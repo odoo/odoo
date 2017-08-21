@@ -4,15 +4,15 @@
 from odoo import api, fields, models
 
 
-class StockPickingToWave(models.TransientModel):
-    _name = 'stock.picking.to.wave'
+class StockPickingToBatch(models.TransientModel):
+    _name = 'stock.picking.to.batch'
     _description = 'Add pickings to a batch picking'
 
-    wave_id = fields.Many2one('stock.picking.wave', string='Batch Picking', required=True)
+    batch_id = fields.Many2one('stock.picking.batch', string='Batch Picking', required=True, oldname="wave_id")
 
     @api.multi
     def attach_pickings(self):
         # use active_ids to add picking line to the selected batch
         self.ensure_one()
         picking_ids = self.env.context.get('active_ids')
-        return self.env['stock.picking'].browse(picking_ids).write({'wave_id': self.wave_id.id})
+        return self.env['stock.picking'].browse(picking_ids).write({'batch_id': self.batch_id.id})

@@ -5,9 +5,9 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class StockPickingWave(models.Model):
+class StockPickingBatch(models.Model):
     _inherit = ['mail.thread']
-    _name = "stock.picking.wave"
+    _name = "stock.picking.batch"
     _description = "Batch Picking"
     _order = "name desc"
 
@@ -19,7 +19,7 @@ class StockPickingWave(models.Model):
         'res.users', string='Responsible', track_visibility='onchange',
         help='Person responsible for this batch picking')
     picking_ids = fields.One2many(
-        'stock.picking', 'wave_id', string='Pickings',
+        'stock.picking', 'batch_id', string='Pickings',
         help='List of picking associated to this batch')
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -31,8 +31,8 @@ class StockPickingWave(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
-        return super(StockPickingWave, self).create(vals)
+            vals['name'] = self.env['ir.sequence'].next_by_code('batch.picking') or '/'
+        return super(StockPickingBatch, self).create(vals)
 
     @api.multi
     def confirm_picking(self):
@@ -59,25 +59,25 @@ class StockPickingWave(models.Model):
             raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this batch to done.'))
         for picking in pickings:
             picking.message_post(
-                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.wave>%s</a>" % (
+                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>" % (
                     _("Transferred by"),
                     _("Batch Picking"),
-                    picking.wave_id.id,
-                    picking.wave_id.name))
+                    picking.batch_id.id,
+                    picking.batch_id.name))
         if pickings:
             pickings.action_done()
         return self.write({'state': 'done'})
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'stock_picking_batch.mt_wave_state'
-        return super(StockPickingWave, self)._track_subtype(init_values)
+            return 'stock_picking_batch.mt_batch_state'
+        return super(StockPickingBatch, self)._track_subtype(init_values)
 
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    wave_id = fields.Many2one(
-        'stock.picking.wave', string='Batch Picking',
+    batch_id = fields.Many2one(
+        'stock.picking.batch', string='Batch Picking', oldname="wave_id",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help='Batch associated to this picking')

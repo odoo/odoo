@@ -35,7 +35,7 @@ class StockConfigSettings(models.TransientModel):
         string="No Rescheduling Propagation",
         oldname='default_new_propagation_minimum_delta',
         help="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n This option allows to not propagate the rescheduling if the change is not critical.")
-    module_stock_picking_wave = fields.Boolean("Batch Pickings")
+    module_stock_picking_batch = fields.Boolean("Batch Pickings", oldname="module_stock_picking_wave")
     module_stock_calendar = fields.Boolean("Vendor Calendar for Reordering",
         help='Scheduled dates of requests for quotation generated from reordering rules are based on vendor lead times (defined on products).\nBy default, such a scheduling is made on calendar days. This option allow to adapt the scheduling with vendor calendars to set on reordering rules.')
     module_stock_barcode = fields.Boolean("Barcode Scanner")
