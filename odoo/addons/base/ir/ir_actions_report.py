@@ -568,7 +568,7 @@ class IrActionsReport(models.Model):
         return result
 
     @api.multi
-    def render_qweb_pdf(self, res_ids, data=None):
+    def render_qweb_pdf(self, res_ids=None, data=None):
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if tools.config['test_enable'] and not tools.config['test_report_directory']:
@@ -601,47 +601,57 @@ class IrActionsReport(models.Model):
         if isinstance(self.env.cr, TestCursor):
             return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        # Dispatch the records by ones having an attachment and ones requesting a call to
-        # wkhtmltopdf.
         save_in_attachment = {}
-        Model = self.env[self.model]
-        record_ids = Model.browse(res_ids)
-        wk_record_ids = Model
-        if self.attachment:
-            for record_id in record_ids:
-                attachment_id = self.retrieve_attachment(record_id)
-                if attachment_id:
-                    save_in_attachment[record_id.id] = attachment_id
-                if not self.attachment_use or not attachment_id:
-                    wk_record_ids += record_id
-        else:
-            wk_record_ids = record_ids
+        if res_ids:
+            # Dispatch the records by ones having an attachment and ones requesting a call to
+            # wkhtmltopdf.
+            Model = self.env[self.model]
+            record_ids = Model.browse(res_ids)
+            wk_record_ids = Model
+            if self.attachment:
+                for record_id in record_ids:
+                    attachment_id = self.retrieve_attachment(record_id)
+                    if attachment_id:
+                        save_in_attachment[record_id.id] = attachment_id
+                    if not self.attachment_use or not attachment_id:
+                        wk_record_ids += record_id
+            else:
+                wk_record_ids = record_ids
+            res_ids = wk_record_ids.ids
 
-        pdf_content = None
-        if wk_record_ids:
-            if self.get_wkhtmltopdf_state() == 'install':
-                # wkhtmltopdf is not installed
-                # the call should be catched before (cf /report/check_wkhtmltopdf) but
-                # if get_pdf is called manually (email template), the check could be
-                # bypassed
-                raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+        # A call to wkhtmltopdf is mandatory in 2 cases:
+        # - The report is not linked to a record.
+        # - The report is not fully present in attachments.
+        if save_in_attachment and not res_ids:
+            _logger.info('The PDF report has been generated from attachments.')
+            return self._post_pdf(save_in_attachment), 'pdf'
 
-            html = self.with_context(context).render_qweb_html(wk_record_ids.ids, data=data)[0]
+        if self.get_wkhtmltopdf_state() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-            # Ensure the current document is utf-8 encoded.
-            html = html.decode('utf-8')
+        html = self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-            bodies, res_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+        # Ensure the current document is utf-8 encoded.
+        html = html.decode('utf-8')
 
-            pdf_content = self._run_wkhtmltopdf(
-                bodies,
-                header=header,
-                footer=footer,
-                landscape=context.get('landscape'),
-                specific_paperformat_args=specific_paperformat_args,
-                set_viewport_size=context.get('set_viewport_size'),
-            )
-        return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=res_ids), 'pdf'
+        bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+
+        pdf_content = self._run_wkhtmltopdf(
+            bodies,
+            header=header,
+            footer=footer,
+            landscape=context.get('landscape'),
+            specific_paperformat_args=specific_paperformat_args,
+            set_viewport_size=context.get('set_viewport_size'),
+        )
+        if res_ids:
+            _logger.info('The PDF report has been generated for records %s.' % (str(res_ids)))
+            return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
+        return pdf_content, 'pdf'
 
     @api.model
     def render_qweb_html(self, docids, data=None):
