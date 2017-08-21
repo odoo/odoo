@@ -21,7 +21,7 @@ class ProcurementGroup(models.Model):
     having the moves grouped into pickings that represent the sales order.
 
     Used in: sales order (to group delivery order lines like the so), pull/push
-    rules (to pack like the delivery order), on orderpoints (e.g. for wave picking
+    rules (to pack like the delivery order), on orderpoints (e.g. for batch picking
     all the similar products together).
 
     Grouping is made only if the source and the destination is the same.
