@@ -3,8 +3,10 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleStock(TestSale):
     def test_00_sale_stock_invoice(self):
         """

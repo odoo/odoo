@@ -3,12 +3,14 @@
 
 from .common import TestAccountBudgetCommon
 from odoo.fields import Date
+from odoo.tests import tagged
 
 import datetime
 
 # ---------------------------------------------------------
 # Tests
 # ---------------------------------------------------------
+@tagged('post_install', '-at_install')
 class TestAccountBudget(TestAccountBudgetCommon):
 
     def test_account_budget(self):

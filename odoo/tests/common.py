@@ -44,6 +44,7 @@ except ImportError:
 import odoo
 from odoo import api
 
+
 _logger = logging.getLogger(__name__)
 
 # The odoo library is supposed already configured.
@@ -113,7 +114,20 @@ class TreeCase(unittest.TestCase):
         for c1, c2 in izip_longest(n1, n2):
             self.assertEqual(c1, c2, msg)
 
-class BaseCase(TreeCase):
+
+class MetaCase(type):
+    """ Metaclass of test case classes to assign default 'test_tags':
+        'standard', 'at_install' and the name of the module.
+    """
+    def __init__(cls, name, bases, attrs):
+        super(MetaCase, cls).__init__(name, bases, attrs)
+        # assign default test tags
+        if cls.__module__.startswith('odoo.addons.'):
+            module = cls.__module__.split('.')[2]
+            cls.test_tags = {'standard', 'at_install', module}
+
+
+class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -1244,3 +1258,46 @@ def record_to_values(fields, record):
             v = [(1, r.id, {}) for r in v]
         r[f] = v
     return r
+
+
+def tagged(*tags):
+    """
+    A decorator to tag TestCase objects
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
+    By default, all Test classes from odoo.tests.common have a test_tags
+    attribute that defaults to 'standard' and also the module technical name
+    When using class inheritance, the tags are NOT inherited.
+    """
+    def tags_decorator(obj):
+        include = {t for t in tags if not t.startswith('-')}
+        exclude = {t[1:] for t in tags if t.startswith('-')}
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        return obj
+    return tags_decorator
+
+
+class TagsSelector(object):
+    """ Test selector based on tags. """
+
+    def __init__(self, spec):
+        """ Parse the spec to determine tags to include and exclude. """
+        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''}
+        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
+        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+
+    def check(self, arg):
+        """ Return whether ``arg`` matches the specification: it must have at
+            least one tag in ``self.include`` and none in ``self.exclude``.
+        """
+        # handle the case where the Test does not inherit from TransactionCase
+        tags = getattr(arg, 'test_tags', set())
+        inter_no_test = self.exclude.intersection(tags)
+        if inter_no_test:
+            _logger.debug("Test '%s' not selected because of following tag(s): '%s'", arg, inter_no_test)
+            return False
+        inter_to_test = self.include.intersection(tags)
+        if not inter_to_test:
+            _logger.debug("Test '%s' not selected because it was not tagged with '%s'", arg, self.include)
+            return False
+        return True
