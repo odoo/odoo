@@ -125,6 +125,11 @@ class AccountAnalyticLine(models.Model):
                 so_line._compute_tax_id()
                 result.update({'so_line': so_line.id})
 
+        # The search on sale.order.line loads a lot of records in prefetch
+        # for lines, sale.order and res.partner (at least). It would be a large
+        # performance hit the next time we need an attribute on one of these
+        # model if we don't clear the prefetch.
+        self.env.prefetch.clear()
         return result
 
     @api.multi
