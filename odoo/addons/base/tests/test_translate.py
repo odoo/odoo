@@ -5,9 +5,10 @@ import unittest
 
 from odoo.tools import pycompat
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged('standard', 'at_install')
 class TranslationToolsTestCase(unittest.TestCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)

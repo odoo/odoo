@@ -7,8 +7,7 @@ from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_register_open(self):

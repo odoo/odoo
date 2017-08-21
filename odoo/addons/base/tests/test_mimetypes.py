@@ -1,6 +1,7 @@
 import base64
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.mimetypes import guess_mimetype
 
 PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
@@ -17,6 +18,7 @@ AE/IX//2gAMAwEAAgADAAAAEB//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/EH//xAAUEQEAA
 /9oACAECAQE/EH//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/EH//2Q=="""
 
 
+@tagged('standard', 'at_install')
 class test_guess_mimetype(unittest.TestCase):
 
     def test_default_mimetype_empty(self):

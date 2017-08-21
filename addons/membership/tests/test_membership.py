@@ -4,8 +4,10 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.membership.tests.common import TestMembershipCommon
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestMembership(TestMembershipCommon):
 
     def test_old_membership(self):

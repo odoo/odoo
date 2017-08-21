@@ -4,8 +4,7 @@ from odoo.tests import common
 from odoo.tools import float_compare
 
 
-@common.at_install(False)
-@common.post_install(True)
+@common.tagged('post_install', '-at_install')
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):

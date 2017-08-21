@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-
 import time
 
 

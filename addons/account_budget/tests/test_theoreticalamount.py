@@ -8,10 +8,12 @@ except ImportError:
     from mock import patch
 
 from odoo.fields import Datetime
+from odoo.tests import tagged
 
 # ---------------------------------------------------------
 # Tests
 # ---------------------------------------------------------
+@tagged('post_install', '-at_install')
 class TestTheoreticalAmount(TestAccountBudgetCommon):
     def setUp(self):
         super(TestTheoreticalAmount, self).setUp()

@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleExpense(TestSale):
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """

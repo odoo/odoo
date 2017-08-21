@@ -1,8 +1,8 @@
 import odoo.tests
 
+
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
-    post_install = True
-    at_install = False
 
     def test_01_admin_widget_x2many(self):
         self.phantom_js("/web#action=test_new_api.action_discussions",

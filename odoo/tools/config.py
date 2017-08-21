@@ -161,6 +161,10 @@ class configmanager(object):
                          my_default=False, help="Enable unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
                          my_default=False, help="Commit database changes performed by XML tests.")
+        group.add_option("--test-tags", dest="test_tags",
+                         default=('+standard'),
+                         help="Comma separated list of tags to filter which tests to excute")
+
         parser.add_option_group(group)
 
         # Logging Group
@@ -425,7 +429,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
+            'test_file', 'test_enable', 'test_commit', 'test_report_directory', 'test_tags',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',

@@ -15,6 +15,7 @@ from odoo.tools import pycompat
 _logger = logging.getLogger(__name__)
 
 
+@odoo.tests.common.tagged('post_install', '-at_install')
 class Crawler(odoo.tests.HttpCase):
     """ Test suite crawling an Odoo CMS instance and checking that all
     internal links lead to a 200 response.
@@ -22,9 +23,6 @@ class Crawler(odoo.tests.HttpCase):
     If a username and a password are provided, authenticates the user before
     starting the crawl
     """
-
-    at_install = False
-    post_install = True
 
     def crawl(self, url, seen=None, msg=''):
         if seen is None:

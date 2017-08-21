@@ -8,9 +8,9 @@ class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('rte_translator')", "odoo.__DEBUG__.services['web_tour.tour'].tours.rte_translator.ready", login='admin', timeout=120)
 
+
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
-    post_install = True
-    at_install = False
 
     def test_01_public_homepage(self):
         self.phantom_js("/", "console.log('ok')", "'website.content.snippets.animation' in odoo.__DEBUG__.services")

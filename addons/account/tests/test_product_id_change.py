@@ -1,6 +1,9 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 
+
+@tagged('post_install', '-at_install')
 class TestProductIdChange(AccountingTestCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
     subtracted to the price of the product.

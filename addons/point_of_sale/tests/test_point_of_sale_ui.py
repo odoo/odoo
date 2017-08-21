@@ -3,8 +3,7 @@
 import odoo.tests
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_point_of_sale_tour(self):

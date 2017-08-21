@@ -4,8 +4,10 @@
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleTimesheet(TestSale):
 
     def setUp(self):

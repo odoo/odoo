@@ -25,6 +25,8 @@ def environment():
 MODULE = 'test_uninstall'
 MODEL = 'test_uninstall.model'
 
+
+@common.tagged('standard', 'at_install')
 class TestUninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in

@@ -5,11 +5,12 @@ import ast
 import unittest
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval
 
 
+@tagged('standard', 'at_install')
 class TestSafeEval(unittest.TestCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts

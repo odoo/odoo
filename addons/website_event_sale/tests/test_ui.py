@@ -1,10 +1,8 @@
 import odoo.tests
 
 
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
-
-    post_install = True
-    at_install = False
 
     def test_admin(self):
         # Seen that:
