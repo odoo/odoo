@@ -32,7 +32,8 @@
             </form>
         </template>
 
-        <template id="ayden_form">
+        <template id="adyen_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
             <input type="hidden" name="merchantReference" t-att-value="merchantReference"/>
             <input type="hidden" name="paymentAmount" t-att-value="paymentAmount"/>
             <input type="hidden" name="currencyCode" t-att-value="currencyCode"/>

@@ -42,6 +42,7 @@
         </template>
 
         <template id="paypal_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
             <input type="hidden" name="cmd" t-att-value="cmd"/>
             <input type="hidden" name="business" t-att-value="business"/>
             <input type="hidden" name="item_name" t-att-value="item_name"/>

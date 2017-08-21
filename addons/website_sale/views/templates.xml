@@ -1324,6 +1324,18 @@
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
+
+                            <div class="mb64 col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                                <h3 class="mb24">Pay with </h3>
+                                <t t-call="payment.payment_tokens_list">
+                                    <t t-set="mode" t-value="'payment'"/>
+                                    <t t-set="submit_txt" t-value="'Pay Now'"/>
+                                    <t t-set="icon_class" t-value="'fa-lock'"/>
+                                    <t t-set="pms" t-value="tokens"/>
+                                    <t t-set="form_action" t-value="'/shop/payment/token'"/>
+                                </t>
+                            </div>
+
                             <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-7 col-sm-8">
                                     <h4>Choose a payment acquirer</h4>

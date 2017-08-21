@@ -20,6 +20,7 @@
         </template>
 
         <template id="transfer_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
             <t t-if="return_url">
                 <input type='hidden' name='return_url' t-att-value='return_url'/>
             </t>
