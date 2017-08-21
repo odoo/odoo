@@ -1847,6 +1847,6 @@ class AccountFullReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > company.fiscalyear_lock_date:
+        if move_date > (company.fiscalyear_lock_date or '0000-00-00'):
             res['date'] = move_date
         return res
