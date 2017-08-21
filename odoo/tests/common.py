@@ -44,6 +44,9 @@ except ImportError:
 import odoo
 from odoo import api
 
+TAGS_RE = re.compile('^(\w|\-)+$')
+TAGS_UNALLOWED_RE = re.compile('[^a-zA-Z0-9_\-]|^$')
+
 _logger = logging.getLogger(__name__)
 
 # The odoo library is supposed already configured.
@@ -1244,3 +1247,57 @@ def record_to_values(fields, record):
             v = [(1, r.id, {}) for r in v]
         r[f] = v
     return r
+
+
+class TagsError(Exception):
+    pass
+
+def tagged(*tags):
+    """
+    A decorator to tag TestCase objects
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute
+    Tags must only contains alphanumeric chars
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag
+    By default, all Test classes from odoo.tests.common have a test_tags
+    attribute that defaults to 'standard' and also the module technical name
+    When using class inheritance, the tags are NOT inherited.
+    """
+    def tags_decorator(obj):
+        for t in tags:
+            if not isinstance(t, str):
+                raise TagsError("Invalid tag Type. Tags should be of type {}".format(type('')))
+            if not TAGS_RE.match(t):
+                raise TagsError("Illegal character '{}' found in test tag".format(TAGS_UNALLOWED_RE.search(t).group()))
+        if not hasattr(obj, 'test_tags'):
+            obj.test_tags = set()
+        to_set = {t for t in tags if not t.startswith('-')}
+        to_unset = {t[1:] for t in tags if t.startswith('-')}
+        obj.test_tags.update(to_set)
+        obj.test_tags -= to_unset
+        return obj
+    return tags_decorator
+
+
+class TagsTestSelector(object):
+    """ Test selector based on tags. """
+
+    def __init__(self, spec):
+        """ Parse the spec to determine tags to include and exclude. """
+        clean_tags = {t.strip() for t in spec.split(',') if t.strip() != ''} or {'standard'}
+        self.exclude = {t[1:] for t in clean_tags if t.startswith('-')}
+        self.include = {t.replace('+', '') for t in clean_tags if not t.startswith('-')}
+
+    def __call__(self, arg):
+        """ Return whether ``arg`` matches the specification: it must have at
+            least one tag in ``self.include`` and none in ``self.exclude``.
+        """
+        tags = getattr(arg, 'test_tags', set())
+        inter_no_test = self.exclude.intersection(tags)
+        if inter_no_test:
+            _logger.debug("Test '{}' deselected because of following tag(s): '{}'".format(arg, inter_no_test))
+            return False
+        inter_to_test = self.include.intersection(tags)
+        if not inter_to_test:
+            _logger.debug("Test '{}' deselected because it was not tagged with '{}'".format(arg, self.include))
+            return False
+        return True
