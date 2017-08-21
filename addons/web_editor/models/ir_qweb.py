@@ -282,7 +282,7 @@ class HTML(models.AbstractModel):
         content = []
         if element.text:
             content.append(element.text)
-        content.extend(html.tostring(child)
+        content.extend(html.tostring(child, encoding='unicode')
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
 
