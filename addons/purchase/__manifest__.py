@@ -26,6 +26,7 @@
         'data/mail_template_data.xml',
         'views/purchase_config_settings_views.xml',
         'views/account_config_settings_views.xml',
+        'views/portal_templates.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
     ],
