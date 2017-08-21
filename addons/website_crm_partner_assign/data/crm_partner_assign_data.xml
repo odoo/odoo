@@ -43,7 +43,7 @@
 
 <p>Thanks,</p>
 
-${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}
+${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}
 
 % if not ctx['partner_id'].user_id:
 PS: It looks like you do not have an account manager assigned to you, please contact us.
