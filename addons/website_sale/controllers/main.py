@@ -715,6 +715,29 @@ class WebsiteSale(http.Controller):
         acquirers = request.env['payment.acquirer'].search(
             [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
         )
+
+        values['form_acquirers'] = [acq for acq in acquirers if acq.view_template_id]
+        values['s2s_acquirers'] = [acq for acq in acquirers if acq.registration_view_template_id]
+
+        for acq in values['form_acquirers']:
+            acq.form = acq.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
+                '/',
+                order.amount_total,
+                order.pricelist_id.currency_id.id,
+                values={
+                    'return_url': '/shop/payment/validate',
+                    'partner_id': shipping_partner_id,
+                    'billing_partner_id': order.partner_invoice_id.id,
+                }
+            )
+
+        for acq in values['s2s_acquirers']:
+            acq.form = acq.sudo()._registration_render(order.partner_id.id, {
+                'return_url': '/shop/payment/validate',
+                'bootstrap_formatting': True
+            })
+
+
         values['acquirers'] = []
         for acquirer in acquirers:
             acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
@@ -727,8 +750,10 @@ class WebsiteSale(http.Controller):
                     'billing_partner_id': order.partner_invoice_id.id,
                 }
             )
-            acquirer.button = acquirer_button
-            values['acquirers'].append(acquirer)
+            acquirer.button = acquirer_button #TBE TODO: remove this line
+            acquirer.form = acquirer_button
+            # values['acquirers'].append(acquirer)
+
         values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
 
         return values
@@ -814,6 +839,42 @@ class WebsiteSale(http.Controller):
             return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 
         return tx.render_sale_button(order, '/shop/payment/validate')
+
+    @http.route('/shop/payment/token', type='http', auth='public', website=True)
+    def payment_token(self, pm_id=None, **kw):
+        """ Method that handles payment using saved tokens
+
+        :param int pm_id: id of the payment.token that we want to use to pay.
+        """
+        order = request.website.sale_get_order()
+        # do not crash if the user has already paid and try to pay again
+        if not order:
+            return request.redirect('/shop/?error=no_order')
+
+        assert order.partner_id.id != request.website.partner_id.id
+
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            pm_id = False
+
+        if not pm_id:
+            return request.redirect('/shop/?error=invalid_token_id')
+
+        # We retrieve the token the user want to use to pay
+        token = request.env['payment.token'].browse(pm_id)
+        # we retrieve an existing transaction (if it exists obviously)
+        tx = request.website.sale_get_transaction() or request.env['payment.transaction'].sudo()
+        # we check if the transaction is Ok, if not then we create it
+        tx = tx.check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type='server2server')
+        # we set the transaction id into the session (so `sale_get_transaction` can retrieve it )
+        request.session['sale_transaction_id'] = tx.id
+        # we proceed the s2s payment
+        res = tx.confirm_sale_token()
+        # we then redirect to the page that validates the payment by giving it error if there's one
+        if res is not True:
+            return request.redirect('/shop/payment/validate?success=False&error=%s' % res)
+        return request.redirect('/shop/payment/validate?success=True')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):

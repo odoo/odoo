@@ -59,7 +59,7 @@ odoo.define('payment.payment_form', function (require){
                         }
                         // if the server has returned false, we display an error
                         else {
-                            self.error(_t('Error'),
+                            self.error(_t('Server Error'),
                                 _t("<p>We are not able to add your payment method at the moment.</p>"));
                         }
                         // here we remove the 'processing' icon from the 'add a new payment' button
@@ -70,9 +70,30 @@ odoo.define('payment.payment_form', function (require){
                         $(button).attr('disabled', false);
                         $(button).find('span.o_loader').remove();
 
-                        self.error(_t('Error'),
+                        self.error(_t('Server Error'),
                             _t("<p>We are not able to add your payment method at the moment.</p>") + (core.debug ? data.data.message : ''));
                     });
+                }
+                // if the user is going to pay with a form payment, then
+                else if(this.isFormPaymentRadio(checked_radio))
+                {
+                    // we retrieve the acquirer id and its form
+                    var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
+                    var acquirer_form = this.$('#o_payment_form_acq_' + acquirer_id);
+                    var inputs_form = $('input', acquirer_form);
+                    var ds = $('input[name="data_set"]', acquirer_form)[0];
+
+                    // Here we take the values we need to send to the acquirer and generate a form with them
+                    var html_form = '<form method="post" action="' + ds.dataset.actionUrl + '" class="hidden">';
+
+                    for(var i = 0; i < inputs_form.length; i ++) {
+                        if(inputs_form[i].name != "data_set") {
+                            html_form +='<input name="' + inputs_form[i].name + '" value="' + inputs_form[i].value + '"/>';
+                        }
+                    }
+                    html_form += '</form>';
+                    // we append the form to the body and send it.
+                    $(html_form).appendTo("body").submit();
                 }
                 // if the user is using an old payment
                 else {
@@ -81,8 +102,8 @@ odoo.define('payment.payment_form', function (require){
                 }
             }
             else {
-                this.error(_t('Error'),
-                    _t('<p>Please select a payment method</p>'));
+                this.error(_t('No payment method selected'),
+                    _t('<p>Please select a payment method.</p>'));
             }
         },
         // event handler when clicking on the button to add a new payment method
@@ -132,7 +153,7 @@ odoo.define('payment.payment_form', function (require){
                     }
                     // if the server has returned false, we display an error
                     else {
-                        self.error(_t('Error'),
+                        self.error(_t('Server Error'),
                             _t("<p>We are not able to add your payment method at the moment.</p>"));
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
@@ -143,13 +164,13 @@ odoo.define('payment.payment_form', function (require){
                     $(button).attr('disabled', false);
                     $(button).find('span.o_loader').remove();
 
-                    self.error(_t('Error'),
+                    self.error(_t('Server error'),
                         _t("<p>We are not able to add your payment method at the moment.</p>") + (core.debug ? data.data.message : ''));
                 });
             }
             else {
-                this.error(_t('Error'),
-                    _t('<p>Please select the option to add a new payment method</p>'));
+                this.error(_t('No payment method selected'),
+                    _t('<p>Please select the option to add a new payment method.</p>'));
             }
         },
         // event handler when clicking on a button to delete a payment method
@@ -170,7 +191,7 @@ odoo.define('payment.payment_form', function (require){
                             ev.target.closest('div').remove();
                         }
                     },function(type,err){
-                        self.error(_t('Error'),
+                        self.error(_t('Server Error'),
                             _t("<p>We are not able to delete your payment method at the moment.</p>"));
                     });
             };
@@ -202,7 +223,7 @@ odoo.define('payment.payment_form', function (require){
                     Delete();
                 }
             }, function(type, err){
-                self.error(_t('Error'),
+                self.error(_t('Server Error'),
                     _t("<p>We are not able to delete your payment method at the moment.</p>") + (core.debug ? err.data.message : ''));
             });
         },
@@ -215,28 +236,43 @@ odoo.define('payment.payment_form', function (require){
             var checked_radio = this.$('input[type="radio"]:checked');
             // we hide all the acquirers form
             this.$('[id*="o_payment_add_token_acq_"]').addClass('hidden');
+            this.$('[id*="o_payment_form_acq_"]').addClass('hidden');
+            if(checked_radio.length != 1) {
+                return;
+            }
+            checked_radio = checked_radio[0];
             // if we clicked on an add new payment radio
-            if(checked_radio.length == 1 && this.isNewPaymentRadio(checked_radio[0]))
+            if(this.isNewPaymentRadio(checked_radio))
             {
                 // then we retrieve the acquirer name
-                var acquirer_id = this.getAcquirerIdFromRadio(checked_radio[0]);
+                var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
                 // and display its form
                 this.$('#o_payment_add_token_acq_' + acquirer_id).removeClass('hidden');
             }
+            else if(this.isFormPaymentRadio(checked_radio))
+            {
+                // then we retrieve the acquirer name
+                var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
+                // and display its form
+                this.$('#o_payment_form_acq_' + acquirer_id).removeClass('hidden');
+            }
         },
         isNewPaymentRadio: function(element) {
-            return $(element).data('acquirer-id') !== undefined;
+            return $(element).data('s2s-payment') === 'True';
+        },
+        isFormPaymentRadio: function(element) {
+            return $(element).data('form-payment') === 'True';
         },
         getAcquirerIdFromRadio: function(element) {
             return $(element).data('acquirer-id');
         },
         error: function(title, message, url) {
             return new Dialog(null, {
-                title: title || "",
-                $content: $(core.qweb.render('website.error_dialog', {
-                    message: message || "",
-                })),
-            }).open();
+                title: _t('Error: ') + title,
+                size: 'medium',
+                $content: message || "",
+                buttons: [
+                {text: _t('Ok'), close: true}]}).open();
         },
         getFormData: function($form){
             var unindexed_array = $form.serializeArray();
