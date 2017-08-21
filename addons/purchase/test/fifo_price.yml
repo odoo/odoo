@@ -49,7 +49,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo1}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check the standard price of the product (fifo icecream), that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
@@ -78,7 +78,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fifo2}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   Check the standard price of the product, that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
 - 
@@ -110,7 +110,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment}: |
-    self.env['stock.immediate.transfer'].create({'pick_id': self.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]}).process()
 - 
   Check stock valuation is 1600
 - 
@@ -141,7 +141,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_uom}: |
-    self.env['stock.immediate.transfer'].create({'pick_id': self.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]}).process()
 - 
   Check stock valuation and qty in stock
 - 
@@ -186,7 +186,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo_usd}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 - 
   We create delivery order of 49.5 kg
 - 
@@ -212,7 +212,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
-    self.env['stock.immediate.transfer'].create({'pick_id': self.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]}).process()
 -
   Do a delivery of an extra 10 kg
 - 
@@ -238,7 +238,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
-    self.env['stock.immediate.transfer'].create({'pick_id': self.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]}).process()
 - 
   Check rounded price is 150.0 / 1.2834
 - 
@@ -340,7 +340,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo_neg}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 -
   Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
 - 
@@ -363,7 +363,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
     picking = self.picking_ids[0]
-    self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
+    self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
     original_out_move = self.env['stock.picking'].browse(ref('outgoing_fifo_shipment_neg')).move_lines[0]
     outgoing_shipment_fifo_icecream_neg2 = self.env['stock.picking'].browse(ref('outgoing_fifo_shipment_neg2')).move_lines[0]
     original_out_move._fifo_vacuum()
