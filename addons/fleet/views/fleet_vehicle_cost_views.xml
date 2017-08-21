@@ -41,20 +41,16 @@
 
         <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.pivot</field>
-            <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
                 <pivot string="Vehicles costs">
-                    <field name="vehicle_id" type="row"/>
+                    <field name="vehicle_id" type="row" groups="fleet.fleet_group_manager"/>
                     <field name="cost_type" type="row"/>
-                    <field name="date" interval="year" type="col" groups="base.group_no_one"/>
-                    <field name="amount" type="measure"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="create_uid" groups="base.group_no_one"/>
-                    <field name="cost_subtype_id" groups="base.group_no_one"/>
-                    <field name="odometer_id" groups="base.group_no_one"/>
-                    <field name="write_date" groups="base.group_no_one"/>
+                    <field name="date" interval="year" type="col" groups="fleet.fleet_group_manager"/>
+                    <field name="amount" type="measure" groups="fleet.fleet_group_manager"/>
+                    <field name="cost_subtype_id" groups="fleet.fleet_group_manager"/>
                     <field name="auto_generated" />
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="description" groups="fleet.fleet_group_manager"/>
+                    <field name="parent_id" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>
