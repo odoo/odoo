@@ -85,6 +85,7 @@ class EventEvent(models.Model):
         string='Event', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
     active = fields.Boolean(default=True)
+    website_published = fields.Boolean('Visible in Website', copy=False)
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         default=lambda self: self.env.user,
