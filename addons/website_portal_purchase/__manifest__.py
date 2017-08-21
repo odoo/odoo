@@ -15,9 +15,6 @@ Display purchase orders on your website. Customers will be able to access their 
         'portal',
     ],
     'data': [
-        'views/website_portal_purchase_templates.xml',
-        'security/ir.model.access.csv',
-        'security/website_portal_purchase_security.xml',
     ],
     'installable': True,
 }
