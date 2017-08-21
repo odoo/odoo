@@ -1,4 +1,4 @@
-.modal {
+.modal.o_technical_modal {
 
     .modal-content {
         border-radius: 0;
@@ -89,7 +89,7 @@
 @zindex-modal-background: @zindex-modal;
 
 // Temporary fix for modals which are not instantiated thanks to the Dialog
-// JS classes (deprecated case).
+// JS classes (deprecated case) + Frontend.
 :not(body) > .modal {
     z-index: @zindex-modal-background + 1;
 }

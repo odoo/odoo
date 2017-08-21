@@ -48,45 +48,6 @@ body .modal {
             .o-w-close-icon(12px);
             margin-right: -2px;
         }
-
-        .modal-content {
-            .modal-header .o_subtitle {
-                margin-left: 10px;
-            }
-            .modal-body {
-                .o_modal_header {
-                    .o-webclient-padding(@top: 10px, @bottom: 10px);
-                    .clearfix();
-                }
-            }
-            .modal-footer {
-                .btn {
-                    text-transform: uppercase;
-                }
-            }
-        }
-
-        @media (min-width: @screen-sm-min) {
-            .modal-dialog {
-                height: 100%;
-                padding: 30px 0;
-                margin: 0 auto;
-
-                .modal-content {
-                    max-height: 100%;
-                    .o-flex-display();
-                    .o-flex-flow(column, nowrap);
-
-                    .modal-header, .modal-footer {
-                        .o-flex(0, 0, auto);
-                    }
-
-                    .modal-body {
-                        overflow: auto;
-                    }
-                }
-            }
-        }
     }
 
     // MOBILE PREVIEW
