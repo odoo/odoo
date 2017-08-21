@@ -552,7 +552,7 @@ class Warehouse(models.Model):
         routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
         pulls = Pull.search(['&', ('route_id', 'in', routes.ids), ('location_id.usage', '=', 'transit')])
         pulls.write({
-            'location_src_id': new_location,
+            'location_src_id': new_location.id,
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
