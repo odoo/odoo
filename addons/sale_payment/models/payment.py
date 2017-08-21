@@ -128,7 +128,7 @@ class PaymentTransaction(models.Model):
         if (self and acquirer and self.acquirer_id != acquirer) or (self and self.sale_order_id != order):
             tx = False
         # new or distinct token
-        if payment_token and tx.payment_token_id and payment_token != self.payment_token_id:
+        if tx and payment_token and tx.payment_token_id and payment_token != self.payment_token_id:
             tx = False
 
         # still draft tx, no more info -> rewrite on tx or create a new one depending on parameter

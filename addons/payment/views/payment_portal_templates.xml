@@ -19,6 +19,7 @@
                             <div class="col-sm-8">
                                 <h3>Manage your Payment Methods</h3>
                                 <t t-call="payment.payment_tokens_list">
+                                    <t t-set="s2s_acquirers" t-value="acquirers"/>
                                     <t t-set="mode" t-value="'manage'"/>
                                     <t t-set="verify_validity" t-value="True"/>
                                 </t>
