@@ -1206,33 +1206,27 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <pivot string="Journal Items">
-                    <field name="journal_id" type="row" groups="base.group_no_one"/>
-                    <field name="date" type="col" groups="base.group_no_one"/>
-                    <field name="balance" type="measure" groups="account.group_account_user"/>
-                    <field name="invoice_id" groups="base.group_no_one"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="journal_id" type="row" groups="account.group_account_manager" />
+                    <field name="date" type="col" groups="account.group_account_manager"/>
+                    <field name="balance" type="measure"/>
+                    <field name="invoice_id"/>
+                    <field name="create_date" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="date_maturity" groups="base.group_no_one"/>
-                    <field name="user_type_id" groups="account.group_account_user"/>
-                    <field name="analytic_account_id" groups="account.group_account_manager"/>
-                    <field name="statement_line_id" />
-                    <field name="create_uid" groups="base.group_no_one"/>
-                    <field name="move_id" groups="base.group_no_one"/>
+                    <field name="date_maturity" groups="account.group_account_manager"/>
+                    <field name="user_type_id" />
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="move_id" groups="account.group_account_manager" />
                     <field name="account_id" groups="account.group_account_manager"/>
-                    <field name="write_date" groups="base.group_no_one"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="payment_id" groups="account.group_account_user"/>
                     <field name="company_currency_id" groups="base.group_multi_currency"/>
-                    <field name="credit_cash_basis" groups="base.group_no_one"/>
-                    <field name="amount_residual_currency" groups="base.group_no_one"/>
-                    <field name="debit_cash_basis" groups="base.group_no_one"/>
-                    <field name="balance_cash_basis" groups="base.group_no_one"/>
-                    <field name="tax_base_amount" groups="base.group_no_one"/>
-                    <field name="debit" groups="account.group_account_invoice" />
-                    <field name="credit" groups="account.group_account_invoice" />
-                    <field name="quantity" groups="account.group_account_invoice" />
+                    <field name="debit" groups="account.group_account_manager"/>
+                    <field name="credit" groups="account.group_account_manager"/>
+                    <field name="quantity"/>
                     <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="name" groups="account.group_account_manager"/>
+                    <field name="ref" groups="account.group_account_manager"/>
+                    <field name="partner_id" groups="account.group_account_manager"/>
+                    <field name="full_reconcile_id" groups="account.group_account_manager"/>
                 </pivot>
             </field>
         </record>
