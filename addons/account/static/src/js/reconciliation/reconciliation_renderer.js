@@ -22,8 +22,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         'click div:first h1.statement_name': '_onClickStatementName',
         'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
-        'click button.button_back_to_statement': '_onGoToBankStatement',
-        'click button.button_close_statement': '_onCloseBankStatement',
     },
     /**
      * @override
@@ -112,6 +110,9 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 'timePerTransaction': Math.round(dt/1000/state.valuemax),
                 'context': state.context,
             }));
+            $done.on('click button.button_close_statement', _.bind(this._onCloseBankStatement, this));
+            $done.on('click button.button_back_to_statement', _.bind(this._onGoToBankStatement, this));
+
             this.$el.children().hide();
             // display rainbowman after full reconciliation
             this.trigger_up('show_effect', {
