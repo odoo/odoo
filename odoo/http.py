@@ -305,7 +305,8 @@ class WebRequest(object):
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
-        raise
+        # otherwise "no active exception to reraise"
+        raise exception
 
     def _call_function(self, *args, **kwargs):
         request = self
