@@ -305,9 +305,9 @@ class AccountBankStatement(models.Model):
         st_lines_left = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
 
         #try to assign partner to bank_statement_line
-        stl_to_assign_partner = [stl.id for stl in st_lines_left if not stl.partner_id]
-        refs = list(set([st.name for st in st_lines_left if not stl.partner_id]))
-        if st_lines_left and stl_to_assign_partner and refs\
+        stl_to_assign = st_lines_left.filtered(lambda stl: not stl.partner_id)
+        refs = {stl_to_assign.mapped('name')}
+        if stl_to_assign and refs\
            and st_lines_left[0].journal_id.default_credit_account_id\
            and st_lines_left[0].journal_id.default_debit_account_id:
 
@@ -327,7 +327,7 @@ class AccountBankStatement(models.Model):
             params = (self.env.user.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
             if statements:
                 sql_query += 'AND stl.id IN %s'
-                params += (tuple(stl_to_assign_partner),)
+                params += (tuple(stl_to_assign.ids),)
             self.env.cr.execute(sql_query, params)
             results = self.env.cr.dictfetchall()
             st_line = self.env['account.bank.statement.line']
