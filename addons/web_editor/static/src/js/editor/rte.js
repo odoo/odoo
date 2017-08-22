@@ -269,10 +269,6 @@ var RTEWidget = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
-        core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
-        core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
-        core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
-
         $(document).on('mousedown.rte activate.rte', this, this._onMousedown.bind(this));
         $(document).on('mouseup.rte', this, this._onMouseup.bind(this));
 
@@ -341,10 +337,6 @@ var RTEWidget = Widget.extend({
         }
 
         $.fn.carousel = this.init_bootstrap_carousel;
-
-        core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
-        core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
-        core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
 
         $(document).off('.rte');
         $('#wrapwrap, .o_editable').off('.rte');
@@ -565,66 +557,6 @@ var RTEWidget = Widget.extend({
      */
     _onClick: function (e) {
         e.preventDefault();
-    },
-    /**
-     * Called when a demand to open a alt dialog is received on the bus.
-     *
-     * @private
-     * @param {Object} data
-     */
-    _onAltDialogDemand: function (data) {
-        var altDialog = new weWidgets.alt(this,
-            data.options || {},
-            data.$editable,
-            data.media
-        );
-        if (data.onSave) {
-            altDialog.on('save', this, data.onSave);
-        }
-        if (data.onCancel) {
-            altDialog.on('cancel', this, data.onCancel);
-        }
-        altDialog.open();
-    },
-    /**
-     * Called when a demand to open a link dialog is received on the bus.
-     *
-     * @private
-     * @param {Object} data
-     */
-    _onLinkDialogDemand: function (data) {
-        var linkDialog = new weWidgets.LinkDialog(this,
-            data.options || {},
-            data.$editable,
-            data.linkInfo
-        );
-        if (data.onSave) {
-            linkDialog.on('save', this, data.onSave);
-        }
-        if (data.onCancel) {
-            linkDialog.on('cancel', this, data.onCancel);
-        }
-        linkDialog.open();
-    },
-    /**
-     * Called when a demand to open a media dialog is received on the bus.
-     *
-     * @private
-     * @param {Object} data
-     */
-    _onMediaDialogDemand: function (data) {
-        var mediaDialog = new weWidgets.MediaDialog(this,
-            data.options || {},
-            data.$editable,
-            data.media
-        );
-        if (data.onSave) {
-            mediaDialog.on('save', this, data.onSave);
-        }
-        if (data.onCancel) {
-            mediaDialog.on('cancel', this, data.onCancel);
-        }
-        mediaDialog.open();
     },
     /**
      * Called when the mouse is pressed on the document -> activate element
