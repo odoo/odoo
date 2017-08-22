@@ -817,7 +817,6 @@
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                             t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
@@ -827,6 +826,7 @@
                                             <h4 class="oe_margin_top_8"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
                                         </a>
                                     </div>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div class="oe_clear"></div>
                                     <div>
                                         <div style="display: inline-block">

@@ -282,12 +282,12 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <b t-if="record.partner_name.raw_value">
                                         <field name="partner_name"/>
                                     </b><t t-else="1">
                                         <i><field name="name"/></i><br/>
                                     </t><br/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div invisible="context.get('search_default_job_id', False)">
                                         <field name="job_id"/>
                                     </div>

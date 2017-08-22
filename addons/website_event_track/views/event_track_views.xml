@@ -29,11 +29,11 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <h4><field name="name"/></h4>
                                     <div>
                                         <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
                                     </div>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                     </div>
