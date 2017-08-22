@@ -129,4 +129,4 @@ class TestPyLint(TransactionCase):
         else:
             out, err = process.communicate()
             if process.returncode:
-                self.fail("\n" + out + "\n" + err)
+                self.fail((b"\n" + out + b"\n" + err).decode('utf-8'))
