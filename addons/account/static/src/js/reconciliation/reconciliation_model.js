@@ -232,10 +232,10 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
-        return this._changePartner(handle, partner.id)
+        return $.when(partner && this._changePartner(handle, partner.id))
                 .then(function() {
                     line.reconciliation_proposition = [];
-                    return self._performMoveLine(handle)
+                    return self.changeMode(handle, 'match');
                 })
                 .then(function () {
                     if (line.mode === 'create') {
@@ -255,7 +255,7 @@ var StatementModel = BasicModel.extend({
                 args: [self.bank_statement_id.id],
             })
             .then(function () {
-                return self.bank_statement_id.id
+                return self.bank_statement_id.id;
             });
     },
     /**

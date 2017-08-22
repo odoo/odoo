@@ -369,7 +369,12 @@ var mv_lines = {
     '[7,"",0,6]': [
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 133, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
-        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false}
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 376.00", 'partner_id': 7, 'account_name': "Bank", 'name': "BNK1/2017/0002: SUPP.OUT/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 392, 'credit': 376.0, 'journal_id': "Bank", 'amount_str': "$ 376.00", 'debit': 0.0, 'account_code': "101401", 'ref': "BILL/2017/0003", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 525.50", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 396, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 525.50", 'debit': 525.5, 'account_code': "101401", 'ref': "INV/2017/0003", 'already_paid': true},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-22", 'date': "2017-01-23", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
     ],
     '[8,"",0,6]': [],
 };
@@ -535,7 +540,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation fields', function (assert) {
         assert.expect(6);
 
@@ -561,7 +565,6 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
-
 
     QUnit.test('Reconciliation basic data', function (assert) {
         assert.expect(14);
@@ -630,7 +633,6 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
-
 
     QUnit.test('Reconciliation partial', function (assert) {
         assert.expect(10);
@@ -702,7 +704,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation currencies', function (assert) {
         assert.expect(2);
 
@@ -737,7 +738,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation change partner', function (assert) {
-        assert.expect(4);
+        assert.expect(10);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
@@ -755,7 +756,21 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(Camptocamp)').trigger('mouseenter').trigger('click');
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
-        assert.strictEqual(widget.$('.match table tr').length, 3, "camptocamp should have 3 propositions for reconciliation");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 3, "camptocamp should have 3 propositions for reconciliation");
+
+        widget = clientAction.widgets[2];
+        widget.$('.accounting_view thead td:first').trigger('click');
+        widget.$('.accounting_view .mv_line .cell_label').trigger('click');
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display agrolait");
+        assert.strictEqual(widget.$('.match table tr').length, 3, "Camptocamp should have 3 propositions for reconciliation");
+        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 0, "should not display the right arrow");
+
+        // Simulate remove partner
+        widget.$('.o_input_dropdown input').trigger('click');
+        widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
+        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 1, "should not display the right arrow");
 
         clientAction.destroy();
     });
@@ -840,7 +855,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation create line with taxes', function (assert) {
         assert.expect(13);
 
@@ -884,7 +898,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation create line from reconciliation model', function (assert) {
         assert.expect(6);
 
@@ -927,7 +940,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation auto reconciliation', function (assert) {
         assert.expect(6);
 
@@ -958,7 +970,6 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
-
 
     QUnit.test('Reconciliation manual', function (assert) {
         assert.expect(8);
