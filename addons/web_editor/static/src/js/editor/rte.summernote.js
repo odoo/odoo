@@ -1,11 +1,13 @@
 odoo.define('web_editor.rte.summernote', function (require) {
 'use strict';
 
-var core = require('web.core');
 var ajax = require('web.ajax');
+var Class = require('web.Class');
+var core = require('web.core');
+var mixins = require('web.mixins');
 var weContext = require('web_editor.context');
-var widgets = require('web_editor.widget');
 var rte = require('web_editor.rte');
+var weWidgets = require('web_editor.widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -422,8 +424,8 @@ dom.isImgFont = function (node) {
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
-        for (var k=0; k<widgets.fontIcons.length; k++) {
-            if (_.intersection(widgets.fontIcons[k].alias, classNames).length) {
+        for (var k=0; k<weWidgets.fontIcons.length; k++) {
+            if (_.intersection(weWidgets.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }
@@ -969,4 +971,133 @@ $.summernote.lang.odoo = {
       redo: _t('Redo')
     }
 };
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+/**
+ * @todo get rid of this. This has been implemented as a fix to be able to
+ * instantiate media, link and alt dialogs outside the main editor: in the
+ * simple HTML fields and forum textarea.
+ */
+var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
+    /**
+     * @constructor
+     */
+    init: function (parent) {
+        mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
+
+        core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
+        core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        mixins.EventDispatcherMixin.destroy.call(this);
+
+        core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
+        core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when a demand to open a alt dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onAltDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var altDialog = new weWidgets.alt(this,
+            data.options || {},
+            data.$editable,
+            data.media
+        );
+        if (data.onSave) {
+            altDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            altDialog.on('cancel', this, data.onCancel);
+        }
+        altDialog.open();
+    },
+    /**
+     * Called when a demand to open a link dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onLinkDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var linkDialog = new weWidgets.LinkDialog(this,
+            data.options || {},
+            data.$editable,
+            data.linkInfo
+        );
+        if (data.onSave) {
+            linkDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            linkDialog.on('cancel', this, data.onCancel);
+        }
+        linkDialog.open();
+    },
+    /**
+     * Called when a demand to open a media dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onMediaDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var mediaDialog = new weWidgets.MediaDialog(this,
+            data.options || {},
+            data.$editable,
+            data.media
+        );
+        if (data.onSave) {
+            mediaDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            mediaDialog.on('cancel', this, data.onCancel);
+        }
+        mediaDialog.open();
+    },
+});
+/**
+ * @todo cannot do this without include because it would make a loop in the
+ * JS module dependencies otherwise.
+ */
+rte.Class.include({
+    /**
+     * @override
+     */
+    start: function () {
+        this._summernoteManager = new SummernoteManager(this);
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    cancel: function () {
+        this._super.apply(this, arguments);
+        this._summernoteManager.destroy();
+    },
+});
+return SummernoteManager;
 });

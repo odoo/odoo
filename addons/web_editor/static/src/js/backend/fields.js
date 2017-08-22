@@ -7,6 +7,7 @@ var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var field_registry = require('web.field_registry');
+var SummernoteManager = require('web_editor.rte.summernote');
 var transcoder = require('web_editor.transcoder');
 
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
@@ -24,6 +25,14 @@ var _t = core._t;
 var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html_text',
     supportedFieldTypes: ['html'],
+
+    /**
+     * @override
+     */
+    start: function () {
+        new SummernoteManager(this);
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Public
