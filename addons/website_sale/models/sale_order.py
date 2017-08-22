@@ -459,7 +459,7 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return None
+            return self.env['sale.order']
 
         return sale_order
 

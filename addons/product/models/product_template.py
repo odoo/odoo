@@ -394,7 +394,7 @@ class ProductTemplate(models.Model):
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
 
             # list of values combination
-            existing_variants = [set(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids]
+            existing_variants = [set(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids]
             variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids if line.value_ids and line.value_ids[0].attribute_id.create_variant))
             variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
             to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
@@ -403,9 +403,9 @@ class ProductTemplate(models.Model):
             variants_to_activate = self.env['product.product']
             variants_to_unlink = self.env['product.product']
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids in variant_matrix:
+                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
                     variants_to_activate |= product_id
-                elif product_id.attribute_value_ids not in variant_matrix:
+                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
                     variants_to_unlink |= product_id
             if variants_to_activate:
                 variants_to_activate.write({'active': True})
