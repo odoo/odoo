@@ -470,6 +470,101 @@ var FormController = BasicController.extend({
             title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
     },
+    openDefaultsDialog: function () {
+        var self = this;
+        var fieldWidgets = this.renderer.allFieldWidgets[this.handle];
+        var display = function (field, value) {
+            if (!value) { return value; }
+            if (field.field.type === 'many2one') {
+                return field.value.data.display_name;
+            }
+            if (field.field.type === 'selection') {
+                return _(field.field.selection).find(function (option) {
+                    return option[0] === value;
+                })[1];
+            }
+            return value;
+        };
+        var fields = _.chain(fieldWidgets)
+            .map(function (field) {
+                var value = field.value;
+                // ignore fields which are empty, invisible, readonly, password field, o2m
+                // or m2m
+                if (!value
+                        || field.attrs.invisible
+                        || field.field.readonly
+                        || field.field.type === 'binary'
+                        || field.nodeOptions.isPassword) {
+                    return false;
+                }
+                if(field.field.type === 'one2many'
+                    || field.field.type === 'many2many'){
+                    return false;
+                }
+                if(field.field.type === 'many2one'){
+                    value =  field.value.res_id;
+                }
+                return {
+                    name: field.name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                };
+            })
+            .compact()
+            .sortBy(function (field) { return field.string; })
+            .value();
+        var conditions = _.chain(fieldWidgets)
+            .filter(function (field) { return field.field.change_default; })
+            .map(function (field) {
+                var value = field.value;
+                if(field.field.type === 'many2one'){
+                    value =  field.value.res_id;
+                }
+                return {
+                    name: field.name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                };
+            })
+            .value();
+        var d = new Dialog(this, {
+            title: _t("Set Default"),
+            buttons: [
+                {text: _t("Close"), close: true},
+                {text: _t("Save default"), click: function () {
+                    var $defaults = d.$('#formview_default_fields');
+                    var fieldToSet = $defaults.val();
+                    if (!fieldToSet) {
+                        $defaults.parent().addClass('o_field_invalid o_input');
+                        return;
+                    }
+                    var condition = d.$el.find('#formview_default_conditions').val(),
+                        allUsers = d.$el.find('#formview_default_all').is(':checked');
+                    this._rpc({
+                        model: 'ir.values',
+                        method: 'set_default',
+                        args: [
+                        self.modelName,
+                        fieldToSet,
+                        _.find(fields, function (field) { return field.name === fieldToSet; }).value,
+                        allUsers,
+                        true,
+                        condition || false
+                        ]
+                    })
+                    .done(function(){ d.close(); });
+                }}
+            ]
+        });
+        d.args = {
+            fields: fields,
+            conditions: conditions
+        };
+        d.template = 'FormView.set_default';
+        d.open();
+    },
     /**
      * Open an existing record in a form view dialog
      *

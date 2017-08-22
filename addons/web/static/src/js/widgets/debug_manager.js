@@ -348,7 +348,7 @@ DebugManager.include({
         });
     },
     set_defaults: function() {
-        this._active_view.controller.open_defaults_dialog();
+        this._active_view.controller.openDefaultsDialog();
     },
     fvg: function() {
         var self = this;
