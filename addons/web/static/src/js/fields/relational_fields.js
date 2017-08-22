@@ -225,7 +225,7 @@ var FieldMany2One = AbstractField.extend({
         var self = this;
         var def = $.Deferred();
         var slowCreate = function () {
-            var dialog = self._searchCreatePopup.bind(self, "form", false, self._createContext(name));
+            var dialog = self._searchCreatePopup("form", false, self._createContext(name));
             dialog.on('closed', self, def.resolve.bind(def));
         };
         if (this.nodeOptions.quick_create) {
@@ -393,7 +393,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _searchCreatePopup: function (view, ids, context) {
         var self = this;
-        new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
+        return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),

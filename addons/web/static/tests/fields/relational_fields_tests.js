@@ -1289,6 +1289,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('slow create on a many2one', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<field name="product_id" options="{\'quick_create\': False}"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form':
+                    '<form>' +
+                        '<field name="name"/>' +
+                    '</form>',
+            },
+        });
+
+        form.$('.o_field_many2one input').focus();
+        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
+
+        $('.modal .modal-footer .btn-primary').first().click();
+
+        assert.strictEqual($('.modal:visible:last .o_form_view').length, 1,
+            'a new modal should be opened and contain a form view');
+
+        form.destroy();
+    });
+
     QUnit.test('no_create option on a many2one', function (assert) {
         assert.expect(1);
 

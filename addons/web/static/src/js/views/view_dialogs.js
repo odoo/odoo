@@ -403,6 +403,7 @@ var SelectCreateDialog = ViewDialog.extend({
             },
         })).open();
         dialog.on('closed', this, this.close.bind(this));
+        return dialog;
     },
 });
 
