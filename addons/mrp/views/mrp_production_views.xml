@@ -228,22 +228,17 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <pivot string="Manufacturing Orders">
-                    <field name="date_planned_start" type="row" groups="mrp.group_mrp_manager"/>
-                    <field name="create_date" groups="base.group_no_one"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="date_start" groups="base.group_no_one"/>
-                    <field name="message_last_post" groups="base.group_no_one"/>
+                    <field name="date_planned_start" type="row" groups="mrp.group_mrp_user"/>
+                    <field name="availability" groups="mrp.group_mrp_user">
+                    <field name="user_id" groups="mrp.group_mrp_user">
+                    <field name="product_id" groups="mrp.group_mrp_user">
+                    <field name="product_qty" groups="mrp.group_mrp_user">
+                    <field name="origin" groups="base.group_no_one"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="create_uid" groups="base.group_no_one"/>
-                    <field name="date_finished" groups="mrp.group_mrp_routings"/>
-                    <field name="bom_id" groups="base.group_no_one"/>
-                    <field name="move_finished_ids" groups="base.group_no_one"/>
-                    <field name="write_date" groups="base.group_no_one"/>
-                    <field name="move_raw_ids" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_id" groups="mrp.group_mrp_user"/>
+                    <field name="move_finished_ids" groups="mrp.group_mrp_user"/>
+                    <field name="move_raw_ids" groups="mrp.group_mrp_user"/>
                     <field name="product_uom_id" groups="product.group_uom"/>
-                    <field name="date_planned_finished" groups="base.group_no_one"/>
-                    <field name="location_dest_id" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>
