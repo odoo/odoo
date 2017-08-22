@@ -191,7 +191,12 @@ models.Order = models.Order.extend({
             var product_id = line.get_product().id;
 
             if (typeof resume[line_hash] === 'undefined') {
-                resume[line_hash] = { qty: qty, note: note, product_id: product_id };
+                resume[line_hash] = {
+                    qty: qty,
+                    note: note,
+                    product_id: product_id,
+                    product_name_wrapped: line.generate_wrapped_product_name(),
+                };
             } else {
                 resume[line_hash].qty += qty;
             }
@@ -222,6 +227,7 @@ models.Order = models.Order.extend({
                 add.push({
                     'id':       curr.product_id,
                     'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                    'name_wrapped': curr.product_name_wrapped,
                     'note':     curr.note,
                     'qty':      curr.qty,
                 });
@@ -229,6 +235,7 @@ models.Order = models.Order.extend({
                 add.push({
                     'id':       curr.product_id,
                     'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                    'name_wrapped': curr.product_name_wrapped,
                     'note':     curr.note,
                     'qty':      curr.qty - old.qty,
                 });
@@ -236,6 +243,7 @@ models.Order = models.Order.extend({
                 rem.push({
                     'id':       curr.product_id,
                     'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
+                    'name_wrapped': curr.product_name_wrapped,
                     'note':     curr.note,
                     'qty':      old.qty - curr.qty,
                 });
@@ -248,6 +256,7 @@ models.Order = models.Order.extend({
                 rem.push({
                     'id':       old.product_id,
                     'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
+                    'name_wrapped': old.product_name_wrapped,
                     'note':     old.note,
                     'qty':      old.qty, 
                 });

@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        self.mapped('order_line').mapped('procurement_ids').cancel()
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
