@@ -859,4 +859,33 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot still handles __count__ measure', function (assert) {
+        // for retro-compatibility reasons, the pivot view still handles
+        // '__count__' measure.
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot></pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.fields, ['__count'],
+                        "should make a read_group with field __count");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                context: {
+                    pivot_measures: ['__count__'],
+                },
+            },
+        });
+
+        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
+
+        pivot.destroy();
+    });
 });});

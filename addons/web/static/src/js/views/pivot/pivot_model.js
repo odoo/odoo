@@ -222,6 +222,17 @@ var PivotModel = AbstractModel.extend({
      * @returns {Deferred}
      */
     load: function (params) {
+        // In the preview implementation of the pivot view (a.k.a. version 2),
+        // the virtual field used to display the number of records was named
+        // __count__, whereas __count is actually the one used in xml. So
+        // basically, activating a filter specifying __count as measures crashed.
+        // Unfortunately, as __count__ was used in the JS, all filters saved as
+        // favorite at that time were saved with __count__, and not __count.
+        // So in order the make them still work with the new implementation, we
+        // simply rename __count__ into __count at this unique entry point.
+        var measures = _.map(params.measures, function (measure) {
+            return measure === '__count__' ? '__count' : measure;
+        });
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.rowGroupBys;
         this.fields = params.fields;
@@ -231,7 +242,7 @@ var PivotModel = AbstractModel.extend({
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.groupedBy,
             colGroupBys: params.colGroupBys,
-            measures: params.measures,
+            measures: measures,
             sorted_column: {},
         };
         this.defaultGroupedBy = params.groupedBy;
