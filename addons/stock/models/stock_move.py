@@ -983,18 +983,3 @@ class StockMove(models.Model):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'
-
-    @api.multi
-    def action_show_picking(self):
-        view = self.env.ref('stock.view_picking_form')
-        return {
-            'name': _('Transfer'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'stock.picking',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'res_id': self.id}
-    show_picking = action_show_picking
