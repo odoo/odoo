@@ -863,24 +863,26 @@
          <field name="arch" type="xml">
              <pivot string="Recruitment Analysis" disable_linking="True">
                  <field name="stage_id" type="row"/>
-                 <field name="job_id" type="col" groups="base.group_no_one"/>
-                 <field name="create_date" groups="base.group_no_one"/>
-                 <field name="date_closed" groups="base.group_no_one"/>
-                 <field name="date_last_stage_update" groups="base.group_no_one"/>
-                 <field name="availability" groups="hr_recruitment.group_hr_recruitment_manager"/>
-                 <field name="create_uid" groups="base.group_no_one"/>
-                 <field name="date_open" groups="base.group_no_one"/>
-                 <field name="last_stage_id" groups="base.group_no_one"/>
+                 <field name="job_id" type="col" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="partner_name" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="type_id" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="availability" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="partner_id" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="user_id" groups="hr_recruitment.group_hr_recruitment_user"/>
                  <field name="company_id" groups="base.group_multi_company"/>
-                 <field name="message_last_post" groups="base.group_no_one"/>
-                 <field name="activity_date_deadline" groups="base.group_no_one"/>
-                 <field name="write_date" groups="base.group_no_one"/>
-                 <field name="write_uid" groups="base.group_no_one"/>
-                 <field name="reference" groups="base.group_no_one"/>
-                 <field name="source_id" groups="base.group_no_one"/>
+                 <field name="priority" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="reference" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="source_id" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="department_id" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="partner_mobile" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="partner_phone" groups="hr_recruitment.group_hr_recruitment_user"/>
                  <field name="probability" groups="hr_recruitment.group_hr_recruitment_manager"/>
-                 <field name="color" groups="base.group_no_one"/>
-                 <field name="delay_close" groups="base.group_no_one"/>
+                 <field name="categ_ids" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="name" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="medium_id" groups="base.group_no_one"/>
+                 <field name="email_from" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="salary_proposed" groups="hr_recruitment.group_hr_recruitment_user"/>
+                 <field name="salary_expected" groups="hr_recruitment.group_hr_recruitment_user"/>
              </pivot>
          </field>
     </record>
