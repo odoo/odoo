@@ -373,6 +373,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
+            firstDay: moment().startOf('week').isoWeekday(),
         };
     },
     _getRangeDomain: function () {
