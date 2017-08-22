@@ -2,6 +2,11 @@ odoo.define('payment_stripe.stripe', function(require) {
     "use strict";
 
     var ajax = require('web.ajax');
+    var core = require('web.core');
+    var _t = core._t;
+    var qweb = core.qweb;
+    ajax.loadXML('/payment_stripe/static/src/xml/stripe_templates.xml', qweb);
+
     // The following currencies are integer only, see
     // https://stripe.com/docs/currencies#zero-decimal
     var int_currencies = [
@@ -33,6 +38,10 @@ odoo.define('payment_stripe.stripe', function(require) {
             }).done(function(data){
                 handler.isTokenGenerate = false;
                 window.location.href = data;
+            }).fail(function(){
+                var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.message;
+                var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
+                wizard.appendTo($('body')).modal({'keyboard': true});
             });
         },
     });
