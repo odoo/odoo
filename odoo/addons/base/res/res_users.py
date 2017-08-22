@@ -683,8 +683,6 @@ class GroupsView(models.Model):
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env['ir.actions.actions'].clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return user
 
     @api.multi
@@ -693,8 +691,6 @@ class GroupsView(models.Model):
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env['ir.actions.actions'].clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return res
 
     @api.multi
@@ -703,8 +699,6 @@ class GroupsView(models.Model):
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env['ir.actions.actions'].clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return res
 
     @api.model

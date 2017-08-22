@@ -2832,7 +2832,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         cr = self._cr
         Data = self.env['ir.model.data'].sudo().with_context({})
-        Values = self.env['ir.values']
         Defaults = self.env['ir.default'].sudo()
         Attachment = self.env['ir.attachment']
 
@@ -2850,14 +2849,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
             if data:
                 data.unlink()
-
-            # For the same reason, remove the relevant records in ir_values
-            refs = ['%s,%s' % (self._name, i) for i in sub_ids]
-            values = Values.search(['|', ('value', 'in', refs),
-                                         '&', ('model', '=', self._name),
-                                              ('res_id', 'in', sub_ids)])
-            if values:
-                values.unlink()
 
             # For the same reason, remove the defaults having some of the
             # records as value

@@ -32,7 +32,6 @@ The kernel of Odoo, needed for all installation.
         'ir/ir_translation_view.xml',
         'ir/ir_ui_menu_view.xml',
         'ir/ir_ui_view_view.xml',
-        'ir/ir_values_view.xml',
         'ir/ir_default_view.xml',
         'ir/ir_autovacuum.xml',
         'ir/ir_model_report.xml',

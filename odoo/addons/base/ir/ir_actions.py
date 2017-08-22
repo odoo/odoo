@@ -46,8 +46,6 @@ class IrActions(models.Model):
         res = super(IrActions, self).create(vals)
         # self.get_bindings() depends on action records
         self.clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return res
 
     @api.multi
@@ -55,8 +53,6 @@ class IrActions(models.Model):
         res = super(IrActions, self).write(vals)
         # self.get_bindings() depends on action records
         self.clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return res
 
     @api.multi
@@ -68,8 +64,6 @@ class IrActions(models.Model):
         res = super(IrActions, self).unlink()
         # self.get_bindings() depends on action records
         self.clear_caches()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
         return res
 
     @api.model
