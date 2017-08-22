@@ -441,7 +441,6 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_res_partner_kanban">
-                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                 <div class="o_kanban_image">
                                     <t t-if="record.image_small.raw_value">
                                         <img t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
@@ -465,6 +464,7 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong class="oe_partner_heading"><field name="display_name"/></strong>
+                                    <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                     <ul>
                                         <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
                                         <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
