@@ -164,7 +164,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
      *
      * @private
      */
-    _renderLines: function (){
+    _renderLines: function () {
         var self = this;
         var linesToDisplay = this.model.getStatementLines();
         _.each(linesToDisplay, function (line, handle) {
