@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from operator import itemgetter
+
 from odoo import api, fields, models
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -33,4 +35,5 @@ class ResPartner(models.Model):
         if not self.user_has_groups('sale.group_delivery_invoice_address'):
             selection = [(x, y) for x, y in result.get('type')['selection'] if x not in ['delivery', 'invoice']]
             result.get('type')['selection'] = selection
+        result.get('type')['selection'].sort(key=itemgetter(0))
         return result
