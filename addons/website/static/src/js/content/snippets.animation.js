@@ -37,7 +37,7 @@ if (!window.performance || !window.performance.now) {
  *
  * This uses a simple API: it can be started, stopped, played and paused.
  */
-var AnimationComponent = Class.extend(mixins.ParentedMixin, {
+var AnimationEffect = Class.extend(mixins.ParentedMixin, {
     /**
      * @constructor
      * @param {Object} parent
@@ -57,9 +57,9 @@ var AnimationComponent = Class.extend(mixins.ParentedMixin, {
      * @param {string} [options.endEvents]
      *        space separated list of events which pause the animation loop. If
      *        not given, the animation is stopped after a while (if no
-     *        startEvent is received again)
+     *        startEvents is received again)
      * @param {jQuery|DOMElement} [options.$endTarget=$startTarget]
-     *        the element(s) on which the endEvent are listened
+     *        the element(s) on which the endEvents are listened
      */
     init: function (parent, updateCallback, startEvents, $startTarget, options) {
         mixins.ParentedMixin.init.call(this);
@@ -83,7 +83,7 @@ var AnimationComponent = Class.extend(mixins.ParentedMixin, {
         this._getStateCallback = this._getStateCallback.bind(parent);
 
         // Add a namespace to events using the generated uid
-        this._uid = '_animationComponent' + _.uniqueId();
+        this._uid = '_animationEffect' + _.uniqueId();
         this.startEvents = _processEvents(this.startEvents, this._uid);
         if (this.endEvents) {
             this.endEvents =  _processEvents(this.endEvents, this._uid);
@@ -139,7 +139,7 @@ var AnimationComponent = Class.extend(mixins.ParentedMixin, {
             }).bind(this));
         } else {
             /**
-             * Else, if there is no endEvent, the animation should begin playing
+             * Else, if there is no endEvents, the animation should begin playing
              * when the startEvents are *continuously* triggered on the
              * $startTarget or fully played once. To achieve this, the animation
              * begins playing and is scheduled to pause after 2 seconds. If the
@@ -243,9 +243,7 @@ var AnimationComponent = Class.extend(mixins.ParentedMixin, {
  * Provides a way for executing code once a website DOM element is loaded in the
  * dom and handle the case where the website edit mode is triggered.
  *
- * Also register AnimationComponent automatically according to the methods it
- * defines. Also allows to register them in more conventional ways by extending
- * the `_prepareComponents` method and calling the `_addComponent` method.
+ * Also register AnimationEffect automatically (@see effects, _prepareEffects).
  */
 var Animation = Widget.extend({
     /**
@@ -267,10 +265,43 @@ var Animation = Widget.extend({
      */
     read_events: {},
     /**
-     * The max FPS at which all the automatic animation components will be
+     * The max FPS at which all the automatic animation effects will be
      * running by default.
      */
     maxFPS: 100,
+    /**
+     * @see this._prepareEffects
+     *
+     * @type {Object[]}
+     * @type {string} startEvents
+     *       The names of the events which trigger the effect to begin playing.
+     * @type {string} [startTarget]
+     *       A selector to find the target where to listen for the start events
+     *       (if no selector, the window target will be used). If the whole
+     *       $target of the animation should be used, use the 'selector' string.
+     * @type {string} [endEvents]
+     *       The name of the events which trigger the end of the effect (if none
+     *       is defined, the animation will stop after a while
+     *       @see AnimationEffect.start).
+     * @type {string} [endTarget]
+     *       A selector to find the target where to listen for the end events
+     *       (if no selector, the startTarget will be used). If the whole
+     *       $target of the animation should be used, use the 'selector' string.
+     * @type {string} update
+     *       A string which refers to a method which will be used as the update
+     *       callback for the effect. It receives 3 arguments: the animation
+     *       state, the elapsedTime since last update and the event which
+     *       triggered the animation (undefined if just a new update call
+     *       without trigger).
+     * @type {string} [getState]
+     *       The animation state is undefined by default, the scroll offset for
+     *       the particular {startEvents: 'scroll'} effect and an object with
+     *       width and height for the particular {startEvents: 'resize'} effect.
+     *       There is the possibility to define the getState callback of the
+     *       animation effect with this key. This allows to improve performance
+     *       even further in some cases.
+     */
+    effects: [],
 
     /**
      * Initializes the events that will need to be binded according to the
@@ -293,14 +324,14 @@ var Animation = Widget.extend({
      * Initializes the animation. The method should not be called directly as
      * called automatically on animation instantiation and on restart.
      *
-     * Also, prepares animation components and start them if any.
+     * Also, prepares animation's effects and start them if any.
      *
      * @override
      */
     start: function () {
-        this._prepareComponents();
-        _.each(this._animationComponents, function (component) {
-            component.start();
+        this._prepareEffects();
+        _.each(this._animationEffects, function (effect) {
+            effect.start();
         });
         return this._super.apply(this, arguments);
     },
@@ -309,7 +340,7 @@ var Animation = Widget.extend({
      * was before the start method was called (unlike standard widget, the
      * associated $el DOM is not removed).
      *
-     * Also stops animation components and destroys them if any.
+     * Also stops animation effects and destroys them if any.
      */
     destroy: function () {
         // The difference with the default behavior is that we unset the
@@ -333,100 +364,47 @@ var Animation = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Registers `AnimationComponent` instances.
+     * Registers `AnimationEffect` instances.
      *
-     * This can be done by extending this method and calling the _addComponent
-     * method in it or by defining particulary-named methods in the specialized
-     * Animation class.
+     * This can be done by extending this method and calling the @see _addEffect
+     * method in it or, better, by filling the @see effects property.
      *
-     * The automatic creation of components according to method names is working
-     * like this:
-     *
-     * - Search for methods which match the pattern:
-     *   on_startEvent[_startTarget[_off_endEvent[_endTarget]]] where:
-     *
-     *     - startEvent: the event name which triggers the animation to begin
-     *                   playing
-     *
-     *     - [startTarget]: the selector (see description below) to find the
-     *                      target where to listen for startEvent (if no
-     *                      selector, the window target will be used)
-     *
-     *     - [endEvent]: the event name which triggers the end of the animation
-     *                   (if none is defined, the animation will stop after a
-     *                   while, @see AnimationComponent.start)
-     *
-     *     - [endTarget]: the selector (see description below) to find the
-     *                    target where to listen for endEvent (if no selector,
-     *                    the startTarget will be used)
-     *
-     * - For all of these methods, register the appropriate animation component
-     *   with the method implementation used as the update callback. The method
-     *   receives 3 arguments: the animation state, the elapsedTime since last
-     *   update and the event which triggered the animation (undefined if just a
-     *   new update call without trigger).
-     *   The animation state is undefined by default, the scroll offset for the
-     *   particular "on_scroll" method and and object with width and height for
-     *   the particular "on_resize" method. There is the possibility to define
-     *   the getState callback of the animation component with this method. For
-     *   the component created by the definition of the "on_abc_def", define the
-     *   "get_state_for_on_abc_def" (so "get_state_for_" followed by the method
-     *   name). This allows to improve performance even further in some cases.
-     *
-     * Selectors mentioned above can be:
-     * - the "selector" string: this tells the system to use the Animation
-     *   instance $target element as target for the animation component
-     * - an underscore-separated list of classnames: for example with
-     *   "leftPanel_playBtn", the system will search inside the Animation
-     *   instance $target element for a DOM which matches the selector
-     *   ".leftPanel .playBtn"
-     *
-     * @todo adapt the regex to new conventions and move the functions to a
-     *       special key to avoid confusion and bugs
      * @private
      */
-    _prepareComponents: function () {
-        this._animationComponents = [];
+    _prepareEffects: function () {
+        this._animationEffects = [];
 
         var self = this;
-        _.each(this.__proto__, function (callback, key) {
-            if (!_.isFunction(callback)) return;
-            // match the pattern described above
-            var m = key.match(/^on_([^_]+)(?:_(.+?))?(?:_off_([^_]+)(?:_(.+))?)?$/);
-            if (!m) return;
-
-            self._addComponent(callback, m[1], _target_from_ugly_selector(m[2]), {
-                getStateCallback: self['get_state_for_' + key] || undefined,
-                endEvents: m[3] || undefined,
-                $endTarget: _target_from_ugly_selector(m[4]),
+        _.each(this.effects, function (desc) {
+            self._addEffect(self[desc.update], desc.startEvents, _findTarget(desc.startTarget), {
+                getStateCallback: desc.getState && self[desc.getState],
+                endEvents: desc.endEvents || undefined,
+                $endTarget: _findTarget(desc.endTarget),
                 maxFPS: self.maxFPS,
             });
 
             // Return the DOM element matching the selector in the form
             // described above.
-            function _target_from_ugly_selector(selector) {
+            function _findTarget(selector) {
                 if (selector) {
                     if (selector === 'selector') {
                         return self.$target;
-                    } else {
-                        return self.$(_.map(selector.split('_'), function (v) {
-                            return '.' + v;
-                        }).join(' '));
                     }
+                    return self.$(selector);
                 }
                 return undefined;
             }
         });
     },
     /**
-     * Registers a new `AnimationComponent` according to given parameters.
+     * Registers a new `AnimationEffect` according to given parameters.
      *
      * @private
-     * @see AnimationComponent.init
+     * @see AnimationEffect.init
      */
-    _addComponent: function (updateCallback, startEvents, $startTarget, options) {
-        this._animationComponents.push(
-            new AnimationComponent(this, updateCallback, startEvents, $startTarget, options)
+    _addEffect: function (updateCallback, startEvents, $startTarget, options) {
+        this._animationEffects.push(
+            new AnimationEffect(this, updateCallback, startEvents, $startTarget, options)
         );
     },
 });
@@ -460,6 +438,10 @@ registry.slider = Animation.extend({
 
 registry.parallax = Animation.extend({
     selector: '.parallax',
+    effects: [{
+        startEvents: 'scroll',
+        update: '_onWindowScroll',
+    }],
 
     /**
      * @override
@@ -531,17 +513,16 @@ registry.parallax = Animation.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Animation Components
+    // Effects
     //--------------------------------------------------------------------------
 
     /**
-     * Function which will automatically create an animation component since the
-     * shape of its name (@see Animation._prepareComponents). Describes how to
-     * update the snippet when the window scrolls.
+     * Describes how to update the snippet when the window scrolls.
      *
+     * @private
      * @param {integer} scrollOffset
      */
-    on_scroll: function (scrollOffset) {
+    _onWindowScroll: function (scrollOffset) {
         // Speed == 0 is no effect and speed == 1 is handled by CSS only
         if (this.speed === 0 || this.speed === 1) {
             return;
