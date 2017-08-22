@@ -151,7 +151,7 @@ class ProcurementOrder(models.Model):
         qty_done = sum(self.move_ids.filtered(lambda move: move.state == 'done').mapped('product_uom_qty'))
         qty_left = max(self.product_qty - qty_done, 0)
         return {
-            'name': self.name,
+            'name': self.name[:2000],
             'company_id': self.rule_id.company_id.id or self.rule_id.location_src_id.company_id.id or self.rule_id.location_id.company_id.id or self.company_id.id,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
