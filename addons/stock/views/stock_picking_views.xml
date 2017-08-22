@@ -388,7 +388,11 @@
             </field>
         </record>
 
-        <menuitem id="all_picking" name="All Transfers" parent="menu_stock_warehouse_mgmt" sequence="2" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="stock_picking_menu_product" name="Products"
+            parent="menu_stock_warehouse_mgmt" sequence="1"
+            groups="stock.group_stock_manager,stock.group_stock_user"/>
+
+        <menuitem id="all_picking" name="Transfers" parent="stock_picking_menu_product" sequence="2" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
