@@ -171,8 +171,6 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
-    ref_ir_value = fields.Many2one('ir.values', 'Sidebar Button', readonly=True, copy=False,
-                                   help="Sidebar button to open the sidebar action")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -255,40 +253,28 @@ class MailTemplate(models.Model):
         for template in self:
             if template.ref_ir_act_window:
                 template.ref_ir_act_window.sudo().unlink()
-            if template.ref_ir_value:
-                template.ref_ir_value.sudo().unlink()
         return True
 
     @api.multi
     def create_action(self):
         ActWindowSudo = self.env['ir.actions.act_window'].sudo()
-        IrValuesSudo = self.env['ir.values'].sudo()
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
-            src_obj = template.model_id.model
-
             button_name = _('Send Mail (%s)') % template.name
             action = ActWindowSudo.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'src_model': src_obj,
+                'src_model': template.model_id.model,
                 'view_type': 'form',
                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',
+                'binding_model_id': template.model_id.id,
             })
-            ir_value = IrValuesSudo.create({
-                'name': button_name,
-                'model': src_obj,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.act_window,%s" % action.id})
-            template.write({
-                'ref_ir_act_window': action.id,
-                'ref_ir_value': ir_value.id,
-            })
+            template.write({'ref_ir_act_window': action.id})
 
         return True
 

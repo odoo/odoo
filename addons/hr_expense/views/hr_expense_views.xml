@@ -736,19 +736,12 @@
             <field name="name">Expense: Submit To Manager</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
             <field name="state">code</field>
             <field name="code">
 if records:
     action = records.submit_expenses()
             </field>
-        </record>
-
-        <record id="action_hr_expense_submit" model="ir.values">
-            <field name="name">Submit To Manager</field>
-            <field name="model_id" ref="model_hr_expense"/>
-            <field name="model">hr.expense</field>
-            <field name="key2">client_action_multi</field>
-            <field eval="'ir.actions.server,%d'%hr_expense_submit_action_server" name="value"/>
         </record>
 
         <menuitem id="menu_hr_expense_root" name="Expenses" sequence="100" web_icon="hr_expense,static/description/icon.png"/>

@@ -681,6 +681,8 @@ class GroupsView(models.Model):
     def create(self, values):
         user = super(GroupsView, self).create(values)
         self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return user
@@ -689,6 +691,8 @@ class GroupsView(models.Model):
     def write(self, values):
         res = super(GroupsView, self).write(values)
         self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -697,6 +701,8 @@ class GroupsView(models.Model):
     def unlink(self):
         res = super(GroupsView, self).unlink()
         self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res

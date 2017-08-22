@@ -715,8 +715,9 @@
             'Mark as Lost' in action dropdown
         -->
         <record id="action_mark_as_lost" model="ir.actions.server">
-            <field name="name">Crm: Mark Leads as lost</field>
+            <field name="name">Mark as lost</field>
             <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
 if record:
@@ -724,13 +725,6 @@ if record:
     action_values.update({'context': env.context})
     action = action_values
             </field>
-        </record>
-
-        <record id="ir_mark_as_lost" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'crm.lead'" name="model"/>
-            <field name="name">Mark as lost</field>
-            <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 
         <!--
