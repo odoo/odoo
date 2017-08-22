@@ -682,21 +682,12 @@
             <field name="name">Survey: Clean test answers</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_survey_survey" />
+            <field name="binding_model_id" ref="model_survey_survey" />
             <field name="state">code</field>
             <field name="code">
 if records:
     env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
             </field>
-        </record>
-
-        <record id="survey_values_action_clean_test_answers" model="ir.values">
-            <field name="name">Survey clean test answers</field>
-            <field name="action_id" ref="survey_action_server_clean_test_answers" />
-            <field name="value" eval="'ir.actions.server,' + str(ref('survey_action_server_clean_test_answers'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_survey_survey" />
-            <field name="model">survey.survey</field>
-            <field name="key2">client_action_multi</field>
         </record>
 
         <!-- MENU ELEMENTS -->

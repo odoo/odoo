@@ -50,20 +50,6 @@
                </search>
             </field>
         </record>
-        <record id="action_module_open_categ" model="ir.actions.act_window">
-            <field name="name">Apps</field>
-            <field name="res_model">ir.module.module</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
-            <field name="domain">[('category_id','=',active_id)]</field>
-        </record>
-        <record id="ir_action_module_category" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'ir.module.category'" name="model"/>
-            <field name="name">Categorized Apps</field>
-            <field eval="'ir.actions.act_window,%d'%action_module_open_categ" name="value"/>
-        </record>
-
 
         <!-- Modules -->
         <record id="module_form" model="ir.ui.view">

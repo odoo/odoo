@@ -91,10 +91,6 @@ class Ref(YamlTag):
     def __str__(self):
         return 'ref(%s)' % repr(self.expr)
     
-class IrSet(YamlTag):
-    def __init__(self):
-        super(IrSet, self).__init__()
-
 def assert_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Assert(**kwargs)
@@ -149,10 +145,6 @@ def ref_constructor(loader, tag_suffix, node):
         kwargs = loader.construct_mapping(node)
     return Ref(**kwargs)
     
-def ir_set_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return IrSet(**kwargs)
-    
 # Registers constructors for custom tags.
 # Constructors are actually defined globally: do not redefined them in another
 # class/file/package.  This means that module recorder need import this file.
@@ -169,5 +161,4 @@ def add_constructors():
     yaml.add_constructor(u"!url", url_constructor)
     yaml.add_constructor(u"!eval", eval_constructor)
     yaml.add_multi_constructor(u"!ref", ref_constructor)
-    yaml.add_constructor(u"!ir_set", ir_set_constructor)
 add_constructors()

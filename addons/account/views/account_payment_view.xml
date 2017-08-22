@@ -328,18 +328,10 @@
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="code">
 records.post()
             </field>
-        </record>
-
-        <record id="account_confirm_payments" model="ir.values">
-            <field name="model_id" ref="account.model_account_payment"/>
-            <field name="name">Confirm Payments</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_confirm_payments'))" />
-            <field name="key">action</field>
-            <field name="model">account.payment</field>
         </record>
 
     </data>

@@ -696,13 +696,6 @@ action = model.activate_sample_project()
             <field name="context">{'project_id':active_id}</field>
         </record>
 
-        <record id="ir_project_task_open" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'project.project'" name="model"/>
-            <field name="name">View project's tasks</field>
-            <field eval="'ir.actions.act_window,'+str(dblc_proj)" name="value"/>
-        </record>
-
         <!-- Task types -->
         <record id="task_type_search" model="ir.ui.view">
             <field name="name">project.task.type.search</field>

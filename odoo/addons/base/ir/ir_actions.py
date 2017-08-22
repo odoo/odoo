@@ -8,6 +8,7 @@ from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools import pycompat
 from odoo.http import request
 
+from collections import defaultdict
 import datetime
 import dateutil
 import logging
@@ -29,6 +30,11 @@ class IrActions(models.Model):
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
                        translate=True)
+    binding_model_id = fields.Many2one('ir.model', ondelete='cascade',
+                                       help="Setting a value makes this action available in the sidebar for the given model.")
+    binding_type = fields.Selection([('action', 'Action'),
+                                     ('report', 'Report')],
+                                    required=True, default='action')
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -38,6 +44,8 @@ class IrActions(models.Model):
     @api.model
     def create(self, vals):
         res = super(IrActions, self).create(vals)
+        # self.get_bindings() depends on action records
+        self.clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -45,6 +53,8 @@ class IrActions(models.Model):
     @api.multi
     def write(self, vals):
         res = super(IrActions, self).write(vals)
+        # self.get_bindings() depends on action records
+        self.clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -56,6 +66,8 @@ class IrActions(models.Model):
         todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
         todos.unlink()
         res = super(IrActions, self).unlink()
+        # self.get_bindings() depends on action records
+        self.clear_caches()
         # ir_values.get_actions() depends on action records
         self.env['ir.values'].clear_caches()
         return res
@@ -71,6 +83,38 @@ class IrActions(models.Model):
             'dateutil': dateutil,
             'timezone': timezone,
         }
+
+    @api.model
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
+    def get_bindings(self, model_name):
+        """ Retrieve the list of actions bound to the given model.
+
+           :return: a dict mapping binding types to a list of dict describing
+                    actions, where the latter is given by calling the method
+                    ``read`` on the action record.
+        """
+        cr = self.env.cr
+        query = """ SELECT a.id, a.type, a.binding_type
+                    FROM ir_actions a, ir_model m
+                    WHERE a.binding_model_id=m.id AND m.model=%s
+                    ORDER BY a.id """
+        cr.execute(query, [model_name])
+
+        # discard unauthorized actions, and read action definitions
+        result = defaultdict(list)
+        user_groups = self.env.user.groups_id
+        for action_id, action_model, binding_type in cr.fetchall():
+            try:
+                action = self.env[action_model].browse(action_id)
+                action_groups = getattr(action, 'groups_id', ())
+                if action_groups and not action_groups & user_groups:
+                    # the user may not perform this action
+                    continue
+                result[binding_type].append(action.read()[0])
+            except (AccessError, MissingError):
+                continue
+
+        return result
 
 
 class IrActionsActWindow(models.Model):
@@ -320,9 +364,6 @@ class IrActionsServer(models.Model):
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade',
                                help="Model on which the server action runs.")
     model_name = fields.Char(related='model_id.model', readonly=True, store=True)
-    menu_ir_values_id = fields.Many2one('ir.values', string='Action on Object',
-                                        copy=False, readonly=True,
-                                        help='IrValues entry of the related more menu entry action')
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
@@ -365,25 +406,15 @@ class IrActionsServer(models.Model):
     def create_action(self):
         """ Create a contextual action for each server action. """
         for action in self:
-            ir_values = self.env['ir.values'].sudo().create({
-                'name': _('Run %s') % action.name,
-                'model': action.model_id.model,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.server,%s" % action.id,
-            })
-            action.write({'menu_ir_values_id': ir_values.id})
+            action.write({'binding_model_id': action.model_id.id,
+                          'binding_type': 'action'})
         return True
 
     @api.multi
     def unlink_action(self):
         """ Remove the contextual actions created for the server actions. """
         self.check_access_rights('write', raise_exception=True)
-        for action in self:
-            if action.menu_ir_values_id:
-                try:
-                    action.menu_ir_values_id.sudo().unlink()
-                except Exception:
-                    raise UserError(_('Deletion of the action record failed.'))
+        self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
     @api.model

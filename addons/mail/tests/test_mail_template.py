@@ -129,15 +129,13 @@ class TestMailTemplate(TestMail):
     def test_add_context_action(self):
         self.email_template.create_action()
 
-        # check template act_window and ir_values has been updated
+        # check template act_window has been updated
         self.assertTrue(bool(self.email_template.ref_ir_act_window))
-        self.assertTrue(bool(self.email_template.ref_ir_value))
 
         # check those records
         action = self.email_template.ref_ir_act_window
         self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
-        value = self.email_template.ref_ir_value
-        self.assertEqual(value.name, 'Send Mail (%s)' % self.email_template.name)
+        self.assertEqual(action.binding_model_id.model, 'mail.test')
 
     def test_set_scheduled_date_on_a_template(self):
         self.email_template_in_2_days = self.email_template.copy()
