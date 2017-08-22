@@ -49,19 +49,17 @@
             <field name="arch" type="xml">
                 <pivot string="Timesheet">
                     <field name="employee_id" type="row"/>
-                    <field name="date" interval="month" type="col" groups="base.group_no_one"/>
-                    <field name="unit_amount" type="measure"/>
+                    <field name="date" interval="month" type="col" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="unit_amount" type="measure" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="product_uom_id" groups="product.group_uom"/>
-                    <field name="code" groups="base.group_no_one"/>
-                    <field name="create_date" groups="base.group_no_one"/>
-                    <field name="write_date" groups="base.group_no_one"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="create_uid" groups="base.group_no_one"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="account_id" groups="account.group_account_manager"/>
+                    <field name="project_id" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="move_id" groups="base.group_no_one"/>
-                    <field name="analytic_amount_currency" groups="analytic.group_analytic_accounting"/>
+                    <field name="name" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="task_id" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="amount" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </pivot>
             </field>
         </record>

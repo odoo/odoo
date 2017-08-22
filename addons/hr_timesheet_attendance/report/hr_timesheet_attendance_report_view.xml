@@ -28,7 +28,7 @@
             <field name="arch" type="xml">
                 <pivot string="timesheet attendance">
                     <field name="user_id" type="row"/>
-                    <field name="date" interval="day" type="col" groups="base.group_no_one"/>
+                    <field name="date" interval="day" type="col"/>
                     <field name="total_difference" type="measure" widget="float_time"/>
                     <field name="total_timesheet" type="measure" widget="float_time"/>
                     <field name="total_attendance" type="measure" widget="float_time"/>
