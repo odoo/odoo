@@ -24,7 +24,7 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='bank_statement']" position="after">
+                <xpath expr="//div[@name='advanced_info']" position="inside">
                     <group string="Point of Sale">
                         <field name="journal_user"/>
                     </group>
