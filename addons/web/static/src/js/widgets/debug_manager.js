@@ -349,6 +349,20 @@ DebugManager.include({
     },
     set_defaults: function() {
         var self = this;
+
+        var display = function (fieldInfo, value) {
+            var displayed = value;
+            if (value && fieldInfo.type === 'many2one') {
+                displayed = value.data.display_name;
+                value = value.data.id;
+            } else if (value && fieldInfo.type === 'selection') {
+                displayed = _.find(fieldInfo.selection, function (option) {
+                    return option[0] === value;
+                })[1];
+            }
+            return [value, displayed];
+        };
+
         var renderer = this._active_view.controller.renderer;
         var fields = self._active_view.fields_view.fields;
         var fieldsInfo = self._active_view.fields_view.fieldsInfo.form;
@@ -369,17 +383,10 @@ DebugManager.include({
                     invisibleOrReadOnly = evaluatedModifiers.invisible || evaluatedModifiers.readonly;
                 }
                 var fieldInfo = fields[fieldName];
-                var value = fieldsValues[fieldName];
-                var displayed = value;
-                if (value && fieldInfo.type === 'many2one') {
-                    displayed = value.data.display_name;
-                    value = value.data.id;
-                } else if (value && fieldInfo.type === 'selection') {
-                    displayed = _.find(fieldInfo.selection, function (option) {
-                        return option[0] === value;
-                    })[1];
-                }
-                // ignore fields which are empty, invisible, readonly, o2m
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
                 if (!value || invisibleOrReadOnly || fieldInfo.type === 'one2many' ||
                     fieldInfo.type === 'many2many' || fieldInfo.type === 'binary' ||
@@ -396,6 +403,25 @@ DebugManager.include({
             .compact()
             .sortBy(function (field) { return field.string; })
             .value();
+
+        var conditions = _.chain(fieldNamesInView)
+            .filter(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                return fieldInfo.change_default;
+            })
+            .map(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                return {
+                    name: fieldName,
+                    string: fieldInfo.string,
+                    value: value,
+                    displayed: displayed,
+                };
+            })
+            .value();
         var d = new Dialog(this, {
             title: _t("Set Default"),
             buttons: [
@@ -408,6 +434,7 @@ DebugManager.include({
                         return;
                     }
                     var allUsers = d.$el.find('#formview_default_all').is(':checked');
+                    var condition = d.$el.find('#formview_default_conditions').val();
                     var value = _.find(self.fields, function (field) {
                         return field.name === fieldToSet;
                     }).value;
@@ -420,7 +447,7 @@ DebugManager.include({
                             value,
                             allUsers,
                             true,
-                            false
+                            condition || false,
                         ],
                     }).done(function () { d.close(); });
                 }}
@@ -428,11 +455,7 @@ DebugManager.include({
         });
         d.args = {
             fields: this.fields,
-            // @FIXME
-            // The conditions part has been dropped from now on because the flag 'change_default'
-            // disappeared during the web client refactoring. Should be implemented again in the
-            // right place.
-            conditions: [],
+            conditions: conditions,
         };
         d.template = 'FormView.set_default';
         d.open();
