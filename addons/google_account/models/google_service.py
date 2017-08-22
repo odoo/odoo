@@ -8,6 +8,7 @@ import urllib2
 import werkzeug.urls
 
 from odoo import api, fields, models, registry, _
+from odoo.exceptions import UserError
 from odoo.http import request
 
 
@@ -123,6 +124,9 @@ class GoogleService(models.TransientModel):
         Parameters = self.env['ir.config_parameter'].sudo()
         client_id = Parameters.get_param('google_%s_client_id' % (service,), default=False)
         client_secret = Parameters.get_param('google_%s_client_secret' % (service,), default=False)
+
+        if not client_id or not client_secret:
+            raise UserError(_("The account for the Google service '%s' is not configured") % service)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = werkzeug.url_encode({
