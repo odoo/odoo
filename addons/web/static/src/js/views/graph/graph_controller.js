@@ -102,10 +102,20 @@ var GraphController = AbstractController.extend({
         });
     },
     /**
+     * @private
+     */
+    _update: function () {
+        this._updateButtons();
+        return this._super.apply(this, arguments);
+    },
+    /**
      * makes sure that the buttons in the control panel matches the current
      * state (so, correct active buttons and stuff like that)
      */
     _updateButtons: function () {
+        if (!this.$buttons) {
+            return;
+        }
         var state = this.model.get();
         this.$buttons.find('.o_graph_button').removeClass('active');
         this.$buttons

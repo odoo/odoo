@@ -87,9 +87,9 @@ var PivotView = AbstractView.extend({
             activeMeasures.push('__count');
         }
 
-        this.loadParams.measures = params.context.pivot_measures || activeMeasures;
-        this.loadParams.colGroupBys = params.context.pivot_column_groupby || colGroupBys;
-        this.loadParams.rowGroupBys = params.context.pivot_row_groupby || rowGroupBys;
+        this.loadParams.measures = activeMeasures;
+        this.loadParams.colGroupBys = colGroupBys;
+        this.loadParams.rowGroupBys = rowGroupBys;
         this.loadParams.fields = fields;
 
         this.controllerParams.title = params.title || arch.attrs.string || _t("Untitled");
