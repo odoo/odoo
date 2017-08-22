@@ -176,11 +176,8 @@
         margin: 0 @o-kanban-record-margin -1px;
         .clearfix();
 
-        &:after, &:before {
-            .square(0);
-        }
-
-        // Kanban Record - Inner Sections
+        // ------- Kanban Record,  v11 Layout -------
+        // Inner Sections
         .o_kanban_record_top, .o_kanban_record_body  {
             margin-bottom: @o-kanban-inner-hmargin;
         }
@@ -300,8 +297,10 @@
             .o-flex(1, 1, 350px);
         }
 
+        // -------  v11 Layout + generic layouts (~v10) -------
         // Kanban Record - Dropdown
         .o_dropdown_kanban {
+            .o-position-absolute(@o-kanban-inside-vgutter,@o-kanban-inside-hgutter);
             visibility: hidden;
 
             @media (max-width: @screen-xs-max){
