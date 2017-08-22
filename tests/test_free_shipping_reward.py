@@ -24,6 +24,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'partner_id': self.steve.id,
         })
 
+        # Price of order will be 5*1.15 = 5.75 (tax included)
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_B.id,
@@ -40,6 +41,24 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
 
+        # Test Case 1b: amount is not reached but is on a threshold
+        # The amount of deliverable product + the one of the delivery exceeds the minimum amount
+        # yet the program shouldn't be applied
+
+        # Order price will be 5.75 + 81.74*1.15 = 99.75
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_B.id,
+                'name': 'Product 1B',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 81.74,
+            })
+        ]})
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3)
+
         # Test case 2: the amount is sufficient, the shipping should
         # be reimbursed
         order.write({'order_line': [
@@ -53,11 +72,11 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         ]})
 
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 4)
+        self.assertEqual(len(order.order_line.ids), 5)
 
         # Test case 3: the amount is not sufficient now, the reward should be removed
         order.write({'order_line': [
             (2, order.order_line.filtered(lambda line: line.product_id.id == self.product_A.id).id, False)
         ]})
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2)
+        self.assertEqual(len(order.order_line.ids), 3)
