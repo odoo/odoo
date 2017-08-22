@@ -518,16 +518,13 @@ class Task(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         default_partner_id = self.env.context.get('default_partner_id')
-        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else None
+        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else self.env['res.partner']
         if self.project_id:
             self.partner_id = self.project_id.partner_id or default_partner
             if self.project_id not in self.stage_id.project_ids:
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
-            if not self.email_from:
-                self.email_from = self.partner_id.email
         else:
             self.partner_id = default_partner
-            self.email_from = default_partner.email
             self.stage_id = False
 
     @api.onchange('user_id')
