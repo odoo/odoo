@@ -24,7 +24,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'wizard/account_move_reversal_view.xml',
         'views/account_view.xml',
         'views/account_report.xml',
-        'data/email_template_data_invoice.xml',
+        'data/mail_template_data.xml',
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_validate_move_view.xml',
         'wizard/account_invoice_state_view.xml',
