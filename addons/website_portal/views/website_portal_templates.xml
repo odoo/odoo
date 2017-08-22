@@ -126,7 +126,7 @@
                             <div class="o_my_contact" t-if="sales_rep">
                                 <t t-call="website_portal.contact"/>
                             </div>
-                            <div class="o_my_details">
+                            <div class="o_my_details" t-if="not hide_current_user and user">
                                 <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                                 <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                             </div>
@@ -167,18 +167,10 @@
     </template>
 
     <template id="details">
-        <t t-call="website.layout">
+        <t t-call="website_portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
             <div id="wrap">
                 <div class="container">
-                  <div class="row">
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb mt8">
-                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                                <li>Details</li>
-                            </ol>
-                        </div>
-                    </div>
                     <h1>Contact Details</h1>
                     <form action="/my/account" method="post">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
