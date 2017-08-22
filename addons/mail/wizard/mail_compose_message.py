@@ -294,6 +294,9 @@ class MailComposer(models.TransientModel):
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
             }
+            if self.model in self.env and hasattr(self.env[self.model], 'message_get_email_values'):
+                mail_values.update(self.env[self.model].browse(res_id).message_get_email_values())
+
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
