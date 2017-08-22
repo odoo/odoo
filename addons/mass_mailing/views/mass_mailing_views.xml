@@ -154,14 +154,15 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <pivot string="Contacts" stacked="True">
-                    <field name="create_date" type="row" groups="base.group_no_one"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="create_uid" groups="base.group_no_one"/>
-                    <field name="opt_out" groups="base.group_no_one"/>
-                    <field name="message_last_post" groups="base.group_no_one"/>
+                    <field name="create_date" type="row" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="opt_out" groups="mass_mailing.group_mass_mailing_user"/>
                     <field name="company_name" groups="base.group_multi_company"/>
-                    <field name="unsubscription_date" groups="base.group_no_one"/>
-                    <field name="write_date" groups="base.group_no_one"/>
+                    <field name="unsubscription_date" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="message_bounce" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="email" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="country_id" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="name" groups="mass_mailing.group_mass_mailing_user"/>
+                    <field name="title_id" groups="mass_mailing.group_mass_mailing_user"/>
                     <field name="message_bounce" groups="mass_mailing.group_mass_mailing_user"/>
                 </pivot>
             </field>
