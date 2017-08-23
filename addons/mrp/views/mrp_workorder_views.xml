@@ -152,6 +152,9 @@
                             <field name="product_qty" readonly="1"/>
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
                             <field name="qty_done"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
                             <field name="move_id" invisible="1"/>
                             <field name="done_wo" invisible="1"/>
                         </tree>
