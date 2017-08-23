@@ -97,6 +97,13 @@ class AccountAnalyticLine(models.Model):
         if self.env.context.get('create'):  # avoid bad loop
             return result
 
+        # find the timesheet UoM
+        timesheet_uom = self.product_uom_id
+        if values.get('product_uom_id'):
+            timesheet_uom = self.env['product.uom'].browse(values['product_uom_id'])
+        if not timesheet_uom:  # fallback on default company timesheet UoM
+            timesheet_uom = self.env.user.company_id.project_time_mode_id
+
         unit_amount = values.get('unit_amount', 0.0) or self.unit_amount
         billable_type = 'non_billable'
         revenue = 0.0
@@ -108,15 +115,17 @@ class AccountAnalyticLine(models.Model):
             # find the analytic account to convert revenue into its currency
             account_id = values.get('account_id') or self.account_id.id
             analytic_account = self.env['account.analytic.account'].browse(account_id)
+            # convert the unit of mesure into hours
+            sale_price_hour = so_line.product_uom._compute_price(so_line.price_unit, timesheet_uom)
+            sale_price = so_line.currency_id.compute(sale_price_hour, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
             # calculate the revenue on the timesheet
             if so_line.product_id.invoice_policy == 'delivery':
-                sale_price_unit = so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
-                revenue = analytic_account.currency_id.round(unit_amount * sale_price_unit * (1-so_line.discount))
+                revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-so_line.discount))
                 billable_type = 'billable_time'
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.track_service == 'task':
+                quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
                 # compute the total revenue the SO since we are in fixed price
-                sale_price_unit = so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id)
-                total_revenue_so = analytic_account.currency_id.round(so_line.product_uom_qty * sale_price_unit * (1-so_line.discount))
+                total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-so_line.discount))
                 # compute the total revenue already existing (without the current timesheet line)
                 domain = [('so_line', '=', so_line.id)]
                 if self.ids:
