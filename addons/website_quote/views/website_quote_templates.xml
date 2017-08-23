@@ -306,7 +306,7 @@
                               </div>
                             </div>
                             <div class="modal-footer">
-                                <div t-if="not acquirers">
+                                <div t-if="not (pms or s2s_acquirers or form_acquirers)">
                                   <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button>
                                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 </div>
@@ -327,48 +327,18 @@
                                   t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                             </p>
-                          </div>
-                          <div class="modal-footer">
-                              <!-- begin website_sale code -->
-                              <div t-if="acquirers" id="payment_method" class="row text-left">
-                                <div class="col-md-6">
-                                  <h4>Payment Acquirer:</h4>
-                                  <ul class="list-unstyled">
-                                    <t t-set="payment_methods_available" t-value="False"/>
-                                    <li t-foreach="acquirers or []" t-as="acquirer">
-                                      <t t-if="not acquirer.country_ids or quotation and quotation.partner_id.country_id in acquirer.country_ids">
-                                        <label t-if="buttons.get(acquirer.id)">
-                                            <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
-                                            <img class="media-object" style="width: 60px; display: inline-block;"
-                                                t-att-title="acquirer.name"
-                                                t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
-                                                <span t-field="acquirer.name"/>
-                                        </label>
-                                        <t t-set="payment_methods_available" t-value="True"/>
-                                      </t>
-                                    </li>
-                                    <li t-if="not payment_methods_available">
-                                      <div class="alert alert-warning">
-                                        <span>No payment gateway is available for your country</span>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div class="col-md-6">
-                                    <t t-foreach="acquirers or []" t-as="acquirer">
-                                        <div class="o_payment_acquirer_button hidden pull-right"
-                                                t-att-data-id="acquirer.id"
-                                                t-att-data-access-token="token or ''"
-                                                t-att-data-tx-type="form"
-                                                t-att-data-call-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
-                                            <div t-raw="buttons.get(acquirer.id)"/>
-                                            <div t-field="acquirer.pre_msg"/>
-                                        </div>
-                                    </t>
-                                    <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
-                                </div>
-                              </div>
-                              <!-- end website_sale code -->
+                        </div>
+                        <div class="modal-footer">
+                            <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
+                                <h3 class="mb24">Pay with</h3>
+                                <t t-call="payment.payment_tokens_list">
+                                    <t t-set="mode" t-value="'payment'"/>
+                                    <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
+                                    <t t-set="icon_class" t-value="'fa-lock'"/>
+                                    <t t-set="form_action" t-value="'/quote/' + str(quotation.id) + '/transaction/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/quote/' + str(quotation.id) + '/transaction/'"/>
+                                </t>
+                            </div>
                           </div>
                         </div>
                       </div>
