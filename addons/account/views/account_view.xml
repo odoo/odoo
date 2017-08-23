@@ -208,20 +208,6 @@
             res_model="account.move.line"
             src_model="res.partner"/>
 
-        <act_window
-            id="act_account_tax_net_posted"
-            name="Net Tax Lines (Posted)"
-            res_model="account.move.line"
-            context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"/>
-
-        <act_window
-            id="act_account_tax_tax_posted"
-            name="Tax Lines (Posted)"
-            res_model="account.move.line"
-            context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"/>
-
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -436,7 +422,8 @@
            name="Journal Items"
            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.move.line"
-           src_model="account.journal"/>
+           src_model="account.journal"
+           view_mode="tree"/>
 
         <!-- Tags -->
         <record id="account_tag_view_form" model="ir.ui.view">
@@ -1084,44 +1071,39 @@
             <field name="arch" type="xml">
                 <form string="Journal Item">
                     <sheet>
+                        <field name="company_id" invisible="1"/>
+                        <field name="parent_state" invisible="1"/>
                         <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="ref"/>
-                                <field name="partner_id"
-                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
-                            </group>
-                            <group>
-                                <field name="journal_id"/>
-                                <field name="date"/>
-                                <field name="company_id" required="1" groups="base.group_multi_company"/>
-                            </group>
+                            <field name="name"/>
+                            <field name="partner_id"
+                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" domain="[('company_id', '=', company_id)]"/>
-                                        <field name="debit"/>
-                                        <field name="credit"/>
+                                        <field name="account_id" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="debit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="credit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="quantity"/>
                                     </group>
                                     <group string="Accounting Documents">
-                                        <field name="move_id" required="False"/>
-                                        <field name="statement_id" readonly="True"/>
+                                        <field name="move_id" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
+                                        <field name="invoice_id" attrs="{'invisible': [('invoice_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
                                         <field name="date_maturity"/>
                                     </group>
-                                    <group string="Taxes">
-                                        <field name="tax_line_id" readonly="1"/>
-                                        <field name="tax_ids" widget="many2many_tags" readonly="1"/>
+
+                                    <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
+                                        <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
+                                        <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                     </group>
-                                    <group string="Matching">
+                                    <group string="Matching" attrs="{'invisible':[('full_reconcile_id','=',False)]}">
                                         <label for="full_reconcile_id"/>
                                         <div>
                                             <field name="full_reconcile_id"/>
-                                            <field name="reconciled" invisible="1"/>
                                             <field name="matched_debit_ids" invisible="1"/>
                                             <field name="matched_credit_ids" invisible="1"/>
                                             <button name="open_reconcile_view"
@@ -1147,54 +1129,11 @@
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
                             </page>
                             <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+                                <field name="date" invisible="1"/>
                                 <field name="analytic_line_ids" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
                         </notebook>
                     </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="view_move_line_form2" model="ir.ui.view">
-            <field name="name">account.move.line.form2</field>
-            <field name="model">account.move.line</field>
-            <field eval="9" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Journal Item">
-                    <notebook colspan="4">
-                        <page string="Information">
-                            <group col="4">
-                                <separator colspan="4" string="General Information"/>
-                                <field name="name"/>
-                                <field name="date"/>
-                                <field name="journal_id" readonly="False"/>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
-                                <field name="partner_id"
-                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
-                                <newline/>
-                                <field name="debit"/>
-                                <field name="credit"/>
-
-                                <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
-                                <field name="quantity"/>
-                                <field name="move_id" required="False"/>
-                                <newline/>
-                                <field name="date_maturity"/>
-                                <field name="blocked"/>
-                                <newline/>
-                                <field name="tax_ids" readonly="1"/>
-                                <field name="tax_line_id" readonly="1"/>
-                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                <separator colspan="4" string="Status"/>
-                                <newline/>
-                                <field name="full_reconcile_id"/>
-                            </group>
-                        </page>
-                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-                            <field name="analytic_line_ids"/>
-                        </page>
-                    </notebook>
                 </form>
             </field>
         </record>
@@ -1315,9 +1254,9 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="view_mode">tree,form,pivot</field>
+            <field name="view_mode">tree,pivot,graph,form</field>
         </record>
-        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries" sequence="1" groups="base.group_no_one" />
+        <menuitem action="action_account_moves_all_a" id="menu_action_account_moves_all" parent="account.menu_finance_entries" sequence="1" groups="group_account_manager" />
         <record id="action_account_moves_all_tree" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
@@ -1543,7 +1482,8 @@
             name="Journal Items"
             context="{'search_default_move_id': active_id, 'default_move_id': active_id}"
             res_model="account.move.line"
-            src_model="account.move"/>
+            src_model="account.move"
+            view_mode="tree"/>
 
         <!-- Full Reconcile -->
         <record id="view_full_reconcile_form" model="ir.ui.view">
@@ -2106,7 +2046,7 @@
         <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="101"/>
 
         <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
-        
+
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>
