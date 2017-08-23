@@ -493,8 +493,7 @@ var KanbanRecord = Widget.extend({
      */
     _onManageTogglerClicked: function (event) {
         event.preventDefault();
-        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        this.$el.toggleClass('o_dropdown_open');
         var colorClass = this._getColorClassname(this.recordData.color || 0);
         this.$('.o_kanban_manage_button_section').toggleClass(colorClass);
     },
