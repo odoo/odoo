@@ -149,7 +149,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the credit notes'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -368,6 +368,12 @@ class AccountMoveLine(models.Model):
             else:
                 move_line.tax_base_amount = 0
 
+    @api.depends('move_id')
+    def _compute_parent_state(self):
+        for record in self:
+            if record.move_id:
+                self.parent_state = self.move_id.state
+
     @api.one
     @api.depends('move_id.line_ids')
     def _get_counterpart(self):
@@ -439,6 +445,7 @@ class AccountMoveLine(models.Model):
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
         help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
+    parent_state = fields.Char(compute="_compute_parent_state", help="State of the parent account.move")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
