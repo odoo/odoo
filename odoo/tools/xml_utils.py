@@ -39,4 +39,4 @@ def create_xml_node(parent_node, node_name, node_value=None):
     :param node_name: string
     :param node_value: string
     """
-    return create_xml_node_chain(parent_node, [node_name], node_value, node_name)[0]
+    return create_xml_node_chain(parent_node, [node_name], node_value)[0]
