@@ -60,8 +60,7 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one(
-        'product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]})
+    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
@@ -72,11 +71,11 @@ class StockMove(models.Model):
         help="It specifies attributes of packaging like type, quantity of packaging,etc.")
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
-        auto_join=True, index=True, required=True, states={'done': [('readonly', True)]},
+        auto_join=True, index=True, required=True,
         help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location',
-        auto_join=True, index=True, required=True, states={'done': [('readonly', True)]},
+        auto_join=True, index=True, required=True,
         help="Location where the system will stock the finished products.")
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
@@ -148,19 +147,18 @@ class StockMove(models.Model):
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
-    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set',
-                                 states={'done': [('readonly', True)]})
+    quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set')
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     product_type = fields.Selection(related='product_id.type', readonly=True)
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
-    is_editable = fields.Boolean('Is editable when done', compute='_compute_is_editable')
+    is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
 
     @api.multi
-    @api.depends('has_tracking', 'move_line_ids', 'location_id', 'location_dest_id', 'is_editable')
+    @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
@@ -170,17 +168,13 @@ class StockMove(models.Model):
                 move.show_details_visible = False
                 continue
 
-            if move.is_editable:
-                move.show_details_visible = True
-                continue
-
             multi_locations_enabled = False
             if self.user_has_groups('stock.group_stock_multi_locations'):
                 multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
             has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
             consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
             if move.picking_id.picking_type_id.show_operations is False\
-                    and move.state not in ['cancel', 'draft', 'confirmed']\
+                    and move.state != 'draft'\
                     and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
                 move.show_details_visible = True
             else:
@@ -195,17 +189,15 @@ class StockMove(models.Model):
             move.show_reserved_availability = not move.location_id.usage == 'supplier'
 
     @api.multi
-    def _compute_is_editable(self):
-        """ This field is only of use in an attrs in the picking view, in order to show
-        the button to edit move when they're done.
-        """
-        for move in self:
-            move.is_editable = move.state == 'done' and self.user_has_groups('stock.group_stock_manager')
-
-    @api.multi
+    @api.depends('state', 'picking_id')
     def _compute_is_initial_demand_editable(self):
         for move in self:
-            move.is_initial_demand_editable = move.state not in ['done', 'cancel'] and self.user_has_groups('stock.group_stock_manager')
+            if move.state == 'draft':
+                move.is_initial_demand_editable = True
+            elif move.state != 'done' and move.picking_id and not move.picking_id.is_locked:
+                move.is_initial_demand_editable = True
+            else:
+                move.is_initial_demand_editable = False
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -319,7 +311,11 @@ class StockMove(models.Model):
         defaults = super(StockMove, self).default_get(fields_list)
         if self.env.context.get('default_picking_id'):
             picking_id = self.env['stock.picking'].browse(self.env.context['default_picking_id'])
-            if picking_id.state not in ['draft', 'confirmed']:
+            if picking_id.state == 'done':
+                defaults['state'] = 'done'
+                defaults['product_uom_qty'] = 0.0
+                defaults['additional'] = True
+            elif picking_id.state not in ['draft', 'confirmed']:
                 defaults['state'] = 'assigned'
                 defaults['product_uom_qty'] = 0.0
                 defaults['additional'] = True
@@ -359,10 +355,6 @@ class StockMove(models.Model):
 
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
-        # Check that we do not modify a stock.move which is done
-        frozen_fields = ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id']
-        if any(fname in frozen_fields for fname in vals) and any(move.state == 'done' for move in self):
-            raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
         #propagation of expected date:
