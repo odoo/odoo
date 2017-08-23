@@ -464,14 +464,14 @@
                                     <div attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
                                         <field name="working_days_open" class="oe_inline mr8"/>
                                         <strong><span class="mr8">Days</span></strong>
-                                        <field name="working_hours_open" class="oe_inline mr8"/>
+                                        <field name="working_hours_open" class="oe_inline mr8" widget="float_time"/>
                                         <strong><span>Hours</span></strong>
                                     </div>
                                     <label string="Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}"/>
                                     <div attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
                                         <field name="working_days_close" class="oe_inline mr8"/>
                                         <strong><span class="mr8">Days</span></strong>
-                                        <field name="working_hours_close" class="oe_inline mr8"/>
+                                        <field name="working_hours_close" class="oe_inline mr8" widget="float_time"/>
                                         <strong><span>Hours</span></strong>
                                     </div>
                                     <label string="Assigning Date" groups="base.group_no_one"/>

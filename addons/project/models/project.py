@@ -468,8 +468,8 @@ class Task(models.Model):
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
-    working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
-    working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
+    working_days_open = fields.Integer(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
+    working_days_close = fields.Integer(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -488,15 +488,17 @@ class Task(models.Model):
 
             if task.date_assign:
                 dt_date_assign = fields.Datetime.from_string(task.date_assign)
-                task.working_hours_open = task.project_id.resource_calendar_id.get_work_hours_count(
+                resourse_working_hour_start = task.project_id.resource_calendar_id.get_work_hours_count(
                         dt_create_date, dt_date_assign, False, compute_leaves=True)
-                task.working_days_open = task.working_hours_open / 24.0
+                task.working_days_open = int(resourse_working_hour_start / 24.0)
+                task.working_hours_open = (resourse_working_hour_start - (task.working_days_open * 24.0))
 
             if task.date_end:
                 dt_date_end = fields.Datetime.from_string(task.date_end)
-                task.working_hours_close = task.project_id.resource_calendar_id.get_work_hours_count(
+                resourse_working_hour_close = task.project_id.resource_calendar_id.get_work_hours_count(
                     dt_create_date, dt_date_end, False, compute_leaves=True)
-                task.working_days_close = task.working_hours_close / 24.0
+                task.working_days_close = int(resourse_working_hour_close / 24.0)
+                task.working_hours_close = (resourse_working_hour_close - (task.working_days_close * 24.0))
 
         (self - task_linked_to_calendar).update(dict.fromkeys(
             ['working_hours_open', 'working_hours_close', 'working_days_open', 'working_days_close'], 0.0))
