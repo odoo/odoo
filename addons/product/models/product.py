@@ -131,8 +131,9 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
-        help="Cost used for standard stock valuation in accounting and used as a base price on purchase orders. "
-             "Expressed in the default unit of measure of the product.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume', help="The volume in m3.")
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
