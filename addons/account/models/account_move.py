@@ -174,6 +174,7 @@ class AccountMove(models.Model):
             #check the lock date + check if some entries are reconciled
             move.line_ids._update_check()
             move.line_ids.unlink()
+        self.mapped('statement_line_id').write({'move_name': False})
         return super(AccountMove, self).unlink()
 
     @api.multi
