@@ -230,4 +230,37 @@ QUnit.module('pad widget', {
         delete FieldPad.prototype.isPadConfigured;
     });
 
+    QUnit.test('record should be discarded properly even if only pad has changed', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch:'<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="description" widget="pad"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (!args.method) {
+                    return $.when(true);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                userName: "batman",
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$buttons.find('.o_form_button_cancel').click();
+        assert.strictEqual(form.$('.oe_pad_readonly').text(), this.data.task.pad_get_content(),
+            "pad content should not have changed");
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
+
 });

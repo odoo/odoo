@@ -95,8 +95,10 @@ function formatDate(value, field, options) {
     if (value === false) {
         return "";
     }
-    if (!options || !('timezone' in options) || options.timezone) {
-        value = value.clone().add(session.tzOffset < 0 ? -1 : 0, 'days');
+    if (field && field.type === 'datetime') {
+        if (!options || !('timezone' in options) || options.timezone) {
+            value = value.clone().add(session.getTZOffset(value), 'minutes');
+        }
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
@@ -121,7 +123,7 @@ function formatDateTime(value, field, options) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
-        value = value.clone().add(session.tzOffset, 'minutes');
+        value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
@@ -357,11 +359,8 @@ function parseDate(value, field, options) {
         date = moment.utc(value);
     } else {
         date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
-        if (options && options.timezone) {
-            date.add(session.tzOffset > 0 ? -1 : 0, 'days');
-        }
     }
-    if (date.isValid() && date.year() >= 1900) {
+    if (date.isValid()) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
@@ -405,7 +404,7 @@ function parseDateTime(value, field, options) {
     } else {
         datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);
         if (options && options.timezone) {
-            datetime.add(-session.tzOffset, 'minutes');
+            datetime.add(-session.getTZOffset(datetime), 'minutes');
         }
     }
     if (datetime.isValid()) {

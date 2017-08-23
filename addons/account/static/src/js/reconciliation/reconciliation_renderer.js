@@ -24,6 +24,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         "click *[rel='do_action']": "_onDoAction",
         'click button.button_back_to_statement': '_onGoToBankStatement',
         'click button.button_close_statement': '_onCloseBankStatement',
+        'click button.js_load_more': '_onLoadMore',
     },
     /**
      * @override
@@ -87,6 +88,12 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+    /*
+     * hide the button to load more statement line
+     */
+    hideLoadMoreButton: function () {
+        this.$('.js_load_more').hide();
+    },
     /**
      * update the statement rendering
      *
@@ -213,6 +220,14 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             view_type: 'list',
             view_mode: 'form',
         });
+    },
+    /**
+     * Load more statement lines for reconciliation
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onLoadMore: function (e) {
+        this.trigger_up('load_more');
     },
     /**
      * @private

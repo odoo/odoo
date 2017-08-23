@@ -35,12 +35,8 @@ var KanbanModel = BasicModel.extend({
         group.count++;
 
         // update the res_ids and count of the parent
-        var self = this;
-        var parent = this.localData[group.parentID];
-        parent.res_ids =  _.flatten(_.map(parent.data, function (dataPointID) {
-            return self.localData[dataPointID].res_ids;
-        }));
-        parent.count++;
+        this.localData[group.parentID].count++;
+        this._updateParentResIDs(group);
 
         return this._fetchRecord(new_record).then(function (result) {
             return result.id;
@@ -151,6 +147,7 @@ var KanbanModel = BasicModel.extend({
         return this.notifyChanges(recordID, changes).then(function () {
             return self.save(recordID);
         }).then(function () {
+            var resID = self.localData[recordID].res_id;
             // Remove record from its current group
             var old_group;
             for (var i = 0; i < parent.data.length; i++) {
@@ -159,11 +156,14 @@ var KanbanModel = BasicModel.extend({
                 if (index >= 0) {
                     old_group.data.splice(index, 1);
                     old_group.count--;
+                    old_group.res_ids = _.without(old_group.res_ids, resID);
+                    self._updateParentResIDs(old_group);
                     break;
                 }
             }
             // Add record to its new group
             new_group.data.push(recordID);
+            new_group.res_ids.push(resID);
             new_group.count++;
             return [old_group.id, new_group.id];
         });
@@ -201,6 +201,16 @@ var KanbanModel = BasicModel.extend({
                 data.data = _.sortBy(data.data, function (d) {
                     return _.indexOf(resIDs, self.localData[d].res_id);
                 });
+                data.res_ids = [];
+                _.each(data.data, function (d) {
+                    var dataPoint = self.localData[d];
+                    if (dataPoint.type === 'record') {
+                        data.res_ids.push(dataPoint.res_id);
+                    } else {
+                        data.res_ids = data.res_ids.concat(dataPoint.res_ids);
+                    }
+                });
+                self._updateParentResIDs(data);
                 return parentID;
             });
     },

@@ -343,6 +343,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 groupBy: searchResult.groupBy,
                 modelName: self.dataset.model,
                 hasSelectors: !self.options.disable_multiple_selection,
+                readonly: true,
             }, self.options.list_view_options));
             listView.setController(SelectCreateListController);
             return listView.getController(self);
@@ -402,6 +403,7 @@ var SelectCreateDialog = ViewDialog.extend({
             },
         })).open();
         dialog.on('closed', this, this.close.bind(this));
+        return dialog;
     },
 });
 

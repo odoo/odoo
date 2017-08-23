@@ -497,7 +497,7 @@ class WebsiteSale(http.Controller):
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
-            partner_id = Partner.sudo().create(checkout)
+            partner_id = Partner.sudo().create(checkout).id
         elif mode[0] == 'edit':
             partner_id = int(all_values.get('partner_id', 0))
             if partner_id:

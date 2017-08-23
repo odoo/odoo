@@ -256,8 +256,11 @@ function addMockEnvironment(widget, params) {
     var initialDebounce = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
     var initialSession, initialConfig, initialParameters;
+    initialSession = _.extend({}, session);
+    session.getTZOffset = function () {
+        return 0; // by default, but may be overriden in specific tests
+    };
     if ('session' in params) {
-        initialSession = _.extend({}, session);
         _.extend(session, params.session);
     }
     if ('config' in params) {
@@ -282,8 +285,8 @@ function addMockEnvironment(widget, params) {
             for (key in session) {
                 delete session[key];
             }
-            _.extend(session, initialSession);
         }
+        _.extend(session, initialSession);
         if ('config' in params) {
             for (key in config) {
                 delete config[key];

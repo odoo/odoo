@@ -100,6 +100,6 @@ class WebsiteSaleDigital(website_account):
                 return request.not_found()
         elif attachment["datas"]:
             data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
         else:
             return request.not_found()

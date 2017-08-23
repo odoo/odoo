@@ -121,7 +121,7 @@
                                 <div class="o_my_contact" t-if="sales_rep">
                                     <t t-call="website_portal.contact"/>
                                 </div>
-                                <div class="o_my_details">
+                                <div class="o_my_details" t-if="not hide_current_user and user">
                                     <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                                     <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>

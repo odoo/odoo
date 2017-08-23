@@ -46,7 +46,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
             k.index = v;
             k.amount = field_utils.format.float(k.amount, {digits: k.digits});
             if (k.date){
-                k.date = field_utils.format.date(field_utils.parse.date(k.date, {isUTC: true}));
+                k.date = field_utils.format.date(field_utils.parse.date(k.date, {}, {isUTC: true}));
             }
         });
         this.$el.html(QWeb.render('ShowPaymentInfo', {

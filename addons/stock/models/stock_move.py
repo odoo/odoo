@@ -211,7 +211,8 @@ class StockMove(models.Model):
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
-        self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+        rounding_method = self._context.get('rounding_method', 'UP')
+        self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method=rounding_method)
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
@@ -954,13 +955,13 @@ class StockMove(models.Model):
         # TDE CLEANME: remove context key + add as parameter
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
-        new_move = self.copy(defaults)
+        new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
         # ctx = context.copy()
         # TDE CLEANME: used only in write in this file, to clean
         # ctx['do_not_propagate'] = True
 
         # FIXME: pim fix your crap
-        self.with_context(do_not_propagate=True, do_not_unreserve=True).write({'product_uom_qty': self.product_uom_qty - uom_qty})
+        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': self.product_uom_qty - uom_qty})
 
         # if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
         #     new_move_prop = self.move_dest_id.split(qty)

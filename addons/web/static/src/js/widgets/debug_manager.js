@@ -348,7 +348,117 @@ DebugManager.include({
         });
     },
     set_defaults: function() {
-        this._active_view.controller.open_defaults_dialog();
+        var self = this;
+
+        var display = function (fieldInfo, value) {
+            var displayed = value;
+            if (value && fieldInfo.type === 'many2one') {
+                displayed = value.data.display_name;
+                value = value.data.id;
+            } else if (value && fieldInfo.type === 'selection') {
+                displayed = _.find(fieldInfo.selection, function (option) {
+                    return option[0] === value;
+                })[1];
+            }
+            return [value, displayed];
+        };
+
+        var renderer = this._active_view.controller.renderer;
+        var fields = self._active_view.fields_view.fields;
+        var fieldsInfo = self._active_view.fields_view.fieldsInfo.form;
+        var fieldNamesInView = renderer.state.getFieldNames();
+        var fieldsValues = renderer.state.data;
+        var modifierDatas = {};
+        _.each(fieldNamesInView, function (fieldName) {
+            modifierDatas[fieldName] = _.find(renderer.allModifiersData, function (modifierdata) {
+                return modifierdata.node.attrs.name === fieldName;
+            });
+        });
+        this.fields = _.chain(fieldNamesInView)
+            .map(function (fieldName) {
+                var modifierData = modifierDatas[fieldName];
+                var invisibleOrReadOnly;
+                if (modifierData) {
+                    var evaluatedModifiers = modifierData.evaluatedModifiers[renderer.state.id];
+                    invisibleOrReadOnly = evaluatedModifiers.invisible || evaluatedModifiers.readonly;
+                }
+                var fieldInfo = fields[fieldName];
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                 // ignore fields which are empty, invisible, readonly, o2m
+                // or m2m
+                if (!value || invisibleOrReadOnly || fieldInfo.type === 'one2many' ||
+                    fieldInfo.type === 'many2many' || fieldInfo.type === 'binary' ||
+                    fieldsInfo[fieldName].options.isPassword) {
+                    return false;
+                }
+                return {
+                    name: fieldName,
+                    string: fieldInfo.string,
+                    value: value,
+                    displayed: displayed,
+                };
+            })
+            .compact()
+            .sortBy(function (field) { return field.string; })
+            .value();
+
+        var conditions = _.chain(fieldNamesInView)
+            .filter(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                return fieldInfo.change_default;
+            })
+            .map(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                return {
+                    name: fieldName,
+                    string: fieldInfo.string,
+                    value: value,
+                    displayed: displayed,
+                };
+            })
+            .value();
+        var d = new Dialog(this, {
+            title: _t("Set Default"),
+            buttons: [
+                {text: _t("Close"), close: true},
+                {text: _t("Save default"), click: function () {
+                    var $defaults = d.$el.find('#formview_default_fields');
+                    var fieldToSet = $defaults.val();
+                    if (!fieldToSet) {
+                        $defaults.parent().addClass('o_form_invalid');
+                        return;
+                    }
+                    var allUsers = d.$el.find('#formview_default_all').is(':checked');
+                    var condition = d.$el.find('#formview_default_conditions').val();
+                    var value = _.find(self.fields, function (field) {
+                        return field.name === fieldToSet;
+                    }).value;
+                    self._rpc({
+                        model: 'ir.values',
+                        method: 'set_default',
+                        args: [
+                            self._active_view.fields_view.model,
+                            fieldToSet,
+                            value,
+                            allUsers,
+                            true,
+                            condition || false,
+                        ],
+                    }).done(function () { d.close(); });
+                }}
+            ]
+        });
+        d.args = {
+            fields: this.fields,
+            conditions: conditions,
+        };
+        d.template = 'FormView.set_default';
+        d.open();
     },
     fvg: function() {
         var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();

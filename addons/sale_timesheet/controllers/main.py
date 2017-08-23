@@ -59,7 +59,7 @@ class SaleTimesheetController(http.Controller):
         values['dashboard'] = dashboard_values
 
         # -- Time Repartition (per employee)
-        repartition_domain = domain + [('timesheet_invoice_type', '!=', False)]  # force billable type
+        repartition_domain = domain + [('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         repartition_data = request.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
 
         # set repartition per type per employee

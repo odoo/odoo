@@ -84,7 +84,7 @@
     <t t-name="mail.chat.SidebarItems">
         <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
             <span t-if="display_hash">#</span>
-            <input type="text" t-attf-placeholder="#{input_placeholder}"/>
+            <input type="text" class="o_input" t-attf-placeholder="#{input_placeholder}"/>
         </div>
         <t t-foreach="channels" t-as="channel">
             <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
@@ -134,6 +134,6 @@
 
     <!-- Invite dialog's content -->
     <div t-name="mail.PartnerInviteDialog">
-        <input type="text" class="o_mail_chat_partner_invite_input" id="mail_search_partners"/>
+        <input type="text" class="o_input o_mail_chat_partner_invite_input" id="mail_search_partners"/>
     </div>
 </templates>
