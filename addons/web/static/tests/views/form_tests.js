@@ -2642,7 +2642,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('button box is not rendered in create mode', function (assert) {
+    QUnit.test('button box is rendered in create mode', function (assert) {
         assert.expect(3);
 
         var form = createView({
@@ -2672,8 +2672,8 @@ QUnit.module('Views', {
         // create mode (leave edition first!)
         form.$buttons.find('.o_form_button_cancel').click();
         form.$buttons.find('.o_form_button_create').click();
-        assert.strictEqual(form.$('.oe_stat_button').length, 0,
-            "button box should not be displayed when creating a new record");
+        assert.strictEqual(form.$('.oe_stat_button').length, 1,
+            "button box should be displayed when creating a new record as well");
 
         form.destroy();
     });
