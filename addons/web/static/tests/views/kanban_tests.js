@@ -1414,6 +1414,8 @@ QUnit.module('Views', {
 
         var writeOnColor;
 
+        this.data.category.records[0].color = 12;
+
         var kanban = createView({
             View: KanbanView,
             model: 'category',
@@ -1446,20 +1448,21 @@ QUnit.module('Views', {
             },
         });
 
-        var $first_record = kanban.$('.o_kanban_record:first()');
+        var $firstRecord = kanban.$('.o_kanban_record:first()');
 
-        assert.strictEqual($first_record.find('.oe_kanban_color_10').length, 0,
-            "no record should have the color 10");
-        assert.strictEqual($first_record.find('.oe_kanban_colorpicker').length, 1,
+        assert.strictEqual(kanban.$('.o_kanban_record.oe_kanban_color_12').length, 0,
+            "no record should have the color 12");
+        assert.strictEqual($firstRecord.find('.oe_kanban_colorpicker').length, 1,
             "there should be a color picker");
-        assert.strictEqual($first_record.find('.oe_kanban_colorpicker').children().length, 10,
-            "the color picker should have 10 children (the colors)");
+        assert.strictEqual($firstRecord.find('.oe_kanban_colorpicker').children().length, 12,
+            "the color picker should have 12 children (the colors)");
 
-        // set the last color
-        $first_record.find('.oe_kanban_colorpicker a.oe_kanban_color_9').click();
+        // Set a color
+        $firstRecord.find('.oe_kanban_colorpicker a.oe_kanban_color_9').click();
         assert.ok(writeOnColor, "should write on the color field");
-        assert.strictEqual($first_record.find('.oe_kanban_color_9').length, 1,
-            "one record should have the color 10");
+        $firstRecord = kanban.$('.o_kanban_record:first()'); // First record is reloaded here
+        assert.ok($firstRecord.is('.oe_kanban_color_9'),
+            "the first record should have the color 9");
 
         kanban.destroy();
     });
