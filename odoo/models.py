@@ -573,6 +573,7 @@ class BaseModel(object):
         def is_onchange(func):
             return callable(func) and hasattr(func, '_onchange')
 
+        # collect onchange methods on the model's class
         cls = type(self)
         methods = defaultdict(list)
         for attr, func in getmembers(cls, is_onchange):
@@ -580,6 +581,17 @@ class BaseModel(object):
                 if name not in cls._fields:
                     _logger.warning("@onchange%r parameters must be field names", func._onchange)
                 methods[name].append(func)
+
+        # add onchange methods to implement "change_default" on fields
+        def onchange_default(field, self):
+            value = field.convert_to_write(self[field.name], self)
+            condition = "%s=%s" % (field.name, value)
+            defaults = self.env['ir.values'].get_defaults_dict(self._name, condition)
+            self.update(defaults)
+
+        for name, field in cls._fields.items():
+            if field.change_default:
+                methods[name].append(functools.partial(onchange_default, field))
 
         # optimization: memoize result on cls, it will not be recomputed
         cls._onchange_methods = methods
