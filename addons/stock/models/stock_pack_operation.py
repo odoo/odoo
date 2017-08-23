@@ -90,7 +90,7 @@ class PackOperation(models.Model):
         res = self.package_id._get_all_products_quantities()
         # reduce by the quantities linked to a move
         for record in self.linked_move_operation_ids:
-            if record.move_id.product_id.id not in res:
+            if record.move_id.product_id not in res:
                 res[record.move_id.product_id] = 0
             res[record.move_id.product_id] -= record.qty
         return res
