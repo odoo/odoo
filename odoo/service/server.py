@@ -276,10 +276,6 @@ class ThreadedServer(CommonServer):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
-        if not stop:
-            # only relevant if we are not in "--stop-after-init" mode
-            self.cron_spawn()
-
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
         """
@@ -322,6 +318,8 @@ class ThreadedServer(CommonServer):
         if stop:
             self.stop()
             return rc
+
+        self.cron_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler.) The try/except is for the win32 case.
