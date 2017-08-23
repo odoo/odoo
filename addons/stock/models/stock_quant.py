@@ -15,6 +15,10 @@ class StockQuant(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         ondelete='restrict', readonly=True, required=True)
+    # so user can filter on template in webclient
+    product_tmpl_id = fields.Many2one(
+        'product.template', string='Product Template',
+        related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
