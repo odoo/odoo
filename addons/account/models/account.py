@@ -76,24 +76,26 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
 
+    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
+    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
-    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
-    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
-
     def _compute_opening_debit_credit(self):
         for record in self:
-            opening_move = record.company_id.account_opening_move_id
-            opening_move_lines = record.env['account.move.line'].search([('account_id','=',record.id), ('move_id','=',opening_move and opening_move.id or False)])
-            record.opening_debit = 0.0
-            record.opening_credit = 0.0
-            for line in opening_move_lines: #should execute at most twice: once for credit, once for debit
-                if line.debit:
-                    record.opening_debit = line.debit
-                elif line.credit:
-                    record.opening_credit = line.credit
+            opening_debit = opening_credit = 0.0
+            if record.company_id.account_opening_move_id:
+                for line in self.env['account.move.line'].search([('account_id', '=', record.id),
+                                                                 ('move_id','=', record.company_id.account_opening_move_id.id)]):
+                    #could be executed at most twice: once for credit, once for debit
+                    if line.debit:
+                        opening_debit = line.debit
+                    elif line.credit:
+                        opening_credit = line.credit
+            record.opening_debit = opening_debit
+            record.opening_credit = opening_credit
 
     def _set_opening_debit(self):
         self._set_opening_debit_credit(self.opening_debit, 'debit')
@@ -110,28 +112,28 @@ class AccountAccount(models.Model):
         opening_move = self.company_id.account_opening_move_id
 
         if not opening_move:
-            raise UserError("No opening move defined !")
+            raise UserError(_("No opening move defined !"))
 
         if opening_move.state == 'draft':
-            # We first check whether we should create a new move line or modify an existing one
-            opening_move_line = self.env['account.move.line'].search([('account_id','=',self.id), ('move_id','=',opening_move and opening_move.id or False), (field,'!=',0.0)])
-
+            # check whether we should create a new move line or modify an existing one
+            opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
+                                                                      ('move_id','=', opening_move.id),
+                                                                      (field,'!=', False)])
             if opening_move_line:
                 if amount:
-                    # Then, we modify the line
+                    # modify the line
                     setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
                 else:
-                    # Then, we delete the line (no need to keep a line with value = 0)
+                    # delete the line (no need to keep a line with value = 0)
                     opening_move_line.with_context({'check_move_validity': False}).unlink()
             elif amount:
-                # Then, we create a new line, as none existed before
+                # create a new line, as none existed before
                 self.env['account.move.line'].with_context({'check_move_validity': False}).create({
-                        'name': _('Opening writing'),
+                        'name': _('Opening balance'),
                         field: amount,
                         'move_id': opening_move.id,
                         'account_id': self.id,
                 })
-            # Else, if amount is zero, then nothing is to be done
 
             # Then, we automatically balance the opening move, to make sure it stays valid
             self.company_id._auto_balance_opening_move()
@@ -359,12 +361,11 @@ class AccountJournal(models.Model):
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
     color = fields.Integer("Color Index", default=1)
+    account_setup_bank_data_marked_done = fields.Boolean(string='Bank setup marked as done', compute="_compute_setup_marked_done", help="Technical field used in domains in the setup bar")
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
-
-    #Computed field for use in views' domains
-    account_setup_bank_data_marked_done = fields.Boolean(string='Bank setup marked as done', compute="_compute_setup_marked_done")
 
     @api.multi
     # do not depend on 'sequence_id.date_range_ids', because
