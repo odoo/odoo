@@ -25,6 +25,9 @@
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
+        <div t-if="widget._initialState.valuemax > widget._initialState.defaultDisplayQty">
+            <button class="btn btn-default js_load_more">Load more</button>
+        </div>
         <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_nocontent">
