@@ -39,13 +39,9 @@
             <field name="arch" type="xml">
                 <pivot string="Lead Assign" disable_linking="True">
                     <field name="date_assign" interval="month" type="col"/>
-                    <field name="delay_open" type="measure" groups="base.group_no_one"/>
+                    <field name="delay_open" type="measure"/>
                     <field name="probability" type="measure"/>
-                    <field name="delay_close" groups="base.group_no_one"/>
-                    <field name="opening_date" groups="base.group_no_one"/>
-                    <field name="partner_assigned_id" groups="base.group_no_one"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="nbr_cases" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>
