@@ -29,8 +29,6 @@
                                 <field name="quantity_done"/>
                                 <field name="lot_id" context="{'default_product_id': product_id}"/>
                                 <field name="move_id" invisible="1"/>
-                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('quantity_done', '&lt;=', 0.99)]}" invisible="context.get('state_done')"/>
-                                <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="context.get('state_done')"/>
                             </tree>
                         </field>
                     </group>
