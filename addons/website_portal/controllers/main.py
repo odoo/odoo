@@ -69,11 +69,13 @@ class website_account(http.Controller):
 
     @http.route(['/my/account'], type='http', auth='user', website=True)
     def details(self, redirect=None, **post):
+        values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        values = {
+        values.update({
             'error': {},
-            'error_message': []
-        }
+            'error_message': [],
+            'hide_current_user': True,
+        })
 
         if post:
             error, error_message = self.details_form_validate(post)

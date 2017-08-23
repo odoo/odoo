@@ -840,17 +840,13 @@ attributes:
 Possible children of the view element are:
 
 ``field``
-  declares fields to aggregate or to use in kanban *logic*. If the field is
-  simply displayed in the kanban view, it does not need to be pre-declared.
+  declares fields to use in kanban *logic*. If the field is simply displayed in
+  the kanban view, it does not need to be pre-declared.
 
   Possible attributes are:
 
   ``name`` (required)
     the name of the field to fetch
-  ``sum``, ``avg``, ``min``, ``max``, ``count``
-    displays the corresponding aggregation at the top of a kanban column, the
-    field's value is the label of the aggregation (a string). Only one
-    aggregate operation per field is supported.
 
 ``templates``
   defines a list of :ref:`reference/qweb` templates. Cards definition may be

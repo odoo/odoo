@@ -243,9 +243,9 @@
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
-                                            <label for="analytic_tag_ids"/>
+                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
                                             <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting" options="{'color_field': 'color'}"/>
                                             </div>
                                         </group>
                                     </group>
