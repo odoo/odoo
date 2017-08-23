@@ -16,17 +16,17 @@ class ProductTemplate(models.Model):
         ('manual_periodic', 'Periodic (manual)'),
         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
         company_dependent=True, copy=True, default='manual_periodic',
-        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
-             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products.")
+        help="""Manual: The accounting entries to value the inventory are not posted automatically.
+        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.""")
     valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('fifo', '(financial) FIFO'),
-        ('average', 'AVCO')], string='Costing Method',
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string='Costing Method',
         company_dependent=True, copy=True,
-        help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
-                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
-                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""")
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.""")
     cost_method = fields.Char(compute='_compute_cost_method', inverse='_set_cost_method')
     property_stock_account_input = fields.Many2one(
         'account.account', 'Stock Input Account',
@@ -161,27 +161,21 @@ class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     property_valuation = fields.Selection([
-        ('manual_periodic', 'Periodic (manual)'),
-        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        ('manual_periodic', 'Manual'),
+        ('real_time', 'Automated')], string='Inventory Valuation',
         company_dependent=True, copy=True, required=True,
-        help="If perpetual valuation is enabled for a product, the system "
-             "will automatically create journal entries corresponding to "
-             "stock moves, with product price as specified by the 'Costing "
-             "Method'. The inventory variation account set on the product "
-             "category will represent the current inventory value, and the "
-             "stock input and stock output account will hold the counterpart "
-             "moves for incoming and outgoing products.")
+        help="""Manual: The accounting entries to value the inventory are not posted automatically.
+        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
+        """)
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('fifo', '(financial) FIFO)'),
-        ('average', 'AVCO')], string="Costing Method",
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string="Costing Method",
         company_dependent=True, copy=True, required=True,
-        help="Standard Price: The cost price is manually updated at the end "
-             "of a specific period (usually once a year).\nAverage Price: "
-             "The cost price is recomputed at each incoming shipment and "
-             "used for the product valuation.\nReal Price: The cost price "
-             "displayed is the price of the last outgoing product (will be "
-             "used in case of inventory loss for example).""")
+        help=""""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
+        """)
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
