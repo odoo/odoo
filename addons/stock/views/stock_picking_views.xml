@@ -302,14 +302,14 @@
                         <page string="Additional Info" name="extra">
                             <group>
                                 <group>
-                                    <field name="move_type"/>
-                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="picking_type_code" invisible="1"/>
+                                    <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="context.get('default_picking_type_id')"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="group_id" groups="base.group_no_one"/>
-                                    <field name="priority"/>
+                                    <field name="priority" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                                 </group>
                             </group>
                         </page>

@@ -187,7 +187,7 @@ class Picking(models.Model):
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
 
     move_type = fields.Selection([
-        ('direct', 'Partial'), ('one', 'All at once')], 'Shipping Policy',
+        ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         default='direct', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="It specifies goods to be deliver partially or all at once")
