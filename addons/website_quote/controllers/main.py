@@ -60,6 +60,8 @@ class sale_quote(http.Controller):
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True
         }
 
         if order_sudo.require_payment or values['need_payment']:
@@ -78,12 +80,6 @@ class sale_quote(http.Controller):
                         'type': 'form',
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                         'partner_id': order_sudo.partner_id.id,
-                    })
-
-            for acq in values['s2s_acquirers']:
-                acq.form = acq._registration_render(order_sudo.partner_id.id, {
-                        'return_url': '/shop/payment/validate',
-                        'bootstrap_formatting': True
                     })
 
         history = request.session.get('my_quotes_history', [])
