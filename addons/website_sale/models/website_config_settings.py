@@ -89,7 +89,7 @@ class WebsiteConfigSettings(models.TransientModel):
     sale_show_tax = fields.Selection([
         ('total', 'Tax-Included Prices'),
         ('subtotal', 'Tax-Excluded Prices')],
-        "Product Prices", default='total')
+        "Product Prices", default='subtotal')
 
     @api.model
     def get_values(self):
