@@ -17,8 +17,19 @@ class WizardValuationHistory(models.TransientModel):
     @api.multi
     def open_table(self):
         self.ensure_one()
-        if self.compute_at_date and self.date:
 
+        # Call `_fifo_vacuum` on concerned moves
+        fifo_valued_products = self.env['product.product']
+        fifo_valued_products |= self.env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped('product_variant_ids')
+        fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
+        fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
+        moves_to_vacuum = self.env['stock.move']
+        Move = self.env['stock.move']
+        for product in fifo_valued_products:
+            moves_to_vacuum |= Move.search([('product_id', '=', product.id), ('remaining_qty', '<', 0)] + Move._get_all_base_domain())
+        moves_to_vacuum._fifo_vacuum()
+
+        if self.compute_at_date and self.date:
             action = self.env['ir.model.data'].xmlid_to_object('stock_account.stock_move_valuation_action')
             if not action:
                 action = {
