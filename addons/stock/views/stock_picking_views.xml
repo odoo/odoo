@@ -202,21 +202,24 @@
             <field name="arch" type="xml">
                 <form string="Transfer">
                 <header>
+                    <field name="is_locked" invisible="1"/>
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_assign" states="confirmed,waiting" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_assign" states="partially_available" string="Recheck Availability" type="object" groups="base.group_user"/>
-                    <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="stock.group_stock_manager"/>
-                    <button name="do_new_transfer" states="draft,partially_available,assigned" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('assigned', 'partially_available'))]}"/>
-                    <button name="%(action_report_delivery)d" string="Print" states="done" type="action" groups="base.group_user"/>
-                    <button name="%(act_stock_return_picking)d" string="Return" states="done" type="action" groups="base.group_user"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'waiting')), ('is_locked', '=', False)]}" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_assign" attrs="{'invisible': ['|', ('state', '!=', 'partially_available'), ('is_locked', '=', False)]}" string="Recheck Availability" type="object" groups="base.group_user"/>
+                    <button name="force_assign" attrs="{'invisible': ['|', ('state', 'not in', ('confirmed', 'waiting', 'partially_available')), ('is_locked', '=', False)]}" string="Force Availability" type="object" groups="stock.group_stock_manager"/>
+                    <button name="do_new_transfer" attrs="{'invisible': ['|', ('state', 'not in', ('draft', 'partially_available', 'assigned')), ('is_locked', '=', False)]}" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
+                    <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
+                    <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('is_locked', '=', False)]}" type="action" groups="base.group_user"/>
+                    <button name="action_cancel" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'confirmed', 'partially_available', 'draft', 'waiting')), ('is_locked', '=', False)]}" string="Cancel" groups="base.group_user" type="object"/>
                     <field name="picking_type_code" invisible="1"/>
-                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available'))]}"/>
+                    <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', '|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available')), ('is_locked', '=', False)]}"/>
                     <field name="show_operations" invisible="1" readonly="1"/>
                     <field name="move_line_exist" invisible="1"/>
                     <field name="has_packages" invisible="1"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done')]}"/>
-                    <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting" string="Cancel" groups="base.group_user" type="object"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done'), ('is_locked', '=', False)]}"/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
                     <field name="picking_type_entire_packs" invisible="1"/>
                 </header>
@@ -265,15 +268,17 @@
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="state" invisible="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" attrs="{'invisible': [('lots_visible', '=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                                    <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
-                                    <field name="qty_done"/>
+                                    <field name="is_initial_demand_editable" invisible="1"/>
+                                    <field name="product_uom_qty" attrs="{'readonly': [('is_initial_demand_editable', '=', False)], 'required': [('product_id', '!=', False)]}"/>
+                                    <field name="is_locked" invisible="1"/>
+                                    <field name="qty_done" attrs="{'readonly': ['|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
                                 </tree>
                             </field>
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations">
                             <field name="id" invisible="1"/>
-                            <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'done'))]}" context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_lines" attrs="{'readonly': [('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree decoration-danger="state != 'done' and quantity_done > reserved_availability" decoration-muted="scrapped == True or state == 'cancel'" string="Stock Moves" editable="bottom">
                                     <field name="name" invisible="1"/>
                                     <field name="date_expected" invisible="1"/>
@@ -287,12 +292,13 @@
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="show_operations" invisible="1" readonly="1"/>
                                     <field name="additional" invisible="1"/>
+                                    <field name="is_locked" invisible="1"/>
 
                                     <field name="product_id" required="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('additional', '=', False)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
-                                    <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False), ('state', '!=', 'draft')]}"/>
+                                    <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" invisible="context.get('picking_type_code') == 'incoming'"/>
-                                    <field name="quantity_done" string="Done" attrs="{'readonly': ['|', ('show_details_visible', '=', True), ('state', '=', 'cancel')], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': ['|', '|', ('show_details_visible', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                 </tree>

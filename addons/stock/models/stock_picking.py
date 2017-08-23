@@ -265,9 +265,7 @@ class Picking(models.Model):
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
-    move_line_ids = fields.One2many(
-        'stock.move.line', 'picking_id', 'Operations',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
 
     move_line_exist = fields.Boolean(
         'Has Pack Operations', compute='_compute_move_line_exist',
@@ -282,6 +280,9 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Default Owner")
     printed = fields.Boolean('Printed')
+    is_locked = fields.Boolean(default=True, help='When the picking is not done this allows changing the '
+                               'initial demand. When the picking is done this allows '
+                               'changing the done quantities.')
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(related='picking_type_id.show_operations')
@@ -648,6 +649,10 @@ class Picking(models.Model):
             'res_id': wiz.id,
             'context': self.env.context,
         }
+
+    def action_toggle_is_locked(self):
+        self.is_locked = not self.is_locked
+        return True
 
     def check_backorder(self):
         self.ensure_one()
