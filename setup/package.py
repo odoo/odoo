@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from __future__ import print_function
 import optparse
 import os
 import pexpect
@@ -17,7 +17,7 @@ except ImportError:
 from contextlib import contextmanager
 from glob import glob
 from os.path import abspath, dirname, join
-from sys import stdout
+from sys import stdout, stderr
 from tempfile import NamedTemporaryFile
 
 # apt-get install rsync python-pexpect debhelper python-setuptools
@@ -40,12 +40,25 @@ PUBLISH_DIRS = {
 ADDONS_NOT_TO_PUBLISH = [
 ]
 
+
+def move_glob(source, wildcards, destination):
+    """Move files matched by wildcards from source to destination
+    wildcards can be a single string wildcard like '*.deb' or a list of wildcards
+    """
+    if not os.path.isdir(destination):
+        raise BaseException('Destination "{}" is not a directory'.format(destination))
+    if isinstance(wildcards, str):
+        wildcards = [wildcards]
+    for wc in wildcards:
+        for file_path in glob(os.path.join(source, wc)):
+            shutil.move(file_path, destination)
+
 def mkdir(d):
     if not os.path.isdir(d):
         os.makedirs(d)
 
 def system(l, chdir=None):
-    print l
+    print (l)
     if chdir:
         cwd = os.getcwd()
         os.chdir(chdir)
@@ -137,7 +150,7 @@ class OdooDocker(object):
             print('Exception during docker execution: %s:' % str(e))
             print('Error during docker execution: printing the bash output:')
             with open(self.log_file.name) as f:
-                print '\n'.join(f.readlines())
+                print('\n'.join(f.readlines()))
             raise
         finally:
             self.docker.close()
@@ -165,18 +178,18 @@ class KVM(object):
         self.login = login
 
     def timeout(self,signum,frame):
-        print "vm timeout kill",self.pid
+        print("vm timeout kill",self.pid)
         os.kill(self.pid,15)
 
     def start(self):
-        l="kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -drive".split(" ")
+        l="kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -m 1024 -drive".split(" ")
         #l.append('file=%s,if=virtio,index=0,boot=on,snapshot=on'%self.image)
         l.append('file=%s,snapshot=on'%self.image)
         #l.extend(['-vnc','127.0.0.1:1'])
         l.append('-nographic')
-        print " ".join(l)
+        print( " ".join(l))
         self.pid=os.spawnvp(os.P_NOWAIT, l[0], l)
-        time.sleep(10)
+        time.sleep(20)
         signal.alarm(2400)
         signal.signal(signal.SIGALRM, self.timeout)
         try:
@@ -210,7 +223,7 @@ class KVMWinBuildExe(KVM):
         self.rsync('%s/ %s@127.0.0.1:build/server/' % (self.o.build_dir, self.login))
         self.ssh("cd build/server/setup/win32;time make allinone;")
         self.rsync('%s@127.0.0.1:build/server/setup/win32/release/ %s/' % (self.login, self.o.build_dir), '')
-        print "KVMWinBuildExe.run(): done"
+        print("KVMWinBuildExe.run(): done")
 
 class KVMWinTestExe(KVM):
     def run(self):
@@ -251,18 +264,21 @@ def build_deb(o):
     # Append timestamp to version for the .dsc to refer the right .tar.gz
     cmd=['sed', '-i', '1s/^.*$/odoo (%s.%s) stable; urgency=low/'%(version,timestamp), 'debian/changelog']
     subprocess.call(cmd, cwd=o.build_dir)
-    deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
-    deb.logfile = stdout
-    if GPGPASSPHRASE:
-        deb.expect_exact('Enter passphrase: ', timeout=1200)
-        deb.send(GPGPASSPHRASE + '\r\n')
-        deb.expect_exact('Enter passphrase: ')
-        deb.send(GPGPASSPHRASE + '\r\n')
-    deb.expect(pexpect.EOF, timeout=1200)
-    system(['mv', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s' % o.build_dir])
-    system(['mv', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s' % o.build_dir])
-    system(['mv', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s' % o.build_dir])
-    system(['mv', glob('%s/../odoo_*.tar.gz' % o.build_dir)[0], '%s' % o.build_dir])
+    if not o.no_debsign:
+        deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
+        deb.logfile = stdout
+        if GPGPASSPHRASE:
+            deb.expect_exact('Enter passphrase: ', timeout=1200)
+            deb.send(GPGPASSPHRASE + '\r\n')
+            deb.expect_exact('Enter passphrase: ')
+            deb.send(GPGPASSPHRASE + '\r\n')
+        deb.expect(pexpect.EOF, timeout=1200)
+    else:
+        subprocess.call(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], cwd=o.build_dir)
+    # As the packages are builded in the parent of the buildir, we move them back to build_dir
+    build_dir_parent = '{}/../'.format(o.build_dir)
+    wildcards = ['odoo_{}'.format(wc) for wc in ('*.deb', '*.dsc', '*_amd64.changes', '*.tar.gz', '*.tar.xz')]
+    move_glob(build_dir_parent, wildcards, o.build_dir)
 
 def build_rpm(o):
     system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
@@ -367,9 +383,10 @@ def gen_deb_package(o, published_files):
     # Remove temp directory
     shutil.rmtree(temp_path)
 
-    # Generate Release.gpg (= signed Release)
-    # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
-    subprocess.call(['gpg', '--default-key', GPGID, '--passphrase', GPGPASSPHRASE, '--yes', '-abs', '--no-tty', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
+    if not o.no_debsign:
+        # Generate Release.gpg (= signed Release)
+        # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
+        subprocess.call(['gpg', '--default-key', GPGID, '--passphrase', GPGPASSPHRASE, '--yes', '-abs', '--no-tty', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(o.pub, 'deb'))
 
 #---------------------------------------------------------
 # Generates an RPM repo
@@ -408,15 +425,17 @@ def options():
     op.add_option("", "--no-testing", action="store_true", help="don't test the builded packages")
 
     op.add_option("", "--no-debian", action="store_true", help="don't build the debian package")
+    op.add_option("", "--no-debsign", action="store_true", help="don't sign the debian package")
     op.add_option("", "--no-rpm", action="store_true", help="don't build the rpm package")
     op.add_option("", "--no-tarball", action="store_true", help="don't build the tarball")
     op.add_option("", "--no-windows", action="store_true", help="don't build the windows package")
 
     # Windows VM
-    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/winxp27/winxp27.vdi', help="%default")
-    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/winxp27/id_rsa', help="%default")
+    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/win1034/win10.qcow2', help="%default")
+    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/win1034/id_rsa', help="%default")
     op.add_option("", "--vm-winxp-login", default='Naresh', help="Windows login (%default)")
-    op.add_option("", "--vm-winxp-python-version", default='2.7', help="Windows Python version installed in the VM (default: %default)")
+    op.add_option("", "--vm-winxp-python-version", default='3.4', help="Windows Python version installed in the VM (default: %default)")
+    op.add_option("", "--no-remove", action="store_true", help="don't remove build dir")
 
     (o, args) = op.parse_args()
     # derive other options
@@ -468,11 +487,14 @@ def main():
                 published_files = publish(o, 'windows', ['exe'])
             except Exception as e:
                 print("Won't publish the exe release.\n Exception: %s" % str(e))
-    except:
-        pass
+    except Exception, exception_text:
+        print('Something bad happened ! : {}'.format(exception_text), file=stderr)
     finally:
-        shutil.rmtree(o.build_dir)
-        print('Build dir %s removed' % o.build_dir)
+        if o.no_remove:
+            print('Build dir "{}" not removed'.format(o.build_dir))
+        else:
+            shutil.rmtree(o.build_dir)
+            print('Build dir %s removed' % o.build_dir)
 
         if not o.no_testing:
             system("docker rm -f `docker ps -a | awk '{print $1 }'` 2>>/dev/null")
