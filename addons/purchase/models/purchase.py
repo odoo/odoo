@@ -579,7 +579,12 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def write(self, values):
         if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking(values)
+            confirm_lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+            for line in confirm_lines:
+                line.order_id.message_post_with_view('purchase.track_po_line_template',
+                values = {'line': line, 'product_qty': values['product_qty']},
+                subtype_id = self.env.ref('mail.mt_note').id)
+            confirm_lines._create_or_update_picking(values)
         result = super(PurchaseOrderLine, self).write(values)
         # Update expected date of corresponding moves
         if 'date_planned' in values:

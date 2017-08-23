@@ -275,6 +275,15 @@ class MrpProduction(models.Model):
         return production
 
     @api.multi
+    def write(self, vals):
+        if vals.get('product_qty'):
+            for mo in self:
+                mo.message_post_with_view('mrp.track_mo_qty',
+                    values = {'production': mo , 'product_qty': vals.get('product_qty')},
+                    subtype_id = self.env.ref('mail.mt_note').id)
+        return super(MrpProduction, self).write(vals)
+
+    @api.multi
     def unlink(self):
         if any(production.state != 'cancel' for production in self):
             raise UserError(_('Cannot delete a manufacturing order not in cancel state'))
