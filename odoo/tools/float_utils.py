@@ -23,6 +23,8 @@ if not pycompat.PY2:
             return f + math.copysign(0.5, f)
         # copysign ensures round(-0.) -> -0 *and* result is a float
         return math.copysign(roundf, f)
+else:
+    round = round
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
