@@ -25,13 +25,11 @@ class Partner(models.Model):
         # render the partner address accordingly to address_view_id
         doc = etree.fromstring(arch)
         for city_node in doc.xpath("//field[@name='city']"):
-            replacement_xml = """
-            <div>
-                <field name="country_enforce_cities" invisible="1"/>
-                <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
-                <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
-            </div>
-            """
+            view = self.env.ref(
+                'base_address_city.view_partner_city_address_form')
+            arch = view._read_template(view.id)
+            replacement_xml = etree.tostring(
+                etree.fromstring(arch).xpath("//div")[0])
             city_id_node = etree.fromstring(replacement_xml)
             city_node.getparent().replace(city_node, city_id_node)
 
