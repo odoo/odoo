@@ -321,9 +321,9 @@ class AccountInvoice(models.Model):
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
 
-    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON')
-    payments_widget = fields.Text(compute='_get_payment_info_JSON')
-    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
+    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
+    payments_widget = fields.Text(compute='_get_payment_info_JSON', groups="account.group_account_invoice")
+    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
