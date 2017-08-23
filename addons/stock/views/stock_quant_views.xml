@@ -97,8 +97,8 @@
         <field name="arch" type="xml">
             <pivot string="Inventory">
                 <field name="product_id" type="row"/>
-                <field name="location_id" type="col"/>
-                <field name="quantity" type="measure"/>
+                <field name="location_id" type="row" groups="stock.group_stock_manager"/>
+                <field name="quantity" type="measure" groups="stock.group_stock_manager"/>
             </pivot>
         </field>
     </record>

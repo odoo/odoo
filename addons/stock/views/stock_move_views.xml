@@ -27,23 +27,17 @@
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
                 <pivot string="Stock Moves Analysis">
-                    <field name="product_id" type="row"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
+                    <field name="product_id" type="row" groups="stock.group_stock_manager"/>
                     <field name="product_uom_qty" type="measure" groups="stock.group_warning_stock"/>
-                    <field name="create_date" groups="base.group_no_one"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="date_expected" groups="base.group_no_one"/>
+                    <field name="date_expected" groups="stock.group_stock_manager"/>
                     <field name="product_uom" groups="product.group_uom"/>
-                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="picking_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="inventory_id" groups="stock.group_adv_location"/>
-                    <field name="origin_returned_move_id" groups="base.group_no_one"/>
-                    <field name="push_rule_id" groups="stock.group_adv_location"/>
-                    <field name="write_date" groups="base.group_no_one"/>
-                    <field name="write_uid" groups="base.group_no_one"/>
-                    <field name="create_uid" groups="base.group_no_one"/>
-                    <field name="product_uom_qty" groups="stock.group_warning_stock"/>
+                    <field name="product_uom_qty" groups="stock.group_stock_manager"/>
+                    <field name="name" groups="stock.group_stock_manager"/>
+                    <field name="date" groups="stock.group_stock_manager"/>
+                    <field name="picking_id" groups="stock.group_stock_manager"/>
+                    <field name="origin" groups="stock.group_stock_manager"/>
+                    <field name="Status" groups="stock.group_stock_manager"/>
                 </pivot>
             </field>
         </record>
