@@ -120,12 +120,12 @@ class AccountAnalyticLine(models.Model):
             sale_price = so_line.currency_id.compute(sale_price_hour, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
             # calculate the revenue on the timesheet
             if so_line.product_id.invoice_policy == 'delivery':
-                revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-so_line.discount))
+                revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
                 billable_type = 'billable_time'
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.track_service == 'task':
                 quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
                 # compute the total revenue the SO since we are in fixed price
-                total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-so_line.discount))
+                total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
                 # compute the total revenue already existing (without the current timesheet line)
                 domain = [('so_line', '=', so_line.id)]
                 if self.ids:
