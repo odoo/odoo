@@ -38,20 +38,33 @@
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
             <form string="Inventory Valuation" create="false" edit="false" delete="false">
-                <group>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-arrows-v" type="object" name="action_view_stock_moves" string="Picking Moves"/>
+                    </div>
                     <group>
-                        <field name="product_id"/>
-                        <field name="quantity"/>
-                        <field name="product_uom_id" groups="product.group_uom"/>
-                        <field name="lot_id" groups="stock.group_production_lot"/>
-                        <field name="package_id" groups="stock.group_tracking_lot"/>
-                        <field name="location_id"/>
-                        <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="location_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="package_id" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        </group>
+                        <group>
+                            <label for="quantity" string="Quantity On Hand"/>
+                            <div class="o_row">
+                                <field name="quantity"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
+                            </div>
+                            <label for="reserved_quantity" string="Quantity Reserved"/>
+                            <div class="o_row">
+                                <field name="reserved_quantity"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
+                            </div>
+                            <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
-                    </group>
-                </group>
+                </sheet>
             </form>
         </field>
     </record>
