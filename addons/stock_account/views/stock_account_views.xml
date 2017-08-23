@@ -61,14 +61,16 @@
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
-                    <field name="price_unit"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="state" invisible="1"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="price_unit"/>
+                    <field name="remaining_qty"/>
                     <field name="value" sum="Stock Valuation"/>
+                    <field name="remaining_value" sum="Stock Valuation"/>
                 </tree>
             </field>
         </record>
