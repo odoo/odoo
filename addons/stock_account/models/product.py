@@ -148,16 +148,13 @@ class ProductProduct(models.Model):
     @api.multi
     def _compute_stock_value(self):
         for product in self:
-            if product.cost_method == 'standard':
-                product.stock_value = product.standard_price * product.qty_available
-            elif product.cost_method == 'average':
-                product.stock_value = product._get_latest_cumulated_value()
-            elif product.cost_method == 'fifo': #Could also do same as for average, but it would lead to more rounding errors
-                moves = product._get_fifo_candidates_in_move()
-                value = 0
-                for move in moves:
-                    value += move.remaining_qty * move.price_unit
-                product.stock_value = value
+            if product.cost_method in ['standard', 'average']:
+                product.stock_value = product.standard_price * product.with_context(company_owned=True).qty_available
+            elif product.cost_method == 'fifo':
+                StockMove = self.env['stock.move']
+                domain = [('product_id', '=', product.id)] + StockMove._get_all_base_domain()
+                moves = StockMove.search(domain)
+                product.stock_value = sum(moves.mapped('value'))
 
 
 class ProductCategory(models.Model):
