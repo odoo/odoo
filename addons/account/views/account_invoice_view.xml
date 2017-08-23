@@ -20,11 +20,9 @@
             <field name="arch" type="xml">
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
-                    <field name="amount_total_signed" type="measure" />
+                    <field name="amount_total_signed" type="measure"/>
                     <field name="residual_company_signed" groups="base.group_no_one"/>
                     <field name="amount_total_company_signed" groups="base.group_no_one"/>
-                    <field name="residual_signed" />
-                    <field name="amount_untaxed_signed" />
                 </pivot>
             </field>
         </record>

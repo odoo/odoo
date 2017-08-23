@@ -108,11 +108,9 @@
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
                 <pivot string="Rating Average" display_quantity="true">
-                    <field name="rated_partner_id" type="row" />
+                    <field name="rated_partner_id" type="row"/>
                     <field name="create_date" type="col"/>
                     <field name="rating" type="measure"/>
-                    <field name="parent_res_id"/>
-                    <field name="res_id"/>
                 </pivot>
             </field>
         </record>

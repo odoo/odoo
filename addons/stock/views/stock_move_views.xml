@@ -28,6 +28,7 @@
             <field name="arch" type="xml">
                 <pivot string="Stock Moves Analysis">
                     <field name="product_id" type="row" groups="stock.group_stock_manager"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
                     <field name="product_uom_qty" type="measure" groups="stock.group_warning_stock"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_expected" groups="stock.group_stock_manager"/>
@@ -37,7 +38,6 @@
                     <field name="date" groups="stock.group_stock_manager"/>
                     <field name="picking_id" groups="stock.group_stock_manager"/>
                     <field name="origin" groups="stock.group_stock_manager"/>
-                    <field name="Status" groups="stock.group_stock_manager"/>
                 </pivot>
             </field>
         </record>

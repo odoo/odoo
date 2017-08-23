@@ -403,7 +403,6 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_tz" groups="event.group_event_manager"/>
                     <field name="date_begin" groups="base.group_no_one"/>
-                    <field name="seats_used"/>
                     <field name="seats_availability" groups="event.group_event_manager"/>
                     <field name="website_published" groups="event.group_event_manager"/>
                     <field name="auto_confirm" groups="base.group_no_one"/>
@@ -519,12 +518,10 @@
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
                 <pivot string="Registration" display_quantity="True">
-                    <field name="event_id" type="row" />
+                    <field name="event_id" type="row"/>
                     <field name="date_closed" groups="base.group_no_one"/>
                     <field name="date_open" groups="base.group_no_one"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="email"/>
-                    <field name="phone"/>
                 </pivot>
             </field>
         </record>

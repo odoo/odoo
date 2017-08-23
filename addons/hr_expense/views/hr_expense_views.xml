@@ -130,12 +130,11 @@
             <field name="arch" type="xml">
                 <pivot string="Expenses Analysis">
                     <field name="employee_id" type="row"/>
-                    <field name="date" interval="month" type="col" />
+                    <field name="date" interval="month" type="col"/>
                     <field name="total_amount" type="measure"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="account_id" groups="account.group_account_manager"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                    <field name="payment_mode" />
                     <field name="product_uom_id" groups="product.group_uom"/>
                 </pivot>
             </field>
@@ -169,7 +168,7 @@
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
                     <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
-                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expence.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
