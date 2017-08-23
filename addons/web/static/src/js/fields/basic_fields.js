@@ -2040,7 +2040,8 @@ var JournalDashboardGraph = AbstractField.extend({
                         .y(function (d) { return d.value; })
                         .showValues(false)
                         .showYAxis(false)
-                        .margin({'left': 0, 'right': 0, 'top': 0, 'bottom': 40});
+                        .color(['#875A7B', '#526774', '#FA8072'])
+                        .margin({'left': 0, 'right': 0, 'top': 20, 'bottom': 20});
 
                     self.chart.xAxis.axisLabel(self.data[0].title);
                     self.chart.yAxis.tickFormat(d3.format(',.2f'));
@@ -2056,7 +2057,7 @@ var JournalDashboardGraph = AbstractField.extend({
             }
             d3.select(self.$('svg')[0])
                 .datum(self.data)
-                .transition().duration(1200)
+                .transition().duration(600)
                 .call(self.chart);
 
             self._customizeChart();
