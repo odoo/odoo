@@ -499,7 +499,6 @@ class AccountBankStatementLine(models.Model):
                 'st_line': st_line.get_statement_line_for_reconciliation_widget(),
                 'reconciliation_proposition': rp
             })
-
         return ret
 
     def get_statement_line_for_reconciliation_widget(self):

@@ -338,9 +338,9 @@ class AccountInvoice(models.Model):
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
 
-    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON')
-    payments_widget = fields.Text(compute='_get_payment_info_JSON')
-    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
+    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
+    payments_widget = fields.Text(compute='_get_payment_info_JSON', groups="account.group_account_invoice")
+    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
 
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
@@ -741,7 +741,7 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         credit_aml = self.env['account.move.line'].browse(credit_aml_id)
         if not credit_aml.currency_id and self.currency_id != self.company_id.currency_id:
-            credit_aml.with_context(allow_amount_currency=True).write({
+            credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
                 'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:

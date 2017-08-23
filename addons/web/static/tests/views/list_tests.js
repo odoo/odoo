@@ -1271,7 +1271,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree><field name="date"/><field name="datetime"/></tree>',
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
@@ -1322,12 +1324,13 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with nested groups', function (assert) {
-        assert.expect(37);
+        assert.expect(42);
 
         this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1});
         this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 2});
 
         var nbRPCs = {readGroup: 0, searchRead: 0};
+        var envIDs = []; // the ids that should be in the environment during this test
 
         var list = createView({
             View: ListView,
@@ -1352,9 +1355,13 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             intercepts: {
-                switch_view:  function (event) {
+                switch_view: function (event) {
                     assert.strictEqual(event.data.res_id, 4,
                         "'switch_view' event has been triggered");
+                },
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
                 },
             },
         });
@@ -1398,6 +1405,7 @@ QUnit.module('Views', {
 
         // open subgroup
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = [4, 5]; // the opened subgroup contains these two records
         $openGroup.find('.o_group_header:nth(2)').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
@@ -1414,6 +1422,7 @@ QUnit.module('Views', {
 
         // sort by int_field (ASC) and check that open groups are still open
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = [5, 4]; // order of the records changed
         list.$('thead th:last').click();
         assert.strictEqual(nbRPCs.readGroup, 2, "should have done two read_groups");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
@@ -1427,6 +1436,7 @@ QUnit.module('Views', {
 
         // close first level group
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = []; // the group being closed, there is no more record in the environment
         list.$('.o_group_header:first').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");
@@ -2517,6 +2527,55 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row:first .text-muted:not(.o_toggle_button_success)').length, 1,
             "boolean button should have been updated");
 
+        list.destroy();
+    });
+
+    QUnit.test('grouped list view, indentation for empty group', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.priority = {
+            string: "Priority",
+            type: "selection",
+            selection: [[1, "Low"], [2, "Medium"], [3, "High"]],
+            default: 1,
+        };
+        this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2});
+        this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3});
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="id"/></tree>',
+            groupBy: ['priority', 'm2o'],
+            mockRPC: function (route, args) {
+                // Override of the read_group to display the row even if there is no record in it,
+                // to mock the behavihour of some fields e.g stage_id on the sale order.
+                if (args.method === 'read_group' && args.kwargs.groupby[0] === "m2o") {
+                    return $.when([
+                        {
+                            id: 8,
+                            m2o:[1,"Value 1"],
+                            m2o_count: 0
+                        }, {
+                            id: 2,
+                            m2o:[2,"Value 2"],
+                            m2o_count: 1
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // open the first group
+        list.$('.o_group_header:first').click();
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().length, 1,
+            "There should be an empty element creating the indentation for the subgroup.");
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).hasClass('fa'), true,
+            "The first element of the row name should have the fa class");
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
+            "The first element of the row name should be a span");
         list.destroy();
     });
 });

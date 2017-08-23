@@ -49,9 +49,9 @@ class WebsiteHrRecruitment(http.Controller):
         countries = set(o.country_id for o in offices if o.country_id)
 
         if department:
-            jobs = (j for j in jobs if j.department_id and j.department_id.id == department.id)
+            jobs = [j for j in jobs if j.department_id and j.department_id.id == department.id]
         if office_id and office_id in [x.id for x in offices]:
-            jobs = (j for j in jobs if j.address_id and j.address_id.id == office_id)
+            jobs = [j for j in jobs if j.address_id and j.address_id.id == office_id]
         else:
             office_id = False
 
