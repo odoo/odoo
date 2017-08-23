@@ -36,6 +36,17 @@ class StockMove(models.Model):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return result
 
+    @api.multi
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals:
+            for move in self:
+                if move.state == 'done':
+                    sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
+                    for line in sale_order_lines:
+                        line.qty_delivered = line._get_delivered_qty()
+        return res
+
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
