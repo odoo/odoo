@@ -151,6 +151,15 @@ class PaymentAcquirer(models.Model):
              "Use this field anywhere a small image is required.")
 
     payment_option_ids = fields.Many2many('payment.option', string='Supported Payment Option')
+    prefered_payment_type = fields.Selection(selection=[('s2s','Server to server'),
+        ('form', 'Form'),
+        ('both', 'Both')
+    ], default='form', required=True, string='Prefered payment type', help="""Which payment type you wish to use.
+        - Form: Redirect the user to the payment acquirer website to pay.
+        - Server to server: The user enter his credit card information on your website and is processed by Odoo.
+        - Both: Both are displayed to the user.
+
+        Note: Subscriptions does not take this field in account, it uses server to server by default.""")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
