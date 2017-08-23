@@ -131,7 +131,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment for test'
     location_id: stock_location_suppliers
     location_dest_id: stock_location_stock
 -
@@ -146,7 +145,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -160,7 +158,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment2}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment main_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -174,7 +171,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment3}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment your_company warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -188,7 +184,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment4}:
    picking_type_id: stock.picking_type_in
-   origin: 'incoming_shipment_main_warehouse'
    partner_id: base.res_partner_1
    location_id: stock.stock_location_suppliers
    location_dest_id: stock.stock_location_stock
@@ -219,7 +214,6 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
-    origin: 'incoming_shipment_chicago_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
@@ -240,7 +234,6 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse2}:
     picking_type_id: chi_picking_type_in
-    origin: 'incoming_shipment chicago_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
