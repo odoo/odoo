@@ -530,6 +530,13 @@ class ConnectionPool(object):
         count = len(self._connections)
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
+    @locked
+    def _dumps(self):
+        d = []
+        for c, u in self._connections:
+            d.append("%r%s" % (c, ' [used]' if u else ''))
+        return '\n'.join(d)
+
     def _debug(self, msg, *args):
         _logger.debug(('%r ' + msg), self, *args)
 

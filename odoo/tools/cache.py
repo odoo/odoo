@@ -3,7 +3,7 @@
 
 # decorator makes wrappers that have the same API as their wrapped function;
 # this is important for the odoo.api.guess() that relies on signatures
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
@@ -196,24 +196,29 @@ class dummy_cache(object):
 
 def log_ormcache_stats(sig=None, frame=None):
     """ Log statistics of ormcache usage by database, model, and method. """
-    from odoo.modules.registry import Registry
     import threading
 
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
+    for stat in orm_cache_stats():
+        me.dbname = stat.dbname
+        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+                     stat.count, stat.hit, stat.miss, stat.err, stat.ratio, stat.model, stat.method)
+
+    me.dbname = me_dbname
+
+def orm_cache_stats():
+    from odoo.modules.registry import Registry
+    CacheStat = namedtuple('CacheStat', 'dbname count hit miss err ratio model method')
+
     entries = defaultdict(int)
     for dbname, reg in Registry.registries.iteritems():
         for key in reg.cache.iterkeys():
             entries[(dbname,) + key[:2]] += 1
     for key, count in sorted(entries.items()):
         dbname, model_name, method = key
-        me.dbname = dbname
         stat = STAT[key]
-        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                     count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
-
-    me.dbname = me_dbname
-
+        yield CacheStat(dbname, count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
 
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
@@ -222,6 +227,7 @@ def get_cache_key_counter(bound_method, *args, **kwargs):
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
+
 
 # For backward compatibility
 cache = ormcache

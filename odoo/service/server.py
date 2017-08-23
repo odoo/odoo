@@ -39,7 +39,9 @@ import odoo
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 import odoo.tools.config as config
-from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.tools import stripped_sys_argv, log_ormcache_stats
+from odoo.tools.misc import _dumpstacks
+from odoo.tools.cache import orm_cache_stats
 
 _logger = logging.getLogger(__name__)
 
@@ -263,7 +265,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGTERM, self.signal_handler)
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
-            signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGQUIT, dump_server_info)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
@@ -369,7 +371,7 @@ class GeventServer(CommonServer):
         resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
 
         if os.name == 'posix':
-            signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGQUIT, dump_server_info)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         gevent.spawn(self.watchdog)
@@ -493,7 +495,7 @@ class PreforkServer(CommonServer):
                 raise KeyboardInterrupt
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
-                self.dumpstacks()
+                dump_server_info()
             elif sig == signal.SIGUSR1:
                 # log ormcache stats on kill -SIGUSR1
                 log_ormcache_stats()
@@ -575,7 +577,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGCHLD, self.signal_handler)
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
-        signal.signal(signal.SIGQUIT, dumpstacks)
+        signal.signal(signal.SIGQUIT, dump_server_info)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         if self.address:
@@ -968,3 +970,38 @@ def restart():
         threading.Thread(target=_reexec).start()
     else:
         os.kill(server.pid, signal.SIGHUP)
+
+
+def dump_server_info(sig, frame=None):
+    try:
+        h = _logger.root.handlers[0]
+        if not (os.name == 'posix' and os.isatty(h.stream.fileno())):
+            raise TypeError
+
+        def yellow(s):
+            return '\033[1;33m\033[1;40m%s\033[0m' % (s,)
+
+    except Exception:
+        def yellow(s):
+            return s
+
+    def header(s):
+        return yellow('{1:=<80}\n{0:^80}\n{1:=>80}'.format(s, ''))
+
+    cs = []
+    for stat in orm_cache_stats():
+        cs.append("DB %s: %6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s" %
+                  (stat.dbname, stat.count, stat.hit, stat.miss, stat.err, stat.ratio, stat.model, stat.method))
+
+    _logger.info("""
+%s
+%s
+
+%s
+%s
+
+%s
+%s
+""" % (header('Stacks'), _dumpstacks(),
+       header('Cache Stats'), "\n".join(cs),
+       header("ConnectionPool"), odoo.sql_db._Pool._dumps()))
