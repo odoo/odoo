@@ -27,9 +27,9 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def write(self, values):
         # prevent to update invoiced timesheets
-        #if self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
-        #    if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
-        #        raise UserError(_('You can not modify already invoiced timesheets.'))
+        if self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
+            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
+                raise UserError(_('You can not modify already invoiced timesheets.'))
 
         so_lines = self.mapped('so_line')
         if values.get('task_id'):
