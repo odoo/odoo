@@ -77,23 +77,55 @@ odoo.define('payment.payment_form', function (require){
                 // if the user is going to pay with a form payment, then
                 else if(this.isFormPaymentRadio(checked_radio))
                 {
+                    var self = this;
                     // we retrieve the acquirer id and its form
                     var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
                     var acquirer_form = this.$('#o_payment_form_acq_' + acquirer_id);
                     var inputs_form = $('input', acquirer_form);
                     var ds = $('input[name="data_set"]', acquirer_form)[0];
+                    var form_save_token = false;
+                    var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
 
                     // Here we take the values we need to send to the acquirer and generate a form with them
                     var html_form = '<form method="post" action="' + ds.dataset.actionUrl + '" class="hidden">';
+                    var ignored_inputs = ['data_set', 'o_payment_form_save_token'];
 
                     for(var i = 0; i < inputs_form.length; i ++) {
-                        if(inputs_form[i].name != "data_set") {
+                        if(ignored_inputs.indexOf(inputs_form[i].name) == -1) {
                             html_form +='<input name="' + inputs_form[i].name + '" value="' + inputs_form[i].value + '"/>';
+                        }
+                        else if(inputs_form[i].name == 'o_payment_form_save_token') {
+                            form_save_token = inputs_form[i].checked;
                         }
                     }
                     html_form += '</form>';
-                    // we append the form to the body and send it.
-                    $(html_form).appendTo("body").submit();
+
+                    // if there's a prepare tx url set
+                    if($tx_url.length == 1)
+                    {
+                        // then we call the route to prepare the transaction
+                        ajax.jsonRpc($tx_url[0].value, 'call', {
+                            'acquirer_id': parseInt(acquirer_id),
+                            'save_token': form_save_token
+                        }).then(function(result){
+                            if(result) {
+                                // we append the form to the body and send it.
+                                $(html_form).appendTo("body").submit();
+                            }
+                            else {
+                                self.error(_t('Server Error'),
+                                _t("<p>We are not able to redirect you to the payment form.</p>"));
+                            }
+                        }).fail(function(message, data){
+                            self.error(_t('Server Error'),
+                            _t("<p>We are not able to redirect you to the payment form.</p>") + (core.debug ? data.data.message : ''));
+                        });
+                    }
+                    else
+                    {
+                        // we append the form to the body and send it.
+                        $(html_form).appendTo("body").submit();
+                    }
                 }
                 // if the user is using an old payment
                 else {
