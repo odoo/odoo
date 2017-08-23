@@ -61,7 +61,7 @@
                     </div>
                     <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if (len(s2s_acquirers)&gt;1 and len(pms)==0 and s2s_acquirers[0]!=acq) else 'hidden' if len(pms)&gt;0 else ''}}">
                         <div class="clearfix">
-                            <t t-raw="acq.form" t-att-data-acquirer-id="acquirer.id"/>
+                            <t t-call="{{acq.sudo().get_s2s_form_name()}}"/>
                         </div>
                     </div>
                 </t>

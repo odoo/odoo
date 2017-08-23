@@ -355,16 +355,11 @@ class PaymentAcquirer(models.Model):
 
         return self.view_template_id.render(values, engine='ir.qweb')
 
-    @api.multi
-    def _registration_render(self, partner_id, qweb_context=None):
-        if qweb_context is None:
-            qweb_context = {}
-        qweb_context.update(id=self.ids[0], partner_id=partner_id)
-        method_name = '_%s_registration_form_generate_values' % (self.provider,)
-        if hasattr(self, method_name):
-            method = getattr(self, method_name)
-            qweb_context.update(method(qweb_context))
-        return self.registration_view_template_id.render(qweb_context, engine='ir.qweb')
+    def get_s2s_form_name(self):
+        if self.registration_view_template_id:
+            model_data = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('res_id', '=', self.registration_view_template_id.id)])
+            return ('%s.%s') % (model_data.module, model_data.name)
+        return False
 
     @api.multi
     def s2s_process(self, data):
