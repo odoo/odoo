@@ -1333,10 +1333,12 @@
                                     <t t-set="icon_class" t-value="'fa-lock'"/>
                                     <t t-set="pms" t-value="tokens"/>
                                     <t t-set="form_action" t-value="'/shop/payment/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/shop/payment/transaction/'"/>
                                 </t>
                             </div>
 
-                            <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                            <!--  TBE TODO: Virer tout ce qu'il y a en bas et qui est inutile maintenant -->
+                            <!-- <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-7 col-sm-8">
                                     <h4>Choose a payment acquirer</h4>
                                     <ul class="list-unstyled">
@@ -1412,7 +1414,7 @@
                                         </a>
                                     </form>
                                 </div>
-                            </div>
+                            </div> -->
                           </div>
                         </div>
 
