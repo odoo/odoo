@@ -181,7 +181,7 @@
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="location_dest_id"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                     <field name="date" invisible="1"/>
                     <field name="min_date"/>
