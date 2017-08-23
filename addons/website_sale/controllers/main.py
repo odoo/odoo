@@ -708,6 +708,8 @@ class WebsiteSale(http.Controller):
             partner=order.partner_id.id,
             order=order,
             payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
+            return_url= '/shop/payment/validate',
+            bootstrap_formatting= True
         )
 
         acquirers = request.env['payment.acquirer'].search(
@@ -731,12 +733,6 @@ class WebsiteSale(http.Controller):
                     'billing_partner_id': order.partner_invoice_id.id,
                 }
             )
-
-        for acq in values['s2s_acquirers']:
-            acq.form = acq._registration_render(order.partner_id.id, {
-                'return_url': '/shop/payment/validate',
-                'bootstrap_formatting': True
-            })
 
         return values
 

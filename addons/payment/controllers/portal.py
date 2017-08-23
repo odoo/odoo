@@ -12,13 +12,13 @@ class WebsitePayment(http.Controller):
         partner = request.env.user.partner_id
         payment_tokens = partner.payment_token_ids
         payment_tokens |= partner.commercial_partner_id.sudo().payment_token_ids
+        return_url = request.params.get('redirect', '/my/payment_method')
         values = {
             'pms': payment_tokens,
-            'acquirers': acquirers
+            'acquirers': acquirers,
+            'return_url': return_url,
+            'bootstrap_formatting': True
         }
-        return_url = request.params.get('redirect', '/my/payment_method')
-        for acquirer in acquirers:
-            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True})
         return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
