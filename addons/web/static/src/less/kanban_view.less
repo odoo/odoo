@@ -89,6 +89,9 @@
     &:hover {
         color: @headings-color;
     }
+    &:focus, &:active, &:focus:active {
+        outline: none;
+    }
 }
 
 .o-kanban-dropdown-open () {
@@ -404,7 +407,7 @@
         // .oe_kanban_avatar_smallbox {
         //     .square(40px);
         //     box-shadow: 0 1px 4px @gray-light;
-        // 
+        //
         //     float: left;
         //     margin-right: 5px;
         // }
