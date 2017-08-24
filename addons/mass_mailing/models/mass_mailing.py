@@ -659,33 +659,36 @@ class MassMailing(models.Model):
         already_mailed_res_ids = [record['res_id'] for record in already_mailed]
         return list(set(res_ids) - set(already_mailed_res_ids))
 
-    def send_mail(self):
+    def get_composer_values(self):
+        self.ensure_one()
+        # Convert links in absolute URLs before the application of the shortener
+        self.body_html = self.env['mail.template']._replace_local_links(self.body_html)
         author_id = self.env.user.partner_id.id
+        composer_values = {
+            'author_id': author_id,
+            'attachment_ids': [(4, attachment.id) for attachment in self.attachment_ids],
+            'body': self.convert_links()[self.id],
+            'subject': self.name,
+            'model': self.mailing_model_real,
+            'email_from': self.email_from,
+            'record_name': False,
+            'composition_mode': 'mass_mail',
+            'mass_mailing_id': self.id,
+            'mailing_list_ids': [(4, l.id) for l in self.contact_list_ids],
+            'no_auto_thread': self.reply_to_mode != 'thread',
+        }
+        if self.reply_to_mode == 'email':
+            composer_values['reply_to'] = self.reply_to
+        return composer_values
+
+    def send_mail(self):
         for mailing in self:
             # instantiate an email composer + send emails
             res_ids = mailing.get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('Please select recipients.'))
 
-            # Convert links in absolute URLs before the application of the shortener
-            mailing.body_html = self.env['mail.template']._replace_local_links(mailing.body_html)
-
-            composer_values = {
-                'author_id': author_id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.convert_links()[mailing.id],
-                'subject': mailing.name,
-                'model': mailing.mailing_model_real,
-                'email_from': mailing.email_from,
-                'record_name': False,
-                'composition_mode': 'mass_mail',
-                'mass_mailing_id': mailing.id,
-                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'no_auto_thread': mailing.reply_to_mode != 'thread',
-            }
-            if mailing.reply_to_mode == 'email':
-                composer_values['reply_to'] = mailing.reply_to
-
+            composer_values = mailing.get_composer_values()
             composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
             extra_context = self._get_mass_mailing_context()
             composer = composer.with_context(active_ids=res_ids, **extra_context)

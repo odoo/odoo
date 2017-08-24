@@ -7214,7 +7214,7 @@ QUnit.module('relational_fields', {
                 "should do a do_action with correct parameters");
         });
 
-        assert.strictEqual(form.$('a.o_form_uri:contains(first record)').length, 1,
+        assert.strictEqual(form.$('a.o_form_uri:contains(xphone)').length, 1,
                         "should contain a link");
         form.$('a.o_form_uri').click(); // click on the link in readonly mode (should trigger do_action)
 
@@ -7226,7 +7226,7 @@ QUnit.module('relational_fields', {
             "should contain one many2one");
         assert.strictEqual(form.$('.o_field_widget select').val(), "product",
             "widget should contain one select with the model");
-        assert.strictEqual(form.$('.o_field_widget input').val(), "first record",
+        assert.strictEqual(form.$('.o_field_widget input').val(), "xphone",
             "widget should contain one input with the record");
 
         var options = _.map(form.$('.o_field_widget select > option'), function (el) {
