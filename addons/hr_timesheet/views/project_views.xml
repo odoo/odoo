@@ -40,7 +40,7 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </button>
                 <xpath expr="//div[@name='options_active']" position="inside">
                     <div>
@@ -55,11 +55,10 @@
             <field name="name">project.task.form.inherited</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
-            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}"  groups="hr_timesheet.group_hr_timesheet_user">
-
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
                         <group>
                             <group>
                                 <field name="planned_hours" widget="float_time"/>
@@ -119,12 +118,12 @@
                     <field name="allow_timesheets" invisible="1"/>
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[last()]" position="after">
-                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
                 <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
-                    <a t-if="record.allow_timesheets.raw_value" class="o_project_kanban_box" name="%(act_hr_timesheet_line_by_project)d" type="action">
+                    <a t-if="record.allow_timesheets.raw_value" class="o_project_kanban_box" name="%(act_hr_timesheet_line_by_project)d" type="action" groups="hr_timesheet.group_hr_timesheet_user">
                         <div>
                             <span class="o_label">Timesheets</span>
                         </div>

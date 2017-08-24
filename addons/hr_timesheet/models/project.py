@@ -10,6 +10,7 @@ class Project(models.Model):
 
     allow_timesheets = fields.Boolean("Allow timesheets", default=True)
 
+
 class Task(models.Model):
     _inherit = "project.task"
 
@@ -25,7 +26,7 @@ class Task(models.Model):
                     children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
 
             task.children_hours = children_hours
-            task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
+            task.effective_hours = sum(task.sudo().timesheet_ids.mapped('unit_amount'))  # use 'sudo' here to allow project user (without timesheet user right) to create task
             task.remaining_hours = task.planned_hours - task.effective_hours - task.children_hours
             task.total_hours = max(task.planned_hours, task.effective_hours)
             task.total_hours_spent = task.effective_hours + task.children_hours
