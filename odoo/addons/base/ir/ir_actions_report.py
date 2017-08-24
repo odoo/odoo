@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.exceptions import UserError, AccessError
+from odoo.tools.safe_eval import safe_eval
 from odoo.tools.misc import find_in_path
 from odoo.tools import config
 from odoo.sql_db import TestCursor
@@ -22,7 +22,6 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from cStringIO import StringIO
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
@@ -102,7 +101,6 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
-
 
     @api.multi
     def associated_view(self):
@@ -512,7 +510,7 @@ class IrActionsReport(models.Model):
 
         # In wkhtmltopdf has been called, we need to split the pdf in order to call the postprocess method.
         if pdf_content:
-            pdf_content_stream = StringIO(pdf_content)
+            pdf_content_stream = io.BytesIO(pdf_content)
             # Build a record_map mapping id -> record
             record_map = {r.id: r for r in self.env[self.model].browse([res_id for res_id in res_ids if res_id])}
 
@@ -540,7 +538,7 @@ class IrActionsReport(models.Model):
                         attachment_writer = PdfFileWriter()
                         for j in range(num, to):
                             attachment_writer.addPage(reader.getPage(j))
-                        stream = StringIO()
+                        stream = io.BytesIO()
                         attachment_writer.write(stream)
                         if res_ids[i] and res_ids[i] not in save_in_attachment:
                             self.postprocess_pdf_report(record_map[res_ids[i]], stream)
@@ -552,14 +550,14 @@ class IrActionsReport(models.Model):
         if self.attachment_use:
             for attachment_id in save_in_attachment.values():
                 content = base64.decodestring(attachment_id.datas)
-                streams.append(StringIO(content))
+                streams.append(io.BytesIO(content))
 
         # Build the final pdf.
         writer = PdfFileWriter()
         for stream in streams:
             reader = PdfFileReader(stream)
             writer.appendPagesFromReader(reader)
-        result_stream = StringIO()
+        result_stream = io.BytesIO()
         streams.append(result_stream)
         writer.write(result_stream)
         result = result_stream.getvalue()
