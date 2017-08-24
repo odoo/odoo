@@ -124,19 +124,6 @@
 
 <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4" groups="stock.group_stock_multi_locations"/>
 
-        <record model="ir.ui.view" id="stock_picking_calendar">
-            <field name="name">stock.picking.calendar</field>
-            <field name="model">stock.picking</field>
-            <field name="priority" eval="2"/>
-            <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
-                    <field name="origin"/>
-                    <field name="picking_type_id"/>
-                    <field name="partner_id"/>
-                </calendar>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="stock_picking_kanban">
             <field name="name">stock.picking.kanban</field>
             <field name="model">stock.picking</field>
