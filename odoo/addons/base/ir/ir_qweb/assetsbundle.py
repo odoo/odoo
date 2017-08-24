@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import os
 import re
 import hashlib
@@ -12,7 +13,7 @@ from odoo import fields, tools
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
-from odoo.tools import func, misc, pycompat
+from odoo.tools import func, misc
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -101,7 +102,7 @@ class AssetsBundle(object):
 
     def to_html(self, sep=None, css=True, js=True, debug=False, async=False, url_for=(lambda url: url)):
         if sep is None:
-            sep = '\n            '
+            sep = u'\n            '
         response = []
         if debug == 'assets':
             if css and self.stylesheets:
@@ -120,12 +121,12 @@ class AssetsBundle(object):
             if css and self.stylesheets:
                 css_attachments = self.css() or []
                 for attachment in css_attachments:
-                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                    response.append(u'<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
                 if self.css_errors:
                     msg = '\n'.join(self.css_errors)
                     response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
             if js and self.javascripts:
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
+                response.append(u'<script %s type="text/javascript" src="%s"></script>' % (async and u'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
 
         return sep + sep.join(response)
@@ -148,8 +149,8 @@ class AssetsBundle(object):
         Not really a full checksum.
         We compute a SHA1 on the rendered bundle + max linked files last_modified date
         """
-        check = json.dumps(self.files) + ",".join(self.remains) + str(self.last_modified)
-        return hashlib.sha1(check).hexdigest()
+        check = u"%s%s%s" % (json.dumps(self.files), u",".join(self.remains), self.last_modified)
+        return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
     def clean_attachments(self, type):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
@@ -207,7 +208,7 @@ class AssetsBundle(object):
             'res_id': False,
             'type': 'binary',
             'public': True,
-            'datas': content.encode('utf8').encode('base64'),
+            'datas': base64.b64encode(content.encode('utf8')),
         }
         attachment = ira.sudo().create(values)
 
@@ -315,11 +316,11 @@ class AssetsBundle(object):
                         outdated = True
                         break
                     if asset._content is None:
-                        asset._content = attachment.datas and attachment.datas.decode('base64').decode('utf8') or ''
+                        asset._content = attachment.datas and base64.b64decode(attachment.datas).decode('utf8') or ''
                         if not asset._content and attachment.file_size > 0:
                             asset._content = None # file missing, force recompile
 
-                if any(asset._content is None for asset in pycompat.values(assets)):
+                if any(asset._content is None for asset in assets.values()):
                     outdated = True
 
                 if outdated:
@@ -357,7 +358,7 @@ class AssetsBundle(object):
                             url = asset.html_url
                             with self.env.cr.savepoint():
                                 self.env['ir.attachment'].sudo().create(dict(
-                                    datas=asset.content.encode('utf8').encode('base64'),
+                                    datas=base64.b64encode(asset.content.encode('utf8')),
                                     mimetype='text/css',
                                     type='binary',
                                     name=url,
@@ -501,7 +502,7 @@ class WebAsset(object):
                 with open(self._filename, 'rb') as fp:
                     return fp.read().decode('utf-8')
             else:
-                return self._ir_attach['datas'].decode('base64').decode('utf-8')
+                return base64.b64decode(self._ir_attach['datas']).decode('utf-8')
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:

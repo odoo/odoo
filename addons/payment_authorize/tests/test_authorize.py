@@ -11,7 +11,7 @@ import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 
 
 @odoo.tests.common.at_install(True)
@@ -39,7 +39,7 @@ class AuthorizeForm(AuthorizeCommon):
             values['x_fp_timestamp'],
             values['x_amount'],
         ]) + '^'
-        return hmac.new(str(values['x_trans_key']), data, hashlib.md5).hexdigest()
+        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
 
     def test_10_Authorize_form_render(self):
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -91,11 +91,11 @@ class AuthorizeForm(AuthorizeCommon):
         tree = objectify.fromstring(res)
         self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
         for el in tree.iterfind('input'):
-            values = list(pycompat.values(el.attrib))
+            values = list(el.attrib.values())
             if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state']:
                 continue
             self.assertEqual(
-                unicode(values[2], "utf-8"),
+                values[2],
                 form_values[values[1]],
                 'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )

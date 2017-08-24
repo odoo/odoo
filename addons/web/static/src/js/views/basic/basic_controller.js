@@ -329,9 +329,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 if (options && options.readonlyIfRealDiscard && !needDiscard) {
                     return;
                 }
-                if (needDiscard) { // Just some optimization
-                    self.model.discardChanges(recordID);
-                }
+                self.model.discardChanges(recordID);
                 if (self.model.isNew(recordID)) {
                     self._abandonRecord(recordID);
                     return;

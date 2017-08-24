@@ -96,6 +96,11 @@ class StockMoveLine(models.Model):
             res = {'domain': {'product_uom_id': []}}
         return res
 
+    @api.onchange('lot_name', 'lot_id')
+    def onchange_serial_number(self):
+        if self.product_id.tracking == 'serial':
+            self.qty_done = 1
+
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')

@@ -16,8 +16,8 @@ _logger = logging.getLogger(__name__)
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
-    "database.secret": lambda: str(uuid.uuid4()),
-    "database.uuid": lambda: str(uuid.uuid1()),
+    "database.secret": lambda: pycompat.text_type(uuid.uuid4()),
+    "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
     "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
 }
@@ -42,7 +42,7 @@ class IrConfigParameter(models.Model):
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
-        for key, func in pycompat.items(_default_parameters):
+        for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
             if force or not params:

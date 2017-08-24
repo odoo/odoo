@@ -315,7 +315,8 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button",
+        trigger: ".header-button.confirm",
+        run: function() {}, //it's a check,
     }]);
 
     Tour.register('pos_basic_order', { test: true, url: '/pos/web' }, steps);

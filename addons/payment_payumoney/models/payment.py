@@ -49,7 +49,7 @@ class PaymentAcquirerPayumoney(models.Model):
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
             sign = self.payumoney_merchant_salt + sign + self.payumoney_merchant_key
 
-        shasign = hashlib.sha512(sign).hexdigest()
+        shasign = hashlib.sha512(sign.encode('utf-8')).hexdigest()
         return shasign
 
     @api.multi

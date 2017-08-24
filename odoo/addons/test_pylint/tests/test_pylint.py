@@ -46,6 +46,7 @@ class TestPyLint(TransactionCase):
         'old-ne-operator',
         'old-octal-operator',
         'parameter-unpacking',
+        'invalid-string-codec',
 
         'metaclass-assignment',
         'deprecated-module',
@@ -75,6 +76,10 @@ class TestPyLint(TransactionCase):
         'filter',
         'zip',
 
+        'basestring',
+        'unichr',
+        'unicode',
+
         'file',
         'reduce',
     ]
@@ -82,6 +87,8 @@ class TestPyLint(TransactionCase):
     BAD_MODULES = [
         'commands',
         'cPickle',
+        'csv',
+        'cStringIO',
         'md5',
         'urllib',
         'urllib2',
@@ -92,6 +99,7 @@ class TestPyLint(TransactionCase):
         'htmlentitydefs',
         'HTMLParser',
         'Queue',
+        'StringIO',
         'UserDict',
         'UserString',
         'UserList',
@@ -139,4 +147,4 @@ class TestPyLint(TransactionCase):
         else:
             out, err = process.communicate()
             if process.returncode:
-                self.fail("pylint test failed:\n" + (out + "\n" + err).strip())
+                self.fail("pylint test failed:\n" + (b"\n" + out + b"\n" + err).decode('utf-8').strip())

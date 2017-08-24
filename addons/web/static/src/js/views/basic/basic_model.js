@@ -186,6 +186,29 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Onchange RPCs may return values for fields that are not in the current
+     * view. Those fields might even be unknown when the onchange returns (e.g.
+     * in x2manys, we only know the fields that are used in the inner view, but
+     * not those used in the potential form view opened in a dialog when a sub-
+     * record is clicked). When this happens, we can't infer their type, so the
+     * given value can't be processed. It is instead stored in the '_rawChanges'
+     * key of the record, without any processing. Later on, if this record is
+     * displayed in another view (e.g. the user clicked on it in the x2many
+     * list, and the record opens in a dialog), those changes that were left
+     * behind must be applied. This function applies changes stored in
+     * '_rawChanges' for a given viewType.
+     *
+     * @param {string} id local resource id of a record
+     * @param {string} viewType the current viewType
+     * @returns {Deferred -> string} resolves to the id of the record
+     */
+    applyRawChanges: function (recordID, viewType) {
+        var record = this.localData[recordID];
+        return this._applyOnChange(record._rawChanges, record, viewType).then(function () {
+            return record.id;
+        });
+    },
+    /**
      * Delete a list of records, then, if the records have a parent, reload it.
      *
      * @todo we should remove the deleted records from the localData
@@ -754,13 +777,14 @@ var BasicModel = AbstractModel.extend({
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
                     } else {
-                        // save the viewType of edition, so that the correct readonly modifiers
-                        // can be evaluated when the record will be saved
-                        for (var fieldName in (rec._changes || {})) {
-                            rec._editionViewType[fieldName] = options.viewType;
-                        }
                         rec._savePoint = _.extend({}, newValue);
                     }
+                });
+
+                // save the viewType of edition, so that the correct readonly modifiers
+                // can be evaluated when the record will be saved
+                _.each((record._changes || {}), function (value, fieldName) {
+                    record._editionViewType[fieldName] = options.viewType;
                 });
             }
             var shouldReload = 'reload' in options ? options.reload : true;
@@ -896,18 +920,23 @@ var BasicModel = AbstractModel.extend({
      * @returns {Deferred -> string} resolves to the group id
      */
     toggleGroup: function (groupId) {
+        var self = this;
         var group = this.localData[groupId];
         if (group.isOpen) {
             group.isOpen = false;
             group.data = [];
+            group.res_ids = [];
             group.offset = 0;
+            this._updateParentResIDs(group);
             return $.when(groupId);
         }
         if (!group.isOpen) {
             group.isOpen = true;
             var def;
             if (group.count > 0) {
-                def = this._load(group);
+                def = this._load(group).then(function () {
+                    self._updateParentResIDs(group);
+                });
             }
             return $.when(def).then(function () {
                 return groupId;
@@ -1093,21 +1122,33 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} values the result of the onchange RPC (a mapping of
      *   fieldnames to their value)
      * @param {Object} record
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyOnChange: function (values, record) {
+    _applyOnChange: function (values, record, viewType) {
         var self = this;
         var defs = [];
         var rec;
+        viewType = viewType || record.viewType;
         record._changes = record._changes || {};
         _.each(values, function (val, name) {
             var field = record.fields[name];
             if (!field) {
-                return; // ignore changes of unknown fields
+                // this field is unknown so we can't process it for now (it is not
+                // in the current view anyway, otherwise it wouldn't be unknown.
+                // we store its value without processing it, so that if we later
+                // on switch to another view in which this field is displayed,
+                // we could process it as we would know its type then.
+                // use case: an onchange sends a create command for a one2many,
+                // in the dict of values, there is a value for a field that is
+                // not in the one2many list, but that is in the one2many form.
+                record._rawChanges[name] = val;
+                return;
             }
-
-            if (field.type === 'many2one' ) {
-                var id = false;
+            var id;
+            if (field.type === 'many2one') {
+                id = false;
                 // in some case, the value returned by the onchange can
                 // be false (no value), so we need to avoid creating a
                 // local record for that.
@@ -1126,13 +1167,27 @@ var BasicModel = AbstractModel.extend({
                     id = rec.id;
                 }
                 record._changes[name] = id;
+            } else if (field.type === 'reference') {
+                id = false;
+                if (val) {
+                    var ref = val.split(',');
+                    rec = self._makeDataPoint({
+                        context: record.context,
+                        data: {id: parseInt(ref[1])},
+                        modelName: ref[0],
+                        parentID: record.id,
+                    });
+                    defs.push(self._fetchNameGet(rec));
+                    id = rec.id;
+                }
+                record._changes[name] = id;
             } else if (field.type === 'one2many' || field.type === 'many2many') {
                 var listId = record._changes[name] || record.data[name];
                 var list;
                 if (listId) {
                     list = self.localData[listId];
                 } else {
-                    var fieldInfo = record.fieldsInfo[record.viewType][name];
+                    var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
                         return; //ignore changes of x2many not in view
                     }
@@ -1142,7 +1197,7 @@ var BasicModel = AbstractModel.extend({
                         parentID: record.id,
                         static: true,
                         type: 'list',
-                        viewtype: fieldInfo.viewType,
+                        viewType: fieldInfo.viewType,
                     });
                 }
                 record._changes[name] = list.id;
@@ -1535,15 +1590,17 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var model;
         var records = [];
+        var ids = [];
         list = this._applyX2ManyOperations(list);
-        var ids = _.map(list.data, function (localId) {
+        _.each(list.data, function (localId) {
             var record = self.localData[localId];
             var data = record._changes || record.data;
             var many2oneId = data[fieldName];
+            if (!many2oneId) { return; }
             var many2oneRecord = self.localData[many2oneId];
             records.push(many2oneRecord);
+            ids.push(many2oneRecord.res_id);
             model = many2oneRecord.model;
-            return many2oneRecord.res_id;
         });
         return this._rpc({
                 model: model,
@@ -1600,6 +1657,39 @@ var BasicModel = AbstractModel.extend({
             });
     },
     /**
+     * Fetch the `name_get` for a reference field.
+     *
+     * @private
+     * @param {Object} record
+     * @param {string} fieldName
+     * @returns {Deferred}
+     */
+    _fetchReference: function (record, fieldName) {
+        var self = this;
+        var def;
+        var value = record._changes && record._changes[fieldName] || record.data[fieldName];
+        var model = value && value.split(',')[0];
+        var resID = value && parseInt(value.split(',')[1]);
+        if (model && model !== 'False' && resID) {
+            def = self._rpc({
+                model: model,
+                method: 'name_get',
+                args: [resID],
+                context: record.getContext({fieldName: fieldName}),
+            }).then(function (result) {
+                return self._makeDataPoint({
+                    data: {
+                        id: result[0][0],
+                        display_name: result[0][1],
+                    },
+                    modelName: model,
+                    parentID: record.id,
+                });
+            });
+        }
+        return $.when(def);
+    },
+    /**
      * Fetch the extra data (`name_get`) for the reference fields of the record
      * model.
      *
@@ -1614,28 +1704,12 @@ var BasicModel = AbstractModel.extend({
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'reference') {
-                var value = record.data[fieldName];
-                if (value) {
-                    var model = value.split(',')[0];
-                    var resID = parseInt(value.split(',')[1]);
-                    var def = self._rpc({
-                        model: model,
-                        method: 'name_get',
-                        args: [resID],
-                        context: record.getContext({fieldName: fieldName}),
-                    }).then(function (result) {
-                        var referenceDp = self._makeDataPoint({
-                            data: {
-                                id: result[0][0],
-                                display_name: result[0][1],
-                            },
-                            modelName: model,
-                            parentID: record.id,
-                        });
-                        record.data[fieldName] = referenceDp.id;
-                    });
-                    defs.push(def);
-                }
+                var def = self._fetchReference(record, fieldName).then(function (dataPoint) {
+                    if (dataPoint) {
+                        record.data[fieldName] = dataPoint.id;
+                    }
+                });
+                defs.push(def);
             }
         });
         return $.when.apply($, defs);
@@ -1904,6 +1978,25 @@ var BasicModel = AbstractModel.extend({
                 args: ["", domain],
                 context: context
             });
+    },
+    /**
+     * Fetches the `name_get` associated to the reference widget if the field is
+     * a `char` (which is a supported case).
+     *
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @returns {Deferred}
+     */
+    _fetchSpecialReference: function (record, fieldName) {
+        var def;
+        var field = record.fields[fieldName];
+        if (field.type === 'char') {
+            // if the widget reference is set on a char field, the name_get
+            // needs to be fetched a posteriori
+            def = this._fetchReference(record, fieldName);
+        }
+        return $.when(def);
     },
     /**
      * Fetches all the m2o records associated to the given fieldName. If the
@@ -2712,6 +2805,7 @@ var BasicModel = AbstractModel.extend({
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
+            _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
@@ -2826,14 +2920,25 @@ var BasicModel = AbstractModel.extend({
                     var field = params.fields[name];
                     data[name] = null;
                     record._changes = record._changes || {};
+                    var dp;
                     if (field.type === 'many2one' && result[name]) {
-                        var rec = self._makeDataPoint({
+                        dp = self._makeDataPoint({
                             context: record.context,
                             data: {id: result[name]},
                             modelName: field.relation,
                             parentID: record.id,
                         });
-                        record._changes[name] = rec.id;
+                        record._changes[name] = dp.id;
+                    } else if (field.type === 'reference' && result[name]) {
+                        var ref = result[name].split(',');
+                        dp = self._makeDataPoint({
+                            context: record.context,
+                            data: {id: parseInt(ref[1])},
+                            modelName: ref[0],
+                            parentID: record.id,
+                        });
+                        defs.push(self._fetchNameGet(dp));
+                        record._changes[name] = dp.id;
                     } else if (field.type === 'one2many' || field.type === 'many2many') {
                         var fieldInfo = record.fieldsInfo[record.viewType][name];
                         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
@@ -2859,6 +2964,7 @@ var BasicModel = AbstractModel.extend({
                         x2manyList._changes = [];
                         var many2ones = {};
                         var r;
+                        result[name] = result[name] || []; // handle false value
                         var isCommandList = result[name].length && _.isArray(result[name][0]);
                         if (!isCommandList) {
                             result[name] = [[6, false, result[name]]];
@@ -2885,7 +2991,7 @@ var BasicModel = AbstractModel.extend({
 
                                 r._changes = _.defaults(value[2], r.data);
                                 for (var name in r._changes) {
-                                    if (r._changes[name] === null) {
+                                    if (!r._changes[name]) {
                                         continue;
                                     }
                                     var isFieldInView = name in r.fields;
@@ -3318,6 +3424,7 @@ var BasicModel = AbstractModel.extend({
                 list.data = data;
                 list.res_ids = ids;
             }
+            self._updateParentResIDs(list);
             return list;
         });
     },
@@ -3361,6 +3468,26 @@ var BasicModel = AbstractModel.extend({
                 }
                 return 0;
             });
+        }
+    },
+    /**
+     * Updates the res_ids of the parent of a given element of type list.
+     *
+     * After some operations (e.g. loading more records, folding/unfolding a
+     * group), the res_ids list of an element may be updated. When this happens,
+     * the res_ids of its ancestors need to be updated as well. This is the
+     * purpose of this function.
+     *
+     * @param {Object} element
+     */
+    _updateParentResIDs: function (element) {
+        var self = this;
+        if (element.parentID) {
+            var parent = this.localData[element.parentID];
+            parent.res_ids =  _.flatten(_.map(parent.data, function (dataPointID) {
+                return self.localData[dataPointID].res_ids;
+            }));
+            this._updateParentResIDs(parent);
         }
     },
     /**

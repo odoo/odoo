@@ -12,7 +12,7 @@ GNU Public Licence.
 """
 
 import atexit
-import csv
+import csv # pylint: disable=deprecated-module
 import logging
 import os
 import signal

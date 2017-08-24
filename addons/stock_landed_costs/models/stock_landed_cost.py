@@ -7,7 +7,6 @@ from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 
 class StockMove(models.Model):
@@ -123,7 +122,7 @@ class LandedCost(models.Model):
             for val_line in landed_cost.valuation_adjustment_lines:
                 val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
             if any(tools.float_compare(cost_line.price_unit, val_amount, precision_digits=prec_digits) != 0
-                   for cost_line, val_amount in pycompat.items(val_to_cost_lines)):
+                   for cost_line, val_amount in val_to_cost_lines.items()):
                 return False
         return True
 
@@ -204,9 +203,8 @@ class LandedCost(models.Model):
                             towrite_dict[valuation.id] = value
                         else:
                             towrite_dict[valuation.id] += value
-        if towrite_dict:
-            for key, value in pycompat.items(towrite_dict):
-                AdjustementLines.browse(key).write({'additional_landed_cost': value})
+        for key, value in towrite_dict.items():
+            AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
 
 

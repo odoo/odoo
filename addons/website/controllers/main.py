@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 from itertools import islice
 import json
@@ -38,11 +38,11 @@ class QueryURL(object):
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
-        for key, value in pycompat.items(self.args):
+        for key, value in self.args.items():
             kw.setdefault(key, value)
         path_args = OrderedSet(path_args or []) | self.path_args
         paths, fragments = {}, []
-        for key, value in pycompat.items(kw):
+        for key, value in kw.items():
             if value and key in path_args:
                 if isinstance(value, models.BaseModel):
                     paths[key] = slug(value)
@@ -87,7 +87,7 @@ class Website(Home):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
-                redirect = '/web?' + request.httprequest.query_string
+                redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
             return http.redirect_with_hash(redirect)
@@ -114,7 +114,7 @@ class Website(Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/%s?%s' % (page[8:], request.httprequest.query_string), code=301)
+            return request.redirect(b'/page/%s?%s' % (page[8:].encode('utf-8'), request.httprequest.query_string), code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 
@@ -149,7 +149,7 @@ class Website(Home):
 
         def create_sitemap(url, content):
             return Attachment.create({
-                'datas': content.encode('base64'),
+                'datas': base64.b64encode(content),
                 'mimetype': mimetype,
                 'type': 'binary',
                 'name': url,
@@ -162,7 +162,7 @@ class Website(Home):
             create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap.datas.decode('base64')
+                content = base64.b64decode(sitemap)
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
@@ -318,9 +318,14 @@ class Website(Home):
 
     def get_view_ids(self, xml_ids):
         ids = []
+        View = request.env["ir.ui.view"].with_context(active_test=False)
         for xml_id in xml_ids:
             if "." in xml_id:
-                record_id = request.env.ref(xml_id).id
+                # Get website-specific view if possible
+                record_id = View.search([
+                    ("website_id", "=", request.website.id),
+                    ("key", "=", xml_id),
+                ]).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
             ids.append(record_id)
@@ -381,7 +386,7 @@ class Website(Home):
         action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
-        if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
+        if isinstance(path_or_xml_id_or_id, pycompat.string_types) and '.' in path_or_xml_id_or_id:
             action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
         if not action:
             action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)

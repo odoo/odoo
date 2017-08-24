@@ -8,7 +8,7 @@ import pytz
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape, html2plaintext, pycompat
+from odoo.tools import html_escape as escape, html2plaintext
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -75,7 +75,7 @@ class WebsiteEventTrackController(http.Controller):
 
         days = {}
         tracks_by_days = {}
-        for day, tracks in pycompat.items(days_tracks):
+        for day, tracks in days_tracks.items():
             tracks_by_days[day] = tracks
             days[day] = self._prepare_calendar(event, tracks)
 

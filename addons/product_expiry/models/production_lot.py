@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 class StockProductionLot(models.Model):
@@ -54,5 +53,5 @@ class StockProductionLot(models.Model):
     @api.onchange('product_id')
     def _onchange_product(self):
         dates_dict = self._get_dates()
-        for field, value in pycompat.items(dates_dict):
+        for field, value in dates_dict.items():
             setattr(self, field, value)

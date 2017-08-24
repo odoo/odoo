@@ -129,11 +129,13 @@ class CustomerPortal(Controller):
 
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
+        values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        values = {
+        values.update({
             'error': {},
-            'error_message': []
-        }
+            'error_message': [],
+            'hide_current_user': True,
+        })
 
         if post:
             error, error_message = self.details_form_validate(post)
@@ -192,7 +194,7 @@ class CustomerPortal(Controller):
                 error["vat"] = 'error'
 
         # error message for empty required fields
-        if [err for err in tools.pycompat.values(error) if err == 'missing']:
+        if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         unknown = [k for k in data if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]

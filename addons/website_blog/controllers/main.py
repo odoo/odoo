@@ -288,8 +288,8 @@ class WebsiteBlog(http.Controller):
                 "id": message.id,
                 "author_name": message.author_id.name,
                 "author_image": message.author_id.image and \
-                    ("data:image/png;base64,%s" % message.author_id.image) or \
-                    '/website_blog/static/src/img/anonymous.png',
+                    (b"data:image/png;base64,%s" % message.author_id.image) or \
+                    b'/website_blog/static/src/img/anonymous.png',
                 "date": message.date,
                 'body': html2plaintext(message.body),
                 'website_published' : message.website_published,

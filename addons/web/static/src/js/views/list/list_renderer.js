@@ -388,15 +388,15 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
-        if (group.count > 0) {
-            var $arrow = $('<span>')
+        var $arrow = $('<span>')
                             .css('padding-left', (groupLevel * 20) + 'px')
                             .css('padding-right', '5px')
-                            .addClass('fa')
-                            .toggleClass('fa-caret-right', !group.isOpen)
-                            .toggleClass('fa-caret-down', group.isOpen);
-            $th.prepend($arrow);
+                            .addClass('fa');
+        if (group.count > 0) {
+            $arrow.toggleClass('fa-caret-right', !group.isOpen)
+                    .toggleClass('fa-caret-down', group.isOpen);
         }
+        $th.prepend($arrow);
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
             var $pager = this._renderGroupPager(group);
             var $lastCell = $cells[$cells.length-1];

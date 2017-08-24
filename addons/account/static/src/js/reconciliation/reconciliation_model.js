@@ -100,6 +100,8 @@ var StatementModel = BasicModel.extend({
         this.lines = {};
         this.valuenow = 0;
         this.valuemax = 0;
+        this.alreadyDisplayed = [];
+        this.defaultDisplayQty = 10;
     },
 
     //--------------------------------------------------------------------------
@@ -230,10 +232,10 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
-        return this._changePartner(handle, partner.id)
+        return $.when(partner && this._changePartner(handle, partner.id))
                 .then(function() {
                     line.reconciliation_proposition = [];
-                    return self._performMoveLine(handle)
+                    return self.changeMode(handle, 'match');
                 })
                 .then(function () {
                     if (line.mode === 'create') {
@@ -253,7 +255,7 @@ var StatementModel = BasicModel.extend({
                 args: [self.bank_statement_id.id],
             })
             .then(function () {
-                return self.bank_statement_id.id
+                return self.bank_statement_id.id;
             });
     },
     /**
@@ -282,6 +284,34 @@ var StatementModel = BasicModel.extend({
      */
     getContext: function () {
         return this.context;
+    },
+    /**
+     * Return the lines that needs to be displayed by the widget
+     *
+     * @returns {Object} lines that are loaded and not yet displayed
+     */
+    getStatementLines: function () {
+        var self = this;
+        var linesToDisplay = _.pick(this.lines, function(value, key, object) { 
+            if (value.visible === true && self.alreadyDisplayed.indexOf(key) === -1) {
+                self.alreadyDisplayed.push(key);
+                return object;
+            }
+        });
+        return linesToDisplay;
+    },
+    /**
+     * Return a boolean telling if load button needs to be displayed or not
+     *
+     * @returns {boolean} true if load more button needs to be displayed
+     */
+    hasMoreLines: function () {
+        var self = this;
+        var notDisplayed = _.filter(this.lines, function(line) { return !line.visible; });
+        if (notDisplayed.length > 0) {
+            return true;
+        }
+        return false;
     },
     /**
      * get the line data for this handle
@@ -355,13 +385,41 @@ var StatementModel = BasicModel.extend({
                 line.reconcileModels = self.reconcileModels;
             });
             var ids = _.pluck(self.lines, 'id');
-            return self._rpc({
-                    model: 'account.bank.statement.line',
-                    method: 'get_data_for_reconciliation_widget',
-                    args: [ids],
-                })
-                .then(self._formatLine.bind(self));
+            ids = ids.splice(0, self.defaultDisplayQty);
+            self.pagerIndex = ids.length;
+            return self.loadData(ids, []);
         });
+    },
+    /**
+     * Load more bank statement line
+     *
+     * @param {integer} quantity to load
+     * @returns {Deferred}
+     */
+    loadMore: function(qty) {
+        if (qty === undefined) {
+            qty = this.defaultDisplayQty;
+        }
+        var ids = _.pluck(this.lines, 'id');
+        ids = ids.splice(this.pagerIndex, qty);
+        this.pagerIndex += qty;
+        return this.loadData(ids, this._getExcludedIds());
+    },
+    /**
+     * RPC method to load informations on lines
+     * 
+     * @param {Array} ids of bank statement line passed to rpc call
+     * @param {Array} list of move_line ids that needs to be excluded from search
+     * @returns {Deferred}
+     */
+    loadData: function(ids, excluded_ids) {
+        var self = this;
+        return self._rpc({
+            model: 'account.bank.statement.line',
+            method: 'get_data_for_reconciliation_widget',
+            args: [ids, excluded_ids],
+        })
+        .then(self._formatLine.bind(self));
     },
     /**
      * Add lines into the propositions from the reconcile model
@@ -770,6 +828,7 @@ var StatementModel = BasicModel.extend({
             var line = _.find(self.lines, function (l) {
                 return l.id === data.st_line.id;
             });
+            line.visible = true;
             _.extend(line, data);
             self._formatLineProposition(line, line.reconciliation_proposition);
             if (!line.reconciliation_proposition.length) {
@@ -849,6 +908,26 @@ var StatementModel = BasicModel.extend({
         }
         prop.amount = prop.base_amount;
         return prop;
+    },
+    /**
+     * Return list of account_move_line that has been selected and needs to be removed
+     * from other calls.
+     *
+     * @private
+     * @returns {Array} list of excluded ids
+     */
+    _getExcludedIds: function () {
+        var excludedIds = [];
+        _.each(this.lines, function(line) {
+            if (line.reconciliation_proposition) {
+                _.each(line.reconciliation_proposition, function(prop) {
+                    if (parseInt(prop['id'])) {
+                        excludedIds.push(prop['id']);
+                    }
+                })
+            }
+        });
+        return excludedIds;
     },
     /**
      * Defined whether the line is to be displayed or not. Here, we only display
@@ -1168,7 +1247,8 @@ var ManualModel = StatementModel.extend({
             'filter': "",
             'reconcileModels': [],
             'account_id': this._formatNameGet([data.account_id, data.account_name]),
-            'st_line': data
+            'st_line': data,
+            'visible': true
         });
         this._formatLineProposition(line, line.reconciliation_proposition);
         if (!line.reconciliation_proposition.length) {

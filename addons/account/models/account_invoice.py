@@ -341,9 +341,9 @@ class AccountInvoice(models.Model):
         related='partner_id.commercial_partner_id', store=True, readonly=True,
         help="The commercial entity that will be used on Journal Entries for this invoice")
 
-    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON')
-    payments_widget = fields.Text(compute='_get_payment_info_JSON')
-    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
+    outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
+    payments_widget = fields.Text(compute='_get_payment_info_JSON', groups="account.group_account_invoice")
+    has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
 
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
@@ -411,7 +411,7 @@ class AccountInvoice(models.Model):
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
         }
-        for onchange_method, changed_fields in pycompat.items(onchanges):
+        for onchange_method, changed_fields in onchanges.items():
             if any(f not in vals for f in changed_fields):
                 invoice = self.new(vals)
                 getattr(invoice, onchange_method)()
@@ -532,7 +532,7 @@ class AccountInvoice(models.Model):
             tax_grouped = invoice.get_taxes_values()
 
             # Create new tax lines
-            for tax in pycompat.values(tax_grouped):
+            for tax in tax_grouped.values():
                 account_invoice_tax.create(tax)
 
         # dummy write on self to trigger recomputations
@@ -551,7 +551,7 @@ class AccountInvoice(models.Model):
     def _onchange_invoice_line_ids(self):
         taxes_grouped = self.get_taxes_values()
         tax_lines = self.tax_line_ids.filtered('manual')
-        for tax in pycompat.values(taxes_grouped):
+        for tax in taxes_grouped.values():
             tax_lines += tax_lines.new(tax)
         self.tax_line_ids = tax_lines
         return
@@ -799,7 +799,7 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         credit_aml = self.env['account.move.line'].browse(credit_aml_id)
         if not credit_aml.currency_id and self.currency_id != self.company_id.currency_id:
-            credit_aml.with_context(allow_amount_currency=True).write({
+            credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
                 'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
@@ -944,7 +944,7 @@ class AccountInvoice(models.Model):
                 else:
                     line2[tmp] = l
             line = []
-            for key, val in pycompat.items(line2):
+            for key, val in line2.items():
                 line.append((0, 0, val))
         return line
 
@@ -1137,7 +1137,7 @@ class AccountInvoice(models.Model):
         result = []
         for line in lines:
             values = {}
-            for name, field in pycompat.items(line._fields):
+            for name, field in line._fields.items():
                 if name in MAGIC_COLUMNS:
                     continue
                 elif field.type == 'many2one':
@@ -1307,7 +1307,7 @@ class AccountInvoice(models.Model):
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, 0.0)
             res[line.tax_id.tax_group_id] += line.amount
-        res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]) for l in res]
         return res
 
@@ -1408,7 +1408,7 @@ class AccountInvoiceLine(models.Model):
                         node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
-            res['arch'] = etree.tostring(doc)
+            res['arch'] = etree.tostring(doc, encoding='unicode')
         return res
 
     @api.v8

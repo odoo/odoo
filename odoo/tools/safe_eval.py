@@ -26,6 +26,7 @@ import werkzeug
 
 from . import pycompat
 from .misc import ustr
+from . import pycompat
 
 import odoo
 
@@ -267,8 +268,9 @@ _BUILTINS = {
     'True': True,
     'False': False,
     'None': None,
+    'bytes': bytes,
     'str': str,
-    'unicode': unicode,
+    'unicode': pycompat.text_type,
     'bool': bool,
     'int': int,
     'float': float,

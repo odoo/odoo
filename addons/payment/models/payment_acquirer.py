@@ -5,7 +5,7 @@ import logging
 import datetime
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, ustr, pycompat
+from odoo.tools import consteq, float_round, image_resize_images, ustr
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 
@@ -169,7 +169,7 @@ class PaymentAcquirer(models.Model):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
         for acquirer in self:
-            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in pycompat.items(self._fields)):
+            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
                 return False
         return True
 
@@ -583,7 +583,7 @@ class PaymentTransaction(models.Model):
         token = '%s%s%s' % (self.callback_model_id.model,
                             self.callback_res_id,
                             self.sudo().callback_method)
-        return hmac.new(str(secret), token, hashlib.sha256).hexdigest()
+        return hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha256).hexdigest()
 
     # --------------------------------------------------
     # FORM RELATED METHODS

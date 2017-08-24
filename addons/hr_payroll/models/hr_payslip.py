@@ -11,8 +11,6 @@ import babel
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
-
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -205,7 +203,7 @@ class HrPayslip(models.Model):
             }
 
             res.append(attendances)
-            res.extend(pycompat.values(leaves))
+            res.extend(leaves.values())
         return res
 
     @api.model
@@ -369,7 +367,7 @@ class HrPayslip(models.Model):
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
-        return [value for code, value in pycompat.items(result_dict)]
+        return list(result_dict.values())
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records

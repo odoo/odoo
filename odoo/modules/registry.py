@@ -17,7 +17,7 @@ import odoo
 from .. import SUPERUSER_ID
 from odoo.tools import (assertion_report, config, existing_tables,
                         lazy_classproperty, lazy_property, table_exists,
-                        topological_sort, OrderedSet, pycompat)
+                        topological_sort, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -157,7 +157,7 @@ class Registry(Mapping):
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in list(pycompat.keys(cls.registries)):
+            for db_name in list(cls.registries.keys()):
                 cls.delete(db_name)
 
     #
@@ -193,8 +193,8 @@ class Registry(Mapping):
         # map fields on their dependents
         dependents = {
             field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
-            for model in pycompat.values(self)
-            for field in pycompat.values(model._fields)
+            for model in self.values()
+            for field in model._fields.values()
         }
         # sort them topologically, and associate a sequence number to each field
         mapping = {
@@ -262,7 +262,7 @@ class Registry(Mapping):
             env['ir.model']._add_manual_models()
 
         # prepare the setup on all models
-        models = list(pycompat.values(env))
+        models = list(env.values())
         for model in models:
             model._prepare_setup()
 
@@ -316,7 +316,7 @@ class Registry(Mapping):
             missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
-            deps = {name: model._depends for name, model in pycompat.items(env)}
+            deps = {name: model._depends for name, model in env.items()}
             for name in topological_sort(deps):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
@@ -341,7 +341,7 @@ class Registry(Mapping):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        for model in pycompat.values(self.models):
+        for model in self.models.values():
             model.clear_caches()
 
     def setup_signaling(self):

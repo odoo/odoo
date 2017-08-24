@@ -14,7 +14,6 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
-from odoo.tools import pycompat
 from odoo.tools.translate import _
 
 
@@ -150,7 +149,7 @@ class WebsiteAccount(CustomerPortal):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)

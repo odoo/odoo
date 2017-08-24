@@ -50,7 +50,7 @@ class View(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, basestring):
+        if isinstance(view_id, pycompat.string_types):
             if 'website_id' in self._context:
                 domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', self._context.get('website_id'))]
                 order = 'website_id'
@@ -67,6 +67,11 @@ class View(models.Model):
 
         # assume it's already a view object (WTF?)
         return view_id
+
+    @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
+        return ['|', ('website_id', '=', False), ('website_id', '=', self.env.context.get('website_id'))] + domain
 
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))

@@ -249,7 +249,7 @@ class Website(models.Model):
 
         def get_url_localized(router, lang):
             arguments = dict(request.endpoint_arguments)
-            for key, val in list(pycompat.items(arguments)):
+            for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
@@ -261,7 +261,7 @@ class Website(models.Model):
             shorts.append(lg_codes[0])
             uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
             if req.query_string:
-                uri += '?' + req.query_string
+                uri += u'?' + req.query_string.decode('utf-8')
             lang = {
                 'hreflang': ('-'.join(lg_codes)).lower(),
                 'short': lg_codes[0],
@@ -327,7 +327,7 @@ class Website(models.Model):
         endpoint = rule.endpoint
         methods = endpoint.routing.get('methods') or ['GET']
 
-        converters = list(pycompat.values(rule._converters))
+        converters = list(rule._converters.values())
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
@@ -372,7 +372,7 @@ class Website(models.Model):
             values = [{}]
             # converters with a domain are processed after the other ones
             convitems = sorted(
-                pycompat.items(converters),
+                converters.items(),
                 key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
@@ -388,7 +388,7 @@ class Website(models.Model):
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
-                for key, val in pycompat.items(value):
+                for key, val in value.items():
                     if key.startswith('__'):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
@@ -414,7 +414,7 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha1(getattr(sudo_record, '__last_update')).hexdigest()[0:7]
+        sha = hashlib.sha1(getattr(sudo_record, '__last_update').encode('utf-8')).hexdigest()[0:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
@@ -494,7 +494,7 @@ class Menu(models.Model):
             self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, basestring):
+            if isinstance(mid, pycompat.string_types):
                 new_menu = self.create({'name': menu['name']})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:

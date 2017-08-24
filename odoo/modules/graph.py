@@ -8,7 +8,6 @@ import logging
 
 import odoo
 import odoo.tools as tools
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ class Graph(dict):
             return
         # update the graph with values from the database (if exist)
         ## First, we set the default values for each package in graph
-        additional_data = {key: {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None} for key in pycompat.keys(self)}
+        additional_data = {key: {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None} for key in self.keys()}
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
@@ -46,8 +45,8 @@ class Graph(dict):
         ## and we update the default values with values from the database
         additional_data.update((x['name'], x) for x in cr.dictfetchall())
 
-        for package in pycompat.values(self):
-            for k, v in pycompat.items(additional_data[package.name]):
+        for package in self.values():
+            for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
 
     def add_module(self, cr, module, force=None):
@@ -102,9 +101,9 @@ class Graph(dict):
 
     def __iter__(self):
         level = 0
-        done = set(pycompat.keys(self))
+        done = set(self.keys())
         while done:
-            level_modules = sorted((name, module) for name, module in pycompat.items(self) if module.depth==level)
+            level_modules = sorted((name, module) for name, module in self.items() if module.depth==level)
             for name, module in level_modules:
                 done.remove(name)
                 yield module

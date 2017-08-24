@@ -18,11 +18,6 @@ _logger = logging.getLogger(__name__)
 MODULE_UNINSTALL_FLAG = '_force_unlink'
 
 
-def encode(s):
-    """ Return an UTF8-encoded version of ``s``. """
-    return s.encode('utf8') if isinstance(s, unicode) else s
-
-
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
     'datetime': datetime,
@@ -199,7 +194,7 @@ class IrModel(models.Model):
     @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in pycompat.items(self._context) if k != '__last_update'})
+            self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
@@ -272,7 +267,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = encode(model_data['model'])
+            _name = pycompat.to_native(model_data['model'])
             _description = model_data['name']
             _module = False
             _custom = True
@@ -524,7 +519,8 @@ class IrModelFields(models.Model):
             if field.state == 'manual' and field.ttype == 'many2many':
                 rel_name = field.relation_table or model._fields[field.name].relation
                 tables_to_drop.add(rel_name)
-            model._pop_field(field.name)
+            if field.state == 'manual':
+                model._pop_field(field.name)
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields
@@ -625,7 +621,7 @@ class IrModelFields(models.Model):
                 if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
-            self.clear_caches()
+            self.clear_caches()                     # for _existing_field_data()
 
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
@@ -684,7 +680,7 @@ class IrModelFields(models.Model):
 
         res = super(IrModelFields, self).write(vals)
 
-        self.clear_caches()
+        self.clear_caches()                         # for _existing_field_data()
 
         if column_rename:
             # rename column in database, and its corresponding index if present
@@ -771,7 +767,7 @@ class IrModelFields(models.Model):
             fields_data[field.name] = dict(params, id=record.id)
             return record
 
-        diff = {key for key, val in pycompat.items(params) if field_data[key] != val}
+        diff = {key for key, val in params.items() if field_data[key] != val}
         if diff:
             cr = self.env.cr
             # update the entry in this table
@@ -789,7 +785,7 @@ class IrModelFields(models.Model):
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
-        for field in pycompat.values(model._fields):
+        for field in model._fields.values():
             self._reflect_field(field)
 
         if not self.pool._init:
@@ -872,7 +868,7 @@ class IrModelFields(models.Model):
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
         fields_data = self._get_manual_field_data(model._name)
-        for name, field_data in pycompat.items(fields_data):
+        for name, field_data in fields_data.items():
             if name not in model._fields and field_data['state'] == 'manual':
                 field = self._instanciate(field_data)
                 if field:
@@ -1134,7 +1130,7 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
-        assert isinstance(model, basestring), 'Not a model name: %s' % (model,)
+        assert isinstance(model, pycompat.string_types), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
         # TransientModel records have no access rights, only an implicit access rule
@@ -1283,7 +1279,7 @@ class IrModelData(models.Model):
             model_id_name[xid.model][xid.res_id] = None
 
         # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in pycompat.items(model_id_name):
+        for model, id_name in model_id_name.items():
             try:
                 ng = self.env[model].browse(id_name).name_get()
                 id_name.update(ng)
@@ -1380,7 +1376,7 @@ class IrModelData(models.Model):
                 record = self.get_object(module, xml_id)
                 if record:
                     self.loads[(module, xml_id)] = (model, record.id)
-                    for parent_model, parent_field in pycompat.items(self.env[model]._inherits):
+                    for parent_model, parent_field in self.env[model]._inherits.items():
                         parent = record[parent_field]
                         parent_xid = '%s_%s' % (xml_id, parent_model.replace('.', '_'))
                         self.loads[(module, parent_xid)] = (parent_model, parent.id)
@@ -1435,7 +1431,7 @@ class IrModelData(models.Model):
         elif record:
             record.write(values)
             if xml_id:
-                for parent_model, parent_field in pycompat.items(record._inherits):
+                for parent_model, parent_field in record._inherits.items():
                     self.sudo().create({
                         'name': xml_id + '_' + parent_model.replace('.', '_'),
                         'model': parent_model,
@@ -1454,7 +1450,7 @@ class IrModelData(models.Model):
         elif mode == 'init' or (mode == 'update' and xml_id):
             existing_parents = set()            # {parent_model, ...}
             if xml_id:
-                for parent_model, parent_field in pycompat.items(record._inherits):
+                for parent_model, parent_field in record._inherits.items():
                     xid = self.sudo().search([
                         ('module', '=', module),
                         ('name', '=', xml_id + '_' + parent_model.replace('.', '_')),
@@ -1474,7 +1470,7 @@ class IrModelData(models.Model):
                 inherit_models = [record]
                 while inherit_models:
                     current_model = inherit_models.pop()
-                    for parent_model_name, parent_field in pycompat.items(current_model._inherits):
+                    for parent_model_name, parent_field in current_model._inherits.items():
                         inherit_models.append(self.env[parent_model_name])
                         if parent_model_name in existing_parents:
                             continue
@@ -1500,7 +1496,7 @@ class IrModelData(models.Model):
 
         if xml_id and record:
             self.loads[(module, xml_id)] = (model, record.id)
-            for parent_model, parent_field in pycompat.items(record._inherits):
+            for parent_model, parent_field in record._inherits.items():
                 parent_xml_id = xml_id + '_' + parent_model.replace('.', '_')
                 self.loads[(module, parent_xml_id)] = (parent_model, record[parent_field].id)
 
