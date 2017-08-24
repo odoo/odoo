@@ -52,74 +52,68 @@ def xmlrpc_return(start_response, service, method, params, string_faultcode=Fals
     # exception handling.
     try:
         result = odoo.http.dispatch_rpc(service, method, params)
-        response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+        response = xmlrpclib.dumps((result,), methodresponse=True)
     except Exception as e:
         if string_faultcode:
-            response = xmlrpc_handle_exception_string(e)
+            response = xmlrpc_convert_exception_stringcode(e)
         else:
-            response = xmlrpc_handle_exception_int(e)
+            response = xmlrpc_convert_exception_int(e)
     start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
     return [response]
 
-def xmlrpc_handle_exception_int(e):
+def xmlrpc_convert_exception_int(e):
     if isinstance(e, odoo.exceptions.UserError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, odoo.tools.ustr(e.value))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.DeferredException):
         info = e.traceback
         # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
         #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     else:
         info = sys.exc_info()
         # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
         #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
-        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-    return response
+    return xmlrpclib.dumps(fault)
 
-def xmlrpc_handle_exception_string(e):
+def xmlrpc_convert_exception_stringcode(e):
+    """ Legacy converter: historically Odoo has mis-generated XML-RPC fault by
+    using a ``<string>`` as the ``<faultCode>`` even though it must be an
+    ``<int>``.
+
+    This function provides the old (incorrect) behavior where
+    :func:`~.xmlrpc_handle_exception_int` implements the correct behavior of
+    integral ``<faultCode>``
+    """
     if isinstance(e, odoo.exceptions.UserError):
         fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault('AccessDenied', str(e))
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, odoo.exceptions.DeferredException):
         info = e.traceback
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpclib.Fault(odoo.tools.ustr(e), formatted_info)
-        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    #InternalError
     else:
         info = sys.exc_info()
         formatted_info = "".join(traceback.format_exception(*info))
         fault = xmlrpclib.Fault(odoo.tools.exception_to_unicode(e), formatted_info)
-        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-    return response
+    return xmlrpclib.dumps(fault)
 
 def wsgi_xmlrpc(environ, start_response):
     """ Two routes are available for XML-RPC
