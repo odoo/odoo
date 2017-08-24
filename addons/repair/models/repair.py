@@ -69,13 +69,10 @@ class Repair(models.Model):
              "* The \'Done\' status is set when repairing is completed.\n"
              "* The \'Cancelled\' status is used when user cancel repair order.")
     location_id = fields.Many2one(
-        'stock.location', 'Current Location',
+        'stock.location', 'Location',
         default=_default_stock_location,
         index=True, readonly=True, required=True,
-        states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
-    location_dest_id = fields.Many2one(
-        'stock.location', 'Delivery Location',
-        readonly=True, required=True,
+        help="This is the location where the product to repair is located.",
         states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]})
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial',
@@ -175,10 +172,6 @@ class Repair(models.Model):
             res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
             self.product_uom = self.product_id.uom_id.id
         return res
-
-    @api.onchange('location_id')
-    def onchange_location_id(self):
-        self.location_dest_id = self.location_id.id
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
@@ -468,7 +461,7 @@ class Repair(models.Model):
                 'product_uom_qty': repair.product_qty,
                 'partner_id': repair.address_id.id,
                 'location_id': repair.location_id.id,
-                'location_dest_id': repair.location_dest_id.id,
+                'location_dest_id': repair.location_id.id,
                 'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
                                            'lot_id': repair.lot_id.id, 
                                            'product_uom_qty': 0,  # bypass reservation here
@@ -477,7 +470,7 @@ class Repair(models.Model):
                                            'package_id': False,
                                            'result_package_id': False,
                                            'location_id': repair.location_id.id, #TODO: owner stuff
-                                           'location_dest_id': repair.location_dest_id.id,})],
+                                           'location_dest_id': repair.location_id.id,})],
                 'repair_id': repair.id,
                 'origin': repair.name,
             })
