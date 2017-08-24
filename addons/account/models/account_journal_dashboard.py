@@ -172,11 +172,11 @@ class account_journal(models.Model):
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
-            query = """SELECT state, amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
+            query = """SELECT state, amount_total, residual_signed, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
             self.env.cr.execute(query, (self.id,))
             query_results = self.env.cr.dictfetchall()
             today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
+            query = """SELECT amount_total, residual_signed, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
             for result in query_results:
@@ -190,7 +190,7 @@ class account_journal(models.Model):
                     sum_draft += cur.compute(result.get('amount_total'), currency) * factor
                 elif result.get('state') == 'open':
                     number_waiting += 1
-                    sum_waiting += cur.compute(result.get('amount_total'), currency) * factor
+                    sum_waiting += cur.compute(result.get('residual_signed'), currency) * factor
             for result in late_query_results:
                 if result['type'] in ['in_refund', 'out_refund']:
                     factor = -1
