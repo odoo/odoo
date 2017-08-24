@@ -1005,7 +1005,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation pager', function (assert) {
         assert.expect(6);
 
@@ -1219,9 +1218,11 @@ QUnit.module('account', {
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should display 10 lines");
         assert.strictEqual(clientAction.$('.js_load_more:visible').length, 1, "should display the load more button");
+        clientAction.$('.accounting_view:has(.o_reconcile:visible) thead .cell_action').click();
         clientAction.$('.o_reconcile:visible').click();
         assert.strictEqual(clientAction.$('.o_reconcile:visible').length, 0, "should remove the reconciled line");
         assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should load one line to complete the 10");
+        clientAction.$('thead .cell_action:eq(1)').click();
         clientAction.$('.js_load_more').click();
         assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 11, "should load the last record");
         assert.strictEqual(clientAction.$('.js_load_more:visible').length, 0, "should hide the load more button");
