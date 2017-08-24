@@ -820,8 +820,8 @@ class WebsiteSale(http.Controller):
         # if token:
             # return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 
-        return True
-        # return tx.render_sale_button(order, '/shop/payment/validate')
+        # return True
+        return tx.render_sale_button(order, '/shop/payment/validate')
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True)
     def payment_token(self, pm_id=None, **kwargs):
