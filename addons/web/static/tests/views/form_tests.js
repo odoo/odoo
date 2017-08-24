@@ -176,7 +176,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 // NOTE: actually, the current web client always request the __last_update
                 // field, not sure why.  Maybe this test should be modified.
-                assert.deepEqual(args.args[1], ["foo", "display_name"],
+                assert.deepEqual(args.args[1], ["foo", "display_name", "__last_update"],
                     "should only fetch requested fields");
                 assert.deepEqual(args.kwargs.context, {bin_size: true},
                     "bin_size should always be in the context");
