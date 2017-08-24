@@ -37,3 +37,29 @@ class TestSaleService(TestSale):
         line = so.order_line
         self.assertTrue(line.product_uom_qty == line.qty_delivered == line.qty_invoiced, 'Sale Service: line should be invoiced completely')
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Service: SO should be invoiced')
+        self.assertEqual(so.tasks_count, 1, "A task should have been created on SO confirmation.")
+
+        # Add a line on the confirmed SO, and it should generate a new task directly
+        product_service_task = self.env['product.product'].create({
+            'name': "Delivered Service",
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': self.env.ref('product.product_uom_hour').id,
+            'uom_po_id': self.env.ref('product.product_uom_hour').id,
+            'default_code': 'SERV-DELI',
+            'track_service': 'task',
+            'project_id': project.id
+        })
+
+        self.env['sale.order.line'].create({
+            'name': product_service_task.name,
+            'product_id': product_service_task.id,
+            'product_uom_qty': 10,
+            'product_uom': product_service_task.uom_id.id,
+            'price_unit': product_service_task.list_price,
+            'order_id': so.id,
+        })
+
+        self.assertEqual(so.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
