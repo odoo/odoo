@@ -264,7 +264,7 @@ Best Regards,''')
                 raise UserError(_("No miscellanous journal could be found. Please create one before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
-                'name': _('Opening Entry'),
+                'name': _('Opening Journal Entry'),
                 'company_id': self.id,
                 'journal_id': default_journal.id,
             })
