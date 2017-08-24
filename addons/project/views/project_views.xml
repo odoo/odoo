@@ -307,9 +307,8 @@
         <record id="ir_actions_server_project_sample" model="ir.actions.server">
             <field name="name">Project: Activate Sample Project</field>
             <field name="model_id" ref="project.model_project_project"/>
-            <field name="code">
-action = model.activate_sample_project()
-            </field>
+            <field name="state">code</field>
+            <field name="code">action = model.activate_sample_project()</field>
         </record>
 
         <record id="open_view_project_all" model="ir.actions.act_window">
