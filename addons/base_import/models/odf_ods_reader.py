@@ -19,8 +19,6 @@ from odf import opendocument
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
 
-from odoo.tools import pycompat
-
 
 class ODSReader(object):
 
@@ -97,4 +95,4 @@ class ODSReader(object):
         return self.SHEETS[name]
 
     def getFirstSheet(self):
-        return next(iter(pycompat.values(self.SHEETS)))
+        return next(iter(self.SHEETS.values()))

@@ -133,7 +133,7 @@ class OdooDocker(object):
     def end(self):
         try:
             _rpc_count_modules(port=str(self.port))
-        except Exception, e:
+        except Exception as e:
             print('Exception during docker execution: %s:' % str(e))
             print('Error during docker execution: printing the bash output:')
             with open(self.log_file.name) as f:
@@ -152,7 +152,7 @@ def docker(docker_image, build_dir, pub_dir):
         _docker.start(docker_image, build_dir, pub_dir)
         try:
             yield _docker
-        except Exception, e:
+        except Exception:
             raise
     finally:
         _docker.end()
@@ -439,7 +439,7 @@ def main():
                 if not o.no_testing:
                     test_tgz(o)
                 published_files = publish(o, 'tarball', ['tar.gz', 'zip'])
-            except Exception, e:
+            except Exception as e:
                 print("Won't publish the tgz release.\n Exception: %s" % str(e))
         if not o.no_debian:
             build_deb(o)
@@ -448,7 +448,7 @@ def main():
                     test_deb(o)
                 published_files = publish(o, 'debian', ['deb', 'dsc', 'changes', 'tar.gz'])
                 gen_deb_package(o, published_files)
-            except Exception, e:
+            except Exception as e:
                 print("Won't publish the deb release.\n Exception: %s" % str(e))
         if not o.no_rpm:
             build_rpm(o)
@@ -457,7 +457,7 @@ def main():
                     test_rpm(o)
                 published_files = publish(o, 'redhat', ['noarch.rpm'])
                 gen_rpm_repo(o, published_files[0])
-            except Exception, e:
+            except Exception as e:
                 print("Won't publish the rpm release.\n Exception: %s" % str(e))
         if not o.no_windows:
             _prepare_build_dir(o, win32=True)
@@ -466,7 +466,7 @@ def main():
                 if not o.no_testing:
                     test_exe(o)
                 published_files = publish(o, 'windows', ['exe'])
-            except Exception, e:
+            except Exception as e:
                 print("Won't publish the exe release.\n Exception: %s" % str(e))
     except:
         pass

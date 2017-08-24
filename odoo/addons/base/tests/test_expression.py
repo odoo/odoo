@@ -5,7 +5,7 @@ import psycopg2
 
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 from odoo.osv import expression
 
 
@@ -85,10 +85,10 @@ class TestExpression(TransactionCase):
             'b ab': [cids['B'], cids['AB']],
         }
         pids = {}
-        for name, cat_ids in pycompat.items(partners_config):
+        for name, cat_ids in partners_config.items():
             pids[name] = partners.create({'name': name, 'category_id': [(6, 0, cat_ids)]}).id
 
-        base_domain = [('id', 'in', list(pycompat.values(pids)))]
+        base_domain = [('id', 'in', list(pids.values()))]
 
         def test(op, value, expected):
             found_ids = partners.search(base_domain + [('category_id', op, value)]).ids

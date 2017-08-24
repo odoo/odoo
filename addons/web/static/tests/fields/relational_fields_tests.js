@@ -958,6 +958,45 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: create with one2many with many2one (version 2)', function (assert) {
+        // This test simulates the exact same scenario as the previous one,
+        // except that the value for the many2one is explicitely set to false,
+        // which is stupid, but this happens, so we have to handle it
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({p: [[0, 0, {display_name: 'new record', trululu: false}]]});
+                } else if (args.method === 'name_get') {
+                    // This should not be called at all and thus is not accounted for
+                    // in the assert.expect. If this is called, you broke this test.
+                    assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
+                        "should not call name_get for the m2o inside o2m which has no value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('td.o_data_cell:first').text(), 'new record',
+            "should have created the new record in the o2m with the correct name");
+
+        form.destroy();
+    });
+
     QUnit.test('list in form: default_get with x2many create', function (assert) {
         assert.expect(3);
 
@@ -1246,6 +1285,38 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
 
         $('.modal .modal-footer .btn-primary').first().click();
+
+        form.destroy();
+    });
+
+    QUnit.test('slow create on a many2one', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<field name="product_id" options="{\'quick_create\': False}"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form':
+                    '<form>' +
+                        '<field name="name"/>' +
+                    '</form>',
+            },
+        });
+
+        form.$('.o_field_many2one input').focus();
+        form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
+
+        $('.modal .modal-footer .btn-primary').first().click();
+
+        assert.strictEqual($('.modal:visible:last .o_form_view').length, 1,
+            'a new modal should be opened and contain a form view');
 
         form.destroy();
     });
@@ -1732,7 +1803,9 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
         assert.strictEqual(form.$('td:eq(0)').text(), "01/25/2017",
@@ -5227,6 +5300,59 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many: onchange that returns unknow field in list, but not in form', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            name: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="name"/>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                            '<field name="timmy" widget="many2many_tags"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        value: {
+                            p: [[5], [0, 0, {display_name: 'new', timmy: [[5], [4, 12]]}]],
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "the one2many should contain one row");
+        assert.strictEqual(form.$('.o_field_widget[name="timmy"]').length, 0,
+            "timmy should not be displayed in the list view");
+
+        form.$('.o_data_row td:first').click(); // open the record
+
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"]').length, 1,
+            "timmy should be displayed in the form view");
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .badge').length, 1,
+            "m2mtags should contain one tag");
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
+            'gold', "tag name should have been correctly loaded");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
@@ -7214,7 +7340,7 @@ QUnit.module('relational_fields', {
                 "should do a do_action with correct parameters");
         });
 
-        assert.strictEqual(form.$('a.o_form_uri:contains(first record)').length, 1,
+        assert.strictEqual(form.$('a.o_form_uri:contains(xphone)').length, 1,
                         "should contain a link");
         form.$('a.o_form_uri').click(); // click on the link in readonly mode (should trigger do_action)
 
@@ -7226,7 +7352,7 @@ QUnit.module('relational_fields', {
             "should contain one many2one");
         assert.strictEqual(form.$('.o_field_widget select').val(), "product",
             "widget should contain one select with the model");
-        assert.strictEqual(form.$('.o_field_widget input').val(), "first record",
+        assert.strictEqual(form.$('.o_field_widget input').val(), "xphone",
             "widget should contain one input with the record");
 
         var options = _.map(form.$('.o_field_widget select > option'), function (el) {
@@ -7251,9 +7377,111 @@ QUnit.module('relational_fields', {
         $dropdown.find('li:first()').click();
 
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('a.o_form_uri').length, 1,
+        assert.strictEqual(form.$('a.o_form_uri:contains(gold)').length, 1,
                         "should contain a link with the new value");
 
+        form.destroy();
+    });
+
+    QUnit.test('default_get and onchange with a reference field', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.reference.default = 'product,37';
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                if (obj.int_field !== 0) {
+                    obj.reference = 'partner_type,' + obj.int_field;
+                }
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="int_field"/>' +
+                            '<field name="reference"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.step(args.model);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.verifySteps(['product'], "the first name_get should have been done");
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] select').val(), "product",
+            "reference field model should be correctly set");
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] input').val(), "xphone",
+            "reference field value should be correctly set");
+
+        // trigger onchange
+        form.$('.o_field_widget[name=int_field]').val(12).trigger('input');
+
+        assert.verifySteps(['product', 'partner_type'], "the second name_get should have been done");
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] select').val(), "partner_type",
+            "reference field model should be correctly set");
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] input').val(), "gold",
+            "reference field value should be correctly set");
+        form.destroy();
+    });
+
+    QUnit.test('widget reference on char field, reset by onchange', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].foo = 'product,37';
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.foo = 'product,' + obj.int_field;
+            },
+        };
+
+        var nbNameGet = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="int_field"/>' +
+                            '<field name="foo" widget="reference" readonly="1"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.model === 'product' && args.method === 'name_get') {
+                    nbNameGet++;
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(nbNameGet, 1,
+            "the first name_get should have been done");
+        assert.strictEqual(form.$('a[name="foo"]').text(), "xphone",
+            "foo field should be correctly set");
+
+        // trigger onchange
+        form.$('.o_field_widget[name=int_field]').val(41).trigger('input');
+
+        assert.strictEqual(nbNameGet, 2,
+            "the second name_get should have been done");
+        assert.strictEqual(form.$('a[name="foo"]').text(), "xpad",
+            "foo field should have been updated");
         form.destroy();
     });
 

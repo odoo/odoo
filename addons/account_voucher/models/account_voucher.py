@@ -5,7 +5,6 @@
 from odoo import fields, models, api, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 
 class AccountVoucher(models.Model):
@@ -358,7 +357,7 @@ class AccountVoucherLine(models.Model):
             self.company_id.id,
             self.voucher_id.currency_id.id,
             self.voucher_id.voucher_type)
-        for fname, fvalue in pycompat.items(onchange_res['value']):
+        for fname, fvalue in onchange_res['value'].items():
             setattr(self, fname, fvalue)
 
     def _get_account(self, product, fpos, type):
@@ -394,7 +393,7 @@ class AccountVoucherLine(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = price_unit or product.lst_price
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -404,7 +403,7 @@ class AccountVoucherLine(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = product.standard_price
+                    values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}

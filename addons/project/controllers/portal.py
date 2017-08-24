@@ -8,7 +8,6 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
 
 from odoo.osv.expression import OR
-from odoo.tools import pycompat
 
 
 class CustomerPortal(CustomerPortal):
@@ -157,7 +156,7 @@ class CustomerPortal(CustomerPortal):
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
             'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
         })
         return request.render("project.portal_my_tasks", values)

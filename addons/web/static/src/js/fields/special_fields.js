@@ -54,7 +54,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         }
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
         offset = (offset[1] === '-' ? -1 : 1) * (parseInt(offset[2])*60 + parseInt(offset[3]));
-        var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), {timezone: false});
+        var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), this.field, {timezone: false});
         var content = this.$option.html().split(' ')[0];
         content += '    ('+ datetime + ')';
         this.$option.html(content);

@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.tools import pycompat
-
 
 class PayslipDetailsReport(models.AbstractModel):
     _name = 'report.hr_payroll.report_payslipdetails'
@@ -38,9 +36,9 @@ class PayslipDetailsReport(models.AbstractModel):
                 result.setdefault(x[2], {})
                 result[x[2]].setdefault(x[1], [])
                 result[x[2]][x[1]].append(x[0])
-            for payslip_id, lines_dict in pycompat.items(result):
+            for payslip_id, lines_dict in result.items():
                 res.setdefault(payslip_id, [])
-                for rule_categ_id, line_ids in pycompat.items(lines_dict):
+                for rule_categ_id, line_ids in lines_dict.items():
                     rule_categories = RuleCateg.browse(rule_categ_id)
                     lines = PayslipLine.browse(line_ids)
                     level = 0
@@ -70,9 +68,9 @@ class PayslipDetailsReport(models.AbstractModel):
             result.setdefault(line.slip_id.id, {})
             result[line.slip_id.id].setdefault(line.register_id, line)
             result[line.slip_id.id][line.register_id] |= line
-        for payslip_id, lines_dict in pycompat.items(result):
+        for payslip_id, lines_dict in result.items():
             res.setdefault(payslip_id, [])
-            for register, lines in pycompat.items(lines_dict):
+            for register, lines in lines_dict.items():
                 res[payslip_id].append({
                     'register_name': register.name,
                     'total': sum(lines.mapped('total')),

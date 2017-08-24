@@ -10,7 +10,7 @@ import requests
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext, pycompat
+from odoo.tools import html2plaintext
 
 from ..py_etherpad import EtherpadLiteClient
 
@@ -106,7 +106,7 @@ class PadCommon(models.AbstractModel):
 
         # In case the pad is created programmatically, the content is not filled in yet since it is
         # normally initialized by the JS layer
-        for k, field in pycompat.items(self._fields):
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and k not in vals:
                 ctx = {
                     'model': self._name,
@@ -121,7 +121,7 @@ class PadCommon(models.AbstractModel):
     def _set_pad_value(self, vals):
 
         # Update the pad if the `pad_content_field` is modified
-        for k, field in pycompat.items(self._fields):
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 company = self.env.user.sudo().company_id
                 myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
@@ -129,7 +129,7 @@ class PadCommon(models.AbstractModel):
                 myPad.setText(path, (html2plaintext(vals[field.pad_content_field]).encode('utf-8')))
 
         # Update the `pad_content_field` if the pad is modified
-        for k, v in list(pycompat.items(vals)):
+        for k, v in vals.items():
             field = self._fields[k]
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)
@@ -139,7 +139,7 @@ class PadCommon(models.AbstractModel):
         self.ensure_one()
         if not default:
             default = {}
-        for k, field in pycompat.items(self._fields):
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field'):
                 pad = self.pad_generate_url()
                 default[k] = pad.get('url')

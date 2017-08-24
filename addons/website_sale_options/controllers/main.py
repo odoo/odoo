@@ -5,8 +5,6 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
-from odoo.tools import pycompat
-
 
 class WebsiteSaleOptions(WebsiteSale):
 
@@ -26,7 +24,7 @@ class WebsiteSaleOptions(WebsiteSale):
 
         option_ids = product.optional_product_ids.mapped('product_variant_ids').ids
         optional_product_ids = []
-        for k, v in pycompat.items(kw):
+        for k, v in kw.items():
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))) and int(v) in option_ids:
                 optional_product_ids.append(int(v))
 

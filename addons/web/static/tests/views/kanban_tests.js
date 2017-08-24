@@ -136,11 +136,12 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic grouped rendering with active field', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         // add active field on partner model and make all records active
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
 
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -152,6 +153,12 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            intercepts: {
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
+                },
+            },
         });
 
         // check available actions in kanban header's config dropdown
@@ -163,6 +170,7 @@ QUnit.module('Views', {
         // archive the records of the first column
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
             "last column should contain 3 records");
+        envIDs = [4];
         kanban.$('.o_kanban_group:last .o_column_archive').click(); // click on 'Archive'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0,
             "last column should contain no record");
@@ -546,8 +554,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
+        var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         this.data.partner.fields.sequence = {type: 'number', string: "Sequence"};
         var kanban = createView({
             View: KanbanView,
@@ -569,6 +578,12 @@ QUnit.module('Views', {
                 }
                 return this._super(route, args);
             },
+            intercepts: {
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
+                },
+            },
         });
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
                         "column should contain 2 record(s)");
@@ -578,6 +593,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.thisiseditable').length, 4, "all records should be editable");
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        envIDs = [3, 2, 4, 1]; // first record of first column moved to the bottom of second column
         testUtils.dragAndDrop($record, $group);
 
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
@@ -673,6 +689,42 @@ QUnit.module('Views', {
             });
         });
         kanban.$('a').first().click();
+        kanban.destroy();
+    });
+
+    QUnit.test('environment is updated when (un)folding groups', function (assert) {
+        assert.expect(3);
+
+        var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            intercepts: {
+                env_updated: function (event) {
+                    assert.deepEqual(envIDs, event.data.ids,
+                        "should notify the environment with the correct ids");
+                },
+            },
+        });
+
+        // fold the second group and check that the res_ids it contains are no
+        // longer in the environment
+        envIDs = [1, 3];
+        kanban.$('.o_kanban_group:last .o_kanban_toggle_fold').click();
+
+        // re-open the second group and check that the res_ids it contains are
+        // back in the environment
+        envIDs = [1, 3, 2, 4];
+        kanban.$('.o_kanban_group:last .o_kanban_toggle_fold').click();
+
         kanban.destroy();
     });
 
@@ -1282,8 +1334,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('resequence columns in grouped by m2o', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
+        var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1301,6 +1354,12 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
+            intercepts: {
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
+                },
+            },
         });
 
         assert.ok(kanban.$('.o_kanban_view').hasClass('ui-sortable'),
@@ -1313,6 +1372,7 @@ QUnit.module('Views', {
         // there is a 100ms delay on the d&d feature (jquery sortable) for
         // kanban columns, making it hard to test. So we rather bypass the d&d
         // for this test, and directly call the event handler
+        envIDs = [2, 4, 1, 3]; // the columns will be inverted
         kanban._onResequenceColumn({data: {ids: [5, 3]}});
         kanban.update({}, {reload: false}); // re-render without reloading
 
@@ -1441,8 +1501,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('load more records in column', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
+        var envIDs = [1, 2, 4]; // the ids that should be in the environment during this test
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1462,12 +1523,19 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
+            intercepts:{
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
+                },
+            },
         });
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
             "there should be 2 records in the column");
 
         // load more
+        envIDs = [1, 2, 3, 4]; // id 3 will be loaded
         kanban.$('.o_kanban_group:eq(1)').find('.o_kanban_load_more').click();
 
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 3,
@@ -1476,6 +1544,8 @@ QUnit.module('Views', {
         assert.verifySteps([[2, undefined], [2, undefined], [2, 2]],
             "the records should be correctly fetched");
 
+        // reload
+        envIDs = [1, 2, 4]; // first group is limited again to 2 records
         kanban.reload();
         assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 2,
             "there should be 2 records in the column after reload");

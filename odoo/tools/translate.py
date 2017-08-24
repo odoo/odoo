@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import codecs
-import csv
 import fnmatch
 import inspect
 import io
@@ -121,18 +120,17 @@ _LOCALE2WIN32 = {
 ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
 
 
+# these direct uses of CSV are ok.
+import csv # pylint: disable=deprecated-module
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
 
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 
-#
-# Helper functions for translating fields
-#
+# FIXME: holy shit this whole thing needs to be cleaned up hard it's a mess
 def encode(s):
-    if isinstance(s, unicode):
-        return s.encode('utf8')
+    assert isinstance(s, pycompat.text_type)
     return s
 
 # which elements are translated inline
@@ -260,7 +258,7 @@ def translate_xml_node(node, callback, parse, serialize):
         append_content(result, translate_content(todo) if todo_has_text else todo)
 
         # translate the required attributes
-        for name, value in pycompat.items(result.attrib):
+        for name, value in result.attrib.items():
             if name in TRANSLATED_ATTRS:
                 result.set(name, translate_text(value) or value)
 
@@ -280,18 +278,18 @@ def translate_xml_node(node, callback, parse, serialize):
 
 
 def parse_xml(text):
-    return etree.fromstring(encode(text))
+    return etree.fromstring(text)
 
 def serialize_xml(node):
-    return etree.tostring(node, method='xml', encoding='utf8').decode('utf8')
+    return etree.tostring(node, method='xml', encoding='unicode')
 
 _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 
 def parse_html(text):
-    return html.fragment_fromstring(encode(text), parser=_HTML_PARSER)
+    return html.fragment_fromstring(text, parser=_HTML_PARSER)
 
 def serialize_html(node):
-    return etree.tostring(node, method='html', encoding='utf8').decode('utf8')
+    return etree.tostring(node, method='html', encoding='unicode')
 
 
 def xml_translate(callback, value):
@@ -307,7 +305,7 @@ def xml_translate(callback, value):
         return serialize_xml(result)
     except etree.ParseError:
         # fallback for translated terms: use an HTML parser and wrap the term
-        root = parse_html("<div>%s</div>" % value)
+        root = parse_html(u"<div>%s</div>" % value)
         result = translate_xml_node(root, callback, parse_xml, serialize_xml)
         # remove tags <div> and </div> from result
         return serialize_xml(result)[5:-6]
@@ -643,14 +641,13 @@ class PoFile(object):
             # only strings in python code are python formated
             self.buffer.write(u"#, python-format\n")
 
-        if not isinstance(trad, unicode):
-            trad = unicode(trad, 'utf8')
-        if not isinstance(source, unicode):
-            source = unicode(source, 'utf8')
-
-        msg = u"msgid %s\n"      \
-              u"msgstr %s\n\n"   \
-                  % (quote(source), quote(trad))
+        msg = (
+            u"msgid %s\n"
+            u"msgstr %s\n\n"
+        ) % (
+            quote(pycompat.text_type(source)), 
+            quote(pycompat.text_type(trad))
+        )
         self.buffer.write(msg)
 
 
@@ -660,7 +657,7 @@ def trans_export(lang, modules, buffer, format, cr):
 
     def _process(format, modules, rows, buffer, lang):
         if format == 'csv':
-            writer = csv.writer(buffer, 'UNIX')
+            writer = pycompat.csv_writer(buffer, dialect='UNIX')
             # write header first
             writer.writerow(("module","type","name","res_id","src","value","comments"))
             for module, type, name, res_id, src, trad, comments in rows:
@@ -681,7 +678,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in sorted(pycompat.items(grouped_rows)):
+            for src, row in sorted(grouped_rows.items()):
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
@@ -695,7 +692,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 module = row[0]
                 rows_by_module.setdefault(module, []).append(row)
             tmpdir = tempfile.mkdtemp()
-            for mod, modrows in pycompat.items(rows_by_module):
+            for mod, modrows in rows_by_module.items():
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
@@ -810,9 +807,9 @@ def trans_generate(lang, modules, cr):
         try:
             # verify the minimal size without eventual xml tags
             # wrap to make sure html content like '<a>b</a><c>d</c>' is accepted by lxml
-            wrapped = "<div>%s</div>" % sanitized_term
+            wrapped = u"<div>%s</div>" % sanitized_term
             node = etree.fromstring(wrapped)
-            sanitized_term = etree.tostring(node, encoding='UTF-8', method='text')
+            sanitized_term = etree.tostring(node, encoding='unicode', method='text')
         except etree.ParseError:
             pass
         # remove non-alphanumeric chars
@@ -847,12 +844,10 @@ def trans_generate(lang, modules, cr):
     cr.execute(query, query_param)
 
     for (xml_name, model, res_id, module) in cr.fetchall():
-        module = encode(module)
-        model = encode(model)
-        xml_name = "%s.%s" % (module, encode(xml_name))
+        xml_name = "%s.%s" % (module, xml_name)
 
         if model not in env:
-            _logger.error("Unable to find object %r", model)
+            _logger.error(u"Unable to find object %r", model)
             continue
 
         record = env[model].browse(res_id)
@@ -861,14 +856,14 @@ def trans_generate(lang, modules, cr):
             continue
 
         if not record.exists():
-            _logger.warning("Unable to find object %r with id %d", model, res_id)
+            _logger.warning(u"Unable to find object %r with id %d", model, res_id)
             continue
 
-        if model=='ir.model.fields':
+        if model==u'ir.model.fields':
             try:
-                field_name = encode(record.name)
+                field_name = record.name
             except AttributeError as exc:
-                _logger.error("name error in %s: %s", xml_name, str(exc))
+                _logger.error(u"name error in %s: %s", xml_name, str(exc))
                 continue
             field_model = env.get(record.model)
             if (field_model is None or not field_model._translate or
@@ -877,11 +872,11 @@ def trans_generate(lang, modules, cr):
             field = field_model._fields[field_name]
 
             if isinstance(getattr(field, 'selection', None), (list, tuple)):
-                name = "%s,%s" % (encode(record.model), field_name)
+                name = "%s,%s" % (record.model, field_name)
                 for dummy, val in field.selection:
-                    push_translation(module, 'selection', name, 0, encode(val))
+                    push_translation(module, 'selection', name, 0, val)
 
-        for field_name, field in record._fields.iteritems():
+        for field_name, field in record._fields.items():
             if field.translate:
                 name = model + "," + field_name
                 try:
@@ -889,13 +884,13 @@ def trans_generate(lang, modules, cr):
                 except Exception:
                     continue
                 for term in set(field.get_trans_terms(value)):
-                    push_translation(module, 'model', name, xml_name, encode(term))
+                    push_translation(module, 'model', name, xml_name, term)
 
         # End of data for ir.model.data query results
 
     def push_constraint_msg(module, term_type, model, msg):
         if not callable(msg):
-            push_translation(encode(module), term_type, encode(model), 0, encode(msg))
+            push_translation(encode(module), term_type, encode(model), 0, msg)
 
     def push_local_constraints(module, model, cons_type='sql_constraints'):
         """ Climb up the class hierarchy and ignore inherited constraints from other modules. """
@@ -1005,7 +1000,7 @@ def trans_generate(lang, modules, cr):
 
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
     try:
-        with file_open(filename) as fileobj:
+        with file_open(filename, mode='rb') as fileobj:
             _logger.info("loading %s", filename)
             fileformat = os.path.splitext(filename)[-1][1:].lower()
             result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
@@ -1038,11 +1033,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # now, the serious things: we read the language file
         fileobj.seek(0)
         if fileformat == 'csv':
-            reader = csv.reader(fileobj, quotechar='"', delimiter=',')
+            reader = pycompat.csv_reader(fileobj, quotechar='"', delimiter=',')
             # read the first line of the file (it contains columns titles)
-            for row in reader:
-                fields = row
-                break
+            fields = next(reader)
 
         elif fileformat == 'po':
             reader = PoFile(fileobj)
@@ -1060,7 +1053,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     addons_module, i18n_dir = os.path.split(addons_module_i18n)
                     addons, module = os.path.split(addons_module)
                     pot_handle = file_open(os.path.join(
-                        addons, module, i18n_dir, module + '.pot'))
+                        addons, module, i18n_dir, module + '.pot'), mode='rb')
                     pot_reader = PoFile(pot_handle)
                 except:
                     pass
@@ -1109,7 +1102,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 return
 
             if isinstance(res_id, pycompat.integer_types) or \
-                    (isinstance(res_id, basestring) and res_id.isdigit()):
+                    (isinstance(res_id, pycompat.string_types) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:
                     dic['module'] = module_name
@@ -1132,7 +1125,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src, target in pycompat.items(pot_targets):
+        for src, target in pot_targets.items():
             if target.value:
                 for type, name, res_id in target.targets:
                     pot_rows.append((type, name, res_id, src, target.value, target.comments))

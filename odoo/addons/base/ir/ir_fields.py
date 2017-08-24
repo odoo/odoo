@@ -12,9 +12,9 @@ from odoo.tools import ustr, pycompat
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
-    return {k: v for k, v in pycompat.items(record) if k in REFERENCING_FIELDS}
+    return {k: v for k, v in record.items() if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
-    return {k: v for k, v in pycompat.items(record) if k not in REFERENCING_FIELDS}
+    return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -38,12 +38,12 @@ class IrFieldsConverter(models.AbstractModel):
     @api.model
     def _format_import_error(self, error_type, error_msg, error_params=(), error_args=None):
         # sanitize error params for later formatting by the import system
-        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, basestring) else p
+        sanitize = lambda p: p.replace('%', '%%') if isinstance(p, pycompat.string_types) else p
         if error_params:
-            if isinstance(error_params, basestring):
+            if isinstance(error_params, pycompat.string_types):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
-                error_params = {k: sanitize(v) for k, v in pycompat.items(error_params)}
+                error_params = {k: sanitize(v) for k, v in error_params.items()}
             elif isinstance(error_params, tuple):
                 error_params = tuple(sanitize(v) for v in error_params)
         return error_type(error_msg % error_params, error_args)
@@ -64,12 +64,12 @@ class IrFieldsConverter(models.AbstractModel):
 
         converters = {
             name: self.to_field(model, field, fromtype)
-            for name, field in pycompat.items(model._fields)
+            for name, field in model._fields.items()
         }
 
         def fn(record, log):
             converted = {}
-            for field, value in pycompat.items(record):
+            for field, value in record.items():
                 if field in REFERENCING_FIELDS:
                     continue
                 if not value:
@@ -78,7 +78,7 @@ class IrFieldsConverter(models.AbstractModel):
                 try:
                     converted[field], ws = converters[field](value)
                     for w in ws:
-                        if isinstance(w, basestring):
+                        if isinstance(w, pycompat.string_types):
                             # wrap warning string in an ImportWarning for
                             # uniform handling
                             w = ImportWarning(w)
@@ -269,14 +269,14 @@ class IrFieldsConverter(models.AbstractModel):
         for item, label in selection:
             label = ustr(label)
             labels = [label] + self._get_translations(('selection', 'model', 'code'), label)
-            if value == unicode(item) or value in labels:
+            if value == pycompat.text_type(item) or value in labels:
                 return item, []
 
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
             value,
-            {'moreinfo': [_label or unicode(item) for item, _label in selection if _label or item]}
+            {'moreinfo': [_label or pycompat.text_type(item) for item, _label in selection if _label or item]}
         )
 
     @api.model

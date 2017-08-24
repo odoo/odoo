@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from cStringIO import StringIO
+import io
 from werkzeug.utils import redirect
 
 from odoo import http
@@ -100,7 +100,7 @@ class WebsiteSaleDigital(CustomerPortal):
             else:
                 return request.not_found()
         elif attachment["datas"]:
-            data = StringIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
+            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
         else:
             return request.not_found()

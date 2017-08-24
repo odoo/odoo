@@ -68,4 +68,4 @@ class MailGroup(models.Model):
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data).hexdigest()
+        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()

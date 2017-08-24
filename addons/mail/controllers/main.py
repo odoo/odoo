@@ -13,7 +13,7 @@ from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -101,7 +101,7 @@ class MailController(http.Controller):
         """ End-point to receive mail from an external SMTP server. """
         dbs = req.jsonrequest.get('databases')
         for db in dbs:
-            message = dbs[db].decode('base64')
+            message = base64.b64decode(dbs[db])
             try:
                 db_registry = registry(db)
                 with db_registry.cursor() as cr:
@@ -119,7 +119,7 @@ class MailController(http.Controller):
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
         res_ids = follower_recs.mapped('res_id')
-        request.env[res_model].browse(res_ids).check_access_rule("write")
+        request.env[res_model].browse(res_ids).check_access_rule("read")
         for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id
@@ -182,7 +182,7 @@ class MailController(http.Controller):
             else:
                 # either a wrong message_id, either someone trying ids -> just go to messaging
                 return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, basestring):
+        elif res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
 
         return self._redirect_to_record(model, res_id, access_token)

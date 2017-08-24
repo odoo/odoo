@@ -6,7 +6,6 @@ from collections import OrderedDict
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import pycompat
 from odoo.tools.translate import _
 from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
 
@@ -88,7 +87,7 @@ class CustomerPortal(CustomerPortal):
             'archive_groups': archive_groups,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
             'default_url': '/my/purchase',
         })

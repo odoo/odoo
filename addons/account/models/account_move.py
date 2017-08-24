@@ -987,26 +987,10 @@ class AccountMoveLine(models.Model):
             vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))
 
         # Writeoff line in the account of self
-        first_line_dict = vals.copy()
-        first_line_dict['account_id'] = self[0].account_id.id
-        if 'analytic_account_id' in first_line_dict:
-            del first_line_dict['analytic_account_id']
-        if 'tax_ids' in first_line_dict:
-            tax_ids = []
-            #vals['tax_ids'] is a list of commands [[4, tax_id, None], ...]
-            for tax_id in vals['tax_ids']:
-                tax_ids.append(tax_id[1])
-            amount = first_line_dict['credit'] - first_line_dict['debit']
-            amount_tax = self.env['account.tax'].browse(tax_ids).compute_all(amount)['total_included']
-            first_line_dict['credit'] = amount_tax > 0 and amount_tax or 0.0
-            first_line_dict['debit'] = amount_tax < 0 and abs(amount_tax) or 0.0
-            del first_line_dict['tax_ids']
+        first_line_dict = self._prepare_writeoff_first_line_values(vals)
 
         # Writeoff line in specified writeoff account
-        second_line_dict = vals.copy()
-        second_line_dict['debit'], second_line_dict['credit'] = second_line_dict['credit'], second_line_dict['debit']
-        if 'amount_currency' in vals:
-            second_line_dict['amount_currency'] = -second_line_dict['amount_currency']
+        second_line_dict = self._prepare_writeoff_second_line_values(vals)
 
         # Create the move
         writeoff_move = self.env['account.move'].with_context(apply_taxes=True).create({
@@ -1020,6 +1004,32 @@ class AccountMoveLine(models.Model):
         # Return the writeoff move.line which is to be reconciled
         return writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
 
+    @api.multi
+    def _prepare_writeoff_first_line_values(self, values):
+        line_values = values.copy()
+        line_values['account_id'] = self[0].account_id.id
+        if 'analytic_account_id' in line_values:
+            del line_values['analytic_account_id']
+        if 'tax_ids' in line_values:
+            tax_ids = []
+            # vals['tax_ids'] is a list of commands [[4, tax_id, None], ...]
+            for tax_id in values['tax_ids']:
+                tax_ids.append(tax_id[1])
+            amount = line_values['credit'] - line_values['debit']
+            amount_tax = self.env['account.tax'].browse(tax_ids).compute_all(amount)['total_included']
+            line_values['credit'] = amount_tax > 0 and amount_tax or 0.0
+            line_values['debit'] = amount_tax < 0 and abs(amount_tax) or 0.0
+            del line_values['tax_ids']
+        return line_values
+
+    @api.multi
+    def _prepare_writeoff_second_line_values(self, values):
+        line_values = values.copy()
+        line_values['debit'], line_values['credit'] = line_values['credit'], line_values['debit']
+        if 'amount_currency' in values:
+            line_values['amount_currency'] = -line_values['amount_currency']
+        return line_values
+
     def force_full_reconcile(self):
         """ After running the manual reconciliation wizard and making full reconciliation, we need to run this method to create
             potentially exchange rate entries that will balance the remaining amount_residual_currency (possibly several aml in
@@ -1031,7 +1041,7 @@ class AccountMoveLine(models.Model):
         partial_rec_set = self.env['account.partial.reconcile']
         maxdate = '0000-00-00'
 
-        #gather the max date for the move creation, and all aml that are unbalanced
+        # gather the max date for the move creation, and all aml that are unbalanced
         for aml in self:
             maxdate = max(aml.date, maxdate)
             if aml.amount_residual_currency:
@@ -1771,6 +1781,6 @@ class AccountFullReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > company.fiscalyear_lock_date:
+        if move_date > (company.fiscalyear_lock_date or '0000-00-00'):
             res['date'] = move_date
         return res

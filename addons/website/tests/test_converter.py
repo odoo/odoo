@@ -4,8 +4,6 @@
 import unittest
 from odoo.addons.http_routing.models.ir_http import slugify, unslug
 
-from odoo.tools import pycompat
-
 
 class TestUnslug(unittest.TestCase):
 
@@ -25,7 +23,7 @@ class TestUnslug(unittest.TestCase):
             'foo1': (None, None),
         }
 
-        for slug, expected in pycompat.items(tests):
+        for slug, expected in tests.items():
             self.assertEqual(unslug(slug), expected)
 
 

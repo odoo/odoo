@@ -1,8 +1,6 @@
 import yaml
 import logging
 
-from . import pycompat
-
 
 class YamlTag(object):
     """
@@ -16,7 +14,7 @@ class YamlTag(object):
     def __getattr__(self, attr):
         return None
     def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, sorted(pycompat.items(self.__dict__)))
+        return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
 
 class Assert(YamlTag):
     def __init__(self, model, id=None, severity=logging.WARNING, string="NONAME", **kwargs):

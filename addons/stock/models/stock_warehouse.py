@@ -8,7 +8,7 @@ from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 import logging
 
@@ -99,7 +99,7 @@ class Warehouse(models.Model):
             'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
             'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
         }
-        for field_name, values in pycompat.items(sub_locations):
+        for field_name, values in sub_locations.items():
             values['location_id'] = vals['view_location_id']
             if vals.get('company_id'):
                 values['company_id'] = vals.get('company_id')
@@ -240,10 +240,10 @@ class Warehouse(models.Model):
             },
         }
         data = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in pycompat.items(data):
+        for field_name in data:
             data[field_name].update(create_data[field_name])
 
-        for picking_type, values in pycompat.items(data):
+        for picking_type, values in data.items():
             sequence = IrSequenceSudo.create(sequence_data[picking_type])
             values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
             warehouse_data[picking_type] = PickingType.create(values).id
@@ -598,8 +598,8 @@ class Warehouse(models.Model):
     @api.one
     def _update_picking_type(self):
         picking_type_values = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in pycompat.items(picking_type_values):
-            getattr(self, field_name).write(values)
+        for field_name, values in picking_type_values.items():
+            self[field_name].write(values)
 
     @api.multi
     def _update_name_and_code(self, new_name=False, new_code=False):

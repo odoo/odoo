@@ -577,7 +577,7 @@ class WebsiteForum(http.Controller):
             img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
-            content = image.encode('base64')
+            content = base64.b64encode(image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -711,7 +711,7 @@ class WebsiteForum(http.Controller):
             values['image'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
-            values['image'] = image.encode('base64')
+            values['image'] = base64.b64encode(image)
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'

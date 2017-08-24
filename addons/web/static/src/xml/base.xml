@@ -448,7 +448,7 @@
                 </label>
             </td>
             <td class="oe_form_required">
-                <select id="formview_default_fields">
+                <select id="formview_default_fields" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.fields" t-as="field"
                             t-att-value="field.name">
@@ -465,7 +465,7 @@
                 </label>
             </td>
             <td>
-                <select id="formview_default_conditions">
+                <select id="formview_default_conditions" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.conditions" t-as="cond"
                             t-att-value="cond.name + '=' + cond.value">

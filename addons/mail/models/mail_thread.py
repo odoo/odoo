@@ -238,7 +238,7 @@ class MailThread(models.AbstractModel):
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
-        for key, val in pycompat.items(self._context):
+        for key, val in self._context.items():
             if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         thread.message_auto_subscribe(list(create_values), values=create_values)
@@ -373,7 +373,7 @@ class MailThread(models.AbstractModel):
                 options['display_log_button'] = is_employee
                 # save options on the node
                 node.set('options', repr(options))
-            res['arch'] = etree.tostring(doc)
+            res['arch'] = etree.tostring(doc, encoding='unicode')
         return res
 
     # ------------------------------------------------------
@@ -388,7 +388,7 @@ class MailThread(models.AbstractModel):
                 always tracked fields and modified on_change fields
         """
         tracked_fields = []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if getattr(field, 'track_visibility', False):
                 tracked_fields.append(name)
 
@@ -416,13 +416,13 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_track_post_template(self, tracking):
-        if not any(change for rec_id, (change, tracking_value_ids) in pycompat.items(tracking)):
+        if not any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
             return True
         templates = self._track_template(tracking)
-        for field_name, (template, post_kwargs) in pycompat.items(templates):
+        for field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
-            if isinstance(template, basestring):
+            if isinstance(template, pycompat.string_types):
                 self.message_post_with_view(template, **post_kwargs)
             else:
                 self.message_post_with_template(template.id, **post_kwargs)
@@ -450,7 +450,7 @@ class MailThread(models.AbstractModel):
         display_values_ids = []
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in pycompat.items(tracked_fields):
+        for col_name, col_info in tracked_fields.items():
             track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
@@ -569,7 +569,7 @@ class MailThread(models.AbstractModel):
     def _generate_notification_token(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
-        hm = hmac.new(str(secret), token, hashlib.sha1).hexdigest()
+        hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
     @api.multi
@@ -816,7 +816,7 @@ class MailThread(models.AbstractModel):
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
-        for model_name, model in pycompat.items(self.env):
+        for model_name, model in self.env.items():
             if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -1266,12 +1266,16 @@ class MailThread(models.AbstractModel):
         # we don't know its encoding until we parse its headers and hence can't
         # convert it to utf-8 for transport between the mailgate script and here.
         if isinstance(message, xmlrpclib.Binary):
-            message = str(message.data)
-        # Warning: message_from_string doesn't always work correctly on unicode,
-        # we must use utf-8 strings here :-(
-        if isinstance(message, unicode):
+            message = bytes(message.data)
+        # message_from_string parses from a *native string*, except apparently
+        # sometimes message is ISO-8859-1 binary data or some shit and the
+        # straightforward version (pycompat.to_native) won't work right ->
+        # always encode message to bytes then use the relevant method
+        # depending on ~python version
+        if isinstance(message, pycompat.text_type):
             message = message.encode('utf-8')
-        msg_txt = email.message_from_string(message)
+        extract = getattr(email, 'message_from_bytes', email.message_from_string)
+        msg_txt = extract(message)
 
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(msg_txt, save_original=save_original)
@@ -1492,9 +1496,9 @@ class MailThread(models.AbstractModel):
             'message_type': 'email',
         }
         if not isinstance(message, Message):
-            if isinstance(message, unicode):
-                # Warning: message_from_string doesn't always work correctly on unicode,
-                # we must use utf-8 strings here :-(
+            # message_from_string works on a native str, so on py2 we need to
+            # encode incoming unicode strings
+            if pycompat.PY2 and not isinstance(message, str):
                 message = message.encode('utf-8')
             message = email.message_from_string(message)
 
@@ -1723,11 +1727,11 @@ class MailThread(models.AbstractModel):
                 cid = info and info.get('cid')
             else:
                 continue
-            if isinstance(content, unicode):
+            if isinstance(content, pycompat.text_type):
                 content = content.encode('utf-8')
             data_attach = {
                 'name': name,
-                'datas': base64.b64encode(str(content)),
+                'datas': base64.b64encode(content),
                 'type': 'binary',
                 'datas_fname': name,
                 'description': name,
@@ -1920,7 +1924,7 @@ class MailThread(models.AbstractModel):
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id
-        if isinstance(views_or_xmlid, basestring):
+        if isinstance(views_or_xmlid, pycompat.string_types):
             views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
         else:
             views = views_or_xmlid
@@ -2052,7 +2056,7 @@ class MailThread(models.AbstractModel):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if name in auto_follow_fields and name in updated_fields and getattr(field, 'track_visibility', False) and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
@@ -2148,10 +2152,10 @@ class MailThread(models.AbstractModel):
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 
-        for pid, subtypes in pycompat.items(new_partners):
+        for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
-        for cid, subtypes in pycompat.items(new_channels):
+        for cid, subtypes in new_channels.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 

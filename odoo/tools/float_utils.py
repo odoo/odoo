@@ -6,6 +6,25 @@ import math
 
 from odoo.tools import pycompat
 
+if not pycompat.PY2:
+    import builtins
+    def round(f):
+        # P3's builtin round differs from P2 in the following manner:
+        # * it rounds half to even rather than up (away from 0)
+        # * round(-0.) loses the sign (it returns -0 rather than 0)
+        # * round(x) returns an int rather than a float
+        #
+        # this compatibility shim implements Python 2's round in terms of
+        # Python 3's so that important rounding error under P3 can be
+        # trivially fixed, assuming the P2 behaviour to be debugged and
+        # correct.
+        roundf = builtins.round(f)
+        if builtins.round(f + 1) - roundf != 1:
+            return f + math.copysign(0.5, f)
+        # copysign ensures round(-0.) -> -0 *and* result is a float
+        return math.copysign(roundf, f)
+else:
+    round = round
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
