@@ -131,21 +131,21 @@ Best Regards,''')
     @api.model
     def setting_init_company_action(self):
         """ Called by the 'Company Data' button of the setup bar."""
-        self.ensure_one()
+        company = self.env.user.company_id
         view_id = self.env.ref('account.setup_view_company_form').id
         return {'type': 'ir.actions.act_window',
                 'name': _('Company Data'),
                 'res_model': 'res.company',
                 'target': 'new',
                 'view_mode': 'form',
-                'res_id': self.id,
+                'res_id': company.id,
                 'views': [[view_id, 'form']],
         }
 
     @api.model
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
-        self.ensure_one()
+        company = self.env.user.company_id
         view_id = self.env.ref('account.setup_bank_journal_form').id
 
         res = {
@@ -159,7 +159,7 @@ Best Regards,''')
 
         # If some bank journal already exists, we open it in the form, so the user can edit it.
         # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=', self.id), ('type','=','bank')], limit=1)
+        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')], limit=1)
         if bank_journal:
             res['res_id'] = bank_journal.id
         else:
@@ -169,9 +169,9 @@ Best Regards,''')
     @api.model
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
-        self.ensure_one()
-        self.create_op_move_if_non_existant()
-        new_wizard = self.env['account.financial.year.op'].create({'company_id': self.id})
+        company = self.env.user.company_id
+        company.create_op_move_if_non_existant()
+        new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
         return {
@@ -187,20 +187,20 @@ Best Regards,''')
     @api.model
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
-        self.ensure_one()
-        self.account_setup_coa_done = True
+        company = self.env.user.company_id
+        company.account_setup_coa_done = True
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
-        if self.opening_move_posted():
+        if company.opening_move_posted():
             return 'account.action_account_form'
 
         # Otherwise, we create the opening move
-        self.create_op_move_if_non_existant()
+        company.create_op_move_if_non_existant()
 
         # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
         # Hide the current year earnings account as it is automatically computed
-        domain = [('user_type_id', '!=', self.env.ref('account.data_unaffected_earnings').id), ('company_id','=', self.id)]
+        domain = [('user_type_id', '!=', self.env.ref('account.data_unaffected_earnings').id), ('company_id','=', company.id)]
         return {
             'type': 'ir.actions.act_window',
             'name': _('Chart of Accounts'),
@@ -214,10 +214,10 @@ Best Regards,''')
     @api.model
     def setting_opening_move_action(self):
         """ Called by the 'Initial Balances' button of the setup bar."""
-        self.ensure_one()
+        company = self.env.user.company_id
 
         # If the opening move has already been posted, we open its form view
-        if self.opening_move_posted():
+        if company.opening_move_posted():
             form_view_id = self.env.ref('account.setup_posted_move_form').id
             return {
                 'type': 'ir.actions.act_window',
@@ -225,13 +225,13 @@ Best Regards,''')
                 'view_mode': 'form',
                 'res_model': 'account.move',
                 'target': 'new',
-                'res_id': self.account_opening_move_id.id,
+                'res_id': company.account_opening_move_id.id,
                 'views': [[form_view_id, 'form']],
             }
 
         # Otherwise, we open a custom wizard to post it.
-        self.create_op_move_if_non_existant()
-        new_wizard = self.env['account.opening'].create({'company_id': self.id})
+        company.create_op_move_if_non_existant()
+        new_wizard = self.env['account.opening'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_opening_move_wizard_form').id
 
         return {
@@ -248,78 +248,70 @@ Best Regards,''')
     @api.model
     def setting_hide_setup_bar(self):
         """ Called by the cross button of the setup bar, to close it."""
-        self.ensure_one()
-        self.account_setup_bar_closed = True
+        self.env.user.company_id.account_setup_bar_closed = True
 
     @api.model
     def create_op_move_if_non_existant(self):
         """ Creates an empty opening move in 'draft' state for the current company
         if there wasn't already one defined. For this, the function needs at least
-        one journal of type 'bank' to exist (required by account.move).
+        one journal of type 'general' to exist (required by account.move).
         """
-        current_company = self._company_default_get()
-        if not current_company.account_opening_move_id:
-            default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', current_company.id)], limit=1)
+        self.ensure_one()
+        if not self.account_opening_move_id:
+            default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError("No miscellanous journal could be found. Please create one before proceeding.")
+                raise UserError(_("No miscellanous journal could be found. Please create one before proceeding."))
 
-            current_company.account_opening_move_id = self.env['account.move'].create({
-                'name': _('Opening move'),
-                'company_id': current_company.id,
+            self.account_opening_move_id = self.env['account.move'].create({
+                'name': _('Opening Entry'),
+                'company_id': self.id,
                 'journal_id': default_journal.id,
             })
 
     def mark_company_setup_as_done_action(self):
-        """ Forces the completion of the 'company' setup step and returns an action
-        refreshing the view.
-        """
+        """ Marks the 'company' setup step as completed."""
         self.account_setup_company_data_done = True
 
     def unmark_company_setup_as_done_action(self):
-        """ Returns the 'company' setup step to its 'not done' state.
-        """
+        """ Marks the 'company' setup step as uncompleted."""
         self.account_setup_company_data_done = False
 
     def opening_move_posted(self):
-        """ Returns true if and only if this company has an opening account move,
-        and this move has been posted.
-        """
+        """ Returns true if this company has an opening account move and this move is posted."""
         return bool(self.account_opening_move_id) and self.account_opening_move_id.state == 'posted'
 
     def get_unaffected_earnings_account(self):
-       """ Returns the unaffected earnings account for this company, creating one
-       if none has yet been defined.
-       """
-       unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
-       rslt = self.env['account.account'].search([('company_id', '=', self.id), ('user_type_id', '=', unaffected_earnings_type.id)])
-       if not rslt:
-           rslt = self.env['account.account'].create({
-               'code': '999999',
-               'name': _('Undistributed Profits/Losses'),
-               'user_type_id': unaffected_earnings_type.id,
-               'company_id': self.id,
-           })
-       return rslt
+        """ Returns the unaffected earnings account for this company, creating one
+        if none has yet been defined.
+        """
+        unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
+        account = self.env['account.account'].search([('company_id', '=', self.id),
+                                                      ('user_type_id', '=', unaffected_earnings_type.id)])
+        if not account:
+            account = self.env['account.account'].create({
+                'code': '999999',
+                'name': _('Undistributed Profits/Losses'),
+                'user_type_id': unaffected_earnings_type.id,
+                'company_id': self.id,
+            })
+        return account
 
     def get_opening_move_differences(self, opening_move_lines):
         currency = self.currency_id
         balancing_move_line = opening_move_lines.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
-        debits_sum = 0.0
-        credits_sum = 0.0
+        debits_sum = credits_sum = 0.0
         for line in opening_move_lines:
             if line != balancing_move_line:
+                #skip the autobalancing move line
                 debits_sum += line.debit
                 credits_sum += line.credit
 
         difference = abs(debits_sum - credits_sum)
-        rslt = {}
-        rslt['debit'] = (debits_sum > credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
-        rslt['credit'] = (debits_sum < credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
-
-        return rslt
-
+        debit_diff = (debits_sum > credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+        credit_diff = (debits_sum < credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+        return debit_diff, credit_diff
 
     def _auto_balance_opening_move(self):
         """ Checks the opening_move of this company. If it has not been posted yet
@@ -327,26 +319,24 @@ Best Regards,''')
         current year earnings account.
         """
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
-            opening_differences = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
-            credit_difference = opening_differences['credit']
-            debit_difference = opening_differences['debit']
+            debit_diff, credit_diff = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
 
             currency = self.currency_id
             balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
-            if float_is_zero(debit_difference + credit_difference, precision_rounding=currency.rounding):
+            if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
                 if balancing_move_line: # zero difference and existing line : delete the line
                     balancing_move_line.unlink()
             else:
                 if balancing_move_line: # Non-zero difference and existing line : edit the line
-                    balancing_move_line.write({'debit': credit_difference, 'credit': debit_difference})
+                    balancing_move_line.write({'debit': credit_diff, 'credit': debit_diff})
                 else: # Non-zero difference and no existing line : create a new line
                     balancing_account = self.get_unaffected_earnings_account()
                     self.env['account.move.line'].create({
                         'name': 'Opening Move Automatic Balancing Line',
                         'move_id': self.account_opening_move_id.id,
                         'account_id': balancing_account.id,
-                        'debit': credit_difference,
-                        'credit': debit_difference,
+                        'debit': credit_diff,
+                        'credit': debit_diff,
                     })
 
