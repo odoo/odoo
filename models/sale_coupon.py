@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import uuid
+import random
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 
 
 class SaleCoupon(models.Model):
@@ -14,15 +14,16 @@ class SaleCoupon(models.Model):
 
     @api.model
     def _generate_code(self):
-        """Generate a 20 char long pseudo-random string of digits
-        Used for barcode generation, UUID4 makes the chance of a collision
-        (unicity constraint) highly unlikely.
-        Using the int version is a longer string than hex but generates a more
-        compact barcode when using digits only (Code128C instead of Code128A).
-        Keep only the first 8 bytes as a 16 bytes barcode is not readable by all
-        barcode scanners.
+        """Generate a 20 char long pseudo-random string of digits for barcode
+        generation.
+
+        A decimal serialisation is longer than a hexadecimal one *but* it
+        generates a more compact barcode (Code128C rather than Code128A).
+
+        Generate 8 bytes (64 bits) barcodes as 16 bytes barcodes are not 
+        compatible with all scanners.
          """
-        return str(int(uuid.uuid4().bytes[:8].encode('hex'), 16))
+        return pycompat.text_type(random.getrandbits(64))
 
     code = fields.Char(default=_generate_code, required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
