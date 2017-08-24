@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+       <template id="report_invoice_document_dummy" inherit_id="account.report_invoice_document">
+            <xpath expr="//p[@t-if='o.payment_term_id']" position="after">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <strong><span>QR print:</span></strong>
+                        <img t-att-src="'/report/barcode/QR/%s' % quote_plus('?') + keep_query(re=o.name, rr=o.number, tt=o.payment_term_id, id=o.state)" />
+                    </div>
+                </div>
+            </xpath>
+        </template>
+        <template id="report_invoice_dummy">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="dummy.invoice.report_invoice_document_dummy" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+</odoo>
