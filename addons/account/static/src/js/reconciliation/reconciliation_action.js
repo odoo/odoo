@@ -201,7 +201,10 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                 _.each(self.model.lines, function (line, _handle) {
                     if (line.mode !== 'inactive' && _handle !== handle) {
                         self.model.changeMode(_handle, 'inactive');
-                        self._getWidget(_handle).update(line);
+                        var widget = self._getWidget(_handle);
+                        if (widget) {
+                            widget.update(line);
+                        }
                     }
                 });
             }
