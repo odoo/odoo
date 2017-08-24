@@ -268,7 +268,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
                                 <div class="o_project_kanban_main">
-                                    <div class="o_kanban_card_content o_visible">
+                                    <div class="o_kanban_card_content">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
                                                 <span><t t-esc="record.name.value"/></span>
@@ -281,7 +281,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_pane o_invisible">
+                                    <div class="o_kanban_card_manage_pane">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div groups="project.group_project_manager">
                                                 <a type="edit">Settings</a>
