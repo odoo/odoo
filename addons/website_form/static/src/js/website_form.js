@@ -150,6 +150,8 @@ odoo.define('website_form.animation', function (require) {
             .fail(function (result_data){
                 self.update_status('error');
             });
+
+            this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);});
         },
 
         check_error_fields: function (error_fields) {
