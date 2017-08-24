@@ -28,7 +28,7 @@ QUnit.module('Barcodes', {
 });
 
 QUnit.test('Button with barcode_trigger', function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     var form = createView({
         View: FormView,
@@ -37,6 +37,7 @@ QUnit.test('Button with barcode_trigger', function (assert) {
         arch: '<form>' +
                 '<header>' +
                     '<button name="do_something" string="Validate" type="object" barcode_trigger="doit"/>' +
+                    '<button name="do_something_else" string="Validate" type="object" invisible="1" barcode_trigger="dothat"/>' +
                 '</header>' +
             '</form>',
         res_id: 2,
@@ -45,11 +46,18 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
                     "do_something method call verified");
             },
+            warning: function () {
+                assert.step('warn');
+            },
         },
     });
 
     // O-BTN.doit
     _.each(['O','-','B','T','N','.','d','o','i','t','Enter'], triggerKeypressEvent);
+    // O-BTN.dothat (should not call execute_action as the button isn't visible)
+    _.each(['O','-','B','T','N','.','d','o','t','h','a','t','Enter'], triggerKeypressEvent);
+
+    assert.verifySteps([], "no warning should be displayed");
 
     form.destroy();
 });

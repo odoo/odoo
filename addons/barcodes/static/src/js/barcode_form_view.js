@@ -350,8 +350,6 @@ FormRenderer.include({
         commands['O-BTN.' + node.attrs.barcode_trigger] = function () {
             if (!$button.hasClass('o_invisible_modifier')) {
                 $button.click();
-            } else {
-                this.do_warn(_t('Action currently unavailable'));
             }
             return $.when();
         };
