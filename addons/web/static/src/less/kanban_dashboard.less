@@ -50,8 +50,11 @@
             }
 
             // ------- Dropdown toggle & menu -------
+            @o-kanban-manage-toggle-height: 35px;
+
             .o_kanban_manage_toggle_button {
                 .o-kanban-dropdown(@o-kanban-dashboard-hpadding);
+                height: @o-kanban-manage-toggle-height;
             }
 
             .o_kanban_card_manage_pane {
@@ -59,8 +62,9 @@
                 .o-kanban-dropdown-menu();
 
                 // Arbitrary value to place the dropdown-menu
-                // exactly below the dropdown-toggle
-                top: 34px;
+                // exactly below the dropdown-toggle (whose height is forced
+                // so that it works on Firefox)
+                top: @o-kanban-manage-toggle-height - 1;
 
                 > div:not(.o_project_kanban_colorpicker) {
                     padding: 3px 0 3px 20px;
