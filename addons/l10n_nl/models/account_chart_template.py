@@ -12,5 +12,5 @@ class WizardMultiChartsAccounts(models.TransientModel):
         res = super(WizardMultiChartsAccounts, self).execute()
         account = self.env['account.account'].search([('code', '=', '999999'), ('company_id', '=', self.company_id.id)])
         if account:
-            account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_32').id)]
+            account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_12').id)]
         return res
