@@ -179,12 +179,12 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="location_dest_id"/>
                     <field name="partner_id"/>
                     <field name="date" invisible="1"/>
-                    <field name="min_date"/>
+                    <field name="scheduled_date"/>
                     <field name="origin"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id"/>
@@ -242,7 +242,7 @@
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="min_date"/>
+                            <field name="scheduled_date"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner" colspan="2" col="2">
@@ -336,7 +336,7 @@
                     <filter name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
-                    <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
+                    <filter name="late" string="Late" domain="[('scheduled_date','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S'))]" help="Pickings that are late on scheduled time"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id','!=', False)]" help="Remaining parts of picking partially processed"/>
                     <separator/>
@@ -358,7 +358,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <filter string="Expected Date" domain="[]"  context="{'group_by':'scheduled_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
                         <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
                         <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
