@@ -137,14 +137,6 @@ class ProductProduct(models.Model):
         self.write({'standard_price': new_price})
         return True
 
-    def _get_fifo_candidates_out_move(self):
-        """ Find OUT moves that were not valued in time because of negative stock.
-        """
-        self.ensure_one()
-        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_out_base_domain()
-        candidates = self.env['stock.move'].search(domain, order='date, id')
-        return candidates
-
     def _get_fifo_candidates_in_move(self):
         """ Find IN moves that can be used to value OUT moves.
         """

@@ -109,15 +109,6 @@ class StockMove(models.Model):
         return domain
 
     @api.model
-    def _get_out_base_domain(self, company_id=False):
-        domain = [
-            ('state', '=', 'done'),
-            ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
-            ('location_dest_id.company_id', '=', False)
-        ]
-        return domain
-
-    @api.model
     def _get_all_base_domain(self, company_id=False):
         domain = [
             ('state', '=', 'done'),
@@ -133,9 +124,6 @@ class StockMove(models.Model):
 
     def _get_in_domain(self):
         return [('product_id', '=', self.product_id.id)] + self._get_in_base_domain(company_id=self.company_id.id)
-
-    def _get_out_domain(self):
-        return [('product_id', '=', self.product_id.id)] + self._get_out_base_domain(company_id=self.company_id.id)
 
     def _get_all_domain(self):
         return [('product_id', '=', self.product_id.id)] + self._get_all_base_domain(company_id=self.company_id.id)
