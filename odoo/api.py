@@ -941,7 +941,7 @@ class Environment(Mapping):
 
     def check_cache(self):
         """ Check the cache consistency. """
-        from odoo.fields import SpecialValue
+        from odoo.models import SpecialValue
 
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
