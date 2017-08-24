@@ -86,20 +86,6 @@ odoo.define('payment.payment_form', function (require){
                     var form_save_token = false;
                     var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
 
-                    // Here we take the values we need to send to the acquirer and generate a form with them
-                    var html_form = '<form method="post" action="' + ds.dataset.actionUrl + '" class="hidden">';
-                    var ignored_inputs = ['data_set', 'o_payment_form_save_token'];
-
-                    for(var i = 0; i < inputs_form.length; i ++) {
-                        if(ignored_inputs.indexOf(inputs_form[i].name) == -1) {
-                            html_form +='<input name="' + inputs_form[i].name + '" value="' + inputs_form[i].value + '"/>';
-                        }
-                        else if(inputs_form[i].name == 'o_payment_form_save_token') {
-                            form_save_token = inputs_form[i].checked;
-                        }
-                    }
-                    html_form += '</form>';
-
                     // if there's a prepare tx url set
                     if($tx_url.length == 1)
                     {
@@ -109,8 +95,20 @@ odoo.define('payment.payment_form', function (require){
                             'save_token': form_save_token
                         }).then(function(result){
                             if(result) {
-                                // we append the form to the body and send it.
-                                $(html_form).appendTo("body").submit();
+                                // TBE: I really don't like how it is designed, but I can't do better with how e-commerce works/
+                                var ignored_inputs = ['data_set', 'o_payment_form_save_token'];
+                                var html_form = '<form method="post" action="'
+                                    + ds.dataset.actionUrl + '" class="hidden">'
+                                    + result + '</form>';
+
+                                // we append the form to the body
+                                var form = $(html_form).appendTo("body");
+                                // we remove the "unused" inputs
+                                for(var i = 0; i < ignored_inputs.length; i++) {
+                                    form.find('input[name="' + ignored_inputs[i] + '"]').remove();
+                                }
+                                // we submit the form
+                                form.submit();
                             }
                             else {
                                 self.error(_t('Server Error'),
@@ -124,7 +122,8 @@ odoo.define('payment.payment_form', function (require){
                     else
                     {
                         // we append the form to the body and send it.
-                        $(html_form).appendTo("body").submit();
+                        // $(html_form).appendTo("body").submit();
+                        this.error(_t("Cannot set-up the payment"), _t("<p>We're unable to process your payment.</p>"));
                     }
                 }
                 // if the user is using an old payment
