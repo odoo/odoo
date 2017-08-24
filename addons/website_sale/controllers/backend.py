@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, _
 from odoo.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
+from datetime import datetime, timedelta
 import babel
 
 from odoo.addons.website.controllers.backend import WebsiteBackend
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class WebsiteSaleBackend(WebsiteBackend):
@@ -58,11 +54,11 @@ class WebsiteSaleBackend(WebsiteBackend):
             'graph': [
                 {
                     'values': sales_graph,
-                    'key': 'Sales',
+                    'key': _('Sales'),
                 },
                 {
                     'values': previous_sales_graph,
-                    'key': 'Previous Sales',
+                    'key': _('Previous Sales'),
                 },
             ],
             'best_sellers': best_sellers,

@@ -5,7 +5,9 @@ from StringIO import StringIO
 import xml.etree.ElementTree as ET
 from uuid import uuid4
 
+from odoo import _
 from odoo.exceptions import ValidationError, UserError
+from odoo import _
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
 
@@ -63,7 +65,7 @@ class AuthorizeAPI():
         response = strip_ns(response, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
             messages = map(lambda m: m.text, response.findall('messages/message/text'))
-            raise ValidationError('Authorize.net Error Message(s):\n %s' % '\n'.join(messages))
+            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
         return response
 
     def _base_tree(self, requestType):
@@ -109,7 +111,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfiles")
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
-        etree.SubElement(billTo, "address").text = (partner.street + (partner.street2 if partner.street2 else '')) or None
+        etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
         etree.SubElement(billTo, "city").text = partner.city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
         etree.SubElement(billTo, "zip").text = partner.zip
@@ -150,7 +152,7 @@ class AuthorizeAPI():
         etree.SubElement(root, "transId").text = transaction_id
         customer = etree.SubElement(root, "customer")
         etree.SubElement(customer, "merchantCustomerId").text = 'ODOO-%s-%s' % (partner.id, uuid4().hex[:8])
-        etree.SubElement(customer, "email").text = partner.email
+        etree.SubElement(customer, "email").text = partner.email or ''
         response = self._authorize_request(root)
         res = dict()
         res['profile_id'] = response.find('customerProfileId').text

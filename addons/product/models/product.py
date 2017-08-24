@@ -94,9 +94,10 @@ class ProductPriceHistory(models.Model):
     def _get_default_company_id(self):
         return self._context.get('force_company', self.env.user.company_id.id)
 
-    company_id = fields.Many2one('res.company', default=_get_default_company_id, required=True)
+    company_id = fields.Many2one('res.company', string='Company',
+        default=_get_default_company_id, required=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True)
-    datetime = fields.Datetime('Date', default=fields.Datetime.now())
+    datetime = fields.Datetime('Date', default=fields.Datetime.now)
     cost = fields.Float('Cost', digits=dp.get_precision('Product Price'))
 
 
@@ -105,7 +106,7 @@ class ProductProduct(models.Model):
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
-    _order = 'default_code, id'
+    _order = 'default_code, name, id'
 
     price = fields.Float(
         'Price', compute='_compute_product_price',
@@ -313,7 +314,9 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
-        product._set_standard_price(vals.get('standard_price', 0.0))
+        # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
+        if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
+            product._set_standard_price(vals.get('standard_price') or 0.0)
         return product
 
     @api.multi

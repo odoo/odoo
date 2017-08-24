@@ -6,7 +6,7 @@
 # Tina Rittmüller <tr@ife.de>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Philipp Hug <philipp@hug.cx>, 2016
 # Henry Mineehen <info@mineehen.de>, 2016
@@ -14,13 +14,14 @@
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>, 2016\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +95,7 @@ msgstr "Klicken sie hier, um neue Einstandskosten zu erstellen."
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Klicken sie hier, um neue Einstandskosten zu erstellen."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -124,6 +125,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Kosten- und Anpassungslinien stimmen nicht überein. Sie sollten vielleicht "
+"die Grundkosten neu berechnen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -157,6 +160,8 @@ msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
 msgstr ""
+"Durch das Deaktivieren der Kalkulationsmethoden wird verhindert, dass Sie "
+"die Grundkostenfunktion nutzen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -192,6 +197,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Gleichmäßig: Die Kosten werden gleichmäßig geteilt\n"
+"Nach Menge: Die Kosten werden nach der Produktmenge geteilt\n"
+"Entsprechend laufender Kosten: Die Kosten werden nach den aktuellen Kosten des Produkts geteilt\n"
+"Nach Gewicht: Die Kosten werden je nach Gewicht geteilt\n"
+"Nach Volumen: Die Kosten werden je nach Volumen geteilt."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -266,6 +276,8 @@ msgstr "Einstandskosten"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
+"Die Grundkosten werden anhand der Maßeinheit des bestellten Artikels "
+"berechnet."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -310,12 +322,14 @@ msgstr "Name"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Keine Wertberichtigungen. Sie sollten vielleicht die Grundkosten neu "
+"berechnen."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Nur initiale Grundkosten können geprüft werden"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -428,6 +442,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Bestätigte Grundkosten können nicht mehr gelöscht werden, aber man könnte "
+"negative Grundkosten erzeugen, um sie in der Summe zu löschen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

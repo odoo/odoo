@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -178,7 +178,7 @@ msgstr "<strong>Nume listă prețuri</strong>:<br/>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Dată tipărire</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -187,6 +187,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Atenție</strong>: adăugarea sau eliminarea de atribute va șterge și "
+"recrea variantele existente și duce la pierderea setărilor făcute la aceste "
+"variante."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -297,7 +300,7 @@ msgstr "Toate produsele"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Toate setările generale legate de acest produs sunt gestionate de "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -473,7 +476,7 @@ msgstr "Raport mărire"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Mai mare decat Unitatea de Masura de referinta"
+msgstr "Mai mare decât Unitatea de Masura de referință"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -526,7 +529,7 @@ msgstr ""
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
 "Calculează Pretul produsului per unitate pe baza versiunii listei de "
-"preturi."
+"prețuri."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
@@ -618,7 +621,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Click to create a pricelist."
-msgstr "Click aici pentru a crea o listă de prețuri"
+msgstr "Clic aici pentru a crea o listă de prețuri"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -627,7 +630,7 @@ msgstr "Click aici pentru a crea o listă de prețuri"
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr "Click aici pentru a defini un produs nou."
+msgstr "Clic aici pentru a defini un produs nou."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -673,6 +676,7 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
@@ -680,11 +684,6 @@ msgstr "Companii"
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
 msgstr "Companie"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -825,7 +824,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -1159,7 +1157,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr "Informatii generale"
+msgstr "Informații generale"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1393,6 +1391,7 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Categorie internă"
 
@@ -1543,7 +1542,7 @@ msgstr "Gestionați unități de măsură multiple"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Gestionare poziții liste de prețuri"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1568,7 +1567,7 @@ msgstr "Marja max."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
 msgid "Max. Price Margin"
-msgstr "Marja Pret Maxim"
+msgstr "Marjă Preț Maxim"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
@@ -1784,12 +1783,12 @@ msgstr "Preț"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Computation"
-msgstr "Calcul pret"
+msgstr "Calcul preț"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
 msgid "Price Discount"
-msgstr "Reduceri de pret"
+msgstr "Reduceri de preț"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
@@ -1817,12 +1816,12 @@ msgstr "Lista de prețuri"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_round
 msgid "Price Rounding"
-msgstr "Rotunjure pret"
+msgstr "Rotunjure preț"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
 msgid "Price Surcharge"
-msgstr "Suprataxare pret"
+msgstr "Suprataxare preț"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_kanban_view
@@ -1870,7 +1869,7 @@ msgstr "Nume Listă prețuri"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr "Element al Listei de preturi"
+msgstr "Element al Listei de prețuri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
@@ -2072,11 +2071,6 @@ msgid "Public Price"
 msgstr "Preț public"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Lista de preturi publica"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2207,6 +2201,7 @@ msgstr "Preț vânzare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Listă prețuri de vânzare"
 
@@ -2290,7 +2285,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr ""
+msgstr "Partajează produsul la toate companiile"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2332,7 +2327,7 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Mai mica decat Unitatea de Masura de referinta"
+msgstr "Mai mică decât Unitatea de Masură de referință"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2372,8 +2367,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
-"Specificati un sablon daca aceasta regula se aplica doar unui sablon de "
-"produse. In caz contrar lasati necompletat."
+"Specificați un șablon dacă aceasta regulă se aplică doar unui șablon de "
+"produs. În caz contrar lăsați necompletat."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_sale_ok
@@ -2395,12 +2390,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr "Specificati valoarea maxima a limitei peste pretul de baza."
+msgstr "Specificați valoarea maximă a limitei peste prețul de bază."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr "Specificati valoarea minima a limitei peste pretul de baza."
+msgstr "Specificați valoarea minimă a limitei peste prețul de bază."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
@@ -2618,6 +2613,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Prețul de vânzare este gestionat din produsul șablon. Clic pe butonul "
+"„Prețuri Variante” pentru a seta prețuri suplimentare pe atribute."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2721,16 +2718,17 @@ msgstr "Suma prețurilor extra pentru toate atributele"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will be displayed on the quotations."
-msgstr ""
+msgstr "Aceasta nota va fi afisata la oferte..."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Aceasta lista de preturi va fi folosita in locul celei implicite pentru "
-"vanzarile catre partenerul curent"
+"Aceasta lista de prețuri va fi folosită în locul celei implicite pentru "
+"vânzarile către partenerul curent"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2763,6 +2761,11 @@ msgstr "Tip"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
+msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
 msgstr ""
 
 #. module: product
@@ -2916,17 +2919,17 @@ msgstr "Liste de prețuri furnizor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "Cod produs furnizor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "Nume produs furnizor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr ""
+msgstr "Unitate de măsură furnizor"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
@@ -3043,14 +3046,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Program de lucru"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -3294,7 +3289,7 @@ msgstr "compania părinte"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template"
-msgstr ""
+msgstr "șablonul produsului"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view

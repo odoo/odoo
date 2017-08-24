@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -100,16 +100,17 @@ msgstr ""
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
 msgstr ""
+"${object.project_id.company_id.name}: Szolgáltatás értékelés igénylése"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% Feladatokon"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Automatikus kanban állapot"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -118,6 +119,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automatikusan módosítja a kanban állapotot, ha a vásárló reagál a szakaszon lévő visszajelzésen.\n"
+" * Egy nagyszerű vásárlói visszajelzés frissíti a kanban állapotot a 'készen áll a következő szakaszra' (zöld golyó).\n"
+" * Egy közepes vagy rossz visszajelzésre a kanban állapota 'blokkolt' (piros golyó).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -125,7 +129,7 @@ msgstr ""
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Vásárlói értékelések"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -133,6 +137,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Vásárlói értékelések a feladatokon. Ha nincs értékelése, változtassa meg a "
+"projekt téma Beállításait és aktiválja azt."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -140,11 +146,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Vásárlói értékelések a feladatokon/ügyeken. Ha nincs értékelése, változtassa"
+" meg a projekt téma Beállításait és aktiválja azt."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Vásárlói értékelés(ek)"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -157,16 +165,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Projekt téma szakaszok szerkesztése és email sablon beállítása\n"
+"arra a szakaszra, melyre aktiválni szeretné az értékelést."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Öröm % ezen a projekt témán"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Öröm % ezen a feladaton"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -177,36 +187,41 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Hogy kapjon vásárlói visszajelzést?\n"
+"- Értékelés szakasz változásnál: Email kiküldés egy feladat/ügy következő szakaszba lépésénél\n"
+"- Ütemezett értékelés: Email kiküldés ütemezve\n"
+"\n"
+"Ne feledje az email sablonok beállítását a szakaszokhoz, melyekre vásárlói visszajelzést szeretne."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Legutóbbi értékelés: Nagyon elégedetlen"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Legutóbbi értékelés: Elégedetlen"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Legutóbbi értékelés: Elégedett"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Nincs értékelés"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "No rating yet"
-msgstr ""
+msgstr "Még nincs értékelés"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Havonta egyszer"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -214,11 +229,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Örömteli értékelés százaléka az elmúlt 30 napban. Értékelés részleteit "
+"előhívhatja a Több menüből."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Időszakos értékelés"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -243,17 +260,17 @@ msgstr "Értékelő email sablon"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Értékelés gyakorisága"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating request deadline"
-msgstr ""
+msgstr "Értékelés igény lejárta"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Értékelés szakasz változáskor"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
@@ -278,7 +295,7 @@ msgstr "Fladat"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Feladat értékelés"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -288,7 +305,7 @@ msgstr "Feladat szakasza"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Havonta kétszer"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

@@ -184,12 +184,22 @@ var Gui = core.Class.extend({
     close_other_tabs: function() {
         var self = this;
 
+        // avoid closing itself
+        var now = Date.now();
+
         localStorage['message'] = '';
         localStorage['message'] = JSON.stringify({
             'message':'close_tabs',
             'session': this.pos.pos_session.id,
+            'window_uid': now,
         });
 
+        // storage events are (most of the time) triggered only when the
+        // localstorage is updated in a different tab.
+        // some browsers (e.g. IE) does trigger an event in the same tab
+        // This may be a browser bug or a different interpretation of the HTML spec
+        // cf https://connect.microsoft.com/IE/feedback/details/774798/localstorage-event-fired-in-source-window
+        // Use window_uid parameter to exclude the current window
         window.addEventListener("storage", function(event) {
             var msg = event.data;
 
@@ -197,7 +207,8 @@ var Gui = core.Class.extend({
 
                 var msg = JSON.parse(event.newValue);
                 if ( msg.message  === 'close_tabs' &&
-                     msg.session  ==  self.pos.pos_session.id ) {
+                     msg.session  ==  self.pos.pos_session.id &&
+                     msg.window_uid != now) {
 
                     console.info('POS / Session opened in another window. EXITING POS')
                     self._close();

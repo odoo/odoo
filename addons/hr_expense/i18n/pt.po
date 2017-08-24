@@ -5,8 +5,8 @@
 # Translators:
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 # Manuela Silva <manuela.silva@sky.com>, 2016
+# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
 # José Gomes <jg@opencloud.pro>, 2016
 # Ricardo Correia <rcorreiavv@gmail.com>, 2016
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Ricardo Correia <rcorreiavv@gmail.com>, 2016\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -74,6 +74,8 @@ msgid ""
 "<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
 " class=\"text-primary\">PRICE</strong>"
 msgstr ""
+"<strong class=\"text-info\">[CÓDIGO DO PRODUTO]</strong> Descrição Livre "
+"<strong class=\"text-primary\">PREÇO</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -180,6 +182,11 @@ msgid "Analytic Account"
 msgstr "Conta de Analítica"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "Aplicar"
@@ -211,6 +218,7 @@ msgid "Bill Reference"
 msgstr "Referência da Fatura"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr "Pode ser Despesa"
@@ -282,7 +290,7 @@ msgstr "Empresa"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_company_id
 msgid "Company related to this journal"
-msgstr "Diário relacionado com a Empresa"
+msgstr "Empresa relacionada com este diário"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -635,7 +643,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "General Information"
-msgstr "Informação geral"
+msgstr "Informação Geral"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -667,7 +675,7 @@ msgstr "Estadia em hotel"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Departamento de RH"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
@@ -746,28 +754,28 @@ msgstr "Memorando"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Expenses"
-msgstr "Minhas Despesas"
+msgstr "As Minhas Despesas"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "My Expenses to Submit"
-msgstr ""
+msgstr "As Minhas Despesas para Submeter"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Reports"
-msgstr ""
+msgstr "Os Meus Relatórios"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "My Team Expenses"
-msgstr "Despesas da Minha Equipa"
+msgstr "As Despesas da Minha Equipa"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "My Team Reports"
-msgstr ""
+msgstr "Relatórios da Minha Equipa"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -808,7 +816,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Not Refused"
-msgstr ""
+msgstr "Não Recusada"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -1022,7 +1030,7 @@ msgstr "Relatórios"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
 msgid "Reports to Approve"
-msgstr ""
+msgstr "Relatórios para Aprovar"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_to_pay_expense_sheet
@@ -1079,6 +1087,7 @@ msgid "Setup your domain alias"
 msgstr "Estabeleça o seu pseudónimo de domínio"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr "Especifique se o produto pode ser selecionado nas despesas de RH."
@@ -1113,7 +1122,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Submit to Manager"
-msgstr "Enviar ao gestor"
+msgstr "Submeter ao Gestor"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -1175,6 +1184,12 @@ msgid "The journal used when the expense is done."
 msgstr "O diário utilizado quando a despesa é feita."
 
 #. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
@@ -1197,7 +1212,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Approve"
-msgstr "Por aprovar"
+msgstr "Para Aprovar"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -1319,9 +1334,22 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:425
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
 #, python-format
 msgid "You cannot delete a posted expense."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:559
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
 msgstr ""
 
 #. module: hr_expense

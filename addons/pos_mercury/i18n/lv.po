@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * pos_mercury
 # 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# JanisJanis <jbojars@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: JanisJanis <jbojars@gmail.com>, 2017\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +73,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Bankas izraksta rinda"
 
 #. module: pos_mercury
 #. openerp-web
@@ -141,16 +145,23 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr ""
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Izveidoja"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Izveidots"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury.py:15
@@ -169,7 +180,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_display_name
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Display Name"
 
 #. module: pos_mercury
 #. openerp-web
@@ -190,6 +201,13 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Empty Command String"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: pos_mercury
@@ -260,7 +278,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
@@ -514,25 +532,25 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Reģistrs"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration___last_update
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Last Modified on"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_write_date
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Pēdējās izmaiņas"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
@@ -585,11 +603,23 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name"
-msgstr ""
+msgstr "Nosaukums"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
 msgstr ""
 
 #. module: pos_mercury
@@ -686,7 +716,7 @@ msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale"
+msgid "Point of Sale Orders"
 msgstr ""
 
 #. module: pos_mercury
@@ -946,7 +976,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration

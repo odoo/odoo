@@ -7,10 +7,10 @@
 # Cozmin Candea <office@terrabit.ro>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -70,6 +70,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Nu a fost găsit un cont de ieșire din stoc pentru produsul %s. Trebuie să "
+"definiți unul în categoria de produs sau în locație înainte de a procesa "
+"această operație."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -87,6 +90,7 @@ msgstr "Schimbă prețul standard"
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
 msgstr ""
+"Alege o dată din trecut pentru a obține valoarea stocului la acea dată."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -107,13 +111,7 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr "Calculat din prețul mediu"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -335,7 +333,7 @@ msgstr "Periodic (manual)"
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Evaluare periodică inventar (recomandat)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -399,7 +397,7 @@ msgstr "Afișează stocul valoric"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the curent stock valuation."
-msgstr ""
+msgstr "Obține valoarea stocului curent."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
@@ -445,6 +443,11 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
 msgstr ""
 
 #. module: stock_account
@@ -528,11 +531,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Folosit pentru evaluarea stocului in timp-real. Atunci cand este setat pe o "
-"locatie virtuala (de tip non intern), acest cont va fi folosit pentru a "
-"mentine valoarea produselor care sunt mutate dintr-o locatie interna in "
-"aceasta locatie, in locul Contulul general pentru Iesirea Stocului setat pe "
-"produs. Acesta nu are niciun efect asupra locatiilor interne."
+"Folosit pentru evaluarea stocului in timp-real. Atunci când este setat pe o "
+"locație virtuala (de tip non intern), acest cont va fi folosit pentru a "
+"menține valoarea produselor care sunt mutate dintr-o locatie interna in "
+"aceasta locație, in locul Contulul general pentru Iesirea Stocului setat pe "
+"produs. Acesta nu are niciun efect asupra locațiilor interne."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -544,10 +547,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat "
-"pe o locatie virtuala (de tip non interna), acest cont va fi folosit pentru "
-"a pastra valoarea produselor care sunt mutate din aceasta locatie intr-o "
-"locatie interna, in loc de Contul general De Iesire a Stocului setat pentru "
-"produse. Acesta nu are niciun efect asupra locatiilor interne."
+"pe o locație virtuala (de tip non interna), acest cont va fi folosit pentru "
+"a pastra valoarea produselor care sunt mutate din aceasta locație intr-o "
+"locație interna, in loc de Contul general De Iesire a Stocului setat pentru "
+"produse. Acesta nu are niciun efect asupra locațiilor interne."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -661,6 +664,9 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Nu aveți definit un cont de evaluare stoc în datele de baza ale produsului "
+"sau în categorie. Trebuie să definiți unul înainte de a procesa această "
+"operație."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

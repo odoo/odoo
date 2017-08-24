@@ -404,7 +404,7 @@ msgstr "<span class=\"text-muted\">(質問ごとに1つの回答のみが許可�
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<span class=\"text-muted\">bio</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">bio</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -729,6 +729,7 @@ msgid "Bad Request"
 msgstr "不正な要求"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
 #: model:ir.ui.view,arch_db:website_forum.badge
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -918,9 +919,15 @@ msgstr "あなたの質問を投稿するにはクリックしてください。
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
-msgstr "処理済"
+msgstr "閉じる"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
@@ -930,6 +937,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
 msgstr ""
 
 #. module: website_forum
@@ -1022,6 +1034,16 @@ msgid "Convert all answers to comments and vice versa"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
 msgid "Convert comment to answer"
 msgstr ""
@@ -1107,6 +1129,12 @@ msgid "Default Post"
 msgstr "デフォルト投稿タイプ"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
 msgid "Delete all posts"
 msgstr ""
@@ -1175,6 +1203,8 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "編集"
 
@@ -1322,6 +1352,12 @@ msgid "First upvote"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
@@ -1330,6 +1366,8 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr ""
 
@@ -1438,7 +1476,7 @@ msgstr "ゲーミフィケーションチャレンジ"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "ゲーミフィケーションのユーザーバッジ"
+msgstr "ゲーミフィケーションのユーザバッジ"
 
 #. module: website_forum
 #. openerp-web
@@ -1527,6 +1565,14 @@ msgid "Help"
 msgstr "ヘルプ"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"How to create a physical inventory at an anterior date?, How is the "
+"'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
@@ -1584,6 +1630,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Inventory Date Problem, Task remaining hours, Can you help solve solve my "
+"tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
@@ -1707,6 +1760,11 @@ msgstr "リンク"
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
 msgstr "リンク"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
@@ -1873,6 +1931,11 @@ msgstr ""
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
 msgstr ""
 
 #. module: website_forum
@@ -2159,6 +2222,11 @@ msgid "Re: %s"
 msgstr "Re: %s"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Read Guidelines"
 msgstr "ガイドラインを読む"
@@ -2209,6 +2277,11 @@ msgstr "レリバンス"
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
 msgstr "関連性計算"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -2355,7 +2428,7 @@ msgstr "申し訳ありません、あなたは投票するためにログイン
 #: code:addons/website_forum/static/src/js/website_forum.js:168
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
-msgstr "申し訳ありませんが、匿名ユーザーは正解を選択できません。"
+msgstr "申し訳ありませんが、匿名ユーザは正解を選択できません。"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
@@ -2372,7 +2445,7 @@ msgstr "申し訳ありませんが、自分の投稿に投票することはで
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Sort by"
-msgstr "並べ替え順"
+msgstr "ソート順"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2561,6 +2634,13 @@ msgid "This post is already flagged"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "This profile is private!"
 msgstr "このプロフィールは非公開です。"
@@ -2706,7 +2786,7 @@ msgstr "ユーザ"
 msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
-msgstr "ユーザーは質問ごとに1回だけ回答できます。 貢献者は回答を編集し、適切なものをマークすることができます。"
+msgstr "ユーザは質問ごとに1回だけ回答できます。 貢献者は回答を編集し、適切なものをマークすることができます。"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation

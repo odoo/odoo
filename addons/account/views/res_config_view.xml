@@ -16,7 +16,7 @@
                 <form string="Configure Accounting" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
                     </header>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
@@ -187,9 +187,9 @@
                                 <label for="company_footer"/>
                                 <field name="company_footer"/>
                             </div>
-                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                            <div>
                                 <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
+                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}" domain="[('company_id', '=', company_id)]"/>
                             </div>
                         </div>
                     </group>

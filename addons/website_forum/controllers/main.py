@@ -152,7 +152,7 @@ class WebsiteForum(http.Controller):
 
         question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
 
-        values = self._prepare_forum_values(forum=forum, searches=post)
+        values = self._prepare_forum_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
             'question_ids': question_ids,

@@ -3,14 +3,14 @@
 # * payment_transfer
 # 
 # Translators:
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Marius Marolla <mariusmarolla@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 14:52+0000\n"
-"PO-Revision-Date: 2016-12-14 14:52+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#: code:addons/payment_transfer/models/payment.py:63
+#, python-format
+msgid "; multiple order found"
+msgstr "; rilevato ordine multiplo"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:61
+#, python-format
+msgid "; no order found"
+msgstr "; nessun ordine trovato"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:28
 #, python-format
 msgid ""
 "<div>\n"
@@ -31,24 +43,19 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:63
-#, python-format
-msgid "; multiple order found"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:61
-#, python-format
-msgid "; no order found"
-msgstr ""
+"<div>\n"
+"<h3>Utilizza i seguenti dettagli per l trasferimento</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Comunicazioni</h4>\n"
+"<p>In qualsiasi comunicazione, ricordati di utilizzare il codice dell'Ordine come riferimento!</p>\n"
+"</div>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26
 #, python-format
 msgid "Bank Account"
-msgstr "Conto bancario"
+msgstr "Conto Bancario"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26
@@ -59,15 +66,15 @@ msgstr "Conti Bancari"
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirente di Pagamento"
+msgstr "Piattaforma di Pagamento"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transazione Pagamento"
+msgstr "Transazione di Pagamento"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:59
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "ricevuti i dati relativi a %s"

@@ -70,12 +70,27 @@ class SaleOrder(models.Model):
         (2, 'Immediate after website order validation and save a token'),
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
 
+    @api.multi
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
+
     @api.one
     def _compute_amount_undiscounted(self):
         total = 0.0
         for line in self.order_line:
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
+
+    @api.onchange('partner_id')
+    def onchange_update_description_lang(self):
+        if not self.template_id:
+            return
+        else:
+            template = self.template_id.with_context(lang=self.partner_id.lang)
+            self.website_description = template.website_description
 
     @api.onchange('template_id')
     def onchange_template_id(self):

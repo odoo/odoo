@@ -3,11 +3,12 @@
 # * website_payment
 # 
 # Translators:
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Saban Yildiz <sabany@projetgrup.com>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Hesabıma Geri"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Hesabıma Dön"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
@@ -52,7 +53,7 @@ msgstr "Ödeme Alıcısını yapılandırma"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr ""
+msgstr "Varsayılan Alıcı"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
@@ -64,12 +65,12 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Sil <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete a payment method:"
-msgstr ""
+msgstr "Bir ödeme yöntemini silin:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
@@ -79,11 +80,17 @@ msgstr "E-Ticaret"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "From"
-msgstr "From:"
+msgstr "Kimden:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
+msgstr "Ödeme yöntemlerinizi yönetin"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
 msgstr ""
 
 #. module: website_payment
@@ -116,23 +123,31 @@ msgstr "Ödeme Yöntemleri"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
-msgstr ""
+msgstr "Tarafından işleme koyulan ödeme"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
-msgstr "Kaynak"
+msgstr "Referans"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "This transaction will be processed by"
-msgstr ""
+msgstr "Bu işlem şunun tarafından işlenecek : "
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Web Sitesi"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings
@@ -143,4 +158,4 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
-msgstr ""
+msgstr "payment_provider_logo"

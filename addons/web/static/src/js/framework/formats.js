@@ -130,7 +130,7 @@ function parse_value (value, descriptor, value_if_empty) {
             } while(tmp !== value);
             tmp = Number(value);
             // do not accept not numbers or float values
-            if (isNaN(tmp) || tmp % 1)
+            if (isNaN(tmp) || tmp % 1 || tmp < -2147483648 || tmp > 2147483647)
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'monetary':

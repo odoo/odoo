@@ -14,7 +14,7 @@ requirement is explained in the [FAQ](#faq).
     `odony`, the file would be `doc/cla/individual/odony.md`. The file should
     contain:
 
-    ```
+```
 <country>, <date>
 
 I hereby agree to the terms of the Odoo Individual Contributor License
@@ -50,7 +50,7 @@ signature is merged.
     If the name of the company is Odoo, the file would be
     `doc/cla/corporate/odoo.md`. The file should contain:
 
-    ```
+```
 <country>, <date>
 
 <company-name> agrees to the terms of the Odoo Corporate Contributor License

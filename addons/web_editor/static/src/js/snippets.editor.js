@@ -107,7 +107,7 @@ data.Class = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : $(selector);
+                    return $from ? cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -130,14 +130,30 @@ data.Class = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return ($from || self.$editable).find(selector);
+                    return cssFind($from || self.$editable, selector);
                 } : function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    $from = $from || self.$editable;
+                    return $from.filter(selector).add(cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
+        }
+
+        /**
+         * jQuery find function behavior is:
+         *      $('A').find('A B') <=> $('A A B')
+         * The searches behavior to find options' DOM needs to be
+         *      $('A').find('A B') <=> $('A B')
+         * This is what this function does.
+         *
+         * @param {jQuery} $from - the jQuery element(s) from which to search
+         * @param {string} selector - the CSS selector to match
+         * @returns {jQuery}
+         */
+        function cssFind($from, selector) {
+            return $from.find('*').filter(selector);
         }
     },
 
@@ -1102,7 +1118,7 @@ data.Editor = Class.extend({
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass("hidden", $ul.children(":not(.divider):not(.hidden)").length === 0);
+        $style_button.toggleClass("hidden", $ul.children(":not(.o_main_header):not(.divider):not(.hidden)").length === 0);
         this.$overlay.toggleClass("oe_active", !!focus);
 
         function _do_action_focus(style, $dest) {

@@ -94,11 +94,6 @@ pygments_style = 'odoo'
 html_theme = 'odoo_ext'
 
 odoo_cover_default = 'banners/installing_odoo.jpg'
-odoo_cover_external = {
-    'https://odoo.com/documentation/functional/accounting.html'   : 'banners/m_accounting.jpg',
-    'https://odoo.com/documentation/functional/double-entry.html' : 'banners/m_1.jpg',
-    'https://odoo.com/documentation/functional/valuation.html'    : 'banners/m_2.jpg',
-}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

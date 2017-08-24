@@ -44,8 +44,8 @@ class BarcodeNomenclature(models.Model):
         if len(code) != 8:
             return -1
 
-        sum1  = ean[1] + ean[3] + ean[5]
-        sum2  = ean[0] + ean[2] + ean[4] + ean[6]
+        sum1  = int(ean[1]) + int(ean[3]) + int(ean[5])
+        sum2  = int(ean[0]) + int(ean[2]) + int(ean[4]) + int(ean[6])
         total = sum1 + 3 * sum2
         return int((10 - total % 10) % 10)
 

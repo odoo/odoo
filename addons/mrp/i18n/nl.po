@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr " Produceer"
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr "# Materiaallijst"
+msgstr "# Stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
@@ -264,7 +264,7 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
-"Een productieorder, gebaseerd of de materiaallijst, zal\n"
+"Een productieorder, gebaseerd of de stuklijst, zal\n"
 "grondstoffen verbruiken en eindproducten produceren."
 
 #. module: mrp
@@ -374,7 +374,7 @@ msgid ""
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
 "Dit is de gemiddelde vertraging in dagen om dit product te produceren. Dit "
-"geldt alleen voor de productieorder en, als het een materiaallijst is met "
+"geldt alleen voor de productieorder en, als het een stuklijst is met "
 "meerdere niveaus, is het alleen voor het niveau van dit product. "
 "Verschillende doorlooptijden worden opgeteld voor alle niveaus en "
 "inkooporders."
@@ -382,12 +382,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr "Materiaallijst kosten"
+msgstr "Stuklijst kosten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 msgid "BOM Name"
-msgstr "Materiaallijst naam"
+msgstr "Stuklijst naam"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
@@ -403,12 +403,12 @@ msgstr "Referentie"
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
 msgid "BOM Structure"
-msgstr "Materiaallijststructuur"
+msgstr "Stuklijststructuur"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "Materiaallijstregels van de gerefereerde materiaallijst"
+msgstr "Stuklijstregels van de gerefereerde stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode_batch
@@ -419,7 +419,7 @@ msgstr "Gebaseerd op"
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Bill Of Material"
-msgstr "Materiaallijst"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -428,12 +428,12 @@ msgstr "Materiaallijst"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_bom_id
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Bill of Material"
-msgstr "Materiaallijst"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Materiaallijstregel"
+msgstr "Stuklijstregel"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -447,12 +447,12 @@ msgstr "Materiaallijstregel"
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Bill of Materials"
-msgstr "Materiaallijst"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_line_action_from_bom
 msgid "Bill of Materials Structure"
-msgstr "Materiaallijststructuur"
+msgstr "Stuklijststructuur"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_bom_id
@@ -460,7 +460,7 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
-"Materiaallijsten geven u de mogelijkheid om een lijst van grondstoffen "
+"Stuklijsten geven u de mogelijkheid om een lijst van grondstoffen "
 "(componenten) te definiëren voor het produceren van een eindproduct."
 
 #. module: mrp
@@ -470,13 +470,13 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Materiaallijsten staan u toe om een lijst van rauwe materialen te\n"
+"Stuklijsten staan u toe om een lijst van rauwe materialen te\n"
 "definiëren die gebruikt wordt om een afgewerkt product te maken; door een productieorder of een pak van producten."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
-msgstr "Materiaallijsten produceren mogelijk bij-producten (A + B --> C +D)"
+msgstr "Stuklijsten produceren mogelijk bij-producten (A + B --> C +D)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -509,35 +509,35 @@ msgstr "Geblokkeerde uren over de laatste maand"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
 msgid "BoM"
-msgstr "Materiaallijst"
+msgstr "Stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
 msgid "BoM Line"
-msgstr "Materiaallijstregel"
+msgstr "Stuklijstrege;"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
 msgid "BoM Lines"
-msgstr "Materiaallijstregels"
+msgstr "Stuklijstregels"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
 msgid "BoM Type"
-msgstr "Materiaallijst soort"
+msgstr "Stuklijst soort"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr "Materiaallijst details"
+msgstr "Stuklijst details"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
-"Materiaallijstregel product %s kan niet hetzelfde zijn als het "
-"materiaallijst hoofdproduct."
+"Stuklijstregel product %s kan niet hetzelfde zijn als het stuklijst "
+"hoofdproduct."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -549,11 +549,6 @@ msgstr "Vet"
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid "By-Products"
 msgstr "Bijproducten"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product_can_be_expensed
-msgid "Can be Expensed"
-msgstr "Declaratie product"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
@@ -630,7 +625,7 @@ msgstr "Klik om een werkplek toe te voegen."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr "Klik om een nieuwe materialenlijst aan te maken."
+msgstr "Klik om een nieuwe stuklijst aan te maken."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1051,7 +1046,7 @@ msgstr "Order afronden"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr "Klaar"
+msgstr "Gereed"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_id
@@ -1082,7 +1077,7 @@ msgstr "Algemene informatie"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr "Geeft de volgorde weer, bij het weergeven van een materiaallijst."
+msgstr "Geeft de volgorde weer, bij het weergeven van een stuklijst."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_sequence
@@ -1175,7 +1170,7 @@ msgstr "ID"
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Indien een product variant is gedefinieerd, is de materiaallijst alleen "
+"Indien een product variant is gedefinieerd, is de stuklijst alleen "
 "beschikbaar voor dit product."
 
 #. module: mrp
@@ -1247,6 +1242,11 @@ msgstr "Voorraad mutaties"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Inventory Post Visible"
 msgstr "Voorraadboeking zichtbaar"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Inventory Unreserve Visible"
+msgstr "Voorraad Reservering ongedaan maken zichtbaar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
@@ -1478,7 +1478,7 @@ msgstr "Beheer kwaliteit controlepunten, controles en metingen"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle_manual
@@ -1717,7 +1717,7 @@ msgstr "Volgende werkorder"
 #: code:addons/mrp/models/procurement.py:90
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr "Er bestaat geen materiaallijst voor dit product!"
+msgstr "Er bestaat geen stuklijst voor dit product!"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1727,7 +1727,7 @@ msgstr "Geen routing"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr "Geen bij-producten in materiaallijst (A + B --> C)"
+msgstr "Geen bij-producten in stuklijst (A + B --> C)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -1782,8 +1782,8 @@ msgstr "Geen varianten op producten"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"Er zijn geen werkorders zijn in behandeling. Klik om de werkplek als "
-"geblokkeerd te markeren."
+"Er zijn geen werkorders in behandeling. Klik om de werkplek als geblokkeerd "
+"te markeren."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -1841,8 +1841,8 @@ msgid ""
 "Odoo uses these BoMs to automatically propose manufacturing\n"
 "                orders according to procurement needs."
 msgstr ""
-"Odoo gebruikt deze materiaallijsten om automatisch productieorders\n"
-"voor te stellen afhankelijk van de verwerving noden."
+"Odoo gebruikt deze stuklijsten om automatisch productieorders\n"
+"voor te stellen afhankelijk van de verwerving behoefte."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
@@ -1926,7 +1926,7 @@ msgstr "PLM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
 msgid "Parent BoM"
-msgstr "Bovenliggende materiaallijst"
+msgstr "Bovenliggende stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
@@ -1989,7 +1989,7 @@ msgstr "Gepland"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Planned Date"
-msgstr "Datum gepland"
+msgstr "Plandatum"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:269
@@ -2221,6 +2221,11 @@ msgid "Propagate cancel and split"
 msgstr "Annuleren en splitsen doorgeven"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_location_path
+msgid "Pushed Flow"
+msgstr "Pushed flows"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
@@ -2304,7 +2309,7 @@ msgstr "Locatie grondstoffen"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Ready"
-msgstr "Klaar"
+msgstr "Gereed voor productie"
 
 #. module: mrp
 #. openerp-web
@@ -2336,8 +2341,8 @@ msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
 "in its BoM or child BoMs!"
 msgstr ""
-"Herhaling fout! Het product mag geen onderdeel zijn van de materiaallijst of"
-" onderliggende materiaallijsten."
+"Herhaling fout! Het product mag geen onderdeel zijn van de stuklijst of "
+"onderliggende stuklijsten."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
@@ -2468,7 +2473,7 @@ msgid ""
 "                materials that will define the required raw materials."
 msgstr ""
 "Routings staan u toe om productie werkplekken aan te maken\n"
-"en te beheren om een product te produceren. Ze zijn gekoppeld aan materiaallijsten die de grondstoffen weergeven."
+"en te beheren om een product te produceren. Ze zijn gekoppeld aan stuklijsten die de grondstoffen weergeven."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
@@ -2539,7 +2544,7 @@ msgstr "Zoeken in grondstoffenlijst"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr "Zoek materiaallijst componenten"
+msgstr "Zoek stuklijst componenten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2549,7 +2554,7 @@ msgstr "Zoek productie"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr "Zoek werkopdrachten"
+msgstr "Zoek werkorders"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -2632,11 +2637,6 @@ msgid "Source"
 msgstr "Bron"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Specificeer of het product kan worden gebruikt als declaratie."
-
-#. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
@@ -2683,7 +2683,7 @@ msgstr "Voorraadmutaties"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
 msgid "Sub BoM"
-msgstr "Sub materiaallijst"
+msgstr "Sub stuklijst"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2737,6 +2737,12 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
 msgstr "Technisch veld om te controleren of we kunnen boeken"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
+msgid "Technical field to check when we can unreserve"
+msgstr ""
+"Technisch veld om te controleren of we een reservering ongedaan kunnen maken"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
@@ -2822,9 +2828,9 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
-"De werkzaamheden voor de productie van deze materiaallijst. Wanneer een "
-"route is opgegeven, zullen de productie orders worden uitgevoerd door middel"
-" van werk orders, anders wordt alles verwerkt in de productieorder zelf."
+"De werkzaamheden voor de productie van deze stuklijst. Wanneer een route is "
+"opgegeven, zullen de productie orders worden uitgevoerd door middel van werk"
+" orders, anders wordt alles verwerkt in de productieorder zelfs."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
@@ -2937,7 +2943,7 @@ msgstr "Te doen"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr "Te lanceren"
+msgstr "Te starten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2964,8 +2970,8 @@ msgid ""
 msgstr ""
 "Om producten te produceren of te assembleren, en om gebruik te maken van\n"
 "grondstoffen en afgewerkte producten,  moet u werken met productie-\n"
-"activiteiten. Productie-activiteiten worden veelal werkopdrachten genoemd.\n"
-"Die werkopdrachten hebben een verschillende uitwerking op de kosten\n"
+"activiteiten. Productie-activiteiten worden veelal werkorders genoemd.\n"
+"Die werkorders hebben een verschillende uitwerking op de kosten\n"
 "van productie en planning, en zijn afhankelijk van de hoeveelheid werk. "
 
 #. module: mrp
@@ -3114,9 +3120,9 @@ msgid ""
 "                check the details in new worksheet)"
 msgstr ""
 "Gebruik berichten om productie of magazijn medewerkers te waarschuwen over "
-"eventuele veranderingen in de producten, processen, of acties (Bijv; "
-"Waarschuwing, de materiaallijst is veranderd, controleer de details van uw "
-"werk opdracht)."
+"eventuele wijzigingen in de producten, processen, of acties (Bijv; "
+"Waarschuwing, de stuklijst is gewijzigd, controleer de details van uw werk "
+"opdracht)."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3307,7 +3313,7 @@ msgstr "Werk instructies"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_workorder_id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap_workorder_id
 msgid "Work Order"
-msgstr "Werkopdracht"
+msgstr "Werkorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_mrp_routings
@@ -3318,8 +3324,8 @@ msgid ""
 "the required raw materials."
 msgstr ""
 "Werkorder werkplekken staan u toe om productie werkplekken aan te maken en "
-"te beheren om het product te produceren. Ze zijn gekoppeld aan de "
-"materiaallijst die de vereiste grondstoffen definieert."
+"te beheren om het product te produceren. Ze zijn gekoppeld aan de stuklijst "
+"die de vereiste grondstoffen definieert."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3355,7 +3361,7 @@ msgstr "Werkorders prestatie"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 msgid "Work Orders Planning"
-msgstr "Werkopdrachten planning"
+msgstr "Werkorder planning"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
@@ -3369,8 +3375,8 @@ msgid ""
 "            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced."
 msgstr ""
-"Een werkopdracht is de lijst van verwerkingen welke moeten worden uitgevoerd\n"
-"voor elke productieorder. Wanneer de eerste werkopdracht wordt gestart, dan\n"
+"Een werkorder de lijst van verwerkingen welke moeten worden uitgevoerd\n"
+"voor elke productieorder. Wanneer de eerste werkorder wordt gestart, dan\n"
 "wordt de productieorder automatisch gemarkeerd als gestart. Wanneer je de laatste\n"
 "verwerking van een productieorder afrondt, dan is de productieorder automatisch\n"
 "gereed en zijn de gerelateerde producten geproduceerd."
@@ -3446,7 +3452,7 @@ msgstr "Werkorder bericht"
 #: model:ir.actions.act_window,name:mrp.mrp_message_action_main
 #: model:ir.ui.menu,name:mrp.mrp_message_menu
 msgid "Workorder Messages"
-msgstr "Werkopdracht berichten"
+msgstr "Werkorder berichten"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
@@ -3461,7 +3467,7 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
-"U kunt bijproducten configureren in de materiaallijst.\n"
+"U kunt bijproducten configureren in de stuklijst.\n"
 "Zonder deze module: A + B + C -> D.\n"
 "Met deze module: A + B + C -> D + E.\n"
 "Dit installeert de module mrp_byproduct."
@@ -3488,16 +3494,29 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Het is niet mogelijk een materiaallijst te verwijderen, welke wordt gebruikt in openstaande productieorders\n"
+"Het is niet mogelijk een stuklijst te verwijderen, welke wordt gebruikt in openstaande productieorders\n"
 "Sluit of annuleer deze eerst."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr "Je kunt maar 1.0 %s van product produceren met een uniek serienummer."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
 "Het is niet mogelijk een voorraadmutatie te annuleren welke reeds "
 "grondstoffen heeft verbuikt"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
+"Het is niet toegestaan om hetzelfde serienummer te gebruiken op twee regels"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44

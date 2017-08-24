@@ -8,14 +8,15 @@
 # Zoltán Csapó <csapoz@gmail.com>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Last-Translator: Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,13 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Tervezett: még meg nem erősített és nem lesz ütemezve amíg nem megerősített\n"
+"* Várakozás másik műveletre: Másik művelet lefutására vár, mielőtt automatikusan elérhetővé válik (mint pl.: Rendelésre készítés (MTO) folyamat)\n"
+"* Elérhetőségre vár: még mindig vár a termék elérhetőségére\n"
+"* Részlegesen elérhető: some products are available and reserved\n"
+"* Szállításra kész: termékek foglaltak, egyszerűen csak megerősítésre vár.\n"
+"* Szállítva: végrehajtva, nem módosítható, és nem megszakítható már a folyamat\n"
+"* Megszakítva: Megszakított, már nem erősíthető meg"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1128,18 +1136,38 @@ msgstr ""
 "adatokat, melyeket nem használ."
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Naptárnézet"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Nem talál egyetlen vásárlói vagy beszállítói helyet sem."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Nem talál egyetlen általános Gyártás rendelésre útvonalat."
@@ -1693,6 +1721,41 @@ msgid "Customers"
 msgstr "Vásárlók"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
 msgid "DHL integration"
 msgstr "DHL integráció"
@@ -2171,6 +2234,11 @@ msgid "Dropshipping"
 msgstr "Közvetlen szállítás /áru gyártótól közvetlenül vásárlóhoz/"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr "Szerkessze a részleteit vagy adjon meg újakat"
@@ -2243,6 +2311,21 @@ msgstr "Extra Mozgás: "
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO... (Először be először ki, Utoljára be először ki)"
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2970,6 +3053,24 @@ msgstr "Belső típus"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
 msgstr ""
 
 #. module: stock
@@ -7415,7 +7516,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "Nem érvényteleníthet egy készlet mozgást, melyet már 'Elvégezve'."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7447,6 +7554,12 @@ msgid ""
 msgstr ""
 "Nem állítat be negatív termék mennyiséget egy raktár készlet tételsoron:\n"
 "\t%s - qty: %s"
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919

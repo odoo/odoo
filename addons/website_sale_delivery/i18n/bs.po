@@ -25,6 +25,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Isporuka će biti "
+"ažurirana nakon odabira nove metode isporuke\"> Isporuka:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -33,6 +35,8 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Opis proizvoda koji želite da prikažete vašem kupcu. Ovaj opis će biti "
+"kopiran na svaku Prodajnu Narudžbu, Nalog Isporuke i Račun/Povrat kupca."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -84,7 +88,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr ""
+msgstr "Odaberite način isporuke"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -94,12 +98,12 @@ msgstr "Država"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Trošak isporuke"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr "Metode dostave"
+msgstr "Metode ispuruke"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -109,12 +113,12 @@ msgstr "Opis"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Opis koji se prikazuje na websajt prodaji i online predračunima."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Opis za online predračune"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
@@ -135,6 +139,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Jednako: Vrijednost će biti podjednako raspoređena.\n"
+"Po količini: Vrijednost će biti podjeljena na osnovu količina proizvoda.\n"
+"Po trenutnoj vrijednosti: Vrijednost će biti podjeljena na osnovu trenutne vrijednosti proizvoda.\n"
+"Po težini: Vrijednost će biti podjeljena na osnovu težine proizvoda.\n"
+"Po zapremini: Vrijednost će biti podjeljena na osnovu zapremine proizvoda."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
@@ -149,7 +158,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Ima način isporuke"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
@@ -173,6 +182,8 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
+"Nije dostupan način isporuke za vašu trenutnu narudžbu i adresu isporuke. "
+"Molimo Vas da nas kontaktirate za više informacija."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
@@ -185,6 +196,8 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Opcionalni proizvodi su predloženi kada god kupac pritisne dugme \"Dodaj u "
+"korpu\"."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -235,7 +248,7 @@ msgstr "Veličina Y"
 #: code:addons/website_sale_delivery/models/sale_order.py:98
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Nažalost, nismo u mogućnosti da isporučimo vašu narudžbu"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
@@ -262,7 +275,7 @@ msgstr "Iznos bez poreza."
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Praćenje:"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published

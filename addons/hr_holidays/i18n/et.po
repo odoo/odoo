@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-#
+# 
 # Translators:
-# Arma Gedonsky <armagedonsky@hot.ee>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Rivo Zängov <eraser@eraser.ee>, 2017
+# Arma Gedonsky <armagedonsky@hot.ee>, 2017
+# Wanradt Koell <wanradt@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-03-12 20:34+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
-"Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
-"Language: et\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Wanradt Koell <wanradt@gmail.com>, 2017\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays
@@ -44,6 +47,12 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:125
+#, python-format
+msgid "%g remaining out of %g"
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:331
 #, python-format
 msgid "%s on %s : %.2f day(s)"
@@ -62,7 +71,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
 msgstr ""
 
 #. module: hr_holidays
@@ -217,7 +227,9 @@ msgid "Appraisal Analysis"
 msgstr "Hindamise analüüsid"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:561
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Approve"
 msgstr "Nõustu"
 
@@ -243,8 +255,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
 msgid ""
 "Average hours of work per day.\n"
-"                It is used in an employee leave request to compute the "
-"number of days consumed based on the resource calendar.\n"
+"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
 "                It can be used to handle various contract types, e.g.:\n"
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
@@ -318,8 +329,7 @@ msgstr "Töötajate kategooriad"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves "
-"available for someone"
+"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
 msgstr ""
 
 #. module: hr_holidays
@@ -470,7 +480,7 @@ msgstr "Kestvus"
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Employee"
-msgstr "Töötaja"
+msgstr "Tootaja"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_category_id
@@ -495,8 +505,8 @@ msgstr "Lõppkuupäev"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that "
-"is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that"
+" is 'active' (active field is True)"
 msgstr ""
 
 #. module: hr_holidays
@@ -676,8 +686,7 @@ msgstr ""
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:445
 #, python-format
-msgid ""
-"Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
@@ -819,7 +828,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2016"
+msgid "Legal Leaves 2017"
 msgstr ""
 
 #. module: hr_holidays
@@ -885,7 +894,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgid ""
+"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
 msgstr ""
 
 #. module: hr_holidays
@@ -1015,7 +1025,9 @@ msgid "Red"
 msgstr "Punane"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:564
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Refuse"
 msgstr "Keeldu"
 
@@ -1064,7 +1076,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
 msgid "Reports"
-msgstr "Aruanded"
+msgstr "Raportid"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_type
@@ -1104,7 +1116,7 @@ msgstr "Lähtesta mustandiks"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Ressurside kalender"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1163,13 +1175,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr.py:117
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when "
-"there is only one leave type with the option 'Allow to Override Limit' "
-"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
-"decide on which leave type the update has to be done. \n"
-" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
-"Requests' located in Leaves Application to manage the leave days of the "
-"employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
 
 #. module: hr_holidays

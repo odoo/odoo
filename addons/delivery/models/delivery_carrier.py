@@ -120,7 +120,7 @@ class DeliveryCarrier(models.Model):
                 try:
                     computed_price = self.get_shipping_price_from_so(order)[0]
                     self.available = True
-                except UserError as e:
+                except ValidationError as e:
                     # No suitable delivery method found, probably configuration error
                     _logger.info("Carrier %s: %s, not found", self.name, e.name)
                     computed_price = 0.0
@@ -226,26 +226,26 @@ class DeliveryCarrier(models.Model):
             if record.delivery_type == 'fixed':
                 PriceRule.search([('carrier_id', '=', record.id)]).unlink()
 
-            line_data = {
-                'carrier_id': record.id,
-                'variable': 'price',
-                'operator': '>=',
-            }
-            # Create the delivery price rules
-            if record.free_if_more_than:
-                line_data.update({
-                    'max_value': record.amount,
-                    'standard_price': 0.0,
-                    'list_base_price': 0.0,
-                })
-                PriceRule.create(line_data)
-            if record.fixed_price is not False:
-                line_data.update({
-                    'max_value': 0.0,
-                    'standard_price': record.fixed_price,
-                    'list_base_price': record.fixed_price,
-                })
-                PriceRule.create(line_data)
+                line_data = {
+                    'carrier_id': record.id,
+                    'variable': 'price',
+                    'operator': '>=',
+                }
+                # Create the delivery price rules
+                if record.free_if_more_than:
+                    line_data.update({
+                        'max_value': record.amount,
+                        'standard_price': 0.0,
+                        'list_base_price': 0.0,
+                    })
+                    PriceRule.create(line_data)
+                if record.fixed_price is not False:
+                    line_data.update({
+                        'max_value': 0.0,
+                        'standard_price': record.fixed_price,
+                        'list_base_price': record.fixed_price,
+                    })
+                    PriceRule.create(line_data)
         return True
 
     @api.model

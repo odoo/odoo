@@ -38,7 +38,7 @@ class AccountInvoice(models.Model):
             cacc = accounts['expense'].id
             if dacc and cacc:
                 price_unit = i_line._get_anglo_saxon_price_unit()
-                if inv.currency_id.id != company_currency:
+                if inv.currency_id != company_currency:
                     currency_id = inv.currency_id.id
                     amount_currency = i_line._get_price(company_currency, price_unit)
                 else:

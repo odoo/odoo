@@ -10,16 +10,17 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Adriel Kotviski <kotviski@gmail.com>, 2016
 # Rui Andrada <shingonoide@gmail.com>, 2016
-# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
 # Peter Leaf <pablleaf@gmail.com>, 2016
+# Silmar <pinheirosilmar@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Peter Leaf <pablleaf@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -357,6 +358,7 @@ msgstr "Criado em"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_mail_compose_message_path
+#: model:ir.model.fields,field_description:website_blog.field_mail_mail_path
 #: model:ir.model.fields,field_description:website_blog.field_mail_message_path
 #: model:ir.model.fields,field_description:website_blog.field_survey_mail_compose_message_path
 msgid "Discussion Path"
@@ -373,16 +375,6 @@ msgstr "Nome para Exibição"
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Duplicate"
 msgstr "Duplicar"
-
-#. module: website_blog
-#: model:ir.model,name:website_blog.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Assistente de composição de E-mail"
-
-#. module: website_blog
-#: model:ir.model,name:website_blog.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Assistente de composição de e-mail para a Pesquisa"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -904,7 +896,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 msgid "Unpublished"
-msgstr ""
+msgstr "Não publicado"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -925,6 +917,7 @@ msgstr "Usado em:"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_mail_compose_message_path
+#: model:ir.model.fields,help:website_blog.field_mail_mail_path
 #: model:ir.model.fields,help:website_blog.field_mail_message_path
 #: model:ir.model.fields,help:website_blog.field_survey_mail_compose_message_path
 msgid ""
@@ -1006,6 +999,11 @@ msgid "comments"
 msgstr "Comentários"
 
 #. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_1
+msgid "functional"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "has been published on the"
 msgstr ""
@@ -1030,3 +1028,8 @@ msgstr "visualizar"
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "views"
 msgstr "visualizações"
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_2
+msgid "website"
+msgstr ""

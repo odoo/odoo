@@ -1,31 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_budget
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-01 20:16+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid ""
 "A budget is a forecast of your company's income and/or expenses\n"
-"                expected for a period in the future. A budget is defined on "
-"some\n"
-"                financial accounts and/or analytic accounts (that may "
-"represent\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
 "Rozpočet je odhad príjmov a/alebo nákladov vašej spoločnosti\n"
@@ -48,7 +48,7 @@ msgstr "Úspech"
 #: model:ir.model,name:account_budget.model_account_analytic_account
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_analytic_account_id
 msgid "Analytic Account"
-msgstr "Analytický účet"
+msgstr "Otvor nástenku analytických účtov"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -120,15 +120,12 @@ msgstr "Rozpočty"
 msgid ""
 "By keeping track of where your money goes, you may be less\n"
 "                likely to overspend, and more likely to meet your financial\n"
-"                goals. Forecast a budget by detailing the expected revenue "
-"per\n"
-"                analytic account and monitor its evolution based on the "
-"actuals\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
 "Sledovaním kam vaše peniaze idú, môže byť menej\n"
-"pravdepodobné že ich prečerpáte a zvyšuje sa pravdepodobnosť vyhovenia vašim "
-"finančným\n"
+"pravdepodobné že ich prečerpáte a zvyšuje sa pravdepodobnosť vyhovenia vašim finančným\n"
 "cieľom. Predpovedzte rozpočet podrobnosťami očakávanej tržby za\n"
 "analytický účet a sledujte jeho vývoj na základe skutočnej hodnoty\n"
 "realizovanej počas tohto obdobia."
@@ -153,7 +150,7 @@ msgstr "Kliknite pre vytvorenie nového rozpočtu."
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_company_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_company_id
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -170,27 +167,27 @@ msgstr "Potvrdené"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_create_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Done"
-msgstr "Dokončiť"
+msgstr "Dokončené"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -273,7 +270,7 @@ msgstr "Resetovať na koncept"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_creating_user_id
 msgid "Responsible"
-msgstr "Zodpovedná osoba"
+msgstr "Zodpovedný"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_from

@@ -221,13 +221,21 @@ function make_message (data) {
     // can not be done in preprocess, since it alter the original value
     if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
         _.each(msg.tracking_value_ids, function(f) {
-            if (_.contains(['date', 'datetime'], f.field_type)) {
-                var format = (f.field_type === 'date') ? 'LL' : 'LLL';
+            if (f.field_type === 'datetime') {
+                var format = 'LLL';
                 if (f.old_value) {
                     f.old_value = moment.utc(f.old_value).local().format(format);
                 }
                 if (f.new_value) {
                     f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            } else if (f.field_type === 'date') {
+                var format = 'LL';
+                if (f.old_value) {
+                    f.old_value = moment(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment(f.new_value).local().format(format);
                 }
             }
         });

@@ -131,7 +131,7 @@ class MrpUnbuild(models.Model):
         produced_quant_ids = produce_moves.mapped('quant_ids').filtered(lambda quant: quant.qty > 0)
         consume_move.quant_ids.sudo().write({'produced_quant_ids': [(6, 0, produced_quant_ids.ids)]})
 
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):
         moves = self.env['stock.move']

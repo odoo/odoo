@@ -28,6 +28,18 @@ class StockMoveLots(models.Model):
     done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)  # TDE FIXME: naming
     plus_visible = fields.Boolean("Plus Visible", compute='_compute_plus')
 
+    @api.one
+    @api.constrains('lot_id', 'quantity_done')
+    def _check_lot_id(self):
+        if self.move_id.product_id.tracking == 'serial':
+            lots = set([])
+            for move_lot in self.move_id.active_move_lot_ids.filtered(lambda r: not r.lot_produced_id and r.lot_id):
+                if move_lot.lot_id in lots:
+                    raise exceptions.UserError(_('You cannot use the same serial number in two different lines.'))
+                if float_compare(move_lot.quantity_done, 1.0, precision_rounding=move_lot.product_id.uom_id.rounding) == 1:
+                    raise exceptions.UserError(_('You can only produce 1.0 %s for products with unique serial number.') % move_lot.product_id.uom_id.name)
+                lots.add(move_lot.lot_id)
+
     def _compute_plus(self):
         for movelot in self:
             if movelot.move_id.product_id.tracking == 'serial':
@@ -46,6 +58,15 @@ class StockMoveLots(models.Model):
         self.ensure_one()
         self.quantity_done = self.quantity_done - 1
         return self.move_id.split_move_lot()
+
+    @api.multi
+    def write(self, vals):
+        if 'lot_id' in vals:
+            for movelot in self:
+                movelot.move_id.production_id.move_raw_ids.mapped('move_lot_ids')\
+                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+                    .write({'lot_produced_id': vals['lot_id']})
+        return super(StockMoveLots, self).write(vals)
 
 
 class StockMove(models.Model):
@@ -133,7 +154,7 @@ class StockMove(models.Model):
         lots = self.env['stock.move.lots']
         for move in self:
             unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
-            unlink_move_lots.unlink()
+            unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
             for movelot in move.move_lot_ids:
@@ -365,3 +386,12 @@ class StockMove(models.Model):
                 'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
             })
         return self.env['stock.move']
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+
+        return new_move_vals

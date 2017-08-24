@@ -207,9 +207,15 @@ var DataExport = Dialog.extend({
         this.records = {};
         this.dataset = dataset;
         this.exports = new data.DataSetSearch(this, 'ir.exports', this.dataset.get_context());
-        
+
         this.row_index = 0;
         this.row_index_level = 0;
+
+        // The default for the ".modal_content" element is "max-height: 100%;"
+        // but we want it to always expand to "height: 100%;" for this modal.
+        // This can be achieved thanks to LESS modification without touching
+        // the ".modal-content" rules... but not with Internet explorer (11).
+        this.$modal.find(".modal-content").css("height", "100%");
     },
     start: function() {
         var self = this;
@@ -261,7 +267,7 @@ var DataExport = Dialog.extend({
 
         function do_setup_export_formats(formats) {
             var $fmts = self.$('.o_export_format');
-            
+
             _.each(formats, function(format, i) {
                 var $radio = $('<input/>', {type: 'radio', value: format.tag, name: 'o_export_format_name'});
                 var $label = $('<label/>', {html: format.label});
@@ -357,7 +363,7 @@ var DataExport = Dialog.extend({
     },
     on_show_data: function(records, expansion) {
         var self = this;
-    
+
         if(expansion) {
             this.$('.o_export_tree_item[data-id="' + expansion + '"]')
                 .addClass('open')

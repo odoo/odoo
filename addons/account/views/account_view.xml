@@ -232,6 +232,7 @@
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Account Journal">
                     <field name='sequence' widget='handle'/>
@@ -283,7 +284,7 @@
                                         <field name="code"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one"/>
                                         <field name="sequence_id" required="0" attrs="{'readonly': 1}" groups="base.group_no_one"/>
-                                        <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)], 'required': [('type', 'in', ['sale', 'purchase']), ('refund_sequence', '=', True)]}"/>
+                                        <field name="refund_sequence_id" required="0" attrs="{'readonly': 1, 'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}" groups="base.group_no_one"/>
                                     </group>
                                     <group>
                                         <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
@@ -655,7 +656,7 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>
@@ -718,7 +719,7 @@
             <field name="name">Bank Statement Lines</field>
             <field name="res_model">account.bank.statement.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_bank_statement_line_search"/>
@@ -1068,7 +1069,7 @@
                                                 class="oe_link"
                                                 type="object"
                                                 string="-> View partially reconciled entries"
-                                                attrs="{'invisible': ['|', ('full_reconcile_id', '=', True), '&amp;', ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
+                                                attrs="{'invisible': ['|', ('full_reconcile_id', '!=', False), '&amp;', ('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                             </button>
                                         </div>
                                     </group>

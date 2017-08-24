@@ -683,8 +683,8 @@ class TestAutoJoin(TransactionCase):
         self.assertEqual(partners, p_aa,
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
+        self.assertEqual(len(self.query_list), 2,
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 2 queries (1 in res_partner_bank, 1 on res_partner)")
         sql_query = self.query_list[0].get_sql()
         self.assertIn('res_partner_bank', sql_query[0],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect main table")
@@ -692,16 +692,16 @@ class TestAutoJoin(TransactionCase):
         expected = "%s::text like %s" % (unaccent('"res_partner_bank"."sanitized_acc_number"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect where condition")
-        
+
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect parameter")
-        sql_query = self.query_list[2].get_sql()
+        sql_query = self.query_list[1].get_sql()
         self.assertIn('res_partner', sql_query[0],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect main table")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect main table")
         self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect where condition")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect where condition")
         self.assertIn(p_aa.id, sql_query[2],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect parameter")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect parameter")
 
         # Do: cascaded one2many without _auto_join
         self._reinit_mock()
@@ -710,8 +710,8 @@ class TestAutoJoin(TransactionCase):
         self.assertEqual(partners, p_a + p_b,
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 5,
-            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 5 queries (1 in res_partner_bank, 4 on res_partner)")
+        self.assertEqual(len(self.query_list), 3,
+            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
 
         # Do: one2many with _auto_join
         patch_auto_join(partner_obj, 'bank_ids', True)
@@ -943,7 +943,7 @@ class TestAutoJoin(TransactionCase):
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 5,
+        self.assertEqual(len(self.query_list), 4,
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') with _auto_join

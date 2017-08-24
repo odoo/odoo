@@ -168,7 +168,7 @@
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
-                                <t t-set="search_class">pagination form-inline o_website_sale_search</t>
+                                <t t-set="search_class" t-value="'pagination form-inline o_website_sale_search'"/>
                             </t>
                             <t t-call="website_sale.pricelist_list" />
                             <t t-call="website.pager" />
@@ -217,8 +217,8 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
-            <t t-set="list_price_desc_label">Price <i class="fa fa-arrow-up" aria-hidden="true"/></t>
-            <t t-set="list_price_asc_label">Price <i class="fa fa-arrow-down" aria-hidden="true"/></t>
+            <t t-set="list_price_desc_label">Catalog price: decreasing order</t>
+            <t t-set="list_price_asc_label">Catalog price: increasing order</t>
             <t t-set="name_asc_label">Name</t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
@@ -443,7 +443,8 @@
                         <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
-                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
+                            <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">
@@ -457,7 +458,7 @@
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr />
+                            <hr t-if="product.availability != 'empty'"/>
                             <div t-if="product.availability == 'in_stock'" class="alert alert-success">
                                 <span class="fa fa-check" />
                                 <span>In Stock</span>
@@ -574,7 +575,7 @@
             <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
                 <i class="fa fa-minus"></i>
             </a>
-            <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+            <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
             <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
                 <i class="fa fa-plus"></i>
             </a>
@@ -592,7 +593,7 @@
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(product.currency_id.decimal_places)">
             <span t-field="product.lst_price"
                 t-options='{
                    "widget": "monetary",
@@ -874,7 +875,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -1191,11 +1192,11 @@
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing')">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
-                                            <label class="control-label" for="company_name">Company Name</label>
+                                            <label class="control-label label-optional" for="company_name">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
-                                            <label class="control-label" for="vat">TIN / VAT </label>
+                                            <label class="control-label label-optional" for="vat">TIN / VAT </label>
                                             <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
                                         </div>
                                     </t>
@@ -1208,7 +1209,7 @@
                                     <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
                                         <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
-                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <label class="control-label label-optional" for="zip">Zip Code</label>
                                             <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
@@ -1218,7 +1219,7 @@
                                     </div>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
                                         <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
-                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <label class="control-label label-optional" for="zip">Zip Code</label>
                                             <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
@@ -1258,7 +1259,7 @@
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
-                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit">
+                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
@@ -1395,7 +1396,7 @@
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                        <a style="width:127px;" class="btn btn-primary a-submit">
+                                        <a class="btn btn-primary a-submit">
                                             <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
                                             <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
                                         </a>

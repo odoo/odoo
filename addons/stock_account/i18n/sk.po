@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# gebri <gebri@inmail.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-01-29 21:00+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: gebri <gebri@inmail.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: stock_account
@@ -58,8 +60,8 @@ msgstr "Zrušiť"
 #: code:addons/stock_account/models/stock.py:244
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on "
-"the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on"
+" the product category, or on the location, before processing this operation."
 msgstr ""
 
 #. module: stock_account
@@ -106,16 +108,10 @@ msgstr "Zvoľte svoj dátum"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr "Vyrátať z priemernej ceny"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -141,16 +137,21 @@ msgid "Costing Method"
 msgstr "Metóda kalkulácie"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+msgid "Counter-Part Account"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
@@ -162,7 +163,7 @@ msgstr "Dátum"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
@@ -172,7 +173,7 @@ msgstr "Vynútiť účtovný dátum"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
@@ -184,17 +185,11 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
-"Ak sa zvýši nákupná cena, bude účtu variácie skladu pripísaný na dlh a na "
-"účet výstupu skladu bude pripísaná hodnota = (rozdiel množstva * množstvo k "
-"dispozícii).\n"
-"Ak sa zníži nákupná cena, bude účtu variácie skladu pripísaná hodnota a na "
-"účet vstupu skladu bude pripísaný dlh."
+"Ak sa zvýši nákupná cena, bude účtu variácie skladu pripísaný na dlh a na účet výstupu skladu bude pripísaná hodnota = (rozdiel množstva * množstvo k dispozícii).\n"
+"Ak sa zníži nákupná cena, bude účtu variácie skladu pripísaná hodnota a na účet vstupu skladu bude pripísaný dlh."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -207,9 +202,9 @@ msgid ""
 "counterpart moves for incoming and outgoing products."
 msgstr ""
 "Ak je trvalé oceňovanie povolené pre produkt, systém automaticky vytvorí "
-"položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako "
-"stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu "
-"výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a "
+"položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako"
+" stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu"
+" výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a "
 "výstupy účtu budú držať ako protipoložka pohybov pre prichádzajúce a "
 "odchádzajúce produkty."
 
@@ -225,9 +220,9 @@ msgid ""
 "counterpart moves for incoming and outgoing products."
 msgstr ""
 "Ak je trvalé oceňovanie povolené pre produkt, systém automaticky vytvorí "
-"položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako "
-"stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu "
-"výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a "
+"položky účtovnej knihy zodpovedajúce skladovým pohybom, s cenou produktu ako"
+" stanovuje \"Metóda kalkulácie\". Účet variácie zásob nastavený na kategóriu"
+" výrobkov bude predstavovať aktuálnu hodnotu zásob, a skladové vstupy a "
 "výstupy účtu budú držať ako protipoložka pohybov pre prichádzajúce a "
 "odchádzajúce produkty."
 
@@ -239,8 +234,8 @@ msgstr "Zahrnúť dodaciu cenu vo výpočte nákladov produktu"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
 msgstr ""
 "Nainštalovať modul ktorý umožňuje ovplyvnenie dodacích cien na výberoch, a "
 "rozdliť ich medzi rôzne produkty."
@@ -248,7 +243,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr "Inventár"
+msgstr "Sklad"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -284,7 +279,7 @@ msgstr "Faktúra"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Položky faktúry"
+msgstr "Riadok faktúry"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -320,7 +315,7 @@ msgstr "Umiestnenie"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Šarža/Sériové číslo"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
@@ -362,7 +357,8 @@ msgstr "Ustavičné (automatizované)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid "Perpetual inventory valuation (stock move generates accounting entries)"
+msgid ""
+"Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
 "Ustavičné ohodnocovanie zásob (skladové pohyby generujú účtovné vstupy)"
 
@@ -395,7 +391,7 @@ msgstr "Množstvo produktu"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_template_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -419,6 +415,12 @@ msgid "Retrieve the curent stock valuation."
 msgstr "Opäť získať súčasné hodnotenie skladu."
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Set standard price"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Výraz"
@@ -440,34 +442,30 @@ msgstr "Štandardná cena zmenená"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming "
-"shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and "
-"used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing "
-"product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
-"Štandardná cena: Výrobná cena je manuálne aktualizované na konci určitého "
-"obdobia (obvykle raz ročne).\n"
-"Priemerná cena: Výrobná cena je prepočítaná pri každej prichádzajúcej "
-"zásielke a použitá pre ocenenie výrobku.\n"
-"Skutočná cena: Zobrazená výrobná cena je cenaposledného odchádzajúceho "
-"produktu (bude sa používať napríklad v prípade straty zásob)."
+"Štandardná cena: Výrobná cena je manuálne aktualizované na konci určitého obdobia (obvykle raz ročne).\n"
+"Priemerná cena: Výrobná cena je prepočítaná pri každej prichádzajúcej zásielke a použitá pre ocenenie výrobku.\n"
+"Skutočná cena: Zobrazená výrobná cena je cenaposledného odchádzajúceho produktu (bude sa používať napríklad v prípade straty zásob)."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
 msgstr ""
 
 #. module: stock_account
@@ -489,7 +487,7 @@ msgstr "Skladová účtovná kniha"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
-msgstr "Pohyb na sklade"
+msgstr "Pohyb Skladu"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -554,8 +552,8 @@ msgstr ""
 "Pouźívané pre oceňovanie zásob v reálnom čase.  Keď je nastavený na "
 "virtuálnu lokáciu (neinterný typ), tento účet bude použitý na držanie "
 "hodnoty produktu presúvaného z internej lokácie do tejto lokácie, namiesto "
-"všeobecného Účtu skladových výstupov nastavenom pre tento produkt. Toto nemá "
-"žiadny efekt na interné lokácie."
+"všeobecného Účtu skladových výstupov nastavenom pre tento produkt. Toto nemá"
+" žiadny efekt na interné lokácie."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -569,8 +567,8 @@ msgstr ""
 "Pouźívané pre oceňovanie zásob v reálnom čase.  Keď je nastavený na "
 "virtuálnu lokáciu (neinterný typ), tento účet bude použitý na držanie "
 "hodnoty produktu presúvaného z internej lokácie do tejto lokácie, namiesto "
-"všeobecného Účtu skladových výstupov nastavenom pre tento produkt. Toto nemá "
-"žiadny efekt na interné lokácie."
+"všeobecného Účtu skladových výstupov nastavenom pre tento produkt. Toto nemá"
+" žiadny efekt na interné lokácie."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -589,8 +587,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
+"value for all products in this category. It can also directly be set on each"
+" product"
 msgstr ""
 "Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy "
 "pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak "
@@ -619,8 +617,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
+"default value for all products in this category. It can also directly be set"
+" on each product"
 msgstr ""
 "Pri oceňovaní zásob v reálnom čase, bude náprotivok položky účtovnej knihy "
 "pre všetky prichádzajúce skladové pohyby zverejnený v tomto účte, ak "
@@ -675,6 +673,15 @@ msgid ""
 msgstr ""
 "Nemáte definovanú žiadnu účtovnú knihu pre vaśu kategóriu produktu, "
 "skontrolujte či máte nainštalovanú tabuľku účtov"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:111
+#: code:addons/stock_account/models/stock.py:248
+#, python-format
+msgid ""
+"You don't have any stock valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

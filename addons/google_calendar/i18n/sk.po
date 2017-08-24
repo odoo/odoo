@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_calendar
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Stefan Stieranka <stieranka@itec.sk>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# gebri <gebri@inmail.sk>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-18 20:12+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: google_calendar
@@ -30,18 +35,12 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"<br/> You should now configure the allowed pages on which you will be "
-"redirected. To do it, you need to complete the field <b>\"Authorized "
-"redirect URI\"</b>\n"
-"                                    and set as value  (your own domain "
-"followed by <i>'/google_account/authentication'</i>):\n"
+"<br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field <b>\"Authorized redirect URI\"</b>\n"
+"                                    and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):\n"
 "                                    <br/>==&gt;"
 msgstr ""
-"<br/> Teraz by ste mali nakonfigurovať povolené stránky, na ktoré budete "
-"presmerovaný. Aby ste tak urobili musíte skompletizovať pole <b>"
-"\"Autorizované presmerovanie URI\"</b>\n"
-"a nastaviť ako hodnotu (vaša vlastná doména následovaná <i>'/google_account/"
-"authentication'</i>):\n"
+"<br/> Teraz by ste mali nakonfigurovať povolené stránky, na ktoré budete presmerovaný. Aby ste tak urobili musíte skompletizovať pole <b>\"Autorizované presmerovanie URI\"</b>\n"
+"a nastaviť ako hodnotu (vaša vlastná doména následovaná <i>'/google_account/authentication'</i>):\n"
 "<br/>==&gt;"
 
 #. module: google_calendar
@@ -112,26 +111,21 @@ msgstr "ID kalendára"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Check that the Application type is set on <b>'Web Application'</b>, then "
-"click on <b>'Configure consent screen'</b>.\n"
-"                                    <br/> Specify an email address and a "
-"product name, then save.\n"
+"Check that the Application type is set on <b>'Web Application'</b>, then click on <b>'Configure consent screen'</b>.\n"
+"                                    <br/> Specify an email address and a product name, then save.\n"
 "                                    <br/><br/>"
 msgstr ""
-"Skontrolujte či Typ aplikácie je nastavený na <b>'Web aplikácia'</b>, potom "
-"kliknite na <b>'Konfigurovať obrazovku súhlasu'</b>.\n"
+"Skontrolujte či Typ aplikácie je nastavený na <b>'Web aplikácia'</b>, potom kliknite na <b>'Konfigurovať obrazovku súhlasu'</b>.\n"
 "<br/> Špecifikujte emailovú adresu a názov produktu, potom uložte.\n"
 "<br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Click on <b>'Create a project...'</b> and enter a project name and change "
-"your id if you want. Don't forget to accept the Terms of Services\n"
+"Click on <b>'Create a project...'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services\n"
 "                                    <br/><br/>"
 msgstr ""
-"Kliknite na <b>'Vytvoriť projekt...'</b> a zadajte názov projektu zmeňte "
-"vaše id ak chcete. Nezabudnite súhlasiť s Podmienkami používania\n"
+"Kliknite na <b>'Vytvoriť projekt...'</b> a zadajte názov projektu zmeňte vaše id ak chcete. Nezabudnite súhlasiť s Podmienkami používania\n"
 "<br/><br/>"
 
 #. module: google_calendar
@@ -160,7 +154,7 @@ msgstr "Pripojte sa na svoj Google účet a prejdite na"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: google_calendar
 #. openerp-web
@@ -216,6 +210,9 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
+"Google je nedostupný... ďalšia synchronizácia bude úplná synchronizácia. \n"
+"\n"
+" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -230,35 +227,28 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
-"Aby sa toto mohlo spraviť, najskôr musíte odpojiť všetky existujúce udalosti "
-"starého účtu."
+"Aby sa toto mohlo spraviť, najskôr musíte odpojiť všetky existujúce udalosti"
+" starého účtu."
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"In the menu on left side, select the sub menu <b>'Credentials'</b> (from "
-"menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
+"In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
 "                                    <br/><br/>"
 msgstr ""
-"V menu na ľave strane, zvoľte pod-menu <b>'Poverenia'</b> (z menu API a aut) "
-"kliknite na tlačidlo <b>'Vyvoriť nové ID klienta'</b>\n"
+"V menu na ľave strane, zvoľte pod-menu <b>'Poverenia'</b> (z menu API a aut) kliknite na tlačidlo <b>'Vyvoriť nové ID klienta'</b>\n"
 "<br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"In the menu on left side, select the sub menu APIs (from menu APIs and auth) "
-"and click on <b>'Calendar API'</b>.\n"
-"                                    <br/> Activate the Calendar API by "
-"clicking on the blue button <b>'Enable API'</b>.\n"
-"                                    <br/> When it's done, the Calendar API "
-"overview will be available\n"
+"In the menu on left side, select the sub menu APIs (from menu APIs and auth) and click on <b>'Calendar API'</b>.\n"
+"                                    <br/> Activate the Calendar API by clicking on the blue button <b>'Enable API'</b>.\n"
+"                                    <br/> When it's done, the Calendar API overview will be available\n"
 "                                    <br/><br/>"
 msgstr ""
-"V menu na ľavej strane, zvoľte pod-menu API (z menu API a aut) a kliknite na "
-"<b>'API kalendár'</b>.\n"
-"<br/> Aktivujte API kalendár kliknutím na modré tlačidlo <b>'Aktivovať API'</"
-"b>.\n"
+"V menu na ľavej strane, zvoľte pod-menu API (z menu API a aut) a kliknite na <b>'API kalendár'</b>.\n"
+"<br/> Aktivujte API kalendár kliknutím na modré tlačidlo <b>'Aktivovať API'</b>.\n"
 "<br/> Po dokončení , prehľad API kalendára bude dostupný\n"
 "<br/><br/>"
 
@@ -268,8 +258,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Posledné ID kalendára bolo synchronizované. Ak je zmenené, odstránime všetky "
-"spojenia medzi GoogleID a Odoo Google interným ID"
+"Posledné ID kalendára bolo synchronizované. Ak je zmenené, odstránime všetky"
+" spojenia medzi GoogleID a Odoo Google interným ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -294,12 +284,10 @@ msgstr "Dátum Odoo aktualizácie"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Once done, you will have the both informations (<b>Client ID</b> and "
-"<b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
+"Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
 "                                    <br/><br/>"
 msgstr ""
-"Po dokončení, budete mať obe informácie (<b>ID klienta</b> a <b>Tajomstvo "
-"klienta</b>) ktoré potrebujete vložiť do 2 spodných políčiek!\n"
+"Po dokončení, budete mať obe informácie (<b>ID klienta</b> a <b>Tajomstvo klienta</b>) ktoré potrebujete vložiť do 2 spodných políčiek!\n"
 "<br/><br/>"
 
 #. module: google_calendar
@@ -339,8 +327,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"Google Synchronizácia potrebuje byť nakonfigurovaná než ju začnete používať, "
-"chcete to spraviť teraz?"
+"Google Synchronizácia potrebuje byť nakonfigurovaná než ju začnete používať,"
+" chcete to spraviť teraz?"
 
 #. module: google_calendar
 #. openerp-web
@@ -394,7 +382,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr ""
+msgstr "Váš token je neplatný alebo bol zrušený !"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings

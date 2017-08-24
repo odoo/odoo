@@ -26,7 +26,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Referenca natječaja:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -61,12 +61,12 @@ msgstr "<strong>Planirani datum</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Planirani datum naručivanja:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>Vrsta dogovora:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -81,24 +81,24 @@ msgstr "<strong>Dobavljač </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Agreement Deadline"
-msgstr ""
+msgstr "Krajnji rok dogovora"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Agreement Reference"
-msgstr ""
+msgstr "Referenca dogovora"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "Vrsta odabira dogovora"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10833
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "Tip dogovora"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -109,7 +109,7 @@ msgstr "Analitički konto"
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "Izbor ponude"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
@@ -141,7 +141,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new purchase agreement."
-msgstr ""
+msgstr "Kliknite kako biste započeli novi dogovor o nabavi."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -182,7 +182,7 @@ msgstr "Datum kreiranja"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr ""
+msgstr "Podaci za nove ponude"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
@@ -204,7 +204,7 @@ msgstr "Naziv za prikaz"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "Ne kreiraj automatski stavke za ZZP"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -258,6 +258,10 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"U natječaju možete zabilježiti proizvode koje trebate kupiti\n"
+"i kreirati ZZP za prodavače. Kada se natječaji\n"
+"registriraju, možete ih pregledati i usporediti, neke možete\n"
+"ovjeriti, a neke otkazati."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -303,7 +307,7 @@ msgstr "Višestruki zahtjevi"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
-msgstr ""
+msgstr "Novi dogovori"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -313,7 +317,7 @@ msgstr "Nova ponuda"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "Number of Orders"
-msgstr ""
+msgstr "Broj naloga"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -373,12 +377,12 @@ msgstr "Predloži natječaj"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
 msgid "Purchase Agreement"
-msgstr ""
+msgstr "Dogovor o nabavi"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Agreement Type"
-msgstr ""
+msgstr "Tip dogovora o nabavi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -386,7 +390,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr ""
+msgstr "Tipovi dogovora o nabavi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -395,7 +399,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr ""
+msgstr "Dogovori o nabavi"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -436,7 +440,7 @@ msgstr "Zahtjev nabave kreiran"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Purchase Tender"
-msgstr ""
+msgstr "Nabavni natječaj"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -456,7 +460,7 @@ msgstr "Količina"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "ZZP/Nalozi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -471,7 +475,7 @@ msgstr "Zahtjev za ponudom"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr ""
+msgstr "Detalji zahtjeva za ponudom"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -497,17 +501,17 @@ msgstr "Planirani datum"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr ""
+msgstr "Traži dogovore o nabavi"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select multiple RFQ"
-msgstr ""
+msgstr "Odaberi više ZZP"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "Odaberi samo jedan ZZP (isključivo)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type_exclusive
@@ -516,6 +520,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Odaberi samo jedan ZZP (isklučivo): kada se narudžba potvrdi, otkaži preostale narudžbe.\n"
+"\n"
+"Odaberi nekoliko ZZP: dopušta nekoliko narudžbi. Na potvrdi narudžbe ne otkazuje preostale narudžbe"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -552,7 +559,7 @@ msgstr "Odredbe i uvjeti"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr ""
+msgstr "Očekivani i planirani datum dostave kada će se primiti svi proizvodi"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -572,12 +579,12 @@ msgstr "Jedinična cijena"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Koristi stavke dogovora"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Koristi količine dogovora"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -598,7 +605,7 @@ msgstr "Skladište"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
 msgid "You cannot confirm call because there is no product line."
-msgstr ""
+msgstr "Ne možete potvrditi poziv, jer nema stavke proizvoda."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:99
@@ -607,6 +614,7 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
+"Morate otkazati ili ovjeriti svaki ZZP prije zatvaranja zahtjeva za nabavom."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

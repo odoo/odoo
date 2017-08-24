@@ -33,6 +33,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+" * Статус «Открыть» используется, когда пользователь кодирует новый и неподтвержденный табель.\n"
+"* Статус «Ожидание одобрения» используется для подтверждения табеля пользователем.\n"
+"* Статус «Одобрен» используется, когда пользовательский табель принимается его старшим."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -253,7 +256,7 @@ msgstr "Примечание"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
-msgstr ""
+msgstr "Только сотрудник по кадрам или менеджер могут утверждать табеля."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -261,6 +264,8 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
+"Только сотрудник по кадрам или менеджер может отклонять табеля или "
+"переустанавливать их в черновик."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -376,7 +381,7 @@ msgstr "Диапазон табеля"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Диапазон табеля *"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
@@ -485,6 +490,16 @@ msgstr "Вы не можете удалить уже подтверждённы�
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Вы не можете дублировать табель."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
+"Вы не может иметь 2 табеля, которые перекрываются!\n"
+"Пожалуйста, используйте меню 'Мой текущий табель', чтобы избежать этой проблемы.."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60

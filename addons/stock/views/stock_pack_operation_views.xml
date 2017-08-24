@@ -21,8 +21,8 @@
                         </div>
                     </group>
                     <group string="Locations" groups="stock.group_stock_multi_locations">
-                        <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]"/>
-                        <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]"/>
+                        <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]" options="{'no_create': True}"/>
+                        <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" options="{'no_create': True}"/>
                     </group>
                     <group string="Packages" groups="stock.group_tracking_lot">
                         <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" domain="[('location_id', '=', location_id)]" context="{'default_location_id': location_id}"/>
@@ -85,7 +85,7 @@
                             <field name="lot_name" invisible="not context.get('only_create', False)"/>
                             <field name="lot_id" invisible="context.get('only_create', False)"
                                    domain="[('product_id','=', parent.product_id)]"
-                                   context="{'default_product_id': parent.product_id}"/>
+                                   context="{'default_product_id': parent.product_id, 'active_pack_operation': parent.id}"/>
                             <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
                             <field name="qty" invisible="context.get('serial')"/>
                             <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>

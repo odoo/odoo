@@ -15,6 +15,12 @@ _logger = logging.getLogger(__name__)
 # changelog https://stripe.com/docs/upgrades#api-changelog
 STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 
+# The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
+INT_CURRENCIES = [
+    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYGí', u'RWF', u'KRW',
+    u'VUV', u'VND', u'XOF'
+];
+
 
 class PaymentAcquirerStripe(models.Model):
     _inherit = 'payment.acquirer'
@@ -84,7 +90,7 @@ class PaymentTransactionStripe(models.Model):
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
-            'amount': int(self.amount*100),  # Stripe takes amount in cents (https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support)
+            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else self.amount*100),
             'currency': self.currency_id.name,
             'metadata[reference]': self.reference
         }
@@ -110,10 +116,13 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data['metadata']['reference']
+        reference = data.get('metadata', {}).get('reference')
         if not reference:
-            error_msg = _('Stripe: invalid reply received from provider, missing reference')
-            _logger.error(error_msg, data['metadata'])
+            error_msg = _(
+                'Stripe: invalid reply received from provider, missing reference. Additional message: %s'
+                % data.get('error', {}).get('message', '')
+            )
+            _logger.error(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
         if not tx:
@@ -140,8 +149,8 @@ class PaymentTransactionStripe(models.Model):
                 'date_validate': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            if self.sudo().callback_eval:
+                safe_eval(self.sudo().callback_eval, {'self': self})
             return True
         else:
             error = tree['error']['message']

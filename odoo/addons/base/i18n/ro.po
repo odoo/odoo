@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-27 11:58+0000\n"
-"PO-Revision-Date: 2017-01-27 11:58+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,78 @@ msgid ""
 " - Hungarian taxes\n"
 " - Hungarian Bank information\n"
 " "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_do
+msgid ""
+"\n"
+"\n"
+"Localization Module for Dominican Republic\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -206,6 +278,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Enable a cache on products for a lower POS loading time."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hr_expense_check
+msgid ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -1464,6 +1544,25 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cn_standard
+msgid ""
+"\n"
+"Including the following data in the Accounting Standards for Business Enterprises\n"
+"包含企业会计准则以下数据\n"
+"\n"
+"* Chart of Accounts\n"
+"* 科目表模板\n"
+"\n"
+"* Account templates\n"
+"* 科目模板\n"
+"\n"
+"* Tax templates\n"
+"* 税金模板\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in
 msgid ""
 "\n"
@@ -1477,6 +1576,23 @@ msgid ""
 "Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
 "31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+"  "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_schedule6
+msgid ""
+"\n"
+"Indian Accounting: Chart of Account.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Schedule VI chart of account for indian accounting.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
 "  "
 msgstr ""
 
@@ -1764,7 +1880,7 @@ msgid ""
 "* *Before Delivery*: A Draft invoice is created and must be paid before delivery\n"
 msgstr ""
 "\n"
-"Gestioneaza cotatiile si comenzile de vanzare\n"
+"Gestioneaza ofertele si comenzile de vanzare\n"
 "=============================================\n"
 "\n"
 "Acest modul face lagatura intre aplicatiile de gestionare a vanzazarilor si depozitelor.\n"
@@ -2377,6 +2493,18 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_hw_screen
+msgid ""
+"\n"
+"Screen Driver\n"
+"=============\n"
+"\n"
+"This module allows the POS client to send rendered HTML to a remotely\n"
+"installed screen. This module then displays this HTML using a web\n"
+"browser.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
 msgid ""
 "\n"
@@ -2723,19 +2851,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_do
-msgid ""
-"\n"
-"This is the base module to manage the accounting chart for Dominican Republic.\n"
-"==============================================================================\n"
-"\n"
-"* Chart of Accounts.\n"
-"* The Tax Code Chart for Domincan Republic\n"
-"* The main taxes used in Domincan Republic\n"
-"* Fiscal position for local "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
 msgid ""
 "\n"
@@ -2981,9 +3096,12 @@ msgid ""
 "This is the module to manage the accounting chart for Vietnam in Odoo.\n"
 "=========================================================================\n"
 "\n"
-"This module applies to companies based in Vietnamese Accounting Standard (VAS).\n"
+"This module applies to companies based in Vietnamese Accounting Standard (VAS)\n"
+"with Chart of account under Circular No. 200/2014/TT-BTC\n"
 "\n"
-"**Credits:** General Solutions.\n"
+"**Credits:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
 msgstr ""
 
 #. module: base
@@ -3141,8 +3259,8 @@ msgstr ""
 "Acest modul adauga 'Marja' la comanda de vânzare.\n"
 "=============================================\n"
 "\n"
-"Astfel se obtine profitabilitatea calculand diferenta dintre Pretul\n"
-"Unitar si Pretul de Cost.\n"
+"Astfel se obține profitabilitatea calculând diferența dintre Prețul\n"
+"Unitar și Prețul de Cost.\n"
 "    "
 
 #. module: base
@@ -3938,7 +4056,7 @@ msgstr "%j - Ziua din an [001,366]"
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%m - Month number [01,12].\""
-msgstr "%m - Numarul lunii [01,12]."
+msgstr "%m - Numărul lunii [01,12]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4010,7 +4128,7 @@ msgstr "'%s' nu pare a fi un întreg pentru câmpul '%%(field)s'"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "(edit)"
-msgstr ""
+msgstr "(editare)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4170,15 +4288,11 @@ msgstr "<b>Nici un modul găsit!</b>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"<code>\n"
-"                                                partner_name = obj.name + '_code'\n"
-"                                                env[\"res.partner\"].create({\"name\": partner_name})\n"
-"                                            </code>"
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 msgstr ""
-"<code>\n"
-"                                                partner_name = obj.name + '_code'\n"
-"                                                env[\"res.partner\"].create({\"name\": partner_name})\n"
-"                                            </code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -4222,7 +4336,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Group</strong>"
-msgstr ""
+msgstr "<strong>Grup</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4237,7 +4351,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Label</strong>"
-msgstr ""
+msgstr "<strong>Etichetă</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -4275,6 +4389,8 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
+"<strong>Operația va șterge definitiv toate datele curente stocate de aceste "
+"module!</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -4527,6 +4643,11 @@ msgid "Accounting & Finance"
 msgstr "Contabilitate și Finanțe"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
+msgid "Accounting &amp; Finance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
 msgid "Accounting Consistency Tests"
 msgstr "Teste ale Consistentei Contabile"
@@ -4708,7 +4829,7 @@ msgstr "Activ(a)"
 #: model:ir.model.fields,field_description:base.field_wkf_activities
 #: model:ir.ui.menu,name:base.menu_workflow_activity
 msgid "Activities"
-msgstr "Activitati"
+msgstr "Activități"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_workitem_act_id
@@ -4913,6 +5034,11 @@ msgid "Algeria"
 msgstr "Algeria"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.ir_cron_view_search
+msgid "All"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
@@ -5084,22 +5210,22 @@ msgstr "Aplică actualizările planificate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_create
 msgid "Apply for Create"
-msgstr "Aplică pentru creare"
+msgstr "Aplicată la creare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_unlink
 msgid "Apply for Delete"
-msgstr "Aplică pentru ștergere"
+msgstr "Aplicată la ștergere"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_read
 msgid "Apply for Read"
-msgstr "Se aplică pentru citire"
+msgstr "Aplicată la citire"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_write
 msgid "Apply for Write"
-msgstr "Aplicați pentru scriere"
+msgstr "Aplicată la scriere"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_appraisal
@@ -5205,7 +5331,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:52
 #, python-format
 msgid "At least one language must be active."
-msgstr "Cel putin o limbă trebuie să fie activă"
+msgstr "Cel puțin o limbă trebuie să fie activă"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
@@ -5239,7 +5365,7 @@ msgstr "Nume atașament"
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 #: model:ir.ui.view,arch_db:base.view_attachment_tree
 msgid "Attachments"
-msgstr "Atasamente"
+msgstr "Atașamente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
@@ -5467,7 +5593,7 @@ msgstr "Limba 'en_US' nu poate fi ștearsă!"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_model_id
 msgid "Base Model"
-msgstr ""
+msgstr "Model de bază"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -5812,8 +5938,8 @@ msgstr "Configurația nu poate fi copiată!"
 #. module: base
 #: code:addons/base/ir/ir_model.py:549
 #, python-format
-msgid "Cannot rename field to %s, because that field already exists!"
-msgstr "Câmpul nu se poate redenumi %s, deoarece deja exista!"
+msgid "Cannot rename/delete fields that are still present in views:"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_lang.py:219
@@ -5931,6 +6057,11 @@ msgstr "Discută cu vizitatorii site-ului tău"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_check
+msgid "Check Printing in Expenses"
 msgstr ""
 
 #. module: base
@@ -6052,7 +6183,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Choose and copy a record in the database"
-msgstr ""
+msgstr "Alege și copie o înregistrate în baza de date "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_encryption
@@ -6119,7 +6250,7 @@ msgstr "Click pentru a crea o bancă nouă"
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Click to create a new partner tag."
-msgstr "Click pentru a crea o noua eticheta partener"
+msgstr "Clic pentru a crea o noua eticheta partener"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -6389,14 +6520,14 @@ msgstr "Condiție"
 msgid ""
 "Condition verified before executing the server action. If it is not "
 "verified, the action will not be executed. The condition is a Python "
-"expression, like 'object.list_price > 5000'. A void condition is considered "
+"expression, like 'record.list_price > 5000'. A void condition is considered "
 "as always True. Help about python expression is given in the help tab."
 msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Conditions"
-msgstr "Conditii"
+msgstr "Condiții"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -6445,7 +6576,7 @@ msgstr "Ceneteză clientul web la periferice hardware"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Connection Information"
-msgstr "Informatii Conexiune"
+msgstr "Informații Conexiune"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_encryption
@@ -6721,12 +6852,12 @@ msgstr "Creați un meniu"
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in another model"
-msgstr ""
+msgstr "Creeați un o nouă înregistrate în alt model "
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Create a new record in the Base Model"
-msgstr ""
+msgstr "Creeați o înregistrate nouă în Modelul de Bază "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -6940,7 +7071,7 @@ msgstr "Luna crearii"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_use_create
 msgid "Creation Policy"
-msgstr ""
+msgstr "Politică creeare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_credit_limit
@@ -7225,7 +7356,7 @@ msgstr "DatăOră"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr "Datele din Comenzile de Vanzare"
+msgstr "Datele din Comenzile de Vânzare"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -7727,7 +7858,7 @@ msgstr "Durata nu poate fi negativă"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Dynamic expression builder"
-msgstr ""
+msgstr "Generator dinamic de expresii"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -7838,7 +7969,7 @@ msgstr "Director Angajat"
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
 msgid "Employees"
-msgstr "Angajati"
+msgstr "Angajați"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:331
@@ -7932,7 +8063,7 @@ msgstr "Etiopia - Contabilitate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_type
 msgid "Evaluation Type"
-msgstr ""
+msgstr "Tip evaluare"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
@@ -8283,6 +8414,19 @@ msgid "Field `%(field_name)s` does not exist"
 msgstr "Câmpul `%(field_name)s` nu există"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:298
+#, python-format
+msgid ""
+"Field names can only contain characters, digits and underscores (up to 63)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:307
+#, python-format
+msgid "Field names must be unique per model."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: model:ir.model,name:base.model_ir_model_fields
 #: model:ir.model.fields,field_description:base.field_ir_model_field_id
@@ -8298,6 +8442,12 @@ msgstr "Câmpuri"
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Fields Description"
 msgstr "Descriere Câmpuri"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:487
+#, python-format
+msgid "Fields:"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -8405,7 +8555,7 @@ msgstr "Contabilitate Financiara si Analitica"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Find the ID of a record in the database"
-msgstr ""
+msgstr "Caută ID-ul unei înregistrări în baza de date "
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -8574,6 +8724,11 @@ msgid "France - Accounting"
 msgstr "Franta - Contabilitate"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - Accounting - Certified CGI 286 I-3 bis"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr ""
@@ -8708,6 +8863,8 @@ msgid ""
 "Generic Wizard to Import Bank Statements. Includes the import of files in "
 ".OFX format"
 msgstr ""
+"Generic Wizard pentru a importa declarații bancare. Include importul de "
+"fișiere în format .OFX"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -8753,7 +8910,7 @@ msgstr ""
 "Regulile globale (nespecifice unui grup) sunt restrictii si nu pot fi "
 "evitate. Regulile grupului local ofera permisiuni suplimentare, dar sunt "
 "constranse in limitele celor globale. Regulile primului grup limiteaza mai "
-"mult decat regulile globale, dar orice regula suplimentara a grupului va "
+"mult decât regulile globale, dar orice regula suplimentara a grupului va "
 "adauga mai multe permisiuni"
 
 #. module: base
@@ -8984,6 +9141,11 @@ msgid "Hardware Driver for Weighing Scales"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_hardware_drivers
+msgid "Hardware Drivers"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
 msgid "Hardware Proxy"
 msgstr "Hardware Proxy"
@@ -9031,7 +9193,7 @@ msgstr ""
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
-"Va ajuta sa va gestionati cotatiile, comenzile de vanzare si facturarea."
+"Va ajuta sa va gestionati ofertele, comenzile de vanzare si facturarea."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_lead_automation
@@ -9658,6 +9820,11 @@ msgstr "India"
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "Indian - Accounting"
 msgstr "India - Contabilitate"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
+msgid "Indian - Schedule VI Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -10768,7 +10935,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Mailing List Archive"
-msgstr "Arhivă listă de mail"
+msgstr "Arhivează listă de mail"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_rml
@@ -10878,7 +11045,7 @@ msgstr "Producător"
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 msgid "Manufacturing"
-msgstr "Fabricație"
+msgstr " Producție"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -10918,7 +11085,7 @@ msgstr "Marje dupa produse"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr "Marjele din Comenzile de Vanzare"
+msgstr "Marjele din Comenzile de Vânzare"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -11108,21 +11275,27 @@ msgid "Missing SMTP Server"
 msgstr "Lipsa server SMTP"
 
 #. module: base
-#: code:addons/models.py:3263
+#: code:addons/models.py:3282
 #, python-format
 msgid "Missing document(s)"
 msgstr "Document(e) lipsă"
 
 #. module: base
-#: code:addons/models.py:5619
+#: code:addons/models.py:5655
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5616
+#: code:addons/models.py:5652
 #, python-format
 msgid "Missing required value for the field '%s'."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:345
+#, python-format
+msgid "Missing view architecture."
 msgstr ""
 
 #. module: base
@@ -11319,7 +11492,7 @@ msgstr "Instalare actualizare modul"
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
-msgstr "Dependenta modul"
+msgstr "Dependență modul"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -11427,7 +11600,7 @@ msgstr "My Document(s)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "My Partners"
-msgstr "My Partners"
+msgstr "Partenerii mei"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -11550,13 +11723,6 @@ msgstr "Noua Zeelandă"
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
 msgstr "Noua Zeelandă"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:551
-#, python-format
-msgid ""
-"New field name must still start with x_ , because it is a custom field!"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
@@ -11804,6 +11970,8 @@ msgid ""
 "                a customer: discussions, history of business opportunities,\n"
 "                documents, etc."
 msgstr ""
+"Odoo vă ajută să urmăriți cu ușurință toate activitățile legate de un "
+"client: discuții, istorie de oportunități de afaceri, documente, etc."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -11812,6 +11980,8 @@ msgid ""
 "                a supplier: discussions, history of purchases,\n"
 "                documents, etc."
 msgstr ""
+"Odoo vă ajută să urmăriți cu ușurință toate activitățile legate de un "
+"furnizor: discuții, istorie de achiziții, documente, etc."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_padding
@@ -12078,7 +12248,7 @@ msgstr "Outgoing Mail Server"
 #: model:ir.ui.view,arch_db:base.ir_mail_server_list
 #: model:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Servers"
-msgstr "Outgoing Mail Servers"
+msgstr "Servere Ieșire E-mail-uri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_out_transitions
@@ -12449,7 +12619,7 @@ msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
 "explicitly."
 msgstr ""
-"Vă rugăm să definiți cel putin un server SMTP, sau să furnizați în mod "
+"Vă rugăm să definiți cel puțin un server SMTP, sau să furnizați în mod "
 "explicit parametrii SMTP."
 
 #. module: base
@@ -12618,6 +12788,11 @@ msgid "Price Accuracy"
 msgstr "Acuratețe preț"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_check
+msgid "Print amount in words on checks issued for expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_priority
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_sequence
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
@@ -12726,6 +12901,11 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 msgid "Provide the field where the record id is stored after the operations."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hw_screen
+msgid "Provides support for customer facing displays"
 msgstr ""
 
 #. module: base
@@ -12844,12 +13024,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr "Cotație, Comandă de vânzări, Controlul Livrării & Facturării"
+msgstr "Ofertă, Comandă de vânzări, Controlul Livrării & Facturării"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr "Cotații, Comenzi de Vânzare, Facturare"
+msgstr "Oferte, Comenzi de Vânzare, Facturare"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:307
@@ -12888,12 +13068,12 @@ msgstr "Raport RML"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML pdf (deprecated)"
-msgstr ""
+msgstr "RML pdf (depăşit tehnic)"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "RML sxw (deprecated)"
-msgstr ""
+msgstr "RML sxw  (depăşit tehnic)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate
@@ -12961,7 +13141,7 @@ msgstr ""
 #: code:addons/base/ir/ir_actions.py:353 code:addons/models.py:4386
 #, python-format
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "Înregistrarea nu există sau a fost ștearsă."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -13033,7 +13213,7 @@ msgstr "Compania Asociată"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
 msgid "Related Field"
-msgstr ""
+msgstr "Câmp Relație"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_partner_id
@@ -13095,7 +13275,7 @@ msgstr "Elimină din meniul 'Mai multe'"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove from the 'Print' menu"
-msgstr ""
+msgstr "Elimină din meniul 'Tipăriți'"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -13126,7 +13306,7 @@ msgstr "Management Reparatii"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_doall
 msgid "Repeat Missed"
-msgstr "Repeta ceea ce s-a pierdut"
+msgstr "Repetă ceea ce s-a pierdut"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron_interval_number
@@ -13265,7 +13445,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_multi
 msgid "Restrict to lists"
-msgstr ""
+msgstr "Utilizat doar în liste"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -13344,7 +13524,7 @@ msgstr "Execută %s"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Run Manually"
-msgstr ""
+msgstr "Rulează manual"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -13557,6 +13737,11 @@ msgstr "Acțiune planificată"
 #: model:ir.ui.view,arch_db:base.ir_cron_view_tree
 msgid "Scheduled Actions"
 msgstr "Acțiuni planificate"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hw_screen
+msgid "Screen Driver"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -14966,9 +15151,9 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Operatiunea solicitata nu poate fi finalizata din cauza restrictiilor de securitate. Va rugam sa contactati administratorul de sistem.\n"
+"Operațiunea solicitată nu poate fi finalizată din cauza restricțiilor de securitate. Vă rugam să contactați administratorul de sistem.\n"
 "\n"
-"(Tip de document: %s, Operatiune: %s)"
+"(Tip de document: %s, Operațiune: %s)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_language_install
@@ -15716,7 +15901,7 @@ msgstr "Actualizează modul"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Update Module List"
-msgstr "Actualizati Lista cu Module"
+msgstr "Actualizați Lista cu Module"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_use_write
@@ -15877,7 +16062,7 @@ msgstr "Filtre definite de utilizator"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_user
 msgid "Username"
-msgstr "Nume de utilizator"
+msgstr "Nume utilizator"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -15982,6 +16167,8 @@ msgid ""
 "Various fields may use Python code or Python expressions. The following "
 "variables can be used:"
 msgstr ""
+"Diverse câmpuri pot utiliza cod Python sau expresii Python. Următoarele "
+"variabile pot fi utilizate: "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -16076,7 +16263,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
 msgid "View mode"
-msgstr ""
+msgstr "Mod Vizualizare"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
@@ -16087,6 +16274,12 @@ msgstr ""
 "Tipul vizualizarii: tipul arbore va fi folosit pentru vizualizarea arbore, "
 "setati pe 'arbore' pentru o vizualizare arbore ierarhica, sau pe 'formular' "
 "pentru o vizualizare obisnuita a listei"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:488
+#, python-format
+msgid "View:"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -16414,10 +16607,10 @@ msgid ""
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
 msgstr ""
-"Atunci cand operatiunea de tranzitie provine de la un buton apasat in "
-"formularul clientului, semnalul testeaza numele butonului apasat. Daca "
-"semnalul este NUL, nu mai este nevoie de niciun buton pentru a valida "
-"aceasta tranzitie."
+"Atunci când operațiunea de tranziție provine de la un buton apăsat în "
+"formularul clientului, semnalul testează numele butonului apăsat. Dacă "
+"semnalul este NULL, nu mai este nevoie de niciun buton pentru a valida "
+"aceasta tranziție."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_copy
@@ -16554,7 +16747,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"Write a python expression, beginning with object, that gives the record to "
+"Write a python expression, beginning with record, that gives the record to "
 "update. An expression builder is available in the help tab. Examples:"
 msgstr ""
 
@@ -16674,6 +16867,12 @@ msgstr ""
 #: code:addons/base/res/res_partner.py:320
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:314
+#, python-format
+msgid "You cannot create recursive inherited views."
 msgstr ""
 
 #. module: base
@@ -16866,17 +17065,7 @@ msgstr "condiție: True"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "condition: object.list_price &gt; 5000"
-msgstr ""
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "context: current context"
-msgstr ""
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "cr: database cursor"
+msgid "condition: record.list_price &gt; 5000"
 msgstr ""
 
 #. module: base
@@ -16937,7 +17126,7 @@ msgstr "e.g. www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr ""
+msgstr "eCommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
@@ -16953,6 +17142,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
 msgstr "email@yourcompany.com"
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.view_server_action_form
+msgid "env: Odoo Environement on which the action is triggered"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:328
@@ -16973,6 +17167,8 @@ msgid ""
 "for record in self:\n"
 "        record['size'] = len(record.name)"
 msgstr ""
+"for record in self:\n"
+"        record['size'] = len(record.name)"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:242
@@ -17266,34 +17462,28 @@ msgid "no"
 msgstr "nu"
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid ""
-"object or obj: browse_record of the record on which the action is triggered"
-msgstr ""
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "object.partner_id"
-msgstr "object.partner_id"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "object.partner_id.currency_id"
-msgstr "object.partner_id.currency_id"
-
-#. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
 msgstr "pe"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_cache
+msgid "pos_cache"
+msgstr "pos_cache"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "pool: ORM model pool (i.e. self.pool)"
+msgid "record.partner_id"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_cache
-msgid "pos_cache"
+#: model:ir.ui.view,arch_db:base.view_server_action_form
+msgid "record.partner_id.currency_id"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.view,arch_db:base.view_server_action_form
+msgid "record: browse_record of the record on which the action is triggered"
 msgstr ""
 
 #. module: base
@@ -17334,7 +17524,7 @@ msgstr "res.users.log"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr ""
+msgstr "self: ORM modelul înregistrării pe care este declanșată acțiunea"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -17349,22 +17539,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test read_group"
-msgstr ""
+msgstr "test read_group"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "test-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_pylint
 msgid "test-eval"
-msgstr ""
+msgstr "test-eval"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
 msgid "test-exceptions"
-msgstr ""
+msgstr "test-exceptions"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_converter
@@ -17379,12 +17569,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit
 msgid "test-inherit"
-msgstr ""
+msgstr "test-inherit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
@@ -17394,17 +17584,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
 msgid "test-uninstall"
-msgstr ""
+msgstr "test-uninstall"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_workflow
 msgid "test-workflow"
-msgstr ""
+msgstr "test-workflow"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
-msgstr ""
+msgstr "test_convert"
 
 #. module: base
 #: model:res.groups,comment:base.group_user
@@ -17418,7 +17608,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "time: Python time module"
+msgid "time, datetime, timezone: Python module"
 msgstr ""
 
 #. module: base
@@ -17431,11 +17621,6 @@ msgstr "titlu"
 #, python-format
 msgid "true"
 msgstr "adevărat"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "uid: current user id"
-msgstr "uid: current user id"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -17471,11 +17656,6 @@ msgstr "workflow.triggers"
 #: model:ir.model,name:base.model_workflow_workitem
 msgid "workflow.workitem"
 msgstr "workflow.workitem"
-
-#. module: base
-#: model:ir.ui.view,arch_db:base.view_server_action_form
-msgid "workflow: Workflow engine"
-msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143

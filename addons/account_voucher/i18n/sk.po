@@ -1,41 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015-2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Robert Kirschner <robertkirschner@yahoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-05 12:23+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher "
-"number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-"* Status \"Návrh\" sa používa, keď používateľ kóduje nový a nepotvrdený "
-"poukaz.\n"
+"* Status \"Návrh\" sa používa, keď používateľ kóduje nový a nepotvrdený poukaz.\n"
 "\n"
 "* \"Pro-forma\" status sa používa, keď poukaz nemá číslo poukážky.\n"
 "\n"
-"* Status \"Uverejnené\"  sa používa, keď používateľ vytvorí poukážku, číslo "
-"poukážky je vygenerované a položky poukážky sú vytvorené v účte.\n"
+"* Status \"Uverejnené\"  sa používa, keď používateľ vytvorí poukážku, číslo poukážky je vygenerované a položky poukážky sú vytvorené v účte.\n"
 "\n"
 " * Status \"Zrušené\" sa používa keď užívateľ zruší poukážku."
 
@@ -53,7 +52,7 @@ msgstr "Dátum účtu"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Účtovný dátum"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -68,7 +67,7 @@ msgstr "Suma"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Analytický účet"
+msgstr "Otvor nástenku analytických účtov"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -128,25 +127,25 @@ msgstr "Kliknite pre registráciu nákupnej potvrdenky."
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Spoločnosť vzťahujúca sa k tejto účtovnej knihe"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
@@ -175,7 +174,7 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -212,7 +211,7 @@ msgstr "Dáva sekvenciu tohoto riadku pri zobrazovaní poukazu."
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
@@ -411,13 +410,13 @@ msgstr "Vyhľadať poukazy"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr "Nastaviť ako návr"
+msgstr "Nastaviť na koncept"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
@@ -481,7 +480,7 @@ msgstr "Celkom"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr "Celkom"
+msgstr "Celková suma"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
@@ -497,7 +496,7 @@ msgstr "Jednotková cena"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
-msgstr "Overenie"
+msgstr "Overiť"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form

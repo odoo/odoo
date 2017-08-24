@@ -56,7 +56,7 @@ class account_journal(models.Model):
         last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DF))], order="date desc, id desc", limit=1)
         start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
 
-        locale = self._context.get('lang', 'en_US')
+        locale = self._context.get('lang') or 'en_US'
         show_date = last_month
         #get date in locale format
         name = format_date(show_date, 'd LLLL Y', locale=locale)
@@ -94,7 +94,7 @@ class account_journal(models.Model):
         data = []
         today = datetime.strptime(fields.Date.context_today(self), DF)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
-        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
+        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
@@ -105,9 +105,9 @@ class account_journal(models.Model):
                 start_week = first_day_of_week + timedelta(days=i*7)
                 end_week = start_week + timedelta(days=6)
                 if start_week.month == end_week.month:
-                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang', 'en_US'))
+                    label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang') or 'en_US')
                 else:
-                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
+                    label = format_date(start_week, 'd MMM', locale=self._context.get('lang') or 'en_US')+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang') or 'en_US')
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
@@ -138,7 +138,8 @@ class account_journal(models.Model):
         number_to_reconcile = last_balance = account_sum = 0
         ac_bnk_stmt = []
         title = ''
-        number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
+        number_draft = number_waiting = number_late = 0
+        sum_draft = sum_waiting = sum_late = 0.0
         if self.type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
             last_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
@@ -171,30 +172,33 @@ class account_journal(models.Model):
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
-            query = """SELECT state, amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
+            query = """SELECT state, amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
             self.env.cr.execute(query, (self.id,))
             query_results = self.env.cr.dictfetchall()
             today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
+            query = """SELECT amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            sum_draft = 0.0
-            number_draft = 0
-            number_waiting = 0
             for result in query_results:
+                if result['type'] in ['in_refund', 'out_refund']:
+                    factor = -1
+                else:
+                    factor = 1
                 cur = self.env['res.currency'].browse(result.get('currency'))
                 if result.get('state') in ['draft', 'proforma', 'proforma2']:
                     number_draft += 1
-                    sum_draft += cur.compute(result.get('amount_total'), currency)
+                    sum_draft += cur.compute(result.get('amount_total'), currency) * factor
                 elif result.get('state') == 'open':
                     number_waiting += 1
-                    sum_waiting += cur.compute(result.get('amount_total'), currency)
-            sum_late = 0.0
-            number_late = 0
+                    sum_waiting += cur.compute(result.get('amount_total'), currency) * factor
             for result in late_query_results:
+                if result['type'] in ['in_refund', 'out_refund']:
+                    factor = -1
+                else:
+                    factor = 1
                 cur = self.env['res.currency'].browse(result.get('currency'))
                 number_late += 1
-                sum_late += cur.compute(result.get('amount_total'), currency)
+                sum_late += cur.compute(result.get('amount_total'), currency) * factor
 
         return {
             'number_to_reconcile': number_to_reconcile,
@@ -312,9 +316,13 @@ class account_journal(models.Model):
             'default_type': invoice_type,
             'type': invoice_type
         })
+
         [action] = self.env.ref('account.%s' % action_name).read()
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
+        if action_name in ['action_bank_statement_tree', 'action_view_bank_statement_tree']:
+            action['views'] = False
+            action['view_id'] = False
         return action
 
     @api.multi

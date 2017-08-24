@@ -6,10 +6,10 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -135,6 +135,7 @@ msgstr "# Compres"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Factures de proveïdors "
 
@@ -150,6 +151,7 @@ msgstr "# de línies"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
 msgstr "# de la comanda de compra "
 
@@ -381,6 +383,12 @@ msgstr "Línies de Factura"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
 msgstr "Quant. facturada"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:581
+#, python-format
+msgid "Billed Quantity"
+msgstr "Quantitat facturada"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -693,11 +701,6 @@ msgid "Email composition wizard"
 msgstr "Assistent de composició de correu electrònic"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Assistent de composició de correu electrònic per Enquesta"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
@@ -716,6 +719,12 @@ msgstr "Data prevista"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Filtres estesos"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:559
+#, python-format
+msgid "Extra line with %s "
+msgstr "Línia extra amb %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -890,6 +899,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Missatge per a la comanda de la compra"
 
@@ -918,11 +928,6 @@ msgid ""
 msgstr ""
 "La major part de les proposicions per a comandes de compra que es creïn "
 "automàticament per Odoo en base amb les necessitats d'inventari."
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "New Mail"
-msgstr "Nou correu"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1010,7 +1015,13 @@ msgid "Order of Day"
 msgstr "Ordre del dia"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:769
+#: code:addons/purchase/models/purchase.py:578
+#, python-format
+msgid "Ordered Quantity"
+msgstr "Quantitat demanada"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:816
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "La quantitat demanada ha disminuït!"
@@ -1019,11 +1030,6 @@ msgstr "La quantitat demanada ha disminuït!"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Comandes"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_mail_mail
-msgid "Outgoing Mails"
-msgstr "Correu sortint"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1208,6 +1214,7 @@ msgstr "Termini de temps de compra *"
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1401,6 +1408,12 @@ msgid "Received Qty"
 msgstr "Qttat rebuda"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:580
+#, python-format
+msgid "Received Quantity"
+msgstr "Quantitat rebuda"
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1489,6 +1502,7 @@ msgstr "Cerca comanda de compra"
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:purchase.field_res_users_purchase_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -1577,6 +1591,7 @@ msgstr "Subtotal"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users_property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Proveïdor de divises"
 
@@ -1606,6 +1621,16 @@ msgstr "Camp tècnic utilitzat per mostrar l'adreça de Drop Ship"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Termes i condicions "
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:574
+#, python-format
+msgid ""
+"The ordered quantity has been decreased. Do not forget to take it into "
+"account on your bills and receipts."
+msgstr ""
+"La quantitat ordenada s'ha reduït. No oblidi tenir-ho en compte en les seves"
+" factures i rebuts."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1679,6 +1704,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
@@ -1806,6 +1832,11 @@ msgstr "Unitats de mesura"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unlock"
 msgstr "Obrir"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Unread Messages"
+msgstr "Missatges pendents de llegir"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -2018,19 +2049,10 @@ msgstr ""
 "físic, un consumible o serveis que compris a un subcontractador."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:385
+#: code:addons/purchase/models/purchase.py:389
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Ha d'assignar una localització de venedor per aquest soci %s"
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:315
-#, python-format
-msgid ""
-"You need purchase manager access rights to validate an order above %.2f %s."
-msgstr ""
-"Necessites els permisos de gestió de compres per validar una comanda per "
-"sobre %.2f %s."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

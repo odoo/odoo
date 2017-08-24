@@ -576,15 +576,18 @@ odoo.define('web_editor.snippets.options', function (require) {
     registry.background = SnippetOption.extend({
         start: function () {
             var res = this._super.apply(this, arguments);
-            this.$target.off(".background-option")
-                        .on("background-color-event.background-option", (function (e, type) {
-                            e.stopPropagation();
-                            if (e.currentTarget !== e.target) return;
-                            this.$el.find("li:first > a").trigger(type);
-                        }).bind(this));
+            this.bind_bg_events();
             return res;
         },
 
+        bind_bg_events: function () {
+            this.$target.off(".background-option")
+                .on("background-color-event.background-option", (function (e, type) {
+                    e.stopPropagation();
+                    if (e.currentTarget !== e.target) return;
+                    this.$el.find("li:first > a").trigger(type);
+                }).bind(this));
+        },
         background: function (type, value, $li) {
             if (value && value.length) {
                 this.$target.css("background-image", "url(" + value + ")");

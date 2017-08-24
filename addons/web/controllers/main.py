@@ -53,6 +53,8 @@ env.filters["json"] = json.dumps
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
 
+DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
+
 #----------------------------------------------------------
 # Odoo Web helpers
 #----------------------------------------------------------
@@ -625,6 +627,7 @@ class Database(http.Controller):
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
+        d['pattern'] = DBNAME_PATTERN
         # databases list
         d['databases'] = []
         try:
@@ -646,22 +649,26 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
+            if not re.match(DBNAME_PATTERN, name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception, e:
-            error = "Database creation error: %s" % e
+            error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
+            if not re.match(DBNAME_PATTERN, new_name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database duplication error: %s" % e
+            error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
@@ -671,7 +678,7 @@ class Database(http.Controller):
             request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database deletion error: %s" % e
+            error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
@@ -689,7 +696,7 @@ class Database(http.Controller):
             return response
         except Exception, e:
             _logger.exception('Database.backup')
-            error = "Database backup error: %s" % e
+            error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
@@ -699,7 +706,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database restore error: %s" % e
+            error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
@@ -708,7 +715,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Master password update error: %s" % e
+            error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/list', type='json', auth='none')
@@ -992,6 +999,8 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
+        height = int(height or 0)
+        width = int(width or 0)
         if content and (width or height):
             # resize maximum 500*500
             if width > 500:

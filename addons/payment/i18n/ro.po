@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -214,7 +214,7 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr "Anulează mesaj"
+msgstr "Mesaj anulare"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -236,11 +236,6 @@ msgstr "Oraș"
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Click to create a payment acquirer."
 msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
-msgid "Code"
-msgstr "Cod"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -269,6 +264,7 @@ msgstr "Modul corespondent"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
 msgstr ""
 
@@ -299,7 +295,7 @@ msgstr "Data creării"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Date autentificare"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -356,7 +352,7 @@ msgstr "Efectuat"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Mesaj efectuare"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -622,6 +618,18 @@ msgid "Ogone"
 msgstr "Ogone"
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:619
+#, python-format
+msgid "Only transactions in the Authorized status can be captured."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:626
+#, python-format
+msgid "Only transactions in the Authorized status can be voided."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
 msgstr "Confirmare comandă"
@@ -669,6 +677,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
@@ -851,6 +860,14 @@ msgid "The payment transaction reference must be unique!"
 msgstr "Referința plății trebuie să fie unică"
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:42
+#, python-format
+msgid ""
+"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"Please use a token from another provider than %s."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
@@ -863,6 +880,12 @@ msgstr ""
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:160
+#, python-format
+msgid "Transaction Authorization is not supported by this payment provider."
 msgstr ""
 
 #. module: payment
@@ -906,7 +929,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Transfer bancar"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe

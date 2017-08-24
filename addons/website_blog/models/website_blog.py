@@ -33,6 +33,7 @@ class Blog(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -133,7 +134,7 @@ class BlogPost(models.Model):
         default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
-    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize_attributes=False)
+    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 

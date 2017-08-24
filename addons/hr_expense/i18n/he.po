@@ -5,13 +5,20 @@
 # Translators:
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
 # ExcaliberX <excaliberx@gmail.com>, 2017
+# ilan kl <ilan@qaroads.co.il>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# yizhaq agronov <yizhaq@gmail.com>, 2017
+# Mor Kir <morki@013.net.il>, 2017
+# fishfurbanter <fishfurbanter@gmail.com>, 2017
+# Moshe Flam <pashute@gmail.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,12 +80,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>תאריך:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Description:</strong>"
-msgstr ""
+msgstr "<strong>תאור:</strong>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -118,12 +125,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_account_id
 msgid "Account"
-msgstr ""
+msgstr "חשבון"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_accountant
 msgid "Accountant"
-msgstr ""
+msgstr "רואה חשבון"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -133,12 +140,12 @@ msgstr "חשבונאות"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_accounting_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "תאריך החשבון"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Accounting Entries"
-msgstr ""
+msgstr "רשומות חשבונאיות"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -154,7 +161,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "שם-מתחם (דומיין)"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
@@ -175,6 +182,11 @@ msgid "Analytic Account"
 msgstr "חשבון אנליטי"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "החל"
@@ -182,7 +194,7 @@ msgstr "החל"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Approve"
-msgstr ""
+msgstr "אשר"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -198,7 +210,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "Bank Journal"
-msgstr ""
+msgstr "יומן הבנק"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_reference
@@ -206,6 +218,7 @@ msgid "Bill Reference"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr ""
@@ -277,7 +290,7 @@ msgstr "חברה"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "חברה הקשורה ליומן זה"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -345,7 +358,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
-msgstr ""
+msgstr "מחלקה"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_description
@@ -365,7 +378,7 @@ msgstr "השם המוצג"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Documents"
-msgstr ""
+msgstr "מסמכים"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -383,7 +396,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Employee"
-msgstr ""
+msgstr "עובד"
 
 #. module: hr_expense
 #: selection:hr.expense,payment_mode:0
@@ -398,14 +411,14 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "End"
-msgstr ""
+msgstr "סוף"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expense"
-msgstr ""
+msgstr "הוצאות"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
@@ -733,7 +746,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_communication
 msgid "Memo"
-msgstr ""
+msgstr "הערה"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
@@ -776,7 +789,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "New Mail"
-msgstr ""
+msgstr "דוא\"ל חדש"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:251
@@ -952,7 +965,7 @@ msgstr "כמות"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
 msgid "Reason"
-msgstr ""
+msgstr "סיבה"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -994,7 +1007,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Register Payment"
-msgstr ""
+msgstr "רשום תשלום"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -1070,6 +1083,7 @@ msgid "Setup your domain alias"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr ""
@@ -1077,7 +1091,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "State"
-msgstr ""
+msgstr "מחוז"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_state
@@ -1164,6 +1178,12 @@ msgid "The journal used when the expense is done."
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
@@ -1186,12 +1206,12 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Approve"
-msgstr ""
+msgstr "על מנת לאשר"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Pay"
-msgstr ""
+msgstr "לשלם"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -1215,7 +1235,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "To:"
-msgstr ""
+msgstr "אל:"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
@@ -1228,7 +1248,7 @@ msgstr "סך הכל"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
-msgstr ""
+msgstr "סה\"כ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_unit_amount
@@ -1308,9 +1328,22 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:425
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
 #, python-format
 msgid "You cannot delete a posted expense."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:559
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
 msgstr ""
 
 #. module: hr_expense
@@ -1373,7 +1406,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "or"
-msgstr ""
+msgstr "או"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:305
@@ -1384,7 +1417,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "send us an email"
-msgstr ""
+msgstr "שילחו לנו דוא\"ל"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner

@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_crm
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Erdenebold Ts <erdenebold10@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-19 08:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -31,12 +34,12 @@ msgstr "# Борлуулалтын захиалгын тоо"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Захиалгууд</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Үнийн санал(ууд) </span>"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
@@ -44,6 +47,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Хамтран эзэмшигч гишүүн. Хамтран эзэмшигч гишүүний гишүүнчлэлийн төлвийг "
+"харгалзана."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -60,12 +65,12 @@ msgstr "Гишүүнчлэлийг Цуцласан Огноо"
 #: code:addons/sale_crm/static/src/js/tour.js:16
 #, python-format
 msgid "Click here to see more options."
-msgstr ""
+msgstr "Энд дарж илүү сонголт үзнэ үү."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Төлбөрийн Токенийг тоолох"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -100,12 +105,12 @@ msgstr "Чөлөөт гишүүн"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
 msgid "Invoiced in Sale Orders Target"
-msgstr ""
+msgstr "Борлуулалтын Захиалгын Зорилт дээр нэхэмжилсэн"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -114,11 +119,17 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Энэ нь гишүүнчлэлийн төлөвийг илтгэдэг.\n"
+"-Гишүүн бус: Ямар ч гишүүнчлэлд бүртгүүлээгүй түнш.\n"
+"-Цуцласан Гишүүн: Гишүүнчлэлээ цуцласан гишүүн.\n"
+"-Хуучин Гишүүн: Гишүүнчлэлийн хугацаа нь хэтэрсэн гишүүн.\n"
+"-Хүлээж байгаа Гишүүн: Гишүүнчлэлд бүртгүүлсэн ба нэхэмжлэл нь үүсэх гэж байгаа гишүүн.\n"
+"-Нэхэмжлэгдсэн Гишүүн: Нэхэмжлэл нь үүссэн гишүүн.\n"
+"-Төлбөрт гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүн."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -130,12 +141,12 @@ msgstr "Сэжим/Боломж"
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Энэ борлуулалтын багийн үнийн саналуудыг харцгаая."
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Захиалгын эх боломжоос чат руу нэвтэрнэ үү"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -160,22 +171,22 @@ msgstr "Гишүүнчлэлийн эхлэх огноо"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мэдэгдэл"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Бараа гаргалтын мессеж"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
-msgstr ""
+msgstr "Шинэ Үнийн Санал"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Үнийн саналын тоо"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
@@ -190,7 +201,7 @@ msgstr "Захиалга"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Төлбөрийн Токен"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -222,16 +233,19 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
+"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
+"Мессеж нь дараагийн талбарт бичигдэх ёстой."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
 msgid "Stock Picking"
-msgstr ""
+msgstr "Бараа бэлтгэлт"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Захиалгын нийлбэр"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
@@ -269,4 +283,4 @@ msgstr "Хэрэглэгчид"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr ""
+msgstr "Нийлүүлэгчийн байрлал"

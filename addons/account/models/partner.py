@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from ast import literal_eval
 from operator import itemgetter
 import time
 
@@ -321,12 +322,9 @@ class ResPartner(models.Model):
     def _compute_issued_total(self):
         """ Returns the issued total as will be displayed on partner view """
         today = fields.Date.context_today(self)
-        for partner in self:
-            domain = partner.get_followup_lines_domain(today, overdue_only=True)
-            issued_total = 0
-            for aml in self.env['account.move.line'].search(domain):
-                issued_total += aml.amount_residual
-            partner.issued_total = issued_total
+        domain = self.get_followup_lines_domain(today, overdue_only=True)
+        for aml in self.env['account.move.line'].search(domain):
+            aml.partner_id.issued_total += aml.amount_residual
 
     @api.one
     def _compute_has_unreconciled_entries(self):
@@ -445,7 +443,7 @@ class ResPartner(models.Model):
         '''
         This function returns an action that display invoices/refunds made for the given partners.
         '''
-        action = self.env.ref('account.action_invoice_refund_out_tree')
-        result = action.read()[0]
-        result['domain'] = [('partner_id', 'in', self.ids)]
-        return result
+        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.ids))
+        return action

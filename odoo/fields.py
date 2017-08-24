@@ -565,7 +565,7 @@ class Field(object):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related[:-1]:
-            record = record[name][:1]
+            record = record[name][:1].with_prefetch(record._prefetch)
         return record, self.related_field
 
     def _compute_related(self, records):
@@ -705,6 +705,7 @@ class Field(object):
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
+                model._field_triggers.add(field, (self, '.'.join(path)))
 
     ############################################################################
     #
@@ -977,6 +978,7 @@ class Field(object):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
@@ -2133,7 +2135,7 @@ class One2many(_RelationalMulti):
     _description_relation_field = property(attrgetter('inverse_name'))
 
     def convert_to_onchange(self, value, record, fnames=()):
-        fnames = set(fnames or value.fields_view_get()['fields'])
+        fnames = set(fnames or ())
         fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 

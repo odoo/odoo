@@ -17,4 +17,4 @@ Kiril Vangelovski kiril@versada.eu https://github.com/kirca
 Naglis Jonaitis naglis@versada.eu https://github.com/naglis
 Paulius Sladkevičius paulius@versada.eu https://github.com/paulius-sladkevicius
 Tomas Račys tomas@versada.eu https://github.com/taezaz
-Andrius Preimantas andrius@verasda.eu https://github.com/andrius-preimantas
+Andrius Preimantas andrius@versada.eu https://github.com/andrius-preimantas

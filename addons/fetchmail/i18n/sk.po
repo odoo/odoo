@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-12 16:15+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: fetchmail
@@ -82,12 +84,12 @@ msgstr "Vytvoriť nový záznam"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
@@ -97,7 +99,7 @@ msgstr "Definuje poradie spracovania, nižšie hodnoty znamenjú vyššiu priori
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -254,8 +256,8 @@ msgid ""
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
 "Spracovanie každej prichádzajúcej pošty v rámci konverzácie zodpovedajúcej "
-"tomuto typu dokumentu. To bude vytvárať nové dokumenty pre nové konverzácie, "
-"alebo priloží následné emaily na existujúce konverzácie (dokumenty)."
+"tomuto typu dokumentu. To bude vytvárať nové dokumenty pre nové konverzácie,"
+" alebo priloží následné emaily na existujúce konverzácie (dokumenty)."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -335,7 +337,15 @@ msgstr "Otestovať & Potvrdiť"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
 msgid "Username"
-msgstr "Užívateľské meno:"
+msgstr "Používateľské meno"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+msgid ""
+"Whether a full original copy of each email should be kept for reference and "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach

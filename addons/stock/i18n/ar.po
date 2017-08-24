@@ -6,7 +6,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mustafa Rawi <mustafa@cubexco.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
 # SaFi J. <safi2266@gmail.com>, 2016
 # Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
@@ -23,13 +23,15 @@
 # Ali zuaby <ali@zuaby.net>, 2016
 # Hossam Esam <hossamesam17@gmail.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# zahi chemaly <zahi@sercotex.net>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"Last-Translator: zahi chemaly <zahi@sercotex.net>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -505,7 +507,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_inventory
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>المنتج</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -516,7 +518,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_inventory
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>كمية</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -755,7 +757,7 @@ msgstr "يسمح لك باختيار والحفاظ على وحدات قياس �
 #. module: stock
 #: selection:stock.config.settings,group_warning_stock:0
 msgid "An informative or blocking warning can be set on a partner"
-msgstr ""
+msgstr "يمكن ضبط تحذير للإعلام أو ﻹيقاف أي شريك"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_ancestor_ids
@@ -930,7 +932,7 @@ msgstr "باركود"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Barcode Interface"
-msgstr ""
+msgstr "جهة تعامل الباركود"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
@@ -1030,18 +1032,38 @@ msgid ""
 msgstr "عن طريق إلغاء الحقل النشط، قد تخفى الدخل الذى لن تستخدمه"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "عرض النتيجة"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "لا يمكن العثور على أي مكان للعميل أو للمورد."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "لا يمكن العثور على اي موجه حسب الطلب عام."
@@ -1587,6 +1609,41 @@ msgid "Customers"
 msgstr "العملاء"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
 msgid "DHL integration"
 msgstr ""
@@ -2052,6 +2109,11 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr ""
@@ -2124,6 +2186,21 @@ msgstr "حركة إضافية:"
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2807,6 +2884,24 @@ msgstr "النوع الداخلي"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
 msgstr ""
 
 #. module: stock
@@ -3529,7 +3624,7 @@ msgstr "الكمية القصوى"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "رسالة لاختيار الأسهم"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -4817,7 +4912,7 @@ msgstr "يجب أن تكون الكمية المتعددة أكبر من أو ت
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_quality
 msgid "Quality"
-msgstr ""
+msgstr "جودة"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:94
@@ -5433,6 +5528,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"اختيار الخيار \"تحذير\" سوف يخطر المستخدم مع الرسالة، واختيار \"حجب رسالة\" "
+"رمي استثناء مع الرسالة ومنع التدفق. يجب كتابة الرسالة في الحقل التالي."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
@@ -6547,7 +6644,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Lot/Serial Number"
-msgstr ""
+msgstr "لوط فريد / الرقم التسلسلي"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_cost
@@ -7078,7 +7175,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "لا يمنكك حذف حركه مخزون فى الحاله \"تمت\" ! "
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7110,6 +7213,12 @@ msgid ""
 msgstr ""
 "لا يمكنك وضع كمية المنتج سالبه في خطوط المخزون:\n"
 "%s - الكمية: %s "
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919

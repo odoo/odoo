@@ -1,23 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
-# Martin Trigaux, 2016
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015-2016
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# gebri <gebri@inmail.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Robert Kirschner <robertkirschner@yahoo.com>, 2017
+# palica <pavol.cupka@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-05-22 07:59+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2017-05-26 08:44+0000\n"
+"PO-Revision-Date: 2017-05-26 08:44+0000\n"
+"Last-Translator: palica <pavol.cupka@gmail.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account
@@ -26,11 +30,8 @@ msgid ""
 "\n"
 "<p>Dear ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
-"% set access_url = access_action['type'] == 'ir.actions.act_url' and "
-"access_action['url'] or '/report/pdf/account.report_invoice/' + str(object."
-"id)\n"
-"% set is_online = access_action and access_action['type'] == 'ir.actions."
-"act_url'\n"
+"% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
 "\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
@@ -40,17 +41,14 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
-"strong>\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "% if is_online:\n"
 "    <br/><br/>\n"
 "    <center>\n"
-"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: "
-"20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: "
-"16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
 "    </center>\n"
 "% endif\n"
 "    <br/><br/>\n"
@@ -65,6 +63,16 @@ msgid ""
 "% if object.user_id and object.user_id.signature:\n"
 "    ${object.user_id.signature | safe}\n"
 "% endif\n"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_invoice_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
+" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
+" * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
+" * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
+" * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 
 #. module: account
@@ -86,9 +94,19 @@ msgid "# of Digits *"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
+msgid "# of Lines"
+msgstr "# Riadkov"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
 msgid "# of Transaction"
 msgstr "# Transakcií"
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_invoice
+msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name} Faktúra (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -126,6 +144,16 @@ msgid ", if accounting or purchase is installed"
 msgstr ", ak je nainštalované účtovnictvo alebo nákup"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "-> Reconcile"
+msgstr "-> Zosúladiť"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "-> View partially reconciled entries"
+msgstr "-> Zobraziť čiastočne zosúladené vstupy"
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:468
 #, python-format
 msgid "1 transaction was automatically reconciled."
@@ -157,6 +185,12 @@ msgid ": General ledger"
 msgstr "\" Hlavná účtovná kniha"
 
 #. module: account
+#: code:addons/account/models/account.py:397
+#, python-format
+msgid ": Refund"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
 msgstr ": Skúšobná bilancia"
@@ -166,29 +200,24 @@ msgstr ": Skúšobná bilancia"
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor="
-"\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary="
-"\"o_mail_notification\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
 "\n"
 "                      <!-- HEADER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding="
-"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
-"rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; "
-"font-weight: bold;\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
 "                                      Invoice ${object.record_name}\n"
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: "
-"0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
-"name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -198,12 +227,9 @@ msgid ""
 "                      <!-- CONTENT -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding="
-"\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
-"rgb(255, 255, 255); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
 "                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,"
-"Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
 "                                ${object.body | safe}\n"
 "                              </td>\n"
 "                            </tbody>\n"
@@ -214,26 +240,19 @@ msgid ""
 "                      <!-- FOOTER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding="
-"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
-"rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style="
-"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style="
-"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" "
-"style=\"text-decoration:none; color: white;\">${user.company_id.email}</"
-"a><br/>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" "
-"style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -243,8 +262,7 @@ msgid ""
 "                      </tr>\n"
 "                      <tr>\n"
 "                        <td align=\"center\">\n"
-"                            Powered by <a href=\"https://www.odoo.com"
-"\">Odoo</a>.\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
 "                        </td>\n"
 "                      </tr>\n"
 "                    </tbody>\n"
@@ -273,11 +291,9 @@ msgstr "<span class=\"o_stat_text\">Fakturované</span>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if "
-"&gt;100 products</span>\n"
+"                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -294,11 +310,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57408;\"/>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import</strong><br/>\n"
-"                                        <span class=\"small\">&gt; 200 "
-"contacts</span>\n"
+"                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -311,12 +325,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Create manually</strong><br/"
-">\n"
-"                                        <span class=\"small\">&lt; 200 "
-"contacts</span>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Create manually</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -329,12 +340,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon="
-"\"&#57440;\"/>\n"
-"                                        <strong> Create manually</strong><br/"
-">\n"
-"                                        <span class=\"small\">Recommended if "
-"&lt;100 products</span>\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Create manually</strong><br/>\n"
+"                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -351,8 +359,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Accountant</strong> "
-"(Advanced access)\n"
+"                                        <strong>Accountant</strong> (Advanced access)\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -363,8 +370,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Advisor</strong> (Full "
-"access)\n"
+"                                        <strong>Advisor</strong> (Full access)\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -375,8 +381,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Billing</strong> (Limited "
-"access)\n"
+"                                        <strong>Billing</strong> (Limited access)\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -398,8 +403,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Invoice payment by Check</"
-"strong>\n"
+"                                        <strong>Invoice payment by Check</strong>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -410,8 +414,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Invoice payment by Wire "
-"Transfer</strong>\n"
+"                                        <strong>Invoice payment by Wire Transfer</strong>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -433,8 +436,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Reconcile Bank Statements</"
-"strong>\n"
+"                                        <strong>Reconcile Bank Statements</strong>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
@@ -454,6 +456,11 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
+msgstr "<span title=\"Zostatok v Odoo\">Zostatok v GL</span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"Latest Statement\">Najnovší výpis</span>"
 
@@ -470,8 +477,8 @@ msgstr "<span> Pre </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid ""
-"<span>(*) This configuration is related to the company you're logged into.</"
-"span>"
+"<span>(*) This configuration is related to the company you're logged "
+"into.</span>"
 msgstr ""
 
 #. module: account
@@ -545,8 +552,8 @@ msgid ""
 "<strong>Automated documents sending:</strong> automatically send your "
 "invoices by email or snail mail."
 msgstr ""
-"<strong>Zasielanie automatizovaných dokumentov:</strong> automaticky pošlite "
-"svoje faktúry emailom alebo klasickou poštu."
+"<strong>Zasielanie automatizovaných dokumentov:</strong> automaticky pošlite"
+" svoje faktúry emailom alebo klasickou poštu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -578,18 +585,16 @@ msgstr "<strong>Skontrolovať konfiguráciu daní:</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
-"                                         Run an <i>Aged Receivable report</"
-"i> and check which customers still owe you money."
+"                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
 msgstr ""
 "<strong>Skontrolovať nezaplatené faktúry</strong><br/>\n"
-"Spustite <i>výkaz pohľadávok podľa veku</i> a skontrolujte ktorí zákazníci "
-"vám stále dlhujú peniaze."
+"Spustite <i>výkaz pohľadávok podľa veku</i> a skontrolujte ktorí zákazníci vám stále dlhujú peniaze."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"<strong>Clean customer invoices:</strong> easy to create, beautiful and full "
-"featured invoices."
+"<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
+" featured invoices."
 msgstr ""
 "<strong>Čisté zákaznícke faktúry:</strong> ľahké na vytváranie, krásne a "
 "plne vybavené faktúry."
@@ -598,6 +603,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Comment:</strong>"
 msgstr "<strong>Komentár:</strong>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+msgid "<strong>Company:</strong>"
+msgstr "<strong>Spoločnosť:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -613,12 +624,10 @@ msgstr "<strong>Vytvoriť zákaznícku faktúru</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
-"                                        This allows you to record the "
-"different payments that constitute your bank deposit. (You may need to"
+"                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
 msgstr ""
 "<strong>Vytvoriť vkladový lístok</strong><br/>\n"
-"Toto umožňuje zaznamenávať rôzne platby, ktoré predstavujú váš bankový "
-"vklad. (Možno budete musieť"
+"Toto umožňuje zaznamenávať rôzne platby, ktoré predstavujú váš bankový vklad. (Možno budete musieť"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -676,6 +685,11 @@ msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Dátum splatnosti:</strong>"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "<strong>Entries Sorted By:</strong>"
+msgstr "<strong>Vstupy radené podľa:</strong>"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Expenses</strong>"
 msgstr "<strong>Výdaje</strong>"
@@ -691,6 +705,11 @@ msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>Dátum vystavenia faktúry:</strong>"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "<strong>Journal:</strong>"
+msgstr "<strong>Účtovná kniha:</strong>"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Journals:</strong>"
 msgstr "<strong>Účtovné knihy:</strong>"
@@ -699,14 +718,10 @@ msgstr "<strong>Účtovné knihy:</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
-"                                        Group or filter your bills to see "
-"those due in the next week, then open each bill individually, click on "
-"<strong>'Pay'</strong> and select the payment method you prefer."
+"                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
 msgstr ""
 "<strong>Označte účty na zaplatenie</strong><br/>\n"
-"Zoskupte alebo filtrujte svoje účty aby ste videli tie splatné v budúcom "
-"týždni, potom otvorte každý účet samostatne, kliknite na <strong>'Zaplatiť'</"
-"strong> a vyberte spôsob platby, ktorý uprednostňujete."
+"Zoskupte alebo filtrujte svoje účty aby ste videli tie splatné v budúcom týždni, potom otvorte každý účet samostatne, kliknite na <strong>'Zaplatiť'</strong> a vyberte spôsob platby, ktorý uprednostňujete."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -716,8 +731,8 @@ msgstr "<strong>Ďalšia akcia:</strong><br/>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of "
-"outstanding payments when creating invoices."
+"<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
+" outstanding payments when creating invoices."
 msgstr ""
 "<strong>Zladenie platby za letu:</strong> automatické návrhy neuhradených "
 "platieb pri vytváraní faktúr."
@@ -726,13 +741,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
-"                                        Create a Payment Order and select "
-"the bills you'd like to pay as Entry lines (only the validated bills will "
-"appear)."
+"                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
 msgstr ""
 "<strong>Alebo generujte platobné objednávky</strong><br/>\n"
-"Vytvorte platobnú objednávku a zvoľte účtenky ktoré chcete zaplatiť ako "
-"Vstupné riadky (iba potvrdené úçtenky budú zobrazené)."
+"Vytvorte platobnú objednávku a zvoľte účtenky ktoré chcete zaplatiť ako Vstupné riadky (iba potvrdené úçtenky budú zobrazené)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -748,13 +760,10 @@ msgstr "<strong>Dĺžka obdobia (dni)</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Print checks</strong><br/>\n"
-"                                        From the Vendor Payments list, "
-"select those you want to pay and click on Print Check (you may first need to "
-"activate the check feature in the"
+"                                        From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the"
 msgstr ""
 "<strong>Tlačiť šeky</strong><br/>\n"
-"Zo Zoanamu platby predajcov, Vyberte tie ktoré chcete zaplatiť a kliknite na "
-"Tlačiť šek (možno budete musieť aktivovať kontrolnú funkciu v"
+"Zo Zoanamu platby predajcov, Vyberte tie ktoré chcete zaplatiť a kliknite na Tlačiť šek (možno budete musieť aktivovať kontrolnú funkciu v"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -770,13 +779,10 @@ msgstr "<strong>Odsúhlasiť Bankový výpis</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
-"                                        In this case, Odoo should "
-"automatically match the bank statement with the previously recorded check "
-"transaction."
+"                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
 msgstr ""
 "<strong>Odsúhlasiť k existujucej transakcii</strong><br/>\n"
-"V tomto prípade, Odoo by malo automaticky spárovať bankový výpis s prestým "
-"zaznamenanou šekovou transakciou."
+"V tomto prípade, Odoo by malo automaticky spárovať bankový výpis s prestým zaznamenanou šekovou transakciou."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -787,13 +793,10 @@ msgstr "<strong>Odsúhlasiť vaše Bankové výpisy</strong>"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Record Bank Statement (or import file)</strong><br/>\n"
-"                                        Depending on the volume of your "
-"transactions, you should be recording your bank statement every week to "
-"several times a day."
+"                                        Depending on the volume of your transactions, you should be recording your bank statement every week to several times a day."
 msgstr ""
 "<strong>Záznam výpisu z bankového účtu (alebo import súboru)</strong><br/>\n"
-"Závisiac od množstva vašich transakcií, mali by ste zaznamenávať vaše "
-"bankové výkazy každý tyždeň až niekoľkokrát denne."
+"Závisiac od množstva vašich transakcií, mali by ste zaznamenávať vaše bankové výkazy každý tyždeň až niekoľkokrát denne."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -815,8 +818,8 @@ msgid ""
 "<strong>Reduced data entry:</strong> no need to manually create invoices, "
 "register bank statements, and send payment follow-ups."
 msgstr ""
-"<strong>Zredukovaný dátový vstup:</strong> nie je potrebné manuálne vytvoriť "
-"faktúry, registrovať bankové výpisy, a odosielať naväzovanie na platby."
+"<strong>Zredukovaný dátový vstup:</strong> nie je potrebné manuálne vytvoriť"
+" faktúry, registrovať bankové výpisy, a odosielať naväzovanie na platby."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -874,8 +877,8 @@ msgid ""
 "<strong>Test the following three scenarios in order to assist you in "
 "familiarizing yourself with Odoo:</strong>"
 msgstr ""
-"<strong>Otestujte nasledujúce tri scenáre aby vám pomohli pri zoznamovaní sa "
-"s Odoo:</strong>"
+"<strong>Otestujte nasledujúce tri scenáre aby vám pomohli pri zoznamovaní sa"
+" s Odoo:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -892,29 +895,27 @@ msgstr "<strong>Tento zákazník nemá nič nesplatné.</strong>"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Total</strong>"
-msgstr "<strong>Celkom</strong>"
+msgstr "<strong>Celkom</strong> "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
-msgstr "<strong>Potvrdiť účtenku</strong><br/> po nakódovaní produktov a daní."
+msgstr ""
+"<strong>Potvrdiť účtenku</strong><br/> po nakódovaní produktov a daní."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
-"                journals. This feature provides an easy way to follow up "
-"cash\n"
-"                payments on a daily basis. You can enter the coins that are "
-"in\n"
+"                journals. This feature provides an easy way to follow up cash\n"
+"                payments on a daily basis. You can enter the coins that are in\n"
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
 "Registračné pokladnice umožňuje spravovať hotovostné vstupy v hotovostných\n"
-"účtovných knihách. Táto funkcia poskytuje jednoduchý spôsob, ako sledovať "
-"platby\n"
+"účtovných knihách. Táto funkcia poskytuje jednoduchý spôsob, ako sledovať platby\n"
 "hotovosťou na dennej báze. Môžete zadať mince, ktoré sú vo\n"
 "vašej pokladni, a potom zaúčtovať položky keď peniaze prichádzajú do alebo\n"
 "odchádzajú z pokladnice."
@@ -932,11 +933,16 @@ msgid "A Payment Term should have only one line of type Balance."
 msgstr "Platobná lehota by mala mať iba jeden riadok typu Zostatok."
 
 #. module: account
+#: code:addons/account/models/account.py:535
+#, python-format
+msgid "A bank account can only belong to one journal."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "A bank statement is a summary of all financial transactions\n"
-"                occurring over a given period of time on a bank account. "
-"You\n"
+"                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
 "Výpis z bankového účtu je súhrn všetkých finančných transakcií\n"
@@ -955,8 +961,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Položka účtovnej knihy sa skladá z niekoľkých položiek účtovnej knihy, z "
-"ktorej\n"
+"Položka účtovnej knihy sa skladá z niekoľkých položiek účtovnej knihy, z ktorej\n"
 "každá je buď debetná alebo kreditná transakcia."
 
 #. module: account
@@ -975,10 +980,14 @@ msgstr "Zoznam bežných daní a ich sadzieb."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
+msgid "A list of your customer and supplier payment terms."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "A product in Odoo is something you sell or buy \n"
-"                        whether or not it is goods, consumables, or "
-"services.\n"
+"                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
 msgstr ""
 "Produkt v odoo je niečo na predaj alebo kúpu\n"
@@ -997,6 +1006,12 @@ msgstr "Potvrdenie musí obsahovať aspoň 2 riadky pohybov."
 #, python-format
 msgid "A selected move line was already reconciled."
 msgstr "Zvolený riadok pohybu už bol potvrdený."
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:883
+#, python-format
+msgid "A selected statement line was already reconciled with an account move."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1021,14 +1036,11 @@ msgstr "Transakcia nemôže mať 0 sumu."
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A typical company may use one journal per payment method (cash,\n"
-"                bank accounts, checks), one purchase journal, one sale "
-"journal\n"
+"                bank accounts, checks), one purchase journal, one sale journal\n"
 "                and one for miscellaneous information."
 msgstr ""
-"Typická spoločnosť môže použiť jednu účtovnú knihu za spôsob platby (v "
-"hotovosti,\n"
-"bankové účty, šeky), jednu účtovnú knihu nákupov, jednu účtovnú knihu "
-"predajov\n"
+"Typická spoločnosť môže použiť jednu účtovnú knihu za spôsob platby (v hotovosti,\n"
+"bankové účty, šeky), jednu účtovnú knihu nákupov, jednu účtovnú knihu predajov\n"
 "a jednu pre rôzne informácie."
 
 #. module: account
@@ -1085,6 +1097,11 @@ msgstr "Výpis z bankového účtu záverečný zostatok"
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
 msgstr "Účet správy bežného účtu"
+
+#. module: account
+#: model:ir.model,name:account.model_account_common_journal_report
+msgid "Account Common Journal Report"
+msgstr "Výkaz bežnej účtovnej knihy účtu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -1150,9 +1167,20 @@ msgid "Account Number"
 msgstr "Číslo účtu"
 
 #. module: account
+#: model:ir.model,name:account.model_account_report_partner_ledger
+msgid "Account Partner Ledger"
+msgstr "Účtovná kniha účtu partnera"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
+#: model:ir.model.fields,field_description:account.field_res_users_property_account_payable_id
 msgid "Account Payable"
 msgstr "Splatný účet"
+
+#. module: account
+#: model:ir.model,name:account.model_account_print_journal
+msgid "Account Print Journal"
+msgstr "Tlačená účtovná kniha účtu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
@@ -1161,6 +1189,7 @@ msgstr "Vlastnosti účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_receivable_id
+#: model:ir.model.fields,field_description:account.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
 msgstr "Účet pohľadávky"
 
@@ -1256,8 +1285,8 @@ msgstr "Typ účtu"
 #: model:ir.model.fields,help:account.field_account_move_line_user_type_id
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
-"legal reports, and set the rules to close a fiscal year and generate opening "
-"entries."
+"legal reports, and set the rules to close a fiscal year and generate opening"
+" entries."
 msgstr ""
 "Typ účtu je používaný na informačné účely, na generovanie právneho výkazu "
 "pre jednotlivé krajiny, a pre nastavenie pravidiel pre uzavretie fiškálneho "
@@ -1322,8 +1351,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
-"Účet, ktorý bude stanovený na daňových riadkoch faktúry pre vratky. Nechajte "
-"prázdne pre použitie výdavkového účtu."
+"Účet, ktorý bude stanovený na daňových riadkoch faktúry pre vratky. Nechajte"
+" prázdne pre použitie výdavkového účtu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1459,7 +1488,7 @@ msgstr "Pridať druhý riadok"
 #: model:ir.ui.view,arch_db:account.view_move_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Add an internal note..."
-msgstr "Pridať internú poznámku"
+msgstr "Pridať internú poznámku..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_comment
@@ -1516,6 +1545,15 @@ msgstr "Po následujúcich daniach"
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Aged Partner Balance"
 msgstr "Zostatok partnera za obdobie"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_aged_balance_view
+msgid ""
+"Aged Partner Balance is a more detailed report of your receivables by "
+"intervals. Odoo calculates a table of credit balance by start Date. So if "
+"you request an interval of 30 days Odoo generates an analysis of creditors "
+"for the past month, past two months, and so on."
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -1611,8 +1649,8 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid ""
-"All selected journal entries will be validated and posted. You won't be able "
-"to modify them afterwards."
+"All selected journal entries will be validated and posted. You won't be able"
+" to modify them afterwards."
 msgstr ""
 "Všetky vybrané účtovné vstupy budú overené a zapísané. Nebudete ich môcť "
 "neskôr upraviť."
@@ -1667,6 +1705,11 @@ msgid "Allow pro-forma invoices"
 msgstr "Povoliť pro-forma faktúry"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
+msgid "Allows to work in a multi currency environment"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
 msgid "Allows you to put invoices in pro-forma state."
 msgstr "Povoľuje vám dať faktúry do pro-forma stavu."
@@ -1694,6 +1737,7 @@ msgstr "Umožňuje vám použiť analytické účtovníctvo."
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1701,6 +1745,11 @@ msgstr "Umožňuje vám použiť analytické účtovníctvo."
 #, python-format
 msgid "Amount"
 msgstr "Suma"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -1767,11 +1816,9 @@ msgstr ""
 msgid ""
 "An account is part of a ledger allowing your company\n"
 "                to register all kinds of debit and credit transactions.\n"
-"                Companies present their annual accounts in two main parts: "
-"the\n"
+"                Companies present their annual accounts in two main parts: the\n"
 "                balance sheet and the income statement (profit and loss\n"
-"                account). The annual accounts of a company are required by "
-"law\n"
+"                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
 "Účet je súčasťou hlavnej účtovnej knihy a umožnuje vašej spoločnosti\n"
@@ -1785,10 +1832,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:account.action_account_type_form
 msgid ""
 "An account type is used to determine how an account is used in\n"
-"                each journal. The deferral method of an account type "
-"determines\n"
-"                the process for the annual closing. Reports such as the "
-"Balance\n"
+"                each journal. The deferral method of an account type determines\n"
+"                the process for the annual closing. Reports such as the Balance\n"
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
@@ -1823,7 +1868,7 @@ msgstr "Analytický úč."
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_analytic_account_id
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Analytic Account"
-msgstr "Analytický účet"
+msgstr "Otvor nástenku analytických účtov"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -1870,7 +1915,7 @@ msgstr "Analytické riadky"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analytické štítky "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -1895,7 +1940,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
 msgid "Appears in VAT report"
-msgstr ""
+msgstr "Výskyt v reporte DPH"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -1905,7 +1950,7 @@ msgstr "Použiteľnosť"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Apply"
-msgstr "Použiť"
+msgstr "Mám záujem"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -1937,6 +1982,14 @@ msgstr "Apríl"
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask Refund"
 msgstr "Vypýtať vratku"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_asset
+msgid ""
+"Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
+"\n"
+"-This installs the module account_asset."
+msgstr ""
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -1988,7 +2041,7 @@ msgstr "Automatické formátovanie"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Automatické zosúladenie"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:473
@@ -2016,7 +2069,7 @@ msgstr "ÚČTENKA"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Bad Debtor"
-msgstr ""
+msgstr "Zlý dlžník"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2050,12 +2103,13 @@ msgstr "Zostatok hotovostného základu"
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:687
+#: code:addons/account/models/chart_template.py:693
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_account_count
+#: model:ir.model.fields,field_description:account.field_res_users_bank_account_count
 #, python-format
 msgid "Bank"
-msgstr "Banka"
+msgstr "Bank"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -2201,8 +2255,14 @@ msgstr "Bankové výpisy sú plne zosúladené."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Základ"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "Base Amount"
+msgstr "Základna suma"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2247,6 +2307,11 @@ msgstr "Účtovanie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Bills"
+msgstr "Účtenky"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
 msgstr "Analýza účteniek"
 
@@ -2259,7 +2324,7 @@ msgstr "Účtenky na zaplatenie"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Blokovacia správa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2418,8 +2483,7 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Nemožno nájsť účtovné grafy pre túto spoločnosť, mali by ste ju "
-"konfigurovať.\n"
+"Nemožno nájsť účtovné grafy pre túto spoločnosť, mali by ste ju konfigurovať.\n"
 "Prosím, choďte na konfiguráciu účtu."
 
 #. module: account
@@ -2450,8 +2514,8 @@ msgid ""
 "Cannot refund invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
-"Nemožno refundovať faktúru ktorá už bola zosúladená, faktúra by najskôr mala "
-"byť odsúladená. Môžete refundovať iba tú faktútu."
+"Nemožno refundovať faktúru ktorá už bola zosúladená, faktúra by najskôr mala"
+" byť odsúladená. Môžete refundovať iba tú faktútu."
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -2572,6 +2636,13 @@ msgid "Chart of Accounts Templates"
 msgstr "Šablóna grafu účtov"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid ""
+"Chart of Accounts has been\n"
+"                            installed. You should review it and create any additional accounts."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
 msgid "Chart of accounts"
 msgstr "Graf účtov"
@@ -2589,7 +2660,7 @@ msgstr "Skontrolovať konečný zostatok"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr ""
+msgstr "Over či rozdiel je nula."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2608,11 +2679,11 @@ msgstr "Zaškrtnite toto pole ak je táto spoločnosť právnicka osoba. "
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and "
-"refunds made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and"
+" refunds made from this journal"
 msgstr ""
-"Zaškrtnite toto políčko, ak nechcete zdieľať rovnakú sekvenciu pre faktúry a "
-"refundácie spravené z tejto účtovnej knihy."
+"Zaškrtnite toto políčko, ak nechcete zdieľať rovnakú sekvenciu pre faktúry a"
+" refundácie spravené z tejto účtovnej knihy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -2675,7 +2746,7 @@ msgstr "Kliknite pre pridanie účtovnej knihy."
 #. module: account
 #: model:ir.actions.act_window,help:account.account_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Kliknite pre zadanie novej menovky."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -2737,10 +2808,17 @@ msgstr "Zatvoriť"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:227
+#: code:addons/account/static/src/xml/account_reconciliation.xml:229
 #, python-format
 msgid "Close the statement"
 msgstr "Zatvoriť výpis"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:228
+#, python-format
+msgid "Close the statements"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_date_done
@@ -2757,7 +2835,7 @@ msgstr "Zatvorené"
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_code
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Code"
-msgstr "Kód"
+msgstr "Kód "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_coin_value
@@ -2802,6 +2880,7 @@ msgstr "Spoločnosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
+#: model:ir.model.fields,field_description:account.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Spoločnosti ktoré odkazujú k partnerovi"
 
@@ -2843,7 +2922,7 @@ msgstr "Spoločnosti ktoré odkazujú k partnerovi"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Spoločnost"
+msgstr "Spoločnosť"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
@@ -2927,20 +3006,17 @@ msgstr "Chyba konfigurácie !"
 #, python-format
 msgid ""
 "Configuration error!\n"
-"Could not find any account to create the invoice, are you sure you have a "
-"chart of account installed?"
+"Could not find any account to create the invoice, are you sure you have a chart of account installed?"
 msgstr ""
 "Chyba konfigurácie!\n"
-"Nemožno nájsť účet na vytvorenie faktúry, ste si istí, že máte nainštalovaný "
-"graf účtu?"
+"Nemožno nájsť účet na vytvorenie faktúry, ste si istí, že máte nainštalovaný graf účtu?"
 
 #. module: account
 #: code:addons/account/models/account.py:301
 #, python-format
 msgid ""
 "Configuration error!\n"
-"The currency of the journal should be the same than the default credit "
-"account."
+"The currency of the journal should be the same than the default credit account."
 msgstr ""
 "Chyba konfigurácie!\n"
 "Mena účtovnej knihy by mala byť rovnaká, ako prevoľba kreditného účtu."
@@ -2950,8 +3026,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Configuration error!\n"
-"The currency of the journal should be the same than the default debit "
-"account."
+"The currency of the journal should be the same than the default debit account."
 msgstr ""
 "Chyba konfigurácie!\n"
 "Mena účtovnej knihy by mala byť rovnaká, ako prevoľba debetného účtu."
@@ -3037,6 +3112,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_contracts_count
+#: model:ir.model.fields,field_description:account.field_res_users_contract_ids
+#: model:ir.model.fields,field_description:account.field_res_users_contracts_count
 msgid "Contracts"
 msgstr "Zmluvy"
 
@@ -3048,7 +3125,7 @@ msgstr "Riadenie prístupu"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Náklady Príjmu"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:393
@@ -3201,7 +3278,7 @@ msgstr "Vytvorte vaše produkty"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_create_date
@@ -3264,7 +3341,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit
@@ -3274,12 +3351,12 @@ msgstr "Vytvorené"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Credit"
-msgstr "Kredit"
+msgstr "Credit"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
 msgid "Credit Card"
-msgstr ""
+msgstr "Kreditná karta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -3316,7 +3393,7 @@ msgstr "Id kreditného pohybu"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
 msgid "Currencies"
-msgstr ""
+msgstr "Meny"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_currency_id
@@ -3338,6 +3415,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_currency_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_currency_id
 #: model:ir.model.fields,field_description:account.field_res_partner_currency_id
+#: model:ir.model.fields,field_description:account.field_res_users_currency_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_currency_id
 #: model:ir.ui.view,arch_db:account.report_generalledger
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -3412,24 +3490,26 @@ msgid "Customer Invoices"
 msgstr "Faktúry zákazníkov"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:486
+#: code:addons/account/models/account_payment.py:508
 #, python-format
 msgid "Customer Payment"
 msgstr "Zákaznícka platba"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users_property_payment_term_id
 msgid "Customer Payment Terms"
 msgstr ""
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_payment.py:488
+#: code:addons/account/models/account_payment.py:510
 #, python-format
 msgid "Customer Refund"
 msgstr "Refundácia zákazníka"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
 msgid "Customer Taxes"
 msgstr "Zákazníkove dane"
@@ -3493,6 +3573,11 @@ msgstr "Dátum"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
+msgid "Day(s) after the end of the invoice month (Net EOM)"
+msgstr "Dni po konci mesiaca faktúry (Net EOM)"
+
+#. module: account
+#: selection:account.payment.term.line,option:0
 msgid "Day(s) after the invoice date"
 msgstr "Dni po dátume faktúry"
 
@@ -3504,7 +3589,7 @@ msgstr "Dni po dátume faktúry"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Debit"
-msgstr "Debet"
+msgstr "Má dať"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
@@ -3530,7 +3615,8 @@ msgstr "Hotovostný základ debetu"
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
 msgstr ""
-"Debetné položky účtovnej knihy ktoré sú spárované s položkami účtovnej knihy."
+"Debetné položky účtovnej knihy ktoré sú spárované s položkami účtovnej "
+"knihy."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
@@ -3614,8 +3700,9 @@ msgstr "Definícia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_trust
+#: model:ir.model.fields,field_description:account.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Stupeň dôvery ktorú máte v tohto dlžníka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
@@ -3786,7 +3873,7 @@ msgstr "Zobraziť debetné/kreditné stĺpce"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_display_name
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -3834,7 +3921,7 @@ msgstr "Neváhajte"
 #. module: account
 #: selection:account.invoice.report,state:0
 msgid "Done"
-msgstr "Dokončiť"
+msgstr "Dokončené"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4020,6 +4107,11 @@ msgid "Entries"
 msgstr "Položky"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
+msgid "Entries Sorted by"
+msgstr "Vstupy radené podľa"
+
+#. module: account
 #: code:addons/account/models/account_move.py:849
 #, python-format
 msgid "Entries are not of the same account!"
@@ -4080,6 +4172,16 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "Účtovná kniha ziskov alebo strát kurzu"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
+msgid "Exchange move id"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
+msgid "Exchange partial rec id"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Exchange rates can be automatically updated once a day from <strong>Yahoo "
@@ -4098,10 +4200,11 @@ msgstr "Očakáva graf analytických účtov"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_expense0
 msgid "Expense"
-msgstr "Výdaj"
+msgstr "Výdavky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category_property_account_expense_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product_property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_expense_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Expense Account"
@@ -4117,6 +4220,11 @@ msgstr "Účet výdajov na šablóne produktu"
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
 msgstr "Výdavky"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
+msgid "External Reference"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4237,6 +4345,7 @@ msgstr "Fiškálne mapovanie"
 #: model:ir.model.fields,field_description:account.field_account_invoice_fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_position_id
+#: model:ir.model.fields,field_description:account.field_res_users_property_account_position_id
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 #: model:ir.ui.view,arch_db:account.view_account_position_template_search
 #: model:ir.ui.view,arch_db:account.view_account_position_template_tree
@@ -4358,6 +4467,16 @@ msgid "Free Reference"
 msgstr "Voľná referencia"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "From Payable accounts"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_move_line_filter
+msgid "From Receivable accounts"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
 msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
@@ -4380,9 +4499,16 @@ msgstr ""
 "tak prispôsobiť túto analýzu vaším potrebám."
 
 #. module: account
+#: model:ir.model,name:account.model_account_full_reconcile
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile_full_reconcile_id
+msgid "Full Reconcile"
+msgstr "Plné zosúladenie"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_accountant
 msgid ""
-"Full accounting features: journals, legal statements, chart of accounts, etc."
+"Full accounting features: journals, legal statements, chart of accounts, "
+"etc."
 msgstr ""
 "Plné účtovné funkcie: úçtovné knihy, právne výpisy, účtovné grafy, atď."
 
@@ -4437,11 +4563,38 @@ msgid "Get started"
 msgstr "Začať"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_plaid
+msgid ""
+"Get your bank statements from you bank and import them through plaid.com.\n"
+"-This installs the module account_plaid."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid ""
-"Get your bank statements from your bank and import them in Odoo in the .CSV "
-"format.\n"
+"Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
+msgid ""
+"Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
+"-This installs the module account_bank_statement_import_ofx."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
+msgid ""
+"Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
+"-This installs the module account_bank_statement_import_qif."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
+msgid ""
+"Get your bank statements from your bank and import them through yodlee.com.\n"
+"-This installs the module account_yodlee."
 msgstr ""
 
 #. module: account
@@ -4482,6 +4635,11 @@ msgid "Go to the configuration panel"
 msgstr "Ísť na panel konfigurácie"
 
 #. module: account
+#: selection:res.partner,trust:0
+msgid "Good Debtor"
+msgstr "Dobrý dlžník"
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:205
 #: code:addons/account/static/src/xml/account_reconciliation.xml:309
@@ -4493,7 +4651,7 @@ msgstr "Dobrá práca!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Hrubá hmotnosť"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -4507,7 +4665,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
@@ -4537,6 +4695,7 @@ msgstr "Má nevybavené"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_has_unreconciled_entries
+#: model:ir.model.fields,field_description:account.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
 msgstr "Má nezladené vstupy"
 
@@ -4638,7 +4797,8 @@ msgstr "Pokiaľ je zadané \"Mena čiastky\", potom \"Čiastka\" musí byť tie�
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_nocreate
-msgid "If checked, the new chart of accounts will not contain this by default."
+msgid ""
+"If checked, the new chart of accounts will not contain this by default."
 msgstr "Ak zaškrtnuté, nový graf účtov nebude obahovať toto v predvoľbe."
 
 #. module: account
@@ -4687,12 +4847,10 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_sepa
 msgid ""
-"If you check this box, you will be able to register your payment using "
-"SEPA.\n"
+"If you check this box, you will be able to register your payment using SEPA.\n"
 "-This installs the module account_sepa."
 msgstr ""
-"Ak zaškrtnete toto políčko, budete môcť registrovať svoju platbu použitím "
-"SEPA.\n"
+"Ak zaškrtnete toto políčko, budete môcť registrovať svoju platbu použitím SEPA.\n"
 "-Toto nainštaluje modul account_sepa."
 
 #. module: account
@@ -4728,37 +4886,28 @@ msgstr ""
 "Ak zvolíte 'Zaokrúhliť za riadok': pre každú daň, suma dane bude najskôr "
 "vypočítaná a zaokrúhlená pre každý riadok PO/SO/faktúry, a potom tieto "
 "zaokrúhlené sumy budú spočítané, čo vedie k celkovej sume tejto dane. Ak "
-"zvolíte 'Zaokrúhliť globálne': pre každú daň, dane budú vypočítané pre každý "
-"riadok PO/SO/faktúra, potom sa tieto sumy spočítaú a nakoniec sa táto "
+"zvolíte 'Zaokrúhliť globálne': pre každú daň, dane budú vypočítané pre každý"
+" riadok PO/SO/faktúra, potom sa tieto sumy spočítaú a nakoniec sa táto "
 "celková čiastka dane zaokrúhli. Ak predávate s daňou zahrnutou, mali by ste "
-"zvoliť 'Zaokrúhlenie na riadok', pretože určite chcete súčet vašich daňových "
-"riadkov medzisúčtov aby sa rovnali celkovej sume s daňou."
+"zvoliť 'Zaokrúhlenie na riadok', pretože určite chcete súčet vašich daňových"
+" riadkov medzisúčtov aby sa rovnali celkovej sume s daňou."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_tax_calculation_rounding_method
 msgid ""
 "If you select 'Round per line' : for each tax, the tax amount will first be\n"
-"             computed and rounded for each PO/SO/invoice line and then these "
-"rounded amounts will be summed,\n"
-"             leading to the total amount for that tax. If you select 'Round "
-"globally': for each tax,\n"
-"             the tax amount will be computed for each PO/SO/invoice line, "
-"then these amounts will be\n"
-"             summed and eventually this total tax amount will be rounded. If "
-"you sell with tax included,\n"
-"             you should choose 'Round per line' because you certainly want "
-"the sum of your tax-included line\n"
+"             computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,\n"
+"             leading to the total amount for that tax. If you select 'Round globally': for each tax,\n"
+"             the tax amount will be computed for each PO/SO/invoice line, then these amounts will be\n"
+"             summed and eventually this total tax amount will be rounded. If you sell with tax included,\n"
+"             you should choose 'Round per line' because you certainly want the sum of your tax-included line\n"
 "             subtotals to be equal to the total amount with taxes."
 msgstr ""
 "Ak zvolíte 'Zaokrúhliť za riadok': pre každú daň, suma dane bude najskôr \n"
-"vypočítaná a zaokrúhlená pre každý riadok PO/SO/faktúry, a potom tieto "
-"zaokrúhlené sumy budú spočítané, \n"
-"čo vedie k celkovej sume tejto dane. Ak zvolíte 'Zaokrúhliť globálne': pre "
-"každú daň, \n"
+"vypočítaná a zaokrúhlená pre každý riadok PO/SO/faktúry, a potom tieto zaokrúhlené sumy budú spočítané, \n"
+"čo vedie k celkovej sume tejto dane. Ak zvolíte 'Zaokrúhliť globálne': pre každú daň, \n"
 "dane budú vypočítané pre každý riadok PO/SO/faktúra, potom sa tieto sumy \n"
-"spočítaú a nakoniec sa táto celková čiastka dane zaokrúhli. Ak predávate s "
-"daňou zahrnutou, mali by ste zvoliť 'Zaokrúhlenie na riadok', pretože určite "
-"chcete súčet vašich daňových riadkov \n"
+"spočítaú a nakoniec sa táto celková čiastka dane zaokrúhli. Ak predávate s daňou zahrnutou, mali by ste zvoliť 'Zaokrúhlenie na riadok', pretože určite chcete súčet vašich daňových riadkov \n"
 "medzisúčtov aby sa rovnali celkovej sume s daňou."
 
 #. module: account
@@ -4782,8 +4931,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_payment_term_id
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the "
-"generation of accounting entries. If you keep the payment term and the due "
+"If you use payment terms, the due date will be computed automatically at the"
+" generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
@@ -4795,8 +4944,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
 msgid ""
-"If you use payment terms, the due date will be computed automatically at the "
-"generation of accounting entries. The payment term may compute several due "
+"If you use payment terms, the due date will be computed automatically at the"
+" generation of accounting entries. The payment term may compute several due "
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
@@ -4810,19 +4959,17 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
-msgid "If you want to be able to send customer statements from Odoo, you must:"
+msgid ""
+"If you want to be able to send customer statements from Odoo, you must:"
 msgstr "Ak chcete mať možnosť posielať výpisy zákazníkov z Odoo, musíte:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send your customers their statements \n"
-"                        from Odoo, you first need to record all outstanding "
-"transactions \n"
-"                        in the payable and receivable accounts. These would "
-"be invoices \n"
-"                        that have not been paid or payments that have not "
-"been reconciled."
+"                        from Odoo, you first need to record all outstanding transactions \n"
+"                        in the payable and receivable accounts. These would be invoices \n"
+"                        that have not been paid or payments that have not been reconciled."
 msgstr ""
 "Ak chcete mať možnosť posielať vašim zákazníkom ich výpisy \n"
 "z Odoo, najskôr musíte zaznamenať všetky zostávajúce transakcie\n"
@@ -4877,8 +5024,8 @@ msgstr "V Odoo,"
 #: code:addons/account/models/account_bank_statement.py:406
 #, python-format
 msgid ""
-"In order to delete a bank statement line, you must first cancel it to delete "
-"related journal items."
+"In order to delete a bank statement line, you must first cancel it to delete"
+" related journal items."
 msgstr ""
 "Pre zmazanie riadku bankového výpisu, najskôr ho musíte zrušiť pre zmazanie "
 "súvisiacich položiek účtovnej knihy."
@@ -4945,6 +5092,7 @@ msgstr "Príjem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category_property_account_income_categ_id
+#: model:ir.model.fields,field_description:account.field_product_product_property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_income_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
@@ -5027,7 +5175,7 @@ msgstr "Interný prevod"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_internal_type
 msgid "Internal Type"
-msgstr ""
+msgstr "Interný typ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
@@ -5046,10 +5194,11 @@ msgid "Invite Users"
 msgstr "Pozvať používateľov"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:956
+#: code:addons/account/models/account_invoice.py:965
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
 #: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn
+#: model:ir.model.fields,field_description:account.field_res_users_invoice_warn
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -5079,7 +5228,7 @@ msgstr "Dátum faktúry"
 #: model:ir.ui.view,arch_db:account.view_invoice_line_form
 #: model:ir.ui.view,arch_db:account.view_invoice_line_tree
 msgid "Invoice Line"
-msgstr "Položky faktúry"
+msgstr "Riadok faktúry"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_invoice_line_ids
@@ -5144,19 +5293,19 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
+msgid "Invoice must be paid in order to set it to register payment."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
+msgid "Invoice must be validated in order to set it to register payment."
 msgstr ""
 
 #. module: account
@@ -5201,6 +5350,7 @@ msgstr "Fakturovanej"
 #: model:ir.actions.report.xml,name:account.account_invoices
 #: model:ir.model.fields,field_description:account.field_account_payment_invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_invoice_ids
+#: model:ir.model.fields,field_description:account.field_res_users_invoice_ids
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -5258,7 +5408,7 @@ msgstr "Fakturácia & platby"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Je nula"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5277,7 +5427,7 @@ msgstr "Pôsobí ako predvolený účet pre výšku debetu"
 msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
-msgstr ""
+msgstr "Pridá stĺpec meny do výkazu v prípade, že mena sa líši od meny firmy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reconciled
@@ -5301,15 +5451,6 @@ msgid ""
 msgstr "Je povinné zadať účet a účtovnú knihu pre vytvorenie odpisu."
 
 #. module: account
-#: code:addons/account/models/account_bank_statement.py:408
-#, python-format
-msgid ""
-"It is not allowed to delete a bank statement line that already created a "
-"journal entry since it would create a gap in the numbering. You should "
-"create the journal entry again and cancel it thanks to a regular revert."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_payment.py:322
 #, python-format
 msgid ""
@@ -5329,14 +5470,10 @@ msgstr "Trvalo vám to"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "It's common practice to change your accounting software \n"
-"                            at the end of a fiscal year. This allows you to "
-"have less \n"
-"                            data to import and balances to set. If you plan "
-"to do so, \n"
-"                            we recommend you start using Odoo for invoicing "
-"and payments \n"
-"                            now, and then move all other accounting "
-"transactions at a later time."
+"                            at the end of a fiscal year. This allows you to have less \n"
+"                            data to import and balances to set. If you plan to do so, \n"
+"                            we recommend you start using Odoo for invoicing and payments \n"
+"                            now, and then move all other accounting transactions at a later time."
 msgstr ""
 "Je bežnou praxou zmeniť svoj účtovný softvér\n"
 "na konci fiškálneho roka. To vám umožní mať menej\n"
@@ -5438,6 +5575,12 @@ msgid "Journal Entry Name"
 msgstr ""
 
 #. module: account
+#: selection:account.print.journal,sort_selection:0
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "Journal Entry Number"
+msgstr "Číslo vstupu účtovnej knihy"
+
+#. module: account
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
@@ -5467,6 +5610,8 @@ msgstr "Štítok položky účtovnej knihy"
 #: model:ir.model.fields,field_description:account.field_account_move_line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_issued_total
 #: model:ir.model.fields,field_description:account.field_res_partner_journal_item_count
+#: model:ir.model.fields,field_description:account.field_res_users_issued_total
+#: model:ir.model.fields,field_description:account.field_res_users_journal_item_count
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
@@ -5799,20 +5944,21 @@ msgstr "Posledný deň následujúceho mesiaca"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_last_time_entries_checked
+#: model:ir.model.fields,help:account.field_res_users_last_time_entries_checked
 msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"Naposledy keď sa vykonalo spárovanie faktúr a platieb pre tohto partnera. To "
-"sa nastavuje v prípade, že to nie je aspoň nezsoúladený debet a nezsoúladený "
-"kredit, alebo ak kliknete na tlačidlo \"Hotovo\"."
+"Naposledy keď sa vykonalo spárovanie faktúr a platieb pre tohto partnera. To"
+" sa nastavuje v prípade, že to nie je aspoň nezsoúladený debet a "
+"nezsoúladený kredit, alebo ak kliknete na tlačidlo \"Hotovo\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
 msgid ""
-"Last time the invoices & payments matching was performed on this account. It "
-"is set either if there's not at least an unreconciled debit and an "
+"Last time the invoices & payments matching was performed on this account. It"
+" is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
 msgstr ""
 "Naposledy keď sa vykonalo spárovanie faktúr a platieb na tomto úçte. To sa "
@@ -5822,6 +5968,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
+#: model:ir.model.fields,field_description:account.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Posledný dátum párovania faktúr & platieb"
 
@@ -5829,6 +5976,16 @@ msgstr "Posledný dátum párovania faktúr & platieb"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Legal Name"
 msgstr "Právne meno"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "Legal Notes..."
+msgstr "Právne Poznámky..."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "Právne údaje ktoré musia byť vytlačené na faktúre."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:149
@@ -5841,7 +5998,7 @@ msgstr "Menej platby"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Nechaj odoo skúsiť zosúladiť vstupy pre používateľa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5963,8 +6120,8 @@ msgid ""
 "Manage your various fixed assets, such as buildings, machinery, materials, "
 "cars, etc..., and calculate their associated depreciation over time."
 msgstr ""
-"Spravujte rôznye pevné aktíva, ako sú budovy, stroje, materiály, automobily, "
-"atď ..., a vypočítať ich pridružený odpisu v priebehu času."
+"Spravujte rôznye pevné aktíva, ako sú budovy, stroje, materiály, automobily,"
+" atď ..., a vypočítať ich pridružený odpisu v priebehu času."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -5978,6 +6135,8 @@ msgid "Managing bank fees"
 msgstr "Spravovanie bankových poplatkov"
 
 #. module: account
+#: model:account.payment.method,name:account.account_payment_method_manual_in
+#: model:account.payment.method,name:account.account_payment_method_manual_out
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_manual
 msgid "Manual"
 msgstr "Manuálne"
@@ -6014,6 +6173,12 @@ msgid "Mark invoice as fully paid"
 msgstr "Označiť faktúru ako plne uhradenú"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
+#: model:ir.ui.view,arch_db:account.view_full_reconcile_form
+msgid "Matched Journal Items"
+msgstr "Spárované položky účtovnej knihy"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
 msgid "Matched credit ids"
 msgstr "Id spárovaného kreditu"
@@ -6022,6 +6187,17 @@ msgstr "Id spárovaného kreditu"
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_debit_ids
 msgid "Matched debit ids"
 msgstr "d spárovaného debetu"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_full_reconcile_form
+#: model:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Matching"
+msgstr "Párovanie"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
+msgid "Matching Number"
+msgstr "Zodpovedajúce číslo"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6066,8 +6242,9 @@ msgstr "Pripomienka:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_invoice_warn_msg
+#: model:ir.model.fields,field_description:account.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Správa pre faktúru"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6077,6 +6254,26 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Credit Card Accounts"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Minus Current Liabilities"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Minus Expenses"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Minus Non-Current Liabilities"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_form
+msgid "Minus Payable Accounts"
 msgstr ""
 
 #. module: account
@@ -6103,7 +6300,8 @@ msgstr ""
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr "Upravť: vytvoriť refundáciu, zosúladiť a vytvoriť nový koncept faktúry"
+msgstr ""
+"Upravť: vytvoriť refundáciu, zosúladiť a vytvoriť nový koncept faktúry"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -6125,19 +6323,17 @@ msgstr "Viac <i class=\"fa fa-caret-down\"/>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Viac informácií"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Most currencies are already created by default. If you plan\n"
-"                        to use some of them, you should check their "
-"<strong>Active</strong>\n"
+"                        to use some of them, you should check their <strong>Active</strong>\n"
 "                        field."
 msgstr ""
 "Väčšina mien je už vytvorených v predvolenom nastavení. Ak máte v pláne\n"
-"používať niektoré z nich, mali by ste skontrolovať ich <strong>Aktívne</"
-"strong>\n"
+"používať niektoré z nich, mali by ste skontrolovať ich <strong>Aktívne</strong>\n"
 "pole."
 
 #. module: account
@@ -6167,7 +6363,7 @@ msgstr "Názov pohybu (id): %s (%s)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Multi Currencies"
-msgstr ""
+msgstr "Multi meny"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6264,7 +6460,7 @@ msgstr "Žiadne naviazanie"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Žiadna správa"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1080
@@ -6320,6 +6516,11 @@ msgstr "Nesúčasné záväzky"
 #: selection:account.tax.template,type_tax_use:0
 msgid "None"
 msgstr "Žiadne"
+
+#. module: account
+#: selection:res.partner,trust:0
+msgid "Normal Debtor"
+msgstr "Normálny dlžník"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -6430,14 +6631,12 @@ msgstr ""
 msgid ""
 "Odoo automatically creates one journal entry per accounting\n"
 "                document: invoice, refund, vendor payment, bank statements,\n"
-"                etc. So, you should record journal entries manually only/"
-"mainly\n"
+"                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
 msgstr ""
 "Odoo automaticky vytvorí jednu položku účtovnej knihy za účtovný\n"
 "dokument: faktúry, refundáciu, platbu predajcu, bankové výpisy,\n"
-"atď. Takže, mali by ste zaznamenávať položky účtovnej knihy manuálne iba/"
-"prevažne\n"
+"atď. Takže, mali by ste zaznamenávať položky účtovnej knihy manuálne iba/prevažne\n"
 "pre rôzne operácie."
 
 #. module: account
@@ -6452,17 +6651,18 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"Odoo has already preconfigured a few taxes according to your country.<br/"
-">Simply review them and check if you need more."
+"Odoo has already preconfigured a few taxes according to your "
+"country.<br/>Simply review them and check if you need more."
 msgstr ""
-"Odoo už vopred nakonfigurovalo niekoľko dan v súlade s vašou krajinou.<br/"
-">Jednoducho ich zhodnoťte a skontrolujte, či budete potrebovať viac."
+"Odoo už vopred nakonfigurovalo niekoľko dan v súlade s vašou "
+"krajinou.<br/>Jednoducho ich zhodnoťte a skontrolujte, či budete potrebovať "
+"viac."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"Odoo should do most of the reconciliation work automatically, so you'll only "
-"need to review a few of them when a <strong>'Reconcile Items'</strong> "
+"Odoo should do most of the reconciliation work automatically, so you'll only"
+" need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
 msgstr ""
 "Odoo by mal robiť väčšinu zosúladenia automaticky, takže budete potrebovať "
@@ -6487,8 +6687,7 @@ msgstr ""
 msgid ""
 "Once draft invoices are confirmed, you will not be able\n"
 "                        to modify them. The invoices will receive a unique\n"
-"                        number and journal items will be created in your "
-"chart\n"
+"                        number and journal items will be created in your chart\n"
 "                        of accounts."
 msgstr ""
 "Akonáhle návrhy faktúr sú potvrdené, nebudete môcť\n"
@@ -6515,10 +6714,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "Once your bank accounts are registered, you will be able \n"
-"                        to access your statements from the Accounting "
-"Dashboard. \n"
-"                        The available methods for synchronization are as "
-"follows."
+"                        to access your statements from the Accounting Dashboard. \n"
+"                        The available methods for synchronization are as follows."
 msgstr ""
 "Akonáhle budú vaše bankové účty zaregistrované, budete mať\n"
 "prístup k svojim výpisom z účtovnej nástenky.\n"
@@ -6551,7 +6748,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:780
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr "Iba správcovia môžu zmeniť nastaveni"
+msgstr "Iba správcovia môžu zmeniť nastavenia"
 
 #. module: account
 #. openerp-web
@@ -6569,8 +6766,8 @@ msgid ""
 "example."
 msgstr ""
 "Len používatelia s rolou \"Poradca\" môžu upravovať účty pred a vrátane "
-"tohoto dátumu. Používa sa napríklad pre zamknutie obdobia v rámci otvoreného "
-"fiškálneho roku."
+"tohoto dátumu. Používa sa napríklad pre zamknutie obdobia v rámci otvoreného"
+" fiškálneho roku."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -6622,6 +6819,9 @@ msgid ""
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
 msgstr ""
+"Operácia nie je povolená. Môžeš zosúladiť len vstupy ktoré majú rovnakú "
+"druhú menu alebo nemajú žiadnu. Oprav svoje položky alebo urob iný výber "
+"pred pokračovaním ďalej."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -6824,6 +7024,24 @@ msgid "Partner Company"
 msgstr "Partnerská spoločnosť"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger_menu
+#: model:ir.actions.report.xml,name:account.action_report_partnerledger
+#: model:ir.ui.menu,name:account.menu_partner_ledger
+#: model:ir.ui.view,arch_db:account.report_partnerledger
+msgid "Partner Ledger"
+msgstr "Účtovná kniha partnera"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
+msgid "Partner Ledger: Payable"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
+msgid "Partner Ledger: Receivable"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
 msgid "Partner name"
 msgstr "Meno partnera"
@@ -6878,6 +7096,7 @@ msgstr "Účty pohľadávok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit_limit
+#: model:ir.model.fields,field_description:account.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Limit pohľadávok"
 
@@ -6899,6 +7118,13 @@ msgstr "Dátum platby"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_difference_handling
 msgid "Payment Difference"
 msgstr "Rozdiel platby"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_payment_widget.js:53
+#, python-format
+msgid "Payment Information"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -7046,15 +7272,11 @@ msgstr "Spárovanie platieb"
 #: model:ir.actions.act_window,help:account.action_account_payments
 #: model:ir.actions.act_window,help:account.action_account_payments_payable
 msgid ""
-"Payments are used to register liquidity movements (send, collect or transfer "
-"money).\n"
-"                  You can then process those payments by your own means or "
-"by using installed facilities."
+"Payments are used to register liquidity movements (send, collect or transfer money).\n"
+"                  You can then process those payments by your own means or by using installed facilities."
 msgstr ""
-"Platby sa používa pre evidenciu pohybov likvidity (odosielanie, zber alebo "
-"prevod peňazí).\n"
-"Potom môžete spracovávať tieto platby podľa svojich vlastných prostriedkov "
-"alebo pomocou nainštalovaných zariadení."
+"Platby sa používa pre evidenciu pohybov likvidity (odosielanie, zber alebo prevod peňazí).\n"
+"Potom môžete spracovávať tieto platby podľa svojich vlastných prostriedkov alebo pomocou nainštalovaných zariadení."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7198,7 +7420,7 @@ msgstr "Plus iný príjem"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Zverejniť"
+msgstr "Príspevok"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7288,6 +7510,7 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
+"Vytlačiť výkaz s stĺpcom meny v prípade, že sa mena líši od meny firmy."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -7368,8 +7591,8 @@ msgstr "Proforma"
 #: code:addons/account/models/account_payment.py:123
 #, python-format
 msgid ""
-"Programmation error: the expected model for this action is 'account."
-"invoice'. The provided one is '%d'."
+"Programmation error: the expected model for this action is "
+"'account.invoice'. The provided one is '%d'."
 msgstr ""
 "Chyba programovania: očakávaný model pre túto akciu je \"account.invoice\". "
 "Poskytnutý je '%d'."
@@ -7542,6 +7765,11 @@ msgid "Reconciled"
 msgstr "Zosúladené"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
+msgid "Reconciled Entries"
+msgstr "Zosúladené vstupy"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled entries"
 msgstr ""
@@ -7556,6 +7784,11 @@ msgstr "Zosúladenie"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
 msgstr "Modely zosúladenia"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
+msgid "Reconciliation Parts"
+msgstr "Časti zosúladenia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7629,11 +7862,11 @@ msgstr "Odkaz na dokument, ktorý vytvoril túto faktúru."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_payment_reference
 msgid ""
-"Reference of the document used to issue this payment. Eg. check number, file "
-"name, etc."
+"Reference of the document used to issue this payment. Eg. check number, file"
+" name, etc."
 msgstr ""
-"Odkaz na doklad, použitých na vydanie tejto platby. Napr.. číslo šeku, názov "
-"súboru atď."
+"Odkaz na doklad, použitých na vydanie tejto platby. Napr.. číslo šeku, názov"
+" súboru atď."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
@@ -7754,7 +7987,7 @@ msgstr "Náhradná daň"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_form
 msgid "Report"
-msgstr "Výkaz"
+msgstr "Report"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_name
@@ -7815,7 +8048,7 @@ msgstr "Zodpovedný"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
 msgid "Revenue Recognition"
-msgstr ""
+msgstr "Ocenenie príjmu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -7889,6 +8122,13 @@ msgstr "Predaj"
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
 msgstr "Daň z predaja"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report.xml,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Sale/Purchase Journal"
+msgstr "Účtovná kniha Predaja / Nákupu"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -8019,6 +8259,15 @@ msgid "Second Tax"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_journal_type
+msgid ""
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1778
 #, python-format
@@ -8060,11 +8309,15 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_invoice_warn
+#: model:ir.model.fields,help:account.field_res_users_invoice_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Zvolenie možnosti \"Varovanie\" notifikuje používateľa správou, Zvolenie "
+"\"Blokovanie správy\" hodí výnimku so správou a zablokuje tok. Správa musí "
+"byť napísaná v ďalšom poli."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
@@ -8135,15 +8388,15 @@ msgstr "Nastaviť predvolené Predajné a Nákupné dane"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_tax_adjustment
 msgid ""
-"Set this field to true if this tax can be used in the tax adjustment wizard, "
-"used to manually fill some data in the tax declaration"
+"Set this field to true if this tax can be used in the tax adjustment wizard,"
+" used to manually fill some data in the tax declaration"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible
 msgid ""
-"Set this to False if you don't want this template to be used actively in the "
-"wizard that generate Chart of Accounts from templates, this is useful when "
+"Set this to False if you don't want this template to be used actively in the"
+" wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
 msgstr ""
@@ -8215,7 +8468,7 @@ msgstr ""
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2480
 #, python-format
 msgid "Skip"
-msgstr ""
+msgstr "Preskočiť"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8373,13 +8626,14 @@ msgstr "Cieľové pohyby"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:120
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:125
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:124
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:129
 #: model:ir.model,name:account.model_account_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_tax_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_tax_id
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
@@ -8407,6 +8661,11 @@ msgid "Tax Account on Refunds"
 msgstr "Daňový účet na refundáciach"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "Tax Amount"
+msgstr "Suma dane"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Application"
 msgstr "Daňová aplikácia"
@@ -8421,6 +8680,11 @@ msgstr "Metóda zaokrúhľovania kalkulácie dane"
 #: model:ir.model.fields,field_description:account.field_account_tax_template_amount_type
 msgid "Tax Computation"
 msgstr "Výpočet dane"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_journal
+msgid "Tax Declaration"
+msgstr "Daňové priznanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_name
@@ -8441,7 +8705,7 @@ msgstr "Skupina dane"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Tax ID"
-msgstr ""
+msgstr "Daňové ID"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_tax
@@ -8554,17 +8818,17 @@ msgstr "Dane používané v predajoch"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance
 msgid ""
-"Technical field holding the debit - credit in order to open meaningful graph "
-"views from reports"
+"Technical field holding the debit - credit in order to open meaningful graph"
+" views from reports"
 msgstr ""
-"Technické pole obsahujúce debet - kredit s cieľom otvoriť zmysluplné náhľady "
-"grafu z výkazov"
+"Technické pole obsahujúce debet - kredit s cieľom otvoriť zmysluplné náhľady"
+" grafu z výkazov"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance_cash_basis
 msgid ""
-"Technical field holding the debit_cash_basis - credit_cash_basis in order to "
-"open meaningful graph views from reports"
+"Technical field holding the debit_cash_basis - credit_cash_basis in order to"
+" open meaningful graph views from reports"
 msgstr ""
 "Technické pole obsahujúce debit_cash_basis - credit_cash_basis s cieľom "
 "otvoriť zmysluplné náhľady grafu z výkazov"
@@ -8584,14 +8848,15 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_move_name
 #: model:ir.model.fields,help:account.field_account_payment_move_name
 msgid ""
-"Technical field holding the number given to the journal entry, automatically "
-"set when the statement line is reconciled then stored to set the same number "
-"again if the line is cancelled, set to draft and re-processed again."
+"Technical field holding the number given to the journal entry, automatically"
+" set when the statement line is reconciled then stored to set the same "
+"number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
-msgid "Technical field to hide filter_refund in case invoice is partially paid"
+msgid ""
+"Technical field to hide filter_refund in case invoice is partially paid"
 msgstr ""
 "Technické pole pre skrytie filter_refund pre prípad že faktúra je čiastočne "
 "zaplatená"
@@ -8624,14 +8889,14 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
-"Technické pole používané pre krytie platobnj metódy ak zvolená účtovná kniha "
-"má iba jendu dostupnú, a to 'manuálne'"
+"Technické pole používané pre krytie platobnj metódy ak zvolená účtovná kniha"
+" má iba jendu dostupnú, a to 'manuálne'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
 msgid ""
-"Technical field used to mark a tax line as exigible in the vat report or not "
-"(only exigible journal items are displayed). By default all new journal "
+"Technical field used to mark a tax line as exigible in the vat report or not"
+" (only exigible journal items are displayed). By default all new journal "
 "items are directly exigible, but with the module account_tax_cash_basis, "
 "some will become exigible only when the payment is recorded."
 msgstr ""
@@ -8664,7 +8929,7 @@ msgstr "Šablóna id prevodného účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr "Šablóny pre Účtovné grafy"
+msgstr "Šablóny pre Účtovný graf"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -8709,8 +8974,8 @@ msgstr "Čo je v priemere"
 #: model:ir.model.fields,help:account.field_account_account_type_type
 msgid ""
 "The 'Internal Type' is used for features available on different types of "
-"accounts: liquidity type is for cash or bank accounts, payable/receivable is "
-"for vendor/customer accounts."
+"accounts: liquidity type is for cash or bank accounts, payable/receivable is"
+" for vendor/customer accounts."
 msgstr ""
 "\"Interný typ\" sa používa pre funkcie dostupné na rôzne typy účtov: typ "
 "likvidity je pre hotovosť alebo bankové účty, splatné/pohľadávy s pre účty "
@@ -8720,8 +8985,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "The Advisors have full access to the Accounting application, \n"
-"                                        plus access to miscellaneous "
-"operations such as salary and asset management."
+"                                        plus access to miscellaneous operations such as salary and asset management."
 msgstr ""
 "Poriadcovia majú plný prístup k Účtovnej plaikácií,\n"
 "plus prístup k rôznym operáciam ako sú spravovanie platov a aktív."
@@ -8732,8 +8996,8 @@ msgid ""
 "The Deposit Ticket module can also be used to settle credit card batch made "
 "of multiple transactions."
 msgstr ""
-"Modul Blok depozitu možno tiež použiť na vysporiadanie várky kreditnej karty "
-"spravený z viacerých transakcií."
+"Modul Blok depozitu možno tiež použiť na vysporiadanie várky kreditnej karty"
+" spravený z viacerých transakcií."
 
 #. module: account
 #: code:addons/account/models/account_move.py:851
@@ -8750,13 +9014,14 @@ msgstr "Účtovná kniha odpvdajúca tomuto bankovému účtu."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,help:account.field_account_move_line_amount_currency
 msgid ""
-"The amount expressed in an optional other currency if it is a multi-currency "
-"entry."
+"The amount expressed in an optional other currency if it is a multi-currency"
+" entry."
 msgstr ""
 "Množstvo vyjadrené vo voliteľné inej mene, pokiaľ ide o multi-menový záznam."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
@@ -8765,11 +9030,11 @@ msgstr ""
 "spoločnosti."
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
-"The amount expressed in the secondary currency must be positive when account "
-"is debited and negative when account is credited."
+"The amount expressed in the secondary currency must be positive when account"
+" is debited and negative when account is credited."
 msgstr ""
 "Suma vyjadrená v sekundárnej mene musí byť kladná ak je účet debetný, a "
 "záporná keď je účet kreditovaný."
@@ -8858,6 +9123,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
+#: model:ir.model.fields,help:account.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr "Fiškálna pozícia bude určovať dane a účty používané pre partnera."
@@ -8902,8 +9168,7 @@ msgstr "Pohyb tohto riadku vstupu."
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "The multi-currency option allows you to send or receive invoices \n"
-"                        in difference currencies, set up foreign bank "
-"accounts \n"
+"                        in difference currencies, set up foreign bank accounts \n"
 "                        and run reports on your foreign financial activities."
 msgstr ""
 "Možnosť multi-mena vám umožňuje odosielať a prijímať faktúry \n"
@@ -8938,6 +9203,7 @@ msgstr "Partnerský účet použitý pre túto faktúru."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_has_unreconciled_entries
+#: model:ir.model.fields,help:account.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
@@ -8946,13 +9212,14 @@ msgstr ""
 "faktúr & platieb."
 
 #. module: account
-#: code:addons/account/models/account_move.py:853
+#: code:addons/account/models/account_move.py:891
 #, python-format
 msgid ""
 "The partner has to be the same on all lines for receivable and payable "
 "accounts!"
 msgstr ""
-"Partner musí byť rovnaký na všetkých riadkoch pre účty záväzkov a pohľadávok!"
+"Partner musí byť rovnaký na všetkých riadkoch pre účty záväzkov a "
+"pohľadávok!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reference
@@ -8960,7 +9227,13 @@ msgid "The partner reference of this invoice."
 msgstr "Partnerský odkaz tejto faktúry."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:339
+#: code:addons/account/models/account_payment.py:55
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_payment.py:342
 #, python-format
 msgid "The payment cannot be processed because the invoice is not open!"
 msgstr "Platba nemôže byť spracovaná pretože faktúra nie je otvorená!"
@@ -8982,6 +9255,14 @@ msgstr ""
 "Reziduálna suma na položke účtovnej knihy vyjadrená v mene spoločnosti."
 
 #. module: account
+#: code:addons/account/models/account_move.py:411
+#, python-format
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_invoice.py:1325
 #, python-format
 msgid ""
@@ -9001,10 +9282,18 @@ msgstr ""
 "daňové riadky."
 
 #. module: account
-#: code:addons/account/models/account_payment.py:457
+#: code:addons/account/models/account_payment.py:479
 #, python-format
 msgid "The sequence of journal %s is deactivated."
 msgstr "Sekvencia účtovnej knihy %s je deaktivovaná."
+
+#. module: account
+#: code:addons/account/models/company.py:89
+#, python-format
+msgid ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:172
@@ -9044,8 +9333,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"Tieto typy sú definované podľa vašej krajiny. Typ obsahuje viac informácií o "
-"účte a jeho špecifikáciach."
+"Tieto typy sú definované podľa vašej krajiny. Typ obsahuje viac informácií o"
+" účte a jeho špecifikáciach."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9072,22 +9361,24 @@ msgid "This Year"
 msgstr "Tento rok"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
 #: model:ir.model.fields,help:account.field_product_template_property_account_expense_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
-"Tento účet bude použitý pre faktúry namiesto predvoleného do nákladov hodnôt "
-"pre aktuálny produkt."
+"Tento účet bude použitý pre faktúry namiesto predvoleného do nákladov hodnôt"
+" pre aktuálny produkt."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_product_product_property_account_income_id
 #: model:ir.model.fields,help:account.field_product_template_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
-"Tento účet bude použitý pre faktúry miesto predvoleného pre hodnotu predajov "
-"pre aktuálny produkt."
+"Toto konto sa použije pre faktúry namiesto predvolené hodnoty predaja pre "
+"tento produkt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_expense_categ_id
@@ -9101,6 +9392,7 @@ msgstr "Tento účet bude použitý pre faktúry pre hodnoty predajov."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_payable_id
+#: model:ir.model.fields,help:account.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
@@ -9110,6 +9402,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_receivable_id
+#: model:ir.model.fields,help:account.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
@@ -9120,32 +9413,25 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_budget
 msgid ""
-"This allows accountants to manage analytic and crossovered budgets. Once the "
-"master budgets and the budgets are defined, the project managers can set the "
-"planned amount on each analytic account.\n"
+"This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
 msgstr ""
-"Toto umožňuje účtovníkom spravovať analytické a prekročené rozpočty. "
-"Akonáhle sú definované hlavné rozpočty a rozpočty, môžu projektoví manažéri "
-"nastaviť plánovanú sumu na každom analytickom účte.\n"
+"Toto umožňuje účtovníkom spravovať analytické a prekročené rozpočty. Akonáhle sú definované hlavné rozpočty a rozpočty, môžu projektoví manažéri nastaviť plánovanú sumu na každom analytickom účte.\n"
 "-Tohle nainštaluje modul account_budget."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_reports_followup
 msgid ""
-"This allows to automate letters for unpaid invoices, with multi-level "
-"recalls.\n"
+"This allows to automate letters for unpaid invoices, with multi-level recalls.\n"
 "-This installs the module account_reports_followup."
 msgstr ""
-"Toto umožňuje automatizovať listy pre neuhradené faktúry, s viacúrovňovými "
-"upomienkami.\n"
+"Toto umožňuje automatizovať listy pre neuhradené faktúry, s viacúrovňovými upomienkami.\n"
 "-Toto nainštaluje modul account_reports_followup."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_batch_deposit
 msgid ""
-"This allows you to group received checks before you deposit them to the "
-"bank.\n"
+"This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
 msgstr ""
 "Toto vám umožní zoskupiť obdržané šeky pred ich vložením do banky.\n"
@@ -9154,24 +9440,19 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_deferred_revenue
 msgid ""
-"This allows you to manage the revenue recognition on selling products. It "
-"keeps track of the installments occurred on those revenue recognitions, and "
-"creates account moves for those installment lines\n"
+"This allows you to manage the revenue recognition on selling products. It keeps track of the installments occurred on those revenue recognitions, and creates account moves for those installment lines\n"
 "-This installs the module account_deferred_revenue."
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
 msgid ""
-"This boolean helps you to choose if you want to propose to the user to "
-"encode\n"
-"             the sales and purchase rates or use the usual m2o fields. This "
-"last choice assumes that\n"
+"This boolean helps you to choose if you want to propose to the user to encode\n"
+"             the sales and purchase rates or use the usual m2o fields. This last choice assumes that\n"
 "             the set of tax defined for the chosen template is complete"
 msgstr ""
 "Toto boolean vám pomôže zvoliť či chcete navrhnúť používateľovi zakódovať\n"
-"predajnú a nákupnú sadzby alebo použiť obvyklé m2o polia. Táto posledná "
-"voľba predpokladá že\n"
+"predajnú a nákupnú sadzby alebo použiť obvyklé m2o polia. Táto posledná voľba predpokladá že\n"
 "súbor daní definovaný pre zvolenú šablónu je kompletný"
 
 #. module: account
@@ -9182,8 +9463,7 @@ msgid ""
 "choice assumes that the set of tax defined on this template is complete"
 msgstr ""
 "Toto boolean vám pomôže zvoliť či chcete navrhnúť používateľovi zakódovať\n"
-"predajnú a nákupnú sadzby alebo vybrať zo zoznamu daní. Táto posledná voľba "
-"predpokladá že\n"
+"predajnú a nákupnú sadzby alebo vybrať zo zoznamu daní. Táto posledná voľba predpokladá že\n"
 "súbor dane definovaný pre zvolenú šablónu je kompletný"
 
 #. module: account
@@ -9244,8 +9524,8 @@ msgid ""
 "database (or cannot be found)."
 msgstr ""
 "Toto pole je používané pre záznam názvu tretej strany pri importe bankových "
-"výpisov v elektronickej forme, keď partner ešte neexistuje v databáze (alebo "
-"nemôže byť nájdený)."
+"výpisov v elektronickej forme, keď partner ešte neexistuje v databáze (alebo"
+" nemôže byť nájdený)."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9269,7 +9549,8 @@ msgstr ""
 #: code:addons/account/models/account.py:351
 #, python-format
 msgid ""
-"This journal already contains items, therefore you cannot modify its company."
+"This journal already contains items, therefore you cannot modify its "
+"company."
 msgstr ""
 "Táto účtovná kniha už obsahuje položky, preto nemôžete upravovať jej "
 "spoločnosť."
@@ -9294,29 +9575,38 @@ msgstr ""
 "dané porovnávacie filtre."
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:273
+#, python-format
+msgid ""
+"This move's amount is higher than the transaction's amount. Click to "
+"register a partial payment and keep the payment balance open."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_debit_credit
 msgid ""
 "This option allows you to get more details about the way your balances are "
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
 msgstr ""
-"Táto možnosť vám umožňuje získať viac detailov o tom ako sa vypočítavajú "
-"naše zostatky.\n"
+"Táto možnosť vám umožňuje získať viac detailov o tom ako sa vypočítavajú naše zostatky.\n"
 "Pretože to zaberá priestor, nepovoľujeme jej používanie počas porovnávania."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_chart_template_id
 msgid ""
 "This optional field allow you to link an account template to a specific "
-"chart template that may differ from the one its root parent belongs to. This "
-"allow you to define chart templates that extend another and complete it with "
-"few new accounts (You don't need to define the whole structure that is "
+"chart template that may differ from the one its root parent belongs to. This"
+" allow you to define chart templates that extend another and complete it "
+"with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
 msgstr ""
 "Toto voliteľné pole vám umožní prepojiť šablónu účtu s konkrétnou schémou, "
 "ktorá sa môže líšiť od scojej nadradenej. To vám umožní definovať šablóny "
 "grafu, ktoré rozširujú ďalšie a dokončiť ho s niekoľkými novými účtami "
-"(nemusíte definovať celú štruktúru, ktorá je spoločná pre oba, niekoľkokrát)."
+"(nemusíte definovať celú štruktúru, ktorá je spoločná pre oba, "
+"niekoľkokrát)."
 
 #. module: account
 #. openerp-web
@@ -9326,8 +9616,8 @@ msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
 msgstr ""
-"Táto stránka zobrazuje všetky bankové transakcie ktoré majú byť zosúladené a "
-"poskytuje k tomu vkusné rozhranie."
+"Táto stránka zobrazuje všetky bankové transakcie ktoré majú byť zosúladené a"
+" poskytuje k tomu vkusné rozhranie."
 
 #. module: account
 #. openerp-web
@@ -9338,6 +9628,7 @@ msgstr "Táto platba je zaregistrovaná ale nie zladená."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_supplier_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
@@ -9347,6 +9638,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
+#: model:ir.model.fields,help:account.field_res_users_property_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
@@ -9357,13 +9649,15 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_purchase_tax_id
 msgid "This purchase tax will be assigned by default on new products."
-msgstr "Táto nákupná daň bude pridelená podľa prednastavenia na nové produkty."
+msgstr ""
+"Táto nákupná daň bude pridelená podľa prednastavenia na nové produkty."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "This role is best suited for managing the day to day accounting operations:"
-msgstr "Táto rola je najvhodnejšia pre správu každodenných účtovných operácií:"
+msgstr ""
+"Táto rola je najvhodnejšia pre správu každodenných účtovných operácií:"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
@@ -9378,18 +9672,18 @@ msgid ""
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
 msgstr ""
-"Toto technické pole môže byť použité pri vytvorení/importe riadku výpisu aby "
-"sa zabránilo procesu zladenia neskôr. Riadok výpisu jednoducho vytvorí "
+"Toto technické pole môže byť použité pri vytvorení/importe riadku výpisu aby"
+" sa zabránilo procesu zladenia neskôr. Riadok výpisu jednoducho vytvorí "
 "náprotivok na tomto účte"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
-"This wizard will validate all journal entries selected. Once journal entries "
-"are validated, you can not update them anymore."
+"This wizard will validate all journal entries selected. Once journal entries"
+" are validated, you can not update them anymore."
 msgstr ""
-"Tento sprievodca potvrdí všetky zvolené vstupy účtovnej knihy. Keď sú všetky "
-"vstupy potvrdené, už ich nemôžete aktualizovať."
+"Tento sprievodca potvrdí všetky zvolené vstupy účtovnej knihy. Keď sú všetky"
+" vstupy potvrdené, už ich nemôžete aktualizovať."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -9397,9 +9691,15 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Tie môžu byť použité pre rýchle vytvorenie položiek účtovnej knihy pri "
-"zlaďovaní\n"
+"Tie môžu byť použité pre rýchle vytvorenie položiek účtovnej knihy pri zlaďovaní\n"
 "bankového výpisu alebo účtu."
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:21
+#, python-format
+msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9424,13 +9724,13 @@ msgstr "Na zaplatenie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"To manage the tax applied when invoicing a Company, Odoo uses the concept of "
-"Fiscal Position: they serve to automatically set the right tax and/or "
+"To manage the tax applied when invoicing a Company, Odoo uses the concept of"
+" Fiscal Position: they serve to automatically set the right tax and/or "
 "account according to the customer country and state."
 msgstr ""
 "Na spravovanie dane aplikovanej pri fakturácii spoločnosti, Odoo používa "
-"pojem fiškálna pozícia: slúži na automatické nastavenie správnej dane a/"
-"alebo účtu v závislosti od krajiny a štátu zákazníka."
+"pojem fiškálna pozícia: slúži na automatické nastavenie správnej dane "
+"a/alebo účtu v závislosti od krajiny a štátu zákazníka."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -9479,16 +9779,19 @@ msgstr "Celkový debet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_total_invoiced
+#: model:ir.model.fields,field_description:account.field_res_users_total_invoiced
 msgid "Total Invoiced"
 msgstr "Celkovo vyfaktúrované"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_debit
+#: model:ir.model.fields,field_description:account.field_res_users_debit
 msgid "Total Payable"
 msgstr "Celkový záväzok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_credit
+#: model:ir.model.fields,field_description:account.field_res_users_credit
 msgid "Total Receivable"
 msgstr "Celková pohľadávka"
 
@@ -9507,21 +9810,25 @@ msgstr "Celkom bez dane"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
-msgid "Total amount in the currency of the company, negative for credit notes."
+msgid ""
+"Total amount in the currency of the company, negative for credit notes."
 msgstr "Celková suma v mene spoločnosti, záporná pre kreditné poznámky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
-msgid "Total amount in the currency of the invoice, negative for credit notes."
+msgid ""
+"Total amount in the currency of the invoice, negative for credit notes."
 msgstr "Celková suma v mene faktúry, záporná pre kreditné poznámky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
+#: model:ir.model.fields,help:account.field_res_users_credit
 msgid "Total amount this customer owes you."
 msgstr "Celková suma ktorú vám je dlžný tento zákazník."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
+#: model:ir.model.fields,help:account.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
 msgstr "Celková suma ktorú musíte zaplatiť tomuto predajcovi."
 
@@ -9625,6 +9932,13 @@ msgid "Undistributed Profits/Losses"
 msgstr "Nerozdelené Zisky/Straty "
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:278
+#, python-format
+msgid "Undo the partial reconciliation."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
@@ -9636,6 +9950,12 @@ msgstr "Jednotková cena"
 #: model:ir.model.fields,field_description:account.field_account_move_line_product_uom_id
 msgid "Unit of Measure"
 msgstr "Merná jednotka"
+
+#. module: account
+#: code:addons/account/report/account_aged_partner_balance.py:187
+#, python-format
+msgid "Unknown Partner"
+msgstr "Neznámy Partner"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable_no_partner
@@ -9765,10 +10085,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid ""
 "Use this option if you want to cancel an invoice and create a new\n"
-"                                one. The credit note will be created, "
-"validated and reconciled\n"
-"                                with the current invoice. A new, draft, "
-"invoice will be created \n"
+"                                one. The credit note will be created, validated and reconciled\n"
+"                                with the current invoice. A new, draft, invoice will be created \n"
 "                                so that you can edit it."
 msgstr ""
 "Použite túto možnosť ak chcete zrušiť faktúru a vitvoriť novú.\n"
@@ -9780,10 +10098,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
-"                                have issued. The credit note will be "
-"created, validated and reconciled\n"
-"                                with the invoice. You will not be able to "
-"modify the credit note."
+"                                have issued. The credit note will be created, validated and reconciled\n"
+"                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
 "Túto možnosť použite, ak chcete zrušiť faktúru ktorú ste nemali\n"
 "vydať. Dobropis bude vytvorený, potvrdeny a zladený\n"
@@ -9797,9 +10113,9 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Používa sa vo výkazoch aby sme vedeli, či máme zvážiť položky účtovnej knihy "
-"od začiatku času alebo iba z fiškálneho roku. Typy účtov, ktoré by mali byť "
-"znovu nastavený na nulu pri každom novom fiškálnom roku (rovnako ako "
+"Používa sa vo výkazoch aby sme vedeli, či máme zvážiť položky účtovnej knihy"
+" od začiatku času alebo iba z fiškálneho roku. Typy účtov, ktoré by mali byť"
+" znovu nastavený na nulu pri každom novom fiškálnom roku (rovnako ako "
 "výdavky, príjmy ..), by nemali mať túto možnosť nastavenú."
 
 #. module: account
@@ -9826,8 +10142,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs "
-"from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs"
+" from what the system computes"
 msgstr ""
 "Používa sa na registráciu zisku, keď sa konečný zostatok pokladne líši od "
 "toho čo vypočíta systém"
@@ -9838,6 +10154,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line_company_currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_company_currency_id
 #: model:ir.model.fields,help:account.field_res_partner_currency_id
+#: model:ir.model.fields,help:account.field_res_users_currency_id
 msgid "Utility field to express amount currency"
 msgstr "Úžitkové pole na vyjadrenie meny sumy"
 
@@ -9915,13 +10232,14 @@ msgid "Vendor Flow"
 msgstr "Tok predajcov"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:493
+#: code:addons/account/models/account_payment.py:515
 #, python-format
 msgid "Vendor Payment"
 msgstr "Platba predajcu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
+#: model:ir.model.fields,field_description:account.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
 msgstr ""
 
@@ -9933,21 +10251,22 @@ msgstr "Referencia predajcu"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:959
-#: code:addons/account/models/account_payment.py:491
+#: code:addons/account/models/account_invoice.py:968
+#: code:addons/account/models/account_payment.py:513
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Refund"
 msgstr "Refundácia predajcu"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
 msgstr "Dane predajcu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
+#: code:addons/account/static/src/xml/account_reconciliation.xml:305
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #, python-format
 msgid "Vendors"
@@ -9966,24 +10285,24 @@ msgstr "Zobraziť podporované banky"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Objem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_warning_account
 #: selection:res.partner,invoice_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Varovanie"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:499
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Varovanie pre %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
-msgstr ""
+msgstr "Varovanie na faktúre"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1265
@@ -9996,10 +10315,8 @@ msgstr "Varovanie!"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "We can handle the whole import process\n"
-"                                        for you: simply send your Odoo "
-"project\n"
-"                                        manager a CSV file containing all "
-"your\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
 "Môžeme zvládnuť celý proces importu\n"
@@ -10011,10 +10328,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "We can handle the whole import process\n"
-"                                        for you: simply send your Odoo "
-"project\n"
-"                                        manager a CSV file containing all "
-"your\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
 "Môžeme zvládnuť celý proces importu\n"
@@ -10036,12 +10351,10 @@ msgstr "Vitajte"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
-"When inviting users, you will need to define which access rights they are "
-"allowed to have. \n"
+"When inviting users, you will need to define which access rights they are allowed to have. \n"
 "                        This is done by assigning a role to each user."
 msgstr ""
-"Keď pozývate používateľov, musíte definovať ktoré prístupové práva sú "
-"oprávnený mať.\n"
+"Keď pozývate používateľov, musíte definovať ktoré prístupové práva sú oprávnený mať.\n"
 "To je urobené pridelením role každému používateľovi."
 
 #. module: account
@@ -10055,6 +10368,13 @@ msgstr "Či má byť táto účtovná kniha zobrazená na nástenke alebo nie"
 #, python-format
 msgid "Whew, that was fast !"
 msgstr "Fíha, to bolo rýchle!"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
+#: model:ir.model.fields,field_description:account.field_account_print_journal_amount_currency
+#: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_amount_currency
+msgid "With Currency"
+msgstr "S menou"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10132,8 +10452,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Môžete zaškrtnúť toto políčko pre označenie tejto položky účtovnej knihy ako "
-"sporný s pridruženým partnerom"
+"Môžete zaškrtnúť toto políčko pre označenie tejto položky účtovnej knihy ako"
+" sporný s pridruženým partnerom"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -10160,14 +10480,20 @@ msgid ""
 "you may deactivate this product."
 msgstr ""
 "Nemôžete zmeniť mernú jednotku produktu ktorý už bol použitý v položke "
-"účtovnej knihy účtu. Ak potrebujee zmeniť mernú jednotku, môžete deaktivovať "
-"tento produkt."
+"účtovnej knihy účtu. Ak potrebujee zmeniť mernú jednotku, môžete deaktivovať"
+" tento produkt."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:320
 #, python-format
 msgid "You can not delete a payment that is already posted"
 msgstr "Nemôžete zmazať platbu ktorá už bola zverejnená"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1360
+#, python-format
+msgid "You can only delete an invoice line if the invoice is in draft state."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -10183,8 +10509,15 @@ msgid ""
 "reports hierarchy (auto-computed field 'level')."
 msgstr ""
 "Tu môžete nastaviť formát v ktorom chcete zobrazovať tento záznam. Ak "
-"ponecháte automatické formátovanie, bude to vypočítané na základe hierarchie "
-"finančných výkazov (automaticky vypočítané pole 'úroveň')."
+"ponecháte automatické formátovanie, bude to vypočítané na základe hierarchie"
+" finančných výkazov (automaticky vypočítané pole 'úroveň')."
+
+#. module: account
+#: code:addons/account/models/account_move.py:185
+#, python-format
+msgid ""
+"You cannot add/modify entries prior to and inclusive of the lock date %s"
+msgstr "Nemôžete pridať/upravovať vstupy pred a vrátane uzamknutého dátumu %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:187
@@ -10214,8 +10547,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
-"Nemôžete zmeniť majiteľa spoločnosti účtu ktorý už obsahuje položky účtovnej "
-"knihy."
+"Nemôžete zmeniť majiteľa spoločnosti účtu ktorý už obsahuje položky účtovnej"
+" knihy."
 
 #. module: account
 #: code:addons/account/models/account.py:187
@@ -10240,8 +10573,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
-"number). You can set it back to \"Draft\" state and modify its content, then "
-"re-confirm it."
+"number). You can set it back to \"Draft\" state and modify its content, then"
+" re-confirm it."
 msgstr ""
 "Nemôžete zmazať faktúru o tom ako bola potvrdená (a dostala číslo). Môžete "
 "ju nastaviť naspäť na 'Koncept' stav a upraviť jej obsah, potom ju opäť "
@@ -10267,26 +10600,20 @@ msgstr "Nemôžete urobiť toto na účte ktorý obsahuje položky účtovnej kn
 #: code:addons/account/models/account_move.py:1157
 #, python-format
 msgid ""
-"You cannot do this modification on a posted journal entry, you can just "
-"change some non legal fields. You must revert the journal entry to cancel "
-"it.\n"
+"You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
 msgstr ""
-"Nemôžete urobiť túto úpravu na zverejnený zápis účtovnej knihy, môžete len "
-"zmeniť niektoré ne- právne oblasti. Musíte vrátiť položku účtovnej knihy aby "
-"ste ju mohli zrušiť.\n"
+"Nemôžete urobiť túto úpravu na zverejnený zápis účtovnej knihy, môžete len zmeniť niektoré ne- právne oblasti. Musíte vrátiť položku účtovnej knihy aby ste ju mohli zrušiť.\n"
 "%s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1159
 #, python-format
 msgid ""
-"You cannot do this modification on a reconciled entry. You can just change "
-"some non legal fields or you must unreconcile first.\n"
+"You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
-"Nemôžete spraviť túto úpravu na zladenom vstupe. Môžete iba zmeniť niektoré "
-"ne-právne polia alebo musíte najskôr odzosúladiť.\n"
+"Nemôžete spraviť túto úpravu na zladenom vstupe. Môžete iba zmeniť niektoré ne-právne polia alebo musíte najskôr odzosúladiť.\n"
 "%s."
 
 #. module: account
@@ -10294,12 +10621,10 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot empty the account number once set.\n"
-"If you would like to delete the account number, you can do it from the Bank "
-"Accounts list."
+"If you would like to delete the account number, you can do it from the Bank Accounts list."
 msgstr ""
 "Nemožno vyprázdniť číslo účtu keď už bude nastavené.\n"
-"Ak by ste chceli vymazať číslo účtu, môžete tak spraviť v zozname bankových "
-"účtov."
+"Ak by ste chceli vymazať číslo účtu, môžete tak spraviť v zozname bankových účtov."
 
 #. module: account
 #: code:addons/account/models/account.py:96
@@ -10308,7 +10633,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconciliable. "
 "(account code: %s)"
 msgstr ""
-"Nemôžete mať účet pohľadávok/záväzkov ktorý nie je zladiťelný. (kód účtu: %s)"
+"Nemôžete mať účet pohľadávok/záväzkov ktorý nie je zladiťelný. (kód účtu: "
+"%s)"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:132
@@ -10352,7 +10678,8 @@ msgstr "Nemôžete dať/brať peniaze do/z bankvého výpisu ktorý je zavretý.
 #: code:addons/account/models/account.py:198
 #, python-format
 msgid ""
-"You cannot remove/deactivate an account which is set on a customer or vendor."
+"You cannot remove/deactivate an account which is set on a customer or "
+"vendor."
 msgstr ""
 "Nemôžete odstrániť/deaktivovať účet ktorý je nastavený na zákazníka alebo "
 "predajcu."
@@ -10408,12 +10735,12 @@ msgstr "Musíte nastaviť začiatočný dátum."
 #: code:addons/account/models/account_move.py:1313
 #, python-format
 msgid ""
-"You should configure the 'Exchange Rate Journal' in the accounting settings, "
-"to manage automatically the booking of accounting entries related to "
+"You should configure the 'Exchange Rate Journal' in the accounting settings,"
+" to manage automatically the booking of accounting entries related to "
 "differences between exchange rates."
 msgstr ""
-"Mali by ste nakonfigurovať \"Výmenný kurz účtovnej knihy\" v nastavení účtu, "
-"pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
+"Mali by ste nakonfigurovať \"Výmenný kurz účtovnej knihy\" v nastavení účtu,"
+" pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
@@ -10424,8 +10751,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Mali by ste nakonfigurovať \"Nárast výmenného kurzu účtu\" v nastavení účtu, "
-"pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
+"Mali by ste nakonfigurovať \"Nárast výmenného kurzu účtu\" v nastavení účtu,"
+" pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
@@ -10436,8 +10763,8 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Mali by ste nakonfigurovať \"Strata výmenného kurzu účtu\" v nastavení účtu, "
-"pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
+"Mali by ste nakonfigurovať \"Strata výmenného kurzu účtu\" v nastavení účtu,"
+" pre automatické spravovanie rezervácií účtovných položiek súvisiacich s "
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
@@ -10553,13 +10880,6 @@ msgstr "aktivovať túto funkciu"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:298
-#, python-format
-msgid "all"
-msgstr "všetko"
-
-#. module: account
-#. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
 msgid "assign to invoice"
@@ -10586,16 +10906,9 @@ msgid "create a journal entry"
 msgstr "vytvoriť záznam účtovnej knihy"
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:295
-#, python-format
-msgid "customers"
-msgstr "zákazníci"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "days"
-msgstr ""
+msgstr "dni"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10627,18 +10940,16 @@ msgstr ""
 "zaplatenú."
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "invoice"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "or"
 msgstr "alebo"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:297
-#, python-format
-msgid "others"
-msgstr "iných"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -10656,6 +10967,11 @@ msgstr "nezaplatené platby"
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
 msgstr "zladenia s ctrl-enter skratkou."
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
+msgid "refund"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -10726,13 +11042,6 @@ msgstr "nastaviť logo spoločnosti"
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "setup your bank accounts."
 msgstr "nastaviť vaše bankové účty"
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:296
-#, python-format
-msgid "suppliers"
-msgstr "dodávatelia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

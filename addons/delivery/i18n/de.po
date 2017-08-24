@@ -9,25 +9,28 @@
 # Marco Broscheit <marco.broscheit@posteo.de>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
-# Henry Mineehen <info@mineehen.de>, 2016
 # Philipp Hug <philipp@hug.cx>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # key six <mobile.umts@gmail.com>, 2016
 # Thomas Neu <t.neu@runbox.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
+# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# Andi <flimflam@salasar.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Thomas Neu <t.neu@runbox.com>, 2016\n"
+"Last-Translator: Andi <flimflam@salasar.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -188,7 +191,7 @@ msgstr "Anlagetyp"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_value_ids
 msgid "Attributes"
-msgstr "Eigenschaften"
+msgstr "Attribute"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available
@@ -366,7 +369,7 @@ msgstr "Herstellungskosten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Kostenmethode"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -435,7 +438,7 @@ msgstr "Auslieferungszeit"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Kunden Ref"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -486,12 +489,12 @@ msgstr "Lieferung"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Lieferungsspediteur"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Lieferungsinformation"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -646,6 +649,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Das Ausfüllen dieses Formulars ermöglicht Ihnen Transporteure in "
+"Abhängigkeit von der Lieferadresse ihres Kunden zu filtern. "
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -656,17 +661,17 @@ msgstr "Festpreis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_follower_ids
 msgid "Followers"
-msgstr "Beobachter"
+msgstr "Abonnenten"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Beobachter (Kanäle)"
+msgstr "Abonnenten (Kanäle)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Beobachter (Partner)"
+msgstr "Abonnenten (Partner)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -690,6 +695,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr "Versandkostenfrei"
 
@@ -742,7 +748,7 @@ msgstr "Höhe"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Höhe muss positiv sein"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -833,12 +839,12 @@ msgstr "Eingang"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Mehr Provider installieren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Integration Level"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -884,7 +890,7 @@ msgstr "Fakturierungsregel"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Beobachter"
+msgstr "Ist ein Abonnent"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line_is_delivery
@@ -930,7 +936,7 @@ msgstr "Länge"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Länge muss positiv sein"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -983,12 +989,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Max. Gewicht"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Max. Gewicht muss positiv sein"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -998,7 +1004,7 @@ msgstr "Max. Wert"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Höchstgewicht lieferbar in dieser Verpackung"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1077,6 +1083,7 @@ msgstr "Normalkosten - Ist-Kosten"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Standard Lieferkosten"
 
@@ -1132,14 +1139,14 @@ msgstr "Verpackung"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Paketcode"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Paketdetails"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1232,7 +1239,7 @@ msgstr "Datum Ablaufwarnung"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
 msgid "Product Attributes"
-msgstr "Produkteigenschaften"
+msgstr "Produktattribute"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
@@ -1360,12 +1367,12 @@ msgstr "Meldebestände"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
 msgid "Reordering max qty"
-msgstr ""
+msgstr "Maximal Nachbestellmenge"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Mindest Nachbestellmenge"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1482,7 +1489,7 @@ msgstr "Versandkosten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Liefergewicht"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1509,12 +1516,16 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise einmal jährlich)\n"
+"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden Lieferung neu berechnet.\n"
+"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
+"Standardisierter Code für internationalen Versand und Warendeklaration"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1539,7 +1550,7 @@ msgstr "Warenversand Konto"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr ""
+msgstr "Lagerbuchungs Id"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1600,6 +1611,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "The Poste"
 
@@ -1627,6 +1639,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Der Verkaufspreis wird in der Produktvorlage verwaltet. Klicken Sie auf den "
+"'Variantenpreise'-Button, um Attributaufschlagspreise zu definieren."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1822,7 +1836,7 @@ msgstr "Zähler der ungelesenen Nachrichten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Bewertung"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1892,7 +1906,7 @@ msgstr "Gewicht * Volumen"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Gewichtseinheit"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1980,7 +1994,7 @@ msgstr "Breite"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Breite muss positiv sein"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187

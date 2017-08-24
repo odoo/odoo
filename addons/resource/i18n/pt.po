@@ -3,6 +3,7 @@
 # * resource
 # 
 # Translators:
+# Manuela Silva <manuela.silva@sky.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
@@ -71,7 +72,7 @@ msgstr "Criado em"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
 msgid "Day of Week"
-msgstr "Dia da semana"
+msgstr "Dia da Semana"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
@@ -265,7 +266,7 @@ msgstr "Detalhes do Recurso"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Folhas de recursos"
+msgstr "Ausências de Recurso"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -287,7 +288,7 @@ msgstr "Recursos"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Resources Leaves"
+msgstr "Ausências de Recursos"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -313,7 +314,7 @@ msgstr "Recursos de pesquisa"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr "Pesquisar Períodos de Licença em Trabalho"
+msgstr "Procurar Ausências no Período de Trabalho"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -333,17 +334,23 @@ msgstr "Horas de início e fim de trabalho"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
 msgid "Starting Date"
-msgstr "Data de início"
+msgstr "Data de Início"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr "Data de Início das Ausências por mês"
+msgstr "Data de Início das Ausências por Mês"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Domingo"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:714
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -403,7 +410,7 @@ msgstr "Trabalho para"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
 msgid "Workgroup Manager"
-msgstr "Gestor do grupo de trabalho"
+msgstr "Gestor do Grupo de Trabalho"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search

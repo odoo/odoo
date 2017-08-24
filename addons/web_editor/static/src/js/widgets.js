@@ -564,6 +564,7 @@ var getCssSelectors = function (filter) {
                             if (!data) {
                                 data = [match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, ''), clean, [clean]];
                             } else {
+                                data[0] += (", " + match[1]);
                                 data[3].push(clean);
                             }
                         }
@@ -636,8 +637,11 @@ var fontIconsDialog = Widget.extend({
     },
     renderElement: function () { // extract list of font (like awesome) from the cheatsheet.
         this.iconsParser = fontIcons;
-        this.icons = _.flatten(_.map(fontIcons, function (data) {
+        this.icons = _.flatten(_.map(fontIcons, function (data) { // TODO maybe useless now
             return data.icons;
+        }));
+        this.alias = _.flatten(_.map(fontIcons, function (data) {
+            return data.alias;
         }));
         this._super.apply(this, arguments);
     },
@@ -740,11 +744,8 @@ var fontIconsDialog = Widget.extend({
                 case '': continue;
                 default:
                     $(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
-                    for (var k=0; k<this.icons.length; k++) {
-                        if (this.icons.indexOf(cls) !== -1) {
-                            this.$('#fa-icon').val(cls);
-                            break;
-                        }
+                    if (this.alias.indexOf(cls) !== -1) {
+                        this.$('#fa-icon').val(cls);
                     }
             }
         }

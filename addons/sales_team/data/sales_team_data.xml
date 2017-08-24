@@ -4,10 +4,12 @@
         <record model="crm.team" id="team_sales_department">
             <field name="name">Direct Sales</field>
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record model="crm.team" id="salesteam_website_sales">
             <field name="name">Website Sales</field>
+            <field name="company_id" eval="False"/>
         </record>
     </data>
 

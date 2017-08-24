@@ -90,7 +90,7 @@ class PackOperation(models.Model):
         res = self.package_id._get_all_products_quantities()
         # reduce by the quantities linked to a move
         for record in self.linked_move_operation_ids:
-            if record.move_id.product_id.id not in res:
+            if record.move_id.product_id not in res:
                 res[record.move_id.product_id] = 0
             res[record.move_id.product_id] -= record.qty
         return res
@@ -110,10 +110,11 @@ class PackOperation(models.Model):
                 qty -= record.qty
             self.remaining_qty = float_round(qty, precision_rounding=self.product_id.uom_id.rounding)
 
-    @api.one
+    @api.multi
     def _compute_location_description(self):
-        self.from_loc = '%s%s' % (self.location_id.name, self.product_id and self.package_id.name or '')
-        self.to_loc = '%s%s' % (self.location_dest_id.name, self.result_package_id.name or '')
+        for operation, operation_sudo in zip(self, self.sudo()):
+            operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
+            operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
     @api.one
     def _compute_lots_visible(self):

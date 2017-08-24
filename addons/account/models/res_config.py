@@ -233,10 +233,8 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):
@@ -281,3 +279,17 @@ class AccountConfigSettings(models.TransientModel):
             'res_id': self.env.user.company_id.id,
             'target': 'current',
         }
+
+    @api.model
+    def create(self, vals):
+        """
+        Avoid to rewrite the `accounts_code_digits` on the company if the value is the same. As all the values are
+        passed on the res.config creation, the related fields are rewriten on each res_config creation. Rewriting
+        the `account_code_digits` on the company will trigger a write on all the account.account to complete the
+        code the missing characters to complete the desired number of digit, leading to a sql_constraint.
+        """
+        if ('company_id' in vals and 'code_digits' in vals):
+            if self.env['res.company'].browse(vals.get('company_id')).accounts_code_digits == vals.get('code_digits'):
+                vals.pop('code_digits')
+        res = super(AccountConfigSettings, self).create(vals)
+        return res

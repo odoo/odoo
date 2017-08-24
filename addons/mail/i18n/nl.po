@@ -7,8 +7,8 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Volluta <volluta@tutanota.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 msgid ""
 msgstr ""
@@ -296,7 +296,7 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">deelgenomen <a href=\"#\" "
+"<div class=\"o_mail_notification\">Toegevoegd <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
@@ -315,8 +315,8 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
-"<div><p>Hallo,</p><p>%s heeft u uitgenodigd om het %s document te volgen: "
-"%s.</p></div>"
+"<div><p>Hallo,</p><p>%s heeft u uitgenodigd om het volgende document %s te "
+"volgen: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -872,7 +872,7 @@ msgstr "Wijzigen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr "Veranderd veld"
+msgstr "Gwijzigd veld"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -913,7 +913,7 @@ msgstr "Kanalen"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr "Kanalen/Partners"
+msgstr "Kanalen/Relaties"
 
 #. module: mail
 #. openerp-web
@@ -1510,8 +1510,8 @@ msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
 msgstr ""
-"Fout zonder uitzondering. Waarschijnlijk door het verzenden van een e-mail "
-"zonder berekende ontvangers."
+"Fout zonder foutmelding. Waarschijnlijk door het verzenden van een e-mail "
+"naar relaties met een foutief e-mail adres."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -1829,7 +1829,7 @@ msgstr "Volgers (Kanalen)"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -2015,7 +2015,7 @@ msgstr "Inactief"
 #: model:ir.model.fields,help:mail.field_stock_production_lot_message_unread
 #: model:ir.model.fields,help:mail.field_survey_survey_message_unread
 msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_needaction
@@ -2129,7 +2129,7 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
-"Indien ingesteld, zal de wachtrij managerde e-mail sturen na de datum. "
+"Indien ingesteld, zal de wachtrij manager de e-mail sturen na de datum. "
 "Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd. "
 "Jinja2 placeholders kunnen worden gebruikt."
 
@@ -2237,7 +2237,7 @@ msgstr "Mensen uitnodigen"
 #: code:addons/mail/static/src/js/client_action.js:649
 #, python-format
 msgid "Invite people to #%s"
-msgstr "Nodig mensen uit io #%s"
+msgstr "Nodig mensen uit voor #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2722,8 +2722,8 @@ msgid ""
 msgstr ""
 "Berichten subtypes geven een nauwkeurigere type aanduiding bij een bericht, "
 "speciaal bij systeem meldingen. Het kan bijvoorbeeld een melding zijn "
-"behorend bij het aanmaken van een nieuwe regel, of bij een fase verandering."
-" Berichten subtypes geven u de mogelijkheid om de meldingen welke een "
+"behorend bij het aanmaken van een nieuwe regel, of bij een fase wijziging. "
+"Berichten subtypes geven u de mogelijkheid om de meldingen welke een "
 "werknemer wil ontvangen, precies in te stellen."
 
 #. module: mail

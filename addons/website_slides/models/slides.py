@@ -165,6 +165,7 @@ class Channel(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -370,7 +371,10 @@ class Slide(models.Model):
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
-                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+                    url = self.env['link.tracker'].sudo().create({
+                        'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
+                        'title': slide.name,
+                    }).short_url
                 else:
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
@@ -383,7 +387,7 @@ class Slide(models.Model):
             values['image'] = values['datas']
         if values.get('website_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
-        if values.get('url'):
+        if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
@@ -397,7 +401,7 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('url'):
+        if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)

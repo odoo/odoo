@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# nasaaskii <nasaaskii@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-03-10 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: nasaaskii <nasaaskii@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
@@ -26,6 +29,9 @@ msgid ""
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
 msgstr ""
+"<b>Татан авалтын саатал</b> нь татан авалтыг хангах аргыг систем олохгүй үед"
+" үүсдэг. Зарим саатал автомат шийдэгддэг, зарим нь гар ажиллагааг шаарддаг "
+"(эдгээр нь алдааны тусгай зурвасаар тогтоогддог)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -33,12 +39,14 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
+"<b>татан авалтын захиалга</b> нь тусгайлсан бараанууд тусгайлсан байрлал\n"
+"                хэрэгцээтэй байгааг хөтлөхөд хэрэглэгддэг. Татан авалтын захиалга нь\n"
+"                ихэнхдээ<i>борлуулалтын захиалга, татах логистикийн дүрэм эсвэл\n"
+"                хамгийн бага нөөцийн дүрэм</i>-с автоматаар үүсдэг."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -58,7 +66,7 @@ msgstr "Нэг мөсөн"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -83,8 +91,9 @@ msgstr "Татан авалт шалгах"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
 "Татан авалтыг шийдвэрлэхээр сонгогдсон дүрэм. Ихэнхдээ систем автоматаар "
 "сонгодог боловч зарим тохиолдолд татан авалтын менежер ялгаатай дүрмээр "
@@ -95,7 +104,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Татан авалтын захиалга үүсгэхдээ дарна уу."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -133,6 +142,11 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
 msgstr "Үүсгэсэн"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr "Хүргэлтийн төрөл"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -209,7 +223,7 @@ msgstr "ID"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Хэрэв маршрут глобаль бол"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
@@ -257,6 +271,9 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Хамгийн түгээмэл саатал нь бараан дээр нийлүүлэгч\n"
+"                тодорхойлогдоогүй байхад гардаг, мөн үйлдвэрлэх барааны\n"
+"                орц нь тодорхойлогдоогүй байхад гардаг."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -406,6 +423,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Энэ татан авалтыг үүсгэсэн баримтын код.\n"
+"Үүнийг Odoo автоматаар бөглөдөг."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -420,7 +439,7 @@ msgstr "Татан авалтыг хийх"
 #. module: procurement
 #: model:ir.actions.server,name:procurement.procurement_order_server_action
 msgid "Run Procurements"
-msgstr ""
+msgstr "Татан авалтыг ажиллуулах"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -479,7 +498,8 @@ msgstr "Төлөв"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
-"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн байдаг."
+"Энэ талбарт баглааны эх үүсвэр болон үүний хөдөлгөөний нэр бөглөгдсөн "
+"байдаг."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -502,21 +522,23 @@ msgstr "Маш яаралтай"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: "
-"purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Татан авалтын захиалга батлагдахад, автоматаар \n"
+"                хэрэгцээг хангах ажилбарыг үүсгэдэг: худалдан авах \n"
+"                захиалгын санал, үйлдвэрлэлийн захиалга, гм."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:144
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
-msgstr ""
+msgstr "Цуцалсан төлөвтэй татан авах захиалгыг устгах боломжгүй."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "ж. Худалдаж авах"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view

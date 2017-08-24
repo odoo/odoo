@@ -161,7 +161,14 @@ var KanbanColumn = Widget.extend({
     get_ids: function () {
         var ids = [];
         this.$('.o_kanban_record').each(function (index, r) {
-            ids.push($(r).data('record').id);
+            var record = $(r).data('record');
+            // when a record is being dragged & dropped, an empty .o_kanban_record
+            // element (a placeholder) is present in the column, but it has no
+            // associated record (the real o_kanban_record is still in the
+            // column, but hidden), so we need to filter out those placeholders
+            if (record) {
+                ids.push(record.id);
+            }
         });
         return ids;
     },

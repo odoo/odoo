@@ -6,13 +6,15 @@
 # Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Last-Translator: Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +133,7 @@ msgstr "Валюта"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr ""
+msgstr "Умови оплати клієнтів"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -141,7 +143,7 @@ msgstr "URL даних"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Ступінь довіри у цього боржника"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -213,16 +215,19 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"Останнім часом для цього партнера виконано звірку рахунків-фактур та "
+"платежів. Вона виконується, якщо у вас немає принаймні неузгодженого дебету "
+"та невмотивованих кредитів, або якщо ви натискаєте кнопку \"Готово\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Дата останньої відповідності рахунків-фактур та платежів"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Повідомлення для рахунку-фактури"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -390,6 +395,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
+"Цей платіжний термін використовуватиметься замість замовчуванням для "
+"замовлень на купівлю та рахунків постачальників"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -397,6 +404,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Цей платіжний термін буде використано замість замовчуванням для замовлень на"
+" продаж та рахунків-фактур клієнтів"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -445,7 +454,7 @@ msgstr "Користувачі"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Допоміжне поле відображає валюту"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -455,7 +464,7 @@ msgstr "URL підтвердження"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr ""
+msgstr "Умови оплати постачальника"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101

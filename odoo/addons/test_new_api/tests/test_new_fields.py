@@ -179,6 +179,29 @@ class TestFields(common.TransactionCase):
         cath.parent = finn
         self.assertEqual(ewan.display_name, "Gabriel / Finnley / Catherine / Ewan")
 
+    def test_12_recursive_recompute(self):
+        """ test recomputation on recursively dependent field """
+        a = self.env['test_new_api.recursive'].create({'name': 'A'})
+        b = self.env['test_new_api.recursive'].create({'name': 'B', 'parent': a.id})
+        c = self.env['test_new_api.recursive'].create({'name': 'C', 'parent': b.id})
+        d = self.env['test_new_api.recursive'].create({'name': 'D', 'parent': c.id})
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'A / B')
+        self.assertEqual(c.display_name, 'A / B / C')
+        self.assertEqual(d.display_name, 'A / B / C / D')
+
+        b.parent = False
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'B')
+        self.assertEqual(c.display_name, 'B / C')
+        self.assertEqual(d.display_name, 'B / C / D')
+
+        b.name = 'X'
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'X')
+        self.assertEqual(c.display_name, 'X / C')
+        self.assertEqual(d.display_name, 'X / C / D')
+
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
@@ -497,6 +520,25 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
+
+        # create company record and attribute
+        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
+        attribute_record = self.env['test_new_api.company.attr'].create({
+            'company': company_record.id,
+            'quantity': 1,
+        })
+        self.assertEqual(attribute_record.bar, 'ABC')
+
+        # change quantity, 'bar' should recompute to 'ABCABC'
+        attribute_record.quantity = 2
+        self.assertEqual(attribute_record.bar, 'ABCABC')
+        self.assertFalse(self.env.has_todo())
+
+        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
+        company_record.foo = 'DEF'
+        self.assertEqual(attribute_record.company.foo, 'DEF')
+        self.assertEqual(attribute_record.bar, 'DEFDEF')
+        self.assertFalse(self.env.has_todo())
 
     def test_28_sparse(self):
         """ test sparse fields. """

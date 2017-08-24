@@ -552,7 +552,7 @@ class Warehouse(models.Model):
         routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
         pulls = Pull.search(['&', ('route_id', 'in', routes.ids), ('location_id.usage', '=', 'transit')])
         pulls.write({
-            'location_src_id': new_location,
+            'location_src_id': new_location.id,
             'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"})
         if not change_to_multiple:
             # If single delivery we should create the necessary MTO rules for the resupply
@@ -573,7 +573,7 @@ class Warehouse(models.Model):
         routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
         self.env['procurement.rule'].search([
             '&', ('route_id', 'in', routes.ids),
-            ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location})
+            ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location.id})
 
     @api.multi
     def _update_routes(self):
@@ -614,7 +614,8 @@ class Warehouse(models.Model):
                         pull.write({'name': pull.name.replace(warehouse.name, new_name, 1)})
                     for push in route.push_ids:
                         push.write({'name': push.name.replace(warehouse.name, new_name, 1)})
-                warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
+                if warehouse.mto_pull_id:
+                    warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
             sequence_data = warehouse._get_sequence_values()
             warehouse.in_type_id.sequence_id.write(sequence_data['in_type_id'])

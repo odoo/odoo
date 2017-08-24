@@ -1,22 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_links
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-05-03 05:47+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.share_page_menu
@@ -65,9 +87,9 @@ msgid ""
 "placement=\"top\" title=\"Defines the context of your link. It might be an "
 "event you want to promote or a special promotion.\"/>"
 msgstr ""
-"Kampaň <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the context of your link. It might be an event you "
-"want to promote or a special promotion.\"/>"
+"Kampaň <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the context of your link. It might be an "
+"event you want to promote or a special promotion.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -107,13 +129,13 @@ msgstr "Sledovač linky"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the medium used to share your link. It might be an "
-"email, or a Facebook Ads for instance.\"/>"
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the medium used to share your link. It "
+"might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
-"Médium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the medium used to share your link. It might be an "
-"email, or a Facebook Ads for instance.\"/>"
+"Médium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the medium used to share your link. It "
+"might be an email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -142,13 +164,13 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the source from which your traffic will come from, "
-"Facebook or Twitter for instance.\"/>"
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the source from which your traffic will "
+"come from, Facebook or Twitter for instance.\"/>"
 msgstr ""
-"Zdroj <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the source from which your traffic will come from, "
-"Facebook or Twitter for instance.\"/>"
+"Zdroj <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the source from which your traffic will "
+"come from, Facebook or Twitter for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -163,6 +185,22 @@ msgid "Stats"
 msgstr "štatistiky"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
+#: model:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "URL"
 msgstr "URL"
@@ -173,6 +211,13 @@ msgstr "URL"
 #, python-format
 msgid "Unable to get recent links"
 msgstr "Nemožno získať najnovšie odkazy"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr ""
 
 #. module: website_links
 #. openerp-web

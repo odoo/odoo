@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -543,11 +543,6 @@ msgid "By-Products"
 msgstr "副産品"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product_can_be_expensed
-msgid "Can be Expensed"
-msgstr "経費入力可能"
-
-#. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
 #, python-format
 msgid "Can't find any generic Manufacture route."
@@ -646,7 +641,7 @@ msgstr "クリックして解体オーダを新規作成してください。"
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid "Click to start a new manufacturing order."
-msgstr "クリックして新しい 「製造オーダー」 を作成"
+msgstr "クリックして新しい製造オーダを作成。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -1227,6 +1222,11 @@ msgid "Inventory Post Visible"
 msgstr "在庫の投入 可視"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Inventory Unreserve Visible"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
@@ -1600,8 +1600,8 @@ msgid ""
 "Messages can be configured to appear during any operation: receptions, delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
-"メッセージは、動作中に表示されるように構成することができます：\n"
-"受入、出荷指図製造指図、作業指示書などです。"
+"メッセージは、動作中に表示されるように設定することができます。\n"
+"受入、出荷指図製造指図、作業指示書など。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1879,7 +1879,7 @@ msgstr "先月実績に基づく設備総合効率"
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time."
-msgstr "設備総合効率：非稼働もしくはブロックされた時間"
+msgstr "設備総合効率: 非稼働もしくはブロックされた時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
@@ -2178,6 +2178,11 @@ msgstr "製品の特性 (サイズ・色等) に基づきバリアントを生�
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_propagate
 msgid "Propagate cancel and split"
 msgstr "取消/分割を展開"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_location_path
+msgid "Pushed Flow"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
@@ -2587,11 +2592,6 @@ msgid "Source"
 msgstr "要求元"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "製品がHR費用で選択することが可能かどうかを指定します"
-
-#. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
@@ -2688,6 +2688,11 @@ msgstr "現在のユーザが動作しているかどうかを示すテクニカ
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
 msgstr "テクニカルフィールド　投稿できるかどうか確認"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
+msgid "Technical field to check when we can unreserve"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
@@ -3404,10 +3409,22 @@ msgstr ""
 "終了させるか、取り消してください"
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr "既に消費した材料を有する移動は取り消すことができません"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44

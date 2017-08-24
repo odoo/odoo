@@ -3,7 +3,7 @@
 # * payment_stripe
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # hman tsao <herman.tsao@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr "信用卡认证编号"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card Holder Name"
-msgstr ""
+msgstr "卡持有人姓名"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -49,9 +49,23 @@ msgid "Checkout Image URL"
 msgstr ""
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#, python-format
+msgid "Close"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "确认<span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#, python-format
+msgid "Error"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -61,7 +75,7 @@ msgstr "到期日期"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "MM / YY"
-msgstr "月/年"
+msgstr "MM / YY"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -72,6 +86,13 @@ msgstr "付款方式"
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "付款交易"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:43
+#, python-format
+msgid "Payment error"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
@@ -92,7 +113,9 @@ msgstr ""
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:111
 #, python-format
-msgid "Stripe: invalid reply received from provider, missing reference"
+msgid ""
+"Stripe: invalid reply received from provider, missing reference. Additional "
+"message: %s"
 msgstr ""
 
 #. module: payment_stripe

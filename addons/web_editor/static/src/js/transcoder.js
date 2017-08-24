@@ -98,19 +98,37 @@ var getMatchedCSSRules = function (a) {
     if (style.display === 'block') {
         delete style.display;
     }
-    if (style['margin-top']) {
-        style.margin = (style['margin-top'] || 0) + ' ' + (style['margin-right'] || 0) + ' ' + (style['margin-bottom'] || 0) + ' ' + (style['margin-left'] || 0);
-        delete style['margin-top'];
-        delete style['margin-right'];
-        delete style['margin-bottom'];
-        delete style['margin-left'];
-    }
-    if (style['padding-top']) {
-        style.padding = (style['padding-top'] || 0) + ' ' + (style['padding-right'] || 0) + ' ' + (style['padding-bottom'] || 0) + ' ' + (style['padding-left'] || 0);
-        delete style['padding-top'];
-        delete style['padding-right'];
-        delete style['padding-bottom'];
-        delete style['padding-left'];
+
+    _.each(['margin', 'padding'], function(p) {
+        if (style[p+'-top'] || style[p+'-right'] || style[p+'-bottom'] || style[p+'-left']) {
+            if (style[p+'-top'] === style[p+'-right'] && style[p+'-top'] === style[p+'-bottom'] && style[p+'-top'] === style[p+'-left']) {
+                // keep => property: [top/right/bottom/left value];
+                style[p] = style[p+'-top'];
+            }
+            else {
+                // keep => property: [top value] [right value] [bottom value] [left value];
+                style[p] = (style[p+'-top'] || 0) + ' ' + (style[p+'-right'] || 0) + ' ' + (style[p+'-bottom'] || 0) + ' ' + (style[p+'-left'] || 0);
+                if (style[p].indexOf('inherit') !== -1 || style[p].indexOf('initial') !== -1) {
+                    // keep => property-top: [top value]; property-right: [right value]; property-bottom: [bottom value]; property-left: [left value];
+                    delete style[p];
+                    return;
+                }
+            }
+            delete style[p+'-top'];
+            delete style[p+'-right'];
+            delete style[p+'-bottom'];
+            delete style[p+'-left'];
+        }
+    });
+
+    // text-decoration rule is decomposed in -line, -color and -style. This is
+    // however not supported by many browser/mail clients and the editor does
+    // not allow to change -color and -style rule anyway
+    if (style['text-decoration-line']) {
+        style['text-decoration'] = style['text-decoration-line'];
+        delete style['text-decoration-line'];
+        delete style['text-decoration-color'];
+        delete style['text-decoration-style'];
     }
 
     return style;
@@ -123,7 +141,7 @@ var font_to_img = function ($editable) {
         var icon, content;
         _.find(widget.fontIcons, function (font) {
             return _.find(widget.getCssSelectors(font.parser), function (css) {
-                if ($font.is(css[0].replace(/::?before$/, ''))) {
+                if ($font.is(css[0].replace(/::?before/g, ''))) {
                     icon = css[2].split("-").shift();
                     content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;

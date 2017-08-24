@@ -1,10 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from mock import patch
+
 from odoo.tests.common import TransactionCase
 
 
 class TestPartnerAssign(TransactionCase):
+
+    def setUp(self):
+        super(TestPartnerAssign, self).setUp()
+
+        def geo_find(addr):
+            return {
+                'Wavre, Belgium': (50.7158956, 4.6128075),
+                'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
+            }.get(addr)
+
+        patcher = patch('odoo.addons.base_geolocalize.models.res_partner.geo_find', wraps=geo_find)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        patcher = patch('odoo.addons.website_crm_partner_assign.models.crm_lead.geo_find',
+                        wraps=geo_find)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_00_partner_assign(self):
         partner2 = self.env.ref('base.res_partner_2')

@@ -34,7 +34,7 @@ class AccountInvoice(models.Model):
     def _check_communication(self):
         for inv in self:
             if inv.reference_type == 'bba' and not self.check_bbacomm(inv.reference):
-                raise ValidationError('Invalid BBA Structured Communication !')
+                raise ValidationError(_('Invalid BBA Structured Communication !'))
 
     def check_bbacomm(self, val):
         supported_chars = '0-9+*/ '

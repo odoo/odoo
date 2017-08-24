@@ -8,6 +8,7 @@ import urllib2
 import werkzeug.urls
 
 from odoo import api, fields, models, registry, _
+from odoo.exceptions import UserError
 from odoo.http import request
 
 
@@ -124,6 +125,9 @@ class GoogleService(models.TransientModel):
         client_id = Parameters.get_param('google_%s_client_id' % (service,), default=False)
         client_secret = Parameters.get_param('google_%s_client_secret' % (service,), default=False)
 
+        if not client_id or not client_secret:
+            raise UserError(_("The account for the Google service '%s' is not configured") % service)
+
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = werkzeug.url_encode({
             'refresh_token': refresh_token,
@@ -139,7 +143,11 @@ class GoogleService(models.TransientModel):
             if error.code == 400:  # invalid grant
                 with registry(request.session.db).cursor() as cur:
                     self.env(cur)['res.users'].browse(self.env.uid).write({'google_%s_rtoken' % service: False})
-            error_key = json.loads(error.read()).get("error", "nc")
+            try:
+                error_file = error.read()
+                error_key = json.loads(error_file).get("error", "nc")
+            except:
+                error_key = error
             _logger.exception("Bad google request : %s !", error_key)
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
             raise self.env['res.config.settings'].get_config_warning(error_msg)

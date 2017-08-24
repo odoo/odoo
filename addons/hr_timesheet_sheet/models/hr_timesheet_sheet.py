@@ -85,7 +85,7 @@ class HrTimesheetSheet(models.Model):
                         AND id <> %s''',
                     (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
                 if any(self.env.cr.fetchall()):
-                    raise ValidationError('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.')
+                    raise ValidationError(_('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):
@@ -152,7 +152,7 @@ class HrTimesheetSheet(models.Model):
 
         analytic_timesheet_toremove = self.env['account.analytic.line']
         for sheet in self:
-            analytic_timesheet_toremove += sheet.timesheet_ids
+            analytic_timesheet_toremove += sheet.timesheet_ids.filtered(lambda t: not t.task_id)
         analytic_timesheet_toremove.unlink()
 
         return super(HrTimesheetSheet, self).unlink()
