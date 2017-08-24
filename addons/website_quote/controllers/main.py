@@ -187,12 +187,12 @@ class sale_quote(http.Controller):
         })
         request.session['quote_%s_transaction_id' % order.id] = tx.id
 
-        return True
-        # return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-        #                              submit_txt=_('Pay & Confirm'), render_values={
-        #                                  'type': order._get_payment_type(),
-        #                                  'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-        #                                  })
+        # return True
+        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                                     submit_txt=_('Pay & Confirm'), render_values={
+                                         'type': order._get_payment_type(),
+                                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                                         })
 
     @http.route('/quote/<int:order_id>/transaction/token', type='http', auth='public', website=True)
     def payment_token(self, order_id, pm_id=None, **kwargs):
