@@ -360,9 +360,6 @@ class AccountJournal(models.Model):
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
-    color = fields.Integer("Color Index", default=1)
-    account_setup_bank_data_marked_done = fields.Boolean(string='Bank setup marked as done', compute="_compute_setup_marked_done", help="Technical field used in domains in the setup bar")
-
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
@@ -405,11 +402,6 @@ class AccountJournal(models.Model):
                 journal.refund_sequence_number_next = sequence.number_next_actual
             else:
                 journal.refund_sequence_number_next = 1
-
-    @api.depends('company_id.account_setup_bank_data_marked_done')
-    def _compute_setup_marked_done(self):
-        for record in self:
-            record.account_setup_bank_data_marked_done = record.company_id.account_setup_bank_data_marked_done
 
     @api.multi
     def _inverse_refund_seq_number_next(self):
@@ -615,37 +607,6 @@ class AccountJournal(models.Model):
             journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
         return journal
-
-    @api.model
-    def retrieve_account_dashboard_setup_bar(self):
-        """ Returns the data used by the setup bar on account's dashboard.
-        """
-        company = self.env['res.company']._company_default_get()
-
-        if company.account_setup_bar_closed:
-            return {'show_setup_bar': False}
-
-        data = {'show_setup_bar': True}
-
-        data['company'] = company.account_setup_company_data_marked_done
-        data['bank'] = company.account_setup_bank_data_marked_done
-        data['fiscal_year'] = company.account_setup_financial_year_data_marked_done
-        data['chart_of_accounts'] = company.account_setup_chart_of_accounts_marked_done
-        data['initial_balance'] = company.opening_move_posted()
-
-        return data
-
-    def mark_bank_setup_as_done_action(self):
-        """ Forces the 'bank setup' step of setup to mark it as done. It will hence
-        be marked as such in the setup bar.
-        """
-        self.company_id.account_setup_bank_data_marked_done = True
-
-    def unmark_bank_setup_as_done_action(self):
-        """ Forces the 'bank setup' step of setup to mark it as undone. It will hence
-        be marked as such in the setup bar.
-        """
-        self.company_id.account_setup_bank_data_marked_done = False
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank and set it as value of the  field bank_account_id """

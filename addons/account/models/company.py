@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+
+from datetime import timedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
@@ -10,10 +10,6 @@ from odoo.tools.float_utils import float_round, float_is_zero
 
 class ResCompany(models.Model):
     _inherit = "res.company"
-
-    def _default_opening_date(self):
-        today = datetime.now()
-        return today + relativedelta(day=1, hour=0, minute=0, second=0, microsecond=0)
 
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
@@ -52,17 +48,18 @@ If you have any queries regarding your account, Please contact us.
 Thank you in advance for your cooperation.
 Best Regards,''')
     use_cash_basis = fields.Boolean(string='Use Cash Basis')
-    account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', help="The journal entry containing all the opening journal items of this company's accounting.")
-    account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal when the opening moves of this company's accounting has been posted.")
-    account_opening_date = fields.Date(string='Accounting opening date',default=_default_opening_date, related='account_opening_move_id.date', help="Date of the opening entries of this company's accounting.")
+
+    #Fields of the setup step for opening move
+    account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
+    account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")
+    account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.")
 
     #Fields marking the completion of a setup step
-    account_setup_company_data_marked_done = fields.Boolean(string='Company setup marked as done', default=False, help="True iff the user has forced the completion of the company setup step.")
-    account_setup_bank_data_marked_done = fields.Boolean('Bank setup marked as done', default=False, help="True iff the user has forced the completion of the bank setup step.")
-    account_setup_financial_year_data_marked_done = fields.Boolean('Financial year setup marked as done', default=False, help="True iff the user has forced the completion of the financial year setup step.")
-    account_setup_chart_of_accounts_marked_done = fields.Boolean(string='Chart of account checked', default=False, help="True iff the wizard has displayed the chart of account once.")
-    account_setup_bar_closed = fields.Boolean(string='Setup bar closed', default=False, help="True iff the setup bar has been closed by the user.")
-
+    account_setup_company_data_done = fields.Boolean(string='Company Setup Marked As Done', help="Technical field holding the status of the company setup step.")
+    account_setup_bank_data_done = fields.Boolean('Bank Setup Marked As Done', help="Technical field holding the status of the bank setup step.")
+    account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
+    account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
+    account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
@@ -133,28 +130,25 @@ Best Regards,''')
 
     @api.model
     def setting_init_company_action(self):
-        """ Called by the 'Company Data' button of the setup bar.
-        """
-        current_company = self.env['res.company']._company_default_get()
+        """ Called by the 'Company Data' button of the setup bar."""
+        self.ensure_one()
         view_id = self.env.ref('account.setup_view_company_form').id
-
         return {'type': 'ir.actions.act_window',
                 'name': _('Company Data'),
                 'res_model': 'res.company',
                 'target': 'new',
                 'view_mode': 'form',
-                'res_id': current_company.id,
+                'res_id': self.id,
                 'views': [[view_id, 'form']],
         }
 
     @api.model
     def setting_init_bank_account_action(self):
-        """ Called by the 'Bank Accounts' button of the setup bar.
-        """
-        current_company = self.env['res.company']._company_default_get()
+        """ Called by the 'Bank Accounts' button of the setup bar."""
+        self.ensure_one()
         view_id = self.env.ref('account.setup_bank_journal_form').id
 
-        rslt_act_dict = {
+        res = {
             'type': 'ir.actions.act_window',
             'name': _('Bank Account'),
             'view_mode': 'form',
@@ -165,27 +159,24 @@ Best Regards,''')
 
         # If some bank journal already exists, we open it in the form, so the user can edit it.
         # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=',current_company.id), ('type','=','bank')], limit=1)
+        bank_journal = self.env['account.journal'].search([('company_id','=', self.id), ('type','=','bank')], limit=1)
         if bank_journal:
-            rslt_act_dict['res_id'] = bank_journal.id
+            res['res_id'] = bank_journal.id
         else:
-            rslt_act_dict['context'] = {'default_type': 'bank'}
-
-        return rslt_act_dict
+            res['context'] = {'default_type': 'bank'}
+        return res
 
     @api.model
     def setting_init_fiscal_year_action(self):
-        """ Called by the 'Fiscal Year Opening' button of the setup bar.
-        """
-        current_company = self.env['res.company']._company_default_get()
-        current_company.create_op_move_if_non_existant()
-
-        new_wizard = self.env['account.financial.year.op'].create({'company_id': current_company.id})
+        """ Called by the 'Fiscal Year Opening' button of the setup bar."""
+        self.ensure_one()
+        self.create_op_move_if_non_existant()
+        new_wizard = self.env['account.financial.year.op'].create({'company_id': self.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Fiscal Year',
+            'name': _('Fiscal Year'),
             'view_mode': 'form',
             'res_model': 'account.financial.year.op',
             'target': 'new',
@@ -195,58 +186,57 @@ Best Regards,''')
 
     @api.model
     def setting_chart_of_accounts_action(self):
-        """ Called by the 'Chart of Accounts' button of the setup bar.
-        """
-        current_company = self._company_default_get()
-        current_company.account_setup_chart_of_accounts_marked_done = True
+        """ Called by the 'Chart of Accounts' button of the setup bar."""
+        self.ensure_one()
+        self.account_setup_coa_done = True
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
-        if current_company.opening_move_posted():
+        if self.opening_move_posted():
             return 'account.action_account_form'
 
-        # Otherwise, we open a custom tree view allowing to edit opening balances of the account, to prepare the opening move
+        # Otherwise, we create the opening move
         self.create_op_move_if_non_existant()
 
+        # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
-
+        # Hide the current year earnings account as it is automatically computed
+        domain = [('user_type_id', '!=', self.env.ref('account.data_unaffected_earnings').id), ('company_id','=', self.id)]
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Chart of Accounts',
+            'name': _('Chart of Accounts'),
             'res_model': 'account.account',
             'view_mode': 'tree',
             'search_view_id': self.env.ref('account.view_account_search').id,
             'views': [[view_id, 'list']],
-            'domain': [('user_type_id','!=',self.env.ref('account.data_unaffected_earnings').id), ('company_id','=',current_company.id)] # We hide the current year earnings account as it is automatically computed.
+            'domain': domain,
         }
 
     @api.model
     def setting_opening_move_action(self):
-        """ Called by the 'Initial Balances' button of the setup bar.
-        """
-        current_company = self.env['res.company']._company_default_get()
+        """ Called by the 'Initial Balances' button of the setup bar."""
+        self.ensure_one()
 
         # If the opening move has already been posted, we open its form view
-        if current_company.opening_move_posted():
+        if self.opening_move_posted():
             form_view_id = self.env.ref('account.setup_posted_move_form').id
-
             return {
                 'type': 'ir.actions.act_window',
-                'name': 'Initial Balances',
+                'name': _('Initial Balances'),
                 'view_mode': 'form',
                 'res_model': 'account.move',
                 'target': 'new',
-                'res_id': current_company.account_opening_move_id.id,
+                'res_id': self.account_opening_move_id.id,
                 'views': [[form_view_id, 'form']],
             }
 
         # Otherwise, we open a custom wizard to post it.
         self.create_op_move_if_non_existant()
-        new_wizard = self.env['account.opening'].create({'company_id': current_company.id})
+        new_wizard = self.env['account.opening'].create({'company_id': self.id})
         view_id = self.env.ref('account.setup_opening_move_wizard_form').id
 
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Initial Balances',
+            'name': _('Initial Balances'),
             'view_mode': 'form',
             'res_model': 'account.opening',
             'target': 'new',
@@ -257,10 +247,9 @@ Best Regards,''')
 
     @api.model
     def setting_hide_setup_bar(self):
-        """ Called by the cross button of the setup bar, to close it.
-        """
-        current_company = self._company_default_get()
-        current_company.account_setup_bar_closed = True
+        """ Called by the cross button of the setup bar, to close it."""
+        self.ensure_one()
+        self.account_setup_bar_closed = True
 
     @api.model
     def create_op_move_if_non_existant(self):
@@ -285,12 +274,12 @@ Best Regards,''')
         """ Forces the completion of the 'company' setup step and returns an action
         refreshing the view.
         """
-        self.account_setup_company_data_marked_done = True
+        self.account_setup_company_data_done = True
 
     def unmark_company_setup_as_done_action(self):
         """ Returns the 'company' setup step to its 'not done' state.
         """
-        self.account_setup_company_data_marked_done = False
+        self.account_setup_company_data_done = False
 
     def opening_move_posted(self):
         """ Returns true if and only if this company has an opening account move,

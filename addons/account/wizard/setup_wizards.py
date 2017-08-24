@@ -19,12 +19,12 @@ class FinancialYearOpeningWizard(models.TransientModel):
     fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
                                              related="company_id.fiscalyear_last_month",
                                              required=True)
-    account_setup_financial_year_data_marked_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
+    account_setup_fy_data_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
 
-    @api.depends('company_id.account_setup_financial_year_data_marked_done')
+    @api.depends('company_id.account_setup_fy_data_done')
     def _compute_setup_marked_done(self):
         for record in self:
-            record.account_setup_financial_year_data_marked_done = record.company_id.account_setup_financial_year_data_marked_done
+            record.account_setup_fy_data_done = record.company_id.account_setup_fy_data_done
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
@@ -34,12 +34,12 @@ class FinancialYearOpeningWizard(models.TransientModel):
     def mark_as_done(self):
         """ Forces fiscal year setup state to 'done'.
         """
-        self.company_id.account_setup_financial_year_data_marked_done = True
+        self.company_id.account_setup_fy_data_done = True
 
     def unmark_as_done(self):
         """ Forces fiscal year setup state to 'undone'.
         """
-        self.company_id.account_setup_financial_year_data_marked_done = False
+        self.company_id.account_setup_fy_data_done = False
 
 class OpeningAccountMoveWizard(models.TransientModel):
     _name = 'account.opening'

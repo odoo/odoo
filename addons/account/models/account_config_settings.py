@@ -62,10 +62,6 @@ class AccountConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
-    account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', related='company_id.account_opening_move_id')
-    account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_opening_journal_id')
-    account_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_opening_date')
-    account_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_setup_opening_move_done')
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
 
     @api.model
@@ -77,18 +73,6 @@ class AccountConfigSettings(models.TransientModel):
             default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
         )
         return res
-
-    @api.depends('company_id')
-    def _compute_has_chart_of_accounts(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
-
-    @api.depends('company_id.account_opening_move_id.state')
-    def _compute_account_setup_opening_move_done(self):
-        for record in self:
-            record.account_setup_opening_move_done = record.company_id.opening_move_posted()
-
-    def define_opening_move_action(self):
-        return self.company_id.setting_opening_move_action()
 
     @api.multi
     def set_values(self):

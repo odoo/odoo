@@ -11,11 +11,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet" position="after">
                     <footer>
-                        <field name="account_setup_company_data_marked_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_company_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_company_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_marked_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_company_setup_as_done_action" attrs="{'invisible': [('account_setup_company_data_marked_done','=',False)]}"/>
+                        <field name="account_setup_company_data_done" invisible="True"/>
+                        <button string="Mark as done" type="object" name="mark_company_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_company_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"/>
+                        <button string="Unmark as done" type="object" name="unmark_company_setup_as_done_action" attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"/>
                     </footer>
                 </xpath>
             </field>
@@ -48,11 +48,11 @@
                         </div>
                     </div>
                     <footer>
-                        <field name="account_setup_financial_year_data_marked_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_as_done" class="oe_highlight" attrs="{'invisible': [('account_setup_financial_year_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_financial_year_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_financial_year_data_marked_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_as_done" attrs="{'invisible': [('account_setup_financial_year_data_marked_done','=',False)]}"/>
+                        <field name="account_setup_fy_data_done" invisible="True"/>
+                        <button string="Mark as done" type="object" name="mark_as_done" class="oe_highlight" attrs="{'invisible': [('account_setup_fy_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_fy_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_fy_data_done','=',False)]}"/>
+                        <button string="Unmark as done" type="object" name="unmark_as_done" attrs="{'invisible': [('account_setup_fy_data_done','=',False)]}"/>
                     </footer>
                 </form>
             </field>
@@ -72,11 +72,11 @@
                 </xpath>
                 <xpath expr="//form/sheet" position="after">
                     <footer>
-                        <field name="account_setup_bank_data_marked_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_bank_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_bank_data_marked_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_marked_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_bank_setup_as_done_action" attrs="{'invisible': [('account_setup_bank_data_marked_done','=',False)]}"/>
+                        <field name="account_setup_bank_data_done" invisible="True"/>
+                        <button string="Mark as done" type="object" name="mark_bank_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_bank_data_done','=',True)]}"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_done','=',False)]}"/>
+                        <button string="Unmark as done" type="object" name="unmark_bank_setup_as_done_action" attrs="{'invisible': [('account_setup_bank_data_done','=',False)]}"/>
                     </footer>
                 </xpath>
             </field>

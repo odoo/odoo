@@ -25,6 +25,8 @@ class account_journal(models.Model):
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
+    color = fields.Integer("Color Index", default=1)
+    account_setup_bank_data_done = fields.Boolean(string='Bank setup marked as done', related='company_id.account_setup_bank_data_done', help="Technical field used in the special view for the setup bar step.")
 
     def _graph_title_and_key(self):
         if self.type == 'sale':
@@ -414,3 +416,27 @@ class account_journal(models.Model):
             'context': "{'default_journal_id': " + str(self.id) + "}",
         })
         return action
+
+    #####################
+    # Setup Steps Stuff #
+    #####################
+    @api.model
+    def retrieve_account_dashboard_setup_bar(self):
+        """ Returns the data used by the setup bar on the Accounting app dashboard."""
+        company = self.env.user.company_id
+        return {
+            'show_setup_bar': not company.account_setup_bar_closed,
+            'company': company.account_setup_company_data_done,
+            'bank': company.account_setup_bank_data_done,
+            'fiscal_year': company.account_setup_fy_data_done,
+            'chart_of_accounts': company.account_setup_coa_done,
+            'initial_balance': company.opening_move_posted(),
+        }
+
+    def mark_bank_setup_as_done_action(self):
+        """ Marks the 'bank setup' step as done in the setup bar and in the company."""
+        self.company_id.account_setup_bank_data_done = True
+
+    def unmark_bank_setup_as_done_action(self):
+        """ Marks the 'bank setup' step as not done in the setup bar and in the company."""
+        self.company_id.account_setup_bank_data_done = False
