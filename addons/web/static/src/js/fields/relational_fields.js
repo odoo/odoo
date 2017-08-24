@@ -20,6 +20,7 @@ var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
+var dom = require('web.dom');
 var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -684,6 +685,7 @@ var FieldX2Many = AbstractField.extend({
             if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
+                this._reset(record, ev);
                 this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
                 return $.when();
             }
@@ -895,11 +897,33 @@ var FieldX2Many = AbstractField.extend({
         this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
             this.lastInitialEvent = ev;
-            this._setValue({
+            // store the cursor position to restore it once potential onchanges have been applied
+            var self = this;
+            var editableID =  this.renderer.getEditableRecordID();
+            var datapoint = _.find(this.value.data, {id: editableID});
+
+            var ref = datapoint && datapoint.ref;
+            var cursor = ref && dom.getCursor(ev.target.getFocusableElement());
+            var fieldName = ev.target.name;
+
+            var def = this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
             });
+
+            if (ref) {
+                def.then(function () {
+                    var nextEditableRecordID = self.renderer.getEditableRecordID();
+                    if (nextEditableRecordID && editableID !== nextEditableRecordID) {
+                        return;
+                    }
+                    var datapoint = _.find(self.value.data, {ref: ref});
+                    if (datapoint) {
+                        self.renderer.focusField(datapoint.id, fieldName, cursor && cursor.offset);
+                    }
+                });
+            }
         }
     },
     /**

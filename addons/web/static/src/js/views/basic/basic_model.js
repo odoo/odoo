@@ -92,10 +92,10 @@ var session = require('web.session');
 var _t = core._t;
 
 var x2ManyCommands = {
-    // (0, _, {values})
+    // (0, virtualID, {values})
     CREATE: 0,
-    create: function (values) {
-        return [x2ManyCommands.CREATE, false, values];
+    create: function (virtualID, values) {
+        return [x2ManyCommands.CREATE, virtualID || false, values];
     },
     // (1, id, {values})
     UPDATE: 1,
@@ -391,6 +391,7 @@ var BasicModel = AbstractModel.extend({
                 limit: element.limit,
                 model: element.model,
                 offset: element.offset,
+                ref: element.ref,
                 res_ids: element.res_ids.slice(0),
                 specialData: _.extend({}, element.specialData),
                 type: 'record',
@@ -1213,6 +1214,7 @@ var BasicModel = AbstractModel.extend({
                             modelName: list.model,
                             parentID: list.id,
                             viewType: list.viewType,
+                            ref: command[1],
                         };
                         if (command[0] === 1) {
                             params.res_id = command[1];
@@ -2415,7 +2417,7 @@ var BasicModel = AbstractModel.extend({
                     commands[fieldName].push(x2ManyCommands.replace_with(realIDs));
                     _.each(relRecordCreated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
-                        commands[fieldName].push(x2ManyCommands.create(changes));
+                        commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
                     });
                     // generate update commands for records that have been
                     // updated (it may happen with editable lists)
@@ -2451,7 +2453,7 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            commands[fieldName].push(x2ManyCommands.create(changes));
+                            commands[fieldName].push(x2ManyCommands.create(relRecord.ref, changes));
                         }
                     }
                     if (options.changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
@@ -2824,6 +2826,7 @@ var BasicModel = AbstractModel.extend({
             orderedBy: params.orderedBy || [],
             parentID: params.parentID,
             rawContext: params.rawContext,
+            ref: params.ref || res_id,
             relationField: params.relationField,
             res_id: res_id,
             res_ids: res_ids,

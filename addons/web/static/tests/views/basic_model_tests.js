@@ -1186,7 +1186,7 @@ QUnit.module('Views', {
             data: this.data,
             mockRPC: function (route, args) {
                 if (args.method === 'onchange' && args.args[1].total === 150) {
-                    assert.deepEqual(args.args[1].product_ids, [[0, false, {name: "xpod"}]],
+                    assert.deepEqual(args.args[1].product_ids, [[0, args.args[1].product_ids[0][1], {name: "xpod"}]],
                         "Should have sent the create command in the onchange");
                 }
                 return this._super(route, args);

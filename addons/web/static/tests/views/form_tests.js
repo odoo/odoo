@@ -1174,7 +1174,7 @@ QUnit.module('Views', {
                         display_name: "first record",
                         foo: "tralala",
                         id: 1,
-                        p: [[0, false, {"display_name": "valid line", "qux": 12.4}]]
+                        p: [[0, args.args[1].p[0][1], {"display_name": "valid line", "qux": 12.4}]]
                     }, "should send the values for the present fields");
                 }
                 return this._super(route, args);
@@ -3760,7 +3760,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     var command = args.args[0].p;
-                    assert.deepEqual(command, [[0, false, {
+                    assert.deepEqual(command, [[0, command[0][1], {
                         display_name: false,
                         timmy: [[6, false, [12]]],
                     }]], "the default partner_type_id should be equal to 12");
@@ -3809,8 +3809,8 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     assert.deepEqual(args.args[0].p,
-                        [[0, false, {
-                            p: [[0, false, {display_name: "xtv"}]],
+                        [[0, args.args[0].p[0][1], {
+                            p: [[0, args.args[0].p[0][2].p[0][1], {display_name: "xtv"}]],
                         }]],
                         "create should be called with the correct arguments");
                 }
@@ -5488,13 +5488,13 @@ QUnit.module('Views', {
                             "readonly fields value should be sent for onchanges");
                     } else { // onchange on field p
                         assert.deepEqual(args.args[1].p, [
-                            [0, false, {display_name: 'readonly', foo: 'foo value'}]
+                            [0, args.args[1].p[0][1], {display_name: 'readonly', foo: 'foo value'}]
                         ], "readonly fields value should be sent for onchanges");
                     }
                 }
                 if (args.method === 'create') {
                     assert.deepEqual(args.args[0], {
-                        p: [[0, false, {display_name: 'readonly'}]]
+                        p: [[0, args.args[0].p[0][1], {display_name: 'readonly'}]]
                     }, "should not have sent the value of the readonly field");
                 }
                 return this._super.apply(this, arguments);
