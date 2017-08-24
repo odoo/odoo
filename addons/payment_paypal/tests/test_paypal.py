@@ -102,7 +102,10 @@ class PaypalForm(PaypalCommon):
         # check form result
         handling_found = False
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'paypal: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
         for form_input in tree.input:
             if form_input.get('name') in ['handling']:
                 handling_found = True
