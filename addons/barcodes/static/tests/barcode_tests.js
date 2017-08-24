@@ -3,9 +3,11 @@ odoo.define('barcodes.tests', function (require) {
 
 var barcodeEvents = require('barcodes.BarcodeEvents');
 
-var testUtils = require('web.test_utils');
+var AbstractField = require('web.AbstractField');
+var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
+var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
 var triggerKeypressEvent = testUtils.triggerKeypressEvent;
@@ -13,14 +15,35 @@ var triggerKeypressEvent = testUtils.triggerKeypressEvent;
 QUnit.module('Barcodes', {
     beforeEach: function () {
         this.data = {
+            order: {
+                fields: {
+                    _barcode_scanned: {string: 'Barcode scanned', type: 'char'},
+                    line_ids: {string: 'Order lines', type: 'one2many', relation: 'order_line'},
+                },
+                records: [
+                    {id: 1, line_ids: [1, 2]},
+                ],
+            },
+            order_line: {
+                fields: {
+                    product_id: {string: 'Product', type: 'many2one', relation: 'product'},
+                    product_barcode: {string: 'Product Barcode', type: 'char'},
+                    quantity: {string: 'Quantity', type: 'integer'},
+                },
+                records: [
+                    {id: 1, product_id: 1, quantity: 0, product_barcode: '1234567890'},
+                    {id: 2, product_id: 2, quantity: 0, product_barcode: '0987654321'},
+                ],
+            },
             product: {
                 fields: {
                     name: {string : "Product name", type: "char"},
                     int_field: {string : "Integer", type: "integer"},
+                    barcode: {string: "Barcode", type: "char"},
                 },
                 records: [
-                    {id: 1, name: "iPad Mini"},
-                    {id: 2, name: "Mouse, Optical"},
+                    {id: 1, name: "iPad Mini", barcode: '1234567890'},
+                    {id: 2, name: "Mouse, Optical", barcode: '0987654321'},
                 ],
             },
         };
@@ -298,4 +321,81 @@ QUnit.test('widget barcode_handler', function (assert) {
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
 });
 
+QUnit.test('specification of widget barcode_handler', function (assert) {
+    assert.expect(5);
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+
+    // Define a specific barcode_handler widget for this test case
+    var TestBarcodeHandler = AbstractField.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.trigger_up('activeBarcode', {
+                name: 'test',
+                fieldName: 'line_ids',
+                quantity: 'quantity',
+                commands: {
+                    barcode: '_barcodeAddX2MQuantity',
+                }
+            });
+        },
+    });
+    var previousField = fieldRegistry.get('test_barcode_handler');
+    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'onchange') {
+                assert.notOK(true, "should not do any onchange RPC");
+            }
+            if (args.method === 'write') {
+                assert.deepEqual(args.args[1].line_ids, [
+                    [1, 1, {quantity: 2}], [1, 2, {quantity: 1}],
+                ], "should have generated the correct commands");
+            }
+            return this._super.apply(this, arguments);
+        },
+        res_id: 1,
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    assert.strictEqual(form.$('.o_data_row').length, 2,
+        "one2many should contain 2 rows");
+
+    // scan twice product 1
+    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '1',
+        "quantity of line one should have been incremented");
+    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '2',
+        "quantity of line one should have been incremented");
+
+    // scan once product 2
+    _.each(['0','9','8','7','6','5','4','3','2','1','Enter'], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_data_row:nth(1) .o_data_cell:nth(1)').text(), '1',
+        "quantity of line one should have been incremented");
+
+    form.$buttons.find('.o_form_button_save').click();
+
+    form.destroy();
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+    fieldRegistry.add('test_barcode_handler', previousField);
+});
 });
