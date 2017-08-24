@@ -255,7 +255,7 @@ class StockMove(models.Model):
         """ Every moves that need to be fixed are identifiable by having a negative `remaining_qty`.
         """
         # FIXME: sort by date (does filtered lose the order?)
-        for move in self.filtered(lambda m: m._is_in() or m._is_out() and m.remaining_qty < 0):
+        for move in self.filtered(lambda m: (m._is_in() or m._is_out()) and m.remaining_qty < 0):
             domain = [
                 '|',
                     ('date', '>', move.date),
