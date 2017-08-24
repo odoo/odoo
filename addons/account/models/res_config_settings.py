@@ -20,10 +20,8 @@ class ResConfigSettings(models.TransientModel):
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
     code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
-        related='company_id.accounts_sale_tax_id', oldname="default_sale_tax")
-    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax",
-        related='company_id.accounts_purchase_tax_id', oldname="default_purchase_tax")
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
+    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
