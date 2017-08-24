@@ -11,7 +11,8 @@
                            name="action_view_timesheet"
                            class="oe_stat_button"
                            icon="fa-clock-o"
-                           attrs="{'invisible': [('timesheet_count', '=', 0)]}" groups="base.group_user">
+                           attrs="{'invisible': [('timesheet_count', '=', 0)]}"
+                           groups="hr_timesheet.group_hr_timesheet_user">
                            <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
                        </button>
                     </xpath>
@@ -31,7 +32,8 @@
                            name="action_view_task"
                            class="oe_stat_button"
                            icon="fa-tasks"
-                           attrs="{'invisible': [('tasks_count', '=', 0)]}" groups="base.group_user">
+                           attrs="{'invisible': [('tasks_count', '=', 0)]}"
+                           groups="project.group_project_user">
                            <field name="tasks_count" widget="statinfo" string="Tasks"/>
                        </button>
                     </xpath>
