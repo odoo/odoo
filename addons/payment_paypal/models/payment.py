@@ -25,7 +25,12 @@ class AcquirerPaypal(models.Model):
         'Paypal Merchant ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
-    paypal_pdt_token = fields.Char(string='Paypal PDT Token', required_if_provider='paypal', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
+    paypal_use_pdt = fields.Boolean(string='Use PDT',
+    help="Check this if you have Payment Data Transfer (PDT) activated in Paypal.\n"
+         "With PDT, your site is notified immediately when a customer completes payment.\n"
+         "With IPN (default mode in Odoo), there is a material lag between the time a customer completes payment\n"
+         "and the time your site receives notification of this event.")
+    paypal_pdt_token = fields.Char(string='Paypal PDT Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Server 2 server
     paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
     paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')
@@ -37,6 +42,26 @@ class AcquirerPaypal(models.Model):
     fees_dom_var = fields.Float(default=3.4)
     fees_int_fixed = fields.Float(default=0.35)
     fees_int_var = fields.Float(default=3.9)
+
+    def _format_notify_message_data(self):
+        return _('''<div><i>Pending,</i>
+<p>Your online payment has been successfully processed. But your order is not validated yet.</p></div>''')
+
+    @api.model
+    def create(self, values):
+        """ Hook in create to create a default pending_msg. This is done in create
+        to have access to the name and other creation values. If no pending_msg
+        or a void pending_msg is given at creation, generate a default one. """
+        if values.get('provider') == 'paypal':
+            values['pending_msg'] = self._format_notify_message_data()
+        return super(AcquirerPaypal, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        """ Hook in write to create a default pending_msg. See create(). """
+        if all(not acquirer.pending_msg and acquirer.provider == 'paypal' for acquirer in self) or values.get('provider') == 'paypal':
+            values['pending_msg'] = self._format_notify_message_data()
+        return super(AcquirerPaypal, self).write(values)
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.

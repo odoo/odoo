@@ -811,8 +811,10 @@ class WebsiteSale(http.Controller):
         payment_token = request.env['payment.token'].sudo().browse(int(token)) if token else None
         tx = tx._check_or_create_sale_tx(order, acquirer, payment_token=payment_token, tx_type=tx_type)
         request.session['sale_transaction_id'] = tx.id
-
-        return tx.render_sale_button(order, '/shop/payment/validate')
+        if acquirer.provider == 'paypal' and acquirer.payment_flow == 'form':
+            return tx.render_sale_button(order, '/shop/confirmation')
+        else:
+            return tx.render_sale_button(order, '/shop/payment/validate')
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True)
     def payment_token(self, pm_id=None, **kwargs):
@@ -916,6 +918,9 @@ class WebsiteSale(http.Controller):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
+            # must have a draft sales order with lines at this point, otherwise reset
+            if not order or order.state != 'draft':
+                request.website.sale_reset()
             return request.render("website_sale.confirmation", {'order': order})
         else:
             return request.redirect('/shop')
