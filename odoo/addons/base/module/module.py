@@ -411,6 +411,7 @@ class Module(models.Model):
         :returns: next res.config item to execute
         :rtype: dict[str, object]
         """
+        _logger.info('User #%d triggered module installation', self.env.uid)
         return self._button_immediate_function(type(self).button_install)
 
     @api.multi
@@ -525,6 +526,7 @@ class Module(models.Model):
         Uninstall the selected module(s) immediately and fully,
         returns the next res.config action to execute
         """
+        _logger.info('User #%d triggered module uninstallation', self.env.uid)
         return self._button_immediate_function(type(self).button_uninstall)
 
     @api.multi
