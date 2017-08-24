@@ -91,6 +91,10 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         // NB : for presets to work correctly, a field id must be the same string as a preset field
         this.presets = {};
         // Description of the fields to initialize in the "create new line" form
+        var domain_account_id = [['deprecated', '=', false]];
+        if (context && context.context && context.context.company_ids) {
+            domain_account_id.push(['company_id', 'in', context.context.company_ids]);
+        }
         this.create_form_fields = {
             account_id: {
                 id: "account_id",
@@ -103,7 +107,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.account",
                     string: _t("Account"),
                     type: "many2one",
-                    domain: [['deprecated', '=', false]],
+                    domain: domain_account_id,
                 },
             },
             label: {
