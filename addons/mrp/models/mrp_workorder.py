@@ -196,7 +196,7 @@ class MrpWorkorder(models.Model):
                 move_lots[0].qty_done = new_qty
             elif move.product_id.tracking == 'serial':
                 # Create extra pseudo record
-                qty_todo = new_qty - sum(move_lots.mapped('quantity'))
+                qty_todo = new_qty - sum(move_lots.mapped('qty_done'))
                 if float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                     while float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                         self.active_move_line_ids += self.env['stock.move.line'].new({
@@ -217,8 +217,8 @@ class MrpWorkorder(models.Model):
                     for move_lot in move_lots:
                         if qty_todo <= 0:
                             break
-                        if not move_lot.lot_id and qty_todo >= move_lot.quantity:
-                            qty_todo = qty_todo - move_lot.quantity
+                        if not move_lot.lot_id and qty_todo >= move_lot.qty_done:
+                            qty_todo = qty_todo - move_lot.qty_done
                             self.active_move_line_ids -= move_lot  # Difference operator
                         else:
                             #move_lot.product_qty = move_lot.product_qty - qty_todo

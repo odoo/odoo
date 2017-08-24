@@ -306,7 +306,7 @@ class AccountBankStatement(models.Model):
 
         #try to assign partner to bank_statement_line
         stl_to_assign = st_lines_left.filtered(lambda stl: not stl.partner_id)
-        refs = {stl_to_assign.mapped('name')}
+        refs = set(stl_to_assign.mapped('name'))
         if stl_to_assign and refs\
            and st_lines_left[0].journal_id.default_credit_account_id\
            and st_lines_left[0].journal_id.default_debit_account_id:
