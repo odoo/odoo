@@ -134,7 +134,6 @@ class CustomerPortal(Controller):
         values.update({
             'error': {},
             'error_message': [],
-            'hide_current_user': True,
         })
 
         if post:
