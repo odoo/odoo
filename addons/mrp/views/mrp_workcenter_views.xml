@@ -77,7 +77,7 @@
             <field name="res_model">mrp.workcenter.productivity</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph,pivot</field>
-            <field name="context">{'search_default_availability': '1', 
+            <field name="context">{'search_default_availability': '1',
                                    'search_default_performance': '1',
                                    'search_default_quality': '1',
                                    'default_workcenter_id': active_id,
@@ -129,7 +129,7 @@
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content o_visible">
+                                <div class="container o_kanban_card_content">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
@@ -203,7 +203,7 @@
                                                 attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                </div><div class="container o_kanban_card_manage_pane">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                             <div class="o_kanban_card_manage_title">
@@ -375,7 +375,7 @@
               </p><p>
                 Manufacturing operations are processed at Work Centers. A Work Center can be composed of
                 workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations. 
+                The Work Centers are defined on the Routing's operations.
               </p>
             </field>
         </record>

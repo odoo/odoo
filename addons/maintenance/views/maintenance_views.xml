@@ -755,7 +755,7 @@
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content o_visible">
+                            <div class="container o_kanban_card_content">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
@@ -799,7 +799,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                            </div><div class="container o_kanban_card_manage_pane">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div class="o_kanban_card_manage_title">
@@ -895,7 +895,7 @@
         sequence="0"/>
 
     <menuitem
-        id="menu_m_request" 
+        id="menu_m_request"
         name="Maintenance"
         parent="menu_maintenance_title"
         groups="group_equipment_manager,base.group_user"
@@ -926,7 +926,7 @@
         sequence="2"/>
 
     <menuitem
-        id="menu_m_reports" 
+        id="menu_m_reports"
         name="Reporting"
         parent="menu_maintenance_title"
         groups="group_equipment_manager,base.group_user"
