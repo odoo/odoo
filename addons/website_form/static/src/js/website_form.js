@@ -113,15 +113,6 @@ odoo.define('website_form.animation', function (require) {
                 }
             });
 
-            // Overwrite form_values array with values from the form tag
-            // Necessary to handle field values generated server-side, since
-            // using t-att- inside a snippet makes it non-editable !
-            for (var key in this.$target.data()) {
-                if (_.str.startsWith(key, 'form_field_')){
-                    form_values[key.replace('form_field_', '')] = this.$target.data(key);
-                }
-            }
-
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function (result_data) {
