@@ -82,7 +82,7 @@ class PickingType(models.Model):
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_late': [('min_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
+            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting', 'partially_available'))],
         }
         for field in domains:
@@ -218,15 +218,11 @@ class Picking(models.Model):
         index=True, track_visibility='onchange',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Priority for this picking. Setting manually a value here would set it as priority for all the moves")
-    min_date = fields.Datetime(
-        'Scheduled Date', compute='_compute_dates', inverse='_set_min_date', store=True,
+    scheduled_date = fields.Datetime(
+        'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
         index=True, track_visibility='onchange',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
-    max_date = fields.Datetime(
-        'Max. Expected Date', compute='_compute_dates', store=True,
-        index=True,
-        help="Scheduled time for the last part of the shipment to be processed")
     date = fields.Datetime(
         'Creation Date',
         default=fields.Datetime.now, index=True, track_visibility='onchange',
@@ -356,13 +352,15 @@ class Picking(models.Model):
 
     @api.one
     @api.depends('move_lines.date_expected')
-    def _compute_dates(self):
-        self.min_date = min(self.move_lines.mapped('date_expected') or [False])
-        self.max_date = max(self.move_lines.mapped('date_expected') or [False])
+    def _compute_scheduled_date(self):
+        if self.move_type == 'direct':
+            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [False])
+        else:
+            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [False])
 
     @api.one
-    def _set_min_date(self):
-        self.move_lines.write({'date_expected': self.min_date})
+    def _set_scheduled_date(self):
+        self.move_lines.write({'date_expected': self.scheduled_date})
 
     @api.one
     def _has_scrap_move(self):
