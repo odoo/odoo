@@ -240,8 +240,13 @@ FormController.include({
             if (prefixed && !hasCommand) {
                 self.do_warn(_t('Error : Barcode command is undefined'), barcode);
             }
-            return $.when.apply($, defs).then(function () {
-                self.update({}, {reload: false});
+            return self.alive($.when.apply($, defs)).then(function () {
+                if (!prefixed) {
+                    // redraw the view if we scanned a real barcode (required if
+                    // we manually apply the change in JS, e.g. incrementing the
+                    // quantity)
+                    self.update({}, {reload: false});
+                }
             });
         });
     },

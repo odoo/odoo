@@ -4,6 +4,7 @@ odoo.define('barcodes.tests', function (require) {
 var barcodeEvents = require('barcodes.BarcodeEvents');
 
 var testUtils = require('web.test_utils');
+var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 
 var createView = testUtils.createView;
@@ -119,6 +120,56 @@ QUnit.test('pager buttons', function (assert) {
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
 
     form.destroy();
+});
+
+QUnit.test('do no update form twice after a command barcode scanned', function (assert) {
+    assert.expect(7);
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+    var formUpdate = FormController.prototype.update;
+    FormController.prototype.update = function () {
+        assert.step('update');
+        return formUpdate.apply(this, arguments);
+    };
+
+    var form = createView({
+        View: FormView,
+        model: 'product',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="int_field" widget="field_float_scannable"/>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'read') {
+                assert.step('read');
+            }
+            return this._super.apply(this, arguments);
+        },
+        res_id: 1,
+        viewOptions: {
+            ids: [1, 2],
+            index: 0,
+        },
+    });
+
+    assert.verifySteps(['read'], "update should not have been called yet");
+
+    // switch to next record
+    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","N","E","X","T","Enter"], triggerKeypressEvent);
+    // a first update is done to reload the data (thus followed by a read), but
+    // update shouldn't be called afterwards
+    assert.verifySteps(['read', 'update', 'read']);
+
+    _.each(['5','4','3','9','8','2','6','7','1','2','5','2','Enter'], triggerKeypressEvent);
+    // a real barcode has been scanned -> an update should be requested (with
+    // option reload='false', so it isn't followed by a read)
+    assert.verifySteps(['read', 'update', 'read', 'update']);
+
+    form.destroy();
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+    FormController.prototype.update = formUpdate;
 });
 
 QUnit.test('widget field_float_scannable', function (assert) {
