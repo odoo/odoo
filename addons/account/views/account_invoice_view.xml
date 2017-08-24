@@ -238,7 +238,7 @@
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                                 <field name="sequence_number_next_prefix" class="oe_inline"/>
-                                <field name="sequence_number_next" class="oe_inline" required="1" style="width: 80px !important;"/>
+                                <field name="sequence_number_next" class="oe_inline" required="1"/>
                             </div>
                         </h1>
                     </div>
@@ -378,7 +378,7 @@
                         <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                             <label string="Invoice Number:"/><br/>
                             <field name="sequence_number_next_prefix" class="oe_inline"/>
-                            <field name="sequence_number_next" class="oe_inline" required="1" style="width: 80px !important;"/>
+                            <field name="sequence_number_next" class="oe_inline" required="1"/>
                         </div>
                     </h1>
                     <field name="type" invisible="1"/>
