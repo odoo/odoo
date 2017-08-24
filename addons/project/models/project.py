@@ -203,16 +203,16 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', _('On invitation only')),
+            ('followers', _('Visible by internal followers')),
             ('employees', _('Visible by all employees')),
-            ('portal', _('Visible by following customers')),
+            ('portal', _('Visible by internal & external followers')),
         ],
-        string='Privacy', required=True,
+        string='Task Privacy', required=True,
         default='employees',
         help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                "- On invitation only: Employees may only see the followed project, tasks or issues\n"
+                "- Visible by internal followers: Employees may only see the followed project, tasks or issues\n"
                 "- Visible by all employees: Employees may see all project, tasks or issues\n"
-                "- Visible by following customers: employees see everything;\n"
+                "- Visible by internal & external followers: employees see everything;\n"
                 "   if website is activated, portal users may see project, tasks or issues followed by\n"
                 "   them or by someone of their company\n")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
