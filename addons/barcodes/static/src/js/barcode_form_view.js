@@ -93,8 +93,14 @@ FormController.include({
      */
     _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode) {
         var changes = {};
-        changes[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
-        return this.model.notifyChanges(candidate.id, changes);
+        var candidateChanges = {};
+        candidateChanges[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
+        changes[activeBarcode.fieldName] = {
+            operation: 'UPDATE',
+            id: candidate.id,
+            data: candidateChanges,
+        };
+        return this.model.notifyChanges(this.handle, changes);
     },
     /**
      * @private
