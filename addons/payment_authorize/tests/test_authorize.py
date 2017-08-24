@@ -89,10 +89,13 @@ class AuthorizeForm(AuthorizeCommon):
         res = self.authorize.render('SO004', 320.0, self.currency_usd.id, values=self.buyer_values)
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'Authorize: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong data-action-url POST url')
         for el in tree.iterfind('input'):
             values = list(pycompat.values(el.attrib))
-            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state']:
+            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state', 'data_set']:
                 continue
             self.assertEqual(
                 unicode(values[2], "utf-8"),
