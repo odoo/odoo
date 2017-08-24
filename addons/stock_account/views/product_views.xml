@@ -39,8 +39,8 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
+                            attrs="{'readonly':[('valuation','=','real_time')]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
-
                     </field>
                     <div name="standard_price_uom" position="after">
                         <button string="Update Cost" type="action"
