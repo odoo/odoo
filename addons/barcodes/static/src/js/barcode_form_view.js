@@ -31,6 +31,8 @@ FormController.include({
                     'O-CMD.SAVE': this._onCommandSave.bind(this),
                     'O-CMD.PAGER-PREV': this._onCommandPrevious.bind(this),
                     'O-CMD.PAGER-NEXT': this._onCommandNext.bind(this),
+                    'O-CMD.PAGER-FIRST': this._onCommandFirst.bind(this),
+                    'O-CMD.PAGER-LAST': this._onCommandLast.bind(this),
                 },
             },
         };
@@ -254,6 +256,29 @@ FormController.include({
                     self.update({}, {reload: false});
                 }
             });
+        });
+    },
+    /**
+     * @private
+     */
+    _onCommandFirst: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            self.pager.updateState({
+                current_min: 1,
+            }, {notifyChange: true});
+        });
+    },
+    /**
+     * @private
+     */
+    _onCommandLast: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            var state = self.model.get(self.handle, {raw: true});
+            self.pager.updateState({
+                current_min: state.count,
+            }, {notifyChange: true});
         });
     },
     /**
