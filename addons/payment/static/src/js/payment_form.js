@@ -33,8 +33,28 @@ odoo.define('payment.payment_form', function (require){
                     var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
                     var acquirer_form = this.$('#o_payment_add_token_acq_' + acquirer_id);
                     // we retrieve all the input inside the acquirer form and 'serialize' them to an indexed array
-                    var form_data = this.getFormData($('input', acquirer_form));
+                    var inputs_form = $('input', acquirer_form);
+                    var form_data = this.getFormData(inputs_form);
                     var ds = $('input[name="data_set"]', acquirer_form)[0];
+                    var empty_inputs = false;
+
+                    inputs_form.toArray().forEach(function(element) {
+                        if(element.dataset.isRequired) {
+                            if (element.value.length === 0) {
+                                $(element).closest('div').addClass('has-error');
+                            }
+                            else {
+                                $(element).closest('div').removeClass('has-error');
+                            }
+                            empty_inputs = true;
+                        }
+                    });
+
+                    if(empty_inputs) {
+                        this.error(_t('Missing values'), _t('<p>Please fill all the inputs required.</p>'));
+                        return;
+                    }
+
                     $(button).attr('disabled', true);
                     $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
@@ -148,16 +168,35 @@ odoo.define('payment.payment_form', function (require){
 
             // we check if the user has selected a 'add a new payment' option
             if(checked_radio.length == 1 && this.isNewPaymentRadio(checked_radio[0])) {
-                // then we add a 'processing' icon into the 'add a new payment' button
-                $(button).attr('disabled', true);
-                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
                 // we retrieve which acquirer is used
                 checked_radio = checked_radio[0];
                 var acquirer_id = this.getAcquirerIdFromRadio(checked_radio);
                 var acquirer_form = this.$('#o_payment_add_token_acq_' + acquirer_id);
                 // we retrieve all the input inside the acquirer form and 'serialize' them to an indexed array
-                var form_data = this.getFormData($('input', acquirer_form));
+                var inputs_form = $('input', acquirer_form);
+                var form_data = this.getFormData(inputs_form);
                 var ds = $('input[name="data_set"]', acquirer_form)[0];
+                var empty_inputs = false;
+
+                inputs_form.toArray().forEach(function(element) {
+                    if(element.dataset.isRequired) {
+                        if (element.value.length === 0) {
+                            $(element).closest('div').addClass('has-error');
+                        }
+                        else {
+                            $(element).closest('div').removeClass('has-error');
+                        }
+                        empty_inputs = true;
+                    }
+                });
+
+                if(empty_inputs) {
+                    this.error(_t('Missing values'), _t('<p>Please fill all the inputs required.</p>'));
+                    return;
+                }
+                // We add a 'processing' icon into the 'add a new payment' button
+                $(button).attr('disabled', true);
+                $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
                 // we force the check when adding a card trough here
                 form_data.verify_validity = true;
