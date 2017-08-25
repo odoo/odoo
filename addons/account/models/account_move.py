@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
-from odoo.tools import float_is_zero, float_compare, pycompat
+from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
 from lxml import etree
@@ -78,6 +78,14 @@ class AccountMove(models.Model):
             partner = move.line_ids.mapped('partner_id')
             move.partner_id = partner.id if len(partner) == 1 else False
 
+    @api.onchange('date')
+    def _onchange_date(self):
+        '''On the form view, a change on the date will trigger onchange() on account.move
+        but not on account.move.line even the date field is related to account.move.
+        Then, trigger the _onchange_amount_currency manually.
+        '''
+        self.line_ids._onchange_amount_currency()
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
@@ -122,12 +130,6 @@ class AccountMove(models.Model):
 
     @api.multi
     def write(self, vals):
-        values = []
-        if 'date' in vals:
-            for line in self.mapped('line_ids').filtered(lambda l: l.amount_currency and l.currency_id):
-                values.append((1, line.id, line.onchange_amount_currency(line.amount_currency, line.currency_id, vals['date'])))
-            if values:
-                vals['line_ids'] = values
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
             self.assert_balanced()
@@ -501,14 +503,17 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('amount_currency', 'currency_id')
     def _onchange_amount_currency(self):
-        for k, v in pycompat.items(self.onchange_amount_currency(self.amount_currency, self.currency_id, self.move_id.date)):
-            setattr(self, k, v)
-
-    @api.multi
-    def onchange_amount_currency(self, amount, currency, date):
-        if currency and currency != self.company_currency_id:
-            amount = currency.with_context(date=date).compute(amount, self.company_currency_id)
-        return {'debit': amount > 0 and amount or 0.0, 'credit': amount < 0 and -amount or 0.0}
+        '''Recompute the debit/credit based on amount_currency/currency_id and date.
+        However, date is a related field on account.move. Then, this onchange will not be triggered
+        by the form view by changing the date on the account.move.
+        To fix this problem, see _onchange_date method on account.move.
+        '''
+        for line in self:
+            amount = line.amount_currency
+            if line.currency_id and line.currency_id != line.company_currency_id:
+                amount = self.currency_id.with_context(date=line.date).compute(amount, line.company_currency_id)
+            line.debit = amount > 0 and amount or 0.0
+            line.credit = amount < 0 and amount or 0.0
 
     ####################################################
     # Reconciliation interface methods
