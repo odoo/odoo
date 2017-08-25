@@ -761,7 +761,7 @@ QUnit.module('Views', {
             "the input should be visible");
 
         // discard the column creation and click it again
-        kanban.$('.o_column_quick_create .o_kanban_cancel').click();
+        kanban.$('.o_column_quick_create').click();
         assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should not be visible after discard");
 
