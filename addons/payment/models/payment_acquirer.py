@@ -428,7 +428,7 @@ class PaymentOption(models.Model):
         image_resize_images(vals)
 
         if 'image' in vals:
-            self.image_payment_form = image_resize_image(vals['image'], size=(45,30))
+            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
 
         return super(PaymentOption, self).create(vals)
 
@@ -436,7 +436,7 @@ class PaymentOption(models.Model):
     def write(self, vals):
         image_resize_images(vals)
         if 'image' in vals:
-            self.image_payment_form = image_resize_image(vals['image'], size=(45,30))
+           vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
         return super(PaymentOption, self).write(vals)
 
 class PaymentTransaction(models.Model):

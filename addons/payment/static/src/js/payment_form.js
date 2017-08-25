@@ -41,10 +41,10 @@ odoo.define('payment.payment_form', function (require){
                     inputs_form.toArray().forEach(function(element) {
                         if(element.dataset.isRequired) {
                             if (element.value.length === 0) {
-                                $(element).closest('div').addClass('has-error');
+                                $(element).closest('div.form-group').addClass('has-error');
                             }
                             else {
-                                $(element).closest('div').removeClass('has-error');
+                                $(element).closest('div.form-group').removeClass('has-error');
                             }
                             empty_inputs = true;
                         }
@@ -181,10 +181,10 @@ odoo.define('payment.payment_form', function (require){
                 inputs_form.toArray().forEach(function(element) {
                     if(element.dataset.isRequired) {
                         if (element.value.length === 0) {
-                            $(element).closest('div').addClass('has-error');
+                            $(element).closest('div.form-group').addClass('has-error');
                         }
                         else {
-                            $(element).closest('div').removeClass('has-error');
+                            $(element).closest('div.form-group').removeClass('has-error');
                         }
                         empty_inputs = true;
                     }
