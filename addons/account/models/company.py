@@ -325,18 +325,20 @@ Best Regards,''')
             balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
             if float_is_zero(debit_diff + credit_diff, precision_rounding=currency.rounding):
-                if balancing_move_line: # zero difference and existing line : delete the line
+                if balancing_move_line:
+                    # zero difference and existing line : delete the line
                     balancing_move_line.unlink()
             else:
-                if balancing_move_line: # Non-zero difference and existing line : edit the line
+                if balancing_move_line:
+                    # Non-zero difference and existing line : edit the line
                     balancing_move_line.write({'debit': credit_diff, 'credit': debit_diff})
-                else: # Non-zero difference and no existing line : create a new line
+                else:
+                    # Non-zero difference and no existing line : create a new line
                     balancing_account = self.get_unaffected_earnings_account()
                     self.env['account.move.line'].create({
-                        'name': 'Opening Move Automatic Balancing Line',
+                        'name': _('Automatic Balancing Line'),
                         'move_id': self.account_opening_move_id.id,
                         'account_id': balancing_account.id,
                         'debit': credit_diff,
                         'credit': debit_diff,
                     })
-
