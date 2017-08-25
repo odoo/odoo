@@ -33,6 +33,11 @@ class MailActivityType(models.Model):
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
         string='Preceding Activities')
+    category = fields.Selection([
+        ('default', 'Other')], default='default',
+        string='Category',
+        help='Categories may trigger specific behavior like opening calendar view')
+
 
 class MailActivity(models.Model):
     """ An actual activity to perform. Activities are linked to
@@ -67,6 +72,7 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
+    activity_category = fields.Selection(related='activity_type_id.category')
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')
