@@ -201,7 +201,10 @@ class StockMove(models.Model):
                     # negative stock use case. We chose to value the out move at the price of the
                     # last out and a correction entry will be made once `_fifo_vacuum` is called.
                     if qty_to_take_on_candidates == 0:
-                        move.write({'value': -tmp_value})  # outgoing move are valued negatively
+                        move.write({
+                            'value': -tmp_value,  # outgoing move are valued negatively
+                            'price_unit': -tmp_value / move.product_qty,
+                        })
                     elif qty_to_take_on_candidates > 0:
                         last_fifo_price = new_standard_price or move.product_id.standard_price
                         negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
