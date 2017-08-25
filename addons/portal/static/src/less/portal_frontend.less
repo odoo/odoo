@@ -1,40 +1,43 @@
 .o_portal {
     .breadcrumb {
         margin-bottom: 0px;
+        display: inline-block;
     }
-}
-.o_my_status_table {
-    text-align: right;
-    tr > :first-child {
-        text-align: left;
-    }
-    tr th {
-        text-align: center;
+
+    > tbody.o_portal_report_tbody {
+        vertical-align: middle;
     }
 }
 
-.o_my_home_content > .page-header > a:hover {
-    text-decoration: none;
-}
+.o_portal_wrap {
+    .o_portal_my_home > .page-header > a:hover {
+        text-decoration: none;
+    }
 
-.portal-wrap table.table tr {
-    word-wrap: break-word;
-}
+    .o_portal_my_doc_table {
+        td, th {
+            text-align: right;
+        }
+        tr > :first-child {
+            text-align: left;
+        }
+    }
 
-.search_panel_fixed_width {
-    overflow: hidden;
-    max-width: 125px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    .o_portal_search_panel_fixed_width {
+        overflow: hidden;
+        max-width: 125px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    table.table tr {
+        word-wrap: break-word;
+    }
 }
 
 .oe_attachments .o_image_small {
     height: 40px;
     width: 50px;
-}
-
-.breadcrumb {
-  display: inline-block;
 }
 
 .o_portal_chatter {
