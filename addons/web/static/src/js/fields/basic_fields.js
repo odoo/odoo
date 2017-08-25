@@ -8,6 +8,7 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var ajax = require('web.ajax');
 var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
@@ -1954,6 +1955,9 @@ var JournalDashboardGraph = AbstractField.extend({
         this.graph_type = this.attrs.graph_type;
         this.data = JSON.parse(this.value);
     },
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
+    },
     start: function () {
         this._onResize = this._onResize.bind(this);
         nv.utils.windowResize(this._onResize);
@@ -2296,6 +2300,9 @@ var AceEditor = DebouncedField.extend({
     start: function () {
         this._startAce(this.$('.ace-view-editor')[0]);
         return this._super.apply(this, arguments);
+    },
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
     /**
      * @override destroy from AbstractField (Widget)

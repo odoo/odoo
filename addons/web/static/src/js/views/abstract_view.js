@@ -122,7 +122,15 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Main method of the view class.
+     * Main method of the view class. Create a controller, and make sure that
+     * data and libraries are loaded.
+     *
+     * There is a unusual thing going in this method with parents: we create
+     * renderer/model with parent as parent, then we have to reassign them at
+     * the end to make sure that we have the proper relationships.  This is
+     * necessary to solve the problem that the controller need the model and the
+     * renderer to be instantiated, but the model need a parent to be able to
+     * load itself, and the renderer need the data in its constructor.
      *
      * @param {Widget} parent The parent of the resulting Controller (most
      *      likely a view manager)
@@ -130,27 +138,24 @@ var AbstractView = Class.extend({
      */
     getController: function (parent) {
         var self = this;
-        return ajax.loadLibs(this).then(function () {
-            return self._loadData(parent).then(function () {
-                var model = self.getModel();
-                var state = model.get(arguments[0]);
-                var renderer = self.getRenderer(parent, state);
-                var Controller = self.Controller || self.config.Controller;
-                var controllerParams = _.extend({
-                    initialState: state,
-                }, self.controllerParams);
-                var controller = new Controller(parent, model, renderer, controllerParams);
-                renderer.setParent(controller);
+        return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
+            var model = self.getModel();
+            var state = model.get(arguments[0]);
+            var renderer = self.getRenderer(parent, state);
+            var Controller = self.Controller || self.config.Controller;
+            var controllerParams = _.extend({
+                initialState: state,
+            }, self.controllerParams);
+            var controller = new Controller(parent, model, renderer, controllerParams);
+            renderer.setParent(controller);
 
-                if (!self.model) {
-                    // if we have a model, it already has a parent. Otherwise, we
-                    // set the controller, so the rpcs from the model actually work
-                    model.setParent(controller);
-                }
-                return controller;
-            });
+            if (!self.model) {
+                // if we have a model, it already has a parent. Otherwise, we
+                // set the controller, so the rpcs from the model actually work
+                model.setParent(controller);
+            }
+            return controller;
         });
-
     },
     /**
      * Returns the view model or create an instance of it if none
