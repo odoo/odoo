@@ -26,13 +26,13 @@ FormController.include({
         this.activeBarcode = {
             form_view: {
                 commands: {
-                    'O-CMD.EDIT': this._onEdit.bind(this),
-                    'O-CMD.CANCEL': this._onDiscard.bind(this),
-                    'O-CMD.SAVE': this._onCommandSave.bind(this),
-                    'O-CMD.PAGER-PREV': this._onCommandPrevious.bind(this),
-                    'O-CMD.PAGER-NEXT': this._onCommandNext.bind(this),
-                    'O-CMD.PAGER-FIRST': this._onCommandFirst.bind(this),
-                    'O-CMD.PAGER-LAST': this._onCommandLast.bind(this),
+                    'O-CMD.EDIT': this._barcodeEdit.bind(this),
+                    'O-CMD.CANCEL': this._barcodeDiscard.bind(this),
+                    'O-CMD.SAVE': this._barcodeSave.bind(this),
+                    'O-CMD.PAGER-PREV': this._barcodePagerPrevious.bind(this),
+                    'O-CMD.PAGER-NEXT': this._barcodePagerNext.bind(this),
+                    'O-CMD.PAGER-FIRST': this._barcodePagerFirst.bind(this),
+                    'O-CMD.PAGER-LAST': this._barcodePagerLast.bind(this),
                 },
             },
         };
@@ -74,6 +74,53 @@ FormController.include({
         }
     },
     /**
+     * @private
+     */
+    _barcodeDiscard: function () {
+        return this.discardChanges();
+    },
+    /**
+     * @private
+     */
+    _barcodeEdit: function () {
+        return this._setMode('edit');
+    },
+    /**
+     * @private
+     */
+    _barcodePagerFirst: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            self.pager.updateState({
+                current_min: 1,
+            }, {notifyChange: true});
+        });
+    },
+    /**
+     * @private
+     */
+    _barcodePagerLast: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            var state = self.model.get(self.handle, {raw: true});
+            self.pager.updateState({
+                current_min: state.count,
+            }, {notifyChange: true});
+        });
+    },
+    /**
+     * @private
+     */
+    _barcodePagerNext: function () {
+        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
+    },
+    /**
+     * @private
+     */
+    _barcodePagerPrevious: function () {
+        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
+    },
+    /**
      * Returns true iff the given barcode matches the given record (candidate).
      *
      * @private
@@ -84,6 +131,12 @@ FormController.include({
      */
     _barcodeRecordFilter: function (candidate, barcode, activeBarcode) {
         return candidate.data.product_barcode === barcode;
+    },
+    /**
+     * @private
+     */
+    _barcodeSave: function () {
+        return this.saveRecord();
     },
     /**
      * @private
@@ -111,7 +164,6 @@ FormController.include({
         core.bus.on('barcode_scanned', this, this._barcodeScanned);
         core.bus.on('keypress', this, this._quantityListener);
     },
-
     /**
      * @private
      */
@@ -257,47 +309,6 @@ FormController.include({
                 }
             });
         });
-    },
-    /**
-     * @private
-     */
-    _onCommandFirst: function () {
-        var self = this;
-        return this.mutex.exec(function () {}).then(function () {
-            self.pager.updateState({
-                current_min: 1,
-            }, {notifyChange: true});
-        });
-    },
-    /**
-     * @private
-     */
-    _onCommandLast: function () {
-        var self = this;
-        return this.mutex.exec(function () {}).then(function () {
-            var state = self.model.get(self.handle, {raw: true});
-            self.pager.updateState({
-                current_min: state.count,
-            }, {notifyChange: true});
-        });
-    },
-    /**
-     * @private
-     */
-    _onCommandNext: function () {
-        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
-    },
-    /**
-     * @private
-     */
-    _onCommandPrevious: function () {
-        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
-    },
-    /**
-     * @private
-     */
-    _onCommandSave: function () {
-        return this.saveRecord();
     },
     /**
      * @private
