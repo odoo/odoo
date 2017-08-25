@@ -141,7 +141,8 @@ class AccountAccount(models.Model):
                 })
 
             # Then, we automatically balance the opening move, to make sure it stays valid
-            if not 'import_file' in self.env.context: # When importing, we auto balance AFTER importing everything, for performances
+            if not 'import_file' in self.env.context:
+                # When importing a file, avoid recomputing the opening move for each account and do it at the end, for better performances
                 self.company_id._auto_balance_opening_move()
 
     @api.model
@@ -211,8 +212,9 @@ class AccountAccount(models.Model):
 
     @api.model
     def load(self, fields, data):
-        """ Overridden for better performances when importing opening debit/credit
-        data: we auto balance after importing all the data.
+        """ Overridden for better performances when importing a list of account
+        with opening debit/credit. In that case, the auto-balance is postpone
+        untill the whole file has been imported.
         """
         rslt = super(AccountAccount, self).load(fields, data)
 
@@ -220,7 +222,6 @@ class AccountAccount(models.Model):
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
                 company._auto_balance_opening_move()
-
         return rslt
 
     @api.multi
