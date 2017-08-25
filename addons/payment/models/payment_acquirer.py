@@ -5,7 +5,7 @@ import logging
 import datetime
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, ustr
+from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 
@@ -420,14 +420,23 @@ class PaymentOption(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
+    image_payment_form = fields.Binary(
+        "Image displayed on the payment form", attachment=True)
+
     @api.model
     def create(self, vals):
         image_resize_images(vals)
+
+        if 'image' in vals:
+            self.image_payment_form = image_resize_image(vals['image'], size=(45,30))
+
         return super(PaymentOption, self).create(vals)
 
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
+        if 'image' in vals:
+            self.image_payment_form = image_resize_image(vals['image'], size=(45,30))
         return super(PaymentOption, self).write(vals)
 
 class PaymentTransaction(models.Model):
