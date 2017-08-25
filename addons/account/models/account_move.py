@@ -1204,10 +1204,10 @@ class AccountMoveLine(models.Model):
         #the 'tax_ids' is a cash based tax.
         taxes = False
         if vals.get('tax_line_id'):
-            taxes = [{'use_cash_basis': self.env['account.tax'].browse(vals['tax_line_id']).use_cash_basis}]
+            taxes = [{'tax_exigibility': self.env['account.tax'].browse(vals['tax_line_id']).tax_exigibility}]
         if vals.get('tax_ids'):
             taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
-        if taxes and any([tax['use_cash_basis'] for tax in taxes]) and not vals.get('tax_exigible'):
+        if taxes and any([tax['tax_exigibility'] == 'on_payment' for tax in taxes]) and not vals.get('tax_exigible'):
             vals['tax_exigible'] = False
 
         new_line = super(AccountMoveLine, self).create(vals)
@@ -1563,7 +1563,7 @@ class AccountPartialReconcile(models.Model):
                     rounded_amt = line.company_id.currency_id.round(amount)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
-                    if line.tax_line_id and line.tax_line_id.use_cash_basis:
+                    if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the tax line
@@ -1596,7 +1596,7 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
 
-                    if any([tax.use_cash_basis for tax in line.tax_ids]):
+                    if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
