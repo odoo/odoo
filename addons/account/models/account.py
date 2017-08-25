@@ -118,12 +118,17 @@ class AccountAccount(models.Model):
             # check whether we should create a new move line or modify an existing one
             opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
                                                                       ('move_id','=', opening_move.id),
-                                                                      (field,'!=', False)])
+                                                                      (field,'!=', False),
+                                                                      (field,'!=', 0.0)]) # 0.0 condition important for import
+
+            counter_part_map = {'debit': opening_move_line.credit, 'credit': opening_move_line.debit}
+            # No typo here! We want the credit value when treating debit and debit value when treating credit
+
             if opening_move_line:
                 if amount:
                     # modify the line
                     setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
-                else:
+                elif counter_part_map[field]:
                     # delete the line (no need to keep a line with value = 0)
                     opening_move_line.with_context({'check_move_validity': False}).unlink()
             elif amount:
