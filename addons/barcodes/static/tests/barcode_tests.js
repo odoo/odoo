@@ -348,7 +348,6 @@ QUnit.test('specification of widget barcode_handler', function (assert) {
             });
         },
     });
-    var previousField = fieldRegistry.get('test_barcode_handler');
     fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
 
     var form = createView({
@@ -402,6 +401,6 @@ QUnit.test('specification of widget barcode_handler', function (assert) {
 
     form.destroy();
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    fieldRegistry.add('test_barcode_handler', previousField);
+    delete fieldRegistry.map.test_barcode_handler;
 });
 });
