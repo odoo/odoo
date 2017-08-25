@@ -60,7 +60,7 @@ class AccountConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
 
     @api.model
@@ -123,14 +123,14 @@ class AccountConfigSettings(models.TransientModel):
         if self.module_account_yodlee:
             self.module_account_plaid = True
 
-    @api.onchange('use_cash_basis')
-    def _onchange_use_cash_basis(self):
+    @api.onchange('tax_exigibility')
+    def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.user.company_id.id), ('use_cash_basis', '=', True)
+            ('company_id', '=', self.env.user.company_id.id), ('tax_exigibility', '=', 'on_payment')
         ], limit=1)
-        if not self.use_cash_basis and tax:
-            self.use_cash_basis = True
+        if not self.tax_exigibility and tax:
+            self.tax_exigibility = True
             res['warning'] = {
                 'title': _('Error!'),
                 'message': _('You cannot disable this setting because some of your taxes are cash basis. '

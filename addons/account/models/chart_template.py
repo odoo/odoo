@@ -519,15 +519,18 @@ class AccountTaxTemplate(models.Model):
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
-    use_cash_basis = fields.Boolean(
-        'Use Cash Basis',
-        help="Select this if the tax should use cash basis,"
-        "which will create an entry for this tax on a given account during reconciliation")
+    tax_exigibility = fields.Selection(
+        [('on_invoice', 'Based on Invoice'),
+         ('on_payment', 'Based on Payment'),
+        ], string='Tax Due', default='on_invoice',
+        oldname='use_cash_basis',
+        help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
+        "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_account = fields.Many2one(
         'account.account.template',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
-        help='Account use when creating entry for tax cash basis')
+        help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -566,7 +569,7 @@ class AccountTaxTemplate(models.Model):
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
             'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
-            'use_cash_basis': self.use_cash_basis,
+            'tax_exigibility': self.tax_exigibility,
         }
 
         if self.tax_group_id:
@@ -596,10 +599,10 @@ class AccountTaxTemplate(models.Model):
                 'cash_basis_account': tax.cash_basis_account.id,
             }
 
-        if any([tax.use_cash_basis for tax in self]):
-            # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(use_cash_basis) is set to True by default
+        if any([tax.tax_exigibility == 'on_payment' for tax in self]):
+            # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
             # (exapmple of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
-            company.use_cash_basis = True
+            company.tax_exigibility = True
 
         return {
             'tax_template_to_tax': tax_template_to_tax,

@@ -44,7 +44,7 @@ If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
 Best Regards,''')
-    use_cash_basis = fields.Boolean(string='Use Cash Basis')
+    tax_exigibility = fields.Boolean(string='Use Cash Basis')
 
     @api.multi
     def compute_fiscalyear_dates(self, date):

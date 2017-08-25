@@ -1040,9 +1040,9 @@
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="tax_adjustment" groups="account.group_account_user"/>
-                                    <field name="hide_use_cash_basis" invisible="1"/>
-                                    <field name="use_cash_basis" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_use_cash_basis', '=', False)]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}" groups="account.group_account_user"/>
+                                    <field name="hide_tax_exigibility" invisible="1"/>
+                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_account" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
                                 </group>
                             </group>
                         </page>
@@ -1794,8 +1794,8 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="use_cash_basis" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}"/>
+                                    <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="cash_basis_account" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
                                 </group>
                             </group>
                         </page>
