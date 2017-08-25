@@ -209,12 +209,16 @@ class StockMove(models.Model):
                             'remaining_qty': -qty_to_take_on_candidates,
                             'remaining_value': negative_stock_value,
                             'value': -tmp_value + negative_stock_value,
+                            'price_unit': (-tmp_value + negative_stock_value) / move.product_qty,
                         }
                         move.write(vals)
                 elif move.product_id.cost_method in ['standard', 'average']:
                     curr_rounding = move.company_id.currency_id.rounding
-                    move.value = -float_round(move.product_id.standard_price * move.product_qty, precision_rounding=curr_rounding)
-                
+                    value = -float_round(move.product_id.standard_price * move.product_qty, precision_rounding=curr_rounding)
+                    move.write({
+                        'value': value,
+                        'price_unit': value / move.product_qty,
+                    })
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time'):
             move._account_entry_move()
         return res

@@ -188,7 +188,6 @@ class TestStockValuation(TransactionCase):
 
         # stock_account values for move3
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out move
         self.assertEqual(move3.remaining_qty, 0.0)  # unused in out move
         self.assertEqual(move3.value, -30.0)  # took 3 items from move 1 @ 10.00 per unit
         self.assertEqual(move3.remaining_value, 0.0)  # took 3 items from move 1 @ 10.00 per unit
@@ -268,7 +267,6 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 80.0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
@@ -294,7 +292,6 @@ class TestStockValuation(TransactionCase):
 
         # stock_account values for move4
         self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.price_unit, 0.0)  # unused in out move
         self.assertEqual(move4.remaining_qty, 0.0)  # unused in out move
         self.assertEqual(move4.value, -90.0)  # took 9 items from move 1 @ 10.00 per unit
         self.assertEqual(move4.remaining_value, 0.0)  # took 3 items from move 1 @ 10.00 per unit
@@ -331,7 +328,6 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 80.0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
@@ -358,7 +354,6 @@ class TestStockValuation(TransactionCase):
 
         # stock_account values for move5
         self.assertEqual(move5.product_uom_qty, 20.0)
-        self.assertEqual(move5.price_unit, 0.0)
         self.assertEqual(move5.remaining_qty, -10.0)
         self.assertEqual(move5.value, -160.0)
         self.assertEqual(move5.remaining_value, -80.0)
@@ -395,12 +390,10 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
         self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.price_unit, 0.0)
         self.assertEqual(move4.remaining_qty, 0.0)
         self.assertEqual(move4.value, -90.0)
         self.assertEqual(move4.remaining_value, 0)
@@ -466,17 +459,14 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
         self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.price_unit, 0.0)
         self.assertEqual(move4.remaining_qty, 0.0)
         self.assertEqual(move4.value, -90.0)
         self.assertEqual(move4.remaining_value, 0)
         self.assertEqual(move5.product_uom_qty, 20.0)
-        self.assertEqual(move5.price_unit, 0.0)
         self.assertEqual(move5.remaining_qty, -10.0)
         self.assertEqual(move5.value, -160.0)
         self.assertEqual(move5.remaining_value, -80.0)
@@ -517,17 +507,14 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
         self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.price_unit, 0.0)
         self.assertEqual(move4.remaining_qty, 0.0)
         self.assertEqual(move4.value, -90.0)
         self.assertEqual(move4.remaining_value, 0)
         self.assertEqual(move5.product_uom_qty, 20.0)
-        self.assertEqual(move5.price_unit, 0.0)
         self.assertEqual(move5.remaining_qty, 0.0)
         self.assertEqual(move5.value, -200.0)
         self.assertEqual(move5.remaining_value, 0.0)
@@ -649,17 +636,14 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 80.0)
         self.assertEqual(move2.remaining_value, 0)
         self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.price_unit, 0.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.value, -30.0)
         self.assertEqual(move3.remaining_value, 0.0)
         self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.price_unit, 0.0)
         self.assertEqual(move4.remaining_qty, 0.0)
         self.assertEqual(move4.value, -90.0)
         self.assertEqual(move4.remaining_value, 0)
         self.assertEqual(move5.product_uom_qty, 20.0)
-        self.assertEqual(move5.price_unit, 0.0)
         self.assertEqual(move5.remaining_qty, 0.0)
         self.assertEqual(move5.value, -200.0)
         self.assertEqual(move5.remaining_value, 0.0)
@@ -740,7 +724,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 94.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
         # so its value should be -((68*15) + (26*15.5)) = -1423
@@ -959,7 +942,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 15.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 10 units from move1 and 5 from move2
         # so its value should be -((10*100) + (5*80)) = -1423
@@ -1194,7 +1176,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 190.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         self.assertEqual(move3.value, -2916.5)
 
