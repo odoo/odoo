@@ -2,6 +2,7 @@ odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
+var ajax = require('web.ajax');
 var field_registry = require('web.field_registry');
 var utils = require('web.utils');
 
@@ -25,6 +26,18 @@ var utils = require('web.utils');
 
 var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
+    jsLibs: [[
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ]],
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
+    },
 
     //--------------------------------------------------------------------------
     // Private

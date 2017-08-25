@@ -176,7 +176,11 @@ var ViewEditor = Widget.extend({
      * @override
      */
     willStart: function () {
-        return $.when(this._super.apply(this, arguments), ajax.loadLibs(this), this._loadResources());
+        return $.when(
+            this._super.apply(this, arguments),
+            ajax.loadLibs(this),
+            this._loadResources()
+        );
     },
     /**
      * Initializes the library and initial view once the DOM is ready. It also
