@@ -217,10 +217,11 @@ class AccountAccount(models.Model):
         rslt = super(AccountAccount, self).load(fields, data)
 
         if 'import_file' in self.env.context:
-            import pdb; pdb.set_trace()
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
                 company._auto_balance_opening_move()
+
+        return rslt
 
     @api.multi
     def write(self, vals):
