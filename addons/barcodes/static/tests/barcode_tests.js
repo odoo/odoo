@@ -247,7 +247,55 @@ QUnit.test('widget field_float_scannable', function (assert) {
         barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
         done();
     });
+});
 
+QUnit.test('widget barcode_handler', function (assert) {
+    assert.expect(4);
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+
+    this.data.product.fields.barcode_scanned = {string : "Scanned barcode", type: "char"};
+    this.data.product.onchanges = {
+        barcode_scanned: function (obj) {
+            // simulate an onchange that increment the int_field value
+            // at each barcode scanned
+            obj.int_field = obj.int_field + 1;
+        },
+    };
+
+    var form = createView({
+        View: FormView,
+        model: 'product',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="barcode_scanned" widget="barcode_handler" invisible="1"/>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'onchange') {
+                assert.step('onchange');
+            }
+            return this._super.apply(this, arguments);
+        },
+        res_id: 1,
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '0',
+        "initial value should be correct");
+
+    _.each(['5','4','3','9','8','2','6','7','1','2','5','2','Enter'], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '1',
+        "value should have been incremented");
+
+    assert.verifySteps(['onchange'], "an onchange should have been done");
+
+    form.destroy();
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
 });
 
 });
