@@ -131,6 +131,8 @@
     <template id="portal_order_page" name="Sales Order">
       <t t-call="portal.portal_layout">
         <t t-set="sales_order" t-value="order"/> <!-- rename to ensure breadcrumb compatibility (differentiate with purchase orders) -->
+        <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
+        <t t-set="invoices_amount" t-value="sum(i.amount_total for i in invoices)"/>
         <div id="optional_placeholder"></div>
         <div class="container">
           <div class="panel panel-default">
@@ -145,7 +147,17 @@
                     </h4>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_order_actions">
-                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="pull-right" title="Download">
+                    <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
+                        <a class="btn btn-primary ml8 pull-right" href="#portal_sign">
+                            <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
+                        </a>
+                    </t>
+                    <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
+                        <a class="btn btn-success ml8 pull-right" disabled="disabled">
+                            <i class="fa fa-check-circle"/> Signed
+                        </a>
+                    </t>
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right" title="Download">
                         <i class="fa fa-download fa-2x" aria-hidden="true"/>
                     </a>
                 </div>
@@ -165,7 +177,6 @@
                   <div>
                     <address t-field="order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                   </div>
-                  <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
                   <t t-if="invoices">
                     <div>
                       <strong>Invoices</strong>
@@ -276,6 +287,19 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="panel-body">
+                <div class="row" t-if="order.state == 'sent' and portal_confirmation == 'sign'" id="portal_sign">
+                    <div class="col-md-offset-3 col-md-6">
+                        <h4>Accept order</h4>
+                        <t t-call="portal.portal_signature">
+                            <t t-set="object" t-value="order"/>
+                            <t t-set="partner_name" t-value="order.partner_id.name"/>
+                            <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
+                            <t t-set="accessToken" t-value="order.access_token"/>
+                        </t>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
