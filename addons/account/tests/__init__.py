@@ -14,5 +14,6 @@ from . import test_payment
 from . import test_product_id_change
 from . import test_reconciliation
 from . import test_search
+from . import test_setup_bar
 from . import test_tax
 from . import test_templates_consistency
