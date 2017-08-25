@@ -273,9 +273,8 @@
                         </page>
                         <page string="Operations">
                             <field name="id" invisible="1"/>
-                            <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'done'))]}" context="{'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'done'))]}" context="{'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree decoration-danger="state != 'done' and quantity_done > reserved_availability" decoration-muted="scrapped == True or state == 'cancel'" string="Stock Moves" editable="bottom">
-                                    <field name="name" invisible="1"/>
                                     <field name="date_expected" invisible="1"/>
                                     <field name="state" invisible="1" readonly="0"/>
                                     <field name="picking_type_id" invisible="1"/>
@@ -291,7 +290,7 @@
                                     <field name="product_id" required="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('additional', '=', False)]}"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False), ('state', '!=', 'draft')]}"/>
-                                    <field name="reserved_availability" string="Reserved"/>
+                                    <field name="reserved_availability" string="Reserved" invisible="context.get('picking_type_code') == 'incoming'"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': ['|', ('show_details_visible', '=', True), ('state', '=', 'cancel')], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
