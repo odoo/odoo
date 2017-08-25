@@ -17,7 +17,8 @@ class WebsitePayment(http.Controller):
             'pms': payment_tokens,
             'acquirers': acquirers,
             'return_url': return_url,
-            'bootstrap_formatting': True
+            'bootstrap_formatting': True,
+            'partner_id': partner.id
         }
         return request.render("payment.pay_methods", values)
 

@@ -316,12 +316,17 @@ odoo.define('payment.payment_form', function (require){
         },
         start: function() {
             this.updateNewPaymentDisplayStatus();
+            $('[data-toggle="tooltip"]').tooltip();
+
         },
     });
 
 
 
     $(document).ready(function (){
+        if (!$('.o_payment_form').length) {
+            return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
+        }
         var form = new PaymentForm();
         form.attachTo($('.o_payment_form'));
     });
