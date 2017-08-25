@@ -27,7 +27,7 @@
                             <field name="backorder_id"/>
                             <field name="origin"/>
                             <field name="date"/>
-                            <field name="scheduled_date"/>
+                            <field name="min_date"/>
                             <field name="state"/>
                             <button name="action_assign" string="Confirm picking" type="object" icon="fa-check text-success" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
                             <button name="force_assign" string="Force availability" type="object" icon="fa-arrow-right text-success" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'draft', 'assigned'))]}" groups="stock.group_stock_manager"/>
