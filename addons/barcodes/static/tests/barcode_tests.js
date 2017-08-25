@@ -128,7 +128,7 @@ QUnit.test('edit, save and cancel buttons', function (assert) {
 });
 
 QUnit.test('pager buttons', function (assert) {
-    assert.expect(3);
+    assert.expect(5);
 
     var form = createView({
         View: FormView,
@@ -148,6 +148,12 @@ QUnit.test('pager buttons', function (assert) {
     assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
     // O-CMD.PAGER-PREV
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","P","R","E","V","Enter"], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    // O-CMD.PAGER-LAST
+    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    // O-CMD.PAGER-FIRST
+    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
 
     form.destroy();
