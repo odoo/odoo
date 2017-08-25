@@ -134,7 +134,7 @@ class AccountAnalyticLine(models.Model):
                 total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
                 # compute (new) revenue of current timesheet line
                 revenue = min(
-                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
+                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-(so_line.discount/100))),
                     total_revenue_so - total_revenue_invoiced
                 )
                 billable_type = 'billable_fixed'
