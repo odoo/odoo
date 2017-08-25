@@ -219,13 +219,6 @@ class AccountBankStatement(models.Model):
             }
 
     @api.multi
-    def button_cancel(self):
-        for statement in self:
-            if any(line.journal_entry_ids.ids for line in statement.line_ids):
-                raise UserError(_('A statement cannot be canceled when its lines are reconciled.'))
-        self.state = 'open'
-
-    @api.multi
     def check_confirm_bank(self):
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
             action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
