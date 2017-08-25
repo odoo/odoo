@@ -158,11 +158,11 @@ var Activity = AbstractActivityField.extend({
     },
 
     // handlers
-    _onEditActivity: function (event) {
+    _onEditActivity: function (event, options) {
         event.preventDefault();
         var self = this;
         var activity_id = $(event.currentTarget).data('activity-id');
-        var action = {
+        var action = _.defaults(options || {}, {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
             view_mode: 'form',
@@ -174,7 +174,7 @@ var Activity = AbstractActivityField.extend({
                 default_res_model: this.model,
             },
             res_id: activity_id,
-        };
+        });
         return this.do_action(action, {
             on_close: function () {
                 // remove the edited activity from the array of fetched activities to
@@ -184,13 +184,17 @@ var Activity = AbstractActivityField.extend({
             },
         });
     },
-    _onUnlinkActivity: function (event) {
+    _onUnlinkActivity: function (event, options) {
         event.preventDefault();
         var activity_id = $(event.currentTarget).data('activity-id');
+        options = _.defaults(options || {}, {
+            model: 'mail.activity',
+            args: [[activity_id]],
+        });
         return this._rpc({
-                model: 'mail.activity',
+                model: options.model,
                 method: 'unlink',
-                args: [[activity_id]],
+                args: options.args,
             })
             .then(this._reload.bind(this, {activity: true}));
     },

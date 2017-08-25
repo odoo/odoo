@@ -12,6 +12,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="category" invisible="1"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
@@ -62,6 +63,7 @@
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
                     <group invisible="1">
+                        <field name="activity_category" invisible="1" />
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
