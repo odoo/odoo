@@ -439,11 +439,18 @@ var loadXML = (function () {
  * the ajax loadJS and loadCSS methods don't do anything if the given file
  * is already loaded.
  *
+ * @param {Object} libs
+ * @param {Array<string> | Array<Array<string>>} [libs.jsLibs=[]] The list of JS files
+ *   that we want to load.  If it is a list of strings, each file will be loaded
+ *   in parallel.  If it is a list of lists, the inner lists will be loaded
+ *   sequentially, and each element of the main list will be loaded in parallel.
+ * @param {Array<string>} [libs.cssLibs=[]] A list of css files, to be loaded in
+ *   parallel
  * @returns {Deferred}
  */
-function loadLibs (lib) {
+function loadLibs (libs) {
     var defs = [];
-    _.each(lib.jsLibs || [], function (urls) {
+    _.each(libs.jsLibs || [], function (urls) {
         if (typeof(urls) === 'string') {
             // jsLibs is an array of urls: those urls can be loaded in
             // parallel
@@ -466,7 +473,7 @@ function loadLibs (lib) {
             defs.push(jsDef);
         }
     });
-    _.each(lib.cssLibs || [], function (url) {
+    _.each(libs.cssLibs || [], function (url) {
         defs.push(ajax.loadCSS(url));
     });
     return $.when.apply($, defs);
