@@ -57,7 +57,6 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
 });
 
 // Field to use scan barcodes
-
 var FormViewBarcodeHandler = AbstractField.extend({
     /**
      * @override
@@ -67,8 +66,6 @@ var FormViewBarcodeHandler = AbstractField.extend({
 
         this.trigger_up('activeBarcode', {
             name: this.name,
-            fieldName: 'pack_operation_product_ids',
-            quantity: 'qty_done',
             commands: {
                 barcode: '_barcodeAddX2MQuantity',
             }
