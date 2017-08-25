@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -350,7 +351,7 @@ class BaseAutomation(models.Model):
                     except Exception:
                         _logger.error(traceback.format_exc())
 
-            action.write({'last_run': fields.Datetime.now()})
+            action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
             if automatic:
                 # auto-commit for batch processing
