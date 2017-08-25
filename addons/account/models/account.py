@@ -141,7 +141,8 @@ class AccountAccount(models.Model):
                 })
 
             # Then, we automatically balance the opening move, to make sure it stays valid
-            self.company_id._auto_balance_opening_move()
+            if not 'import_file' in self.env.context: # When importing, we auto balance AFTER importing everything, for performances
+                self.company_id._auto_balance_opening_move()
 
     @api.model
     def default_get(self, default_fields):
@@ -207,6 +208,19 @@ class AccountAccount(models.Model):
         default = dict(default or {})
         default.setdefault('code', _("%s (copy)") % (self.code or ''))
         return super(AccountAccount, self).copy(default)
+
+    @api.model
+    def load(self, fields, data):
+        """ Overridden for better performances when importing opening debit/credit
+        data: we auto balance after importing all the data.
+        """
+        rslt = super(AccountAccount, self).load(fields, data)
+
+        if 'import_file' in self.env.context:
+            import pdb; pdb.set_trace()
+            companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
+            for company in companies:
+                company._auto_balance_opening_move()
 
     @api.multi
     def write(self, vals):
