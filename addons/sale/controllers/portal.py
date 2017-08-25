@@ -35,6 +35,29 @@ class CustomerPortal(CustomerPortal):
     # Quotations and Sales Orders
     #
 
+    def _order_check_access(self, order_id, access_token=None):
+        order = request.env['sale.order'].browse([order_id])
+        order_sudo = order.sudo()
+        try:
+            order.check_access_rights('read')
+            order.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(order_sudo.access_token, access_token):
+                raise
+        return order_sudo
+
+    def _order_get_page_view_values(self, order, access_token, **kwargs):
+        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
+        values = {
+            'order': order,
+            'order_invoice_lines': order_invoice_lines,
+        }
+        if access_token:
+            values['no_breadcrumbs'] = True
+        history = request.session.get('my_orders_history', [])
+        values.update(get_records_pager(history, order))
+        return values
+
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
@@ -138,23 +161,10 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/orders/<int:order>'], type='http', auth="public", website=True)
     def orders_followup(self, order=None, access_token=None, **kw):
-        order = request.env['sale.order'].browse([order])
-        order_sudo = order.sudo()
-        values = {}
         try:
-            order.check_access_rights('read')
-            order.check_access_rule('read')
+            order_sudo = self._order_check_access(order, access_token=access_token)
         except AccessError:
-            if not access_token or not consteq(order_sudo.access_token, access_token):
-                return request.redirect('/my')
-            values.update({'no_breadcrumbs': True})
+            return request.redirect('/my')
 
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order_sudo.invoice_ids.mapped('invoice_line_ids')}
-        history = request.session.get('my_orders_history', [])
-
-        values.update({
-            'order': order_sudo,
-            'order_invoice_lines': order_invoice_lines,
-        })
-        values.update(get_records_pager(history, order_sudo))
+        values = self._order_get_page_view_values(order_sudo, access_token, **kw)
         return request.render("sale.orders_followup", values)
