@@ -50,18 +50,27 @@
                             </t>
                             <span class="payment_option_name" t-esc="acq.name"/>
                         </label>
-                        <!-- <ul class="pull-right list-inline">
+                        <ul class="pull-right list-inline payment_option_list">
+                            <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_option_ids" t-as="pm_option">
-                                <li>
-                                    <span t-field="pm_option.image_small"
+                                <li t-if="i &lt; 3">
+                                    <span t-field="pm_option.image_payment_form"
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
+                                <li t-if="i==3" style="display:block;">
+                                    <span class="pull-right more_option text-info">
+                                        <a href="#" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_option_ids[3:]])">and more</a>
+                                    </span>
+                                </li>
+                                <t t-set="i" t-value="i+1"/>
                             </t>
-                        </ul> -->
+                        </ul>
                     </div>
                     <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if (len(s2s_acquirers)&gt;1 and len(pms)==0 and s2s_acquirers[0]!=acq) else 'hidden' if len(pms)&gt;0 else ''}}">
                         <div class="clearfix">
-                            <t t-call="{{acq.sudo().get_s2s_form_name()}}"/>
+                            <t t-call="{{acq.sudo().get_s2s_form_name()}}">
+                                 <t t-set="id" t-value="acq.id"/>
+                            </t>
                         </div>
                     </div>
                 </t>
@@ -76,6 +85,21 @@
                                 name="pm_id" t-attf-value="form_{{acq.id}}"/>
                             <span class="payment_option_name" t-esc="acq.name"/>
                         </label>
+                        <ul class="pull-right list-inline payment_option_list">
+                            <t t-set="i" t-value="0"/>
+                            <t t-foreach="acq.payment_option_ids" t-as="pm_option">
+                                <li t-if="i &lt; 3">
+                                    <span t-field="pm_option.image_payment_form"
+                                        t-options='{"widget": "image", "alt-field": "name"}' />
+                                </li>
+                                <li t-if="i==3" style="display:block;">
+                                    <span class="pull-right more_option text-info">
+                                        <a href="#" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_option_ids[3:]])">and more</a>
+                                    </span>
+                                </li>
+                                <t t-set="i" t-value="i+1"/>
+                            </t>
+                        </ul>
                     </div>
                     <div t-attf-id="o_payment_form_acq_{{acq.id}}" class="panel-footer hidden">
                         <p>You'll be redirected to the <t t-esc="acq.provider"/> website after clicking on the payment button.</p>
