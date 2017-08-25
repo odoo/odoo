@@ -62,7 +62,8 @@ class sale_quote(http.Controller):
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
             'return_url': '/shop/payment/validate',
-            'bootstrap_formatting': True
+            'bootstrap_formatting': True,
+            'partner_id': order_sudo.partner_id.id,
         }
 
         if order_sudo.require_payment or values['need_payment']:
