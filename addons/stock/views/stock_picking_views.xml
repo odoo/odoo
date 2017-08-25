@@ -242,7 +242,8 @@
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="min_date"/>
+                            <field name="min_date" attrs="{'invisible': [('move_type', '=', 'one')]}"/>
+                            <field name="max_date" attrs="{'invisible': ['|', ('move_type', '=', 'direct'), ('move_type', '=', False)]}"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner" colspan="2" col="2">
