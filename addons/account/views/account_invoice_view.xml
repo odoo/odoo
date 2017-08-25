@@ -368,6 +368,8 @@
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Invoice">
+                    <div class="oe_button_box" name="button_box">
+                    </div>
                     <label string="Credit Note" attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}"/>
                     <h1 class="mt0">
                         <div attrs="{'invisible': [('sequence_number_next_prefix','!=',False)]}">

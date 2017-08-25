@@ -32,7 +32,7 @@ class PaymentTransaction(models.Model):
             tx = getattr(self, tx_find_method_name)(data)
         _logger.info('<%s> transaction processed: tx ref:%s, tx amount: %s', acquirer_name, tx.reference if tx else 'n/a', tx.amount if tx else 'n/a')
 
-        if tx:
+        if tx and tx.sale_order_id:
             # Auto-confirm SO if necessary
             tx._confirm_so()
 
