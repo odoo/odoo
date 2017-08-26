@@ -124,7 +124,7 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice" js_class="credit_note_list_view">
                     <field name="partner_id" groups="base.group_user" string="Customer"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
@@ -188,7 +188,7 @@
             <field name="name">account.invoice.supplier.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice" js_class="credit_note_list_view">
                     <field name="partner_id" groups="base.group_user" string="Vendor"/>
                     <field name="date_invoice" string="Bill Date"/>
                     <field name="number"/>
@@ -214,7 +214,7 @@
             <field name="model">account.invoice</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Vendor Bill">
+                <form string="Vendor Bill" js_class="credit_note_form_view">
                 <header>
                         <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
@@ -352,7 +352,7 @@
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <form string="Invoice" class="o_invoice_form">
+                <form string="Invoice" class="o_invoice_form" js_class="credit_note_form_view">
                 <header>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight o_invoice_send" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight" groups="base.group_user"/>
@@ -727,10 +727,19 @@
             <field name="act_window_id" ref="action_invoice_out_refund"/>
         </record>
 
-        <menuitem action="action_invoice_out_refund"
-                  id="menu_action_invoice_out_refund"
-                  parent="menu_finance_receivables_documents"
-                  sequence="1"/>
+        <record id="account_invoice_action_out_refund_new" model="ir.actions.act_window">
+            <field name="name">Customer Credit Notes</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
+        </record>
+
+        <record id="account_invoice_action_out_refund_new_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="account_invoice_action_out_refund_new"/>
+        </record>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
@@ -767,6 +776,19 @@
 
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables_documents" sequence="1"/>
 
+        <record id="account_invoice_action_in_refund_new" model="ir.actions.act_window">
+            <field name="name">Vendor Credit Notes</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
+        </record>
+
+        <record id="account_invoice_action_in_refund_new_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_supplier_form"/>
+            <field name="act_window_id" ref="account_invoice_action_in_refund_new"/>
+        </record>
 
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
             <field name="name">Vendor Credit Notes</field>
@@ -797,11 +819,6 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_in_refund"/>
         </record>
-
-        <menuitem action="action_invoice_in_refund"
-                  id="menu_action_invoice_in_refund"
-                  parent="menu_finance_payables_documents"
-                  sequence="1"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"
