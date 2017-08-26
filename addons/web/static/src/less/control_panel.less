@@ -3,7 +3,7 @@
 .o_control_panel {
     .o-flex-display();
     .o-flex-flow(row, wrap);
-    border-bottom: 1px solid @odoo-main-color-muted;
+    border-bottom: 1px solid darken(@odoo-control-panel-background-color, 20%);
     .o-webclient-padding(@top: 10px, @bottom: 10px);
     background-color: @odoo-control-panel-background-color;
 
@@ -16,13 +16,7 @@
             .o-text-overflow(@max-width: 90%);
 
             > a {
-                color: @odoo-brand-optional;
                 cursor: pointer;
-
-                &:hover {
-                    color: darken(@odoo-brand-optional, 10%);
-                    text-decoration: none;
-                }
             }
         }
     }
@@ -87,10 +81,19 @@
             padding-left: 5px;
             text-align: center;
             .user-select(none);
+
+            > div {
+                .o-flex-display();
+                .o-align-items(center);
+            }
+
+            .o_pager_counter {
+                margin-right: 5px;
+            }
         }
 
-        > .o_cp_switch_buttons {
-            padding-left: 5px;
+        > .o_cp_switch_buttons > .btn:first-child {
+            margin-left: @odoo-horizontal-padding;
         }
     }
 }
