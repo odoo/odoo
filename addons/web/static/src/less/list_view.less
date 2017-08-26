@@ -35,14 +35,15 @@
     .o_column_sortable {
         .user-select(none);  // Prevent unwanted selection while sorting
 
-        &.o-sort-up:after {
+        &:after {
             font-family: FontAwesome;
             margin-left: 5px;
+        }
+
+        &.o-sort-up:after {
             content: "\f0d7";
         }
         &.o-sort-down:after {
-            font-family: FontAwesome;
-            margin-left: 5px;
             content: "\f0d8";
         }
     }
