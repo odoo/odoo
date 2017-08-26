@@ -404,6 +404,8 @@ var ListRenderer = BasicRenderer.extend({
         }
         return $('<tr>')
                     .addClass('o_group_header')
+                    .toggleClass('o_group_open', group.isOpen)
+                    .toggleClass('o_group_has_content', group.count > 0)
                     .data('group', group)
                     .append($th)
                     .append($cells);
