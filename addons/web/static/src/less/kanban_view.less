@@ -154,6 +154,7 @@
     }
 
     .o_kanban_quick_create {
+        box-shadow: 0 0 20px -10px;
         margin: 0 @o-kanban-record-margin -1px @o-kanban-record-margin;
 
         input {
@@ -536,8 +537,8 @@
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
         .o-kanban-slim-col();
-        border-left: 1px solid darken(@odoo-color-silver-darker,10%);
-        background-color: @gray-lighter;
+        margin-left: 1px;
+        background-color: darken(@gray-lighter-dark, 2%);
 
         .o_kanban_header {
             position: relative;
@@ -583,8 +584,8 @@
             .o-position-absolute(-1px, 0, 0, (-@o-kanban-group-padding - 1px));
             display: none;
             width: @o-kanban-default-record-width;
-            box-shadow: 0 0 10px -3px;
-            background-color: white;
+            box-shadow: 0 0 20px -10px;
+            background-color: @gray-lighter;
 
             input, input:focus, input:hover {
                 font-size: 16px;
