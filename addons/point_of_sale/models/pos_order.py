@@ -213,7 +213,12 @@ class PosOrder(models.Model):
             current_company = order.sale_journal.company_id
             account_def = IrProperty.get(
                 'property_account_receivable_id', 'res.partner')
-            order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
+            order_account = order.partner_id.property_account_receivable_id or account_def
+            # If fiscal position, then map order account
+            fpos = order.fiscal_position_id or order.partner_id.property_account_position_id
+            if fpos:
+                order_account = fpos.map_account(order_account)
+
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if move is None:
                 # Create an entry for the sale
@@ -264,13 +269,18 @@ class PosOrder(models.Model):
 
                 # Search for the income account
                 if line.product_id.property_account_income_id.id:
-                    income_account = line.product_id.property_account_income_id.id
+                    income_account = line.product_id.property_account_income_id
                 elif line.product_id.categ_id.property_account_income_categ_id.id:
-                    income_account = line.product_id.categ_id.property_account_income_categ_id.id
+                    income_account = line.product_id.categ_id.property_account_income_categ_id
                 else:
                     raise UserError(_('Please define income '
                                       'account for this product: "%s" (id:%d).')
                                     % (line.product_id.name, line.product_id.id))
+
+                # If fiscal position, then map income account
+                fpos = order.fiscal_position_id or order.partner_id.property_account_position_id
+                if fpos:
+                    income_account = fpos.map_account(income_account)
 
                 name = line.product_id.name
                 if line.notice:
@@ -282,7 +292,7 @@ class PosOrder(models.Model):
                     'name': name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
-                    'account_id': income_account,
+                    'account_id': income_account.id,
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
@@ -300,7 +310,7 @@ class PosOrder(models.Model):
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
                         'quantity': line.qty,
-                        'account_id': tax['account_id'] or income_account,
+                        'account_id': tax['account_id'] or income_account.id,
                         'credit': ((tax['amount'] > 0) and tax['amount']) or 0.0,
                         'debit': ((tax['amount'] < 0) and -tax['amount']) or 0.0,
                         'tax_line_id': tax['id'],
@@ -318,7 +328,7 @@ class PosOrder(models.Model):
             # counterpart
             insert_data('counter_part', {
                 'name': _("Trade Receivables"),  # order.name,
-                'account_id': order_account,
+                'account_id': order_account.id,
                 'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
                 'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
                 'partner_id': partner_id
@@ -970,10 +980,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
