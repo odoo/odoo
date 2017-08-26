@@ -18,12 +18,11 @@
         'account',
     ],
     'data': [
-        'data/account.account.tag.csv',
         'data/l10n_co_chart_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
         'data/account.tax.template.csv',
-        'data/account_tax_group_data.xml',
         'data/account_chart_template_data.yml',
+        'views/res_partner.xml',
     ],
 }
