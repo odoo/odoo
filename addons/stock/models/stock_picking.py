@@ -509,8 +509,6 @@ class Picking(models.Model):
         _Mapping = namedtuple('Mapping', ('product', 'package', 'owner', 'location', 'location_dst_id'))
 
         all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
-        computed_putaway_locations = dict(
-            (product, self.location_dest_id.get_putaway_strategy(product) or self.location_dest_id.id) for product in all_products)
 
         product_to_uom = dict((product.id, product.uom_id) for product in all_products)
         picking_moves = self.move_lines.filtered(lambda move: move.state not in ('done', 'cancel'))
@@ -522,6 +520,9 @@ class Picking(models.Model):
             raise UserError(_('The source location must be the same for all the moves of the picking.'))
         if len(picking_moves.mapped('location_dest_id')) > 1:
             raise UserError(_('The destination location must be the same for all the moves of the picking.'))
+
+        computed_putaway_locations = dict(
+            (product, picking_moves.mapped('location_dest_id').get_putaway_strategy(product) or picking_moves.mapped('location_dest_id').id) for product in all_products)
 
         pack_operation_values = []
         # find the packages we can move as a whole, create pack operations and mark related quants as done
