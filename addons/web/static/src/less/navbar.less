@@ -8,10 +8,9 @@
 
     > a, > button {
         float: left;
-        width: @odoo-navbar-height;
         height: @odoo-navbar-height;
         border: none;
-        padding: 0;
+        padding: 0 @odoo-horizontal-padding - 4px 0 @odoo-horizontal-padding;
         line-height: @odoo-navbar-height;
         background-color: transparent;
         text-align: center;
@@ -140,6 +139,10 @@
     }
     .o_user_menu {
         margin-left: 6px;
+
+        > a {
+            padding-right: @odoo-horizontal-padding;
+        }
 
         .oe_topbar_avatar {
             height: 17px;
