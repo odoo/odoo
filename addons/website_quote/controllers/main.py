@@ -4,13 +4,28 @@ import base64
 
 import werkzeug
 
-from odoo import fields, http, _
+from odoo import exceptions, fields, http, _
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import get_records_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, get_records_pager
 from odoo.addons.portal.controllers.mail import _message_post_helper
 
 
+class CustomerPortal(CustomerPortal):
+
+    @http.route()
+    def portal_order_page(self, order=None, access_token=None, **kw):
+        try:
+            order_sudo = self._order_check_access(order, access_token=access_token)
+        except exceptions.AccessError:
+            pass
+        else:
+            if order_sudo.template_id and order_sudo.template_id.active:
+                return request.redirect('/quote/%s/%s' % (order, access_token or ''))
+        return super(CustomerPortal, self).portal_order_page(order=order, access_token=access_token, **kw)
+
+
 class sale_quote(http.Controller):
+
     @http.route("/quote/<int:order_id>", type='http', auth="user", website=True)
     def view_user(self, *args, **kwargs):
         return self.view(*args, **kwargs)
