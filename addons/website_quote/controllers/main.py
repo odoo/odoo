@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 
 import werkzeug
 
@@ -22,6 +21,19 @@ class CustomerPortal(CustomerPortal):
             if order_sudo.template_id and order_sudo.template_id.active:
                 return request.redirect('/quote/%s/%s' % (order, access_token or ''))
         return super(CustomerPortal, self).portal_order_page(order=order, access_token=access_token, **kw)
+
+    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
+    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
+        try:
+            order_sudo = self._order_check_access(res_id, access_token=access_token)
+        except exceptions.AccessError:
+            pass
+        else:
+            if order_sudo.require_payment:
+                return {
+                    'error': _('Order is not in a state requiring customer validation.')
+                }
+        return super(CustomerPortal, self).portal_quote_accept(res_id, access_token=access_token, partner_name=partner_name, signature=signature)
 
 
 class sale_quote(http.Controller):
@@ -101,19 +113,6 @@ class sale_quote(http.Controller):
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
-
-    @http.route(['/quote/accept'], type='json', auth="public", website=True)
-    def accept(self, order_id, token=None, signer=None, sign=None, **post):
-        Order = request.env['sale.order'].sudo().browse(order_id)
-        if token != Order.access_token or Order.require_payment:
-            return request.render('website.404')
-        if Order.state != 'sent':
-            return False
-        attachments = [('signature.png', base64.b64decode(sign))] if sign else []
-        Order.action_confirm()
-        message = _('Order signed by %s') % (signer,)
-        _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
-        return True
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
     def decline(self, order_id, token, **post):
