@@ -2086,4 +2086,38 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('only x2many lists (static) should be sorted client-side', function (assert) {
+        assert.expect(1);
+
+        this.params.modelName = 'partner_type';
+        this.params.res_id = undefined;
+        this.params.orderedBy = [{name: 'display_name', asc: true}];
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route) {
+                if (route === '/web/dataset/search_read') {
+                    // simulate randomn sort form the server
+                    return $.when({
+                        length: 3,
+                        records: [
+                            {id: 12, display_name: "gold", date: "2017-01-25"},
+                            {id: 15, display_name: "bronze"},
+                            {id: 14, display_name: "silver"},
+                        ],
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var list = model.get(resultID);
+            assert.deepEqual(_.map(list.data, 'res_id'), [12, 15, 14],
+                "should have kept the order from the server");
+        });
+        model.destroy();
+    });
+
 });});

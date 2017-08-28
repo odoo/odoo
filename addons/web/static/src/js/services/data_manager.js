@@ -305,18 +305,6 @@ return core.Class.extend({
                 viewType = viewType === 'tree' ? 'list' : viewType;
                 innerFieldsView.type = viewType;
                 attrs.views[viewType] = self._processFieldsView(_.extend({}, innerFieldsView));
-
-                // default_order is like:
-                //   'name,id desc'
-                // but we need it like:
-                //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
-                var defaultOrder = innerFieldsView.arch.attrs.default_order;
-                if (defaultOrder) {
-                    attrs.orderedBy = _.map(defaultOrder.split(','), function (order) {
-                        order = order.trim().split(' ');
-                        return {name: order[0], asc: order[1] !== 'desc'};
-                    });
-                }
             });
             delete field.views;
         }
@@ -346,6 +334,23 @@ return core.Class.extend({
                     }
                 }
                 attrs.mode = mode;
+                if (mode in attrs.views) {
+                    var view = attrs.views[mode];
+                    // process the default_order, which is like 'name,id desc'
+                    // but we need it like [{name: 'name', asc: true}, {name: 'id', asc: false}]
+                    var defaultOrder = view.arch.attrs.default_order;
+                    if (defaultOrder) {
+                        attrs.orderedBy = _.map(defaultOrder.split(','), function (order) {
+                            order = order.trim().split(' ');
+                            return {name: order[0], asc: order[1] !== 'desc'};
+                        });
+                    }
+                    // detect editables list has they behave differently with respect
+                    // to the sorting (changes are not sorted directly)
+                    if (mode === 'list' && view.arch.attrs.editable) {
+                         attrs.keepChangesUnsorted = true;
+                     }
+                }
             }
             if (attrs.Widget.prototype.fieldsToFetch) {
                 attrs.viewType = 'default';
