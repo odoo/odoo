@@ -323,6 +323,7 @@
     <field name="refund_account_id" ref="a_input_vat"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_input_vat_7')])]"/>
+    <field name="tax_group_id" ref="tax_group_vat_7"/>
 </record>
 
 <record id="tax_output_vat" model="account.tax.template">
@@ -334,6 +335,7 @@
     <field name="refund_account_id" ref="a_output_vat"/>
     <field name="type_tax_use">sale</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_output_7')])]"/>
+    <field name="tax_group_id" ref="tax_group_vat_7"/>
 </record>
 
 <record id="tax_wht_co_1" model="account.tax.template">
@@ -345,6 +347,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_comp_tax_trans_1')])]"/>
+    <field name="tax_group_id" ref="tax_group_1"/>
 </record>
 
 <record id="tax_wht_co_2" model="account.tax.template">
@@ -356,6 +359,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_comp_tax_advt_2')])]"/>
+    <field name="tax_group_id" ref="tax_group_2"/>
 </record>
 
 <record id="tax_wht_co_3" model="account.tax.template">
@@ -367,6 +371,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_comp_tax_serv_3')])]"/>
+    <field name="tax_group_id" ref="tax_group_3"/>
 </record>
 
 <record id="tax_wht_co_5" model="account.tax.template">
@@ -378,6 +383,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_comp_tax_rent_5')])]"/>
+    <field name="tax_group_id" ref="tax_group_5"/>
 </record>
 
 <record id="tax_wht_pers_1" model="account.tax.template">
@@ -389,6 +395,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_pers_tax_trans_1')])]"/>
+    <field name="tax_group_id" ref="tax_group_1"/>
 </record>
 
 <record id="tax_wht_pers_2" model="account.tax.template">
@@ -400,6 +407,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_pers_tax_advt_2')])]"/>
+    <field name="tax_group_id" ref="tax_group_2"/>
 </record>
 
 <record id="tax_wht_pers_3" model="account.tax.template">
@@ -411,6 +419,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_pers_tax_serv_3')])]"/>
+    <field name="tax_group_id" ref="tax_group_3"/>
 </record>
 
 <record id="tax_wht_pers_5" model="account.tax.template">
@@ -422,6 +431,7 @@
     <field name="refund_account_id" ref="a_wht"/>
     <field name="type_tax_use">purchase</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_pers_tax_rent_5')])]"/>
+    <field name="tax_group_id" ref="tax_group_5"/>
 </record>
 
 <record id="tax_wht_income_1" model="account.tax.template">
@@ -433,6 +443,7 @@
     <field name="refund_account_id" ref="a_wht_income"/>
     <field name="type_tax_use">sale</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_income_tax_trans_1')])]"/>
+    <field name="tax_group_id" ref="tax_group_1"/>
 </record>
 
 <record id="tax_wht_income_2" model="account.tax.template">
@@ -444,6 +455,7 @@
     <field name="refund_account_id" ref="a_wht_income"/>
     <field name="type_tax_use">sale</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_income_tax_advt_2')])]"/>
+    <field name="tax_group_id" ref="tax_group_2"/>
 </record>
 
 <record id="tax_wht_income_3" model="account.tax.template">
@@ -455,6 +467,7 @@
     <field name="refund_account_id" ref="a_wht_income"/>
     <field name="type_tax_use">sale</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_income_tax_serv_3')])]"/>
+    <field name="tax_group_id" ref="tax_group_3"/>
 </record>
 
 <record id="tax_wht_income_5" model="account.tax.template">
@@ -466,5 +479,6 @@
     <field name="refund_account_id" ref="a_wht_income"/>
     <field name="type_tax_use">sale</field>
     <field name="tag_ids" eval="[(6,0,[ref('tag_income_tax_rent_5')])]"/>
+    <field name="tax_group_id" ref="tax_group_5"/>
 </record>
 </odoo>

@@ -79,6 +79,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_19"/>
     </record>
 
     <record id="ivat21" model="account.tax.template">
@@ -92,6 +93,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
     <record id="ivat23" model="account.tax.template">
@@ -104,6 +106,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_03'), ref('tag_ivat_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_23"/>
     </record>
     
     <!-- tax definitions for return VAT from purchases -->
@@ -119,6 +122,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
+        <field name="tax_group_id" ref="tax_group_19"/>
     </record>
 
 
@@ -133,6 +137,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
+        <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
     <record id="pvat23" model="account.tax.template">
@@ -145,6 +150,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_12'), ref('tag_ivat_05')])]"/>
+        <field name="tax_group_id" ref="tax_group_23"/>
     </record>
 
     <!-- return VAT on expenses (different from purchases ) -->
@@ -159,6 +165,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_13'), ref('tag_ivat_06')])]"/>
+        <field name="tax_group_id" ref="tax_group_19"/>
     </record>
 
     <record id="evat21" model="account.tax.template">
@@ -172,6 +179,7 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_ivat_13'), ref('tag_ivat_06')])]"/>
+        <field name="tax_group_id" ref="tax_group_21"/>
     </record>
 
     <record id="evat23" model="account.tax.template">
@@ -185,5 +193,6 @@
         <field name="account_id" ref="chartgr_54_00"/>
         <field name="refund_account_id" ref="chartgr_54_00"/>
         <field name="tag_ids" eval="[(6,0,[ref('l10n_gr.tag_ivat_13'), ref('l10n_gr.tag_ivat_06')])]"/>
+        <field name="tax_group_id" ref="tax_group_23"/>
     </record>
 </odoo>

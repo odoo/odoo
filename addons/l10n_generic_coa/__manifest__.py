@@ -15,6 +15,7 @@ Install some generic chart of accounts.
         'account',
     ],
     'data': [
+        'data/account_data.xml',
         'data/l10n_generic_coa_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],

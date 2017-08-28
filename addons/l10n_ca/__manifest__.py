@@ -42,6 +42,7 @@ position.
         'data/account_chart_template_data.xml',
         'data/l10n_ca_chart_data.xml',
         'data/account_chart_template_after_data.xml',
+        'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/fiscal_templates_data.xml',
         'data/account_chart_template_data.yml',

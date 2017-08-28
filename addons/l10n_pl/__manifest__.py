@@ -27,6 +27,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     ],
     'data': [
               'data/l10n_pl_chart_data.xml',
+              'data/account_data.xml',
               'data/account_tax_data.xml',
               'data/account_fiscal_position_data.xml',
               'data/res_country_state_data.xml',

@@ -353,6 +353,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_14'), ref('st_tag_in_50')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="input_tax_12" model="account.tax.template">
         <field name="name">(standard)Input Sales Tax @ 12%</field>
@@ -365,6 +366,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_11'), ref('st_tag_in_47')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="input_tax_4" model="account.tax.template">
         <field name="name">(standard)Input Sales Tax @ 4%</field>
@@ -377,6 +379,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_08'), ref('st_tag_in_44')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
     <record id="add_input_vat_1" model="account.tax.template">
         <field name="name">(standard)Additional Input VAT @ 1%</field>
@@ -389,6 +392,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_64'), ref('st_tag_in_32')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
     </record>
     <record id="input_vat_12" model="account.tax.template">
         <field name="name">(standard)Input VAT @ 12.5%</field>
@@ -401,6 +405,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_61'), ref('st_tag_in_29')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="add_input_vat_2" model="account.tax.template">
         <field name="name">(standard)Additional Input VAT @ 2.5%</field>
@@ -413,6 +418,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_67'), ref('st_tag_in_35')])]"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="sale_Excise_Duty_12_5" model="account.tax.template">
         <field name="name">(standard)Input Excise Duty @ 12.5%</field>
@@ -425,6 +431,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_04'), ref('st_tag_in_40')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="sale_service_tax14" model="account.tax.template">
         <field name="name">(standard)Input Service Tax 14%</field>
@@ -437,6 +444,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_18')])]"/>
+        <field name="tax_group_id" ref="tax_group_14"/>
     </record>
     <record id="sale_sb_cess_service_tax_0_5" model="account.tax.template">
         <field name="name">(standard)Swachh Bharat Cess @ 0.5% On Input Service</field>
@@ -448,6 +456,7 @@
         <field name="account_id" ref="p112342"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_19')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="sale_kk_cess_service_tax_0_5" model="account.tax.template">
         <field name="name">(standard)Krishi Kalyan Cess @ 0.5% On Input Service</field>
@@ -459,6 +468,7 @@
         <field name="account_id" ref="p112343"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_20')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="sale_service_tax_15" model="account.tax.template">
         <field name="name">(standard)Input Service Tax @ 15%</field>
@@ -473,6 +483,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('sale_service_tax14'),ref('sale_sb_cess_service_tax_0_5'),ref('sale_kk_cess_service_tax_0_5')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_54')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="input_vat_4" model="account.tax.template">
         <field name="name">(standard)Input VAT @ 4%</field>
@@ -485,6 +496,7 @@
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_26'), ref('st_tag_in_58')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
 
     <!--output purchase tax-->
@@ -499,6 +511,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_51'), ref('st_tag_in_15')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="output_tax_12" model="account.tax.template">
         <field name="name">(standard)Output Purchase Tax @ 12%</field>
@@ -511,6 +524,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_12'), ref('st_tag_in_48')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="output_tax_4" model="account.tax.template">
         <field name="name">(standard)Output Purchase Tax @ 4%</field>
@@ -523,6 +537,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_45'), ref('st_tag_in_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
     <record id="add_output_vat_1" model="account.tax.template">
         <field name="name">(standard)Additional Output VAT @ 1%</field>
@@ -535,6 +550,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_65'), ref('st_tag_in_33')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
     </record>
     <record id="output_vat_12" model="account.tax.template">
         <field name="name">(standard)Output VAT @ 12.5%</field>
@@ -547,6 +563,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_30'), ref('st_tag_in_62')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="add_output_vat_2" model="account.tax.template">
         <field name="name">(standard)Additional Output VAT @ 2.5%</field>
@@ -559,6 +576,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_68'), ref('st_tag_in_36')])]"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="purchase_Excise_Duty_12_5" model="account.tax.template">
         <field name="name">(standard)Output Excise Duty @ 12.5%</field>
@@ -571,6 +589,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_05'), ref('st_tag_in_41')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="purchase_service_tax14" model="account.tax.template">
         <field name="name">(standard)Output Serivce Tax 14%</field>
@@ -583,6 +602,7 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_21')])]"/>
+        <field name="tax_group_id" ref="tax_group_14"/>
     </record>
     <record id="purchase_sb_cess_service_tax0_5" model="account.tax.template">
         <field name="name">(standard)Swachh Bharat Cess @ 0.5% On Output Service</field>
@@ -594,6 +614,7 @@
         <field name="account_id" ref="p100532"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_22')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="purchase_kk_cess_service_tax0_5" model="account.tax.template">
         <field name="name">(standard)Krishi Kalyan Cess @ 0.5% On Output Service</field>
@@ -605,6 +626,7 @@
         <field name="account_id" ref="p100533"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_23')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="purchase_service_tax_15" model="account.tax.template">
         <field name="name">(standard)Output Service Tax @ 15%</field>
@@ -619,6 +641,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_service_tax14'),ref('purchase_sb_cess_service_tax0_5'),ref('purchase_kk_cess_service_tax0_5')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_55')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="output_vat_4" model="account.tax.template">
         <field name="name">(standard)Output VAT @ 4%</field>
@@ -631,5 +654,6 @@
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_27'), ref('st_tag_in_59')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
 </odoo>

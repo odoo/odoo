@@ -128,6 +128,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_03'), ref('tag_ar_16')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
 
     <record id="OTAX_21" model="account.tax.template">
@@ -140,6 +141,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_07'), ref('tag_ar_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
 
     <record id="ITAX_27" model="account.tax.template">
@@ -152,6 +154,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_16'), ref('tag_ar_03')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_27"/>
     </record>
 
     <record id="OTAX_27" model="account.tax.template">
@@ -164,6 +167,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_12'), ref('tag_ar_07')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_27"/>
     </record>
 
     <record id="ITAX_105" model="account.tax.template">
@@ -176,6 +180,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_16'), ref('tag_ar_03')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_105"/>
     </record>
 
     <record id="OTAX_105" model="account.tax.template">
@@ -188,6 +193,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_07'), ref('tag_ar_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_105"/>
     </record>
 
     <record id="OTAX_02" model="account.tax.template">
@@ -200,5 +206,6 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_ar_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_2"/>
     </record>
 </odoo>
