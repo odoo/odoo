@@ -709,6 +709,9 @@ class Meeting(models.Model):
     privacy = fields.Selection([('public', 'Everyone'), ('private', 'Only me'), ('confidential', 'Only internal users')], 'Privacy', default='public', states={'done': [('readonly', True)]}, oldname="class")
     location = fields.Char('Location', states={'done': [('readonly', True)]}, track_visibility='onchange', help="Location of Event")
     show_as = fields.Selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}, default='busy')
+    res_id = fields.Integer('Related Document ID')
+    res_model_id = fields.Many2one('ir.model', 'Related Document Model', ondelete='cascade')
+    res_model = fields.Char('Related Document Model', related='res_model_id.model', store=True, readonly=True)
 
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
@@ -1276,6 +1279,11 @@ class Meeting(models.Model):
             'target': 'current',
             'flags': {'form': {'action_buttons': True, 'options': {'mode': 'edit'}}}
         }
+
+    @api.multi
+    def action_open_calendar_event(self):
+        action = self.env[self.res_model].browse(self.res_id).get_formview_action()
+        return action
 
     @api.multi
     def action_sendmail(self):
