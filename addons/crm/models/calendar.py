@@ -8,6 +8,15 @@ class CalendarEvent(models.Model):
 
     _inherit = 'calendar.event'
 
+    @api.model
+    def default_get(self, fields):
+        defaults = super(CalendarEvent, self).default_get(fields)
+        if 'res_model_id' not in defaults and defaults.get('opportunity_id'):
+            defaults['res_model_id'] = self.env.ref('model_crm_lead').id
+        if 'res_id' not in defaults and defaults.get('opportunity_id'):
+            defaults['res_id'] = defaults['opportunity_id']
+        return defaults
+
     def _compute_is_highlighted(self):
         super(CalendarEvent, self)._compute_is_highlighted()
         if self.env.context.get('active_model') == 'crm.lead':

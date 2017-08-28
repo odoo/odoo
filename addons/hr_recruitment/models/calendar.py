@@ -8,6 +8,15 @@ class CalendarEvent(models.Model):
     """ Model for Calendar Event """
     _inherit = 'calendar.event'
 
+    @api.model
+    def default_get(self, fields):
+        defaults = super(CalendarEvent, self).default_get(fields)
+        if 'res_model_id' not in defaults and defaults.get('applicant_id'):
+            defaults['res_model_id'] = self.env.ref('model_hr_applicant').id
+        if 'res_id' not in defaults and defaults.get('applicant_id'):
+            defaults['res_id'] = defaults['applicant_id']
+        return defaults
+
     def _compute_is_highlighted(self):
         super(CalendarEvent, self)._compute_is_highlighted()
         applicant_id = self.env.context.get('active_id')
