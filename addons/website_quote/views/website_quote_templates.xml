@@ -292,23 +292,19 @@
                               <h4 class="modal-title">Validate Order</h4>
                             </div>
                             <div class="modal-body" id="sign-dialog">
-                              <p>
-                                  <span>I agree that by signing this proposal, I
-                                  accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
-                                  <b data-id="total_amount" t-field="quotation.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                  <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
-                              </p>
-                              <div id="signer" class="form-group">
-                                  <label class="control-label" for="name">Your Name:</label>
-                                  <input type="text" name="signer" id="name" class="form-control"/>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div t-if="not (pms or s2s_acquirers or form_acquirers)">
-                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button>
-                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                </div>
+                                <p>
+                                    <span>I agree that by signing this proposal, I
+                                    accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                    <b data-id="total_amount" t-field="quotation.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                                    <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                </p>
+                                <t t-call="portal.portal_signature">
+                                    <t t-set="object" t-value="quotation"/>
+                                    <t t-set="partner_name" t-value="quotation.partner_id.name"/>
+                                    <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
+                                    <t t-set="accessToken" t-value="quotation.access_token"/>
+                                </t>
                             </div>
                           </form>
                         </div>
@@ -532,21 +528,6 @@
             <li><a href="#introduction">Introduction</a></li>
         </ul>
     </div>
-  </template>
-
-  <!-- Options:Quotation Signature -->
-  <template id="opt_quotation_signature" name="Ask Signature" customize_show="True" inherit_id="website_quote.so_quotation">
-      <xpath expr="//div[@id='sign-dialog']" position="inside">
-        <div class="panel panel-default mt16 mb0" id="drawsign">
-            <div class="panel-heading">
-                <div class="pull-right">
-                    <a id="sign_clean" class="btn btn-xs">Clear</a>
-                </div>
-                <strong>Draw your signature</strong>
-            </div>
-            <div id="signature" class="panel-body" style="padding: 0"/>
-        </div>
-      </xpath>
   </template>
 
   <template id="optional_products">
