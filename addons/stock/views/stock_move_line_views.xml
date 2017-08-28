@@ -48,7 +48,15 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <search string="Stock Moves">
+                <field name="picking_id" string="Reference"/>
+                <field name="product_id"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="by_state" domain="[]"  context="{'group_by':'state'}"/>
+                </group>
             </search>
         </field>
     </record>
