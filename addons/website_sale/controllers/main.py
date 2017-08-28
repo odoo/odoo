@@ -807,7 +807,6 @@ class WebsiteSale(http.Controller):
         else:
             order = request.website.sale_get_order()
         if not order or not order.order_line or acquirer_id is None:
-            # return request.redirect("/shop/checkout")
             return False
 
         assert order.partner_id.id != request.website.partner_id.id
@@ -819,10 +818,6 @@ class WebsiteSale(http.Controller):
         tx = tx.check_or_create_sale_tx(order, acquirer, payment_token=payment_token, tx_type=tx_type)
         request.session['sale_transaction_id'] = tx.id
 
-        # if token:
-            # return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
-
-        # return True
         return tx.render_sale_button(order, '/shop/payment/validate')
 
     @http.route('/shop/payment/token', type='http', auth='public', website=True)

@@ -82,7 +82,6 @@ class sale_quote(http.Controller):
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                         'partner_id': order_sudo.partner_id.id,
                     })
-
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
@@ -173,7 +172,6 @@ class sale_quote(http.Controller):
         order = request.env['sale.order'].sudo().browse(order_id)
         if not order or not order.order_line or acquirer_id is None:
             return False
-            # return request.redirect("/quote/%s" % order_id)
 
         # find an already existing transaction
         acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
@@ -187,7 +185,6 @@ class sale_quote(http.Controller):
         })
         request.session['quote_%s_transaction_id' % order.id] = tx.id
 
-        # return True
         return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                                      submit_txt=_('Pay & Confirm'), render_values={
                                          'type': order._get_payment_type(),
