@@ -2555,7 +2555,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # in onchange mode, discard computed fields and fields in cache
         if self.env.in_onchange:
             for f in list(fs):
-                if f.compute or (f.name in self._cache):
+                if f.compute or self.env.cache.contains(self, f):
                     fs.discard(f)
                 else:
                     records &= self._in_cache_without(f)
@@ -2571,13 +2571,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             result = self.read([f.name for f in fs], load='_classic_write')
 
         # check the cache, and update it if necessary
-        if not self._cache.has_value(field.name):
+        if not self.env.cache.contains_value(self, field):
             for values in result:
                 record = self.browse(values.pop('id'), self._prefetch)
                 record._cache.update(record._convert_to_cache(values, validate=False))
-            if field.name not in self._cache:
+            if not self.env.cache.contains(self, field):
                 exc = AccessError("No value found for %s.%s" % (self, field.name))
-                self._cache.set_failed([field.name], exc)
+                self.env.cache.set_failed(self, field, exc)
 
     @api.multi
     def _read_from_database(self, field_names, inherited_field_names=[]):
@@ -2682,8 +2682,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                     (self._name, 'read')
                 )
-                for record in forbidden:
-                    record._cache.set_failed(self._fields, exc)
+                self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 
     @api.multi
     def get_metadata(self):
@@ -3870,8 +3869,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if len(existing) < len(self):
             # mark missing records in cache with a failed value
             exc = MissingError(_("Record does not exist or has been deleted."))
-            for record in (self - existing):
-                record._cache.set_failed(self._fields, exc)
+            self.env.cache.set_failed(self - existing, self._fields.values(), exc)
         return existing
 
     @api.multi
@@ -4680,8 +4678,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        ids = [it for it in self._prefetch[self._name] - set(self.env.cache[field]) if it]
-        recs = self.browse(ids)
+        recs = self.browse(self._prefetch[self._name]) - self.env.cache.get_records(self, field)
         if limit and len(recs) > limit:
             recs = self + (recs - self)[:(limit - len(self))]
         return recs
@@ -4705,7 +4702,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         if fnames is None:
             if ids is None:
-                return self.env.invalidate_all()
+                return self.env.cache.invalidate()
             fields = list(self._fields.values())
         else:
             fields = [self._fields[n] for n in fnames]
@@ -4713,7 +4710,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
-        self.env.invalidate(spec)
+        self.env.cache.invalidate(spec)
 
     @api.multi
     def modified(self, fnames):
@@ -4765,7 +4762,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for field in (fields - stored):
                 invalids.append((field, None))
 
-        self.env.invalidate(invalids)
+        self.env.cache.invalidate(invalids)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
@@ -5024,30 +5021,27 @@ class RecordCache(MutableMapping):
     def __contains__(self, name):
         """ Return whether `record` has a cached value for field ``name``. """
         field = self._record._fields[name]
-        return self._record.id in self._record.env.cache[field]
+        return self._record.env.cache.contains(self._record, field)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
         field = self._record._fields[name]
-        value = self._record.env.cache[field][self._record.id]
-        return value.get() if isinstance(value, SpecialValue) else value
+        return self._record.env.cache.get(self._record, field)
 
     def __setitem__(self, name, value):
         """ Assign the cached value of field ``name`` for ``record``. """
         field = self._record._fields[name]
-        self._record.env.cache[field][self._record.id] = value
+        self._record.env.cache.set(self._record, field, value)
 
     def __delitem__(self, name):
         """ Remove the cached value of field ``name`` for ``record``. """
         field = self._record._fields[name]
-        del self._record.env.cache[field][self._record.id]
+        self._record.env.cache.remove(self._record, field)
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
-        cache, record_id = self._record.env.cache, self._record.id
-        for name, field in self._record._fields.items():
-            if name != 'id' and record_id in cache[field]:
-                yield name
+        for field in self._record.env.cache.get_fields(self._record):
+            yield field.name
 
     def __len__(self):
         """ Return the number of fields with a cached value. """
@@ -5056,36 +5050,22 @@ class RecordCache(MutableMapping):
     def has_value(self, name):
         """ Return whether `record` has a cached, regular value for field ``name``. """
         field = self._record._fields[name]
-        dummy = SpecialValue(None)
-        value = self._record.env.cache[field].get(self._record.id, dummy)
-        return not isinstance(value, SpecialValue)
+        return self._record.env.cache.contains_value(self._record, field)
 
     def get_value(self, name, default=None):
         """ Return the cached, regular value of field ``name`` for `record`, or ``default``. """
         field = self._record._fields[name]
-        dummy = SpecialValue(None)
-        value = self._record.env.cache[field].get(self._record.id, dummy)
-        return default if isinstance(value, SpecialValue) else value
+        return self._record.env.cache.get_value(self._record, field, default)
 
     def set_special(self, name, getter):
         """ Use the given getter to get the cached value of field ``name``. """
         field = self._record._fields[name]
-        self._record.env.cache[field][self._record.id] = SpecialValue(getter)
+        self._record.env.cache.set_special(self._record, field, getter)
 
     def set_failed(self, names, exception):
         """ Mark the given fields with the given exception. """
-        def getter():
-            raise exception
-        for name in names:
-            self.set_special(name, getter)
-
-
-class SpecialValue(object):
-    """ Wrapper for a function to get the cached value of a field. """
-    __slots__ = ['get']
-
-    def __init__(self, getter):
-        self.get = getter
+        fields = [self._record._fields[name] for name in names]
+        self._record.env.cache.set_failed(self._record, fields, exception)
 
 
 AbstractModel = BaseModel

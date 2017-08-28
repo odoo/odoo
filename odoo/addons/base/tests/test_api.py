@@ -250,11 +250,11 @@ class TestAPI(common.TransactionCase):
         # fetch data in the cache
         for p in partners:
             p.name, p.company_id.name, p.user_id.name, p.contact_address
-        self.env.check_cache()
+        self.env.cache.check(self.env)
 
         # change its parent
         child.write({'parent_id': partner2.id})
-        self.env.check_cache()
+        self.env.cache.check(self.env)
 
         # check recordsets
         self.assertEqual(child.parent_id, partner2)
@@ -262,16 +262,16 @@ class TestAPI(common.TransactionCase):
         self.assertIn(child, partner2.child_ids)
         self.assertEqual(set(partner1.child_ids + child), set(children1))
         self.assertEqual(set(partner2.child_ids), set(children2 + child))
-        self.env.check_cache()
+        self.env.cache.check(self.env)
 
         # delete it
         child.unlink()
-        self.env.check_cache()
+        self.env.cache.check(self.env)
 
         # check recordsets
         self.assertEqual(set(partner1.child_ids), set(children1) - set([child]))
         self.assertEqual(set(partner2.child_ids), set(children2))
-        self.env.check_cache()
+        self.env.cache.check(self.env)
 
         # convert from the cache format to the write format
         partner = partner1
@@ -290,21 +290,30 @@ class TestAPI(common.TransactionCase):
         self.assertItemsEqual(partners.ids, partners._prefetch['res.partner'])
 
         # reading ONE partner should fetch them ALL
-        partner = next(p for p in partners)
-        partner.country_id
-        country_id_cache = self.env.cache[type(partners).country_id]
-        self.assertItemsEqual(partners.ids, country_id_cache)
+        for partner in partners:
+            partner.country_id
+            break
+        partner_ids_with_field = [partner.id
+                                  for partner in partners
+                                  if 'country_id' in partner._cache]
+        self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
         # partners' countries are ready for prefetching
-        country_ids = set(cid for cids in country_id_cache.values() for cid in cids)
+        country_ids = {cid
+                       for partner in partners
+                       for cid in partner._cache['country_id']}
         self.assertTrue(len(country_ids) > 1)
         self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
 
         # reading ONE partner country should fetch ALL partners' countries
-        country = next(p.country_id for p in partners if p.country_id)
-        country.name
-        name_cache = self.env.cache[type(country).name]
-        self.assertItemsEqual(country_ids, name_cache)
+        for partner in partners:
+            if partner.country_id:
+                partner.country_id.name
+                break
+        country_ids_with_field = [country.id
+                                  for country in partners.mapped('country_id')
+                                  if 'name' in country._cache]
+        self.assertItemsEqual(country_ids_with_field, country_ids)
 
     @mute_logger('odoo.models')
     def test_60_prefetch_object(self):

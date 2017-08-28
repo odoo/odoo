@@ -39,18 +39,18 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
+    src, dst = records.env.cache, env.cache
     todo, done = set(records), set()
     while todo:
         record = todo.pop()
         if record not in done:
             done.add(record)
             target = record.with_env(env)
-            for name in record._cache:
-                field = record._fields[name]
-                value = record[name]
-                if isinstance(value, BaseModel):
-                    todo.update(value)
-                target._cache[name] = field.convert_to_cache(value, target, validate=False)
+            for field in src.get_fields(record):
+                value = src.get(record, field)
+                dst.set(target, field, value)
+                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
+                    todo.update(field.convert_to_record(value, record))
 
 
 def resolve_mro(model, name, predicate):
@@ -893,14 +893,14 @@ class Field(MetaField('DummyField', (object,), {})):
             # only a single record may be accessed
             record.ensure_one()
             try:
-                value = record._cache[self.name]
+                value = record.env.cache.get(record, self)
             except KeyError:
                 # cache miss, determine value and retrieve it
                 if record.id:
                     self.determine_value(record)
                 else:
                     self.determine_draft_value(record)
-                value = record._cache[self.name]
+                value = record.env.cache.get(record, self)
         else:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
@@ -922,7 +922,7 @@ class Field(MetaField('DummyField', (object,), {})):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record._cache[self.name] = value
+            record.env.cache.set(record, self, value)
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(record[self.name], record)
@@ -931,7 +931,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # determine more dependent fields, and invalidate them
             if self.relational:
                 spec += self.modified_draft(record)
-            env.invalidate(spec)
+            env.cache.invalidate(spec)
 
         else:
             # Write to database
@@ -939,7 +939,7 @@ class Field(MetaField('DummyField', (object,), {})):
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
-                record._cache[self.name] = value
+                record.env.cache.set(record, self, value)
 
     ############################################################################
     #
@@ -950,9 +950,10 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
         fields = records._field_computed[self]
+        cache = records.env.cache
         for field in fields:
             for record in records:
-                record._cache[field.name] = field.convert_to_cache(False, record, validate=False)
+                cache.set(record, field, field.convert_to_cache(False, record, validate=False))
         if isinstance(self.compute, pycompat.string_types):
             getattr(records, self.compute)()
         else:
@@ -970,7 +971,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     try:
                         self._compute_value(record)
                     except Exception as exc:
-                        record._cache.set_failed([self.name], exc)
+                        record.env.cache.set_failed(record, [self], exc)
 
     def determine_value(self, record):
         """ Determine the value of ``self`` for ``record``. """
@@ -1011,7 +1012,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         else:
             # this is a non-stored non-computed field
-            record._cache[self.name] = self.convert_to_cache(False, record, validate=False)
+            record.env.cache.set(record, self, self.convert_to_cache(False, record, validate=False))
 
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
@@ -1021,7 +1022,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 self._compute_value(record)
         else:
             null = self.convert_to_cache(False, record, validate=False)
-            record._cache.set_special(self.name, lambda: null)
+            record.env.cache.set_special(record, self, lambda: null)
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
@@ -1062,11 +1063,11 @@ class Field(MetaField('DummyField', (object,), {})):
             if path == 'id' and field.model_name == records._name:
                 target = records - protected
             elif path and env.in_onchange:
-                target = (target.browse(env.cache[field]) - protected).filtered(
+                target = (env.cache.get_records(target, field) - protected).filtered(
                     lambda rec: rec if path == 'id' else rec._mapped_cache(path) & records
                 )
             else:
-                target = target.browse(env.cache[field]) - protected
+                target = env.cache.get_records(target, field) - protected
 
             if target:
                 spec.append((field, target._ids))
@@ -1117,8 +1118,9 @@ class Integer(Field):
 
     def _update(self, records, value):
         # special case, when an integer field is used as inverse for a one2many
+        cache = records.env.cache
         for record in records:
-            record._cache[self.name] = value.id or 0
+            cache.set(record, self, value.id or 0)
 
     def convert_to_export(self, value, record):
         if value or value == 0:
@@ -1632,8 +1634,9 @@ class Binary(Field):
         # Note: the 'bin_size' flag is handled by the field 'datas' itself
         data = {att.res_id: att.datas
                 for att in records.env['ir.attachment'].sudo().search(domain)}
+        cache = records.env.cache
         for record in records:
-            record._cache[self.name] = data.get(record.id, False)
+            cache.set(record, self, data.get(record.id, False))
 
     def write(self, records, value):
         # retrieve the attachments that stores the value, and adapt them
@@ -1905,8 +1908,9 @@ class Many2one(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        cache = records.env.cache
         for record in records:
-            record._cache[self.name] = self.convert_to_cache(value, record, validate=False)
+            cache.set(record, self, self.convert_to_cache(value, record, validate=False))
 
     def convert_to_column(self, value, record, values=None):
         return value or None
@@ -1967,19 +1971,21 @@ class _RelationalMulti(_Relational):
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        cache = records.env.cache
         for record in records:
-            if self.name in record._cache:
+            if cache.contains(record, self):
                 val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                record._cache[self.name] = val
+                cache.set(record, self, val)
             else:
-                record._cache.set_special(self.name, self._update_getter(record, value))
+                cache.set_special(record, self, self._update_getter(record, value))
 
     def _update_getter(self, record, value):
         def getter():
             # determine the current field's value, and update it in cache only
-            del record._cache[self.name]
+            cache = record.env.cache
+            cache.remove(record, self)
             val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-            record._cache[self.name] = val
+            cache.set(record, self, val)
             return val
         return getter
 
@@ -2173,8 +2179,9 @@ class One2many(_RelationalMulti):
             group[int(line[inverse])].append(line.id)
 
         # store result in cache
+        cache = records.env.cache
         for record in records:
-            record._cache[self.name] = tuple(group[record.id])
+            cache.set(record, self, tuple(group[record.id]))
 
     def write(self, records, value):
         comodel = records.env[self.comodel_name].with_context(**self.context)
@@ -2370,8 +2377,9 @@ class Many2many(_RelationalMulti):
             group[row[0]].append(row[1])
 
         # store result in cache
+        cache = records.env.cache
         for record in records:
-            record._cache[self.name] = tuple(group[record.id])
+            cache.set(record, self, tuple(group[record.id]))
 
     def write(self, records, value):
         cr = records._cr
