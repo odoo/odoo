@@ -181,7 +181,6 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
-                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div class="o_kanban_image">
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
@@ -196,6 +195,7 @@
                             <strong>
                                 <field name="name"/>
                             </strong>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <ul>
                                 <li id="last_login"/>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
