@@ -975,6 +975,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         defaults = {}
         parent_fields = defaultdict(list)
+        ir_defaults = self.env['ir.default'].get_model_defaults(self._name)
 
         for name in fields_list:
             # 1. look up context
@@ -983,11 +984,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 defaults[name] = self._context[key]
                 continue
 
-            # 2. look up ir_values
-            #    Note: performance is good, because get_defaults_dict is cached!
-            ir_values_dict = self.env['ir.values'].get_defaults_dict(self._name)
-            if name in ir_values_dict:
-                defaults[name] = ir_values_dict[name]
+            # 2. look up ir.default
+            if name in ir_defaults:
+                defaults[name] = ir_defaults[name]
                 continue
 
             field = self._fields.get(name)
@@ -1303,28 +1302,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Add related action information if aksed
         if toolbar:
-            IrValues = self.env['ir.values']
-            resprint = IrValues.get_actions('client_print_multi', self._name)
-            resaction = IrValues.get_actions('client_action_multi', self._name)
-            resrelate = IrValues.get_actions('client_action_relate', self._name)
-            resprint = [print_[2]
-                        for print_ in resprint
-                        if view_type == 'tree' or not print_[2].get('multi')]
-            resaction = [action[2]
-                         for action in resaction
-                         if view_type == 'tree' or not action[2].get('multi')]
-            #When multi="True" set it will display only in More of the list view
-            resrelate = [action[2]
-                         for action in resrelate
-                         if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
+            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
+            resreport = [action
+                         for action in bindings['report']
+                         if view_type == 'tree' or not action.get('multi')]
+            resaction = [action
+                         for action in bindings['action']
+                         if view_type == 'tree' or not action.get('multi')]
 
-            for x in itertools.chain(resprint, resaction, resrelate):
-                x['string'] = x['name']
+            for res in itertools.chain(resreport, resaction):
+                res['string'] = res['name']
 
             result['toolbar'] = {
-                'print': resprint,
+                'print': resreport,
                 'action': resaction,
-                'relate': resrelate,
             }
         return result
 
@@ -2045,7 +2036,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows. """
         # get the default value; ideally, we should use default_get(), but it
-        # fails due to ir.values not being ready
+        # fails due to ir.default not being ready
         field = self._fields[column_name]
         if field.default:
             value = field.default(self)
@@ -2841,7 +2832,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         cr = self._cr
         Data = self.env['ir.model.data'].sudo().with_context({})
-        Values = self.env['ir.values']
+        Defaults = self.env['ir.default'].sudo()
         Attachment = self.env['ir.attachment']
 
         for sub_ids in cr.split_for_in_conditions(self.ids):
@@ -2859,13 +2850,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if data:
                 data.unlink()
 
-            # For the same reason, remove the relevant records in ir_values
-            refs = ['%s,%s' % (self._name, i) for i in sub_ids]
-            values = Values.search(['|', ('value', 'in', refs),
-                                         '&', ('model', '=', self._name),
-                                              ('res_id', 'in', sub_ids)])
-            if values:
-                values.unlink()
+            # For the same reason, remove the defaults having some of the
+            # records as value
+            Defaults.discard_records(self.browse(sub_ids))
 
             # For the same reason, remove the relevant records in ir_attachment
             # (the search is performed with sql as the search method of

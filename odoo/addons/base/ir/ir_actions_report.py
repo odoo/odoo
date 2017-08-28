@@ -79,6 +79,7 @@ class IrActionsReport(models.Model):
 
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
+    binding_type = fields.Selection(default='report')
     model = fields.Char(required=True)
 
     report_type = fields.Selection([('qweb-html', 'HTML'), ('qweb-pdf', 'PDF')], required=True, default='qweb-pdf',
@@ -90,8 +91,6 @@ class IrActionsReport(models.Model):
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
                               help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
     groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
-    ir_values_id = fields.Many2one('ir.values', string='More Menu entry', readonly=True,
-                                   help='More menu entry.', copy=False)
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
@@ -119,25 +118,15 @@ class IrActionsReport(models.Model):
     def create_action(self):
         """ Create a contextual action for each report. """
         for report in self:
-            ir_values = self.env['ir.values'].sudo().create({
-                'name': report.name,
-                'model': report.model,
-                'key2': 'client_print_multi',
-                'value': "ir.actions.report,%s" % report.id,
-            })
-            report.write({'ir_values_id': ir_values.id})
+            model = self.env['ir.model']._get(report.model)
+            report.write({'binding_model_id': model.id, 'binding_type': 'report'})
         return True
 
     @api.multi
     def unlink_action(self):
         """ Remove the contextual actions created for the reports. """
         self.check_access_rights('write', raise_exception=True)
-        for report in self:
-            if report.ir_values_id:
-                try:
-                    report.ir_values_id.sudo().unlink()
-                except Exception:
-                    raise UserError(_('Deletion of the action record failed.'))
+        self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
     #--------------------------------------------------------------------------

@@ -38,7 +38,7 @@ class Website(models.Model):
         return self.env['res.lang'].search([]).ids
 
     def _default_language(self):
-        lang_code = self.env['ir.values'].get_default('res.partner', 'lang')
+        lang_code = self.env['ir.default'].get('res.partner', 'lang')
         def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return def_lang.id if def_lang else self._active_languages()[0]
 

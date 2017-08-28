@@ -292,15 +292,7 @@
             <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-
-        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">hr.employee</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
         </record>
 
         <!-- Employee Category -->
