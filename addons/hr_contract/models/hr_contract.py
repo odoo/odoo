@@ -104,8 +104,8 @@ class Contract(models.Model):
         soon_expired_contracts = self.search([
             ('state', '=', 'open'),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=-7))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=-60)))
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=7))),
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60)))
         ])
         return soon_expired_contracts.write({
             'state': 'pending'
@@ -114,9 +114,10 @@ class Contract(models.Model):
     @api.model
     def update_to_close(self):
         expired_contracts = self.search([
+            ('state', '!=', 'close'),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1)))
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=-1))),
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=-1)))
         ])
         return expired_contracts.write({
             'state': 'close'
