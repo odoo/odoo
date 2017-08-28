@@ -10,7 +10,7 @@ odoo.define('payment_stripe.stripe', function(require) {
     // The following currencies are integer only, see
     // https://stripe.com/docs/currencies#zero-decimal
     var int_currencies = [
-        'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYGí',
+        'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYG',
         'RWF', 'KRW', 'VUV', 'VND', 'XOF'
     ];
 
@@ -18,13 +18,6 @@ odoo.define('payment_stripe.stripe', function(require) {
         key: $("input[name='stripe_key']").val(),
         image: $("input[name='stripe_image']").val(),
         locale: 'auto',
-        closed: function() {
-          if (!handler.isTokenGenerate) {
-                $('#pay_stripe')
-                    .removeAttr('disabled')
-                    .find('i').remove();
-          }
-        },
         token: function(token, args) {
             handler.isTokenGenerate = true;
             ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
@@ -46,64 +39,79 @@ odoo.define('payment_stripe.stripe', function(require) {
         },
     });
 
-    $('#pay_stripe').on('click', function(e) {
-        // Open Checkout with further options
-        if(!$(this).find('i').length)
-            $(this).append('<i class="fa fa-spinner fa-spin"/>');
-            $(this).attr('disabled','disabled');
-
-        var $form = $(e.currentTarget).parents('form');
-        var acquirer_id = $(e.currentTarget).closest('div.o_payment_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
-        acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
-        if (! acquirer_id) {
-            return false;
+    $(document).ready(function (){
+        if (!$('.o_payment_form').length) {
+            return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
         }
 
-        var access_token = $("input[name='token']").val();
-        var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
-        if (so_id) {
-            so_id = parseInt(so_id[1]);
-        }
+        $('#o_payment_form_pay').on('click', function(ev){
+            // we retrieve the payment form
+            var parent_form = ev.target.form;
+            // then the checked radio
+            var checked_radio = $('input[type="radio"]:checked', parent_form);
+            // check if there's one checked radio
+            if(checked_radio.length != 1) {
+                return;
+            }
+            // if there's a checked radio, we retrieve the usefull data
+            var acquirer_id = checked_radio.data('acquirerId');
+            var provider = checked_radio.data('provider');
+            var is_form_payment = checked_radio.data('form-payment') === "True";
+            // now we check if the user has clicked on stripe radio button and wants to pay via the checkout form
+            if(provider != "stripe" || is_form_payment !== true) {
+                return;
+            }
+            // from here we retrieve the inputs that contains the data we need
+            var provider_form = $("#o_payment_form_acq_" + acquirer_id, parent_form);
 
-        e.preventDefault();
-        if ($('.o_website_payment').length !== 0) {
-            var currency = $("input[name='currency']").val();
-            var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
+            var access_token = $('input[name="token"]', provider_form).val();
+            var so_id = $("input[name='return_url']", provider_form).val().match(/quote\/([0-9]+)/) || undefined;
+            if (so_id) {
+                so_id = parseInt(so_id[1]);
             }
 
-            ajax.jsonRpc('/website_payment/transaction', 'call', {
-                    reference: $("input[name='invoice_num']").val(),
-                    amount: amount,
-                    currency_id: currency,
-                    acquirer_id: acquirer_id
-                })
-                handler.open({
-                    name: $("input[name='merchant']").val(),
-                    description: $("input[name='invoice_num']").val(),
-                    currency: currency,
-                    amount: amount,
-                });
-        } else {
-            var currency = $("input[name='currency']").val();
-            var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
+            if ($('.o_website_payment').length !== 0) {
+                var currency = $("input[name='currency']", provider_form).val();
+                var amount = parseFloat($("input[name='amount']", provider_form).val() || '0.0');
+                if (!_.contains(int_currencies, currency)) {
+                    amount = amount*100;
+                }
 
-            ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
-                    so_id: so_id,
-                    access_token: access_token
-                }, {'async': false}).then(function (data) {
-                $form.html(data);
-                handler.open({
-                    name: $("input[name='merchant']").val(),
-                    description: $("input[name='invoice_num']").val(),
-                    currency: currency,
-                    amount: amount,
+                ajax.jsonRpc('/website_payment/transaction', 'call', {
+                        reference: $("input[name='invoice_num']", provider_form).val(),
+                        amount: amount,
+                        currency_id: currency,
+                        acquirer_id: acquirer_id
+                    })
+                    handler.open({
+                        name: $("input[name='merchant']", provider_form).val(),
+                        description: $("input[name='invoice_num']", provider_form).val(),
+                        currency: currency,
+                        amount: amount,
+                    });
+            } else {
+                var currency = $("input[name='currency']", provider_form).val();
+                var amount = parseFloat($("input[name='amount']", provider_form).val() || '0.0');
+                if (!_.contains(int_currencies, currency)) {
+                    amount = amount*100;
+                }
+
+                // TBE TODO: Pass 'so_id: so_id' and 'access_token: access_token' on the URL
+                ajax.jsonRpc('/shop/payment/transaction/', 'call', {
+                        acquirer_id: acquirer_id
+                    }, {'async': false}).then(function (data) {
+                    try {
+                        provider_form.html(data);
+                    }
+                    catch(err) { } // here it will catch an error saying that payment_stripe.stripe is already started
+                    handler.open({
+                        name: $("input[name='merchant']", provider_form).val(),
+                        description: $("input[name='invoice_num']", provider_form).val(),
+                        currency: currency,
+                        amount: amount,
+                    });
                 });
-            });
-        }
+            }
+        });
     });
 });
