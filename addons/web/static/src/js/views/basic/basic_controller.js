@@ -546,7 +546,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
-            this.reload({fieldNames: data.fieldNames});
+            this.reload({
+                fieldNames: data.fieldNames,
+                keepChanges: data.keepChanges || false,
+            });
         }
     },
     /**
