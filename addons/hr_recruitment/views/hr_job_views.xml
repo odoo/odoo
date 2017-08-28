@@ -25,8 +25,8 @@
                 <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div>
-                            <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
@@ -37,7 +37,7 @@
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content o_visible">
+                            <div class="container o_kanban_card_content">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                 </t>
-                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                            </div><div class="container o_kanban_card_manage_pane">
                                 <div class="row">
                                     <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div class="o_kanban_card_manage_title">

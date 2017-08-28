@@ -617,9 +617,9 @@
                     <field name="count_picking_backorders"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" name="stock_picking">
+                            <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{kanban_color(record.color.raw_value)}" name="stock_picking">
                                 <div>
-                                    <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                                    <div t-attf-class="o_kanban_card_header">
                                         <div class="o_kanban_card_header_title">
                                             <div class="o_primary">
                                                 <a type="object" name="get_stock_picking_action_picking_type">
@@ -632,7 +632,7 @@
                                             <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                         </div>
                                     </div>
-                                    <div class="container o_kanban_card_content o_visible">
+                                    <div class="container o_kanban_card_content">
                                         <div class="row">
                                             <div class="col-xs-6 o_kanban_primary_left">
                                                 <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
@@ -679,7 +679,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                    </div><div class="container o_kanban_card_manage_pane">
                                         <div class="row">
                                             <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                                 <div class="o_kanban_card_manage_title">

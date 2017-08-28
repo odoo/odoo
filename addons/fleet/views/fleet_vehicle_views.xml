@@ -181,9 +181,6 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_tags_section">
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            </div>
                             <div class="o_kanban_image">
                                 <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.raw_value)"/>
                             </div>
@@ -191,6 +188,9 @@
                                 <strong>
                                     <field name="license_plate"/> : <field name="model_id"/>
                                 </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
                                 <ul>
                                     <li>
                                         <t t-if="record.driver_id.raw_value"><field name="driver_id"/></t>

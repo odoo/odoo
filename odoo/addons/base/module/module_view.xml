@@ -158,14 +158,16 @@
                       <div class="oe_module_vignette oe_kanban_global_click">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
-                        <div class="oe_module_desc">
-                          <h4><field name="shortdesc"/></h4>
+                        <div class="oe_module_desc" t-att-title="record.shortdesc.value">
+                          <h4 class="o_kanban_record_title"><field name="shortdesc"/></h4>
                           <p class="oe_module_name">
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
-                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_install" states="uninstalled">Install</button>
-                          <button type="button" t-if="installed" class="btn btn-default pull-right btn-sm disabled" disabled="disabled">Installed</button>
+                          <div class="oe_module_action">
+                            <code groups="base.group_no_one"><small><field name="name"/></small></code>
+                            <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_install" states="uninstalled">Install</button>
+                            <span t-if="installed" class="pull-right text-muted text-success">Installed</span>
+                          </div>
                         </div>
                       </div>
                     </t>
