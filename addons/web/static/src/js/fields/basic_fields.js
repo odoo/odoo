@@ -846,6 +846,10 @@ var HandleWidget = AbstractField.extend({
     tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
+
+    isSet: function () {
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
 });
 
 var FieldEmail = InputField.extend({
