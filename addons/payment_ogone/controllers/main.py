@@ -2,6 +2,7 @@
 import logging
 import pprint
 import werkzeug
+import urllib
 
 from odoo import http
 from odoo.http import request
@@ -28,6 +29,16 @@ class OgoneController(http.Controller):
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
         return werkzeug.utils.redirect(post.pop('return_url', '/'))
 
+    @http.route([
+        '/validation/ogone/accept',
+        '/validation/ogone/decline',
+        '/validation/ogone/exception',
+    ], type='http', auth='none')
+    def ogone_validation_form_feedback(self, **post):
+        """ Feedback from 3d secure for a bank card validation """
+        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        return werkzeug.utils.redirect(urllib.unquote(post.pop('return_url', '/')))
+
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
@@ -38,10 +49,22 @@ class OgoneController(http.Controller):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
-            acq.s2s_process(post)
+            token = acq.s2s_process(post)
         except Exception, e:
             # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
             error = e.message.splitlines()[0].split('|')[-1] or ''
+
+        if token and post.get('verify_validity'):
+            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            params = {
+                'accept_url': baseurl + '/validation/ogone/accept',
+                'decline_url': baseurl + '/validation/ogone/decline',
+                'exception_url': baseurl + '/validation/ogone/exception',
+                'return_url': post.get('return_url', baseurl)
+                }
+            tx = token.validate(**params)
+            if tx and tx.html_3ds:
+                return tx.html_3ds
         return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
