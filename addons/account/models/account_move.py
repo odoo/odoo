@@ -78,6 +78,14 @@ class AccountMove(models.Model):
             partner = move.line_ids.mapped('partner_id')
             move.partner_id = partner.id if len(partner) == 1 else False
 
+    @api.onchange('date')
+    def _onchange_date(self):
+        '''On the form view, a change on the date will trigger onchange() on account.move
+        but not on account.move.line even the date field is related to account.move.
+        Then, trigger the _onchange_amount_currency manually.
+        '''
+        self.line_ids._onchange_amount_currency()
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
@@ -492,6 +500,20 @@ class AccountMoveLine(models.Model):
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise ValidationError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
+
+    @api.onchange('amount_currency', 'currency_id')
+    def _onchange_amount_currency(self):
+        '''Recompute the debit/credit based on amount_currency/currency_id and date.
+        However, date is a related field on account.move. Then, this onchange will not be triggered
+        by the form view by changing the date on the account.move.
+        To fix this problem, see _onchange_date method on account.move.
+        '''
+        for line in self:
+            amount = line.amount_currency
+            if line.currency_id and line.currency_id != line.company_currency_id:
+                amount = self.currency_id.with_context(date=line.date).compute(amount, line.company_currency_id)
+            line.debit = amount > 0 and amount or 0.0
+            line.credit = amount < 0 and amount or 0.0
 
     ####################################################
     # Reconciliation interface methods
