@@ -14,30 +14,34 @@ odoo.define('payment_stripe.stripe', function(require) {
         'RWF', 'KRW', 'VUV', 'VND', 'XOF'
     ];
 
-    var handler = StripeCheckout.configure({
-        key: $("input[name='stripe_key']").val(),
-        image: $("input[name='stripe_image']").val(),
-        locale: 'auto',
-        token: function(token, args) {
-            handler.isTokenGenerate = true;
-            ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
-                tokenid: token.id,
-                email: token.email,
-                amount: $("input[name='amount']").val(),
-                acquirer_id: $("#acquirer_stripe").val(),
-                currency: $("input[name='currency']").val(),
-                invoice_num: $("input[name='invoice_num']").val(),
-                return_url: $("input[name='return_url']").val()
-            }).done(function(data){
-                handler.isTokenGenerate = false;
-                window.location.href = data;
-            }).fail(function(){
-                var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.message;
-                var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
-                wizard.appendTo($('body')).modal({'keyboard': true});
-            });
-        },
-    });
+    function getStripeHandler(parentElement)
+    {
+        var handler = StripeCheckout.configure({
+            key: $("input[name='stripe_key']", parentElement).val(),
+            image: $("input[name='stripe_image']", parentElement).val(),
+            locale: 'auto',
+            token: function(token, args) {
+                handler.isTokenGenerate = true;
+                ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
+                    tokenid: token.id,
+                    email: token.email,
+                    amount: $("input[name='amount']", parentElement).val(),
+                    acquirer_id: $("#acquirer_stripe", parentElement).val(),
+                    currency: $("input[name='currency']", parentElement).val(),
+                    invoice_num: $("input[name='invoice_num']", parentElement).val(),
+                    return_url: $("input[name='return_url']", parentElement).val()
+                }).done(function(data){
+                    handler.isTokenGenerate = false;
+                    window.location.href = data;
+                }).fail(function(){
+                    var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.message;
+                    var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
+                    wizard.appendTo($('body')).modal({'keyboard': true});
+                });
+            },
+        });
+        return handler;
+    }
 
     $(document).ready(function (){
         if (!$('.o_payment_form').length) {
@@ -64,10 +68,13 @@ odoo.define('payment_stripe.stripe', function(require) {
             // from here we retrieve the inputs that contains the data we need
             var provider_form = $("#o_payment_form_acq_" + acquirer_id, parent_form);
 
-            var access_token = $('input[name="token"]', provider_form).val();
             var so_id = $("input[name='return_url']", provider_form).val().match(/quote\/([0-9]+)/) || undefined;
+            var access_token = $("input[name='return_url']", provider_form).val().match(/quote\/([0-9]+)\/([0-9a-zA-Z\-]+)/) || undefined;
             if (so_id) {
                 so_id = parseInt(so_id[1]);
+            }
+            if(access_token) {
+                access_token = access_token[2];
             }
 
             if ($('.o_website_payment').length !== 0) {
@@ -83,6 +90,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                         currency_id: currency,
                         acquirer_id: acquirer_id
                     })
+                    var handler = getStripeHandler(provider_form);
                     handler.open({
                         name: $("input[name='merchant']", provider_form).val(),
                         description: $("input[name='invoice_num']", provider_form).val(),
@@ -96,14 +104,23 @@ odoo.define('payment_stripe.stripe', function(require) {
                     amount = amount*100;
                 }
 
+                var url = '/shop/payment/transaction/';
+                if(so_id) {
+                    url += so_id + '/';
+                    if(access_token) {
+                        url += access_token;
+                    }
+                }
+
                 // TBE TODO: Pass 'so_id: so_id' and 'access_token: access_token' on the URL
-                ajax.jsonRpc('/shop/payment/transaction/', 'call', {
+                ajax.jsonRpc(url, 'call', {
                         acquirer_id: acquirer_id
                     }, {'async': false}).then(function (data) {
                     try {
                         provider_form.html(data);
                     }
                     catch(err) { } // here it will catch an error saying that payment_stripe.stripe is already started
+                    var handler = getStripeHandler(provider_form);
                     handler.open({
                         name: $("input[name='merchant']", provider_form).val(),
                         description: $("input[name='invoice_num']", provider_form).val(),
