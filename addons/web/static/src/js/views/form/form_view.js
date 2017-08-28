@@ -29,6 +29,7 @@ var FormView = BasicView.extend({
         this.loadParams.type = 'record';
         this.loadParams.parentID = params.parentID;
 
+        this.controllerParams.disableAutofocus = params.disable_autofocus;
         this.controllerParams.hasSidebar = params.sidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.footerToButtons = params.footer_to_buttons;

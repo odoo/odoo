@@ -27,7 +27,7 @@ var GraphView = AbstractView.extend({
     /**
      * @override
      */
-    init: function (viewInfo, params) {
+    init: function (viewInfo) {
         this._super.apply(this, arguments);
 
         var measure;
@@ -57,9 +57,9 @@ var GraphView = AbstractView.extend({
         this.controllerParams.measures = measures;
         this.rendererParams.stacked = viewInfo.arch.attrs.stacked !== "False";
 
-        this.loadParams.mode = params.context.graph_mode || viewInfo.arch.attrs.type || 'bar';
-        this.loadParams.measure = params.context.graph_measure || measure || '__count__';
-        this.loadParams.groupBys = params.context.graph_groupbys || groupBys || [];
+        this.loadParams.mode = viewInfo.arch.attrs.type || 'bar';
+        this.loadParams.measure = measure || '__count__';
+        this.loadParams.groupBys = groupBys || [];
         this.loadParams.fields = viewInfo.fields;
     },
 });

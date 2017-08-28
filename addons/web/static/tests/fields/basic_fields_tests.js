@@ -1259,6 +1259,8 @@ QUnit.module('basic_fields', {
         // Copying from a div tag with white-space:pre-wrap doesn't work in Firefox
         assert.strictEqual(form.$('[name="txt"]').prop("tagName").toLowerCase(), 'span',
             "the field contents should be surrounded by a span tag");
+
+        form.destroy();
     });
 
     QUnit.module('FieldBinary');

@@ -2738,8 +2738,7 @@ var BasicModel = AbstractModel.extend({
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
                 var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
                 var modifiers = self._evalModifiers(record, rawModifiers);
-                var required = 'required' in modifiers ? modifiers.required : field.required;
-                if (required && !self._isFieldSet(recordData[fieldName], field.type)) {
+                if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
                 }
             });

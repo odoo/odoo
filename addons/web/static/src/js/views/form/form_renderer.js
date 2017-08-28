@@ -245,10 +245,6 @@ var FormRenderer = BasicRenderer.extend({
     _renderButtonBox: function (node) {
         var self = this;
         var $result = $('<' + node.tag + '>', { 'class': 'o_not_full' });
-        // Avoid to show buttons if we are in create mode (edit mode without res_id)
-        if (this.mode === 'edit' && !this.state.res_id) {
-            return $result;
-        }
         var buttons = _.map(node.children, function (child) {
             if (child.tag === 'button') {
                 return self._renderStatButton(child);
@@ -818,9 +814,6 @@ var FormRenderer = BasicRenderer.extend({
                 self._addFieldTooltip(widget, $label);
             }
         });
-
-        // Focus the default field (in edit mode)
-        self.autofocus();
     },
     /**
      * Sets id attribute of given widget to idForLabel
