@@ -231,6 +231,28 @@ class TestOnChange(common.TransactionCase):
                       for user in discussion.participants + demo],
         )
 
+    def test_onchange_default(self):
+        """ test the effect of a conditional user-default on a field """
+        Foo = self.env['test_new_api.foo']
+        field_onchange = Foo._onchange_spec()
+        self.assertTrue(Foo._fields['value1'].change_default)
+        self.assertEqual(field_onchange.get('value1'), '1')
+
+        # create a user-defined default based on 'value1'
+        self.env['ir.values'].set_default('test_new_api.foo', 'value2', 666, condition='value1=42')
+
+        # setting 'value1' to 42 should trigger the change of 'value2'
+        self.env.invalidate_all()
+        values = {'name': 'X', 'value1': 42, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {'value2': 666})
+
+        # setting 'value1' to 24 should not trigger the change of 'value2'
+        self.env.invalidate_all()
+        values = {'name': 'X', 'value1': 24, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {})
+
     def test_onchange_one2many_value(self):
         """ test the value of the one2many field inside the onchange """
         discussion = self.env.ref('test_new_api.discussion_0')

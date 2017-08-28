@@ -5352,6 +5352,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange and required fields with override in arch', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {}
+        };
+        this.data.turtle.fields.turtle_foo.required = true;
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="turtle_foo" required="0"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // triggers an onchange on partner, because the new record is valid
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.verifySteps(['read', 'default_get', 'onchange']);
+        form.destroy();
+    });
+
+
 
     QUnit.module('FieldMany2Many');
 
