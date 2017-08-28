@@ -9,7 +9,7 @@
     <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
         sequence="100" groups="group_stock_manager"/>
     <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="stock.group_stock_manager" sequence="1"/>
-    <menuitem id="menu_packages_config" name="Packages" parent="menu_stock_config_settings" sequence="3"/>
+
 
     <menuitem id="menu_product_in_config_stock" name="Products" parent="stock.menu_stock_config_settings" sequence="4"/>
 
@@ -18,6 +18,8 @@
 
     <menuitem id="product_uom_menu" name="Units of Measures" parent="menu_stock_config_settings"
         sequence="5" groups="product.group_uom"/>
+
+    <menuitem id="menu_packages_config" name="Packages" parent="menu_stock_config_settings" sequence="6"/>
 
     <menuitem
         action="product.product_category_action_form" id="menu_product_category_config_stock"

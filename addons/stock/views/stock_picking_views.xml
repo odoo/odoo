@@ -303,7 +303,7 @@
                                 <group>
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}" invisible="context.get('default_picking_type_id')"/>
+                                    <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -391,7 +391,7 @@
             parent="menu_stock_warehouse_mgmt" sequence="1"
             groups="stock.group_stock_manager,stock.group_stock_user"/>
 
-        <menuitem id="all_picking" name="Transfers" parent="stock_picking_menu_product" sequence="2" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+        <menuitem id="all_picking" name="Transfers" parent="stock_picking_menu_product" sequence="5" action="action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
 
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
