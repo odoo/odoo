@@ -13,7 +13,6 @@ var BasicComposer = Composers.BasicComposer;
 
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
-var createAsyncView = testUtils.createAsyncView;
 
 QUnit.module('mail', {}, function () {
 
@@ -496,7 +495,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 });
 
 QUnit.test('form activity widget: schedule next activity', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
     this.data.partner.records[0].activity_ids = [1];
     this.data.partner.records[0].activity_state = 'today';
     this.data['mail.activity'].records = [{
@@ -508,6 +507,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         activity_type_id: 2,
     }];
 
+    var checkReadArgs = false;
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -528,6 +528,10 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 return $.when();
+            }
+            if (args.method === 'read' && checkReadArgs) {
+                assert.deepEqual(args.args[1], ['activity_ids', 'message_ids'],
+                    "should only read the mail fields");
             }
             return this._super.apply(this, arguments);
         },
@@ -555,6 +559,8 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
                     view_type: "form",
                     views: [[false, "form"]],
                 }, "should do a do_action with correct parameters");
+                checkReadArgs = true; // should re-read the activities when closing the dialog
+                event.data.options.on_close();
             },
         },
     });
@@ -564,6 +570,55 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
+QUnit.test('form activity widget: schedule activity does not discard changes', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'write') {
+                assert.deepEqual(args.args[1], {foo: 'new value'},
+                    "should correctly save the change");
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+            do_action: function (event) {
+                event.data.options.on_close();
+            },
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // update value of foo field
+    form.$('.o_field_widget[name=foo]').val('new value').trigger('input');
+
+    // schedule an activity (this triggers a do_action)
+    form.$('.o_chatter_button_schedule_activity').click();
+
+    // save the record
+    form.$buttons.find('.o_form_button_save').click();
+
     form.destroy();
 });
 
