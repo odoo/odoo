@@ -1061,6 +1061,7 @@ var ManualModel = StatementModel.extend({
                             model: 'account.move.line',
                             method: 'get_data_for_manual_reconciliation',
                             args: args,
+                            context: context,
                         })
                         .then(function (result) {
                             var defs = _.map(result, self._formatLine.bind(self, context.mode));
@@ -1073,6 +1074,7 @@ var ManualModel = StatementModel.extend({
                             model: 'account.move.line',
                             method: 'get_data_for_manual_reconciliation',
                             args: ['account', self.account_ids],
+                            context: context,
                         })
                         .then(function (result) {
                             var defs = _.map(result, self._formatLine.bind(self, 'accounts'));
@@ -1091,6 +1093,7 @@ var ManualModel = StatementModel.extend({
                             model: 'account.move.line',
                             method: 'get_data_for_manual_reconciliation_widget',
                             args: [partner_ids, account_ids],
+                            context: context,
                         })
                         .then(function (result) {
                             var defs = _.map(result.accounts, self._formatLine.bind(self, 'accounts'));
@@ -1269,6 +1272,10 @@ var ManualModel = StatementModel.extend({
         this._super(line, props);
         if (props.length) {
             _.each(props, function (prop) {
+                var tmp_value = prop.debit || prop.credit;
+                prop.credit = prop.credit !== 0 ? 0 : tmp_value;
+                prop.debit = prop.debit !== 0 ? 0 : tmp_value;
+                prop.amount = -prop.amount;
                 prop.journal_id = self._formatNameGet(prop.journal_id || line.journal_id);
             });
         }
