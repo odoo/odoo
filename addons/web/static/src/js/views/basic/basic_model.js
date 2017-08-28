@@ -1629,8 +1629,8 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRecord: function (record, options) {
         var self = this;
-        var fieldNames = options && options.fieldNames ||
-                         _.uniq(record.getFieldNames().concat(['display_name']));
+        var fieldNames = options && options.fieldNames || record.getFieldNames();
+        fieldNames = _.uniq(fieldNames.concat(['display_name']));
         return this._rpc({
                 model: record.model,
                 method: 'read',
@@ -2337,6 +2337,16 @@ var BasicModel = AbstractModel.extend({
     _generateOnChangeData: function (record) {
         var commands = this._generateX2ManyCommands(record, {withReadonly: true});
         var data = _.extend(this.get(record.id, {raw: true}).data, commands);
+        // 'display_name' is automatically added to the list of fields to fetch,
+        // when fetching a record, even if it doesn't appear in the view. However,
+        // only the fields in the view must be passed to the onchange RPC, so we
+        // remove it from the data sent by RPC if it isn't in the view.
+        var hasDisplayName = _.some(record.fieldsInfo, function (fieldsInfo) {
+            return 'display_name' in fieldsInfo;
+        });
+        if (!hasDisplayName) {
+            delete data.display_name;
+        }
 
         // one2many records have a parentID
         if (record.parentID) {

@@ -1134,7 +1134,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === "onchange") {
                     assert.deepEqual(args.args[3],
-                        {"foo": "1", "p": "", "p.bar": "", "p.display_name": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
+                        {"foo": "1", "p": "", "p.bar": "", "p.product_id": "", "timmy": "", "timmy.name": ""},
                         "should send only the fields used in the views");
                 }
                 return this._super(route, args);
@@ -1282,7 +1282,6 @@ QUnit.module('Views', {
                 if (args.method === 'onchange') {
                     assert.deepEqual(args.args[3], {
                         p: '',
-                        'p.display_name': '',
                         'p.foo': '1'
                     }, "onchangeSpec should be correct (with sub fields)");
                 }
@@ -2827,6 +2826,92 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('display_name not sent for onchanges if not in view', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner.onchanges = {
+            foo: function () {},
+        };
+        this.data.partner_type.onchanges = {
+            name: function () {},
+        };
+        var readInModal = false;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="foo"/>' +
+                        '<field name="timmy">' +
+                            '<tree>' +
+                                '<field name="name"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="name"/>' +
+                                '<field name="color"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.model === 'partner') {
+                    assert.deepEqual(args.args[1], ['foo', 'timmy', 'display_name'],
+                        "should read display_name even if not in the view");
+                }
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    if (!readInModal) {
+                        assert.deepEqual(args.args[1], ['name'],
+                            "should not read display_name for records in the list");
+                    } else {
+                        assert.deepEqual(args.args[1], ['name', 'color', 'display_name'],
+                            "should read display_name when opening the subrecord");
+                    }
+                }
+                if (args.method === 'onchange' && args.model === 'partner') {
+                    assert.deepEqual(args.args[1], {
+                        id: 1,
+                        foo: 'coucou',
+                        timmy: [[6, false, [12]]],
+                    }, "should only send the value of fields in the view (+ id)");
+                    assert.deepEqual(args.args[3], {
+                        foo: '1',
+                        timmy: '',
+                        'timmy.name': '1',
+                        'timmy.color': '',
+                    }, "only the fields in the view should be in the onchange spec");
+                }
+                if (args.method === 'onchange' && args.model === 'partner_type') {
+                    assert.deepEqual(args.args[1], {
+                        id: 12,
+                        name: 'new name',
+                        color: 2,
+                    }, "should only send the value of fields in the view (+ id)");
+                    assert.deepEqual(args.args[3], {
+                        name: '1',
+                        color: '',
+                    }, "only the fields in the view should be in the onchange spec");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // trigger the onchange
+        form.$('.o_field_widget[name=foo]').val("coucou").trigger('input');
+
+        // open a subrecord and trigger an onchange
+        readInModal = true;
+        form.$('.o_data_row .o_data_cell:first').click();
+        $('.modal .o_field_widget[name=name]').val("new name").trigger('input');
+
+        form.destroy();
+    });
+
     QUnit.test('onchanges on date(time) fields', function (assert) {
         assert.expect(6);
 
@@ -3725,7 +3810,6 @@ QUnit.module('Views', {
                 if (args.method === 'create') {
                     var command = args.args[0].p;
                     assert.deepEqual(command, [[0, false, {
-                        display_name: false,
                         timmy: [[6, false, [12]]],
                     }]], "the default partner_type_id should be equal to 12");
                 }

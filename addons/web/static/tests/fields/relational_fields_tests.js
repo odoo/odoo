@@ -2521,6 +2521,7 @@ QUnit.module('relational_fields', {
             arch:'<form string="Partners">' +
                     '<field name="p">' +
                         '<kanban create="0">' +
+                            '<field name="display_name"/>' +
                             '<templates>' +
                                 '<t t-name="kanban-box">' +
                                     '<div class="oe_kanban_global_click">' +
@@ -3499,7 +3500,7 @@ QUnit.module('relational_fields', {
                 rpcCount++;
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [[0, false, {
-                        display_name: false, int_field: 123, product_id: 41
+                        int_field: 123, product_id: 41
                     }]]);
                 }
                 return this._super(route, args);
@@ -3736,7 +3737,7 @@ QUnit.module('relational_fields', {
                 if (args.method === 'default_get') {
                     var expected = counter === 0 ?
                         [[4, 2, false]] :
-                        [[4, 2, false], [0, false, {display_name: false, turtle_foo: 'hammer'}]];
+                        [[4, 2, false], [0, false, {turtle_foo: 'hammer'}]];
                     assert.deepEqual(args.kwargs.context.turtles, expected,
                         "should have properly evaluated turtles key in context");
                     counter++;
@@ -5544,6 +5545,7 @@ QUnit.module('relational_fields', {
             arch:'<form string="Partners">' +
                     '<field name="timmy">' +
                         '<kanban create="0">' +
+                            '<field name="display_name"/>' +
                             '<templates>' +
                                 '<t t-name="kanban-box">' +
                                     '<div class="oe_kanban_global_click">' +
