@@ -325,7 +325,7 @@ class MrpWorkorder(models.Model):
             if production_move.has_tracking != 'none':
                 move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
                 if move_line:
-                    move_line.product_qty += self.qty_producing
+                    move_line.product_uom_qty += self.qty_producing
                 else:
                     move_line.create({'move_id': production_move.id,
                                  'product_id': production_move.product_id.id,
