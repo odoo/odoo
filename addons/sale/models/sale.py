@@ -308,7 +308,7 @@ class SaleOrder(models.Model):
             query = """UPDATE %(table_name)s
                           SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
                         WHERE %(column_name)s IS NULL
-                    """ % {'table_name': self._name, 'column_name': column_name}
+                    """ % {'table_name': self._table, 'column_name': column_name}
             self.env.cr.execute(query)
 
     def _generate_access_token(self):
