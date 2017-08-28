@@ -653,18 +653,25 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
 
-    @api.depends('invoice_lines', 'invoice_lines.invoice_id', 'invoice_lines.invoice_id.state', 
-                 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids', 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids.invoice_id', 'invoice_lines.invoice_id.refund_invoice_ids.invoice_line_ids.invoice_id.state')
+    @api.depends('invoice_lines',
+                 'invoice_lines.price_total',
+                 'invoice_lines.invoice_id',
+                 'invoice_lines.invoice_id.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids',
+                 'invoice_lines.invoice_id.refund_invoice_ids.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
     def _compute_invoice_amount(self):
         for line in self:
-            amt_invoiced = 0.0
-            refund_amount_total = 0.0
-            for invoice_line in line.invoice_lines:
-                if invoice_line.invoice_id.state in ('open', 'paid'):
-                    amt_invoiced += invoice_line.price_total
-                refund_amount_total += sum(invoice_line.invoice_id.refund_invoice_ids.filtered(lambda x: x.state in ['open', 'paid']).mapped('amount_total'))
-            line.amt_invoiced = amt_invoiced - refund_amount_total
-            line.amt_to_invoice = line.price_total - amt_invoiced
+            # Invoice lines referenced by this line
+            invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
+            # Refund invoices linked to invoice_lines
+            refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
+            # Total invoiced amount
+            invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
+            # Total refunded amount
+            refund_amount_total = sum(refund_invoices.mapped('amount_total'))
+            line.amt_invoiced = invoiced_amount_total - refund_amount_total
+            line.amt_to_invoice = line.price_total - invoiced_amount_total
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
