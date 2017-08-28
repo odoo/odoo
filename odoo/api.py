@@ -740,7 +740,7 @@ class Environment(Mapping):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
-        self.cache = defaultdict(dict)              # {field: {id: value, ...}, ...}
+        self.cache = Cache()
         self._protected = defaultdict(frozenset)    # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
@@ -836,39 +836,11 @@ class Environment(Mapping):
         """ Return whether we are in 'onchange' draft mode. """
         return self.all.mode == 'onchange'
 
-    def invalidate(self, spec):
-        """ Invalidate some fields for some records in the cache of all
-            environments.
-
-            :param spec: what to invalidate, a list of `(field, ids)` pair,
-                where ``field`` is a field object, and ``ids`` is a list of record
-                ids or ``None`` (to invalidate all records).
-        """
-        if not spec:
-            return
-        for env in list(self.all):
-            c = env.cache
-            for field, ids in spec:
-                if ids is None:
-                    if field in c:
-                        del c[field]
-                else:
-                    field_cache = c[field]
-                    for id in ids:
-                        field_cache.pop(id, None)
-
-    def invalidate_all(self):
-        """ Clear the cache of all environments. """
-        for env in list(self.all):
-            env.cache.clear()
-            env._protected.clear()
-            env.dirty.clear()
-
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
-        self.invalidate_all()
+        self.cache.invalidate()
         self.all.todo.clear()
 
     @contextmanager
@@ -939,36 +911,6 @@ class Environment(Mapping):
         field = min(self.all.todo, key=self.registry.field_sequence)
         return field, self.all.todo[field][0]
 
-    def check_cache(self):
-        """ Check the cache consistency. """
-        from odoo.models import SpecialValue
-
-        # make a full copy of the cache, and invalidate it
-        cache_dump = dict(
-            (field, dict(field_cache))
-            for field, field_cache in self.cache.items()
-        )
-        self.invalidate_all()
-
-        # re-fetch the records, and compare with their former cache
-        invalids = []
-        for field, field_dump in cache_dump.items():
-            records = self[field.model_name].browse(f for f in field_dump if f)
-            for record in records:
-                try:
-                    cached = field_dump[record.id]
-                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
-                    value = field.convert_to_record(cached, record)
-                    fetched = record[field.name]
-                    if fetched != value:
-                        info = {'cached': value, 'fetched': fetched}
-                        invalids.append((field, record, info))
-                except (AccessError, MissingError):
-                    pass
-
-        if invalids:
-            raise UserError('Invalid cache for fields\n' + pformat(invalids))
-
     @property
     def recompute(self):
         return self.all.recompute
@@ -998,6 +940,115 @@ class Environments(object):
     def __iter__(self):
         """ Iterate over environments. """
         return iter(self.envs)
+
+
+class Cache(object):
+    """ Implementation of the cache of records. """
+    def __init__(self):
+        self._data = defaultdict(dict)          # {field: {id: value}}
+
+    def contains(self, record, field):
+        """ Return whether ``record`` has a value for ``field``. """
+        return record.id in self._data[field]
+
+    def get(self, record, field):
+        """ Return the value of ``field`` for ``record``. """
+        value = self._data[field][record.id]
+        return value.get() if isinstance(value, SpecialValue) else value
+
+    def set(self, record, field, value):
+        """ Set the value of ``field`` for ``record``. """
+        self._data[field][record.id] = value
+
+    def remove(self, record, field):
+        """ Remove the value of ``field`` for ``record``. """
+        del self._data[field][record.id]
+
+    def contains_value(self, record, field):
+        """ Return whether ``record`` has a regular value for ``field``. """
+        value = self._data[field].get(record.id, SpecialValue(None))
+        return not isinstance(value, SpecialValue)
+
+    def get_value(self, record, field, default=None):
+        """ Return the regular value of ``field`` for ``record``. """
+        value = self._data[field].get(record.id, SpecialValue(None))
+        return default if isinstance(value, SpecialValue) else value
+
+    def set_special(self, record, field, getter):
+        """ Set the value of ``field`` for ``record`` to return ``getter()``. """
+        self._data[field][record.id] = SpecialValue(getter)
+
+    def set_failed(self, records, fields, exception):
+        """ Mark ``fields`` on ``records`` with the given exception. """
+        def getter():
+            raise exception
+        for field in fields:
+            for record in records:
+                self.set_special(record, field, getter)
+
+    def get_fields(self, record):
+        """ Return the fields with a value for ``record``. """
+        for name, field in record._fields.items():
+            if name != 'id' and record.id in self._data[field]:
+                yield field
+
+    def get_records(self, model, field):
+        """ Return the records of ``model`` that have a value for ``field``. """
+        return model.browse(self._data[field])
+
+    def invalidate(self, spec=None):
+        """ Invalidate the cache, partially or totally depending on ``spec``. """
+        if spec is None:
+            for env in list(Environment.envs):
+                env.cache._data.clear()
+        elif spec:
+            for env in list(Environment.envs):
+                data = env.cache._data
+                for field, ids in spec:
+                    if ids is None:
+                        if field in data:
+                            del data[field]
+                    else:
+                        field_cache = data[field]
+                        for id in ids:
+                            field_cache.pop(id, None)
+
+    def check(self, env):
+        """ Check the consistency of the cache for the given environment. """
+        # make a full copy of the cache, and invalidate it
+        dump = defaultdict(dict)
+        for field, field_cache in env.cache._data.items():
+            for record_id, value in field_cache.items():
+                if record_id:
+                    dump[field][record_id] = value
+        self.invalidate()
+
+        # re-fetch the records, and compare with their former cache
+        invalids = []
+        for field, field_dump in dump.items():
+            records = env[field.model_name].browse(field_dump)
+            for record in records:
+                try:
+                    cached = field_dump[record.id]
+                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    value = field.convert_to_record(cached, record)
+                    fetched = record[field.name]
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
+                        invalids.append((record, field, info))
+                except (AccessError, MissingError):
+                    pass
+
+        if invalids:
+            raise UserError('Invalid cache for fields\n' + pformat(invalids))
+
+
+class SpecialValue(object):
+    """ Wrapper for a function to get the cached value of a field. """
+    __slots__ = ['get']
+
+    def __init__(self, getter):
+        self.get = getter
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
