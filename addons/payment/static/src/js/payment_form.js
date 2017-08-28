@@ -18,7 +18,7 @@ odoo.define('payment.payment_form', function (require){
         },
 
         payEvent: function(ev) {
-            ev.stopPropagation();
+            // ev.stopPropagation();
             ev.preventDefault();
             var form = this.el;
             var checked_radio = this.$('input[type="radio"]:checked');
@@ -105,6 +105,10 @@ odoo.define('payment.payment_form', function (require){
                     var ds = $('input[name="data_set"]', acquirer_form)[0];
                     var form_save_token = false;
                     var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
+
+                    // if neither the dataset or the action url is defined, then we just stop the execution of the function
+                    if(!ds || !ds.dataset.actionUrl)
+                        return;
 
                     // if there's a prepare tx url set
                     if($tx_url.length == 1)
