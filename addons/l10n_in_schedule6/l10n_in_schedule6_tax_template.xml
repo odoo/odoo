@@ -464,6 +464,7 @@
         <field name="account_id" ref="c114214"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_21'), ref('st_tag_in_66')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="input_tax_12" model="account.tax.template">
         <field name="name">(schedule6)Input Sales Tax @ 12%</field>
@@ -475,6 +476,7 @@
         <field name="account_id" ref="c114214"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_18'), ref('st_tag_in_63')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="input_tax_4" model="account.tax.template">
         <field name="name">(schedule6)Input Sales Tax @ 4%</field>
@@ -486,6 +488,7 @@
         <field name="account_id" ref="c114214"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_15'), ref('st_tag_in_60')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
     <record id="add_input_vat_1" model="account.tax.template">
         <field name="name">(schedule6)Additional Input VAT @ 1%</field>
@@ -497,6 +500,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_86'), ref('st_tag_in_45')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
     </record>
     <record id="input_vat_12" model="account.tax.template">
         <field name="name">(schedule6)Input VAT @ 12.5%</field>
@@ -508,6 +512,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_83'), ref('st_tag_in_42')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="add_input_vat_2" model="account.tax.template">
         <field name="name">(schedule6)Additional Input VAT @ 2.5%</field>
@@ -519,6 +524,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_89'), ref('st_tag_in_48')])]"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="sale_vat_8" model="account.tax.template">
         <field name="name">(schedule6)Input VAT @ 8%</field>
@@ -530,6 +536,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_77'), ref('st_tag_in_36')])]"/>
+        <field name="tax_group_id" ref="tax_group_8"/>
     </record>
     <record id="sale_vat_10" model="account.tax.template">
         <field name="name">(schedule6)Input VAT @ 10%</field>
@@ -541,6 +548,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_39'), ref('st_tag_in_80')])]"/>
+        <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="sale_tax_12" model="account.tax.template">
         <field name="name">(schedule6)Input Tax 12%</field>
@@ -552,6 +560,7 @@
         <field name="account_id" ref="c1142111"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_07')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="sale_edu_cess_Excise_Duty_2" model="account.tax.template">
         <field name="name">(schedule6)Input Education Cess @ 2% On Excise Duty</field>
@@ -563,6 +572,7 @@
         <field name="account_id" ref="c1142112"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_08')])]"/>
+        <field name="tax_group_id" ref="tax_group_024"/>
     </record>
     <record id="sale_hedu_cess_Excise_Duty_1" model="account.tax.template">
         <field name="name">(schedule6)Input Higher Education Cess @ 1% On Excise Duty</field>
@@ -574,6 +584,7 @@
         <field name="account_id" ref="c1142113"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_09')])]"/>
+        <field name="tax_group_id" ref="tax_group_01224"/>
     </record>
     <record id="sale_Excise_Duty_12" model="account.tax.template">
         <field name="name">(schedule6)Input Excise Duty @ 12.36%</field>
@@ -586,6 +597,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('sale_tax_12'),ref('sale_edu_cess_Excise_Duty_2'),ref('sale_hedu_cess_Excise_Duty_1')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_56')])]"/>
+        <field name="tax_group_id" ref="tax_group_1236"/>
     </record>
         <record id="sale_service_tax12" model="account.tax.template">
         <field name="name">(schedule6)Input Service Tax 12%</field>
@@ -597,6 +609,7 @@
         <field name="account_id" ref="c1142121"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_25')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="sale_edu_cess_service_tax_2" model="account.tax.template">
         <field name="name">(schedule6)Input Education Cess @ 2% On Service Tax</field>
@@ -608,6 +621,7 @@
         <field name="account_id" ref="c1142122"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_26')])]"/>
+        <field name="tax_group_id" ref="tax_group_024"/>
     </record>
     <record id="sale_high_edu_service_tax_1" model="account.tax.template">
         <field name="name">(schedule6)Input Higher Education Cess @ 1% On Service Tax</field>
@@ -619,6 +633,7 @@
         <field name="account_id" ref="c1142123"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_27')])]"/>
+        <field name="tax_group_id" ref="tax_group_01224"/>
     </record>
     <record id="sale_service_tax_12" model="account.tax.template">
         <field name="name">(schedule6)Input Service Tax @ 12.36%</field>
@@ -632,6 +647,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('sale_service_tax12'),ref('sale_edu_cess_service_tax_2'),ref('sale_high_edu_service_tax_1')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_70')])]"/>
+        <field name="tax_group_id" ref="tax_group_1236"/>
     </record>
     <record id="input_vat_4" model="account.tax.template">
         <field name="name">(schedule6)Input VAT @ 4%</field>
@@ -643,6 +659,7 @@
         <field name="account_id" ref="c114215"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_33'), ref('st_tag_in_74')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
 
     <!--output purchase tax-->
@@ -656,6 +673,7 @@
         <field name="account_id" ref="c121610"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_22'), ref('st_tag_in_67')])]"/>
+        <field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="output_tax_12" model="account.tax.template">
         <field name="name">(schedule6)Output Purchase Tax @ 12%</field>
@@ -667,6 +685,7 @@
         <field name="account_id" ref="c121610"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_19'), ref('st_tag_in_64')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="output_tax_4" model="account.tax.template">
         <field name="name">(schedule6)Output Purchase Tax @ 4%</field>
@@ -678,6 +697,7 @@
         <field name="account_id" ref="c121610"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_61'), ref('st_tag_in_16')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
     <record id="add_output_vat_1" model="account.tax.template">
         <field name="name">(schedule6)Additional Output VAT @ 1%</field>
@@ -689,6 +709,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_87'), ref('st_tag_in_46')])]"/>
+        <field name="tax_group_id" ref="tax_group_1"/>
     </record>
     <record id="output_vat_12" model="account.tax.template">
         <field name="name">(schedule6)Output VAT @ 12.5%</field>
@@ -700,6 +721,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_43'), ref('st_tag_in_84')])]"/>
+        <field name="tax_group_id" ref="tax_group_125"/>
     </record>
     <record id="add_output_vat_2" model="account.tax.template">
         <field name="name">(schedule6)Additional Output VAT @ 2.5%</field>
@@ -711,6 +733,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_90'), ref('st_tag_in_49')])]"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="purchase_vat_8" model="account.tax.template">
         <field name="name">(schedule6)Output VAT @ 8%</field>
@@ -722,6 +745,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_78'), ref('st_tag_in_37')])]"/>
+        <field name="tax_group_id" ref="tax_group_8"/>
     </record>
     <record id="purchase_vat_10" model="account.tax.template">
         <field name="name">(schedule6)Output VAT @ 10%</field>
@@ -733,6 +757,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_81'), ref('st_tag_in_40')])]"/>
+        <field name="tax_group_id" ref="tax_group_10"/>
     </record>
         <record id="purchase_edu_cess_12" model="account.tax.template">
         <field name="name">(schedule6)Output Tax 12%</field>
@@ -744,6 +769,7 @@
         <field name="account_id" ref="c1216121"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_10')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="purchase_edu_cess_Excise_Duty_2" model="account.tax.template">
         <field name="name">(schedule6)Output Education Cess @ 2% Excise Duty</field>
@@ -755,6 +781,7 @@
         <field name="account_id" ref="c1216122"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_11')])]"/>
+        <field name="tax_group_id" ref="tax_group_2"/>
     </record>
     <record id="purchase_hedu_cess_Excise_Duty_1" model="account.tax.template">
         <field name="name">(schedule6)Output Higher Education Cess @ 1% Excise Duty</field>
@@ -766,6 +793,7 @@
         <field name="account_id" ref="c1216123"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_12')])]"/>
+        <field name="tax_group_id" ref="tax_group_01224"/>
     </record>
     <record id="purchase_Excise_Duty_12" model="account.tax.template">
         <field name="name">(schedule6)Output Excise Duty @ 12.36%</field>
@@ -779,6 +807,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_edu_cess_12'),ref('purchase_edu_cess_Excise_Duty_2'),ref('purchase_hedu_cess_Excise_Duty_1')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_57')])]"/>
+        <field name="tax_group_id" ref="tax_group_1236"/>
     </record>
         <record id="purchase_edu_service_tax12" model="account.tax.template">
         <field name="name">(schedule6)Output Service Tax 12%</field>
@@ -790,6 +819,7 @@
         <field name="account_id" ref="c1216131"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_28')])]"/>
+        <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="purchase_edu_cess_service_tax_2" model="account.tax.template">
         <field name="name">(schedule6)Output Education Cess @ 2% On Service Tax</field>
@@ -801,6 +831,7 @@
         <field name="account_id" ref="c1216132"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_29')])]"/>
+        <field name="tax_group_id" ref="tax_group_024"/>
     </record>
     <record id="purchase_high_edu_service_tax_1" model="account.tax.template">
         <field name="name">(schedule6)Output Higher Education Cess @ 1% On Service Tax</field>
@@ -812,6 +843,7 @@
         <field name="account_id" ref="c1216133"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_30')])]"/>
+        <field name="tax_group_id" ref="tax_group_01224"/>
     </record>
     <record id="st_purchase_service_tax_12" model="account.tax.template">
         <field name="name">(schedule6)Output Service Tax @ 12.36%</field>
@@ -825,6 +857,7 @@
         <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_edu_service_tax12'),ref('purchase_edu_cess_service_tax_2'),ref('purchase_high_edu_service_tax_1')])]"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_71')])]"/>
+        <field name="tax_group_id" ref="tax_group_1236"/>
     </record>
     <record id="output_vat_4" model="account.tax.template">
         <field name="name">(schedule6)Output VAT @ 4%</field>
@@ -836,6 +869,7 @@
         <field name="account_id" ref="c121611"/>
         <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_34'), ref('st_tag_in_75')])]"/>
+        <field name="tax_group_id" ref="tax_group_4"/>
     </record>
 
     </data>

@@ -33,6 +33,7 @@ Here is how it works:
 
     'data': [
         'data/l10n_ch_chart_data.xml',
+        'data/account_data.xml',
         'data/account_vat2011_data.xml',
         'data/account_fiscal_position_data.xml',
         'data/account_chart_template_data.yml',

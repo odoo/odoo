@@ -25,6 +25,7 @@
       <field name="account_id" ref="401110"/>
       <field name="refund_account_id" ref="401110"/>
       <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_18')])]"/>
+      <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
     <record id="OTAX_18" model="account.tax.template">
@@ -37,6 +38,7 @@
       <field name="account_id" ref="401110"/>
       <field name="refund_account_id" ref="401110"/>
       <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_18')])]"/>
+      <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
     <record id="OTAX_02" model="account.tax.template">
@@ -49,5 +51,6 @@
       <field name="account_id" ref="401110"/>
       <field name="refund_account_id" ref="401110"/>
       <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_02')])]"/>
+      <field name="tax_group_id" ref="tax_group_2"/>
     </record>
 </odoo>

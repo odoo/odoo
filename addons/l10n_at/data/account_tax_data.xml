@@ -150,6 +150,7 @@
             <field name="account_id" ref="chart3500"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_27'), ref('tag_at_12')])]"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
     
         <record id="tax_at_mwst_10" model="account.tax.template">
@@ -162,6 +163,7 @@
             <field name="account_id" ref="chart3500"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_26'), ref('tag_at_13')])]"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         
         <record id="tax_at_vst_20" model="account.tax.template">
@@ -174,6 +176,7 @@
             <field name="account_id" ref="chart2500"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_27'), ref('tag_at_07') ,ref('tag_at_06'), ref('tag_at_03')])]"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         
         <record id="tax_at_vst_10" model="account.tax.template">
@@ -186,6 +189,7 @@
             <field name="account_id" ref="chart2500"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_09'), ref('tag_at_03'), ref('tag_at_08')])]"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         
         <record model="account.tax.template" id="tax_import_20">
@@ -198,6 +202,7 @@
             <field name="refund_account_id" ref="chart2510"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_24')])]"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         
         <record model="account.tax.template" id="tax_import_10">
@@ -210,6 +215,7 @@
             <field name="refund_account_id" ref="chart2510"/>
             <field name="type_tax_use">purchase</field>
              <field name="tag_ids" eval="[(6,0,[ref('tag_at_23')])]"/>
+             <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         
         <record model="account.tax.template" id="tax_eu_20_purchase_ust">
@@ -221,6 +227,7 @@
             <field name="account_id" ref="chart3501"/>
             <field name="refund_account_id" ref="chart3501"/>
             <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
         
         <record model="account.tax.template" id="tax_eu_20_purchase_vst">
@@ -233,6 +240,7 @@
             <field name="refund_account_id" ref="chart2501"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_27'), ref('tag_at_07'), ref('tag_at_06'), ref('tag_at_03')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
 
         <record model="account.tax.template" id="tax_eu_20_purchase">
@@ -245,6 +253,7 @@
             <field name="amount_type">group</field>
             <field name="children_tax_ids" eval="[(6, 0, [ref('tax_eu_20_purchase_ust'), ref('tax_eu_20_purchase_vst')])]"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_07')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
 
         <record model="account.tax.template" id="tax_eu_10_purchase_ust">
@@ -256,6 +265,7 @@
             <field name="account_id" ref="chart3503"/>
             <field name="refund_account_id" ref="chart3503"/>
             <field name="type_tax_use">none</field>
+            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         
         <record model="account.tax.template" id="tax_eu_10_purchase_vst">
@@ -268,6 +278,7 @@
             <field name="refund_account_id" ref="chart2503"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_09'), ref('tag_at_03'), ref('tag_at_08')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
 
         <record model="account.tax.template" id="tax_eu_10_purchase">
@@ -279,6 +290,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="children_tax_ids" eval="[(6, 0, [ref('tax_eu_10_purchase_ust'), ref('tax_eu_10_purchase_vst')])]"/>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_09')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         
         <record model="account.tax.template" id="tax_at_mwst_20_eu">
@@ -291,6 +303,7 @@
             <field name="refund_account_id" ref="chart3510"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_27'), ref('tag_at_12')])]"/>
+            <field name="tax_group_id" ref="tax_group_20"/>
         </record>
 
         <record model="account.tax.template" id="tax_at_mwst_10_eu">
@@ -303,6 +316,7 @@
             <field name="refund_account_id" ref="chart3511"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_26'), ref('tag_at_13')])]"/>
+            <field name="tax_group_id" ref="tax_group_10"/>
         </record>
         
         <record model="account.tax.template" id="tax_eu_sale_at">
@@ -315,6 +329,7 @@
             <field name="refund_account_id" ref="chart3500"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_19')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
 
         <record model="account.tax.template" id="tax_export_at">
@@ -327,6 +342,7 @@
             <field name="refund_account_id" ref="chart3500"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_at_18')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         
         

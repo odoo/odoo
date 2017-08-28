@@ -48,6 +48,7 @@
         <field name="account_id" ref="account_activa_account_2172003"/>
         <field name="refund_account_id" ref="account_activa_account_2172003"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_exento_ventas')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
     </record>
     <record id="tax1sale" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -59,6 +60,7 @@
         <field name="account_id" ref="account_activa_account_2172003"/>
         <field name="refund_account_id" ref="account_activa_account_2172003"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_12_ventas')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_12"/>
     </record>
     <record id="tax2sale" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -70,6 +72,7 @@
         <field name="account_id" ref="account_activa_account_2172003"/>
         <field name="refund_account_id" ref="account_activa_account_2172003"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_8_ventas')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_8"/>
     </record>
     <record id="tax3sale" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -81,6 +84,7 @@
         <field name="account_id" ref="account_activa_account_2172003"/>
         <field name="refund_account_id" ref="account_activa_account_2172003"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_22_ventas')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
     </record>
     <record id="tax0purchase" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -92,6 +96,7 @@
         <field name="account_id" ref="account_activa_account_2172003"/>
         <field name="refund_account_id" ref="account_activa_account_2172003"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_exento_compras')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
     </record>
     <record id="tax1purchase" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -103,6 +108,7 @@
         <field name="account_id" ref="account_activa_account_1151004"/>
         <field name="refund_account_id" ref="account_activa_account_1151004"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_12_compras')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_12"/>
     </record>
     <record id="tax2purchase" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -114,6 +120,7 @@
         <field name="account_id" ref="account_activa_account_1151004"/>
         <field name="refund_account_id" ref="account_activa_account_1151004"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_8_compras')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_8"/>
     </record>
     <record id="tax3purchase" model="account.tax.template">
         <field name="chart_template_id" ref="ve_chart_template_amd"/>
@@ -125,6 +132,7 @@
         <field name="account_id" ref="account_activa_account_1151004"/>
         <field name="refund_account_id" ref="account_activa_account_1151004"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva_22_compras')])]"/>
+        <field name="tax_group_id" ref="tax_group_iva_22"/>
     </record>
 </data>
 </odoo>
