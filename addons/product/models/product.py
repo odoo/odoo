@@ -129,10 +129,10 @@ class ProductProduct(models.Model):
         groups="base.group_user",
         help="Cost used for standard stock valuation in accounting and used as a base price on purchase orders. "
              "Expressed in the default unit of measure of the product.")
-    volume = fields.Float('Volume', help="The volume in m3.")
+    volume = fields.Float('Volume', help="The volume of this product.")
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
-        help="The weight of the contents in Kg, not including any packaging, etc.")
+        help="The weight of the contents, not including any packaging, etc.")
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')

@@ -117,6 +117,19 @@
             <field name="category_id" ref="product_uom_categ_vol"/>
             <field name="factor">1.0</field>
         </record>
+        <record id="product_uom_millilitre" model="product.uom">
+            <field name="name">Milliliter(s)</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">1000</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_cubic_meter" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="name">m³</field>
+            <field name="factor_inv">1000</field>
+            <field name="uom_type">bigger</field>
+            <field name="rounding" eval="0.001"/>
+        </record>
 
         <!--Americanization of units of measure-->
         <record id="product_uom_lb" model="product.uom">
@@ -167,6 +180,9 @@
             <field name="factor_inv" eval="3.78541"/>
             <field name="uom_type">bigger</field>
         </record>
+
+        <function model="ir.config_parameter" name="set_param" eval="('database_weight_uom_id', ref('product.product_uom_kgm'))"/>
+        <function model="ir.config_parameter" name="set_param" eval="('database_volume_uom_id', ref('product.product_uom_cubic_meter'))"/>
 
         <!--
 ... to here, it should be in product_demo but we cant just move it

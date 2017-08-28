@@ -28,7 +28,13 @@ class PriceRule(models.Model):
     sequence = fields.Integer(required=True, default=10)
     carrier_id = fields.Many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade')
 
-    variable = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], required=True, default='weight')
+    variable = fields.Selection([
+        ('weight', 'Weight'),
+        ('volume', 'Volume'),
+        ('wv', 'Weight * Volume'),
+        ('price', 'Price'),
+        ('quantity', 'Quantity')], string='Variable', required=True, default='weight',
+        help="Weights and Volumes are considered to be in the global Unit of Measure setting, set in the General Settings")
     operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
     list_base_price = fields.Float(string='Sale Base Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)

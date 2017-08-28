@@ -11,6 +11,7 @@ class ProductPackaging(models.Model):
     width = fields.Integer('Width')
     length = fields.Integer('Length')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id', readonly=1)
     shipper_package_code = fields.Char('Package Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')
 
@@ -20,3 +21,8 @@ class ProductPackaging(models.Model):
         ('positive_length', 'CHECK(length>=0)', 'Length must be positive'),
         ('positive_max_weight', 'CHECK(max_weight>=0.0)', 'Max Weight must be positive'),
     ]
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_weight_uom_id'))
+        for p in self:
+            p.weight_uom_id = weight_uom_id
