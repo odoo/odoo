@@ -31,7 +31,7 @@ class WebsitePayment(http.Controller):
 
         # Try default one then fallback on first
         acquirer_id = acquirer_id and int(acquirer_id) or \
-            env['ir.values'].get_default('payment.transaction', 'acquirer_id', company_id=user.company_id.id) or \
+            env['ir.default'].get('payment.transaction', 'acquirer_id', company_id=user.company_id.id) or \
             env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])[0].id
 
         acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',

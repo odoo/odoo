@@ -876,7 +876,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
                     res.unlink()
             existing_accounts.unlink()
 
-        ir_values_obj = self.env['ir.values']
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
@@ -903,10 +902,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user
+        IrDefault = self.env['ir.default']
         if self.sale_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], for_all_users=True, company_id=company.id)
+            IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
         if self.purchase_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], for_all_users=True, company_id=company.id)
+            IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)

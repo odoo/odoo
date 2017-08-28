@@ -60,19 +60,11 @@ class TestServerActions(TestServerActionsBase):
 
         # Do: create contextual action
         self.action.create_action()
-
-        # Test: ir_values created
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
-        self.assertEqual(ir_values.value, b'ir.actions.server,%d' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
-        self.assertEqual(ir_values.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
+        self.assertEqual(self.action.binding_model_id.model, 'res.partner')
 
         # Do: remove contextual action
         self.action.unlink_action()
-
-        # Test: ir_values removed
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 0, 'ir_actions_server: unlink_action should remove the ir_values record')
+        self.assertFalse(self.action.binding_model_id)
 
     def test_10_code(self):
         self.action.write({
@@ -184,6 +176,55 @@ class TestServerActions(TestServerActionsBase):
             self.action.write({
                 'child_ids': [(6, 0, [self.action.id])]
             })
+
+
+class TestActionBindings(common.TransactionCase):
+
+    def test_bindings(self):
+        """ check the action bindings on models """
+        Actions = self.env['ir.actions.actions']
+
+        # first make sure there is no bound action
+        bindings = Actions.get_bindings('res.partner')
+        self.assertFalse(bindings['action'])
+        self.assertFalse(bindings['report'])
+
+        # create action bindings, and check the returned bindings
+        action1 = self.env.ref('base.action_attachment')
+        action2 = self.env.ref('base.ir_default_menu_action')
+        action3 = self.env['ir.actions.report'].search([('groups_id', '=', False)], limit=1)
+        action1.binding_model_id = action2.binding_model_id \
+                                 = action3.binding_model_id \
+                                 = self.env['ir.model']._get('res.partner')
+
+        bindings = Actions.get_bindings('res.partner')
+        self.assertItemsEqual(
+            bindings['action'],
+            (action1 + action2).read(),
+            "Wrong action bindings",
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            action3.read(),
+            "Wrong action bindings",
+        )
+
+        # add a group on an action, and check that it is not returned
+        group = self.env.ref('base.group_user')
+        action2.groups_id += group
+        self.env.user.groups_id -= group
+
+        bindings = Actions.get_bindings('res.partner')
+        self.assertItemsEqual(
+            bindings['action'],
+            action1.read(),
+            "Wrong action bindings",
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            action3.read(),
+            "Wrong action bindings",
+        )
 
 
 class TestCustomFields(common.TransactionCase):
