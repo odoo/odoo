@@ -530,7 +530,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
                 return $.when();
             }
             if (args.method === 'read' && checkReadArgs) {
-                assert.deepEqual(args.args[1], ['activity_ids', 'message_ids'],
+                assert.deepEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name'],
                     "should only read the mail fields");
             }
             return this._super.apply(this, arguments);
@@ -686,11 +686,11 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
                 if (nbReads === 1) { // first read
                     assert.strictEqual(args.args[1].length, 4, 'should read all fiels the first time');
                 } else if (nbReads === 2) { // second read: after the unlink
-                    assert.ok(_.isEqual(args.args[1], ['activity_ids']),
-                        'should only read the activities after an unlink');
+                    assert.ok(_.isEqual(args.args[1], ['activity_ids', 'display_name']),
+                        'should only read the activities (+ display_name) after an unlink');
                 } else { // third read: after marking an activity done
-                    assert.ok(_.isEqual(args.args[1], ['activity_ids', 'message_ids']),
-                        'should read the activities and messages after marking an activity done');
+                    assert.ok(_.isEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name']),
+                        'should read the activities and messages (+ display_name) after marking an activity done');
                 }
             }
             return this._super.apply(this, arguments);
@@ -809,8 +809,8 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
                     assert.strictEqual(args.args[1].length, 3,
                         'should read "foo", "message_follower_ids" and "display_name"');
                 } else { // three next reads: only read 'message_follower_ids' field
-                    assert.ok(_.isEqual(args.args[1], ['message_follower_ids']),
-                        'should only read "message_follower_ids"');
+                    assert.deepEqual(args.args[1], ['message_follower_ids', 'display_name'],
+                        'should only read "message_follower_ids" and "display_name"');
                 }
             }
             return this._super.apply(this, arguments);
