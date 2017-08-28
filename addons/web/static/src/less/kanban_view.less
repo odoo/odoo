@@ -7,6 +7,7 @@
 @o-kanban-image-width: 64px;
 @o-kanban-inside-vgutter: 8px;
 @o-kanban-inside-hgutter: 8px;
+@o-kanban-color-border-width: 3px;
 @o-kanban-inside-hgutter-mobile: @odoo-horizontal-padding;
 @o-kanban-inner-hmargin: 5px;
 @o-kanban-progressbar-height: 20px;
@@ -35,9 +36,8 @@
 }
 .o-kanban-record-color(@size) when (@size > 0) {
     .o-kanban-record-color(@size - 1);
-    .oe_kanban_color_@{size} {
-        box-shadow: inset 2px 0 0 0 ~"@{odoo-color-@{size}}";
-        border-left-color: ~"@{odoo-color-@{size}}";
+    .oe_kanban_color_@{size}::after {
+        background-color: ~"@{odoo-color-@{size}}";
     }
 }
 .o-kanban-slim-col() {
@@ -107,17 +107,21 @@
 
         > a {
             display: block;
-            height: 15px;
-            border-width: 0 0 0 20px;
-            border-style: solid;
+
+            &::after {
+                content: "";
+                display: block;
+                width: 20px;
+                height: 15px;
+            }
         }
 
         // No Color
         &:first-child > a {
             position: relative;
-            &:before {
+            &::before {
                 content: "";
-                .o-position-absolute(-2px, @left: -10px);
+                .o-position-absolute(-2px, @left: 10px);
                 display: block;
                 width: 1px;
                 height: 20px;
@@ -167,6 +171,13 @@
         margin: 0 @o-kanban-record-margin -1px;
 
         // ------- Kanban Record, v11 Layout -------
+        // Records colours
+        &::after {
+            content: "";
+            .o-position-absolute(0, auto, 0, 0);
+            width: @o-kanban-color-border-width;
+        }
+
         // Inner Sections
         .o_kanban_record_top, .o_kanban_record_body  {
             margin-bottom: @o-kanban-inner-hmargin;
@@ -645,9 +656,6 @@
     }
 
     // Records colours
-    .oe_kanban_color_0 {
-        border-left: 1px solid @gray-lighter-dark;
-    }
     .o-kanban-record-color(12);
 }
 
