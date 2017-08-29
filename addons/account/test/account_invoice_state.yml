@@ -42,10 +42,10 @@
     assert (len(moves) > 0), 'You should have multiple moves'
     moves[0].journal_id.write({'update_posted': True})
 -
-  In order to check the "Cancel Selected Invoices" wizard in odoo I cancelled this open invoice using this wizard
+  I cancelled this open invoice using the button on invoice
 -
-  !record {model: account.invoice.cancel, id: account_invoice_cancel_0}:
-    {}
+  !python {model: account.invoice, id: account_invoice_state}:
+    self.action_invoice_cancel()
 -
   I check that customer invoice is in the cancel state
 -
