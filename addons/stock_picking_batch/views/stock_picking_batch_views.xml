@@ -97,7 +97,7 @@
         </field>
     </record>
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
-        <field name="name">Batch Picking</field>
+        <field name="name">Batch Pickings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking.batch</field>
         <field name="view_type">form</field>
@@ -115,7 +115,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.stock_picking_menu_product" sequence="2"/>
+    <menuitem action="stock_picking_batch_action" id="stock_picking_batch_menu" parent="stock.stock_picking_menu_product" sequence="10"/>
 
     <record id="vpicktree_inherit_stock_picking_batch" model="ir.ui.view">
         <field name="name">stock.picking.tree</field>
