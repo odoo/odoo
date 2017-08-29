@@ -117,7 +117,7 @@ class MailController(http.Controller):
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
         res_ids = follower_recs.mapped('res_id')
-        request.env[res_model].browse(res_ids).check_access_rule("write")
+        request.env[res_model].browse(res_ids).check_access_rule("read")
         for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id

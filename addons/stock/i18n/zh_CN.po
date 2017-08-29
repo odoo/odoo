@@ -6,13 +6,14 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
+# Yaorong Li <55yaorong.li@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-22 14:03+0000\n"
 "PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Yuan Xulei <hi@yxl.name>, 2017\n"
+"Last-Translator: Yaorong Li <55yaorong.li@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -684,7 +685,7 @@ msgstr "全部"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_quant_ids
 msgid "All Bulk Content"
-msgstr "所有包含内容"
+msgstr "所有散装内容"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -723,7 +724,7 @@ msgstr "仓库中的所有产品都属于公司"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_returned_move_ids
 msgid "All returned moves"
-msgstr "所有退货移动"
+msgstr "全部退回移动"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:221
@@ -992,7 +993,7 @@ msgstr "在送货之前将货物送到出货位置（分拣+送货）"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Bulk Content"
-msgstr "批量内容"
+msgstr "散装内容"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -1140,7 +1141,7 @@ msgstr "检查在拣货打包作业的存在"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
 msgid "Check this box to allow using this location as a return location."
-msgstr "勾选允许这个位置作为默认的退货位置"
+msgstr "勾选允许这个位置作为默认的退回位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_scrap_location
@@ -1779,7 +1780,7 @@ msgstr "所有库存作业的默认计量单位"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr "要遵循的默认入库路线"
+msgstr "要遵循的默认入向路线"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
@@ -1895,7 +1896,7 @@ msgstr "交货类型"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr "取决于安装的模块，它允许在产品定义路线：是否购买，制造，MTO/MTS，等等..."
+msgstr "取决于安装的模块，它允许在产品定义路线：购买，制造，MTO/MTS，等等..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2222,6 +2223,8 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"对于Odoo团队,<br/>\n"
+"Fabien Pinckaers, 创始人"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -2903,7 +2906,7 @@ msgstr "已盘点所有者"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_package_id
 msgid "Inventoried Pack"
-msgstr "盘点包裹"
+msgstr "已盘点包裹"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_product_id
@@ -2957,7 +2960,7 @@ msgstr "库存管理"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_date
 msgid "Inventory Date"
-msgstr "盘点时间"
+msgstr "盘点日期"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3042,7 +3045,7 @@ msgstr "盘点"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
 msgid "Is a Return Location?"
-msgstr "是一个退货位置？"
+msgstr "是一个退回位置？"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
@@ -3235,7 +3238,7 @@ msgstr "提前类型"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr "如果这个路线在所有的公司内用到那就留空"
+msgstr "如果这个路线在所有的公司间共享, 那么此字段留空"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
@@ -3335,7 +3338,7 @@ msgstr "位置类型"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的库位"
+msgstr "系统用于存储产成品的位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3719,7 +3722,7 @@ msgstr "移动日期: 安排的日期直到移动完成的日期，这日期是�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_origin_returned_move_id
 msgid "Move that created the return move"
-msgstr "创建退货移库的移库"
+msgstr "创建退回移库的移库"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_move_dest_id
@@ -3858,7 +3861,7 @@ msgstr "不允许负数"
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
-msgstr "没有产品被退货（只有完成状态和未完全退货的 行能被退货）！"
+msgstr "没有产品被退回（只有完成状态和未完全退回的 行能被退回）！"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:182
@@ -4089,7 +4092,7 @@ msgstr "可选的定位细节，仅供参考"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr "选项: 所有的退货移动来自此移动"
+msgstr "选项: 所有的退回移动来自此移动"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_dest_id
@@ -4131,7 +4134,7 @@ msgstr "原始"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_origin_returned_move_id
 msgid "Origin return move"
-msgstr "原始退货移动"
+msgstr "原始退回移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_orig_ids
@@ -4147,7 +4150,7 @@ msgstr "源库位"
 #: code:addons/stock/models/stock_quant.py:222
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
-msgstr "否则确认仓库/所有者正确"
+msgstr "否则确认库存/所有者正确"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
@@ -4492,7 +4495,7 @@ msgstr "拣货类型决定了展示拣货在视图、报告...等中的展示方
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Picking Type for Returns"
-msgstr "退货的拣货类型"
+msgstr "退回的拣货类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
@@ -5191,24 +5194,24 @@ msgstr "下架策略 %s 没有实现."
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "订货规则"
+msgstr "重订货规则"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "订货规则搜索"
+msgstr "重订货规则搜索"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_max_qty
 msgid "Reordering max qty"
-msgstr "订货最大数量"
+msgstr "重订货最大数量"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_reordering_min_qty
 msgid "Reordering min qty"
-msgstr "订货最小数量"
+msgstr "重订货最小数量"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5284,17 +5287,17 @@ msgstr "补充仓库"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr "退货"
+msgstr "退回"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_location_id
 msgid "Return Location"
-msgstr "退货位置"
+msgstr "退回位置"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货拣货"
+msgstr "退回作业"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:161
@@ -5369,7 +5372,7 @@ msgstr "规则"
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Run Reordering Rules"
-msgstr "运行订货规则"
+msgstr "运行重订货规则"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_proc_schedulers
@@ -5481,7 +5484,7 @@ msgstr "手动选择产品"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr "选择这条路线可以被选择的位置"
+msgstr "选择这条路线可以被选择的地方"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
@@ -5751,7 +5754,7 @@ msgstr "库存"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "Stock Inventory"
-msgstr "仓库盘存"
+msgstr "库存盘点"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -5815,12 +5818,12 @@ msgstr "在手库存"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Stock Operation"
-msgstr "仓库作业"
+msgstr "库存作业"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 msgid "Stock Operations"
-msgstr "仓库作业"
+msgstr "库存作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
@@ -6173,7 +6176,7 @@ msgstr "拣货动作的源位置必须相同的"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
 msgid "The stock operation where the packing has been made"
-msgstr "打包作业执行的仓库作业"
+msgstr "打包作业执行的库存作业"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
@@ -6424,7 +6427,7 @@ msgid ""
 msgstr ""
 "为了更好的管理库存，你可以为你的仓库创建\n"
 "                            叫做 <strong>位置</strong>的分支 (例如:\n"
-"                            发货区, 退货区, 货架 34等等).\n"
+"                            发货区, 退回区, 货架 34等等).\n"
 "                            原则是涉及盘点的区域都要创建位置."
 
 #. module: stock
@@ -6725,7 +6728,7 @@ msgstr "验证"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Validate Inventory"
-msgstr "确认盘点"
+msgstr "验证盘点"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -6950,7 +6953,7 @@ msgid ""
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
 msgstr ""
-"当仓库中这条路径被勾选, 那么这个仓库中所有的产品都会被设为默认的这条路径 但是这条规则能够被在产品或者产品种类或者补货拉规则中的路径设置覆盖"
+"当仓库中这条路线被勾选, 那么这个仓库中所有的产品都会被设为默认的这条路线但是这条规则能够被在产品或者产品种类或者补货拉规则中的路线设置覆盖"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_selectable
@@ -7297,7 +7300,7 @@ msgstr "取消(_C)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "a stockable Product"
-msgstr "库存类产品"
+msgstr "可库存产品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
