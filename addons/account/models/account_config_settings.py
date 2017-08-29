@@ -143,7 +143,7 @@ class AccountConfigSettings(models.TransientModel):
     def create(self, values):
         # Optimisation purpose, saving a res_config even without changing any values will trigger the write of all
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
-        # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
+        # of account_move_line related field company_currency_id which can be slow depending on the number of entries
         # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
         # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
         # code the missing characters to complete the desired number of digit, leading to a sql_constraint.

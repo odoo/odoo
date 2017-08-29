@@ -687,7 +687,7 @@
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
 
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables" sequence="1"/>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables_documents" sequence="1"/>
 
         <record id="action_invoice_out_refund" model="ir.actions.act_window">
             <field name="name">Customer Credit Notes</field>
@@ -724,7 +724,7 @@
 
         <menuitem action="action_invoice_out_refund"
                   id="menu_action_invoice_out_refund"
-                  parent="menu_finance_receivables"
+                  parent="menu_finance_receivables_documents"
                   sequence="1"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
@@ -760,7 +760,7 @@
             <field name="act_window_id" ref="action_invoice_tree2"/>
         </record>
 
-        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables" sequence="1"/>
+        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables_documents" sequence="1"/>
 
 
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
@@ -795,7 +795,7 @@
 
         <menuitem action="action_invoice_in_refund"
                   id="menu_action_invoice_in_refund"
-                  parent="menu_finance_payables"
+                  parent="menu_finance_payables_documents"
                   sequence="1"/>
 
         <act_window
