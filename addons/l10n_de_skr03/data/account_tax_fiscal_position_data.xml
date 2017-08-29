@@ -195,7 +195,7 @@
             <field name="refund_account_id" ref="account_1778"/>
             <field name="account_id" ref="account_1778"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_09'), ref('l10n_de.tag_de_44')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_09'), ref('l10n_de.tag_de_44'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
             <field name="tax_group_id" ref="tax_group_19"/>
         </record>
         <record id="tax_ust_eu_skr03" model="account.tax.template">
@@ -207,8 +207,28 @@
             <field name="refund_account_id" ref="account_1777"/>
             <field name="account_id" ref="account_1777"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_45'), ref('l10n_de.tag_de_10')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_45'), ref('l10n_de.tag_de_10', ref('l10n_de.tag_de_intracom_community_supplies'))])]"/>
             <field name="tax_group_id" ref="tax_group_7"/>
+        </record>
+        <record id="tax_free_eu_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">0% Steuerfreie Leistung EU</field>
+            <field name="description">0% USt EU</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_21'), ref('l10n_de.tag_de_intracom_community_supplies')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+        </record>
+        <record id="tax_free_third_country_skr03" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_de_chart_template"/>
+            <field name="name">0% Steuerfreie Leistung Drittland</field>
+            <field name="description">0% USt Drittland</field>
+            <field name="amount_type">percent</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('l10n_de.tag_de_45')])]"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
         </record>
 
 
