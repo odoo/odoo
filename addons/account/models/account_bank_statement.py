@@ -379,7 +379,7 @@ class AccountBankStatementLine(models.Model):
     def _check_amount(self):
         # Allow to enter bank statement line with an amount of 0,
         # so that user can enter/import the exact bank statement they have received from their bank in Odoo
-        if self.journal_id.type != 'bank' and not self.currency_id.is_zero(self.amount):
+        if self.journal_id.type != 'bank' and self.currency_id.is_zero(self.amount):
             raise ValidationError(_('A Cash transaction can\'t have a 0 amount.'))
 
     @api.one
