@@ -23,6 +23,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
+        'focusout .statement_name_edition>input': '_onValidateName',
+        'keyup .statement_name_edition>input' : '_inputKeyUP'
     },
     /**
      * @override
@@ -54,7 +56,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 self.name = new basic_fields.FieldChar(self,
                     'name', self.model.get(self.handleNameRecord),
                     {mode: 'edit'});
-
                 self.name.appendTo(self.$('.statement_name_edition')).then(function () {
                     self.name.$el.addClass('o_required_modifier');
                 });
@@ -138,6 +139,12 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         this.$('h1.statement_name').text(state.title);
     },
 
+    // if enter key is pressed after changing the title
+    _inputKeyUP: function(event) {
+        if(event.which === $.ui.keyCode.ENTER) {
+            this._onValidateName();
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -173,6 +180,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onClickStatementName: function () {
         this.$('.statement_name, .statement_name_edition').toggle();
+        this.$('.statement_name_edition input').select();
     },
     /**
      * @private
