@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 import os
 import sys
@@ -8,7 +9,7 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
-from odoo.tools import convert_file, exception_to_unicode, pycompat
+from odoo.tools import convert_file, exception_to_unicode
 from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
@@ -63,8 +64,8 @@ class IrModule(models.Model):
             for root, dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
-                    with open(full_path, 'r') as fp:
-                        data = fp.read().encode('base64')
+                    with open(full_path, 'rb') as fp:
+                        data = base64.b64encode(fp.read())
                     url_path = '/%s%s' % (module, full_path.split(path)[1].replace(os.path.sep, '/'))
                     url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
@@ -118,6 +119,6 @@ class IrModule(models.Model):
                 finally:
                     addons.module.ad_paths.remove(module_dir)
         r = ["Successfully imported module '%s'" % mod for mod in success]
-        for mod, error in pycompat.items(errors):
+        for mod, error in errors.items():
             r.append("Error while importing module '%s': %r" % (mod, error))
         return '\n'.join(r), module_names

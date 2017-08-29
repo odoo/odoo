@@ -12,8 +12,6 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
-
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +21,7 @@ def dict_keys_startswith(dictionary, string):
         .. note::
             This function uses dictionary comprehensions (Python >= 2.7)
     """
-    return {k: v for k, v in pycompat.items(dictionary) if k.startswith(string)}
+    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyStage(models.Model):
@@ -237,7 +235,7 @@ class Survey(models.Model):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
-            result_summary = {'answers': list(pycompat.values(answers)), 'comments': comments}
+            result_summary = {'answers': list(answers.values()), 'comments': comments}
 
         # Calculate and return statistics for matrix
         if question.type == 'matrix':
@@ -637,7 +635,7 @@ class SurveyQuestion(models.Model):
             if self.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # Preventing answers with blank value
-            if all(not answer.strip() for answer in pycompat.values(answer_candidates)) and answer_candidates:
+            if all(not answer.strip() for answer in answer_candidates.values()) and answer_candidates:
                 errors.update({answer_tag: self.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and self.comment_count_as_answer and (not comment_flag or not comment_answer):

@@ -9,7 +9,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 
 from odoo.addons import decimal_precision as dp
@@ -308,7 +308,7 @@ class SaleOrder(models.Model):
             query = """UPDATE %(table_name)s
                           SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
                         WHERE %(column_name)s IS NULL
-                    """ % {'table_name': self._name, 'column_name': column_name}
+                    """ % {'table_name': self._table, 'column_name': column_name}
             self.env.cr.execute(query)
 
     def _generate_access_token(self):
@@ -404,7 +404,7 @@ class SaleOrder(models.Model):
         if not invoices:
             raise UserError(_('There is no invoicable line.'))
 
-        for invoice in pycompat.values(invoices):
+        for invoice in invoices.values():
             if not invoice.invoice_line_ids:
                 raise UserError(_('There is no invoicable line.'))
             # If invoice is negative, do a refund invoice instead
@@ -421,7 +421,7 @@ class SaleOrder(models.Model):
             invoice.message_post_with_view('mail.message_origin_link',
                 values={'self': invoice, 'origin': references[invoice]},
                 subtype_id=self.env.ref('mail.mt_note').id)
-        return [inv.id for inv in pycompat.values(invoices)]
+        return [inv.id for inv in invoices.values()]
 
     @api.multi
     def action_draft(self):
@@ -551,18 +551,19 @@ class SaleOrder(models.Model):
             base_tax = 0
             for tax in line.tax_id:
                 group = tax.tax_group_id
-                res.setdefault(group, 0.0)
+                res.setdefault(group, {'amount': 0.0, 'base': 0.0})
                 # FORWARD-PORT UP TO SAAS-17
                 price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
                 taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
                                          product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
-                    res[group] += t['amount']
+                    res[group]['amount'] += t['amount']
+                    res[group]['base'] += t['base']
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
-        res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
-        res = [(l[0].name, l[1]) for l in res]
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
+        res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
         return res
 
     @api.multi

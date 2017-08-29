@@ -181,7 +181,6 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
-                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div class="o_kanban_image">
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
@@ -196,6 +195,7 @@
                             <strong>
                                 <field name="name"/>
                             </strong>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <ul>
                                 <li id="last_login"/>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
@@ -292,15 +292,7 @@
             <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-
-        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">hr.employee</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
         </record>
 
         <!-- Employee Category -->
@@ -524,8 +516,8 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div>
-                                <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
                                         <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
@@ -534,7 +526,7 @@
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content o_visible">
+                                <div class="container o_kanban_card_content">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
@@ -542,7 +534,7 @@
                                         <div class="col-xs-6 o_kanban_primary_right">
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                </div><div class="container o_kanban_card_manage_pane">
                                     <div class="row">
                                         <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
                                             <div class="o_kanban_card_manage_title">

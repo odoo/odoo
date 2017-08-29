@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 import babel.dates
 import collections
@@ -33,7 +34,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
         :param with_date: if a value is passed to this param it will return dates based on value of withdate + calendar_id
         :return: real event id
     """
-    if calendar_id and isinstance(calendar_id, (basestring)):
+    if calendar_id and isinstance(calendar_id, pycompat.string_types):
         res = [bit for bit in calendar_id.split('-') if bit]
         if len(res) == 2:
             real_id = res[0]
@@ -47,7 +48,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (basestring, pycompat.integer_types)):
+    if isinstance(ids, (pycompat.string_types, pycompat.integer_types)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -173,6 +174,7 @@ class Attendee(models.Model):
         mails_to_send = self.env['mail.mail']
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
+                # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
                 mail_id = invitation_template.send_mail(attendee.id)
 
@@ -181,7 +183,7 @@ class Attendee(models.Model):
                     vals['attachment_ids'] = [(0, 0, {'name': 'invitation.ics',
                                                       'mimetype': 'text/calendar',
                                                       'datas_fname': 'invitation.ics',
-                                                      'datas': str(ics_file).encode('base64')})]
+                                                      'datas': base64.b64encode(ics_file)})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
                 vals['res_id'] = False
                 current_mail = self.env['mail.mail'].browse(mail_id)
@@ -468,7 +470,7 @@ class Alarm(models.Model):
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
-    interval = fields.Selection(list(pycompat.items(_interval_selection)), 'Unit', required=True, default='hours')
+    interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
     @api.onchange('duration', 'interval')
@@ -630,8 +632,8 @@ class Meeting(models.Model):
             }
 
         # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
-        format_date = lang_params.get("date_format", '%B-%d-%Y').encode('utf-8')
-        format_time = lang_params.get("time_format", '%I-%M %p').encode('utf-8')
+        format_date = pycompat.to_native(lang_params.get("date_format", '%B-%d-%Y'))
+        format_time = pycompat.to_native(lang_params.get("time_format", '%I-%M %p'))
         return (format_date, format_time)
 
     @api.model
@@ -917,11 +919,11 @@ class Meeting(models.Model):
                     elif interval == 'minutes':
                         delta = timedelta(minutes=duration)
                     trigger.value = delta
-                    valarm.add('DESCRIPTION').value = alarm.name or 'Odoo'
+                    valarm.add('DESCRIPTION').value = alarm.name or u'Odoo'
             for attendee in meeting.attendee_ids:
                 attendee_add = event.add('attendee')
-                attendee_add.value = 'MAILTO:' + (attendee.email or '')
-            result[meeting.id] = cal.serialize()
+                attendee_add.value = u'MAILTO:' + (attendee.email or u'')
+            result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
 
@@ -1058,7 +1060,7 @@ class Meeting(models.Model):
                 pile.reverse()
                 new_pile = []
                 for item in pile:
-                    if not isinstance(item, basestring):
+                    if not isinstance(item, pycompat.string_types):
                         res = item
                     elif str(item) == str('&'):
                         first = new_pile.pop()
@@ -1207,7 +1209,7 @@ class Meeting(models.Model):
 
         if interval == 'day':
             # Day number (1-31)
-            result = unicode(date.day)
+            result = pycompat.text_type(date.day)
 
         elif interval == 'month':
             # Localized month name and year
@@ -1219,6 +1221,7 @@ class Meeting(models.Model):
 
         elif interval == 'time':
             # Localized time
+            # FIXME: formats are specifically encoded to bytes, maybe use babel?
             dummy, format_time = self._get_date_formats()
             result = tools.ustr(date.strftime(format_time + " %Z"))
 
@@ -1289,7 +1292,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_unread(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(pycompat.values(id_map)))
+        real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_unread()
         for event in self:
             if event.id == id_map[event.id]:
@@ -1301,7 +1304,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_needaction(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(pycompat.values(id_map)))
+        real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_needaction()
         for event in self:
             if event.id == id_map[event.id]:
@@ -1314,7 +1317,7 @@ class Meeting(models.Model):
     @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         thread_id = self.id
-        if isinstance(self.id, basestring):
+        if isinstance(self.id, pycompat.string_types):
             thread_id = get_real_ids(self.id)
         if self.env.context.get('default_date'):
             context = dict(self.env.context)
@@ -1350,7 +1353,7 @@ class Meeting(models.Model):
         for arg in args:
             if arg[0] == 'id':
                 for n, calendar_id in enumerate(arg[2]):
-                    if isinstance(calendar_id, basestring):
+                    if isinstance(calendar_id, pycompat.string_types):
                         arg[2][n] = calendar_id.split('-')[0]
         return super(Meeting, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
@@ -1388,7 +1391,7 @@ class Meeting(models.Model):
             # set end_date for calendar searching
             if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
                 for real_meeting in real_meetings:
-                    if real_meeting.recurrency and real_meeting.end_type in ('count', unicode('count')):
+                    if real_meeting.recurrency and real_meeting.end_type == u'count':
                         final_date = real_meeting._get_recurrency_end_date()
                         super(Meeting, real_meeting).write({'final_date': final_date})
 
@@ -1472,7 +1475,7 @@ class Meeting(models.Model):
         for calendar_id, real_id in select:
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (basestring, pycompat.integer_types)) and len(ls) >= 2:
+            if not isinstance(ls, (pycompat.string_types, pycompat.integer_types)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 

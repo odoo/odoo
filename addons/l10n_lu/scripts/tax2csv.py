@@ -1,17 +1,7 @@
 from collections import OrderedDict
-import csv
 
 import xlrd
 from odoo.tools import pycompat
-
-def _e(s):
-    if type(s) is unicode:
-        return s.encode('utf8')
-    elif s is None:
-        return ''
-    else:
-        return str(s)
-
 
 def _is_true(s):
     return s not in ('F', 'False', 0, '', None, False)
@@ -56,9 +46,9 @@ class LuxTaxGenerator:
             yield OrderedDict(pycompat.izip(keys, row))
 
     def tax_codes_to_csv(self):
-        writer = csv.writer(open('account.tax.code.template-%s.csv' %
+        writer = pycompat.csv_writer(open('account.tax.code.template-%s.csv' %
                                  self.suffix, 'wb'))
-        tax_codes_iterator = self.iter_tax_codes
+        tax_codes_iterator = self.iter_tax_codes()
         keys = next(tax_codes_iterator)
         writer.writerow(keys)
 
@@ -69,7 +59,7 @@ class LuxTaxGenerator:
             if tax_code in tax_codes:
                 raise RuntimeError('duplicate tax code %s' % tax_code)
             tax_codes[tax_code] = row['id']
-            writer.writerow(pycompat.imap(_e, pycompat.values(row)))
+            writer.writerow([pycompat.to_text(v) for v in row.values()])
 
         # read taxes and add leaf tax codes
         new_tax_codes = {}  # id: parent_code
@@ -145,17 +135,19 @@ class LuxTaxGenerator:
 
         for tax_code_id in sorted(new_tax_codes):
             name, parent_code = new_tax_codes[tax_code_id]
-            writer.writerow((tax_code_id,
-                             'lu_tct_m' + parent_code,
-                             tax_code_id.replace('lu_tax_code_template_', ''),
-                             '1',
-                             '',
-                             _e(name),
-                             ''))
+            writer.writerow([
+                tax_code_id,
+                u'lu_tct_m' + parent_code,
+                tax_code_id.replace('lu_tax_code_template_', u''),
+                u'1',
+                u'',
+                pycompat.to_text(name),
+                u''
+            ])
 
     def taxes_to_csv(self):
-        writer = csv.writer(open('account.tax.template-%s.csv' %
-                                 self.suffix, 'wb'))
+        writer = pycompat.csv_writer(open('account.tax.template-%s.csv' %
+                                     self.suffix, 'wb'))
         taxes_iterator = self.iter_taxes()
         keys = next(taxes_iterator)
         writer.writerow(keys[3:] + ['sequence'])
@@ -168,17 +160,20 @@ class LuxTaxGenerator:
                 cur_seq = seq + 1000
             else:
                 cur_seq = seq
-            writer.writerow(list(pycompat.imap(_e, list(pycompat.values(row))[3:])) + [cur_seq])
+            writer.writerow([
+                pycompat.to_text(v)
+                for v in list(row.values())[3:]
+            ] + [cur_seq])
 
     def fiscal_pos_map_to_csv(self):
-        writer = csv.writer(open('account.fiscal.'
-                                 'position.tax.template-%s.csv' %
-                                 self.suffix, 'wb'))
+        writer = pycompat.csv_writer(open('account.fiscal.'
+                                     'position.tax.template-%s.csv' %
+                                     self.suffix, 'wb'))
         fiscal_pos_map_iterator = self.iter_fiscal_pos_map()
         keys = next(fiscal_pos_map_iterator)
         writer.writerow(keys)
         for row in fiscal_pos_map_iterator:
-            writer.writerow(pycompat.imap(_e, pycompat.values(row)))
+            writer.writerow([pycompat.to_text(s) for s in row.values()])
 
 
 if __name__ == '__main__':

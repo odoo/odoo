@@ -38,7 +38,7 @@
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='button_cancel']" position="after">
+                <xpath expr="//button[@name='check_confirm_bank']" position="after">
                     <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
                 </xpath>
             </field>

@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_utils, pycompat
+from odoo.tools import float_utils
 
 
 class Inventory(models.Model):
@@ -202,6 +202,19 @@ class Inventory(models.Model):
     prepare_inventory = action_start
 
     @api.multi
+    def action_inventory_line_tree(self):
+        action = self.env.ref('stock.action_inventory_line_tree').read()[0]
+        action['context'] = {
+            'default_location_id': self.location_id.id,
+            'default_product_id': self.product_id.id,
+            'default_prod_lot_id': self.lot_id.id,
+            'default_package_id': self.package_id.id,
+            'default_partner_id': self.partner_id.id,
+            'default_inventory_id': self.id,
+        }
+        return action
+
+    @api.multi
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
@@ -251,7 +264,7 @@ class Inventory(models.Model):
 
         for product_data in self.env.cr.dictfetchall():
             # replace the None the dictionary by False, because falsy values are tested later on
-            for void_field in [item[0] for item in pycompat.items(product_data) if item[1] is None]:
+            for void_field in [item[0] for item in product_data.items() if item[1] is None]:
                 product_data[void_field] = False
             product_data['theoretical_qty'] = product_data['product_qty']
             if product_data['product_id']:
@@ -334,6 +347,8 @@ class InventoryLine(models.Model):
     theoretical_qty = fields.Float(
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
+    inventory_location_id = fields.Many2one(
+        'stock.location', 'Location', related='inventory_id.location_id', related_sudo=False)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')

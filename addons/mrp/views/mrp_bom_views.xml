@@ -239,12 +239,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_line_tree_view"/>
             <field name="view_type">tree</field>
-        </record>
-        <record id="ir_BOM_structure" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'mrp.bom'" name="model"/>
-            <field name="name">Bill of Materials Structure</field>
-            <field eval="'ir.actions.act_window,'+str(mrp_bom_line_action_from_bom)" name="value"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
         </record>
 
         <record id="template_open_bom" model="ir.actions.act_window">

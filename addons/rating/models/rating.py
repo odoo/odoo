@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import uuid
 
 from odoo import api, fields, models, tools, _
 
 from odoo.modules.module import get_resource_path
-from odoo.tools import pycompat
 
 RATING_LIMIT_SATISFIED = 7
 RATING_LIMIT_OK = 3
@@ -70,7 +69,7 @@ class Rating(models.Model):
         for rating in self:
             try:
                 image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
-                rating.rating_image = open(image_path, 'rb').read().encode('base64')
+                rating.rating_image = base64.b64decode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
 
@@ -275,7 +274,7 @@ class RatingMixin(models.AbstractModel):
         values.update((d['rating'], d['rating_count']) for d in data)
         # add other stats
         if add_stats:
-            rating_number = sum(pycompat.values(values))
+            rating_number = sum(values.values())
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,

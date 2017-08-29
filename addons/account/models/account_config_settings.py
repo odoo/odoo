@@ -38,6 +38,7 @@ class AccountConfigSettings(models.TransientModel):
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
+    module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
@@ -61,7 +62,7 @@ class AccountConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
 
     @api.model
@@ -82,11 +83,9 @@ class AccountConfigSettings(models.TransientModel):
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ Set the product taxes if they have changed """
-        ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        IrDefault = self.env['ir.default'].sudo()
+        IrDefault.set('product.template', "taxes_id", self.default_sale_tax_id.ids, company_id=self.company_id.id)
+        IrDefault.set('product.template', "supplier_taxes_id", self.default_purchase_tax_id.ids, company_id=self.company_id.id)
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             wizard = self.env['wizard.multi.charts.accounts'].create({
@@ -126,14 +125,14 @@ class AccountConfigSettings(models.TransientModel):
         if self.module_account_yodlee:
             self.module_account_plaid = True
 
-    @api.onchange('use_cash_basis')
-    def _onchange_use_cash_basis(self):
+    @api.onchange('tax_exigibility')
+    def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.user.company_id.id), ('use_cash_basis', '=', True)
+            ('company_id', '=', self.env.user.company_id.id), ('tax_exigibility', '=', 'on_payment')
         ], limit=1)
-        if not self.use_cash_basis and tax:
-            self.use_cash_basis = True
+        if not self.tax_exigibility and tax:
+            self.tax_exigibility = True
             res['warning'] = {
                 'title': _('Error!'),
                 'message': _('You cannot disable this setting because some of your taxes are cash basis. '

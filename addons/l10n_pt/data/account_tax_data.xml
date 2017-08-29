@@ -44,6 +44,7 @@
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_iva23')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_23"/>
         </record>
 
         <record id="iva13" model="account.tax.template">
@@ -53,6 +54,7 @@
             <field name="amount">13</field>
             <field name="amount_type">percent</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_iva13')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_13"/>
         </record>
 
         <record id="iva6" model="account.tax.template">
@@ -62,6 +64,7 @@
             <field name="amount">6</field>
             <field name="amount_type">percent</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_iva6')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_6"/>
         </record>
 
         <record id="iva0" model="account.tax.template">
@@ -71,6 +74,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_iva0')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
         <record id="compiva23" model="account.tax.template">
@@ -81,6 +85,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_compiva23')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_23"/>
         </record>
 
         <record id="compiva13" model="account.tax.template">
@@ -91,6 +96,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_compiva13')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_13"/>
         </record>
 
         <record id="compiva6" model="account.tax.template">
@@ -101,6 +107,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_compiva6')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_6"/>
         </record>
 
         <record id="compiva0" model="account.tax.template">
@@ -111,6 +118,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_compiva0')])]"/>
+            <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
 
     </data>

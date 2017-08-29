@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import random
 import re
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, modules, tools
-from odoo.tools import pycompat
-
 
 class ImLivechatChannel(models.Model):
     """ Livechat Channel
@@ -21,7 +19,7 @@ class ImLivechatChannel(models.Model):
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     def _default_user_ids(self):
         return [(6, 0, [self._uid])]
@@ -96,7 +94,7 @@ class ImLivechatChannel(models.Model):
         for record in self:
             dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
             repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
-            total = sum(pycompat.values(repartition))
+            total = sum(repartition.values())
             if total > 0:
                 happy = repartition['great']
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0

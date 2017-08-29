@@ -313,9 +313,11 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
+        logger = _logger.getChild('phantomjs')
         t0 = datetime.now()
         td = timedelta(seconds=timeout)
         buf = bytearray()
+        pid = phantom.stdout.fileno()
         while True:
             # timeout
             self.assertLess(datetime.now() - t0, td,
@@ -323,7 +325,7 @@ class HttpCase(TransactionCase):
 
             # read a byte
             try:
-                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
+                ready, _, _ = select.select([pid], [], [], 0.5)
             except select.error as e:
                 # In Python 2, select.error has no relation to IOError or
                 # OSError, and no errno/strerror/filename, only a pair of
@@ -333,39 +335,35 @@ class HttpCase(TransactionCase):
                     continue
                 raise
 
-            if ready:
-                s = phantom.stdout.read(1)
-                if not s:
-                    break
-                buf.append(s)
+            if not ready:
+                continue
+
+            s = os.read(pid, 4096)
+            if not s:
+                self.fail("Ran out of data to read")
+            buf.extend(s)
 
             # process lines
-            if '\n' in buf and (not buf.startswith('<phantomLog>') or '</phantomLog>' in buf):
-                if buf.startswith('<phantomLog>'):
-                    line = buf[12:buf.index('</phantomLog>')]
-                    buf = bytearray()
+            while b'\n' in buf and (not buf.startswith(b'<phantomLog>') or b'</phantomLog>' in buf):
+
+                if buf.startswith(b'<phantomLog>'):
+                    line, buf = buf[12:].split(b'</phantomLog>\n', 1)
                 else:
-                    line, buf = buf.split('\n', 1)
-                line = str(line)
+                    line, buf = buf.split(b'\n', 1)
+                line = line.decode('utf-8')
 
                 lline = line.lower()
                 if lline.startswith(("error", "server application error")):
                     try:
                         # when errors occur the execution stack may be sent as a JSON
                         prefix = lline.index('error') + 6
-                        _logger.error("phantomjs: %s", pformat(json.loads(line[prefix:])))
+                        self.fail(pformat(json.loads(line[prefix:])))
                     except ValueError:
-                        line_ = line.split('\n\n')
-                        _logger.error("phantomjs: %s", line_[0])
-                        # The second part of the log is for debugging
-                        if len(line_) > 1:
-                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
-                        pass
-                    break
+                        self.fail(lline)
                 elif lline.startswith("warning"):
-                    _logger.warn("phantomjs: %s", line)
+                    logger.warn(line)
                 else:
-                    _logger.info("phantomjs: %s", line)
+                    logger.info(line)
 
                 if line == "ok":
                     return True
@@ -382,40 +380,40 @@ class HttpCase(TransactionCase):
             phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None, close_fds=True)
         except OSError:
             raise unittest.SkipTest("PhantomJS not found")
-        result = False
         try:
             result = self.phantom_poll(phantom, timeout)
-        finally:
-            # kill phantomjs if phantom.exit() wasn't called in the test
-            if phantom.poll() is None:
-                phantom.terminate()
-                phantom.wait()
-
-            # check PhantomJS health
-            from signal import SIGSEGV
-            _logger.info("Phantom JS return code: %d" % phantom.returncode)
-            if phantom.returncode == -SIGSEGV:
-                _logger.error("Phantom JS has crashed (segmentation fault) during testing; log may not be relevant")
-
-            self._wait_remaining_requests()
-            # we ignore phantomjs return code as we kill it as soon as we have ok
-            _logger.info("phantom_run execution finished")
             self.assertTrue(
                 result,
                 "PhantomJS test completed without reporting success; "
                 "the log may contain errors or hints.")
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            if phantom.poll() is None:
+                _logger.info("Terminating phantomjs")
+                phantom.terminate()
+                phantom.wait()
+            else:
+                # if we had to terminate phantomjs its return code is
+                # always -15 so we don't care
+                # check PhantomJS health
+                from signal import SIGSEGV
+                _logger.info("Phantom JS return code: %d" % phantom.returncode)
+                if phantom.returncode == -SIGSEGV:
+                    _logger.error("Phantom JS has crashed (segmentation fault) during testing; log may not be relevant")
+
+            self._wait_remaining_requests()
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())
         for thread in threading.enumerate():
             if thread.name.startswith('odoo.service.http.request.'):
-                thread.join_retry_count = 10
+                join_retry_count = 10
                 while thread.isAlive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
-                    thread.join_retry_count -= 1
-                    if thread.join_retry_count < 0:
+                    join_retry_count -= 1
+                    if join_retry_count < 0:
                         _logger.warning("Stop waiting for thread %s handling request for url %s",
                                         thread.name, thread.url)
                         break

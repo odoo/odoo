@@ -40,7 +40,7 @@ from odoo.modules.module import run_unit_tests, runs_post_install
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
-from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats, pycompat
+from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
@@ -216,7 +216,7 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = odoo.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in pycompat.items(registries):
+            for db_name, registry in registries.items():
                 while registry.ready:
                     try:
                         acquired = ir_cron._acquire_job(db_name)
@@ -433,7 +433,7 @@ class PreforkServer(CommonServer):
 
     def pipe_ping(self, pipe):
         try:
-            os.write(pipe[1], '.')
+            os.write(pipe[1], b'.')
         except IOError as e:
             if e.errno not in [errno.EAGAIN, errno.EINTR]:
                 raise
@@ -525,7 +525,7 @@ class PreforkServer(CommonServer):
 
     def process_timeout(self):
         now = time.time()
-        for (pid, worker) in pycompat.items(self.workers):
+        for (pid, worker) in self.workers.items():
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
                 _logger.error("%s (%s) timeout after %ss",
@@ -546,8 +546,8 @@ class PreforkServer(CommonServer):
     def sleep(self):
         try:
             # map of fd -> worker
-            fds = {w.watchdog_pipe[0]: w for k, w in pycompat.items(self.workers)}
-            fd_in = list(pycompat.keys(fds)) + [self.pipe[0]]
+            fds = {w.watchdog_pipe[0]: w for w in self.workers.values()}
+            fd_in = list(fds) + [self.pipe[0]]
             # check for ping or internal wakeups
             ready = select.select(fd_in, [], [], self.beat)
             # update worker watchdogs
@@ -771,7 +771,7 @@ class WorkerHTTP(Worker):
             client, addr = self.multi.socket.accept()
             self.process_request(client, addr)
         except socket.error as e:
-            if e[0] not in (errno.EAGAIN, errno.ECONNABORTED):
+            if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
 
     def start(self):
@@ -887,7 +887,7 @@ def load_test_file_yml(registry, test_file):
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod_name, mod_mod in list(pycompat.items(sys.modules)):
+    for mod_name, mod_mod in list(sys.modules.items()):
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:

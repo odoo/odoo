@@ -8,7 +8,7 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
-from odoo.tools import pycompat
+from . import pycompat
 
 unsafe_eval = eval
 
@@ -135,7 +135,7 @@ class ormcache_multi(ormcache):
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, basestring), "ormcache_multi() parameter multi must be an argument name"
+        assert isinstance(self.multi, pycompat.string_types), "ormcache_multi() parameter multi must be an argument name"
 
         super(ormcache_multi, self).determine_key()
 
@@ -202,10 +202,10 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
     entries = defaultdict(int)
-    for dbname, reg in pycompat.items(Registry.registries):
+    for dbname, reg in Registry.registries.items():
         for key in reg.cache:
             entries[(dbname,) + key[:2]] += 1
-    for key, count in sorted(pycompat.items(entries)):
+    for key, count in sorted(entries.items()):
         dbname, model_name, method = key
         me.dbname = dbname
         stat = STAT[key]

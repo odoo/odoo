@@ -331,12 +331,15 @@ return AbstractRenderer.extend({
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
+            // Dirty hack to ensure a correct first render
+            eventAfterAllRender: function (view) {
+                window.dispatchEvent(new Event('resize'));
+            },
             height: 'parent',
             unselectAuto: false,
         });
 
         this.$calendar.fullCalendar(fc_options);
-        window.dispatchEvent(new Event('resize'));
     },
     /**
      * Initialize the mini calendar in the sidebar

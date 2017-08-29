@@ -90,7 +90,7 @@ class Pricelist(models.Model):
         results = {}
         for pricelist in pricelists:
             subres = pricelist._compute_price_rule(products_qty_partner, date=date, uom_id=uom_id)
-            for product_id, price in pycompat.items(subres):
+            for product_id, price in subres.items():
                 results.setdefault(product_id, {})
                 results[product_id][pricelist.id] = price
         return results
@@ -254,11 +254,11 @@ class Pricelist(models.Model):
         self.ensure_one()
         return {
             product_id: res_tuple[0]
-            for product_id, res_tuple in pycompat.items(self._compute_price_rule(
+            for product_id, res_tuple in self._compute_price_rule(
                 list(pycompat.izip(products, quantities, partners)),
                 date=date,
                 uom_id=uom_id
-            ))
+            ).items()
         }
 
     def get_product_price(self, product, quantity, partner, date=False, uom_id=False):
@@ -280,7 +280,7 @@ class Pricelist(models.Model):
     @api.multi
     def price_get(self, prod_id, qty, partner=None):
         """ Multi pricelist, mono product - returns price per pricelist """
-        return {key: price[0] for key, price in pycompat.items(self.price_rule_get(prod_id, qty, partner=partner))}
+        return {key: price[0] for key, price in self.price_rule_get(prod_id, qty, partner=partner).items()}
 
     @api.multi
     def price_rule_get_multi(self, products_by_qty_by_partner):

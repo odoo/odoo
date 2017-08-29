@@ -1,4 +1,5 @@
 # coding: utf-8
+import base64
 import datetime
 import logging
 import time
@@ -14,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT, pycompat
+from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 
@@ -141,7 +142,7 @@ class PaymentAcquirerOgone(models.Model):
                 ]
                 return key.upper() in keys
 
-        items = sorted((k.upper(), v) for k, v in pycompat.items(values))
+        items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
         shasign = sha1(sign).hexdigest()
@@ -469,7 +470,7 @@ class PaymentTxOgone(models.Model):
             self.write({
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': str(tree.HTML_ANSWER).decode('base64')
+                'html_3ds': base64.b64decode(tree.HTML_ANSWER.decode('ascii')),
             })
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)

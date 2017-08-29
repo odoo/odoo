@@ -5,7 +5,6 @@ import pytz
 from odoo import _, api, fields, models
 from odoo.addons.mail.models.mail_template import format_tz
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import pycompat
 from odoo.tools.translate import html_translate
 
 from dateutil.relativedelta import relativedelta
@@ -389,7 +388,7 @@ class EventRegistration(models.Model):
             'partner_id': partner_id.id,
             'event_id': event_id and event_id.id or False,
         }
-        data.update({key: value for key, value in pycompat.items(registration) if key in self._fields})
+        data.update({key: value for key, value in registration.items() if key in self._fields})
         return data
 
     @api.one

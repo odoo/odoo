@@ -1323,6 +1323,64 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.o2m = {
+            string: "O2M", type: 'one2many', relation: 'partner', default: [
+                [6, 0, []],
+                [0, 0, {category: false}],
+                [0, 0, {category: 12}],
+            ],
+        };
+        this.data.partner.fields.category.type = 'many2one';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get' && args.model === 'partner_type') {
+                    assert.deepEqual(args.args, [[12]], "should name_get on category 12");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var params = {
+            fieldNames: ['o2m'],
+            fields: this.data.partner.fields,
+            fieldsInfo: {
+                form: {
+                    o2m: {
+                        relatedFields: this.data.partner.fields,
+                        fieldsInfo: {
+                            list: {
+                                category: {
+                                    relatedFields: { display_name: {} },
+                                },
+                            },
+                        },
+                        viewType: 'list',
+                    },
+                },
+            },
+            modelName: 'partner',
+            type: 'record',
+            viewType: 'form',
+        };
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.o2m.count, 2, "o2m field should contain 2 records");
+            assert.strictEqual(record.data.o2m.data[0].data.category, false,
+                "first category field should be empty");
+            assert.strictEqual(record.data.o2m.data[1].data.category.data.display_name, "gold",
+                "second category field should have been correctly fetched");
+        });
+
+        model.destroy();
+    });
+
     QUnit.test('default_get: fetch x2manys inside x2manys', function (assert) {
         assert.expect(3);
 
@@ -2007,5 +2065,25 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get with value false for a one2many', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.product_ids.default = false;
+        this.params.fieldNames = ['product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
+        });
+
+        model.destroy();
+    });
 
 });});

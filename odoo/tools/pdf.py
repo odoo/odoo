@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from cStringIO import StringIO
+import io
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
@@ -11,10 +11,10 @@ def merge_pdf(pdf_data):
     '''
     writer = PdfFileWriter()
     for document in pdf_data:
-        reader = PdfFileReader(StringIO(document), strict=False)
+        reader = PdfFileReader(io.BytesIO(document), strict=False)
         for page in range(0, reader.getNumPages()):
             writer.addPage(reader.getPage(page))
-    _buffer = StringIO()
+    _buffer = io.BytesIO()
     writer.write(_buffer)
     merged_pdf = _buffer.getvalue()
     _buffer.close()

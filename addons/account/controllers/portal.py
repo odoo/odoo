@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
-
-from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.tools import consteq
 
 
 class PortalAccount(CustomerPortal):
@@ -22,6 +22,10 @@ class PortalAccount(CustomerPortal):
 
         values['invoice_count'] = invoice_count
         return values
+
+    # ------------------------------------------------------------
+    # My Invoices
+    # ------------------------------------------------------------
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -74,15 +78,31 @@ class PortalAccount(CustomerPortal):
         })
         return request.render("account.portal_my_invoices", values)
 
-    @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="user", website=True)
-    def portal_my_invoices_report(self, invoice_id, **kw):
+    @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
+    def portal_my_invoice_detail(self, invoice_id, access_token=None, **kw):
         invoice = request.env['account.invoice'].browse(invoice_id)
         try:
             invoice.check_access_rights('read')
             invoice.check_access_rule('read')
-        # TDE FIXME: does not exist, or maybe, don't know
         except AccessError:
-            return request.redirect('/my')
+            if not access_token or not consteq(invoice.sudo().access_token, access_token):
+                return request.redirect('/my')
+
+        values = {
+            'page_name': 'invoice',
+            'invoice': invoice.sudo(),
+        }
+        return request.render("account.portal_invoice_page", values)
+
+    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="public", website=True)
+    def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
+        invoice = request.env['account.invoice'].browse(invoice_id)
+        try:
+            invoice.check_access_rights('read')
+            invoice.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(invoice.sudo().access_token, access_token):
+                return request.redirect('/my')
 
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
@@ -92,6 +112,10 @@ class PortalAccount(CustomerPortal):
             ('Content-Length', len(pdf)),
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
+
+    # ------------------------------------------------------------
+    # My Home
+    # ------------------------------------------------------------
 
     def details_form_validate(self, data):
         error, error_message = super(PortalAccount, self).details_form_validate(data)

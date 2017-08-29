@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 from email.utils import formataddr
 
 import re
@@ -9,7 +9,7 @@ import uuid
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import ormcache, pycompat
+from odoo.tools import ormcache
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -41,7 +41,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     @api.model
     def default_get(self, fields):
@@ -619,7 +619,7 @@ class Channel(models.Model):
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
-        return list(pycompat.values(channels_preview))
+        return list(channels_preview.values())
 
     #------------------------------------------------------
     # Commands

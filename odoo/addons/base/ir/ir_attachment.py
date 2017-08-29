@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import hashlib
 import itertools
 import logging
@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
-from odoo.tools import config, human_size, ustr, html_escape, pycompat
+from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -97,14 +97,14 @@ class IrAttachment(models.Model):
             if bin_size:
                 r = human_size(os.path.getsize(full_path))
             else:
-                r = open(full_path,'rb').read().encode('base64')
+                r = base64.b64encode(open(full_path,'rb').read())
         except (IOError, OSError):
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
 
     @api.model
     def _file_write(self, value, checksum):
-        bin_value = value.decode('base64')
+        bin_value = base64.b64decode(value)
         fname, full_path = self._get_path(bin_value, checksum)
         if not os.path.exists(full_path):
             try:
@@ -167,7 +167,7 @@ class IrAttachment(models.Model):
 
         # remove garbage files, and clean up checklist
         removed = 0
-        for fname, filepath in pycompat.items(checklist):
+        for fname, filepath in checklist.items():
             if fname not in whitelist:
                 try:
                     os.unlink(self._full_path(fname))
@@ -195,7 +195,7 @@ class IrAttachment(models.Model):
         for attach in self:
             # compute the fields that depend on datas
             value = attach.datas
-            bin_data = value and value.decode('base64') or ''
+            bin_data = base64.b64decode(value) if value else b''
             vals = {
                 'file_size': len(bin_data),
                 'checksum': self._compute_checksum(bin_data),
@@ -220,7 +220,7 @@ class IrAttachment(models.Model):
             :param bin_data : datas in its binary form
         """
         # an empty file has a checksum too (for caching)
-        return hashlib.sha1(bin_data or '').hexdigest()
+        return hashlib.sha1(bin_data or b'').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
@@ -235,7 +235,7 @@ class IrAttachment(models.Model):
         if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
         if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
-            mimetype = guess_mimetype(values['datas'].decode('base64'))
+            mimetype = guess_mimetype(base64.b64decode(values['datas']))
         return mimetype or 'application/octet-stream'
 
     def _check_contents(self, values):
@@ -258,8 +258,8 @@ class IrAttachment(models.Model):
         if file_type:
             index_content = file_type.split('/')[0]
             if index_content == 'text': # compute index_content only for text type
-                words = re.findall("[^\x00-\x1F\x7F-\xFF]{4,}", bin_data)
-                index_content = ustr("\n".join(words))
+                words = re.findall(b"[\x20-\x7E]{4,}", bin_data)
+                index_content = b"\n".join(words).decode('ascii')
         return index_content
 
     name = fields.Char('Attachment Name', required=True)
@@ -318,7 +318,7 @@ class IrAttachment(models.Model):
             model_ids[values['res_model']].add(values['res_id'])
 
         # check access rights on the records
-        for res_model, res_ids in pycompat.items(model_ids):
+        for res_model, res_ids in model_ids.items():
             # ignore attachments that are not attached to a resource anymore
             # when checking access rights (resource was deleted but attachment
             # was not)
@@ -374,12 +374,12 @@ class IrAttachment(models.Model):
 
         # To avoid multiple queries for each attachment found, checks are
         # performed in batch as much as possible.
-        for res_model, targets in pycompat.items(model_attachments):
+        for res_model, targets in model_attachments.items():
             if res_model not in self.env:
                 continue
             if not self.env[res_model].check_access_rights('read', False):
                 # remove all corresponding attachment ids
-                ids.difference_update(itertools.chain(*pycompat.values(targets)))
+                ids.difference_update(itertools.chain(*targets.values()))
                 continue
             # filter ids according to what access rules permit
             target_ids = list(targets)

@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty, pycompat
+from odoo.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ class Params(object):
         params = []
         for arg in self.args:
             params.append(repr(arg))
-        for item in sorted(pycompat.items(self.kwargs)):
+        for item in sorted(self.kwargs.items()):
             params.append("%s=%r" % item)
         return ', '.join(params)
 
@@ -100,7 +100,7 @@ class Meta(type):
         # dummy parent class to catch overridden methods decorated with 'returns'
         parent = type.__new__(meta, name, bases, {})
 
-        for key, value in list(pycompat.items(attrs)):
+        for key, value in list(attrs.items()):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
@@ -155,6 +155,14 @@ def constrains(*args):
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
         supported and will be ignored
+
+        ``@constrains`` will be triggered only if the declared fields in the
+        decorated method are included in the ``create`` or ``write`` call.
+        It implies that fields not present in a view will not trigger a call
+        during a record creation. A override of ``create`` is necessary to make
+        sure a constraint will always be triggered (e.g. to test the absence of
+        value).
+
     """
     return attrsetter('_constrains', args)
 
@@ -938,13 +946,13 @@ class Environment(Mapping):
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
             (field, dict(field_cache))
-            for field, field_cache in pycompat.items(self.cache)
+            for field, field_cache in self.cache.items()
         )
         self.invalidate_all()
 
         # re-fetch the records, and compare with their former cache
         invalids = []
-        for field, field_dump in pycompat.items(cache_dump):
+        for field, field_dump in cache_dump.items():
             records = self[field.model_name].browse(f for f in field_dump if f)
             for record in records:
                 try:

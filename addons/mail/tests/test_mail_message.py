@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import itertools
 
 from odoo.addons.mail.tests.common import TestMail
@@ -215,7 +215,7 @@ class TestMailMessageAccess(TestMail):
 
     def test_mail_message_access_read_notification(self):
         attachment = self.env['ir.attachment'].create({
-            'datas': 'My attachment'.encode('base64'),
+            'datas': base64.b64encode(b'My attachment'),
             'name': 'doc.txt',
             'datas_fname': 'doc.txt'})
         # attach the attachment to the message

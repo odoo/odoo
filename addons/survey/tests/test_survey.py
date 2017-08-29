@@ -12,8 +12,6 @@ from odoo import _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
-from odoo.tools import pycompat
-
 
 class TestSurvey(TransactionCase):
 
@@ -178,7 +176,7 @@ class TestSurvey(TransactionCase):
 
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in pycompat.items(urltypes):
+        for urltype, urltxt in urltypes.items():
             survey_url = getattr(self.survey1, urltype + '_url')
             survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
             self.assertTrue(validate_url(survey_url))
@@ -210,8 +208,8 @@ class TestSurvey(TransactionCase):
         answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
         expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}
         for answer in answers:
-            for field, value in pycompat.items(expected_values):
-                self.assertEqual(getattr(answer, field), value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
+            for field, value in expected_values.items():
+                self.assertEqual(answer[field], value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
 
     def test_10_survey_result_simple_multiple_choice(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
@@ -264,7 +262,7 @@ class TestSurvey(TransactionCase):
             'print': {'method': 'print', 'token': '/test', 'text': 'Print'},
             'result': {'method': 'result', 'token': '', 'text': 'Results of the'},
             'test': {'method': 'public', 'token': '/phantom', 'text': 'Results of the'}}
-        for action, val in pycompat.items(actions):
+        for action, val in actions.items():
             result = getattr(self.survey1.with_context({'survey_token': val['token'][1:]}), 'action_' + action + '_survey')()
             url = getattr(self.survey1.with_context({'relative_url': True}), val['method'] + '_url') + val['token']
             self.assertEqual(result['url'], url)

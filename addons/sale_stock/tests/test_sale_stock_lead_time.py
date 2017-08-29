@@ -47,7 +47,7 @@ class TestSaleStockLeadTime(TestStockCommon):
 
         # Check schedule date of picking
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=company.security_lead)
-        min_date = fields.Datetime.from_string(order.picking_ids[0].min_date)
+        min_date = fields.Datetime.from_string(order.picking_ids[0].scheduled_date)
         self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')
 
     def test_01_product_route_level_delays(self):
@@ -83,18 +83,18 @@ class TestSaleStockLeadTime(TestStockCommon):
 
         # Check schedule date of ship type picking
         out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.out_type_id)
-        out_min_date = fields.Datetime.from_string(out.min_date)
+        out_min_date = fields.Datetime.from_string(out.scheduled_date)
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=out.move_lines[0].rule_id.delay)
         self.assertTrue(abs(out_min_date - out_date) <= timedelta(seconds=1), 'Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
 
         # Check schedule date of pack type picking
         pack = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pack_type_id)
-        pack_min_date = fields.Datetime.from_string(pack.min_date)
+        pack_min_date = fields.Datetime.from_string(pack.scheduled_date)
         pack_date = out_date - timedelta(days=pack.move_lines[0].rule_id.delay)
         self.assertTrue(abs(pack_min_date - pack_date) <= timedelta(seconds=1), 'Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
 
         # Check schedule date of pick type picking
         pick = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pick_type_id)
-        pick_min_date = fields.Datetime.from_string(pick.min_date)
+        pick_min_date = fields.Datetime.from_string(pick.scheduled_date)
         pick_date = pack_date - timedelta(days=pick.move_lines[0].rule_id.delay)
         self.assertTrue(abs(pick_min_date - pick_date) <= timedelta(seconds=1), 'Schedule date of pick type picking should be equal to: Schedule date of pack type picking - pull rule delay.')

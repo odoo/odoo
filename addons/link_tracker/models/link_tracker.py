@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 import random
 import re
@@ -12,9 +12,9 @@ from werkzeug import urls, utils
 
 
 from odoo import models, fields, api, _
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr
 
-URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
+URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
     if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
@@ -90,7 +90,7 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('favicon')
     def _compute_icon_src(self):
-        self.icon_src = 'data:image/png;base64,' + self.favicon
+        self.icon_src = b'data:image/png;base64,' + self.favicon
 
     @api.one
     @api.depends('url')
@@ -123,7 +123,7 @@ class link_tracker(models.Model):
     def _compute_favicon(self):
         try:
             icon = requests.get('http://www.google.com/s2/favicons', params={'domain': self.url}, timeout=5).content
-            icon_base64 = icon.encode('base64').replace("\n", "")
+            icon_base64 = base64.b64encode(icon).replace(b"\n", b"").decode('ascii')
         except:
             icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
 
@@ -165,7 +165,7 @@ class link_tracker(models.Model):
             create_vals['url'] = VALIDATE_URL(vals['url'])
 
         search_domain = []
-        for fname, value in pycompat.items(create_vals):
+        for fname, value in create_vals.items():
             search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)

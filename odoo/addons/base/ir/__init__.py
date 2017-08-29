@@ -10,7 +10,7 @@ from . import ir_actions_report
 from . import ir_attachment
 from . import ir_cron
 from . import ir_filters
-from . import ir_values
+from . import ir_default
 from . import ir_translation
 from . import ir_exports
 from . import ir_rule

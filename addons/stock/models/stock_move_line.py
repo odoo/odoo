@@ -96,6 +96,11 @@ class StockMoveLine(models.Model):
             res = {'domain': {'product_uom_id': []}}
         return res
 
+    @api.onchange('lot_name', 'lot_id')
+    def onchange_serial_number(self):
+        if self.product_id.tracking == 'serial':
+            self.qty_done = 1
+
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')
@@ -225,6 +230,14 @@ class StockMoveLine(models.Model):
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
         res = super(StockMoveLine, self).write(vals)
+
+        # As stock_account values according to a move's `product_uom_qty`, we consider that any
+        # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
+        # this is what move's `action_done` will do. So, we replicate the behavior here.
+        if updates or 'qty_done' in vals:
+            moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
+            for move in moves:
+                move.product_uom_qty = move.quantity_done
         next_moves.do_unreserve()
         next_moves.action_assign()
         return res

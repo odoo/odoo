@@ -2016,6 +2016,7 @@ class StockMove(TransactionCase):
         move1.move_line_ids.qty_done = 1
         move1.action_done()
 
+        self.assertEqual(move1.product_uom_qty, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
 
@@ -2024,6 +2025,7 @@ class StockMove(TransactionCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), -1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), -1.0)
+        self.assertEqual(move1.product_uom_qty, 2.0)
 
     def test_edit_done_move_line_9(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
@@ -2052,12 +2054,14 @@ class StockMove(TransactionCase):
         move1.move_line_ids.qty_done = 1
         move1.action_done()
 
+        self.assertEqual(move1.product_uom_qty, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
 
         # edit once done, we actually moved 2 products
         move1.move_line_ids.qty_done = 0
 
+        self.assertEqual(move1.product_uom_qty, 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
 
@@ -2087,6 +2091,7 @@ class StockMove(TransactionCase):
 
         quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
         self.assertEqual(len(quant), 0.0)
+        self.assertEqual(move1.product_uom_qty, 0.0)
 
     def test_edit_done_move_line_11(self):
         """ Add a move line and check if the quant is updated
@@ -2112,6 +2117,7 @@ class StockMove(TransactionCase):
         picking.action_assign()
         move1.move_line_ids.qty_done = 10
         picking.action_done()
+        self.assertEqual(move1.product_uom_qty, 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
         self.env['stock.move.line'].create({
             'picking_id': move1.move_line_ids.picking_id.id,
@@ -2124,6 +2130,7 @@ class StockMove(TransactionCase):
         })
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 20.0)
         move1.move_line_ids[1].qty_done = 5
+        self.assertEqual(move1.product_uom_qty, 15.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 15.0)
 
     def test_immediate_validate_1(self):

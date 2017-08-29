@@ -10,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 
@@ -211,7 +211,8 @@ class StockMove(models.Model):
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
-        self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+        rounding_method = self._context.get('rounding_method', 'UP')
+        self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method=rounding_method)
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
@@ -595,7 +596,7 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for key, moves in pycompat.items(to_assign):
+        for moves in to_assign.values():
             moves.assign_picking()
         self._push_apply()
         return self
@@ -740,9 +741,13 @@ class StockMove(models.Model):
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     move_lines_in = move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
-                    keys_in = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
+                    keys_in_groupby = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
+
+                    def _keys_in_sorted(ml):
+                        return (ml.location_dest_id.id, ml.lot_id.id, ml.result_package_id.id, ml.owner_id.id)
+
                     grouped_move_lines_in = {}
-                    for k, g in groupby(sorted(move_lines_in, key=itemgetter(*keys_in)), key=itemgetter(*keys_in)):
+                    for k, g in groupby(sorted(move_lines_in, key=_keys_in_sorted), key=itemgetter(*keys_in_groupby)):
                         qty_done = 0
                         for ml in g:
                             qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
@@ -756,18 +761,22 @@ class StockMove(models.Model):
                     moves_out_siblings_to_consider = moves_out_siblings & (assigned_moves + partially_available_moves)
                     reserved_moves_out_siblings = moves_out_siblings.filtered(lambda m: m.state in ['partially_available', 'assigned'])
                     move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).mapped('move_line_ids')
-                    keys_out = ['location_id', 'lot_id', 'package_id', 'owner_id']
+                    keys_out_groupby = ['location_id', 'lot_id', 'package_id', 'owner_id']
+
+                    def _keys_out_sorted(ml):
+                        return (ml.location_id.id, ml.lot_id.id, ml.package_id.id, ml.owner_id.id)
+
                     grouped_move_lines_out = {}
-                    for k, g in groupby(sorted(move_lines_out_done, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
+                    for k, g in groupby(sorted(move_lines_out_done, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
                         qty_done = 0
                         for ml in g:
                             qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
                         grouped_move_lines_out[k] = qty_done
-                    for k, g in groupby(sorted(move_lines_out_reserved, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
+                    for k, g in groupby(sorted(move_lines_out_reserved, key=_keys_out_sorted), key=itemgetter(*keys_out_groupby)):
                         grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                     available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in.keys()}
                     # pop key if the quantity available amount to 0
-                    available_move_lines = {k: v for k, v in pycompat.items(available_move_lines) if v}
+                    available_move_lines = dict((k, v) for k, v in available_move_lines.items() if v)
 
                     if not available_move_lines:
                         continue
@@ -954,13 +963,13 @@ class StockMove(models.Model):
         # TDE CLEANME: remove context key + add as parameter
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
-        new_move = self.copy(defaults)
+        new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
         # ctx = context.copy()
         # TDE CLEANME: used only in write in this file, to clean
         # ctx['do_not_propagate'] = True
 
         # FIXME: pim fix your crap
-        self.with_context(do_not_propagate=True, do_not_unreserve=True).write({'product_uom_qty': self.product_uom_qty - uom_qty})
+        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': self.product_uom_qty - uom_qty})
 
         # if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
         #     new_move_prop = self.move_dest_id.split(qty)
@@ -982,18 +991,3 @@ class StockMove(models.Model):
                     move.state = 'waiting'
                 else:
                     move.state = 'confirmed'
-
-    @api.multi
-    def action_show_picking(self):
-        view = self.env.ref('stock.view_picking_form')
-        return {
-            'name': _('Transfer'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'stock.picking',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'res_id': self.id}
-    show_picking = action_show_picking

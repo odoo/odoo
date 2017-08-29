@@ -8,7 +8,6 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
@@ -126,7 +125,7 @@ class Lang(models.Model):
             # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
             # unsupported '%-' patterns, e.g. for cs_CZ
             format = format.replace('%-', '%')
-            for pattern, replacement in pycompat.items(tools.DATETIME_FORMATS_MAP):
+            for pattern, replacement in tools.DATETIME_FORMATS_MAP.items():
                 format = format.replace(pattern, replacement)
             return str(format)
 
@@ -164,10 +163,10 @@ class Lang(models.Model):
         lang = self.search([('code', '=', lang_code)])
         if not lang:
             self.load_lang(lang_code)
-        IrValues = self.env['ir.values']
-        default_value = IrValues.get_defaults('res.partner', condition=False)
-        if not default_value:
-            IrValues.set_default('res.partner', 'lang', lang_code, condition=False)
+        IrDefault = self.env['ir.default']
+        default_value = IrDefault.get('res.partner', 'lang')
+        if default_value is None:
+            IrDefault.set('res.partner', 'lang', lang_code)
             # set language of main company, created directly by db bootstrap SQL
             partner = self.env.user.company_id.partner_id
             if not partner.lang:
@@ -220,13 +219,8 @@ class Lang(models.Model):
         if vals.get('active') == False:
             if self.env['res.users'].search([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot unactivate a language that is currently used by users."))
-            # delete linked ir.value specifying default partner's language
-            default_lang = self.env['ir.values'].search([
-                ('key', '=', 'default'),
-                ('name', '=', 'lang'),
-                ('model', '=', 'res.partner')])
-            if default_lang and default_lang.value_unpickle in lang_codes:
-                default_lang.unlink()
+            # delete linked ir.default specifying default partner's language
+            self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
         self.clear_caches()

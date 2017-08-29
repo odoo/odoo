@@ -9,7 +9,8 @@ Also, adds methods to convert values back to Odoo models.
 """
 
 import ast
-import cStringIO
+import base64
+import io
 import itertools
 import json
 import logging
@@ -47,7 +48,10 @@ class QWeb(models.AbstractModel):
         el.set('t-call', el.attrib.pop('t-snippet'))
         name = self.env['ir.ui.view'].search([('key', '=', el.attrib.get('t-call'))]).display_name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (escape(ir_qweb.unicodifier(name)), escape(ir_qweb.unicodifier(thumbnail)))
+        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (
+            escape(pycompat.to_text(name)),
+            escape(pycompat.to_text(thumbnail))
+        )
         return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
 
     def _compile_directive_install(self, el, options):
@@ -57,7 +61,11 @@ class QWeb(models.AbstractModel):
                 return []
             name = el.attrib.get('string') or 'Snippet'
             thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
-            div = u'<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (escape(ir_qweb.unicodifier(name)), module.id, escape(ir_qweb.unicodifier(thumbnail)))
+            div = u'<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
+                escape(pycompat.to_text(name)),
+                module.id,
+                escape(pycompat.to_text(thumbnail))
+            )
             return [self._append(ast.Str(div))]
         else:
             return []
@@ -201,7 +209,7 @@ class DateTime(models.AbstractModel):
     def attributes(self, record, field_name, options, values):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
         value = record[field_name]
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
         if value:
             # convert from UTC (server timezone) to user timezone
@@ -274,7 +282,7 @@ class HTML(models.AbstractModel):
         content = []
         if element.text:
             content.append(element.text)
-        content.extend(html.tostring(child)
+        content.extend(html.tostring(child, encoding='unicode')
                        for child in element.iterchildren(tag=etree.Element))
         return '\n'.join(content)
 
@@ -288,44 +296,6 @@ class Image(models.AbstractModel):
     """
     _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field.image'
-
-    @api.model
-    def record_to_html(self, record, field_name, options):
-        assert options['tagName'] != 'img',\
-            "Oddly enough, the root tag of an image field can not be img. " \
-            "That is because the image goes into the tag, or it gets the " \
-            "hose again."
-
-        aclasses = ['img', 'img-responsive'] + options.get('class', '').split()
-        classes = ' '.join(pycompat.imap(escape, aclasses))
-
-        max_size = None
-        if options.get('resize'):
-            max_size = options.get('resize')
-        else:
-            max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
-            if max_width or max_height:
-                max_size = '%sx%s' % (max_width, max_height)
-
-        sha = hashlib.sha1(getattr(record, '__last_update')).hexdigest()[0:7]
-        max_size = '' if max_size is None else '/%s' % max_size
-        src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
-
-        alt = None
-        if options.get('alt-field') and getattr(record, options['alt-field'], None):
-            alt = escape(record[options['alt-field']])
-        elif options.get('alt'):
-            alt = options['alt']
-
-        src_zoom = None
-        if options.get('zoom') and getattr(record, options['zoom'], None):
-            src_zoom = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, options['zoom'], max_size, sha)
-        elif options.get('zoom'):
-            src_zoom = options['zoom']
-
-        img = '<img class="%s" src="%s" style="%s"%s%s/>' % \
-            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '', ' data-zoom="1" data-zoom-image="%s"' % src_zoom if src_zoom else '')
-        return ir_qweb.unicodifier(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
 
@@ -374,7 +344,7 @@ class Image(models.AbstractModel):
                 image = I.open(f)
                 image.load()
                 f.seek(0)
-                return f.read().encode('base64')
+                return base64.b64encode(f.read())
         except Exception:
             logger.exception("Failed to load local image %r", url)
             return None
@@ -390,7 +360,7 @@ class Image(models.AbstractModel):
 
             req = requests.get(url, timeout=REMOTE_CONNECTION_TIMEOUT)
             # PIL needs a seekable file-like image so wrap result in IO buffer
-            image = I.open(cStringIO.StringIO(req.content))
+            image = I.open(io.BytesIO(req.content))
             # force a complete load of the image data to validate it
             image.load()
         except Exception:
@@ -399,9 +369,9 @@ class Image(models.AbstractModel):
 
         # don't use original data in case weird stuff was smuggled in, with
         # luck PIL will remove some of it?
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         image.save(out, image.format)
-        return out.getvalue().encode('base64')
+        return base64.b64encode(out.getvalue())
 
 
 class Monetary(models.AbstractModel):

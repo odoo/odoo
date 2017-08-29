@@ -7,8 +7,6 @@ from odoo.exceptions import UserError
 
 import logging
 
-from odoo.tools import pycompat
-
 _logger = logging.getLogger(__name__)
 
 def migrate_set_tags_and_taxes_updatable(cr, registry, module):
@@ -327,7 +325,7 @@ class AccountChartTemplate(models.Model):
 
         # writing account values after creation of accounts
         company.transfer_account_id = account_template_ref[transfer_account_id.id]
-        for key, value in pycompat.items(generated_tax_res['account_dict']):
+        for key, value in generated_tax_res['account_dict'].items():
             if value['refund_account_id'] or value['account_id'] or value['cash_basis_account']:
                 AccountTaxObj.browse(key).write({
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),
@@ -521,15 +519,18 @@ class AccountTaxTemplate(models.Model):
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
-    use_cash_basis = fields.Boolean(
-        'Use Cash Basis',
-        help="Select this if the tax should use cash basis,"
-        "which will create an entry for this tax on a given account during reconciliation")
+    tax_exigibility = fields.Selection(
+        [('on_invoice', 'Based on Invoice'),
+         ('on_payment', 'Based on Payment'),
+        ], string='Tax Due', default='on_invoice',
+        oldname='use_cash_basis',
+        help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
+        "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_account = fields.Many2one(
         'account.account.template',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
-        help='Account use when creating entry for tax cash basis')
+        help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -568,7 +569,7 @@ class AccountTaxTemplate(models.Model):
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
             'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
-            'use_cash_basis': self.use_cash_basis,
+            'tax_exigibility': self.tax_exigibility,
         }
 
         if self.tax_group_id:
@@ -598,10 +599,10 @@ class AccountTaxTemplate(models.Model):
                 'cash_basis_account': tax.cash_basis_account.id,
             }
 
-        if any([tax.use_cash_basis for tax in self]):
-            # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(use_cash_basis) is set to True by default
+        if any([tax.tax_exigibility == 'on_payment' for tax in self]):
+            # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
             # (exapmple of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
-            company.use_cash_basis = True
+            company.tax_exigibility = True
 
         return {
             'tax_template_to_tax': tax_template_to_tax,
@@ -875,7 +876,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
                     res.unlink()
             existing_accounts.unlink()
 
-        ir_values_obj = self.env['ir.values']
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
@@ -902,10 +902,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user
+        IrDefault = self.env['ir.default']
         if self.sale_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], for_all_users=True, company_id=company.id)
+            IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
         if self.purchase_tax_id and taxes_ref:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], for_all_users=True, company_id=company.id)
+            IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)

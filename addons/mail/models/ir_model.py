@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class IrModel(models.Model):
@@ -41,7 +42,7 @@ class IrModel(models.Model):
         model_class = super(IrModel, self)._instanciate(model_data)
         if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
-            parents = [parents] if isinstance(parents, basestring) else parents
+            parents = [parents] if isinstance(parents, pycompat.string_types) else parents
             model_class._inherit = parents + ['mail.thread']
         return model_class
 

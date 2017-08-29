@@ -4,7 +4,6 @@
 from odoo import http, _
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.http import request
-from odoo.tools import pycompat
 
 
 class WebsiteEventSaleController(WebsiteEventController):
@@ -16,7 +15,7 @@ class WebsiteEventSaleController(WebsiteEventController):
 
     def _process_tickets_details(self, data):
         ticket_post = {}
-        for key, value in pycompat.items(data):
+        for key, value in data.items():
             if not key.startswith('nb_register') or '-' not in key:
                 continue
             items = key.split('-')

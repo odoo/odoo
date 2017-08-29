@@ -19,7 +19,7 @@
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                        <span class="fa fa-bars fa-lg"/>
+                                        <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <li><a t-att-href="record.website_url.value">View Track</a></li>
@@ -29,11 +29,11 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <h4><field name="name"/></h4>
                                     <div>
                                         <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
                                     </div>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                     </div>
