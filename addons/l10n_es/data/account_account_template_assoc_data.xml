@@ -286,42 +286,35 @@
         <field name="code">4707</field>
         <field name="reconcile" eval="True"/>
         <field name="name">Hacienda Pública, deudora por colaboración en la entrega y distribución de subvenciones (art.12 Ley de Subvenciones)</field>
-        <field name="user_type_id" ref="account_type_tax"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="account_chart_template_assoc"/>
     </record>
     <record id="l10n_es.account_assoc_4757" model="account.account.template">
         <field name="code">4757</field>
         <field name="reconcile" eval="True"/>
         <field name="name">Hacienda Pública, acreedora por subvenciones recibidas en concepto de entidad colaboradora (art.12 Ley de Subvencioens)</field>
-        <field name="user_type_id" ref="account_type_tax"/>
+        <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="account_chart_template_assoc"/>
     </record>
     <record id="l10n_es.account_assoc_490" model="account.account.template">
         <field name="code">490</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de créditos por operaciones de la actividad</field>
-        <field name="user_type_id" ref="account_type_terceros"/>
-        <field name="chart_template_id" ref="account_chart_template_assoc"/>
-    </record>
-    <record id="l10n_es.account_assoc_551" model="account.account.template">
-        <field name="code">551</field>
-        <field name="reconcile" eval="False"/>
-        <field name="name">Cuenta corriente con patronos y otros</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="account_chart_template_assoc"/>
     </record>
     <record id="l10n_es.account_assoc_5935" model="account.account.template">
         <field name="code">5935</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de participaciones a corto plazo en otras partes vinculadas</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_assoc"/>
     </record>
     <record id="l10n_es.account_assoc_596" model="account.account.template">
         <field name="code">596</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de participaciones a corto plazo</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="account_chart_template_assoc"/>
     </record>
     <record id="l10n_es.account_assoc_6501" model="account.account.template">

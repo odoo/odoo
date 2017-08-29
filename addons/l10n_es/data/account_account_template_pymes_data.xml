@@ -139,28 +139,21 @@
         <field name="code">490</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
-        <field name="user_type_id" ref="account_type_terceros"/>
-        <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
-    </record>
-    <record id="pgc_pyme_551" model="account.account.template">
-        <field name="code">551</field>
-        <field name="reconcile" eval="False"/>
-        <field name="name">Cuenta corriente con socios y administradores</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
     </record>
     <record id="l10n_es.account_pymes_5935" model="account.account.template">
         <field name="code">5935</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de participaciones a corto plazo en otras partes vinculadas</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
     </record>
     <record id="l10n_es.account_pymes_596" model="account.account.template">
         <field name="code">596</field>
         <field name="reconcile" eval="False"/>
         <field name="name">Deterioro de valor de participaciones a corto plazo</field>
-        <field name="user_type_id" ref="account_type_financieras"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
     </record>
     <record id="l10n_es.account_pymes_650" model="account.account.template">
