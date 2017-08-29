@@ -47,8 +47,7 @@ class IrTranslationImport(object):
         # of ir_translation, so this copy will be much faster.
         query = """ CREATE TEMP TABLE %s (
                         imd_model VARCHAR(64),
-                        imd_name VARCHAR(128),
-                        noupdate BOOLEAN
+                        imd_name VARCHAR(128)
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)
 
@@ -105,8 +104,7 @@ class IrTranslationImport(object):
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute(""" UPDATE %s AS ti
-                          SET res_id = imd.res_id,
-                              noupdate = imd.noupdate
+                       SET res_id = imd.res_id
                        FROM ir_model_data AS imd
                        WHERE ti.res_id IS NULL
                        AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
@@ -152,10 +150,7 @@ class IrTranslationImport(object):
                                src = ti.src,
                                state = 'translated'
                            FROM %s AS ti
-                          WHERE %s
-                            AND ti.value IS NOT NULL
-                            AND ti.value != ''
-                            AND noupdate IS NOT TRUE
+                           WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                        """ % (self._model_table, self._table, find_expr),
                        (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
@@ -350,6 +345,12 @@ class IrTranslation(models.Model):
 
         # create missing translations
         for res_id in set(ids) - set(existing_ids):
+            # TODO: Remove this ugly fix, needed because es_419 lang is not
+            # supported by odoo yet.
+            # Remove this section after issue
+            # https://github.com/odoo/odoo/issues/18363 be solved.
+            if lang == 'es_419':
+                lang = self.env.user.company_id.partner_id.lang or 'en_US'
             self.create({
                 'lang': lang,
                 'type': tt,
