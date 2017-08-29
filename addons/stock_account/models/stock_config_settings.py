@@ -25,4 +25,6 @@ class StockConfigSettings(models.TransientModel):
             data = 'real_time'
         else:
             data = 'manual_periodic'
+        if self.user_has_groups('stock.group_stock_manager') and self.user_has_groups('base.group_system'):
+            self = self.sudo()
         return self.env['ir.values'].set_default('product.category', 'property_valuation', data)
