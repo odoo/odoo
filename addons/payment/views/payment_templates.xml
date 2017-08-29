@@ -74,7 +74,7 @@
                         </div>
                     </div>
                 </t>
-                <t tif="mode == 'payment'" t-foreach="form_acquirers" t-as="acq">
+                <t t-if="mode == 'payment'" t-foreach="form_acquirers" t-as="acq">
                     <div class="panel-body">
                         <label>
                             <input type="radio" t-att-data-acquirer-id="acq.id"
@@ -102,7 +102,7 @@
                         </ul>
                     </div>
                     <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="hidden {{'panel-footer' if acq.save_token == 'ask' else ''}}">
-                        <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token"/> Save my payment data</label>
+                        <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/> Save my payment data</label>
                         <t t-raw="acq.form"/>
                     </div>
                 </t>

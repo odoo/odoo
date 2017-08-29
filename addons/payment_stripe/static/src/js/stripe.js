@@ -112,7 +112,6 @@ odoo.define('payment_stripe.stripe', function(require) {
                     }
                 }
 
-                // TBE TODO: Pass 'so_id: so_id' and 'access_token: access_token' on the URL
                 ajax.jsonRpc(url, 'call', {
                         acquirer_id: acquirer_id
                     }, {'async': false}).then(function (data) {
