@@ -112,7 +112,7 @@
                                         </div>
                                     </div>
                                     <field name="registration_view_template_id" groups="base.group_no_one"/>
-                                    <field name="payment_option_ids" widget="many2many_tags"/>
+                                    <field name="payment_icon_ids" widget="many2many_tags"/>
                                     <field name="prefered_payment_type"/>
                                 </group>
                             </page>
@@ -378,12 +378,12 @@
             parent='root_payment_menu'
             groups='base.group_no_one'/>
 
-        <!-- Payment options -->
-        <record model="ir.ui.view" id="payment_option_form_view">
-            <field name="name">payment.option.form</field>
-            <field name="model">payment.option</field>
+        <!-- Payment icons -->
+        <record model="ir.ui.view" id="payment_icon_form_view">
+            <field name="name">payment.icon.form</field>
+            <field name="model">payment.icon</field>
             <field name="arch" type="xml">
-                <form string="Payment Option">
+                <form string="Payment Icon">
                     <sheet>
                         <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
@@ -401,21 +401,21 @@
             </field>
         </record>
 
-        <record id="action_payment_option" model="ir.actions.act_window">
-            <field name="name">Payment Options</field>
-            <field name="res_model">payment.option</field>
+        <record id="action_payment_icon" model="ir.actions.act_window">
+            <field name="name">Payment Icons</field>
+            <field name="res_model">payment.icon</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a payment acquirer.
+                    Click to create a payment icon.
                 </p>
             </field>
         </record>
 
         <menuitem
-            action="action_payment_option"
-            id="payment_option_menu"
+            action="action_payment_icon"
+            id="payment_icon_menu"
             parent="root_payment_menu"/>
     </data>
 </odoo>

@@ -27,11 +27,11 @@
             </ul>
         </field>
         <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_bancontact"),
-                                                        ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_visa"),
-                                                        ref("payment.payment_option_cc_american_express")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_american_express")])]'/>
     </record>
 
     <record id="payment_acquirer_ogone" model="payment.acquirer">
@@ -52,10 +52,10 @@
             </ul>
         </field>
         <!-- https://payment-services.ingenico.com/~/media/files/130806_product_sheet_ingenico_collect_en.ashx?la=en -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_bancontact"),
-                                                        ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
     <record id="payment_acquirer_adyen" model="payment.acquirer">
@@ -73,14 +73,14 @@
             </ul>
         </field>
         <!-- https://www.adyen.com/payment-methods -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_bancontact"),
-                                                        ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_visa"),
-                                                        ref("payment.payment_option_cc_discover"),
-                                                        ref("payment.payment_option_cc_diners_club_intl"),
-                                                        ref("payment.payment_option_cc_jcb"),
-                                                        ref("payment.payment_option_cc_unionpay")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_unionpay")])]'/>
     </record>
 
     <record id="payment_acquirer_authorize" model="payment.acquirer">
@@ -102,12 +102,12 @@
             </ul>
         </field>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_discover"),
-                                                        ref("payment.payment_option_cc_diners_club_intl"),
-                                                        ref("payment.payment_option_cc_jcb"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
     <record id="payment_acquirer_transfer" model="payment.acquirer">
@@ -139,15 +139,15 @@
             </ul>
         </field>
         <!-- http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_discover"),
-                                                        ref("payment.payment_option_cc_diners_club_intl"),
-                                                        ref("payment.payment_option_cc_jcb"),
-                                                        ref("payment.payment_option_cc_american_express"),
-                                                        ref("payment.payment_option_cc_bancontact"),
-                                                        ref("payment.payment_option_cc_unionpay"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_unionpay"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
     <record id="payment_acquirer_paypal" model="payment.acquirer">
@@ -166,14 +166,14 @@
             </ul>
         </field>
         <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_discover"),
-                                                        ref("payment.payment_option_cc_diners_club_intl"),
-                                                        ref("payment.payment_option_cc_jcb"),
-                                                        ref("payment.payment_option_cc_american_express"),
-                                                        ref("payment.payment_option_cc_unionpay"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_unionpay"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
     <record id="payment_acquirer_stripe" model="payment.acquirer">
@@ -194,13 +194,13 @@
             https://stripe.com/payments/payment-methods-guide
             https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
         -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_discover"),
-                                                        ref("payment.payment_option_cc_diners_club_intl"),
-                                                        ref("payment.payment_option_cc_jcb"),
-                                                        ref("payment.payment_option_cc_american_express"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
     <record id="payment_acquirer_custom" model="payment.acquirer">
@@ -235,10 +235,10 @@
         <!-- https://www.payumoney.com/selfcare.html?userType=seller
             > Banks & Cards > What options do you have in the Credit Card payment?
          -->
-        <field name="payment_option_ids" eval='[(6, 0, [ref("payment.payment_option_cc_maestro"),
-                                                        ref("payment.payment_option_cc_mastercard"),
-                                                        ref("payment.payment_option_cc_american_express"),
-                                                        ref("payment.payment_option_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
 </odoo>
