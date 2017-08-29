@@ -47,13 +47,6 @@
   !record {model: account.invoice.cancel, id: account_invoice_cancel_0}:
     {}
 -
-  I clicked on Cancel Invoices Button
--
-  !python {model: account.invoice.cancel, id: False}: |
-    self.browse(ref("account_invoice_cancel_0")).with_context({"lang": 'en_US',
-      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
-      "type": "out_invoice", "active_id": ref("account_invoice_state"), }).invoice_cancel()
--
   I check that customer invoice is in the cancel state
 -
   !assert {model: account.invoice, id: account_invoice_state}:
