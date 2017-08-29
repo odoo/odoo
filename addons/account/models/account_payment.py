@@ -309,16 +309,23 @@ class account_payment(models.Model):
             'context': action_context,
         }
 
-    @api.onchange('amount')
+    @api.onchange('amount', 'currency_id')
     def _onchange_amount(self):
-        res = {}
         journal_type = ['bank', 'cash']
-        res['domain'] = {'journal_id': [('type', 'in', journal_type), self.payment_type == 'inbound' and ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)]}
-        if self.amount == 0:
+        domain = []
+        if self.currency_id.is_zero(self.amount):
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
             journal_type.append('general')
             self.payment_difference_handling = 'reconcile'
-            res['domain'] = {'journal_id': [('type', 'in', journal_type)]}
-        return res
+            self.journal_id = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
+        else:
+            if self.payment_type == 'inbound':
+                domain.append(('at_least_one_inbound', '=', True))
+            else:
+                domain.append(('at_least_one_outbound', '=', True))
+        domain.append(('type', 'in', journal_type))
+        return {'domain': {'journal_id': domain}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -544,7 +551,7 @@ class account_payment(models.Model):
             counterpart_aml['amount_currency'] -= amount_currency_wo
 
         #Write counterpart lines
-        if not self.amount == 0:
+        if not self.currency_id.is_zero(self.amount):
             if not self.currency_id != self.company_id.currency_id:
                 amount_currency = 0
             liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
