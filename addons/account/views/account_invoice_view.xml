@@ -325,8 +325,8 @@
                                     <field name="user_id" string="Responsible"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
-                                    <field name="name" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_create': True}"/>
+                                    <field name="name"/>
                                 </group>
                                 <group>
                                     <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>
