@@ -716,8 +716,8 @@ class WebsiteSale(http.Controller):
             [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
         )
 
-        values['form_acquirers'] = [acq for acq in acquirers if acq.prefered_payment_type in ['form', 'both'] and acq.view_template_id]
-        values['s2s_acquirers'] = [acq for acq in acquirers if acq.prefered_payment_type in ['s2s', 'both'] and acq.registration_view_template_id]
+        values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
+        values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
         values['tokens'] = request.env['payment.token'].search(
             [('partner_id', '=', order.partner_id.id),
             ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])

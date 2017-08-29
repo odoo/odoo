@@ -117,8 +117,8 @@ class PaymentAcquirer(models.Model):
         help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
-        ('ask', 'Let the customer decide (recommended for eCommerce)'),
-        ('always', 'Always (recommended for Subscriptions)')],
+        ('ask', 'Let the customer decide'),
+        ('always', 'Always')],
         string='Save Cards', default='none',
         help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
@@ -151,15 +151,10 @@ class PaymentAcquirer(models.Model):
              "Use this field anywhere a small image is required.")
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
-    prefered_payment_type = fields.Selection(selection=[('s2s','Server to server'),
-        ('form', 'Form'),
-        ('both', 'Both')
-    ], default='form', required=True, string='Prefered payment type', help="""Which payment type you wish to use.
-        - Form: Redirect the user to the payment acquirer website to pay.
-        - Server to server: The user enter his credit card information on your website and is processed by Odoo.
-        - Both: Both are displayed to the user.
-
-        Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website.'),
+        ('form', 'The customer is redirected to the website of the acquirer.')],
+        default='form', required=True, string='Payment flow',
+        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
