@@ -6885,6 +6885,71 @@ QUnit.module('relational_fields', {
         list.destroy();
     });
 
+    QUnit.test('search more in many2one: group and use the pager', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records.push({
+            id: 5,
+            display_name: "Partner 4",
+        }, {
+            id: 6,
+            display_name: "Partner 5",
+        }, {
+            id: 7,
+            display_name: "Partner 6",
+        }, {
+            id: 8,
+            display_name: "Partner 7",
+        }, {
+            id: 9,
+            display_name: "Partner 8",
+        }, {
+            id: 10,
+            display_name: "Partner 9",
+        });
+
+        this.data.partner.fields.datetime.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+
+            res_id: 1,
+            archs: {
+                'partner,false,list': '<tree limit="7"><field name="display_name"/></tree>',
+                'partner,false,search': '<search><group>' +
+                       '    <filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
+                        '</group></search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
+
+        $('.modal .o_searchview_more').click();  // Magnifying class for more filters
+        $('.modal .o_search_options .o_group_by_menu a:contains(Bar)').click(); // group by 'Bar'
+
+        $('.modal .o_group_header:first').click();
+        assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 7,
+            "should display 7 records in the first page");
+        $('.modal .o_group_header:first .o_pager_next').click();
+        assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 1,
+            "should display 1 record in the second page");
+
+        form.destroy();
+    });
+
     QUnit.test('field many2many_tags keeps focus when being edited', function (assert) {
         assert.expect(7);
 
