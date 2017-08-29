@@ -8,8 +8,8 @@ class Website(models.Model):
     _inherit = "website"
 
     @api.model
-    def payment_options(self):
-        """ This function returns the list of payment options which are supported by payment acquirers that are published
+    def payment_icons(self):
+        """ This function returns the list of payment icons which are supported by payment acquirers that are published
         """
-        options = self.env['payment.option'].sudo().search([('acquirer_ids', '!=', False)])
-        return [opt for opt in options if any(acq.website_published for acq in opt.acquirer_ids)]
+        icons = self.env['payment.icon'].sudo().search([('acquirer_ids', '!=', False)])
+        return [icon for icon in icons if any(acq.website_published for acq in icon.acquirer_ids)]

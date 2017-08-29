@@ -150,7 +150,7 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    payment_option_ids = fields.Many2many('payment.option', string='Supported Payment Option')
+    payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
     prefered_payment_type = fields.Selection(selection=[('s2s','Server to server'),
         ('form', 'Form'),
         ('both', 'Both')
@@ -355,7 +355,7 @@ class PaymentAcquirer(models.Model):
 
         return self.view_template_id.render(values, engine='ir.qweb')
 
-    def get_s2s_form_name(self):
+    def get_s2s_form_xml_id(self):
         if self.registration_view_template_id:
             model_data = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('res_id', '=', self.registration_view_template_id.id)])
             return ('%s.%s') % (model_data.module, model_data.name)
@@ -400,23 +400,23 @@ class PaymentAcquirer(models.Model):
                 'context': context,
             }
 
-class PaymentOption(models.Model):
-    _name = 'payment.option'
-    _description = 'Payment Option'
+class PaymentIcon(models.Model):
+    _name = 'payment.icon'
+    _description = 'Payment Icon'
 
     name = fields.Char(string='Name')
-    acquirer_ids = fields.Many2many('payment.acquirer', string="Acquirers", help="List of Acquirers supporting this payment option.")
+    acquirer_ids = fields.Many2many('payment.acquirer', string="Acquirers", help="List of Acquirers supporting this payment icon.")
     image = fields.Binary(
         "Image", attachment=True,
-        help="This field holds the image used for this payment option, limited to 1024x1024px")
+        help="This field holds the image used for this payment icon, limited to 1024x1024px")
     image_medium = fields.Binary(
         "Medium-sized image", attachment=True,
-        help="Medium-sized image of this payment option. It is automatically "
+        help="Medium-sized image of this payment icon. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
     image_small = fields.Binary(
         "Small-sized image", attachment=True,
-        help="Small-sized image of this payment option. It is automatically "
+        help="Small-sized image of this payment icon. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
@@ -430,14 +430,14 @@ class PaymentOption(models.Model):
         if 'image' in vals:
             vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
 
-        return super(PaymentOption, self).create(vals)
+        return super(PaymentIcon, self).create(vals)
 
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
         if 'image' in vals:
            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-        return super(PaymentOption, self).write(vals)
+        return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
     """ Transaction Model. Each specific acquirer can extend the model by adding
