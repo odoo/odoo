@@ -50,6 +50,7 @@ class AccountConfigSettings(models.TransientModel):
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')
     module_account_sepa = fields.Boolean(string='Use SEPA payments')
+    module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
     module_account_plaid = fields.Boolean(string="Plaid Connector")
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically")
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
