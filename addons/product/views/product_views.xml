@@ -220,13 +220,11 @@
                                 <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                     <label for="volume"/>
                                     <div class="o_row">
-                                        <field name="volume"/>
-                                        <span>m³</span>
+                                        <field name="volume" widget="volume"/>
                                     </div>
                                     <label for="weight"/>
                                     <div class="o_row">
-                                        <field name="weight"/>
-                                        <span>kg</span>
+                                        <field name="weight" widget="weight"/>
                                     </div>
                                 </group>
                             </group>

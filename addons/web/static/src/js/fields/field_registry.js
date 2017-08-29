@@ -38,6 +38,7 @@ registry
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('label_selection', basic_fields.LabelSelection)
+    .add('measure', basic_fields.MeasureField)
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
     .add('boolean_favorite', basic_fields.FavoriteWidget)

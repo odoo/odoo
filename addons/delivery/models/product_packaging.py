@@ -10,7 +10,7 @@ class ProductPackaging(models.Model):
     height = fields.Integer('Height')
     width = fields.Integer('Width')
     length = fields.Integer('Length')
-    max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
+    max_weight = fields.Float('Max Weight', help="Maximum weight shippable in this packaging. If you want to change the weight's unit of measure, you can do it in the General Settings.")
     shipper_package_code = fields.Char('Package Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')
 

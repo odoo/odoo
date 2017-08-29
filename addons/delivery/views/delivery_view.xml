@@ -218,10 +218,9 @@
                     <group>
                         <label for="weight" string="Weight"/>
                         <div>
-                            <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight" widget="weight" class="oe_inline"/>
                         </div>
-                        <field name="shipping_weight"/>
+                        <field name="shipping_weight" widget="weight"/>
                         <field name="number_of_packages" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                 </group>
@@ -249,7 +248,7 @@
             <field name="inherit_id" ref="stock.view_move_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_expected']" position="after">
-                    <field name="weight"/>
+                    <field name="weight" widget="weight"/>
                 </xpath>
             </field>
         </record>
@@ -261,8 +260,8 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="packaging_id"/>
-                    <field name="weight"/>
-                    <field name="shipping_weight"/>
+                    <field name="weight" widget="weight"/>
+                    <field name="shipping_weight" widget="weight"/>
                 </field>
             </field>
         </record>
@@ -272,14 +271,8 @@
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='main_grp']" position="inside">
-                    <group>
-                        <label for="weight"/>
-                        <div>
-                            <field name="weight" nolabel="1" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                        </div>
-                    </group>
+                <xpath expr="//group[@name='main_grp_col2']" position="inside">
+                    <field name="weight" widget="weight"/>
                 </xpath>
             </field>
         </record>

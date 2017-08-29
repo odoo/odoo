@@ -2341,7 +2341,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree>' +
                     '<field name="int_field" widget="handle"/>' +
-                    '<field name="amount" widget="float" digits="[5,0]"/>' +
+                    '<field name="qux"/>' +
                   '</tree>',
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
@@ -2357,14 +2357,14 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '1200',
-            "default first record should have amount 1200");
-        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '500',
-            "default second record should have amount 500");
-        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '300',
-            "default third record should have amount 300");
-        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '0',
-            "default third record should have amount 0");
+        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '0.40',
+            "default first record should have amount 0.40");
+        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '13.00',
+            "default second record should have amount 13.00");
+        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '-3.00',
+            "default third record should have amount -3.00");
+        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '9.00',
+            "default third record should have amount 9.00");
 
         // Drag and drop the fourth line in second position
         testUtils.dragAndDrop(
@@ -2373,14 +2373,14 @@ QUnit.module('Views', {
             {position: 'bottom'}
         );
 
-        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '1200',
-            "new first record should have amount 1200");
-        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '0',
-            "new second record should have amount 0");
-        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '500',
-            "new third record should have amount 500");
-        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '300',
-            "new third record should have amount 300");
+        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '0.40',
+            "new first record should have amount 0.40");
+        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '9.00',
+            "new second record should have amount 9.00");
+        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '13.00',
+            "new third record should have amount 13.00");
+        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '-3.00',
+            "new third record should have amount -3.00");
 
         list.destroy();
     });

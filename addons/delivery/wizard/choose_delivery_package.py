@@ -18,7 +18,8 @@ class ChooseDeliveryPackage(models.TransientModel):
     )
     shipping_weight = fields.Float(
         string='Shipping Weight',
-        default=lambda self: self._default_shipping_weight()
+        default=lambda self: self._default_shipping_weight(),
+        help="If you want to change the weight's unit of measure, you can do it in the General Settings."
     )
 
     def _default_stock_quant_package_id(self):

@@ -39,7 +39,7 @@ class ResCompany(models.Model):
             nb_companies = self.search_count([])
             for company in self:
                 existing_pricelist = ProductPricelist.search(
-                    [('company_id', 'in', (False, company.id)), 
+                    [('company_id', 'in', (False, company.id)),
                      ('currency_id', '=', currency_id)])
                 if existing_pricelist:
                     continue
@@ -56,7 +56,7 @@ class ResCompany(models.Model):
                         'company': company.name
                     }
                     pricelist = ProductPricelist.create({
-                        'name': _("Default %(currency)s pricelist for %(company)s") %  params,
+                        'name': _("Default %(currency)s pricelist for %(company)s") % params,
                         'currency_id': currency_id,
                         'company_id': company.id,
                     })

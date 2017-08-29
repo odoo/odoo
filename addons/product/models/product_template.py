@@ -81,12 +81,13 @@ class ProductTemplate(models.Model):
         help="The cost price is used to valuate your inventory.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume',
-        help="The volume in m3.", store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', store=True,
+        help="The volume of this product. If you want to change the volume's"
+             " unit of measure, you can do it in the General Settings.")
     weight = fields.Float(
-        'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
-        inverse='_set_weight', store=True,
-        help="The weight of the contents in Kg, not including any packaging, etc.")
+        'Weight', compute='_compute_weight', inverse='_set_weight', store=True,
+        help="The weight of the contents, not including any packaging, etc. If you want to change"
+             " the weight's unit of measure, you can do it in the General Settings.")
 
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,

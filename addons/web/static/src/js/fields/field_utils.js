@@ -248,6 +248,43 @@ function formatX2Many(value) {
 }
 
 /**
+ * Returns a string representing a measured value. The result takes into account
+ * the user settings (to display the correct decimal separator, symbol, ...).
+ *
+ * @param {float} value the value that should be formatted
+ * @param {Object} [field]
+ *        a description of the field (returned by fields_get for example).
+ * @param {Object} [options]
+ *        additional options to override the values in the python description of
+ *        the field.
+ * @param {Object} [options.measure] the description of the measure to use
+ * @param {string} [options.measure.symbol]
+ *        the symbol to be prepended or appended to the value string
+ * @param {string} [options.measure.position]
+ *        whether to prepend ('before') or append ('after') the symbol
+ * @param {integer[]} [options.measure.digits]
+ *        the number of digits that should be used, instead of the default
+ *        digits precision in the field.
+ * @returns {string}
+ */
+function formatMeasure(value, field, options) {
+    var measure = (options || {}).measure || {};
+
+    var formatted_value = formatFloat(value, field, {
+        digits: measure.digits,
+    });
+
+    if (!measure.symbol) {
+        return formatted_value;
+    }
+    if (measure.position === "after") {
+        return formatted_value += '&nbsp;' + measure.symbol;
+    } else {
+        return measure.symbol + '&nbsp;' + formatted_value;
+    }
+}
+
+/**
  * Returns a string representing a monetary value. The result takes into account
  * the user settings (to display the correct decimal separator, currency, ...).
  *
@@ -291,18 +328,11 @@ function formatMonetary(value, field, options) {
         currency = session.get_currency(currency_id);
     }
 
-    var formatted_value = formatFloat(value, field, {
-        digits:  (currency && currency.digits) || options.digits,
-    });
+    if (currency) {
+        currency.digits = currency.digits || options.digits || field.digits;
+    }
 
-    if (!currency) {
-        return formatted_value;
-    }
-    if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
-    } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
-    }
+    return formatMeasure(value, field, {measure: currency});
 }
 
 /**
@@ -542,6 +572,7 @@ return {
         integer: formatInteger,
         many2many: formatX2Many,
         many2one: formatMany2one,
+        measure: formatMeasure,
         monetary: formatMonetary,
         one2many: formatX2Many,
         reference: formatMany2one,

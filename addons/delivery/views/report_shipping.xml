@@ -9,8 +9,7 @@
                     <span t-field="o.carrier_id"/>
                 </td>
                 <td t-if="o.weight">
-                    <span t-field="o.weight"/>
-                    <span t-field="o.weight_uom_id"/>
+                    <span t-field="o.weight" t-options="{'widget': 'weight'}"/>
                 </td>
             </xpath>
         </template>
