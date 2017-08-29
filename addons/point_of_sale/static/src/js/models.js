@@ -1443,7 +1443,7 @@ exports.Orderline = Backbone.Model.extend({
 
         var taxes_vals = [];
         _(taxes).each(function(tax){
-            var tax_amount = self._compute_all(tax, base, quantity);
+            var tax_amount = self._compute_all(tax, base, quantity, false);
             tax_amount = round_pr(tax_amount, currency_rounding);
 
             var tax_base = base;
