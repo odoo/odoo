@@ -56,8 +56,8 @@ class account_abstract_payment(models.AbstractModel):
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
-        if not self.amount > 0.0:
-            raise ValidationError(_('The payment amount must be strictly positive.'))
+        if self.amount < 0:
+            raise ValidationError(_('The payment amount cannot be negative.'))
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
@@ -309,6 +309,24 @@ class account_payment(models.Model):
             'context': action_context,
         }
 
+    @api.onchange('amount', 'currency_id')
+    def _onchange_amount(self):
+        journal_type = ['bank', 'cash']
+        domain = []
+        if self.currency_id.is_zero(self.amount):
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
+            journal_type.append('general')
+            self.payment_difference_handling = 'reconcile'
+            self.journal_id = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
+        else:
+            if self.payment_type == 'inbound':
+                domain.append(('at_least_one_inbound', '=', True))
+            else:
+                domain.append(('at_least_one_outbound', '=', True))
+        domain.append(('type', 'in', journal_type))
+        return {'domain': {'journal_id': domain}}
+
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
@@ -526,18 +544,19 @@ class account_payment(models.Model):
             writeoff_line['amount_currency'] = amount_currency_wo
             writeoff_line['currency_id'] = currency_id
             writeoff_line = aml_obj.create(writeoff_line)
-            if counterpart_aml['debit']:
+            if counterpart_aml['debit'] or writeoff_line['credit']:
                 counterpart_aml['debit'] += credit_wo - debit_wo
-            if counterpart_aml['credit']:
+            if counterpart_aml['credit'] or writeoff_line['debit']:
                 counterpart_aml['credit'] += debit_wo - credit_wo
             counterpart_aml['amount_currency'] -= amount_currency_wo
 
         #Write counterpart lines
-        if not self.currency_id != self.company_id.currency_id:
-            amount_currency = 0
-        liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
-        liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
-        aml_obj.create(liquidity_aml_dict)
+        if not self.currency_id.is_zero(self.amount):
+            if not self.currency_id != self.company_id.currency_id:
+                amount_currency = 0
+            liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
+            liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
+            aml_obj.create(liquidity_aml_dict)
 
         #validate the payment
         move.post()

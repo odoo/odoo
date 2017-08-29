@@ -230,15 +230,15 @@
                             <field name="partner_id" invisible="1"/>
                             <field name="state" invisible="1"/>
                             <group>
-                                <field name="journal_id" widget="selection"/>
-                                <field name="hide_payment_method" invisible="1"/>
-                                <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
-                                <field name="payment_method_code" invisible="1"/>
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                                 </div>
+                                <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
+                                <field name="hide_payment_method" invisible="1"/>
+                                <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
+                                <field name="payment_method_code" invisible="1"/>
                             </group>
                             <group>
                                 <field name="payment_date"/>
@@ -252,6 +252,8 @@
                                     <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
                                         <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
                                         <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                        <label string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
+                                        <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
                                         <label for="writeoff_label" class="oe_edit_only" string="Label"/>
                                         <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                                     </div>
