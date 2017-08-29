@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
 
 import time
 
 
-class TestAccountInvoiceRounding(AccountTestUsers):
+class TestAccountInvoiceRounding(AccountingTestCase):
 
     def setUp(self):
-        super(AccountTestUsers, self).setUp()
+        super(TestAccountInvoiceRounding, self).setUp()
         self.account_receivable = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_revenue = self.env['account.account'].search(
             [('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
+        self.fixed_tax = self.env['account.tax'].create({
+            'name': 'Test Tax',
+            'amount': 0.0,
+            'amount_type': 'fixed',
+        })
 
     def create_cash_rounding(self, rounding, method, strategy):
         return self.env['account.cash.rounding'].create({
@@ -35,17 +40,8 @@ class TestAccountInvoiceRounding(AccountTestUsers):
             'type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-06-26',
         })
-        tax_id = None
         if tax_amount:
-            tax_id = self.env['account.tax'].search([('name', '=', 'Test Tax')])
-            if tax_id:
-                tax_id.amount = tax_amount
-            else:
-                tax_id = self.env['account.tax'].create({
-                    'name': 'Test Tax',
-                    'amount': tax_amount,
-                    'amount_type': 'fixed',
-                })
+            self.fixed_tax.amount = tax_amount
         self.env['account.invoice.line'].create({
             'product_id': self.env.ref("product.product_product_4").id,
             'quantity': 1,
@@ -53,7 +49,7 @@ class TestAccountInvoiceRounding(AccountTestUsers):
             'invoice_id': invoice_id.id,
             'name': 'something',
             'account_id': self.account_revenue.id,
-            'invoice_line_tax_ids': [(6, 0, [tax_id.id])] if tax_id else None
+            'invoice_line_tax_ids': [(6, 0, [self.fixed_tax.id])] if tax_amount else None
         })
         # Create the tax_line_ids
         invoice_id._onchange_invoice_line_ids()
