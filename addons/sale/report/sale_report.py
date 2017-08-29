@@ -26,6 +26,8 @@ class SaleReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
+    amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
@@ -56,6 +58,8 @@ class SaleReport(models.Model):
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
+                    sum(l.amt_to_invoice / COALESCE(cr.rate, 1.0)) as amt_to_invoice,
+                    sum(l.amt_invoiced / COALESCE(cr.rate, 1.0)) as amt_invoiced,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
