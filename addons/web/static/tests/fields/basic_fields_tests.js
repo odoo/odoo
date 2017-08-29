@@ -1578,6 +1578,24 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('handle widget with falsy values', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="sequence" widget="handle"/>' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_row_handle:visible').length, this.data.partner.records.length,
+            'there should be a visible handle for each record');
+        list.destroy();
+    });
+
 
     QUnit.module('FieldDate');
 
