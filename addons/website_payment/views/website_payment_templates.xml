@@ -6,7 +6,7 @@
             <ul class="payment_method_list list-inline">
                 <t t-foreach="request.website.payment_icons()" t-as="icon">
                     <li>
-                        <span t-field="icon.image_small" t-options='{"widget": "image", "alt-field": "name"}' />
+                        <span t-field="icon.image" t-options='{"widget": "image", "alt-field": "name"}' />
                     </li>
                 </t>
             </ul>

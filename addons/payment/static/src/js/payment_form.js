@@ -18,7 +18,6 @@ odoo.define('payment.payment_form', function (require){
         },
 
         payEvent: function(ev) {
-            // ev.stopPropagation();
             ev.preventDefault();
             var form = this.el;
             var checked_radio = this.$('input[type="radio"]:checked');
@@ -113,26 +112,23 @@ odoo.define('payment.payment_form', function (require){
                     // if there's a prepare tx url set
                     if($tx_url.length == 1)
                     {
+                        // if the user wants to save his credit card info
+                        form_save_token = $('input[name="o_payment_form_save_token"]').checked === true;
                         // then we call the route to prepare the transaction
                         ajax.jsonRpc($tx_url[0].value, 'call', {
                             'acquirer_id': parseInt(acquirer_id),
                             'save_token': form_save_token
                         }).then(function(result){
                             if(result) {
-                                // TBE: I really don't like how it is designed, but I can't do better with how e-commerce works/
-                                var ignored_inputs = ['data_set', 'o_payment_form_save_token'];
-                                var html_form = '<form method="post" action="'
-                                    + ds.dataset.actionUrl + '" class="hidden">'
-                                    + result + '</form>';
-
-                                // we append the form to the body
-                                var form = $(html_form).appendTo("body");
-                                // we remove the "unused" inputs
-                                for(var i = 0; i < ignored_inputs.length; i++) {
-                                    form.find('input[name="' + ignored_inputs[i] + '"]').remove();
-                                }
-                                // we submit the form
-                                form.submit();
+                                // if the server sent us the html form, we create a form element
+                                var newForm = document.createElement('form');
+                                newForm.setAttribute("method", "post"); // set it to post
+                                newForm.setAttribute("action", ds.dataset.actionUrl); // set the action url
+                                newForm.hidden = true; // hide it
+                                newForm.innerHTML = result; // put the html sent by the server inside the form
+                                document.getElementsByTagName('body')[0].appendChild(newForm); // append the form to the body
+                                $(newForm).find('input[data-remove-me]').remove(); // remove all the input that should be removed
+                                newForm.submit(); // and finally submit the form
                             }
                             else {
                                 self.error(_t('Server Error'),
@@ -146,7 +142,6 @@ odoo.define('payment.payment_form', function (require){
                     else
                     {
                         // we append the form to the body and send it.
-                        // $(html_form).appendTo("body").submit();
                         this.error(_t("Cannot set-up the payment"), _t("<p>We're unable to process your payment.</p>"));
                     }
                 }
@@ -366,11 +361,11 @@ odoo.define('payment.payment_form', function (require){
 
 
 
-    $(document).ready(function (){
-        if (!$('.o_payment_form').length) {
-            return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
-        }
-        var form = new PaymentForm();
-        form.attachTo($('.o_payment_form'));
-    });
+    require('web.dom_ready'); // only start this when dom is ready
+    if (!$('.o_payment_form').length) {
+        return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
+    }
+    var form = new PaymentForm();
+    form.attachTo($('.o_payment_form'));
+
 });

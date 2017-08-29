@@ -11,5 +11,4 @@ class Website(models.Model):
     def payment_icons(self):
         """ This function returns the list of payment icons which are supported by payment acquirers that are published
         """
-        icons = self.env['payment.icon'].sudo().search([('acquirer_ids', '!=', False)])
-        return [icon for icon in icons if any(acq.website_published for acq in icon.acquirer_ids)]
+        return self.env['payment.icon'].sudo().search([('acquirer_ids.website_published', '=', True)])

@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="stripe_form">
-            <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
             <script src="https://checkout.stripe.com/checkout.js"></script>
             <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
             <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
@@ -22,7 +22,6 @@
             <input type='hidden' name='email' t-att-value='email'/>
             <input id="acquirer_stripe" type='hidden' name="acquirer" t-att-value="acquirer.id"/>
             <input type='hidden' name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
-            <!-- TBE TODO: Seems like the JS does something with the submit button, I need to check this out -->
             <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
         </template>
 

@@ -404,34 +404,22 @@ class PaymentIcon(models.Model):
     image = fields.Binary(
         "Image", attachment=True,
         help="This field holds the image used for this payment icon, limited to 1024x1024px")
-    image_medium = fields.Binary(
-        "Medium-sized image", attachment=True,
-        help="Medium-sized image of this payment icon. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
-        "Small-sized image", attachment=True,
-        help="Small-sized image of this payment icon. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
 
     image_payment_form = fields.Binary(
         "Image displayed on the payment form", attachment=True)
 
     @api.model
     def create(self, vals):
-        image_resize_images(vals)
-
         if 'image' in vals:
             vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-
+            vals['image'] = image_resize_image(vals['image'], size=(64,64))
         return super(PaymentIcon, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        image_resize_images(vals)
         if 'image' in vals:
            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
+           vals['image'] = image_resize_image(vals['image'], size=(64,64))
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
