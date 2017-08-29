@@ -20,27 +20,18 @@
             }
 
             .o_value {
-                font-weight: bold;
+                font-weight: 800;
             }
 
             > a {
-                color: @text-color;
                 font-weight: 500;
-
-                &:hover {
-                    text-decoration: none;
-                    color: @headings-color;
-                }
 
                 &.o_needaction{
                     font-size: small;
                     font-weight: 400;
                     margin-left: 4px;
-                    opacity: 0.5;
+                    .o-hover-opacity(0.5, 1);
 
-                    &:hover{
-                        opacity:1;
-                    }
                     &:before {
                         content: "/ ";
                     }
