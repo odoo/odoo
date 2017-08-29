@@ -35,7 +35,7 @@ from openerp.tools import ustr
 from openerp.tools.misc import str2bool, xlwt
 from openerp import http
 from openerp.http import request, serialize_exception as _serialize_exception, content_disposition
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -1405,6 +1405,9 @@ class ExcelExport(ExportFormat, http.Controller):
         return base + '.xls'
 
     def from_data(self, fields, rows):
+        if len(rows) > 65535:
+            raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
+
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
