@@ -2043,7 +2043,7 @@ var BasicModel = AbstractModel.extend({
         if (record.data.hasOwnProperty(domainModel)) {
             domainModel = record._changes && record._changes[domainModel] || record.data[domainModel];
         }
-        var domainValue = record._changes && record._changes[fieldName] || record.data[fieldName];
+        var domainValue = record._changes && record._changes[fieldName] || record.data[fieldName] || [];
 
         // avoid rpc if not necessary
         var hasChanged = this._saveSpecialDataCache(record, fieldName, {
