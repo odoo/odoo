@@ -13,11 +13,10 @@ def load_translations(env):
 def init_settings(env):
     '''If the company is localized in Switzerland, activate the cash rounding by default.
     '''
-    company_id = env.user.company_id
     # The cash rounding is activated by default only if the company is localized in Switzerland.
-    if company_id.country_id == env.ref('base.ch'):
+    for company in env['res.company'].search([('country_id', '=', env.ref('base.ch').id)]):
         res_config_id = env['account.config.settings'].create({
-            'company_id': company_id.id,
+            'company_id': company.id,
             'group_cash_rounding': True
         })
         # We need to call execute, otherwise the "implied_group" in fields are not processed.
