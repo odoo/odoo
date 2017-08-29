@@ -46,11 +46,12 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit = "product.product"
+
     def _bom_orders_count(self, cr, uid, ids, field_name, arg, context=None):
         Production = self.pool('mrp.production')
-        res = {}
-        for product_id in ids:
-            res[product_id] = Production.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
+        res = dict.fromkeys(ids, 0)
+        for g in Production.read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context):
+            res[g['partner_id'][0]] = g['partner_id_count']
         return res
 
     _columns = {
