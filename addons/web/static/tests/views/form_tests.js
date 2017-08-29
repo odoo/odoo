@@ -5734,5 +5734,29 @@ QUnit.module('Views', {
         config.debug = initialDebugMode;
         form.destroy();
     });
+
+    QUnit.test('bounce edit button in readonly mode', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<div class="oe_title">' +
+                        '<field name="display_name"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                bounce_edit: function() {
+                    assert.step('bounce edit method is called.');
+                }
+            }
+        });
+
+        form.$('[name="display_name"]').click();
+        form.destroy();
+    });
 });
 });
