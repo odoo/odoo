@@ -219,30 +219,17 @@
                 .o-flex-display();
                 .o-align-items(center);
                 height: 20px;
-
-                .o_selection, .o_kanban_selection {
-                    font-size: 12px;
-                    line-height: 12px;
-                    margin: 0;
-                    padding: 0;
-
-                    > a {
-                        display: inline-block;
-                        overflow: hidden;
-                        line-height: 0;
-                    }
-                }
             }
             .oe_kanban_bottom_left {
                 .o-flex(1, 0, auto);
 
-                .o_priority {
+                > * {
                     margin-right: 6px;
+                }
 
-                    .o_priority_star {
-                        margin-top: 1px;
-                        font-size: 18px;
-                    }
+                .o_priority_star {
+                    margin-top: 1px;
+                    font-size: 18px;
                 }
             }
             .oe_kanban_bottom_right{

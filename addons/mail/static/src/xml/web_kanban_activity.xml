@@ -22,7 +22,7 @@
         <span>No activities planned.</span>
     </li>
     <li t-if="!_.isEmpty(records)">
-        <ul class="o_activity_log">
+        <ul class="nav o_activity_log">
             <t t-foreach="_.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />
                 <li class="o_activity_label">
