@@ -1994,7 +1994,7 @@
         </record>
 
         <menuitem id="menu_account_customer" name="Customers"
-            parent="menu_finance_receivables"
+            parent="menu_finance_receivables_master_data"
             action="base.action_partner_customer_form" sequence="100"/>
 
         <record id="product_product_view_tree" model="ir.ui.view">
@@ -2041,14 +2041,14 @@
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
 
-        <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables" sequence="100"/>
+        <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables_master_data" sequence="100"/>
 
-        <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="101"/>
+        <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables_master_data" sequence="101"/>
 
         <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
 
         <menuitem id="menu_account_supplier" name="Vendors"
-            parent="menu_finance_payables"
+            parent="menu_finance_payables_master_data"
             action="base.action_partner_supplier_form" sequence="100"/>
 
         <!-- Account Financial Report -->
