@@ -1,134 +1,163 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data noupdate="1">
-	<!-- Account Tags -->
+<odoo>
+    <data>
 
-	<record id="tax_tag_ut25" model="account.account.tag">
-		<field name="name">Utgående 25% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
-	<record id="tax_tag_ut15" model="account.account.tag">
-		<field name="name">Utgående 15% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
-	<record id="tax_tag_ut8" model="account.account.tag">
-		<field name="name">Utgående 10% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
-	<record id="tax_tag_in25" model="account.account.tag">
-		<field name="name">Inngående 25% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
-	<record id="tax_tag_in15" model="account.account.tag">
-		<field name="name">Inngående 15% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
-	<record id="tax_tag_in8" model="account.account.tag">
-		<field name="name">Inngående 10% mva</field>
-		<field name="applicability">taxes</field>
-	</record>
+        <!-- Account Tags -->
+        <record id="tag_no_01" model="account.account.tag">
+            <field name="name">Sum avgiftsgrunnlag</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_02" model="account.account.tag">
+            <field name="name">Sum innkjøp</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_03" model="account.account.tag">
+            <field name="name">Ikke momspliktig omsetning</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_04" model="account.account.tag">
+            <field name="name">Grunnlag for utgående avgift, høy sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_05" model="account.account.tag">
+            <field name="name">Grunnlag for utgående avgift, mellom sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_06" model="account.account.tag">
+            <field name="name">Grunnlag for utgående avgift, lav sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_07" model="account.account.tag">
+            <field name="name">Grunnlag for inngående avgift, høy sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_08" model="account.account.tag">
+            <field name="name">Grunnlag for inngående avgift, mellom sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_09" model="account.account.tag">
+            <field name="name">Grunnlag for inngående avgift, lav sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_10" model="account.account.tag">
+            <field name="name">Netto beregnet avgift</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_11" model="account.account.tag">
+            <field name="name">Beregnet inngående avgift, høy sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_12" model="account.account.tag">
+            <field name="name">Beregnet inngående avgift, lav sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_13" model="account.account.tag">
+            <field name="name">Beregnet inngående avgift, mellom sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_14" model="account.account.tag">
+            <field name="name">Beregnet utgående avgift, høy sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_15" model="account.account.tag">
+            <field name="name">Beregnet utgående avgift, lav sats</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_no_16" model="account.account.tag">
+            <field name="name">Beregnet utgående avgift, mellom sats</field>
+            <field name="applicability">taxes</field>
+        </record>
 
-        <record id="tax_tag_in0" model="account.account.tag">
+
+        <record id="tax1" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Utgående 25% mva</field>
+            <field name="description">Utgående 25% mva</field>
+            <field name="amount">25</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="chart2701"/>
+            <field name="refund_account_id" ref="chart2701"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_04'),ref('tag_no_14')])]"/>
+        </record>
+        <record id="tax2" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Utgående 15% mva</field>
+            <field name="description">Utgående 15% mva</field>
+            <field name="amount">15</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="chart2703"/>
+            <field name="refund_account_id" ref="chart2703"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_05'),ref('tag_no_16')])]"/>
+        </record>
+        <record id="tax3" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Utgående 10% mva</field>
+            <field name="description">Utgående 10% mva</field>
+            <field name="amount">10</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="chart2704"/>
+            <field name="refund_account_id" ref="chart2704"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_06'),ref('tag_no_15')])]"/>
+        </record>
+        <record id="tax4" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Inngående 25% mva</field>
+            <field name="description">Inngående 25% mva</field>
+            <field name="amount">25</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="chart2711"/>
+            <field name="refund_account_id" ref="chart2711"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_07'),ref('tag_no_11')])]"/>
+        </record>
+        <record id="tax5" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Inngående 15% mva</field>
+            <field name="description">Inngående 15% mva</field>
+            <field name="amount">15</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="chart2713"/>
+            <field name="refund_account_id" ref="chart2713"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_08'),ref('tag_no_13')])]"/>
+        </record>
+        <record id="tax6" model="account.tax.template">
+            <field name="chart_template_id" ref="no_chart_template"/>
+            <field name="name">Inngående 10% mva</field>
+            <field name="description">Inngående 10% mva</field>
+            <field name="amount">10</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="chart2714"/>
+            <field name="refund_account_id" ref="chart2714"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_no_09'),ref('tag_no_12')])]"/>
+        </record>
+
+        <record id="tax7" model="account.tax.template">
+                <field name="chart_template_id" ref="no_chart_template"/>
                 <field name="name">Inngående 0% mva</field>
-                <field name="applicability">taxes</field>
+                <field name="description">Inngående 0% mva</field>
+                <field name="amount">0</field>
+                <field name="amount_type">percent</field>
+                <field name="type_tax_use">purchase</field>
+                <field name="account_id" ref="chart2714"/>
+                <field name="refund_account_id" ref="chart2714"/>
         </record>
 
-        <record id="tax_tag_ut0" model="account.account.tag">
+        <record id="tax8" model="account.tax.template">
+                <field name="chart_template_id" ref="no_chart_template"/>
                 <field name="name">Utgående 0% mva</field>
-                <field name="applicability">taxes</field>
+                <field name="description">Utgående 0% mva</field>
+                <field name="amount">0</field>
+                <field name="amount_type">percent</field>
+                <field name="type_tax_use">sale</field>
+                <field name="account_id" ref="chart2704"/>
+                <field name="refund_account_id" ref="chart2704"/>
+                <field name="tag_ids" eval="[(6,0,[ref('tag_no_03')])]"/>
         </record>
 
-
-<record id="tax1" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Utgående 25% mva</field>
-	<field name="description">Utgående 25% mva</field>
-	<field name="amount">25</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">sale</field>
-	<field name="account_id" ref="chart2701"/>
-	<field name="refund_account_id" ref="chart2701"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut25')])]"/>
-</record>
-<record id="tax2" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Utgående 15% mva</field>
-	<field name="description">Utgående 15% mva</field>
-	<field name="amount">15</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">sale</field>
-	<field name="account_id" ref="chart2703"/>
-	<field name="refund_account_id" ref="chart2703"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut15')])]"/>
-</record>
-<record id="tax3" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Utgående 10% mva</field>
-	<field name="description">Utgående 10% mva</field>
-	<field name="amount">10</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">sale</field>
-	<field name="account_id" ref="chart2704"/>
-	<field name="refund_account_id" ref="chart2704"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut8')])]"/>
-</record>
-<record id="tax4" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Inngående 25% mva</field>
-	<field name="description">Inngående 25% mva</field>
-	<field name="amount">25</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">purchase</field>
-	<field name="account_id" ref="chart2711"/>
-	<field name="refund_account_id" ref="chart2711"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in25')])]"/>
-</record>
-<record id="tax5" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Inngående 15% mva</field>
-	<field name="description">Inngående 15% mva</field>
-	<field name="amount">15</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">purchase</field>
-	<field name="account_id" ref="chart2713"/>
-	<field name="refund_account_id" ref="chart2713"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in15')])]"/>
-</record>
-<record id="tax6" model="account.tax.template">
-	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Inngående 10% mva</field>
-	<field name="description">Inngående 10% mva</field>
-	<field name="amount">10</field>
-	<field name="amount_type">percent</field>
-	<field name="type_tax_use">purchase</field>
-	<field name="account_id" ref="chart2714"/>
-	<field name="refund_account_id" ref="chart2714"/>
-	<field name="tag_ids" eval="[(6,0,[ref('tax_tag_in8')])]"/>
-</record>
-
-<record id="tax7" model="account.tax.template">
-        <field name="chart_template_id" ref="no_chart_template"/>
-        <field name="name">Inngående 0% mva</field>
-        <field name="description">Inngående 0% mva</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="account_id" ref="chart2714"/>
-        <field name="refund_account_id" ref="chart2714"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_in0')])]"/>
-</record>
-
-<record id="tax8" model="account.tax.template">
-        <field name="chart_template_id" ref="no_chart_template"/>
-        <field name="name">Utgående 0% mva</field>
-        <field name="description">Utgående 0% mva</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="account_id" ref="chart2704"/>
-        <field name="refund_account_id" ref="chart2704"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ut0')])]"/>
-</record>
-
-</data>
-</openerp>
+    </data>
+</odoo>

@@ -5,7 +5,7 @@
 
 {
     'name' : 'Poland - Accounting',
-    'version' : '1.02',
+    'version' : '2.0',
     'author' : 'Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
     'category': 'Localization',
