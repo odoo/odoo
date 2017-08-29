@@ -45,7 +45,7 @@ tour.register('crm_tour', {
     content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
     position: "bottom",
     run: function (actions) {
-        actions.auto(".modal-footer .btn-default");
+        actions.auto(".modal-footer button[special=cancel]");
     },
 }, {
     trigger: ".o_kanban_record",

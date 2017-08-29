@@ -238,6 +238,26 @@ class MailActivity(models.Model):
         return message.ids and message.ids[0] or False
 
     @api.multi
+    def action_done_schedule_next(self):
+        wizard_ctx = dict(
+            self.env.context,
+            default_previous_activity_type_id=self.activity_type_id.id,
+            default_res_id=self.res_id,
+            default_res_model=self.res_model,
+        )
+        self.action_done()
+        return {
+            'name': _('Schedule an Activity'),
+            'context': wizard_ctx,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.activity',
+            'views': [(False, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
+    @api.multi
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
