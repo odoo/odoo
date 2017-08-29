@@ -101,8 +101,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div t-attf-id="o_payment_form_acq_{{acq.id}}" class="panel-footer hidden">
-                        <p>You'll be redirected to the <t t-esc="acq.provider"/> website after clicking on the payment button.</p>
+                    <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="hidden {{'panel-footer' if acq.save_token == 'ask' else ''}}">
                         <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token"/> Save my payment data</label>
                         <t t-raw="acq.form"/>
                     </div>
