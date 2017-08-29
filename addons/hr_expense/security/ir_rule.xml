@@ -11,8 +11,18 @@
         <record id="property_rule_expense_employee" model="ir.rule">
             <field name="name">Employee Expense</field>
             <field name="model_id" ref="model_hr_expense"/>
-            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'in', (False, 'draft'))]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="hr_expense_prevent_unlink" model="ir.rule">
+            <field name="name">Expense Prevent Delete Employee</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'not in', (False, 'draft'))]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
         <record id="hr_expense_comp_rule" model="ir.rule">
             <field name="name">Expense multi company rule</field>
