@@ -271,6 +271,10 @@ class MrpWorkorder(models.Model):
                     'location_dest_id': move.location_dest_id.id,
                     })
 
+    def _assign_default_final_lot_id(self):
+        self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
+                                                                    order='create_date', limit=1)
+
     @api.multi
     def record_production(self):
         self.ensure_one()
@@ -308,8 +312,6 @@ class MrpWorkorder(models.Model):
         # One a piece is produced, you can launch the next work order
         if self.next_work_order_id.state == 'pending':
             self.next_work_order_id.state = 'ready'
-        if self.next_work_order_id and self.final_lot_id and not self.next_work_order_id.final_lot_id:
-            self.next_work_order_id.final_lot_id = self.final_lot_id.id
 
         self.move_line_ids.filtered(
             lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
@@ -342,18 +344,24 @@ class MrpWorkorder(models.Model):
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
+        if self.final_lot_id:
+            self.final_lot_id.use_next_on_work_order_id = self.next_work_order_id
+            self.final_lot_id = False
+
         # Set a qty producing
         if self.qty_produced >= self.production_id.product_qty:
             self.qty_producing = 0
         elif self.production_id.product_id.tracking == 'serial':
+            self._assign_default_final_lot_id()
             self.qty_producing = 1.0
             self._generate_lot_ids()
         else:
             self.qty_producing = self.production_id.product_qty - self.qty_produced
             self._generate_lot_ids()
 
-        self.final_lot_id = False
         if self.qty_produced >= self.production_id.product_qty:
+            if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
+                self.next_work_order_id._assign_default_final_lot_id()
             self.button_finish()
         return True
 
