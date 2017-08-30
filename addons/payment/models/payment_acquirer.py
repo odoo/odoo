@@ -227,6 +227,33 @@ class PaymentAcquirer(models.Model):
             return getattr(self, '%s_get_form_action_url' % self.provider)()
         return False
 
+    def _get_available_payment_input(self, partner=None, company=None):
+        """ Generic (model) method that fetches available payment mechanisms
+        to use in all portal / eshop pages that want to use the payment form.
+
+        It contains
+
+         * form_acquirers: record set of acquirers based on a local form that
+                           sends customer to the acquirer website;
+         * s2s_acquirers: reset set of acquirers that send customer data to
+                          acquirer without redirecting to any other website;
+         * pms: record set of stored credit card data (aka payment.token)
+                connected to a given partner to allow customers to reuse them """
+        if not company:
+            company = self.env.user.company_id
+        if not partner:
+            partner = self.env.user.partner_id
+        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
+        form_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 'form' and acq.view_template_id)
+        s2s_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 's2s' and acq.registration_view_template_id)
+        return {
+            'form_acquirers': form_acquirers,
+            's2s_acquirers': s2s_acquirers,
+            'pms': self.env['payment.token'].search([
+                ('partner_id', '=', partner.id),
+                ('acquirer_id', 'in', s2s_acquirers.ids)]),
+        }
+
     @api.multi
     def render(self, reference, amount, currency_id, partner_id=False, values=None):
         """ Renders the form template of the given acquirer as a qWeb template.
@@ -362,6 +389,10 @@ class PaymentAcquirer(models.Model):
         if not self.s2s_validate(data):
             return False
         if hasattr(self, cust_method_name):
+            # As this method may be called in JSON and overriden in various addons
+            # let us raise interesting errors before having stranges crashes
+            if not data.get('partner_id'):
+                raise ValueError(_('Missing partner reference when trying to create a new payment token'))
             method = getattr(self, cust_method_name)
             return method(data)
         return True
