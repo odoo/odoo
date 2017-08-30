@@ -49,6 +49,10 @@
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
+                    <button class="oe_stat_button" name="action_used_in_bom" type="object"
+                        attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_bom_count', '=', 0)]}" icon="fa-level-up">
+                        <field string="BoM Where Used" name="used_in_bom_count" widget="statinfo" />
+                    </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
@@ -67,6 +71,10 @@
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_stat_button" name="action_used_in_bom" type="object"
+                        attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']), ('used_in_bom_count', '=', 0)]}" icon="fa-level-up">
+                        <field string="BoM Where Used" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="%(act_product_mrp_production)d" type="action"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
