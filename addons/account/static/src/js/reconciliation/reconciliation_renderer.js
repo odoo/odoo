@@ -20,7 +20,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
         'focusout .statement_name_edition>input': '_onValidateName',
@@ -67,13 +66,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         this.$('h1.statement_name').text(this._initialState.title);
 
         delete this._initialState;
-
-        this.enterHandler = function (e) {
-            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                this.trigger_up('validate_all_balanced');
-            }
-        }.bind(this);
-        $('body').on('keyup', this.enterHandler);
 
         return $.when.apply($, defs);
     },
@@ -142,7 +134,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     // if enter key is pressed after changing the title
     _inputKeyUP: function(event) {
         if(event.which === $.ui.keyCode.ENTER) {
-            this._onValidateName();
+            $('.statement_name_edition input').blur();
         }
     },
     //--------------------------------------------------------------------------
