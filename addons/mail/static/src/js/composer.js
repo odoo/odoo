@@ -514,6 +514,13 @@ var BasicComposer = Widget.extend(chat_mixin, {
         this.clear_composer();
     },
 
+    getState: function () {
+        return {
+            attachments: this.get('attachment_ids'),
+            text: this.$input.val(),
+        };
+    },
+
     // Events
     on_click_add_attachment: function () {
         this.$('input.o_input_file').click();
@@ -523,6 +530,11 @@ var BasicComposer = Widget.extend(chat_mixin, {
     on_click_emoji_img: function(event) {
         this.$input.val(this.$input.val() + " " + $(event.currentTarget).data('emoji') + " ");
         this.$input.focus();
+    },
+
+    setState: function (state) {
+        this.set('attachment_ids', state.attachments);
+        this.$input.val(state.text);
     },
 
     /**
@@ -810,7 +822,15 @@ var ExtendedComposer = BasicComposer.extend({
             return message;
         });
     },
-
+    clear_composer: function () {
+        this._super.apply(this, arguments);
+        this.$subject_input.val('');
+    },
+    getState: function () {
+        var state = this._super.apply(this, arguments);
+        state.subject = this.$subject_input.val();
+        return state;
+    },
     should_send: function () {
         return false;
     },
@@ -823,6 +843,10 @@ var ExtendedComposer = BasicComposer.extend({
     },
     set_subject: function(subject) {
         this.$('.o_composer_subject input').val(subject);
+    },
+    setState: function (state) {
+        this._super.apply(this, arguments);
+        this.set_subject(state.subject);
     },
 });
 
