@@ -61,20 +61,22 @@ class sale_quote(http.Controller):
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True,
+            'partner_id': order_sudo.partner_id.id,
         }
 
         if order_sudo.require_payment or values['need_payment']:
-            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)]))
-            extra_context = {
-                'submit_class': 'btn btn-primary',
-                'submit_txt': _('Pay & Confirm')
-            }
-            values['buttons'] = {}
-            for acquirer in values['acquirers']:
-                values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
-                    '/',
-                    order_sudo.amount_total,
-                    order_sudo.pricelist_id.currency_id.id,
+            acquirers = request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)])
+
+            values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]
+            values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
+            values['pms'] = request.env['payment.token'].search(
+                [('partner_id', '=', order_sudo.partner_id.id),
+                ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
+
+            for acq in values['form_acquirers']:
+                acq.form = acq.render('/', order_sudo.amount_total, order_sudo.pricelist_id.currency_id.id,
                     values={
                         'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                         'type': 'form',
@@ -158,8 +160,8 @@ class sale_quote(http.Controller):
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (Order.id, token))
 
     # note dbo: website_sale code
-    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, access_token=None, tx_type=None):
+    @http.route(['/quote/<int:order_id>/transaction/'], type='json', auth="public", website=True)
+    def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -170,7 +172,7 @@ class sale_quote(http.Controller):
         """
         order = request.env['sale.order'].sudo().browse(order_id)
         if not order or not order.order_line or acquirer_id is None:
-            return request.redirect("/quote/%s" % order_id)
+            return False
 
         # find an already existing transaction
         acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
@@ -189,3 +191,38 @@ class sale_quote(http.Controller):
                                          'type': order._get_payment_type(),
                                          'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                                          })
+
+    @http.route('/quote/<int:order_id>/transaction/token', type='http', auth='public', website=True)
+    def payment_token(self, order_id, pm_id=None, **kwargs):
+
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order or not order.order_line or pm_id is None:
+            return request.redirect("/quote/%s" % order_id)
+
+        # try to convert pm_id into an integer, if it doesn't work redirect the user to the quote
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            return request.redirect('/quote/%s' % order_id)
+
+        # retrieve the token from its id
+        token = request.env['payment.token'].sudo().browse(pm_id)
+        if not token:
+            return request.redirect('/quote/%s' % order_id)
+
+        # find an already existing transaction
+        tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
+        # set the transaction type to server2server
+        tx_type = 'server2server'
+        # check if the transaction exists, if not then it create one
+        tx = tx.check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type=tx_type, add_tx_values={
+            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
+            'callback_res_id': order.id,
+            'callback_method': '_confirm_online_quote',
+        })
+        # set the transaction id into the session
+        request.session['quote_%s_transaction_id' % order_id] = tx.id
+        # proceed to the payment
+        tx.confirm_sale_token()
+        # redirect the user to the online quote
+        return request.redirect('/quote/%s/%s' % (order_id, order.access_token))

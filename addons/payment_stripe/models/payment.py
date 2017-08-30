@@ -17,9 +17,9 @@ STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 
 # The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
 INT_CURRENCIES = [
-    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYGí', u'RWF', u'KRW',
+    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYG', u'RWF', u'KRW',
     u'VUV', u'VND', u'XOF'
-];
+]
 
 
 class PaymentAcquirerStripe(models.Model):
