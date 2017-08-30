@@ -19,6 +19,7 @@ QUnit.module('Views', {
                     int_field: {string: "int_field", type: "integer", sortable: true},
                     qux: {string: "my float", type: "float"},
                     m2o: {string: "M2O field", type: "many2one", relation: "bar"},
+                    o2m: {string: "O2M field", type: "one2many", relation: "bar"},
                     m2m: {string: "M2M field", type: "many2many", relation: "bar"},
                     amount: {string: "Monetary field", type: "monetary"},
                     currency_id: {string: "Currency", type: "many2one",
@@ -1992,6 +1993,80 @@ QUnit.module('Views', {
             "3rd row should be selected");
 
         list.destroy();
+    });
+
+    QUnit.test('navigation with tab on a list with create="0"', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom" create="0">' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row').length, 4,
+            "the list should contain 4 rows");
+
+        list.$('.o_data_row:nth(2) .o_data_cell:first').click();
+        assert.ok(list.$('.o_data_row:nth(2)').hasClass('o_selected_row'),
+            "third row should be in edition");
+
+        // Press 'Tab' -> should go to next line
+        list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
+        assert.ok(list.$('.o_data_row:nth(3)').hasClass('o_selected_row'),
+            "fourth row should be in edition");
+
+        // Press 'Tab' -> should go back to first line as the create action isn't available
+        list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
+        assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should be in edition");
+
+        list.destroy();
+    });
+
+
+    QUnit.test('navigation with tab on a one2many list with create="0"', function (assert) {
+        assert.expect(4);
+
+        this.data.foo.records[0].o2m = [1, 2];
+        var form = createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><sheet>' +
+                    '<field name="o2m">' +
+                        '<tree editable="bottom" create="0">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</sheet></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=o2m] .o_data_row').length, 2,
+            "there should be two records in the many2many");
+
+        form.$('.o_field_widget[name=o2m] .o_data_cell:first').click();
+        assert.ok(form.$('.o_field_widget[name=o2m] .o_data_row:first').hasClass('o_selected_row'),
+            "first row should be in edition");
+
+        // Press 'Tab' -> should go to next line
+        form.$('.o_field_widget[name=o2m] .o_selected_row input').trigger({type: 'keydown', which: 9});
+        assert.ok(form.$('.o_field_widget[name=o2m] .o_data_row:nth(1)').hasClass('o_selected_row'),
+            "second row should be in edition");
+
+        // Press 'Tab' -> should go back to first line as the create action isn't available
+        form.$('.o_field_widget[name=o2m] .o_selected_row input').trigger({type: 'keydown', which: 9});
+        assert.ok(form.$('.o_field_widget[name=o2m] .o_data_row:first').hasClass('o_selected_row'),
+            "first row should be in edition");
+
+        form.destroy();
     });
 
     QUnit.test('edition, then navigation with tab (with a readonly field)', function (assert) {
