@@ -186,15 +186,20 @@ class TestSaleTimesheet(TestSale):
         self.assertEquals(timesheet2.timesheet_invoice_id, invoice)
         self.assertEquals(timesheet3.timesheet_invoice_id, invoice)
 
-        # check that analytic line for product 'ordered' can be altered
+        # check that analytic line for product 'delivery' cannot be altered
         with self.assertRaises(UserError):
             timesheet1.write(dict(unit_amount=10))
         self.assertNotEquals(timesheet1.unit_amount, 10)
 
-        # check that analytic line for product 'delivered' cannot be altered
+        # check that analytic line for product 'ordered' can be altered
         timesheet3.write(dict(unit_amount=10))
         self.assertEquals(timesheet3.unit_amount, 10)
 
+        # check that if at least 1 analytic line is for product 'delivery', it cannot be altered
+        with self.assertRaises(UserError):
+            (timesheet1 + timesheet3).write(dict(unit_amount=15))
+        self.assertNotEquals(timesheet1.unit_amount, 15)
+        self.assertNotEquals(timesheet3.unit_amount, 15)
 
     def test_revenue_multi_currency(self):
         """ Create a SO with 2 lines : one for a delivered service, one for a ordered service. Confirm
