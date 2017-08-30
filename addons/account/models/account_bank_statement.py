@@ -91,7 +91,7 @@ class AccountBankStatement(models.Model):
     @api.one
     @api.depends('line_ids.journal_entry_ids')
     def _check_lines_reconciled(self):
-        self.all_lines_reconciled = all([line.journal_entry_ids.ids or line.account_id.id for line in self.line_ids])
+        self.all_lines_reconciled = all([line.journal_entry_ids.ids or line.account_id.id for line in self.line_ids if not self.currency_id.is_zero(line.amount)])
 
     @api.depends('move_line_ids')
     def _get_move_line_count(self):
@@ -236,7 +236,7 @@ class AccountBankStatement(models.Model):
             for st_line in statement.line_ids:
                 if st_line.account_id and not st_line.journal_entry_ids.ids:
                     st_line.fast_counterpart_creation()
-                elif not st_line.journal_entry_ids.ids:
+                elif not st_line.journal_entry_ids.ids and not statement.currency_id.is_zero(st_line.amount):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
                 for aml in st_line.journal_entry_ids:
                     moves |= aml.move_id
@@ -286,7 +286,7 @@ class AccountBankStatement(models.Model):
 
         sql_query = """SELECT stl.id
                         FROM account_bank_statement_line stl
-                        WHERE account_id IS NULL AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
+                        WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
                             AND company_id = %s
                 """
         params = (self.env.user.company_id.id,)
@@ -377,10 +377,10 @@ class AccountBankStatementLine(models.Model):
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
-        # This constraint could possibly underline flaws in bank statement import (eg. inability to
-        # support hacks such as using dummy transactions to give additional informations)
-        if self.amount == 0:
-            raise ValidationError(_('A transaction can\'t have a 0 amount.'))
+        # Allow to enter bank statement line with an amount of 0,
+        # so that user can enter/import the exact bank statement they have received from their bank in Odoo
+        if self.journal_id.type != 'bank' and self.currency_id.is_zero(self.amount):
+            raise ValidationError(_('A Cash transaction can\'t have a 0 amount.'))
 
     @api.one
     @api.constrains('amount', 'amount_currency')
