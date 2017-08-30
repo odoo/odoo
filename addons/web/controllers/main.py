@@ -36,7 +36,7 @@ from odoo.tools.misc import str2bool, xlwt
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 
 _logger = logging.getLogger(__name__)
@@ -1427,6 +1427,9 @@ class ExcelExport(ExportFormat, http.Controller):
         return base + '.xls'
 
     def from_data(self, fields, rows):
+        if len(rows) > 65535:
+            raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
+
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 
