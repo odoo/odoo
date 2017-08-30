@@ -166,7 +166,7 @@ class account_journal(models.Model):
                             FROM account_bank_statement_line AS line
                             LEFT JOIN account_bank_statement AS st
                             ON line.statement_id = st.id
-                            WHERE st.journal_id IN %s AND st.state = 'open'
+                            WHERE st.journal_id IN %s AND st.state = 'open' AND line.amount != 0.0
                             AND not exists (select 1 from account_move_line aml where aml.statement_line_id = line.id)
                         """, (tuple(self.ids),))
             number_to_reconcile = self.env.cr.fetchone()[0]
