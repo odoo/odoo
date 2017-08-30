@@ -539,6 +539,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *   reload
      */
     _onReload: function (event) {
+        event.stopPropagation(); // prevent other controllers from handling this request
         var data = event && event.data || {};
         var handle = data.db_id;
         if (handle) {

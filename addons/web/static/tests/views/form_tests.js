@@ -5734,5 +5734,60 @@ QUnit.module('Views', {
         config.debug = initialDebugMode;
         form.destroy();
     });
+
+    QUnit.test('reload event is handled only once', function (assert) {
+        // In this test, several form controllers are nested (two of them are
+        // opened in dialogs). When the users clicks on save in the last
+        // opened dialog, a 'reload' event is triggered up to reload the (direct)
+        // parent view. If this event isn't stopPropagated by the first controller
+        // catching it, it will crash when the other one will try to handle it,
+        // as this one doesn't know at all the dataPointID to reload.
+        assert.expect(9);
+
+        var arch = '<form>' +
+                        '<field name="display_name"/>' +
+                        '<field name="trululu"/>' +
+                    '</form>';
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: arch,
+            archs: {
+                'partner,false,form': arch,
+            },
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_external_button').click(); // open the many2one record in a modal
+        $('.modal .o_external_button').click(); // in the modal, open the many2one record in another modal
+
+        $('.modal:nth(1) .o_field_widget[name=display_name]').val('new name').trigger('input');
+        $('.modal:nth(1) .modal-footer .btn-primary').first().click(); // save changes
+
+        assert.strictEqual($('.modal .o_field_widget[name=trululu] input').val(), 'new name',
+            "record should have been reloaded");
+        assert.verifySteps([
+            "read", // main record
+            "get_formview_id", // id of first form view opened in a dialog
+            "read", // first dialog
+            "get_formview_id", // id of second form view opened in a dialog
+            "read", // second dialog
+            "write", // save second dialog
+            "read", // reload first dialog
+        ]);
+
+        form.destroy();
+    });
 });
 });
