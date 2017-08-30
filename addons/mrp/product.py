@@ -51,7 +51,7 @@ class product_product(osv.osv):
         Production = self.pool('mrp.production')
         res = dict.fromkeys(ids, 0)
         for g in Production.read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context):
-            res[g['partner_id'][0]] = g['partner_id_count']
+            res[g['product_id'][0]] = g['product_id_count']
         return res
 
     _columns = {
