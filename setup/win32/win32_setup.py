@@ -17,14 +17,16 @@ def generate_files():
 
     files = []
     if os.name == 'nt':
-        files.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+        files.append(('vcredist', ['c:\\vcredist_x86.exe', ]))
+    services_files = []
     for action, steps in actions.items():
         fname = action + '.bat'
-        files.append(fname)
+        services_files.append(fname)
         with open(fname, 'w') as fp:
             fp.write('@PATH=%WINDIR%\system32;%WINDIR%;%WINDIR%\System32\Wbem;.\n')
             for step in steps:
                 fp.write('@net %s %s\n' % (step, nt_service_name))
+    files.append(('services_files', services_files))
     return files
 
 setup(
