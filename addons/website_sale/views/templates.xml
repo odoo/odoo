@@ -1324,71 +1324,26 @@
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
-                            <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
-                                <div class="col-lg-7 col-sm-8">
-                                    <h4>Choose a payment acquirer</h4>
-                                    <ul class="list-unstyled">
-                                        <t t-set="payment_methods_available" t-value="False"/>
-                                        <t t-set="partner_country" t-value="website_sale_order and website_sale_order.partner_invoice_id.country_id"/>
-                                        <t t-foreach="acquirers or []" t-as="acquirer">
-                                          <li t-if="not acquirer.country_ids or partner_country in acquirer.country_ids">
-                                            <label t-if="acquirer.button">
-                                                <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer" />
-                                                <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
-                                                <span t-field="acquirer.name" />
-                                                <span t-if="acquirer.fees_active">(processing fees apply)</span>
-                                            </label>
-                                            <t t-set="payment_methods_available" t-value="True"/>
-                                          </li>
-                                        </t>
-                                        <li t-if="not payment_methods_available">
-                                          <div class="alert alert-warning">
-                                            <span>No payment gateway is available for your country</span>
-                                          </div>
-                                        </li>
-                                        <li t-if="any(token for token in tokens if not token.acquirer_id.country_ids or partner_country in token.acquirer_id.country_ids)">
-                                            <label>
-                                                <input type="radio" name="acquirer" />
-                                                <span class='fa fa-2x fa-credit-card'/>
-                                                Saved Cards
-                                            </label>
 
-                                            <div class="list-group">
-                                                <t t-foreach='tokens' t-as='token'>
-                                                    <a t-if="not token.acquirer_id.country_ids or partner_country in token.acquirer_id.country_ids" class="list-group-item btn_payment_token" t-att-data-acquirer="token.acquirer_id.id" t-att-data-token='token.id'>
-                                                        <span class="js_radio fa fa-circle-o"></span>&amp;nbsp;
-                                                        <t t-esc="token.name" />
-                                                        <t t-if="len(set(tokens.mapped('acquirer_id')))>1">
-                                                            (<t t-esc='token.acquirer_id.name'/>)
-                                                        </t>
-                                                        <span t-if="token.acquirer_id.fees_active">(processing fees apply)</span>
-                                                    </a>
-                                                </t>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <a class="btn btn-default btn-block"
-                                            groups="base.group_system"
-                                            t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
+                            <div id="payment_method" class="mb64 col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                                <h3 class="mb24">Pay with </h3>
+                                <t t-call="payment.payment_tokens_list">
+                                    <t t-set="mode" t-value="'payment'"/>
+                                    <t t-set="submit_txt" t-value="'Pay Now'"/>
+                                    <t t-set="icon_class" t-value="'fa-lock'"/>
+                                    <t t-set="pms" t-value="tokens"/>
+                                    <t t-set="form_action" t-value="'/shop/payment/token'"/>
+                                    <t t-set="prepare_tx_url" t-value="'/shop/payment/transaction/'"/>
+                                    <t t-set="partner_id" t-value="partner"/>
+                                </t>
+                            </div>
+
+                            <div t-if="not (form_acquirers or s2s_acquirers)">
+                                <a class="btn btn-default btn-block"
+                                    groups="base.group_system"
+                                    t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
                                         <i class="fa fa-plus-square" aria-hidden="true"></i> Configure payment acquirers
-                                    </a>
-                                </div>
-                                <div class="col-lg-5 col-sm-4 text-right">
-                                    <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
-                                        <div class="o_payment_acquirer_button hidden pull-right"
-                                                t-att-data-id="acquirer.id"
-                                                t-att-data-call-url="'/shop/payment/transaction/%s' % (acquirer.id)">
-                                            <div t-raw="acquirer.button" />
-                                            <div class="token_hide">
-                                                <div t-if="acquirer.save_token == 'ask'">
-                                                    <input type="checkbox" name="odoo_save_token" id="odoo_save_token"/>
-                                                    <label for="odoo_save_token">Save my payment data</label>
-                                                </div>
-                                                <div class="pre_msg" t-field="acquirer.pre_msg" />
-                                            </div>
-                                        </div>
-                                    </t>
-                                </div>
+                                </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <div class="col-sm-12">
