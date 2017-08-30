@@ -41,11 +41,11 @@ odoo.define('payment.payment_form', function (require){
                         if(element.dataset.isRequired) {
                             if (element.value.length === 0) {
                                 $(element).closest('div.form-group').addClass('has-error');
+                                empty_inputs = true;
                             }
                             else {
                                 $(element).closest('div.form-group').removeClass('has-error');
                             }
-                            empty_inputs = true;
                         }
                     });
 
