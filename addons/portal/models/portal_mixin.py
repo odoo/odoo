@@ -13,6 +13,12 @@ class PortalMixin(models.AbstractModel):
         'Portal Access URL', compute='_compute_portal_url',
         help='Customer Portal URL')
     shared = fields.Boolean('Check shared Document', compute="_compute_shared")
+    # to display the warning from specific model
+    share_warning = fields.Text("share warning", compute="_compute_share_warning")
+
+    def _compute_share_warning(self):
+        for mixin in self:
+            mixin.share_warning = ''
 
     def _compute_shared(self):
         # when Access through sudo in portal env.user will be super user
@@ -47,7 +53,7 @@ class PortalMixin(models.AbstractModel):
         field = self._get_customer_field()
         return self[field] if field else self.env['res.partner']
 
-    def get_share_url(self):
+    def get_share_url(self, signup_partner=False):
         self.ensure_one()
         params = {
             'model': self._name,
@@ -55,7 +61,7 @@ class PortalMixin(models.AbstractModel):
         }
         if hasattr(self, 'access_token') and self.access_token:
             params['access_token'] = self.access_token
-        if hasattr(self, 'partner_id') and self.partner_id:
+        if signup_partner and hasattr(self, 'partner_id') and self.partner_id:
             params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
 
         return '/mail/view?' + url_encode(params)

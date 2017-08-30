@@ -417,7 +417,6 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboardMixin, {
     init: function() {
         this._super.apply(this, arguments);
         this.string = this.nodeOptions.string || _t('Copy Text');
-        this.icon = 'fa-clipboard'
     },
 
     //--------------------------------------------------------------------------
@@ -991,7 +990,6 @@ var TextCopyClipboard = FieldText.extend(CopyClipboardMixin, {
     init: function() {
         this._super.apply(this, arguments);
         this.string = this.nodeOptions.string || _t('Copy Text');
-        this.icon = 'fa-clipboard'
     },
 
     //--------------------------------------------------------------------------

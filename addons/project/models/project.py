@@ -247,6 +247,11 @@ class Project(models.Model):
         for project in self:
             project.portal_url = '/my/project/%s' % project.id
 
+    def _compute_share_warning(self):
+        super(Project, self)._compute_share_warning()
+        for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
+            project.share_warning = _("The project won't be visible in the recipients portal because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it appear on the portal.\n")
+
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
         domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
@@ -572,6 +577,11 @@ class Task(models.Model):
         super(Task, self)._compute_portal_url()
         for task in self:
             task.portal_url = '/my/task/%s' % task.id
+
+    def _compute_share_warning(self):
+        super(Task, self)._compute_share_warning()
+        for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
+            task.share_warning = _("The task won't be visible in the recipients portal because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it appear on the portal.\n")
 
     @api.depends('child_ids.planned_hours')
     def _compute_subtask_planned_hours(self):

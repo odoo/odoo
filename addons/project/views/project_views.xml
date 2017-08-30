@@ -328,6 +328,9 @@
                                     <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div>
+                                                <a name="%(portal.mail_invite_share_action)d" type="action">Share</a>
+                                            </div>
+                                            <div>
                                                 <a type="edit">Edit</a>
                                             </div>
                                             <div t-if="record.rating_status.raw_value != 'no'">
@@ -557,6 +560,7 @@
                                         </a>
                                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                             <li t-if="widget.editable"><a type="set_cover">Set Cover Image</a></li>
+                                            <li><a name="%(portal.mail_invite_share_action)d" type="action">Share</a></li>
                                             <li t-if="widget.editable"><a type="edit">Edit Task</a></li>
                                             <li t-if="widget.deletable"><a type="delete">Delete</a></li>
                                             <li class="divider"></li>

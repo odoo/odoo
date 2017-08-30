@@ -112,6 +112,7 @@ var AbstractView = Class.extend({
                 create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
                 delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
                 duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
+                share: this.arch.attrs.share ? JSON.parse(this.arch.attrs.share) : false,
             },
             groupable: this.groupable,
             controllerID: params.controllerID,
