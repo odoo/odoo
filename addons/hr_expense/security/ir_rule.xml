@@ -26,6 +26,26 @@
             <field eval="True" name="global"/>
             <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
         </record>
+        <record id="hr_expense_report_prevent_unlink" model="ir.rule">
+            <field name="name">Expense Report Prevent Delete Employee</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="domain_force">[('state', '=', 'submit')]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record id="hr_expense_report_auth_unlink" model="ir.rule">
+            <field name="name">Expense Report Authorize Delete Officer</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
 
     </data>
 </odoo>
