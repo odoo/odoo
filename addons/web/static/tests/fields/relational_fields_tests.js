@@ -998,14 +998,15 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('list in form: default_get with x2many create', function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
+        var displayName = 'brandon is the new timmy';
         this.data.partner.onchanges.timmy = function (obj) {
             assert.deepEqual(
                 obj.timmy,
                 [
                     [6, false, []],
-                    [0, false, {display_name: 'brandon is the new timmy', name: 'brandon'}]
+                    [0, false, {display_name: displayName, name: 'brandon'}]
                 ],
                 "should have properly created the x2many command list");
             obj.int_field = obj.timmy.length;
@@ -1029,6 +1030,15 @@ QUnit.module('relational_fields', {
                 if (args.method === 'default_get') {
                     return $.when({timmy: [[0, 0, {display_name: 'brandon is the new timmy', name: 'brandon'}]]});
                 }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        int_field: 2,
+                        timmy: [
+                            [6, false, []],
+                            [0, false, {display_name: displayName, name: 'brandon'}],
+                        ],
+                    }, "should send the correct values to create");
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1037,6 +1047,12 @@ QUnit.module('relational_fields', {
             "should have created the new record in the m2m with the correct name");
         assert.strictEqual($('input.o_field_integer').val(), '2',
             "should have called and executed the onchange properly");
+
+        // edit the subrecord and save
+        displayName = 'new value';
+        form.$('.o_data_cell').click();
+        form.$('.o_data_cell input').val(displayName).trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });

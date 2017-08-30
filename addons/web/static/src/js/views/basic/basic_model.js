@@ -2407,7 +2407,10 @@ var BasicModel = AbstractModel.extend({
                 _.each(list._changes, function (change) {
                     if (change.operation === 'ADD') {
                         relRecordAdded.push(self.localData[change.id]);
-                    } else if (change.operation === 'UPDATE') {
+                    } else if (change.operation === 'UPDATE' && !self.isNew(change.id)) {
+                        // ignore new records that would have been updated
+                        // afterwards, as all their changes would already
+                        // be aggregated in the CREATE command
                         relRecordUpdated.push(self.localData[change.id]);
                     }
                 });
