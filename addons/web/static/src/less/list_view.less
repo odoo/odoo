@@ -33,18 +33,35 @@
     }
 
     .o_column_sortable {
+        position: relative;
         .user-select(none);  // Prevent unwanted selection while sorting
 
-        &:after {
+        &::after {
+            .o-position-absolute(@right: 3px);
             font-family: FontAwesome;
-            margin-left: 5px;
-        }
-
-        &.o-sort-up:after {
             content: "\f0d7";
+            opacity: 0;
         }
-        &.o-sort-down:after {
-            content: "\f0d8";
+        &.o-sort-up {
+            cursor: n-resize;
+            &::after {
+                content: "\f0d7";
+            }
+        }
+        &.o-sort-down {
+            cursor: s-resize;
+            &::after {
+                content: "\f0d8";
+            }
+        }
+        &:hover::after {
+            opacity: 0.3;
+        }
+        &.o-sort-up, &.o-sort-down {
+            color: @headings-color;
+            &::after {
+                opacity: 1;
+            }
         }
     }
 
