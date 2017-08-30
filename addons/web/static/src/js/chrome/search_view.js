@@ -603,6 +603,34 @@ var SearchView = Widget.extend({
             current_category = filter.category;
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Activates a filter for a given domain.
+     * FIXME: the way it is done could be improved, but the actual state of the
+     * searchview doesn't allow to do much better. For instance, if the same
+     * filter is added twice, it appears twice in the facets. This should be
+     * improved when the searchview will be rewrote.
+
+     * @param {string} domain the domain to filter on
+     * @param {string} help the text to display in the facet
+     */
+    addFilter: function (domain, help) {
+        var filter = {
+            attrs: {
+                domain: domain,
+                help: help,
+            },
+        };
+        var filterWidget = new search_inputs.Filter(filter);
+        var filterGroup = new search_inputs.FilterGroup([filterWidget], this);
+        var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
+        this.query.add([facet], {silent: true});
+        this.query.trigger('reset');
+    },
 });
 
 _.extend(SearchView, {

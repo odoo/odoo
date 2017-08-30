@@ -28,6 +28,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys));
             this.active_view.controller.reload(_.extend({}, this.env));
         },
+        add_filter: '_onAddFilter',
         switch_view: function(event) {
             if ('res_id' in event.data) {
                 this.env.currentId = event.data.res_id;
@@ -649,6 +650,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onAddFilter: function (event) {
+        if (this.searchview) {
+            this.searchview.addFilter(event.data.domain, event.data.help);
+        }
+    },
     /**
      * This handler is probably called by a sub form view when the user discards
      * its value.  The usual result of this is that we switch back to the

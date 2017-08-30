@@ -505,8 +505,8 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('many2many_tags are correctly fetched and displayed', function (assert) {
-        assert.expect(10);
+    QUnit.test('many2many_tags in kanban views', function (assert) {
+        assert.expect(11);
 
         this.data.partner.records[0].category_ids = [6, 7];
         this.data.partner.records[1].category_ids = [7];
@@ -527,6 +527,14 @@ QUnit.module('Views', {
             mockRPC: function (route) {
                 assert.step(route);
                 return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                add_filter: function (event) {
+                    assert.deepEqual(event.data, {
+                        domain: "[['category_ids','=','gold']]",
+                        help: 'gold',
+                    }, "should trigger an 'add_filter' event with correct data");
+                },
             },
         });
 
@@ -549,6 +557,9 @@ QUnit.module('Views', {
         ], 'five RPCs should have been done (previous 2, 1 write (triggers a re-render), same 2 at re-render');
         assert.strictEqual(kanban.$('.o_kanban_record:first()').find('.o_field_many2manytags .o_tag').length, 2,
             'first record should still contain only 2 tags');
+
+        // click on a tag to trigger a search by tag
+        kanban.$('.o_tag:contains(gold):first').click();
 
         kanban.destroy();
     });
