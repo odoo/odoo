@@ -1633,7 +1633,7 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
             var $tag = $('<span>')
-                    .text( _.str.escapeHTML(m2m.data.display_name))
+                    .text(m2m.data.display_name)
                     .prepend('<span>')
                     .appendTo(self.$el);
             if (self.colorField in m2m.data) {
