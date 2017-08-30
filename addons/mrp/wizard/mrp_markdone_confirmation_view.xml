@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_markdone_confirmation_view" model="ir.ui.view">
+            <field name="name">mrp.markdone.confirmation.form</field>
+            <field name="model">mrp.markdone.confirmation</field>
+            <field name="arch" type="xml">
+                <form string="Consumed Less Material">
+                    <div>
+                        <p>You have consumed less material than what was planned.</p>
+                        <p>Are you sure you want to close this MO?</p>
+                    </div>
+                    <footer>
+                        <button name="action_done" string="Done" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+    </record>
+</odoo>

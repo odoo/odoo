@@ -126,7 +126,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ---------------------------------------------------------------
         # Check consume quants and produce quants after posting inventory
         # ---------------------------------------------------------------
-        production_table.button_mark_done()
+        production_table.action_done()
 # TODO: check quantities in stock then
 #         self.assertEqual(sum(move_table_sheet.quant_ids.mapped('qty')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
 #         self.assertEqual(sum(move_leg.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
