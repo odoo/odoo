@@ -25,7 +25,7 @@
 /////////   Calendar View Design   ///////////
 .o_calendar_container {
     height: 100%;
-    .o-webclient-padding(@top: @odoo-horizontal-padding/2, @bottom: @odoo-horizontal-padding/2);
+    .o-webclient-padding(@top: @odoo-horizontal-padding, @bottom: @odoo-horizontal-padding);
     .o-flex-display();
 
     // Generate all color classes
@@ -57,7 +57,7 @@
                 z-index: 0; // FIXME
             }
             .fc-week-number, .fc-widget-header {
-                background-color: lighten(@odoo-brand-secondary, 30%);
+                background-color: @odoo-webclient-background-color;
             }
             .o_avatar_square {
                 border-radius: 5px;
@@ -82,6 +82,13 @@
             }
         }
 
+        // Border colours
+        .fc-unthemed {
+            th, td, thead, tbody, .fc-divider, .fc-row, .fc-content, .fc-popover, .fc-list-view, .fc-list-heading td {
+                border-color: @odoo-webclient-background-color;
+            }
+        }
+
         .o_target_date:not(.fc-today) {
             background-color: @odoo-brand-primary;
             opacity: 0.1;
@@ -91,12 +98,39 @@
     .o_calendar_sidebar_container {
         .o-flex(0, 0, @odoo-horizontal-padding);
         position: relative;
+        height: 100%;
 
         &.o_sidebar_hidden {
             margin-right: -@odoo-horizontal-padding; // hack to display the toggler in the gutter
             .o_calendar_sidebar_toggler {
                 padding: 4px;
                 color: darken(@odoo-webclient-background-color, 30%);
+            }
+        }
+
+        .o_calendar_sidebar {
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+            max-height: 100%;
+            height: 100%;
+        }
+
+        .panel {
+            .o-flex(0, 0, auto);
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .o_calendar_mini + .o_calendar_filter {
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+            .o-flex(1, 1, auto);
+
+            .o_calendar_filter_items {
+                overflow: auto;
             }
         }
 
@@ -113,7 +147,6 @@
         .o_calendar_sidebar {
             width: 250px;
             margin-left: 8px;
-            background: @odoo-view-background-color;
         }
 
         .ui-datepicker {
