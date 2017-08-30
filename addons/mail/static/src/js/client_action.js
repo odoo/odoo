@@ -173,6 +173,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.throttled_renderSidebar = _.throttle(this.renderSidebar.bind(this), 100, { leading: false });
         this.notification_bar = (window.Notification && window.Notification.permission === "default");
         this.selected_message = null;
+        this.composerStates = {};
     },
 
     willStart: function () {
@@ -409,15 +410,31 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             });
     },
 
+    storeComposerState: function (channel) {
+        var composer = channel.mass_mailing ? this.extended_composer : this.basic_composer;
+        this.composerStates[channel.uuid] = composer.getState();
+        composer.clear_composer();
+    },
+
+    restoreComposerState: function (channel) {
+        var composer = channel.mass_mailing ? this.extended_composer : this.basic_composer;
+        var composerState = this.composerStates[channel.uuid];
+        if (composerState) {
+            composer.setState(composerState);
+        }
+    },
+
     set_channel: function (channel) {
         var self = this;
         // Store scroll position of previous channel
         if (this.channel) {
             this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
+            this.storeComposerState(this.channel);
         }
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
 
         this.channel = channel;
+        this.restoreComposerState(this.channel);
         this.messages_separator_position = undefined; // reset value on channel change
         this.unread_counter = this.channel.unread_counter;
         this.last_seen_message_id = this.channel.last_seen_message_id;
