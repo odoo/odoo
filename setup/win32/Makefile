@@ -10,7 +10,7 @@ LAUNCH_PY2EXE=/cygdrive/c/python${PYTHON_VERSION}/python.exe setup.py py2exe
 
 MAKENSIS_ARGUMENTS=/DVERSION=$(VERSION) /DSERVICENAME=${SERVICENAME}
 
-LAUNCH_MAKENSIS=/cygdrive/c/cygwin/makensis $(MAKENSIS_ARGUMENTS) setup.nsi
+LAUNCH_MAKENSIS=/cygdrive/c/tools/cygwin/makensis $(MAKENSIS_ARGUMENTS) setup.nsi
 
 default: allinone
 
@@ -27,8 +27,8 @@ server_clean:
 	rm -rf $(SERVER_DIRECTORY)/.cyg*
 
 allinone: server_clean
-	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_PY2EXE_SERVICE))
-	(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
+	#(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_PY2EXE_SERVICE))
+	#(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && mkdir -p $(FILES_DIRECTORY))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && cp openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe)
