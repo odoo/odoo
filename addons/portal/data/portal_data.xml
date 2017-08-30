@@ -34,5 +34,31 @@
 <p>
 ${object.wizard_id.welcome_message or ''}]]></field>
         </record>
+        <record id="mail_template_share_document_portal" model="mail.template">
+            <field name="name">Portal: share Document Link</field>
+            <field name="model_id" ref="portal.model_mail_compose_message"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+% set url = object.default_share_link()
+% set active_model= ctx.get('active_model')
+% set active_id= ctx.get('active_id')
+% set record = object.env[active_model].browse(active_id)
+<p>
+    Dear,
+</p>
+<p>
+    A document ${record.name} has been shared with you.
+</p>
+<p> 
+    <a href="${url}">${url}</a>
+</p>
+<p>
+    Thank you,
+</p>
+<p>
+    ${user.name}
+</p>
+]]></field>
+        </record>
     </data>
 </odoo>

@@ -162,7 +162,10 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
+                                        <strong class="o_kanban_record_title">
+                                            <span><t t-esc="record.partner_id.value"/></span>
+                                             <button name="%(portal.action_mail_share_document)d" type="action" class="btn-link"><i class="fa fa-share-alt fa-1x"></i></button>
+                                        </strong>
                                     </div>
                                     <strong><field name="amount_total_signed" widget="monetary"/></strong>
                                 </div>
@@ -376,7 +379,7 @@
                         <div attrs="{'invisible': [('sequence_number_next_prefix','!=',False)]}">
                             <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
                             <label string="Draft Credit Note" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_refund')]}"/>
-                            <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/>
+                            <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/><button name="%(portal.action_mail_share_document)d" type="action"><i class="fa fa-share-alt fa-2x"></i></button>
                         </div>
                         <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                             <label string="Invoice Number:"/><br/>

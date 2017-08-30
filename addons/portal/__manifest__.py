@@ -21,6 +21,7 @@ a dependency towards website edition and customization capabilities.""",
         'views/assets.xml',
         'views/portal_templates.xml',
         'wizard/portal_wizard_views.xml',
+        'wizard/mail_compose_message_views.xml'
     ],
     'qweb': [
         'static/src/xml/portal_chatter.xml',
