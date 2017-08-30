@@ -1631,6 +1631,7 @@ var BasicModel = AbstractModel.extend({
                 record.data = _.extend({}, record.data, result);
             })
             .then(function () {
+                fieldNames = _.without(fieldNames, '__last_update');
                 self._parseServerData(fieldNames, record, record.data);
             })
             .then(function () {
@@ -2749,7 +2750,6 @@ var BasicModel = AbstractModel.extend({
         var fields = _.extend({
             display_name: {type: 'char'},
             id: {type: 'integer'},
-            __last_update: {type: 'datetime'},
         }, params.fields);
 
         var dataPoint = {
