@@ -120,6 +120,7 @@ var FieldManagerMixin = {
      */
     _onLoad: function (event) {
         var self = this;
+        event.stopPropagation(); // prevent other field managers from handling this request
         var data = event.data;
         if (!data.on_success) { return; }
         var params = {};

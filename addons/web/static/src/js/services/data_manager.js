@@ -398,11 +398,6 @@ return core.Class.extend({
      */
     _processFieldsView: function (viewInfo) {
         var viewFields = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
-        // by default fetch display_name and id
-        if (!viewInfo.fields.display_name) {
-            viewInfo.fields.display_name = {type: 'char'};
-            viewFields.display_name = {};
-        }
         viewInfo.fieldsInfo = {};
         viewInfo.fieldsInfo[viewInfo.type] = viewFields;
         utils.deepFreeze(viewInfo.fields);

@@ -100,7 +100,9 @@
     }
 
     .o_data_cell.o_invisible_modifier {
-        display: initial!important;  // Override invisible to keep the cells aligned
+        // Override display: none to keep table cells aligned. Note: cannot use
+        // 'initial' as it will force them to 'inline', not 'table-cell'.
+        display: table-cell!important;
     }
 
     //--------------------------------------------------------------------------

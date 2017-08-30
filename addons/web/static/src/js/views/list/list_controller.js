@@ -313,7 +313,11 @@ var ListController = BasicController.extend({
      */
     _onAddRecord: function (event) {
         event.stopPropagation();
-        this._addRecord();
+        if (this.activeActions.create) {
+            this._addRecord();
+        } else if (event.data.onFail) {
+            event.data.onFail();
+        }
     },
     /**
      * Handles a click on a button by performing its action.

@@ -341,7 +341,12 @@ ListRenderer.include({
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
-            this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+            var self = this;
+            this.unselectRow().then(function () {
+                self.trigger_up('add_record', {
+                    onFail: self._selectCell.bind(self, 0, 0, {}),
+                });
+            });
         }
     },
     /**

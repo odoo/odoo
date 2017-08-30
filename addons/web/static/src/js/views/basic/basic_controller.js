@@ -539,6 +539,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *   reload
      */
     _onReload: function (event) {
+        event.stopPropagation(); // prevent other controllers from handling this request
         var data = event && event.data || {};
         var handle = data.db_id;
         if (handle) {
@@ -546,7 +547,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             this.model.reload(handle).then(this._confirmSave.bind(this, handle));
         } else {
             // no db_id given, so reload the main record
-            this.reload({fieldNames: data.fieldNames});
+            this.reload({
+                fieldNames: data.fieldNames,
+                keepChanges: data.keepChanges || false,
+            });
         }
     },
     /**

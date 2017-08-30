@@ -995,9 +995,9 @@ QUnit.module('account', {
             " Agrolait 101200 ",
             "should display the partner and the account code as title");
 
-        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_left').text(),
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right').text(),
             "$ 11,000.00", "sould display the line in $");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_left .o_multi_currency').data('content'),
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right .o_multi_currency').data('content'),
             "10,222.00 €", "sould display the monetary information in €");
 
         assert.strictEqual(clientAction.$('.accounting_view:first .o_no_valid:visible').length, 1, "should display the skip button");
