@@ -142,7 +142,7 @@ class ProductTemplate(models.Model):
         # This makes sure that every template below has a corresponding product in the zipped result.
         self = self.filtered('product_variant_id')
         # use mapped who returns a recordset with only itself to prefetch (and don't prefetch every product_variant_ids)
-        for template, product in zip(self, self.mapped('product_variant_id')):
+        for template, product in pycompat.izip(self, self.mapped('product_variant_id')):
             template.website_price = product.website_price
             template.website_public_price = product.website_public_price
 

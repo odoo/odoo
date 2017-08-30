@@ -14,8 +14,7 @@ class TestHrContracts(TransactionCase):
         self.test_contract = dict(name='Test', wage=1, employee_id=self.employee.id, state='open')
 
     def apply_cron(self):
-        self.env.ref('hr_contract.ir_cron_data_contract_update_to_pending').method_direct_trigger()
-        self.env.ref('hr_contract.ir_cron_data_contract_update_to_close').method_direct_trigger()
+        self.env.ref('hr_contract.ir_cron_data_contract_update_state').method_direct_trigger()
 
     def test_contract_enddate(self):
         self.test_contract.update(dict(date_end=datetime.now() + relativedelta(days=100)))
