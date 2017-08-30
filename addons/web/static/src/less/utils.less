@@ -254,3 +254,21 @@
     -o-transform: @transform;
     transform: @transform;
 }
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+.o-hover-opacity(@default-opacity: 0.5, @hover-opacity: 1) {
+    opacity: @default-opacity;
+
+    &:hover, &:focus, &.focus {
+        opacity: @hover-opacity;
+    }
+}
+.o-hover-text-color(@default-color: @text-color, @hover-color: @link-color) {
+    color: @default-color;
+
+    &:hover, &:focus, &.focus {
+        color: @hover-color;
+    }
+}

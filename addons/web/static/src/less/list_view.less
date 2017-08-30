@@ -33,17 +33,35 @@
     }
 
     .o_column_sortable {
+        position: relative;
         .user-select(none);  // Prevent unwanted selection while sorting
 
-        &.o-sort-up:after {
+        &::after {
+            .o-position-absolute(@right: 3px);
             font-family: FontAwesome;
-            margin-left: 5px;
             content: "\f0d7";
+            opacity: 0;
         }
-        &.o-sort-down:after {
-            font-family: FontAwesome;
-            margin-left: 5px;
-            content: "\f0d8";
+        &.o-sort-up {
+            cursor: n-resize;
+            &::after {
+                content: "\f0d7";
+            }
+        }
+        &.o-sort-down {
+            cursor: s-resize;
+            &::after {
+                content: "\f0d8";
+            }
+        }
+        &:hover::after {
+            opacity: 0.3;
+        }
+        &.o-sort-up, &.o-sort-down {
+            color: @headings-color;
+            &::after {
+                opacity: 1;
+            }
         }
     }
 
@@ -100,7 +118,7 @@
     }
 
     .o_data_cell.o_invisible_modifier {
-        display: initial!important;  // Override invisible to keep the cells aligned
+        display: table-cell!important;  // Override invisible to keep the cells aligned
     }
 
     //--------------------------------------------------------------------------
@@ -108,7 +126,6 @@
     //--------------------------------------------------------------------------
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
         position: relative;
-        padding: 0;
 
         // Field widgets override
         > .o_field_widget {
@@ -131,7 +148,7 @@
             width: 16px; // to have some space on the right
         }
         .o_input {
-            padding: 4px; // bootstrap cell - 1px of border
+            padding: @table-condensed-cell-padding;
             background-color: white;
 
             .o_input {
@@ -144,9 +161,8 @@
         .o_field_monetary input {
             width: 0;
         }
-        .o_checkbox {
-            padding: 7px 0 0 5px;
-            background: transparent;
+        .o_field_boolean {
+            position: relative!important;
         }
         .o_field_widget {
             min-width: 0;
