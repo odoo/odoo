@@ -65,7 +65,7 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header/field[@name='state']" position="before">
-                    <button name="cancel" states="posted,sent,reconciled" string="Cancel" type="object"/>
+                    <button name="cancel" attrs="{'invisible': [('state', 'in', ['draft','cancelled'])]}" string="Cancel" type="object"/>
                 </xpath>
             </field>
         </record>

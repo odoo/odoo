@@ -6,7 +6,7 @@
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancel']" edit="false">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancelled']" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -25,7 +25,7 @@
             <field name="name">account.supplier.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancel']" edit="false">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancelled']" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -113,8 +113,8 @@
                 <form string="Register Payment" version="7">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
+                        <button name="action_draft" class="oe_highlight" states="cancelled" string="Set To Draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancelled"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">

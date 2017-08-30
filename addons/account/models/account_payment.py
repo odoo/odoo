@@ -269,7 +269,7 @@ class account_payment(models.Model):
 
     company_id = fields.Many2one(store=True)
     name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
 
     payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
@@ -425,7 +425,7 @@ class account_payment(models.Model):
                     move.line_ids.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
-            rec.state = 'cancel'
+            rec.state = 'cancelled'
 
     @api.multi
     def unlink(self):
