@@ -3157,6 +3157,19 @@ class stock_inventory(osv.osv):
             to_clean['value']['package_id'] = False
         return to_clean
 
+    def action_inventory_line_tree(self, cr, uid, ids, context=None):
+        inv = self.browse(cr, uid, ids, context=context)
+        action = self.pool['ir.model.data'].xmlid_to_object(cr, uid, 'stock.action_inventory_line_tree', context=context).read()[0]
+        action['context'] = {
+            'default_location_id': inv.location_id.id,
+            'default_product_id': inv.product_id.id,
+            'default_prod_lot_id': inv.lot_id.id,
+            'default_package_id': inv.package_id.id,
+            'default_partner_id': inv.partner_id.id,
+            'default_inventory_id': inv.id,
+        }
+        return action
+
     _constraints = [
         (_check_filter_product, 'The selected inventory options are not coherent.',
             ['filter', 'product_id', 'lot_id', 'partner_id', 'package_id']),
@@ -3215,6 +3228,8 @@ class stock_inventory_line(osv.osv):
         'prodlot_name': fields.related('prod_lot_id', 'name', type='char', string='Serial Number Name', store={
                                                                                             'stock.production.lot': (_get_prodlot_change, ['name'], 20),
                                                                                             'stock.inventory.line': (lambda self, cr, uid, ids, c={}: ids, ['prod_lot_id'], 20),}),
+        'inventory_location_id': fields.related(
+            'inventory_id', 'location_id', type='many2one', relation='stock.location', string='Location'),
     }
 
     _defaults = {
