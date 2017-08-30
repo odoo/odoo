@@ -1629,8 +1629,8 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRecord: function (record, options) {
         var self = this;
-        var fieldNames = options && options.fieldNames ||
-                         _.uniq(record.getFieldNames().concat(['display_name']));
+        var fieldNames = options && options.fieldNames || record.getFieldNames();
+        fieldNames = _.uniq(fieldNames.concat(['display_name']));
         return this._rpc({
                 model: record.model,
                 method: 'read',
@@ -2043,7 +2043,7 @@ var BasicModel = AbstractModel.extend({
         if (record.data.hasOwnProperty(domainModel)) {
             domainModel = record._changes && record._changes[domainModel] || record.data[domainModel];
         }
-        var domainValue = record._changes && record._changes[fieldName] || record.data[fieldName];
+        var domainValue = record._changes && record._changes[fieldName] || record.data[fieldName] || [];
 
         // avoid rpc if not necessary
         var hasChanged = this._saveSpecialDataCache(record, fieldName, {
@@ -2337,6 +2337,16 @@ var BasicModel = AbstractModel.extend({
     _generateOnChangeData: function (record) {
         var commands = this._generateX2ManyCommands(record, {withReadonly: true});
         var data = _.extend(this.get(record.id, {raw: true}).data, commands);
+        // 'display_name' is automatically added to the list of fields to fetch,
+        // when fetching a record, even if it doesn't appear in the view. However,
+        // only the fields in the view must be passed to the onchange RPC, so we
+        // remove it from the data sent by RPC if it isn't in the view.
+        var hasDisplayName = _.some(record.fieldsInfo, function (fieldsInfo) {
+            return 'display_name' in fieldsInfo;
+        });
+        if (!hasDisplayName) {
+            delete data.display_name;
+        }
 
         // one2many records have a parentID
         if (record.parentID) {
@@ -2397,7 +2407,10 @@ var BasicModel = AbstractModel.extend({
                 _.each(list._changes, function (change) {
                     if (change.operation === 'ADD') {
                         relRecordAdded.push(self.localData[change.id]);
-                    } else if (change.operation === 'UPDATE') {
+                    } else if (change.operation === 'UPDATE' && !self.isNew(change.id)) {
+                        // ignore new records that would have been updated
+                        // afterwards, as all their changes would already
+                        // be aggregated in the CREATE command
                         relRecordUpdated.push(self.localData[change.id]);
                     }
                 });
