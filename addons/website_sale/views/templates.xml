@@ -408,13 +408,13 @@
                         <div class="col-sm-7">
                             <span itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
-                                <t t-set="variant_img" t-value="product.product_variant_ids[0].image_variant"/>
+                                <t t-set="variant_img" t-value="product.product_variant_id.image_variant"/>
                                 <t t-set="image_ids"  t-value="product.product_image_ids"/>
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
                                     <div class="carousel-inner">
-                                        <div class="item active" itemprop="image" t-field="product.product_variant_ids[0].image" t-options='{"widget": "image", "class": "product_detail_img js_variant_img", "alt-field": "name", "zoom": "image"}'/>
-                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image"}'/>
+                                        <div class="item active" itemprop="image" t-field="product.product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + product.product_variant_id['__last_update']}"/>
+                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + product.product_variant_id['__last_update']}"/>
                                         <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
                                             <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
                                         </t>
