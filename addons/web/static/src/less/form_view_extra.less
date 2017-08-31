@@ -3,17 +3,17 @@
 @sheet-padding: 16px;
 
 .o_form_view {
+    &.o_form_nosheet.oe_form_nomargin {
+        margin: 0;
+    }
     .o_form_sheet_bg {
-        position: relative;
-        padding: @sheet-padding 0;
         border-bottom: 1px solid #ddd;
         background: url(/web/static/src/img/form_sheetbg.png);
 
-        .o_form_sheet {
+        > .o_form_sheet {
             min-width: @sheet-min-width;
             max-width: @sheet-max-width;
             min-height: 330px;
-            margin: 0 auto;
             padding: 16px;
             border: 1px solid #c8c8d3;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -25,24 +25,6 @@
             .oe_notebook_page {
                 padding: 0 16px;
             }
-        }
-    }
-
-    // Header containing status/workflow buttons
-    > header {
-        border-bottom: 1px solid #cacaca;
-        .o-vertical-gradient(#fcfcfc, #dedede);
-        > button:not(.btn-primary):not(.btn-link):not(.oe_highlight) {
-            .btn-default;
-        }
-    }
-    &.o_form_nosheet {
-        padding: 16px;
-        &.oe_form_nomargin {
-            margin: 0;
-        }
-        > header {
-            margin: -16px -16px 0 -16px;
         }
     }
 

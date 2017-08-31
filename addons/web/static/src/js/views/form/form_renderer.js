@@ -754,11 +754,9 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTagSheet: function (node) {
         this.has_sheet = true;
-        var $result = $('<div>').addClass('o_form_sheet_bg');
         var $sheet = $('<div>').addClass('o_form_sheet');
         $sheet.append(_.map(node.children, this._renderNode.bind(this)));
-        $result.append($sheet);
-        return $result;
+        return $sheet;
     },
     /**
      * Main entry point for the rendering.  From here, we call _renderNode on
@@ -797,6 +795,10 @@ var FormRenderer = BasicRenderer.extend({
         // Set the new content of the form view, and toggle classnames
         this.$el.html($newContent);
         this.$el.toggleClass('o_form_nosheet', !this.has_sheet);
+        if (this.has_sheet) {
+            this.$el.children().not('.oe_chatter')
+                .wrapAll($('<div/>', {class: 'o_form_sheet_bg'}));
+        }
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 

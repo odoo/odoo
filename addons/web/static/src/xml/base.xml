@@ -492,52 +492,6 @@
         </tr>
     </table>
 </form>
-
-<t t-name="FormRenderingForm">
-    <div t-attf-class="#{classnames}">
-    </div>
-</t>
-<t t-name="FormRenderingSheet">
-    <div class="o_form_sheet_bg">
-        <div t-attf-class="o_form_sheet #{classnames}"/>
-    </div>
-</t>
-<div t-name="FormRenderingOuterGroup" class="o_group">
-    <t t-if="string" t-call="FormRenderingSeparator"/>
-</div>
-<table t-name="FormRenderingInnerGroup" class="o_group o_inner_group">
-    <t t-if="string">
-        <tr><td><t t-call="FormRenderingSeparator"/></td></tr>
-    </t>
-</table>
-<t t-name="FormRenderingNotebook">
-    <div class="o_notebook">
-        <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
-            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab" disable_anchor="true">
-                    <t t-esc="page.string"/>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane #{classnames}" t-att-id="id">
-                <t t-raw="page.contents"/>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="FormRenderingSeparator">
-    <div t-attf-class="o_horizontal_separator">
-        <t t-esc="string"/>
-    </div>
-</t>
-<t t-name="FormRenderingLabel">
-    <label t-att-for="_for"
-        t-attf-class="#{classnames} o_form_label #{help ? 'o_form_label_help ' : ''}">
-        <t t-esc="string"/>
-    </label>
-</t>
-
 <t t-name="GraphView.buttons">
     <div class="btn-group btn-group-sm" role="group">
         <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
