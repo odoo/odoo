@@ -182,7 +182,7 @@ class KVM(object):
         os.kill(self.pid,15)
 
     def start(self):
-        l="kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -drive".split(" ")
+        l="kvm -net nic,model=rtl8139 -net user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432 -m 1024 -drive".split(" ")
         #l.append('file=%s,if=virtio,index=0,boot=on,snapshot=on'%self.image)
         l.append('file=%s,snapshot=on'%self.image)
         #l.extend(['-vnc','127.0.0.1:1'])
