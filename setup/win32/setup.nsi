@@ -41,7 +41,7 @@
 !define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '10'
+    !define MAJOR_VERSION '11'
 !endif
 
 !ifndef MINOR_VERSION
@@ -49,7 +49,7 @@
 !endif
 
 !ifndef REVISION_VERSION
-    !define REVISION_VERSION '0'
+    !define REVISION_VERSION 'alpha1'
 !endif
 
 !ifndef VERSION
@@ -80,7 +80,7 @@ OutFile "openerp-allinone-setup-${VERSION}.exe"
 #SetCompress auto
 ShowInstDetails show
 
-XPStyle on
+#XPStyle on
 
 InstallDir "$PROGRAMFILES\Odoo ${VERSION}"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
@@ -116,7 +116,7 @@ Var HWNDPostgreSQLPassword
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.4-2-windows.exe"
+!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.8-1-windows.exe"
 !define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
@@ -214,6 +214,10 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     File "start.bat"
     File "stop.bat"
 
+    # Install Visual C redistribuable files
+    DetailPrint "Installing Visual C++ redistributable files"
+    nsExec::Exec "dist\vcredist\vcredist_x86.exe /q"
+
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
     File /r "${STATIC_PATH}\less\*"
@@ -298,8 +302,8 @@ Section "Uninstall"
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
 
-    nsExec::Exec "net stop odoo-server-9.0"
-    nsExec::Exec "sc delete odoo-server-9.0"
+    nsExec::Exec "net stop ${SERVICENAME}"
+    nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
 
     Rmdir /r "$INSTDIR\server"
