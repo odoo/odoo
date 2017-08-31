@@ -6,8 +6,9 @@
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
-                <field name="picking_id" string="Reference"/>
                 <field name="create_date" invisible="1" groups="base.group_no_one"/>
+                <field name="picking_id" string="Picking"/>
+                <field name="origin" string="Reference"/>
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
@@ -30,7 +31,8 @@
                     <group>
                         <group>
                             <field name="date" groups="base.group_no_one"/>
-                            <field name="picking_id" string="Reference"/>
+                            <field name="picking_id" string="Picking"/>
+                            <field name="origin" string="Reference"/>
                             <field name="product_id"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>

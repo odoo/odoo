@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockScrap(models.Model):
@@ -63,7 +64,6 @@ class StockScrap(models.Model):
         if 'name' not in vals or vals['name'] == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
         scrap = super(StockScrap, self).create(vals)
-        scrap.do_scrap()
         return scrap
 
     @api.multi
@@ -75,29 +75,11 @@ class StockScrap(models.Model):
     def _get_origin_moves(self):
         return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
 
-    @api.multi
-    def do_scrap(self):
-        for scrap in self:
-            move = self.env['stock.move'].create(scrap._prepare_move_values())
-            if self.product_id.type == 'product':
-                quantity_in_stock = sum(self.env['stock.quant'].search([
-                    ('product_id', '=', self.product_id.id),
-                    ('lot_id', '=', self.lot_id and self.lot_id.id or False),
-                    ('package_id', '=', self.package_id and self.package_id.id or False),
-                    ('owner_id', '=', self.owner_id and self.owner_id.id or False),
-                    ('location_id', 'child_of', self.location_id.id)
-                ]).mapped('quantity'))
-                if quantity_in_stock < move.product_qty:  # FIXME: float compare
-                    raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
-            move.action_done()
-            scrap.write({'move_id': move.id, 'state': 'done'})
-        return True
-
     def _prepare_move_values(self):
         self.ensure_one()
         return {
             'name': self.name,
-            'origin': self.origin or self.picking_id.name,
+            'origin': self.origin or self.picking_id.name or self.name,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.scrap_qty,
@@ -117,17 +99,38 @@ class StockScrap(models.Model):
         }
 
     @api.multi
+    def do_scrap(self):
+        for scrap in self:
+            move = self.env['stock.move'].create(scrap._prepare_move_values())
+            move.action_done()
+            scrap.write({'move_id': move.id, 'state': 'done'})
+        return True
+
+    @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
         action['domain'] = [('id', '=', self.picking_id.id)]
         return action
 
     @api.multi
-    def action_get_stock_move(self):
-        action = self.env.ref('stock.stock_move_action').read([])[0]
-        action['domain'] = [('id', '=', self.move_id.id)]
+    def action_get_stock_move_lines(self):
+        action = self.env.ref('stock.stock_move_line_action').read([])[0]
+        action['domain'] = [('move_id', '=', self.move_id.id)]
         return action
 
-    @api.multi
-    def action_done(self):
-        return {'type': 'ir.actions.act_window_close'}
+    def action_validate(self):
+        self.ensure_one()
+        lot_id = self.lot_id or None
+        package_id = self.package_id or None
+        owner_id = self.owner_id or None
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, lot_id, package_id, owner_id, strict=True)
+        if float_compare(available_qty, self.scrap_qty, 2) >= 0:
+            return self.do_scrap()
+        else:
+            action = self.env['stock.scrap.wizard'].get_action()
+            action['context'] = {
+                    'default_product_id': self.product_id.id,
+                    'default_product_uom_id': self.product_uom_id.id,
+                    'default_scrap_id': self.id
+            }
+            return action
