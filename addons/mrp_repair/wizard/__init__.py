@@ -3,3 +3,4 @@
 
 from . import mrp_repair_cancel
 from . import mrp_repair_make_invoice
+from . import stock_scrap_wizard
