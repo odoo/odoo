@@ -71,12 +71,6 @@
                             <tr>
                                 <th><strong>Product</strong></th>
                                 <th class="text-right"><strong>Quantity</strong></th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Source Location</strong>
-                                </th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Destination Location</strong>
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,12 +86,6 @@
                                     <td class="text-right">
                                         <span t-field="line.product_uom_qty"/>
                                         <span t-field="line.product_uom.name" groups="product.group_uom"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_id.name"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_dest_id.name"/>
                                     </td>
                                 </tr>
                             </t>
