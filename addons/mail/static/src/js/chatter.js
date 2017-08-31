@@ -288,7 +288,10 @@ var Chatter = Widget.extend(chat_mixin, {
         if (this.fields.thread && event.data.thread) {
             fieldNames.push(this.fields.thread.name);
         }
-        this.trigger_up('reload', {fieldNames: fieldNames});
+        this.trigger_up('reload', {
+            fieldNames: fieldNames,
+            keepChanges: true,
+        });
     },
     _onScheduleActivity: function () {
         this.fields.activity.scheduleActivity(false);

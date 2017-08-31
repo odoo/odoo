@@ -352,8 +352,11 @@ class StockMove(models.Model):
     @api.multi
     def write(self, vals):
         # FIXME: pim fix your crap
-        if vals.get('product_uom_qty') and self.env.context.get('do_not_unreserve') is None:
-            self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel']).do_unreserve()
+        if vals.get('product_uom_qty'):
+            if self.env.context.get('do_not_unreserve') is None:
+                move_to_unreserve = self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))
+                move_to_unreserve.do_unreserve()
+                (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
 
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']

@@ -627,19 +627,40 @@ class AccountMoveLine(models.Model):
     @api.model
     def get_reconciliation_proposition(self, account_id, partner_id=False):
         """ Returns two lines whose amount are opposite """
+        
+        target_currency = (self.currency_id and self.amount_currency) and self.currency_id or self.company_id.currency_id
+        partner_id_condition = partner_id and 'AND a.partner_id = %(partner_id)s' or ''
 
+        rec_prop = self.env['account.move.line']
         # Get pairs
-        partner_id_condition = partner_id and 'AND a.partner_id = %(partner_id)s AND b.partner_id = %(partner_id)s' or ''
-        query = """
-                SELECT a.id, b.id
-                FROM account_move_line a, account_move_line b
-                WHERE a.amount_residual = -b.amount_residual
-                AND NOT a.reconciled AND NOT b.reconciled
-                AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
-                {partner_id_condition}
-                ORDER BY a.date desc
-                LIMIT 10
-            """.format(**locals())
+        move_line_id = self.env.context.get('move_line_id', False)
+        if move_line_id:
+            move_line = self.env['account.move.line'].browse(move_line_id)
+            amount = move_line.amount_residual;
+            rec_prop = move_line
+            query = """
+                    SELECT a.id, a.id FROM account_move_line a
+                    WHERE a.amount_residual = -%(amount)s
+                    AND NOT a.reconciled
+                    AND a.account_id = %(account_id)s
+                    AND a.id != %(move_line_id)s
+                    {partner_id_condition}
+                    ORDER BY a.date desc
+                    LIMIT 10
+                """.format(**locals())
+        else:
+            partner_id_condition = partner_id_condition and partner_id_condition+' AND b.partner_id = %(partner_id)s' or ''
+            query = """
+                    SELECT a.id, b.id
+                    FROM account_move_line a, account_move_line b
+                    WHERE a.amount_residual = -b.amount_residual
+                    AND NOT a.reconciled AND NOT b.reconciled
+                    AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
+                    {partner_id_condition}
+                    ORDER BY a.date desc
+                    LIMIT 10
+                """.format(**locals())
+
         self.env.cr.execute(query, locals())
         pairs = self.env.cr.fetchall()
 
@@ -648,11 +669,12 @@ class AccountMoveLine(models.Model):
         allowed_ids = set(self.env['account.move.line'].browse(all_pair_ids).ids)
         pairs = [pair for pair in pairs if pair[0] in allowed_ids and pair[1] in allowed_ids]
 
-        # Return lines formatted
         if len(pairs) > 0:
-            target_currency = (self.currency_id and self.amount_currency) and self.currency_id or self.company_id.currency_id
-            lines = self.browse(list(pairs[0]))
-            return lines.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
+            rec_prop += self.browse(list(set(pairs[0])))
+
+        if len(rec_prop) > 0:
+            # Return lines formatted
+            return rec_prop.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency)
         return []
 
     @api.model

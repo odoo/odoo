@@ -287,7 +287,7 @@ class Foo(models.Model):
     _name = 'test_new_api.foo'
 
     name = fields.Char()
-    value1 = fields.Integer()
+    value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
 
 

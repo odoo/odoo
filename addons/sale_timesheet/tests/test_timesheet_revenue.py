@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_repr
 
 
@@ -186,6 +187,16 @@ class TestSaleTimesheet(TestSale):
         self.assertEquals(timesheet1.timesheet_invoice_id, invoice)
         self.assertEquals(timesheet2.timesheet_invoice_id, invoice)
         self.assertEquals(timesheet3.timesheet_invoice_id, invoice)
+
+        # check that analytic line for product 'ordered' can be altered
+        with self.assertRaises(UserError):
+            timesheet1.write(dict(unit_amount=10))
+        self.assertNotEquals(timesheet1.unit_amount, 10)
+
+        # check that analytic line for product 'delivered' cannot be altered
+        timesheet3.write(dict(unit_amount=10))
+        self.assertEquals(timesheet3.unit_amount, 10)
+
 
     def test_revenue_multi_currency(self):
         """ Create a SO with 2 lines : one for a delivered service, one for a ordered service. Confirm

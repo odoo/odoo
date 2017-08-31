@@ -1259,6 +1259,8 @@ QUnit.module('basic_fields', {
         // Copying from a div tag with white-space:pre-wrap doesn't work in Firefox
         assert.strictEqual(form.$('[name="txt"]').prop("tagName").toLowerCase(), 'span',
             "the field contents should be surrounded by a span tag");
+
+        form.destroy();
     });
 
     QUnit.module('FieldBinary');
@@ -1592,6 +1594,24 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('td:first span.o_row_handle').length, 1,
             "content of the cell should have been replaced");
         form.destroy();
+    });
+
+    QUnit.test('handle widget with falsy values', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="sequence" widget="handle"/>' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_row_handle:visible').length, this.data.partner.records.length,
+            'there should be a visible handle for each record');
+        list.destroy();
     });
 
 
@@ -3876,6 +3896,44 @@ QUnit.module('basic_fields', {
             "field selector popover should contain two fields");
         assert.strictEqual($sampleLi.length, 1,
             "field selector popover should contain 'Color index' field");
+        form.destroy();
+    });
+
+    QUnit.test('domain field: handle false domain as []', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = false;
+        this.data.partner.fields.bar.type = "char";
+        this.data.partner.records[0].bar = "product";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="bar"/>' +
+                            '<field name="foo" widget="domain" options="{\'model\': \'bar\'}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'search_count') {
+                    assert.deepEqual(args.args[0], [], "should send a valid domain");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        var $warning = form.$('.o_field_widget[name=foo] .text-warning');
+        assert.strictEqual($warning.length, 0, "should not display that the domain is invalid");
+
         form.destroy();
     });
 });

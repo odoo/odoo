@@ -355,22 +355,19 @@ class AccountInvoice(models.Model):
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
 
     #fields use to set the sequence, on the first invoice of the journal
-    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
+    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
-    def _compute_portal_url(self):
-        super(AccountInvoice, self)._compute_portal_url()
-        for order in self:
-            order.portal_url = '/my/invoices/%s' % (order.id)
-
-    def _no_existing_validated_invoice(self):
+    def _get_seq_number_next_stuff(self):
         self.ensure_one()
+        journal_sequence = self.journal_id.sequence_id
         if self.journal_id.refund_sequence:
             domain = [('type', '=', self.type)]
+            journal_sequence = self.type in ['in_refund', 'out_refund'] and self.journal_id.refund_sequence_id or self.journal_id.sequence_id
         elif self.type in ['in_invoice', 'in_refund']:
             domain = [('type', 'in', ['in_invoice', 'in_refund'])]
         else:
@@ -378,11 +375,16 @@ class AccountInvoice(models.Model):
         if self.id:
             domain += [('id', '<>', self.id)]
         domain += [('journal_id', '=', self.journal_id.id), ('state', 'not in', ['draft', 'cancel'])]
-        return not self.search(domain, limit=1)
+        return journal_sequence, domain
+
+    def _compute_portal_url(self):
+        super(AccountInvoice, self)._compute_portal_url()
+        for order in self:
+            order.portal_url = '/my/invoices/%s' % (order.id)
 
     @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
-        """ computes the number that will be assigned to the first invoice/bill/refund of a journal, in order to
+        """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
         let the user manually change it.
         """
         if not self.env.user._is_admin():
@@ -391,18 +393,25 @@ class AccountInvoice(models.Model):
                 invoice.sequence_number_next = ''
             return
         for invoice in self:
-            if invoice.journal_id.refund_sequence:
-                journal_sequence = invoice.type in ['in_refund', 'out_refund'] and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
-            else:
-                journal_sequence = invoice.journal_id.sequence_id
-
-            if (invoice.state == 'draft') and self._no_existing_validated_invoice():
-                prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice)._get_prefix_suffix()
+            journal_sequence, domain = invoice._get_seq_number_next_stuff()
+            if (invoice.state == 'draft') and not self.search(domain, limit=1):
+                prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice,
+                                                              ir_sequence_date_range=invoice.date_invoice)._get_prefix_suffix()
                 invoice.sequence_number_next_prefix = prefix
+            else:
+                invoice.sequence_number_next_prefix = False
+
+    @api.depends('state', 'journal_id')
+    def _get_sequence_number_next(self):
+        """ computes the number that will be assigned to the first invoice/bill/refund of a journal, in order to
+        let the user manually change it.
+        """
+        for invoice in self:
+            journal_sequence, domain = invoice._get_seq_number_next_stuff()
+            if (invoice.state == 'draft') and not self.search(domain, limit=1):
                 number_next = journal_sequence._get_current_sequence().number_next_actual
                 invoice.sequence_number_next = '%%0%sd' % journal_sequence.padding % number_next
             else:
-                invoice.sequence_number_next_prefix = False
                 invoice.sequence_number_next = ''
 
     @api.multi

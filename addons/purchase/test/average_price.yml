@@ -47,7 +47,7 @@
 - 
   !python {model: product.product, id: product_average_icecream}: |
     assert self.qty_available == 10.0, 'Wrong quantity in stock after first reception'
-    assert self.average_price == 60.0, 'Standard price should be the price of the first reception!'
+    assert self.standard_price == 60.0, 'Standard price should be the price of the first reception!'
 - 
   I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
 - 
@@ -75,7 +75,7 @@
   Check the standard price
 - 
   !python {model: product.product, id: product_average_icecream}: |
-    assert self.average_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
+    assert self.standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
 - 
   Create picking to send some goods
 - 
@@ -101,7 +101,7 @@
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
   !python {model: product.product, id: product_average_icecream}: |
-    assert self.average_price == 75.0, 'Average price should not have changed with outgoing picking!'
+    assert self.standard_price == 75.0, 'Average price should not have changed with outgoing picking!'
     assert self.qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
 - 
   Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
@@ -131,4 +131,4 @@
 - 
   !python {model: product.product, id: product_average_icecream}: |
     assert self.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
-    assert round(self.average_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.standard_price, 2),)
+    assert round(self.standard_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.standard_price, 2),)

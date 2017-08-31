@@ -231,6 +231,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
                     <group>
                         <group name="main_grp" colspan="2">
                             <group name="main_grp_col1">
@@ -358,7 +360,7 @@
         </record>
 
         <record id="stock_move_action" model="ir.actions.act_window">
-            <field name="name">Stock Moves</field>
+            <field name="name">Picking Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

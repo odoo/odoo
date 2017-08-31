@@ -5,22 +5,22 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class StockPickingWave(models.Model):
+class StockPickingBatch(models.Model):
     _inherit = ['mail.thread']
-    _name = "stock.picking.wave"
-    _description = "Picking Wave"
+    _name = "stock.picking.batch"
+    _description = "Batch Picking"
     _order = "name desc"
 
     name = fields.Char(
-        string='Picking Wave Name', default='/',
+        string='Batch Picking Name', default='/',
         copy=False, required=True,
-        help='Name of the picking wave')
+        help='Name of the batch picking')
     user_id = fields.Many2one(
         'res.users', string='Responsible', track_visibility='onchange',
-        help='Person responsible for this wave')
+        help='Person responsible for this batch picking')
     picking_ids = fields.One2many(
-        'stock.picking', 'wave_id', string='Pickings',
-        help='List of picking associated to this wave')
+        'stock.picking', 'batch_id', string='Pickings',
+        help='List of picking associated to this batch')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'Running'),
@@ -31,8 +31,8 @@ class StockPickingWave(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
-        return super(StockPickingWave, self).create(vals)
+            vals['name'] = self.env['ir.sequence'].next_by_code('batch.picking') or '/'
+        return super(StockPickingBatch, self).create(vals)
 
     @api.multi
     def confirm_picking(self):
@@ -56,28 +56,28 @@ class StockPickingWave(models.Model):
     def done(self):
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
         if any(picking.state != 'assigned' for picking in pickings):
-            raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
+            raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this batch to done.'))
         for picking in pickings:
             picking.message_post(
-                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.wave>%s</a>" % (
+                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>" % (
                     _("Transferred by"),
-                    _("Picking Wave"),
-                    picking.wave_id.id,
-                    picking.wave_id.name))
+                    _("Batch Picking"),
+                    picking.batch_id.id,
+                    picking.batch_id.name))
         if pickings:
             pickings.action_done()
         return self.write({'state': 'done'})
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'stock_picking_wave.mt_wave_state'
-        return super(StockPickingWave, self)._track_subtype(init_values)
+            return 'stock_picking_batch.mt_batch_state'
+        return super(StockPickingBatch, self)._track_subtype(init_values)
 
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    wave_id = fields.Many2one(
-        'stock.picking.wave', string='Picking Wave',
+    batch_id = fields.Many2one(
+        'stock.picking.batch', string='Batch Picking', oldname="wave_id",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help='Picking wave associated to this picking')
+        help='Batch associated to this picking')

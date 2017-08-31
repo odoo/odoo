@@ -223,15 +223,15 @@ var PivotModel = AbstractModel.extend({
      */
     load: function (params) {
         this.initialDomain = params.domain;
-        this.initialRowGroupBys = params.rowGroupBys;
+        this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.data = {
             domain: params.domain,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.groupedBy,
-            colGroupBys: params.colGroupBys,
-            measures: params.measures,
+            colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
+            measures: this._processMeasures(params.context.pivot_measures) || params.measures,
             sorted_column: {},
         };
         this.defaultGroupedBy = params.groupedBy;
@@ -245,6 +245,12 @@ var PivotModel = AbstractModel.extend({
      */
     reload: function (handle, params) {
         var self = this;
+        if ('context' in params) {
+            this.data.context = params.context;
+            this.data.colGroupBys = params.context.pivot_column_groupby || this.data.colGroupBys;
+            this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
+            this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
+        }
         if ('domain' in params) {
             this.data.domain = params.domain;
         } else {
@@ -261,7 +267,7 @@ var PivotModel = AbstractModel.extend({
         var old_col_root = this.data.main_col.root;
         return this._loadData().then(function () {
             var new_groupby_length;
-            if (!('groupBy' in params)) {
+            if (!('groupBy' in params) && !('pivot_row_groupby' in (params.context || {}))) {
                 // we only update the row groupbys according to the old groupbys
                 // if we don't have the key 'groupBy' in params.  In that case,
                 // we want to have the full open state for the groupbys.
@@ -647,6 +653,29 @@ var PivotModel = AbstractModel.extend({
 
         this.data.main_row.root = main_row_header;
         this.data.main_col.root = main_col_header;
+    },
+    /**
+     * In the preview implementation of the pivot view (a.k.a. version 2),
+     * the virtual field used to display the number of records was named
+     * __count__, whereas __count is actually the one used in xml. So
+     * basically, activating a filter specifying __count as measures crashed.
+     * Unfortunately, as __count__ was used in the JS, all filters saved as
+     * favorite at that time were saved with __count__, and not __count.
+     * So in order the make them still work with the new implementation, we
+     * handle both __count__ and __count.
+     *
+     * This function replaces in the given array of measures occurences of
+     * '__count__' by '__count'.
+     *
+     * @param {Array[string] || undefined} measures
+     * @return {Array[string] || undefined}
+     */
+    _processMeasures: function (measures) {
+        if (measures) {
+            return _.map(measures, function (measure) {
+                return measure === '__count__' ? '__count' : measure;
+            });
+        }
     },
     /**
      * Format a value to a usable string, for the renderer to display.

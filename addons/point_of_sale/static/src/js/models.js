@@ -1674,6 +1674,9 @@ exports.Orderline = Backbone.Model.extend({
             if (!no_map_tax){
                 tax = self._map_tax_fiscal_position(tax);
             }
+            if (!tax){
+                return;
+            }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;

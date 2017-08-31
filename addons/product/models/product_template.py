@@ -78,7 +78,9 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="The cost price is used to valuate your inventory.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product. ")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
