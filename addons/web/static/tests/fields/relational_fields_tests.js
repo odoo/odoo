@@ -1474,6 +1474,7 @@ QUnit.module('relational_fields', {
                 assert.strictEqual($('.modal').length, 1,
                     "should have one modal in body");
                 form.destroy();
+                relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
                 done();
             });
         });
