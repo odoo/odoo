@@ -7,18 +7,15 @@
             <form string="Putaway">
                <group colspan="4">
                    <field name="name"/>
-	       <field name="method"/>
                </group>
-               <div attrs="{'invisible': [('method', '!=', 'fixed')]}">
-                   <separator string="Fixed Locations Per Categories"/>
-                   <field name="fixed_location_ids" colspan="4" nolabel="1">
-                       <tree editable="top">
-                           <field name="sequence" widget='handle'/>
-                           <field name="category_id"/>
-                           <field name="fixed_location_id"/>
-                       </tree>
-                   </field>
-               </div>
+               <separator string="Fixed Locations Per Categories"/>
+               <field name="fixed_location_ids" colspan="4" nolabel="1">
+                   <tree editable="top">
+                       <field name="sequence" widget='handle'/>
+                       <field name="category_id"/>
+                       <field name="fixed_location_id"/>
+                   </tree>
+               </field>
            </form>
         </field>
     </record>
