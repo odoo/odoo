@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var ajax = require('web.ajax');
 var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
@@ -1949,6 +1948,14 @@ var FieldToggleBoolean = AbstractField.extend({
 
 var JournalDashboardGraph = AbstractField.extend({
     className: "o_dashboard_graph",
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
     init: function () {
         this._super.apply(this, arguments);
         this.graph_type = this.attrs.graph_type;
@@ -2069,7 +2076,6 @@ var JournalDashboardGraph = AbstractField.extend({
             this._customizeChart();
         }
     },
-
 });
 
 /**
@@ -2282,25 +2288,14 @@ var FieldDomain = AbstractField.extend({
  */
 var AceEditor = DebouncedField.extend({
     template: "AceEditor",
+    jsLibs: [
+        '/web/static/lib/ace/ace.odoo-custom.js',
+        [
+            '/web/static/lib/ace/mode-python.js',
+            '/web/static/lib/ace/mode-xml.js'
+        ]
+    ],
     events: {}, // events are triggered manually for this debounced widget
-    /**
-     * @override willStart from AbstractField (Widget)
-     * Loads the ace library if not already loaded.
-     *
-     * @returns {Deferred}
-     */
-    willStart: function () {
-        var loadJSDef;
-        if (!window.ace) {
-            loadJSDef = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
-                return $.when(
-                    ajax.loadJS('/web/static/lib/ace/mode-python.js'),
-                    ajax.loadJS('/web/static/lib/ace/mode-xml.js')
-                );
-            });
-        }
-        return $.when(this._super.apply(this, arguments), loadJSDef);
-    },
     /**
      * @override start from AbstractField (Widget)
      *

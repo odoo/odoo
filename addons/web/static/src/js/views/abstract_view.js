@@ -23,13 +23,12 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
+var ajax = require('web.ajax');
 var Class = require('web.Class');
 var Context = require('web.Context');
-var ajax = require('web.ajax');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
-var Context = require('web.Context');
 
 var AbstractView = Class.extend({
     // name displayed in view switchers
@@ -51,8 +50,6 @@ var AbstractView = Class.extend({
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-        js_libs: [],
-        css_libs: [],
     },
 
     /**
@@ -125,7 +122,15 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Main method of the view class.
+     * Main method of the view class. Create a controller, and make sure that
+     * data and libraries are loaded.
+     *
+     * There is a unusual thing going in this method with parents: we create
+     * renderer/model with parent as parent, then we have to reassign them at
+     * the end to make sure that we have the proper relationships.  This is
+     * necessary to solve the problem that the controller need the model and the
+     * renderer to be instantiated, but the model need a parent to be able to
+     * load itself, and the renderer needs the data in its constructor.
      *
      * @param {Widget} parent The parent of the resulting Controller (most
      *      likely a view manager)
@@ -133,7 +138,7 @@ var AbstractView = Class.extend({
      */
     getController: function (parent) {
         var self = this;
-        return $.when(this._loadData(parent), this._loadLibs()).then(function () {
+        return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
             var model = self.getModel();
             var state = model.get(arguments[0]);
             var renderer = self.getRenderer(parent, state);
@@ -201,40 +206,6 @@ var AbstractView = Class.extend({
     _loadData: function (parent) {
         var model = this.getModel(parent);
         return model.load(this.loadParams);
-    },
-    /**
-     * Makes sure that the js_libs and css_libs are properly loaded. Note that
-     * the ajax loadJS and loadCSS methods don't do anything if the given file
-     * is already loaded.
-     *
-     * @private
-     * @returns {Deferred}
-     */
-    _loadLibs: function () {
-        var defs = [];
-        var jsDefs;
-        _.each(this.config.js_libs, function (urls) {
-            if (typeof(urls) === 'string') {
-                // js_libs is an array of urls: those urls can be loaded in
-                // parallel
-                defs.push(ajax.loadJS(urls));
-            } else {
-                // js_libs is an array of arrays of urls: those arrays of urls
-                // must be loaded sequentially, but the urls inside each
-                // sub-array can be loaded in parallel
-                defs.push($.when.apply($, jsDefs).then(function () {
-                    jsDefs = [];
-                    _.each(urls, function (url) {
-                        jsDefs.push(ajax.loadJS(url));
-                    });
-                    return $.when.apply($, jsDefs);
-                }));
-            }
-        });
-        _.each(this.config.css_libs, function (url) {
-            defs.push(ajax.loadCSS(url));
-        });
-        return $.when.apply($, defs);
     },
     /**
      * Loads the subviews for x2many fields when they are not inline

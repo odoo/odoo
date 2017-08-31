@@ -433,15 +433,52 @@ var loadXML = (function () {
     };
 })();
 
-return {
+
+/**
+ * Loads the given js and css libraries. Note that the ajax loadJS and loadCSS methods
+ * don't do anything if the given file is already loaded.
+ *
+ * @param {Object} libs
+ * @Param {Array | Array<Array>} [libs.jsLibs=[]] The list of JS files that we want to
+ *   load. The list may contain strings (the files to load), or lists of strings. The
+ *   first level is loaded sequentially, and files listed in inner lists are loaded in
+ *   parallel.
+ * @param {Array<string>} [libs.cssLibs=[]] A list of css files, to be loaded in
+ *   parallel
+ *
+ * @returns {Deferred}
+ */
+function loadLibs (libs) {
+    var defs = [];
+    _.each(libs.jsLibs || [], function (urls) {
+        defs.push($.when.apply($, defs).then(function () {
+            if (typeof(urls) === 'string') {
+                return ajax.loadJS(urls);
+            } else {
+                return $.when.apply($, _.map(urls, function (url) {
+                    return ajax.loadJS(url);
+                }));
+            }
+        }));
+    });
+    _.each(libs.cssLibs || [], function (url) {
+        defs.push(ajax.loadCSS(url));
+    });
+    return $.when.apply($, defs);
+}
+
+var ajax = {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
     rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,
+    loadLibs: loadLibs,
     get_file: get_file,
     post: post,
 };
+
+return ajax;
 
 });

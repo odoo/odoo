@@ -25,6 +25,14 @@ var utils = require('web.utils');
 
 var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
 
     //--------------------------------------------------------------------------
     // Private

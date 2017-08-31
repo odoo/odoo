@@ -95,7 +95,6 @@
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
 
-        <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/bootstrap_overridden.less"/>
@@ -129,8 +128,6 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/data_export.less"/>
 
         <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
-        <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
-        <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
         <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
         <script type="text/javascript" src="/web/static/lib/fuzzy-master/fuzzy.js"></script>
 
@@ -142,7 +139,6 @@
         <!-- Special case: core.js declares $.browser needed by ba-bbq -->
         <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-        <script type="text/javascript" src="/web/static/src/js/libs/nvd3.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/domain.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/pyeval.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
@@ -221,9 +217,6 @@
         <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_controller.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_view.js"></script>
-
-        <script type="text/javascript" src="/web/static/lib/fullcalendar/js/fullcalendar.js"></script>
-        <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
 
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_controller.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_model.js"></script>
@@ -408,6 +401,18 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <!-- add lazy-loaded libs -->
+                <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
+                <script type="text/javascript" src="/web/static/lib/fullcalendar/js/fullcalendar.js"></script>
+                <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
+                <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
+                <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
+                <script type="text/javascript" src="/web/static/src/js/libs/nvd3.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/ace.odoo-custom.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
+
                 <script type="text/javascript">
                     // define the 'web.web_client' module because some other modules require it
                     odoo.define('web.web_client', function (require) {
