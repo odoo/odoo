@@ -431,10 +431,10 @@ def options():
     op.add_option("", "--no-windows", action="store_true", help="don't build the windows package")
 
     # Windows VM
-    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/winxp27/winxp27.vdi', help="%default")
-    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/winxp27/id_rsa', help="%default")
+    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/win1034/win10.qcow2', help="%default")
+    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/win1034/id_rsa', help="%default")
     op.add_option("", "--vm-winxp-login", default='Naresh', help="Windows login (%default)")
-    op.add_option("", "--vm-winxp-python-version", default='2.7', help="Windows Python version installed in the VM (default: %default)")
+    op.add_option("", "--vm-winxp-python-version", default='3.4', help="Windows Python version installed in the VM (default: %default)")
 
     (o, args) = op.parse_args()
     # derive other options
