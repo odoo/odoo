@@ -7,6 +7,7 @@ class TestSetupBar(AccountingTestCase):
 
     def test_initial_balance_step(self):
         company = self.env.ref('base.main_company')
+        company.create_op_move_if_non_existant()
         initial_setup_wizard = self.env['account.opening'].create({'company_id': company.id}).with_context({'check_move_validity': False})
 
         unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
