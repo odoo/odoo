@@ -1,3 +1,4 @@
+(function() {var define = ace.define, require = ace.require;
 define("ace/mode/xml_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function(e, t, n) {
     "use strict";
     var r = e("../lib/oop"),
@@ -500,3 +501,4 @@ define("ace/mode/xml_highlight_rules", ["require", "exports", "module", "ace/lib
             }, this.$id = "ace/mode/xml"
         }.call(l.prototype), t.Mode = l
 });
+})();

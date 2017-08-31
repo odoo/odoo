@@ -112,6 +112,14 @@ function formatLESS(less) {
 var ViewEditor = Widget.extend({
     template: 'web_editor.ace_view_editor',
     xmlDependencies: ['/web_editor/static/src/xml/ace.xml'],
+    jsLibs: [
+        '/web/static/lib/ace/ace.odoo-custom.js',
+        [
+            '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-less.js',
+            '/web/static/lib/ace/theme-monokai.js'
+        ]
+    ],
     events: {
         'click .o_ace_type_switcher_choice': '_onTypeChoice',
         'change .o_res_list': '_onResChange',
@@ -170,14 +178,11 @@ var ViewEditor = Widget.extend({
      * @override
      */
     willStart: function () {
-        var js_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
-            return $.when(
-                ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
-                ajax.loadJS('/web/static/lib/ace/mode-less.js'),
-                ajax.loadJS('/web/static/lib/ace/theme-monokai.js')
-            );
-        });
-        return $.when(this._super.apply(this, arguments), js_def, this._loadResources());
+        return $.when(
+            this._super.apply(this, arguments),
+            ajax.loadLibs(this),
+            this._loadResources()
+        );
     },
     /**
      * Initializes the library and initial view once the DOM is ready. It also

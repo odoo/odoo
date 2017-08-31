@@ -1,6 +1,7 @@
 odoo.define('website.backend.dashboard', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -16,6 +17,14 @@ var QWeb = core.qweb;
 
 var Dashboard = Widget.extend(ControlPanelMixin, {
     template: 'website.WebsiteDashboardMain',
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
         'click .o_dashboard_action': 'on_dashboard_action',
@@ -37,10 +46,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
     willStart: function() {
         var self = this;
-        return this._super().then(function() {
-            return $.when(
-                self.fetch_data()
-            );
+        return $.when(ajax.loadLibs(this), this._super()).then(function() {
+            return self.fetch_data();
         });
     },
 

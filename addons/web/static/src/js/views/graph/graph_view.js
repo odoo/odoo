@@ -19,6 +19,14 @@ var _lt = core._lt;
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
     config: {
         Model: GraphModel,
         Controller: Controller,

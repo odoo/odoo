@@ -30,10 +30,13 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
+var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
+    cssLibs: [],
+    jsLibs: [],
     events: {
         'keydown': '_onKeydown',
     },
@@ -172,6 +175,14 @@ var AbstractField = Widget.extend({
             self.$el.addClass('o_field_widget');
             return self._render();
         });
+    },
+    /**
+     * Loads the libraries listed in this.jsLibs and this.cssLibs
+     *
+     * @override
+     */
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
 
     //--------------------------------------------------------------------------
