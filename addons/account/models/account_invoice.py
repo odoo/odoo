@@ -418,13 +418,13 @@ class AccountInvoice(models.Model):
     def _set_sequence_next(self):
         ''' Set the number_next on the sequence related to the invoice/bill/refund'''
         self.ensure_one()
-        if not self.env.user._is_admin() or not self.sequence_number_next or not self._no_existing_validated_invoice():
+        journal_sequence, domain = self._get_seq_number_next_stuff()
+        if not self.env.user._is_admin() or not self.sequence_number_next or self.search_count(domain):
             return
         nxt = re.sub("[^0-9]", '', self.sequence_number_next)
         result = re.match("(0*)([0-9]+)", nxt)
-        journal_sequence = self.journal_id.refund_sequence and self.journal_id.refund_sequence_id or self.journal_id.sequence_id
         if result and journal_sequence:
-            #use _get_current_sequence to manage the date range sequences
+            # use _get_current_sequence to manage the date range sequences
             sequence = journal_sequence._get_current_sequence()
             sequence.number_next = int(result.group(2))
 
