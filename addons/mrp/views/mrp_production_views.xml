@@ -122,8 +122,8 @@
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
+                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}" string="Reserved"/>
                                     <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
                                         attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
