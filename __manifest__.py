@@ -9,7 +9,7 @@
     'depends': ['website_sale', 'sale_coupon'],
     'data': [
         'views/website_sale_templates.xml',
-        'views/website_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/sale_coupon_program_views.xml',
     ],
     'auto_install': True,
