@@ -590,7 +590,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         def onchange_default(field, self):
             value = field.convert_to_write(self[field.name], self)
             condition = "%s=%s" % (field.name, value)
-            defaults = self.env['ir.values'].get_defaults_dict(self._name, condition)
+            defaults = self.env['ir.default'].get_model_defaults(self._name, condition)
             self.update(defaults)
 
         for name, field in cls._fields.items():
