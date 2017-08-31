@@ -32,10 +32,9 @@ QUnit.module('Views', {
                 assert.step(url + ' loaded');
             });
         };
+
         var View = AbstractView.extend({
-            config: _.extend({}, AbstractView.prototype.config, {
-                js_libs: ['a', 'b'],
-            }),
+            jsLibs: [['a', 'b']],
         });
         createAsyncView({
             View: View,
@@ -71,13 +70,12 @@ QUnit.module('Views', {
                 assert.step(url + ' loaded');
             });
         };
+
         var View = AbstractView.extend({
-            config: _.extend({}, AbstractView.prototype.config, {
-                js_libs: [
-                    ['a', 'b'],
-                    ['c'],
-                ],
-            }),
+            jsLibs: [
+                ['a', 'b'],
+                'c',
+            ],
         });
         createAsyncView({
             View: View,
@@ -85,7 +83,7 @@ QUnit.module('Views', {
             data: this.data,
             model: 'fake_model',
         }).then(function (view) {
-            assert.verifySteps(['a', 'b', 'a loaded', 'b loaded', 'c', 'c loaded'],
+            assert.verifySteps(['a', 'b', 'b loaded', 'a loaded', 'c', 'c loaded'],
                 "should for all libs to be loaded");
             ajax.loadJS = loadJS;
             view.destroy();
@@ -94,11 +92,11 @@ QUnit.module('Views', {
 
         assert.verifySteps(['a', 'b'],
             "libs 'a' and 'b' should be loaded in parallel");
-        defs.a.resolve();
-        assert.verifySteps(['a', 'b', 'a loaded'],
-            "should wait for 'a' and 'b' to be loaded before loading 'c'");
         defs.b.resolve();
-        assert.verifySteps(['a', 'b', 'a loaded', 'b loaded', 'c'],
+        assert.verifySteps(['a', 'b', 'b loaded'],
+            "should wait for 'a' and 'b' to be loaded before loading 'c'");
+        defs.a.resolve();
+        assert.verifySteps(['a', 'b', 'b loaded', 'a loaded', 'c'],
             "should load 'c' when 'a' and 'b' are loaded");
         defs.c.resolve();
     });

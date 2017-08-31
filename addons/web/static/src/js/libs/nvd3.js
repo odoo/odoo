@@ -6,10 +6,6 @@ odoo.define('web.nvd3.extensions', function () {
  * in place.
  */
 
-if (!('nv' in window)) {
-    return;
-}
-
 nv.dev = false;  // sets nvd3 library in production mode
 
 // monkey patch nvd3 to allow removing eventhandler on windowresize events
