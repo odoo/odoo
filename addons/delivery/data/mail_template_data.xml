@@ -26,27 +26,6 @@
 <p>Thank you,</p>
       </field>
     </record>
-    <!--Email Notification template for Delivery-->
-    <record id="mail_template_data_delivery_notification" model="mail.template">
-      <field name="name">Delivery: Custom Notification Email</field>
-      <field name="subject">${object.subject}</field>
-      <field name="model_id" ref="mail.model_mail_message"/>
-      <field name="auto_delete" eval="True"/>
-      <field name="use_default_layout" eval="False"/>
-      <field name="body_html" type="xml">
-        <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed" summary="o_mail_notification">
-          <tbody>
-            <tr>
-              <td align="center" style="min-width: 590px;">
-                <span style="font-size:20px; color:white; font-weight: bold;">${object.record_name}</span>
-              </td>
-            </tr>
-            <tr>
-              <td valign="top" style="color: #555; font-size: 14px;">${object.body | safe}</td>
-            </tr>
-          </tbody>
-        </table>
-      </field>
-    </record>
+
   </data>
 </odoo>

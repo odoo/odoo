@@ -77,54 +77,5 @@ from ${object.company_id.name}.
 ]]></field>
         </record>
 
-
-        <!--Default Notification Email template for invoices-->
-        <record id="purchase.mail_template_data_notification_email_purchase_order" model="mail.template">
-            <field name="name">Purchase Order Notification Email</field>
-            <field name="subject">${object.subject}</field>
-            <field name="model_id" ref="mail.model_mail_message"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="use_default_layout" eval="False"/>
-            <field name="body_html"><![CDATA[<html>
-                <head></head>
-                <body style="margin: 0; padding: 0;">
-                <table border="0" width="100%" cellpadding="0" style="padding: 20px;" summary="o_mail_notification">
-                    <tbody>
-
-                      <!-- HEADER -->
-                      <tr>
-                        <td align="center" style="min-width: 590px;">
-                          <table border="0" cellpadding="0" style="min-width: 100%; padding: 20px;">
-                            <tr>
-                              <td valign="middle">
-                                  <span style="font-size:20px; font-weight: bold;">
-                                      ${object.record_name}
-                                  </span>
-                              </td>
-                              <td valign="middle" align="right">
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                      <!-- CONTENT -->
-                      <tr>
-                        <td align="center" style="min-width: 590px;">
-                          <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; padding: 20px;">
-                            <tbody>
-                              <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                                ${object.body | safe}
-                              </td>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      </tr>
-                    </tbody>
-                </table>
-                </body>
-                </html>
-            ]]></field>
-        </record>
     </data>
 </odoo>
