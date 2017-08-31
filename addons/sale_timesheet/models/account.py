@@ -84,12 +84,12 @@ class AccountAnalyticLine(models.Model):
                 timesheet_uom = self.env.user.company_id.project_time_mode_id
 
             # default values
-            billable_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
             unit_amount = timesheet.unit_amount
             so_line = timesheet.so_line
-            revenue = 0.0
-            billable_type = 'non_billable'
-
+            values = {
+                'timesheet_revenue': 0.0,
+                'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
+            }
             # set the revenue and billable type according to the product and the SO line
             if timesheet.task_id and so_line.product_id.type == 'service' and so_line.product_id.service_type == 'timesheet':
                 # find the analytic account to convert revenue into its currency
@@ -100,8 +100,8 @@ class AccountAnalyticLine(models.Model):
 
                 # calculate the revenue on the timesheet
                 if so_line.product_id.invoice_policy == 'delivery':
-                    revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
-                    billable_type = 'billable_time'
+                    values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
+                    values['timesheet_invoice_type'] = 'billable_time'
                 elif so_line.product_id.invoice_policy == 'order':
                     quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
                     # compute the total revenue the SO since we are in fixed price
@@ -113,14 +113,13 @@ class AccountAnalyticLine(models.Model):
                     analytic_lines = timesheet.search(domain)
                     total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
                     # compute (new) revenue of current timesheet line
-                    revenue = min(
+                    values['timesheet_revenue'] = min(
                         analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
                         total_revenue_so - total_revenue_invoiced
                     )
-                    billable_type = 'billable_fixed'
-
-            timesheet.write({
-                'timesheet_revenue': revenue,
-                'timesheet_invoice_type': billable_type,
-            })
+                    values['timesheet_invoice_type'] = 'billable_fixed'
+                    # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
+                    if so_line.invoice_status == 'invoiced':
+                        values['timesheet_invoice_id'] = so_line.invoice_lines[0].invoice_id.id
+            timesheet.write(values)
         return True
