@@ -185,19 +185,15 @@
                             <field name="location_id"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Content">
-                            <separator string="Products" />
-                            <field name="current_picking_id" invisible="1"/>
-                            <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
-                                <tree>
-                                    <field name="product_id"/>
-                                    <field name="qty_done" string="Quantity"/>
-                                </tree>
-                            </field>
-                            <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
-                        </page>
-                    </notebook>
+                    <separator string="Content" />
+                    <field name="current_picking_id" invisible="1"/>
+                    <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="qty_done" string="Quantity"/>
+                        </tree>
+                    </field>
+                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
                 </sheet>
             </form>
         </field>
