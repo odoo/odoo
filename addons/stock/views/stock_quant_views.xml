@@ -190,10 +190,19 @@
                     <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
                         <tree>
                             <field name="product_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="qty_done" string="Quantity"/>
+                            <field name="product_uom_id" groups="product.group_uom"/>
                         </tree>
                     </field>
-                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
+                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="quantity"/>
+                            <field name="product_uom_id" groups="product.group_uom"/>
+                        </tree>
+                    </field>
                 </sheet>
             </form>
         </field>
