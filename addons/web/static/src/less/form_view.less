@@ -197,10 +197,10 @@
                 &:before, &:after {
                     content: " ";
                     display: block;
-                    .o-position-absolute(0, -@odoo-statusbar-arrow-width);
+                    .o-position-absolute(0, -@odoo-statusbar-arrow-width + 1);
 
-                    border-top: @odoo-statusbar-height/2 solid transparent;
-                    border-bottom: @odoo-statusbar-height/2 solid transparent;
+                    border-top: floor(@odoo-statusbar-height/2) solid transparent;
+                    border-bottom: ceil(@odoo-statusbar-height/2) solid transparent;
                     border-right: none;
                     border-left: @odoo-statusbar-arrow-width solid @odoo-view-background-color;
                     .o-transition(border, 0.2s);
@@ -219,7 +219,7 @@
                 }
 
                 &:before {
-                    right: -@odoo-statusbar-arrow-width - 1px;
+                    right: -@odoo-statusbar-arrow-width;
                     border-left-color: @gray-lighter-dark;
                 }
 
@@ -227,7 +227,6 @@
                     color: @odoo-brand-primary;
                     font-size: 11px;
                     background-color: @gray-lighter;
-                    box-shadow: inset 0 5px 7px -8px @gray-darker;
                     cursor: default;
 
                     &:after {
