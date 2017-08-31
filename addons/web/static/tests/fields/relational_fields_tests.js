@@ -1035,7 +1035,7 @@ QUnit.module('relational_fields', {
                         int_field: 2,
                         timmy: [
                             [6, false, []],
-                            [0, false, {display_name: displayName, name: 'brandon'}],
+                            [0, args.args[0].timmy[1][1], {display_name: displayName, name: 'brandon'}],
                         ],
                     }, "should send the correct values to create");
                 }
