@@ -846,6 +846,13 @@ var HandleWidget = AbstractField.extend({
     tagName: 'span',
     description: "",
     supportedFieldTypes: ['integer'],
+
+    /*
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
 });
 
 var FieldEmail = InputField.extend({
@@ -1787,7 +1794,7 @@ var FieldProgressBar = AbstractField.extend({
             } else {
                 this.$el.on('click', function () {
                     if (!self.write_mode) {
-                        var $input = $('<input>', {type: 'text', class: 'o_progressbar_value'});
+                        var $input = $('<input>', {type: 'text', class: 'o_progressbar_value o_input'});
                         $input.on('blur', _.bind(self.on_change_input, self));
                         self.$('.o_progressbar_value').replaceWith($input);
                         self.write_mode = true;

@@ -12,6 +12,10 @@ class StockMove(TransactionCase):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.pack_location = self.env.ref('stock.location_pack_zone')
+        self.transit_location = self.env['stock.location'].search([
+            ('company_id', '=', self.env.user.company_id.id),
+            ('usage', '=', 'transit'),
+        ], limit=1)
         self.uom_unit = self.env.ref('product.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -2632,3 +2636,39 @@ class StockMove(TransactionCase):
                 self.assertEqual(quant.in_date, Datetime.to_string(initial_in_date_lot1))
             elif quant.lot_id == lot2:
                 self.assertEqual(quant.in_date, initial_in_date_lot2)
+
+    def test_transit_1(self):
+        """ Receive some products, send some to transit, check the product's `available_qty`
+        computed field with or without the "company_owned" key in the context.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.qty_done = 10
+        move1.action_done()
+
+        self.assertEqual(self.product1.qty_available, 10.0)
+
+        move2 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.transit_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move2.action_confirm()
+        move2.action_assign()
+        move2.move_line_ids.qty_done = 5
+        move2.action_done()
+
+        self.assertEqual(self.product1.qty_available, 5.0)
+        self.assertEqual(self.product1.with_context(company_owned=True).qty_available, 10.0)

@@ -260,10 +260,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view .line_info_button.fa-exclamation-triangle': '_onTogglePartialReconcile',
         'click .reconcile_model_create': '_onCreateReconcileModel',
         'click .reconcile_model_edit': '_onEditReconcileModel',
+        'keyup input': '_onInputKeyup',
+        'blur input': '_onInputKeyup',
     },
     custom_events: _.extend({}, FieldManagerMixin.custom_events, {
         'field_changed': '_onFieldChanged',
     }),
+    _avoidFieldUpdate: {},
 
     /**
      * create partner_id field in editable mode
@@ -407,6 +410,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             this.model.notifyChanges(this.handleCreateRecord, state.createForm);
             var record = this.model.get(this.handleCreateRecord);
             _.each(this.fields, function (field, fieldName) {
+                if (self._avoidFieldUpdate[fieldName]) return;
                 if (fieldName === "partner_id") return;
                 if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
                     field.reset(record);
@@ -597,6 +601,32 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onFilterChange: function () {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
+    },
+    /**
+     * @private
+     * @param {keyup event} event
+     */
+    _onInputKeyup: function (event) {
+        if(event.keyCode === 13) {
+            if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
+                this._onCreateProposition();
+            }
+            return;
+        }
+
+        var self = this;
+        for (var fieldName in this.fields) {
+            var field = this.fields[fieldName];
+            if (!field.$el.is(event.target)) {
+                continue;
+            }
+            this._avoidFieldUpdate[field.name] = event.type !== 'focusout';
+            field.value = false;
+            field._setValue($(event.target).val()).then(function () {
+                self._avoidFieldUpdate[field.name] = false;
+            });
+            break;
+        }
     },
     /**
      * @private

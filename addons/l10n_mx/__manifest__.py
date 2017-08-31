@@ -28,7 +28,7 @@ With this module you will have:
  - Minimal chart of account tested in production environments.
  - Minimal chart of taxes, to comply with SAT_ requirements.
 
-.. SAT: http://www.sat.gob.mx/
+.. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
         "account",

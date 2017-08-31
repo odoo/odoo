@@ -187,7 +187,7 @@ class Picking(models.Model):
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
 
     move_type = fields.Selection([
-        ('direct', 'Partial'), ('one', 'All at once')], 'Shipping Policy',
+        ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         default='direct', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="It specifies goods to be deliver partially or all at once")
@@ -236,7 +236,7 @@ class Picking(models.Model):
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     location_dest_id = fields.Many2one(
-        'stock.location', "Destination Location Zone",
+        'stock.location', "Destination Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
@@ -644,8 +644,8 @@ class Picking(models.Model):
         for move in self.move_lines:
             quantity_todo.setdefault(move.product_id.id, 0)
             quantity_done.setdefault(move.product_id.id, 0)
-            quantity_todo[move.product_id.id] += move.product_qty
-            quantity_done[move.product_id.id] += move.quantity_done #TODO: convert to base units
+            quantity_todo[move.product_id.id] += move.product_uom_qty
+            quantity_done[move.product_id.id] += move.quantity_done
         for ops in self.move_line_ids.filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
             for quant in ops.package_id.quant_ids:
                 quantity_done.setdefault(quant.product_id.id, 0)

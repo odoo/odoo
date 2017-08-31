@@ -2,6 +2,17 @@
 <odoo>
     <data>
 
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_get_account_moves" icon="fa-arrows" class="oe_stat_button" string="Account Moves" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_inventory_form_inherit" model="ir.ui.view">
             <field name="name">stock.inventory.form.inherit</field>
             <field name="model">stock.inventory</field>
@@ -50,14 +61,16 @@
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
-                    <field name="price_unit"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                     <field name="date" groups="base.group_no_one"/>
                     <field name="state" invisible="1"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="price_unit"/>
+                    <field name="remaining_qty"/>
                     <field name="value" sum="Stock Valuation"/>
+                    <field name="remaining_value" sum="Stock Valuation"/>
                 </tree>
             </field>
         </record>

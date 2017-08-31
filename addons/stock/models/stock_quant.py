@@ -11,10 +11,15 @@ from odoo.osv import expression
 class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quants'
+    _rec_name = 'product_id'
 
     product_id = fields.Many2one(
         'product.product', 'Product',
         ondelete='restrict', readonly=True, required=True)
+    # so user can filter on template in webclient
+    product_tmpl_id = fields.Many2one(
+        'product.template', string='Product Template',
+        related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
@@ -42,6 +47,18 @@ class StockQuant(models.Model):
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
+
+    @api.multi
+    def action_view_stock_moves(self):
+        self.ensure_one()
+        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action['domain'] = [
+            ('product_id', '=', self.product_id.id),
+            '|', ('location_id', '=', self.location_id.id),
+            ('location_dest_id', '=', self.location_id.id),
+            ('lot_id', '=', self.lot_id.id),
+            ('package_id', '=', self.package_id.id)]
+        return action
 
     @api.multi
     @api.constrains('product_id')

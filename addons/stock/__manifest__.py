@@ -43,14 +43,13 @@
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',
 
-        'views/stock_scrap_views.xml',
-
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
-        'views/stock_inventory_views.xml',
         'views/stock_incoterms_views.xml',
         'views/stock_production_lot_views.xml',
         'views/stock_picking_views.xml',
+        'views/stock_scrap_views.xml',
+        'views/stock_inventory_views.xml',
         'views/stock_quant_views.xml',
         'views/stock_location_views.xml',
         'views/procurement_views.xml',

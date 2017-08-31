@@ -848,9 +848,7 @@ class TestStockFlow(TestStockCommon):
 
         res_dict = picking_out.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        res_dict_for_back_order = wizard.process()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
-        backorder_wizard.process()
+        wizard.process()
 
         # ----------------------------------------------------------------------
         # Check product stock location quantity and quantity available.
@@ -931,9 +929,7 @@ class TestStockFlow(TestStockCommon):
         # Transfer Incoming shipment.
         res_dict = picking_in.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        res_dict_for_back_order = wizard.process()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
-        backorder_wizard.process()
+        wizard.process()
 
         # -----------------------------------------------------------------------
         # Check incoming shipment after transfer.
@@ -970,7 +966,9 @@ class TestStockFlow(TestStockCommon):
         pack_opt.write({'product_uom_qty': 0.5})
         res_dict = picking_out.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         # Check total quantity stock location.
@@ -992,7 +990,9 @@ class TestStockFlow(TestStockCommon):
         pack_opt.write({'product_uom_qty': 0.5})
         res_dict = bo_out_1.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
 
@@ -1014,7 +1014,9 @@ class TestStockFlow(TestStockCommon):
         pack_opt.write({'product_uom_qty': 0.5})
         res_dict = bo_out_2.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
         # Check total quantity stock location of product KG.
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
@@ -1035,7 +1037,9 @@ class TestStockFlow(TestStockCommon):
         pack_opt.write({'product_uom_qty': 0.5})
         res_dict = bo_out_3.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 999.9980, 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))

@@ -1087,7 +1087,11 @@ var FieldOne2Many = FieldX2Many.extend({
         ev.stopPropagation();
 
         if (this.editable) {
-            if (!this.creatingRecord) {
+            if (!this.activeActions.create) {
+                if (ev.data.onFail) {
+                    ev.data.onFail();
+                }
+            } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
                 this._setValue({
                     operation: 'CREATE',
