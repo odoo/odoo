@@ -34,7 +34,7 @@ class AccountingTestTemplConsistency(HttpCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'last_time_entries_checked'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'last_time_entries_checked', 'opening_debit', 'opening_credit'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')

@@ -15,7 +15,6 @@ from lxml import etree
 # Entries
 #----------------------------------------------------------
 
-
 class AccountMove(models.Model):
     _name = "account.move"
     _description = "Account Entry"
@@ -455,6 +454,9 @@ class AccountMoveLine(models.Model):
         help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
     parent_state = fields.Char(compute="_compute_parent_state", help="State of the parent account.move")
 
+    #Needed for setup, as a decoration attribute needs to know that for a tree view in one of the popups, and there's no way to reference directly a xml id from there
+    is_unaffected_earnings_line = fields.Boolean(string="Is Unaffected Earnings Line", compute="_compute_is_unaffected_earnings_line", help="Tells whether or not this line belongs to an unaffected earnings account")
+
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -500,6 +502,12 @@ class AccountMoveLine(models.Model):
             if line.amount_currency:
                 if (line.amount_currency > 0.0 and line.credit > 0.0) or (line.amount_currency < 0.0 and line.debit > 0.0):
                     raise ValidationError(_('The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.'))
+
+    @api.depends('account_id.user_type_id')
+    def _compute_is_unaffected_earnings_line(self):
+        for record in self:
+            unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
+            record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
 
     @api.onchange('amount_currency', 'currency_id')
     def _onchange_amount_currency(self):

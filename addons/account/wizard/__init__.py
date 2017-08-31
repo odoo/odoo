@@ -19,4 +19,5 @@ from . import account_report_partner_ledger
 from . import account_report_trial_balance
 from . import account_financial_report
 from . import account_report_aged_partner_balance
+from . import setup_wizards
 from . import wizard_tax_adjustments
