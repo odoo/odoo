@@ -292,6 +292,9 @@
     </t>
 
     <t t-name="manual_reconciliation" t-extend="reconciliation">
+        <t t-jquery=".js_automatic_reconciliation">
+            $(this).addClass('hidden');
+        </t>
         <t t-jquery=".interface_options" t-operation="append">
             <table t-if="show_mode_selector" border="0" cellpadding="0" cellspacing="0" class="oe_form_group o_form_group"><tbody>
                 <tr class="oe_form_group_row o_form_group_row">
