@@ -411,6 +411,7 @@ tour.register('main_flow_tour', {
     content: _t("Go to Operations"),
     position: "bottom"
 }, {
+    edition: "community",
     trigger: ".o_app[data-menu-xmlid='stock.procurement_order_compute_all_menu'], .oe_menu_toggler[data-menu-xmlid='stock.procurement_order_compute_all_menu']",
     content: _t("Click on schedulers menu"),
     position: "bottom"
