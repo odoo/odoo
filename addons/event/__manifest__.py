@@ -27,7 +27,7 @@ Key Features
         'report/event_event_reports.xml',
         'data/email_template_data.xml',
         'data/event_data.xml',
-        'views/event_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
     ],

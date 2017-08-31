@@ -21,7 +21,7 @@
         'views/payment_views.xml',
         'views/snippets.xml',
         'views/report_shop_saleorder.xml',
-        'views/website_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/demo.xml',

@@ -2,7 +2,7 @@
 
 from odoo import fields, models
 
-class event_config_settings(models.TransientModel):
+class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     module_event_sale = fields.Boolean("Tickets")

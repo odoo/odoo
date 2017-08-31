@@ -9,7 +9,7 @@
     """,
     'data': [
         'views/fleet_views.xml',
-        'views/fleet_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/hr_contract_views.xml',
     ],
     'auto_install': True,

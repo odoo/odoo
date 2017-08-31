@@ -27,7 +27,7 @@
         'report/project_report_views.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
-        'views/project_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/project_templates.xml',
         'views/project_portal_templates.xml',
         'data/web_planner_data.xml',

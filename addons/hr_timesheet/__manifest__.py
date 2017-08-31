@@ -25,7 +25,7 @@ up a management by affair.
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
         'views/hr_timesheet_views.xml',
-        'views/hr_timesheet_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/project_views.xml',
         'views/project_portal_templates.xml',
         'report/hr_timesheet_report_view.xml',

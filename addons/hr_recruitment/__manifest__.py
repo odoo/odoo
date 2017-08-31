@@ -22,7 +22,7 @@
         'security/ir.model.access.csv',
         'data/hr_recruitment_data.xml',
         'views/hr_recruitment_views.xml',
-        'views/hr_recruitment_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/hr_recruitment_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',

@@ -3,7 +3,7 @@
 
 # flake8: noqa: F401
 
-from . import base_config_settings
+from . import res_config_settings
 from . import decimal_precision
 
 # don't try to be a good boy and sort imports alphabetically.

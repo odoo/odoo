@@ -25,7 +25,7 @@
         'views/hr_payroll_report.xml',
         'data/hr_payroll_data.xml',
         'wizard/hr_payroll_contribution_register_report_views.xml',
-        'views/hr_payroll_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/report_contributionregister_templates.xml',
         'views/report_payslip_templates.xml',
         'views/report_payslipdetails_templates.xml',

@@ -33,7 +33,7 @@
         'views/stock_picking_views.xml',
         'views/mrp_unbuild_views.xml',
         'views/ir_attachment_view.xml',
-        'views/mrp_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/mrp_templates.xml',
         'views/stock_scrap_views.xml',
         'report/mrp_report_views_main.xml',

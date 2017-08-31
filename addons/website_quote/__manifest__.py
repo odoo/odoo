@@ -16,7 +16,7 @@
         'views/sale_order_views.xml',
         'views/sale_quote_views.xml',
         'views/website_quote_templates.xml',
-        'views/sale_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

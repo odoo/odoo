@@ -40,6 +40,6 @@ With this module you will have:
         "data/account_tax_data.xml",
         "data/fiscal_position_data.xml",
         "data/account_chart_template_data.yml",
-        "views/account_config_settings_views.xml",
+        "views/res_config_settings_views.xml",
     ],
 }

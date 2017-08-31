@@ -57,7 +57,7 @@
         'views/stock_move_line_views.xml',
         'views/stock_move_views.xml',
         'views/product_views.xml',
-        'views/stock_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
 

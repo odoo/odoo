@@ -15,7 +15,7 @@ It also will include the feedback tool for the livechat, and web pages to displa
     'auto_install': True,
     'data': [
         'views/website_livechat.xml',
-        'views/website_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/website_livechat_view.xml',
         'security/ir.model.access.csv',
         'security/website_livechat.xml',

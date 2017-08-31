@@ -40,7 +40,7 @@ Here is how it works:
         'report/isr_report.xml',
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
-        'views/account_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
 
     'demo': [

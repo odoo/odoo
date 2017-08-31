@@ -12,7 +12,7 @@
         'data/google_drive_data.xml',
         'views/google_drive_views.xml',
         'views/google_drive_templates.xml',
-        'views/base_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/google_drive_demo.xml'
