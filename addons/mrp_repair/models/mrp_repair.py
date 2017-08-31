@@ -418,7 +418,7 @@ class Repair(models.Model):
             moves = self.env['stock.move']
             for operation in repair.operations:
                 move = Move.create({
-                    'name': operation.name,
+                    'name': repair.name,
                     'product_id': operation.product_id.id,
                     'product_uom_qty': operation.product_uom_qty,
                     'product_uom': operation.product_uom.id,
@@ -435,6 +435,7 @@ class Repair(models.Model):
                                            'location_id': operation.location_id.id, #TODO: owner stuff
                                            'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
+                    'origin': repair.name,
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
@@ -456,6 +457,7 @@ class Repair(models.Model):
                                            'location_id': repair.location_id.id, #TODO: owner stuff
                                            'location_dest_id': repair.location_dest_id.id,})],
                 'repair_id': repair.id,
+                'origin': repair.name,
             })
             consumed_lines = moves.mapped('move_line_ids')
             produced_lines = move.move_line_ids
