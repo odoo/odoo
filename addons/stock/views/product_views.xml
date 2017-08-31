@@ -234,9 +234,9 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                       <button string="Traceability"
-                            type="action"
-                            name= "%(act_product_stock_move_open)d"
+                       <button string="Inventory Moves"
+                            type="object"
+                            name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-arrows-v"
                             groups="stock.group_stock_user"/>
@@ -298,8 +298,8 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                        <button string="Traceability" type="object"
-                            name= "action_view_stock_moves"
+                        <button string="Inventory Moves" type="object"
+                            name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-arrows-v"
                             groups="stock.group_stock_user"/>
