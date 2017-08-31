@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0">
+            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
                 <field name="picking_id" string="Reference"/>
                 <field name="create_date" invisible="1" groups="base.group_no_one"/>

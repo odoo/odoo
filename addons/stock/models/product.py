@@ -354,6 +354,13 @@ class Product(models.Model):
         return self.mapped('product_tmpl_id').action_view_routes()
 
     @api.multi
+    def action_view_stock_move_lines(self):
+        self.ensure_one()
+        action = self.env.ref('stock.stock_move_line_action').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        return action
+
+    @api.multi
     def write(self, values):
         res = super(Product, self).write(values)
         if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
@@ -524,11 +531,9 @@ class ProductTemplate(models.Model):
         return action
 
     @api.multi
-    def action_view_stock_moves(self):
-        products = self.mapped('product_variant_ids')
-        action = self.env.ref('stock.act_product_stock_move_open').read()[0]
-        if products:
-            action['context'] = {'default_product_id': products.ids[0]}
+    def action_view_stock_move_lines(self):
+        self.ensure_one()
+        action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
