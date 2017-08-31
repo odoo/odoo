@@ -2205,14 +2205,13 @@ class One2many(_RelationalMulti):
                 elif act[0] == 6:
                     record = records[-1]
                     comodel.browse(act[2]).write({inverse: record.id})
-                    query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
-                    comodel._cr.execute(query, (record.id, act[2] or [0]))
-                    lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
+                    domain = self.domain(records) if callable(self.domain) else self.domain
+                    domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
                     inverse_field = comodel._fields[inverse]
                     if inverse_field.ondelete == 'cascade':
-                        lines.unlink()
+                        comodel.search(domain).unlink()
                     else:
-                        lines.write({inverse: False})
+                        comodel.search(domain).write({inverse: False})
 
 
 class Many2many(_RelationalMulti):
