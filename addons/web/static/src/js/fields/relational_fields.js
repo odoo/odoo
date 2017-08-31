@@ -715,16 +715,19 @@ var FieldX2Many = AbstractField.extend({
             return $.when();
         }
         var arch = this.view.arch;
+        var viewType;
         if (arch.tag === 'tree') {
+            viewType = 'list';
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
-                viewType: 'list',
+                viewType: viewType,
             });
         }
         if (arch.tag === 'kanban') {
+            viewType = 'kanban';
             var record_options = {
                 editable: false,
                 deletable: false,
@@ -733,9 +736,10 @@ var FieldX2Many = AbstractField.extend({
             this.renderer = new KanbanRenderer(this, this.value, {
                 arch: arch,
                 record_options: record_options,
-                viewType: 'kanban',
+                viewType: viewType,
             });
         }
+        this.$el.addClass('o_field_x2many o_field_x2many_' + viewType);
         return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
     },
     /**
