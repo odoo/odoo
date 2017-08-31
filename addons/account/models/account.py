@@ -77,9 +77,74 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     group_id = fields.Many2one('account.group')
 
+    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
+    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
+
+    def _compute_opening_debit_credit(self):
+        for record in self:
+            opening_debit = opening_credit = 0.0
+            if record.company_id.account_opening_move_id:
+                for line in self.env['account.move.line'].search([('account_id', '=', record.id),
+                                                                 ('move_id','=', record.company_id.account_opening_move_id.id)]):
+                    #could be executed at most twice: once for credit, once for debit
+                    if line.debit:
+                        opening_debit = line.debit
+                    elif line.credit:
+                        opening_credit = line.credit
+            record.opening_debit = opening_debit
+            record.opening_credit = opening_credit
+
+    def _set_opening_debit(self):
+        self._set_opening_debit_credit(self.opening_debit, 'debit')
+
+    def _set_opening_credit(self):
+        self._set_opening_debit_credit(self.opening_credit, 'credit')
+
+    def _set_opening_debit_credit(self, amount, field):
+        """ Generic function called by both opening_debit and opening_credit's
+        inverse function. 'Amount' parameter is the value to be set, and field
+        either 'debit' or 'credit', depending on wich one of these two fields
+        got assigned.
+        """
+        opening_move = self.company_id.account_opening_move_id
+
+        if not opening_move:
+            raise UserError(_("No opening move defined !"))
+
+        if opening_move.state == 'draft':
+            # check whether we should create a new move line or modify an existing one
+            opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
+                                                                      ('move_id','=', opening_move.id),
+                                                                      (field,'!=', False),
+                                                                      (field,'!=', 0.0)]) # 0.0 condition important for import
+
+            counter_part_map = {'debit': opening_move_line.credit, 'credit': opening_move_line.debit}
+            # No typo here! We want the credit value when treating debit and debit value when treating credit
+
+            if opening_move_line:
+                if amount:
+                    # modify the line
+                    setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
+                elif counter_part_map[field]:
+                    # delete the line (no need to keep a line with value = 0)
+                    opening_move_line.with_context({'check_move_validity': False}).unlink()
+            elif amount:
+                # create a new line, as none existed before
+                self.env['account.move.line'].with_context({'check_move_validity': False}).create({
+                        'name': _('Opening balance'),
+                        field: amount,
+                        'move_id': opening_move.id,
+                        'account_id': self.id,
+                })
+
+            # Then, we automatically balance the opening move, to make sure it stays valid
+            if not 'import_file' in self.env.context:
+                # When importing a file, avoid recomputing the opening move for each account and do it at the end, for better performances
+                self.company_id._auto_balance_opening_move()
 
     @api.model
     def default_get(self, default_fields):
@@ -145,6 +210,20 @@ class AccountAccount(models.Model):
         default = dict(default or {})
         default.setdefault('code', _("%s (copy)") % (self.code or ''))
         return super(AccountAccount, self).copy(default)
+
+    @api.model
+    def load(self, fields, data):
+        """ Overridden for better performances when importing a list of account
+        with opening debit/credit. In that case, the auto-balance is postpone
+        untill the whole file has been imported.
+        """
+        rslt = super(AccountAccount, self).load(fields, data)
+
+        if 'import_file' in self.env.context:
+            companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
+            for company in companies:
+                company._auto_balance_opening_move()
+        return rslt
 
     @api.multi
     def write(self, vals):
@@ -304,7 +383,6 @@ class AccountJournal(models.Model):
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
-    color = fields.Integer("Color Index", default=1)
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
