@@ -284,7 +284,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(field_onchange.get('value1'), '1')
 
         # create a user-defined default based on 'value1'
-        self.env['ir.values'].set_default('test_new_api.foo', 'value2', 666, condition='value1=42')
+        self.env['ir.default'].set('test_new_api.foo', 'value2', 666, condition='value1=42')
 
         # setting 'value1' to 42 should trigger the change of 'value2'
         self.env.invalidate_all()
