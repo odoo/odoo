@@ -18,7 +18,7 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     'data': [
         'data/ir_cron_data.xml',
         'views/ir_translation_views.xml',
-        'views/base_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'wizard/base_gengo_translations_view.xml',
     ],
     'demo': ['data/res_company_demo.xml'],

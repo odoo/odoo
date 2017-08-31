@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.delivery</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="msg_delivery_method_setting" position="replace">
+                <div class="content-group" attrs="{'invisible': [('module_website_sale_delivery', '=', False)]}">
+                    <div class="mt16">
+                        <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Delivery Methods" class="btn-link" icon="fa-arrow-right"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

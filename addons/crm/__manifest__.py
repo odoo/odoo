@@ -37,7 +37,7 @@
         'wizard/base_partner_merge_views.xml',
 
         'views/crm_templates.xml',
-        'views/crm_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/crm_views.xml',
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',

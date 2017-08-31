@@ -15,7 +15,7 @@ Allow users to login through OAuth2 Provider.
         'data/auth_oauth_data.yml',
         'views/auth_oauth_views.xml',
         'views/res_users_views.xml',
-        'views/base_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/auth_oauth_templates.xml',
         'security/ir.model.access.csv',
     ],

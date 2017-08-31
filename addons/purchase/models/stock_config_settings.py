@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 
-class StockConfigSettings(models.TransientModel):
+class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     po_lead = fields.Float(related='company_id.po_lead')
@@ -19,12 +19,12 @@ class StockConfigSettings(models.TransientModel):
             self.po_lead = 0.0
 
     def get_values(self):
-        res = super(StockConfigSettings, self).get_values()
+        res = super(ResConfigSettings, self).get_values()
         res.update(
             use_po_lead=self.env['ir.config_parameter'].sudo().get_param('purchase.use_po_lead')
         )
         return res
 
     def set_values(self):
-        super(StockConfigSettings, self).set_values()
+        super(ResConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', self.use_po_lead)

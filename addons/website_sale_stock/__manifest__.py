@@ -14,7 +14,7 @@
     'auto_install': True,
     'data': [
         'views/product_template_views.xml',
-        'views/website_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/website_sale_stock_templates.xml'
     ]
 }
