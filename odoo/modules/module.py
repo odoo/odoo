@@ -328,9 +328,9 @@ def load_information_from_description_file(module, mod_path=None):
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
 
