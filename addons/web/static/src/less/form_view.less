@@ -128,9 +128,27 @@
         }
     }
 
+    // No sheet
+    &.o_form_nosheet {
+        display: block;
+        .o-webclient-padding(@top: @odoo-sheet-vpadding, @bottom: @odoo-sheet-vpadding);
+
+        .o_form_statusbar {
+            margin: -@odoo-sheet-vpadding -@odoo-horizontal-padding @odoo-sheet-vpadding -@odoo-horizontal-padding;
+        }
+    }
+
+    // Non-chatter rules
+    .o_form_sheet_bg {
+        position: relative;
+
+        > .o_form_sheet {
+            margin: @odoo-sheet-vpadding auto;
+        }
+    }
+
     // Statusbar
     .o_form_statusbar {
-        .o-flex(0, 0, auto);
         position: relative; // Needed for the "More" dropdown
         .o-flex-display();
         .o-justify-content(space-between);
