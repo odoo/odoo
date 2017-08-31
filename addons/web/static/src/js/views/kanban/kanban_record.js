@@ -15,6 +15,8 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var QWeb = core.qweb;
 
+var NB_KANBAN_RECORD_COLORS = 12;
+
 var KanbanRecord = Widget.extend({
     events: {
         'click .oe_kanban_action': '_onKanbanActionClicked',
@@ -111,15 +113,15 @@ var KanbanRecord = Widget.extend({
      * @returns {integer} the color id
      */
     _getColorID: function (variable) {
-        if (typeof(variable) === 'number') {
-            return Math.round(variable) % 10;
+        if (typeof variable === 'number') {
+            return Math.round(variable) % NB_KANBAN_RECORD_COLORS;
         }
-        if (typeof(variable) === 'string') {
+        if (typeof variable === 'string') {
             var index = 0;
-            for (var i=0; i<variable.length; i++) {
+            for (var i = 0 ; i < variable.length ; i++) {
                 index += variable.charCodeAt(i);
             }
-            return index % 10;
+            return index % NB_KANBAN_RECORD_COLORS;
         }
         return 0;
     },
@@ -493,8 +495,7 @@ var KanbanRecord = Widget.extend({
      */
     _onManageTogglerClicked: function (event) {
         event.preventDefault();
-        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        this.$el.toggleClass('o_dropdown_open');
         var colorClass = this._getColorClassname(this.recordData.color || 0);
         this.$('.o_kanban_manage_button_section').toggleClass(colorClass);
     },

@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div id="wrap" class='portal-wrap'>
+            <div id="wrap" class='o_portal_wrap'>
                 <div class="container mb64">
                     <t t-if="my_details">
                         <div class="row">
@@ -117,7 +117,7 @@
     <template id="portal_my_home" name="My Portal">
         <t t-call="portal.portal_layout">
             <t t-set="my_details" t-value="True"/>
-            <div class="o_my_home_content">
+            <div class="o_portal_my_home">
                 <div class="oe_structure"></div>
                 <h3 class="page-header">Your Documents</h3>
                 <ul class="o_portal_docs list-group">
@@ -159,7 +159,7 @@
                             </li>
                         </ul>
                     </div>
-                    <input type="text" class="form-control search_panel_fixed_width" t-att-value='search' name="search"/>
+                    <input type="text" class="form-control o_portal_search_panel_fixed_width" t-att-value='search' name="search"/>
                     <span class="input-group-btn">
                         <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
                     </span>
@@ -167,7 +167,7 @@
             </div>
         </t>
         <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_sortby" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
                 <span class="fa fa-sort fa-lg" />
                 <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                 <span class="caret"></span>
@@ -181,7 +181,7 @@
             </ul>
         </div>
         <div t-if="searchbar_filters" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_filters" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
                 <span class="fa fa-filter fa-lg" />
                 <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
                 <span class="caret"></span>

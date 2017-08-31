@@ -224,9 +224,9 @@ var PortalChatter = Widget.extend({
 });
 
 base.ready().then(function () {
-    $('.o_website_mail_thread').each(function (index) {
+    $('.o_portal_chatter').each(function (index) {
         var $elem = $(this);
-        var mail_thread = new WebsiteMailThread(null, $elem.data());
+        var mail_thread = new PortalChatter(null, $elem.data());
         mail_thread.appendTo($elem);
     });
 });

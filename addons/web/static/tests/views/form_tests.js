@@ -3809,8 +3809,8 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     assert.deepEqual(args.args[0].p,
-                        [[0, false, {
-                            p: [[0, false, {display_name: "xtv"}]],
+                        [[0, args.args[0].p[0][1], {
+                            p: [[0, args.args[0].p[0][2].p[0][1], {display_name: "xtv"}]],
                         }]],
                         "create should be called with the correct arguments");
                 }

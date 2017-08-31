@@ -355,7 +355,7 @@ class Users(models.Model):
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
-            self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
+            self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
         if 'groups_id' in values:
@@ -681,24 +681,24 @@ class GroupsView(models.Model):
     def create(self, values):
         user = super(GroupsView, self).create(values)
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return user
 
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return res
 
     @api.multi
     def unlink(self):
         res = super(GroupsView, self).unlink()
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return res
 
     @api.model

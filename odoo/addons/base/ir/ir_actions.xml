@@ -52,14 +52,14 @@
             <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
                 <form string="Report">
-                    <field name="ir_values_id" invisible="1"/>
+                    <field name="binding_model_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="create_action" string="Add in the 'Print' menu" type="object"
-                                    attrs="{'invisible':[('ir_values_id','!=',False)]}" icon="fa-plus-square"
+                                    attrs="{'invisible':[('binding_model_id','!=',False)]}" icon="fa-plus-square"
                                     help="Display an option on related documents to print this report" class="oe_stat_button"/>
                             <button name="unlink_action" string="Remove from the 'Print' menu" type="object"
-                                    attrs="{'invisible':[('ir_values_id','=',False)]}" icon="fa-minus-square"
+                                    attrs="{'invisible':[('binding_model_id','=',False)]}" icon="fa-minus-square"
                                     help="Remove the contextual action related this report" class="oe_stat_button"/>
                             <button name="associated_view" string="QWeb views" type="object"
                                     attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}" icon='fa-code'
@@ -254,13 +254,13 @@
             <field name="arch" type="xml">
                 <form string="Server Action">
                     <header>
-                        <field name="menu_ir_values_id" invisible="1"/>
+                        <field name="binding_model_id" invisible="1"/>
                         <button name="create_action" string="Create Contextual Action" type="object"
                                 class="btn-primary"
-                                attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
+                                attrs="{'invisible':[('binding_model_id','!=',False)]}"
                                 help="Display an option in the 'More' top-menu in order to run this action."/>
                         <button name="unlink_action" string="Remove Contextual Action" type="object"
-                                attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
+                                attrs="{'invisible':[('binding_model_id','=',False)]}"
                                 help="Remove 'More' top-menu contextual action related to this action"/>
                     </header>
                     <sheet>

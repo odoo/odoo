@@ -220,28 +220,21 @@
     </template>
 
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
-        <xpath expr="//div[hasclass('o_my_home_content')]" position="inside">
-            <t t-if="user_id.commercial_partner_id.grade_id">
-                <h3 t-if="lead_count" class="page-header">
-                    <a href="/my/leads">My Leads
-                        <span class="badge ml8" t-esc="lead_count"/>
-                    </a>
-                </h3>
-                <h3 class="page-header">
-                    <a href="/my/opportunities">My Opportunities
-                        <span t-if="opp_count" class="badge ml8" t-esc="opp_count"/>
-                        <small t-if="not opp_count" class="ml8">
-                            There are currently no opportunities.
-                        </small>
-                    </a>
-                </h3>
-            </t>
+        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
+            <li t-if="lead_count" class="list-group-item">
+                <span class="badge" t-esc="lead_count"/>
+                <a href="/my/leads">My Leads</a>
+            </li>
+            <li class="list-group-item">
+                <span class="badge" t-esc="opp_count"/>
+                <a href="/my/opportunities">My Opportunities</a>
+            </li>
         </xpath>
     </template>
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
-            <h3 class="page-header">
+            <h3>
                 My Leads
                 <t t-call="portal.portal_searchbar"/>
             </h3>
@@ -276,7 +269,7 @@
 
     <template id="portal_my_opportunities" name="My Opportunities">
         <t t-call="portal.portal_layout">
-            <h3 class="page-header">
+            <h3>
                 My Opportunities
                 <t t-call="portal.portal_searchbar"/>
                 <button name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>

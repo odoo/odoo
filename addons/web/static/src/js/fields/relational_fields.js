@@ -20,6 +20,7 @@ var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
+var dom = require('web.dom');
 var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
@@ -685,6 +686,7 @@ var FieldX2Many = AbstractField.extend({
             if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
+                this._reset(record, ev);
                 this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
                 return $.when();
             }
@@ -896,35 +898,30 @@ var FieldX2Many = AbstractField.extend({
         this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
             this.lastInitialEvent = ev;
+            // store the cursor position to restore it once potential onchanges have been applied
+            var self = this;
+            var editableID =  this.renderer.getEditableRecordID();
+            var datapoint = _.find(this.value.data, {id: editableID});
+
+            var ref = datapoint && datapoint.ref;
+            var cursor = ref && dom.getCursor(ev.target.getFocusableElement());
+            var fieldName = ev.target.name;
+
             var def = this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
             });
 
-            // Correctly resets the cursor
-            var self = this;
-            var cursor, fieldName;
-            var editableId =  this.renderer.getEditableRecordID();
-            var datapoint = _.find(this.renderer.state.data, {id: editableId});
-            var ref = datapoint && datapoint.ref;
-            if ('DEBOUNCE' in ev.target) { // char, text, float, integer fields
-                cursor = utils.getCursor(ev.target.getFocusableElement());
-                fieldName = ev.target.name;
-            }
             if (ref) {
                 def.then(function () {
                     var nextEditableRecordID = self.renderer.getEditableRecordID();
-                    if (nextEditableRecordID && editableId !== nextEditableRecordID) {
+                    if (nextEditableRecordID && editableID !== nextEditableRecordID) {
                         return;
                     }
-                    var datapoint = _.find(self.renderer.state.data, {ref: ref});
+                    var datapoint = _.find(self.value.data, {ref: ref});
                     if (datapoint) {
-                        self.renderer.editRecord(datapoint.id);
-                        if (cursor) {
-                            var field = _.findWhere(self.renderer.allFieldWidgets[datapoint.id], {name: fieldName});
-                            utils.setCursor(field.getFocusableElement(), cursor.offset);
-                        }
+                        self.renderer.focusField(datapoint.id, fieldName, cursor && cursor.offset);
                     }
                 });
             }
@@ -1661,7 +1658,8 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
             var $tag = $('<span>')
-                    .attr('title', _.str.escapeHTML(m2m.data.display_name))
+                    .text(m2m.data.display_name)
+                    .prepend('<span>')
                     .appendTo(self.$el);
             if (self.colorField in m2m.data) {
                 if (m2m.data[self.colorField] === 10) {

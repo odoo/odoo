@@ -5,7 +5,7 @@ import logging
 import datetime
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import consteq, float_round, image_resize_images, ustr
+from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
 from odoo.addons.base.module import module
 from odoo.exceptions import ValidationError
 
@@ -117,8 +117,8 @@ class PaymentAcquirer(models.Model):
         help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
-        ('ask', 'Let the customer decide (recommended for eCommerce)'),
-        ('always', 'Always (recommended for Subscriptions)')],
+        ('ask', 'Let the customer decide'),
+        ('always', 'Always')],
         string='Save Cards', default='none',
         help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
@@ -149,6 +149,12 @@ class PaymentAcquirer(models.Model):
         help="Small-sized image of this provider. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
+
+    payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
+    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website.'),
+        ('form', 'The customer is redirected to the website of the acquirer.')],
+        default='form', required=True, string='Payment flow',
+        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -344,16 +350,11 @@ class PaymentAcquirer(models.Model):
 
         return self.view_template_id.render(values, engine='ir.qweb')
 
-    @api.multi
-    def _registration_render(self, partner_id, qweb_context=None):
-        if qweb_context is None:
-            qweb_context = {}
-        qweb_context.update(id=self.ids[0], partner_id=partner_id)
-        method_name = '_%s_registration_form_generate_values' % (self.provider,)
-        if hasattr(self, method_name):
-            method = getattr(self, method_name)
-            qweb_context.update(method(qweb_context))
-        return self.registration_view_template_id.render(qweb_context, engine='ir.qweb')
+    def get_s2s_form_xml_id(self):
+        if self.registration_view_template_id:
+            model_data = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('res_id', '=', self.registration_view_template_id.id)])
+            return ('%s.%s') % (model_data.module, model_data.name)
+        return False
 
     @api.multi
     def s2s_process(self, data):
@@ -394,6 +395,32 @@ class PaymentAcquirer(models.Model):
                 'context': context,
             }
 
+class PaymentIcon(models.Model):
+    _name = 'payment.icon'
+    _description = 'Payment Icon'
+
+    name = fields.Char(string='Name')
+    acquirer_ids = fields.Many2many('payment.acquirer', string="Acquirers", help="List of Acquirers supporting this payment icon.")
+    image = fields.Binary(
+        "Image", attachment=True,
+        help="This field holds the image used for this payment icon, limited to 1024x1024px")
+
+    image_payment_form = fields.Binary(
+        "Image displayed on the payment form", attachment=True)
+
+    @api.model
+    def create(self, vals):
+        if 'image' in vals:
+            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
+            vals['image'] = image_resize_image(vals['image'], size=(64,64))
+        return super(PaymentIcon, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if 'image' in vals:
+           vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
+           vals['image'] = image_resize_image(vals['image'], size=(64,64))
+        return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):
     """ Transaction Model. Each specific acquirer can extend the model by adding

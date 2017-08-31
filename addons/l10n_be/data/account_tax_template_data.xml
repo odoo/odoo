@@ -152,6 +152,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-OUT-21-L" model="account.tax.template">
             <field name="sequence">11</field>
@@ -165,6 +166,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-OUT-12-S" model="account.tax.template">
             <field name="sequence">20</field>
@@ -179,6 +181,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_02'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-OUT-12-L" model="account.tax.template">
             <field name="sequence">21</field>
@@ -192,6 +195,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_02'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-OUT-06-S" model="account.tax.template">
             <field name="sequence">30</field>
@@ -206,6 +210,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-OUT-06-L" model="account.tax.template">
             <field name="sequence">31</field>
@@ -219,6 +224,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01'), ref('tax_tag_49'), ref('tax_tag_54'), ref('tax_tag_64')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-OUT-00-S" model="account.tax.template">
             <field name="sequence">40</field>
@@ -233,6 +239,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_00'), ref('tax_tag_49')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-OUT-00-L" model="account.tax.template">
             <field name="sequence">41</field>
@@ -246,6 +253,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_00'), ref('tax_tag_49')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-OUT-00-CC" model="account.tax.template">
             <field name="sequence">50</field>
@@ -259,6 +267,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_45'), ref('tax_tag_49')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-OUT-00-EU-S" model="account.tax.template">
             <field name="sequence">60</field>
@@ -273,6 +282,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_44'), ref('tax_tag_48s44')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-OUT-00-EU-L" model="account.tax.template">
             <field name="sequence">61</field>
@@ -286,6 +296,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46L'), ref('tax_tag_48s46L')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0_eu"/>
         </record>
         <record id="attn_VAT-OUT-00-EU-T" model="account.tax.template">
             <field name="sequence">62</field>
@@ -300,6 +311,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46T'), ref('tax_tag_48s46T')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0_eu"/>
         </record>
         <record id="attn_VAT-OUT-00-ROW" model="account.tax.template">
             <field name="sequence">70</field>
@@ -313,6 +325,7 @@
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_47'), ref('tax_tag_49')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V81-21" model="account.tax.template">
             <field name="sequence">110</field>
@@ -326,6 +339,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-IN-V81-12" model="account.tax.template">
             <field name="sequence">120</field>
@@ -339,6 +353,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-IN-V81-06" model="account.tax.template">
             <field name="sequence">130</field>
@@ -352,6 +367,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-IN-V81-00" model="account.tax.template">
             <field name="sequence">140</field>
@@ -365,6 +381,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
          <record id="attn_TVA-21-inclus-dans-prix" model="account.tax.template">
             <field name="sequence">12</field>
@@ -378,6 +395,7 @@
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-IN-V82-21-S" model="account.tax.template">
             <field name="sequence">210</field>
@@ -392,6 +410,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-IN-V82-21-G" model="account.tax.template">
             <field name="sequence">220</field>
@@ -406,6 +425,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-IN-V82-12-S" model="account.tax.template">
             <field name="sequence">230</field>
@@ -420,6 +440,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-IN-V82-12-G" model="account.tax.template">
             <field name="sequence">240</field>
@@ -434,6 +455,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-IN-V82-06-S" model="account.tax.template">
             <field name="sequence">250</field>
@@ -448,6 +470,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-IN-V82-06-G" model="account.tax.template">
             <field name="sequence">260</field>
@@ -462,6 +485,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-IN-V82-00-S" model="account.tax.template">
             <field name="sequence">270</field>
@@ -476,6 +500,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V82-00-G" model="account.tax.template">
             <field name="sequence">280</field>
@@ -490,6 +515,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V83-21" model="account.tax.template">
             <field name="sequence">310</field>
@@ -504,6 +530,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21"/>
         </record>
         <record id="attn_VAT-IN-V83-12" model="account.tax.template">
             <field name="sequence">320</field>
@@ -518,6 +545,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-IN-V83-06" model="account.tax.template">
             <field name="sequence">330</field>
@@ -532,6 +560,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6"/>
         </record>
         <record id="attn_VAT-IN-V83-00" model="account.tax.template">
             <field name="sequence">340</field>
@@ -546,6 +575,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V81-21-CC-C1" model="account.tax.template">
             <field name="sequence">411</field>
@@ -559,6 +589,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-21-CC-C2" model="account.tax.template">
             <field name="sequence">412</field>
@@ -571,6 +602,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-21-CC" model="account.tax.template">
             <field name="sequence">410</field>
@@ -583,6 +615,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-21-CC-C1'), ref('attn_VAT-IN-V81-21-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_81'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-12-CC-C1" model="account.tax.template">
             <field name="sequence">421</field>
@@ -596,6 +629,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-12-CC-C2" model="account.tax.template">
             <field name="sequence">422</field>
@@ -608,6 +642,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-12-CC" model="account.tax.template">
             <field name="sequence">420</field>
@@ -621,6 +656,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-12-CC-C1'), ref('attn_VAT-IN-V81-12-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_81'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-06-CC-C1" model="account.tax.template">
             <field name="sequence">431</field>
@@ -634,6 +670,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-06-CC-C2" model="account.tax.template">
             <field name="sequence">432</field>
@@ -646,6 +683,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-06-CC" model="account.tax.template">
             <field name="sequence">430</field>
@@ -659,6 +697,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-06-CC-C1'), ref('attn_VAT-IN-V81-06-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_81'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V81-00-CC" model="account.tax.template">
             <field name="sequence">440</field>
@@ -673,6 +712,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_81'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V82-21-CC-C1" model="account.tax.template">
             <field name="sequence">511</field>
@@ -686,6 +726,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-21-CC-C2" model="account.tax.template">
             <field name="sequence">512</field>
@@ -698,6 +739,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-21-CC" model="account.tax.template">
             <field name="sequence">510</field>
@@ -711,6 +753,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-21-CC-C1'), ref('attn_VAT-IN-V82-21-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_82'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-12-CC-C1" model="account.tax.template">
             <field name="sequence">521</field>
@@ -724,6 +767,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-12-CC-C2" model="account.tax.template">
             <field name="sequence">522</field>
@@ -736,6 +780,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-12-CC" model="account.tax.template">
             <field name="sequence">520</field>
@@ -749,6 +794,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-12-CC-C1'), ref('attn_VAT-IN-V82-12-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_82'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-06-CC-C1" model="account.tax.template">
             <field name="sequence">531</field>
@@ -762,6 +808,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-06-CC-C2" model="account.tax.template">
             <field name="sequence">532</field>
@@ -774,6 +821,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-06-CC" model="account.tax.template">
             <field name="sequence">530</field>
@@ -787,6 +835,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-06-CC-C1'), ref('attn_VAT-IN-V82-06-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_82'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V82-00-CC" model="account.tax.template">
             <field name="sequence">540</field>
@@ -801,6 +850,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_82'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V83-21-CC-C1" model="account.tax.template">
             <field name="sequence">611</field>
@@ -814,6 +864,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-21-CC-C2" model="account.tax.template">
             <field name="sequence">612</field>
@@ -826,6 +877,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-21-CC" model="account.tax.template">
             <field name="sequence">610</field>
@@ -839,6 +891,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-21-CC-C1'), ref('attn_VAT-IN-V83-21-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_83'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-12-CC-C1" model="account.tax.template">
             <field name="sequence">621</field>
@@ -852,6 +905,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-12-CC-C2" model="account.tax.template">
             <field name="sequence">622</field>
@@ -864,6 +918,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-12-CC" model="account.tax.template">
             <field name="sequence">620</field>
@@ -877,6 +932,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-12-CC-C1'), ref('attn_VAT-IN-V83-12-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_83'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-06-CC-C1" model="account.tax.template">
             <field name="sequence">631</field>
@@ -890,6 +946,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-06-CC-C2" model="account.tax.template">
             <field name="sequence">632</field>
@@ -902,6 +959,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-06-CC" model="account.tax.template">
             <field name="sequence">630</field>
@@ -915,6 +973,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-06-CC-C1'), ref('attn_VAT-IN-V83-06-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_83'), ref('tax_tag_56'), ref('tax_tag_85'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_cocont"/>
         </record>
         <record id="attn_VAT-IN-V83-00-CC" model="account.tax.template">
             <field name="sequence">640</field>
@@ -929,6 +988,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_87'), ref('tax_tag_83'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V82-CAR-EXC-C1" model="account.tax.template">
             <field name="sequence">721</field>
@@ -942,6 +1002,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82_not_deductible'), ref('tax_tag_85_not_deductible')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_50_deductible"/>
         </record>
         <record id="attn_VAT-IN-V82-CAR-EXC-C2" model="account.tax.template">
             <field name="sequence">722</field>
@@ -955,6 +1016,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_50_deductible"/>
         </record>
         <record id="attn_VAT-IN-V82-CAR-EXC" model="account.tax.template">
             <field name="sequence">720</field>
@@ -967,6 +1029,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-CAR-EXC-C1'), ref('attn_VAT-IN-V82-CAR-EXC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_85'), ref('tax_tag_63'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_50_deductible"/>
         </record>
         <record id="attn_VAT-IN-V81-21-EU-C1" model="account.tax.template">
             <field name="sequence">1111</field>
@@ -980,6 +1043,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-21-EU-C2" model="account.tax.template">
             <field name="sequence">1112</field>
@@ -992,6 +1056,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-21-EU" model="account.tax.template">
             <field name="sequence">1110</field>
@@ -1004,6 +1069,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-21-EU-C1'), ref('attn_VAT-IN-V81-21-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-EU-C1" model="account.tax.template">
             <field name="sequence">1121</field>
@@ -1017,6 +1083,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-EU-C2" model="account.tax.template">
             <field name="sequence">1122</field>
@@ -1029,6 +1096,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-EU" model="account.tax.template">
             <field name="sequence">1120</field>
@@ -1042,6 +1110,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-12-EU-C1'), ref('attn_VAT-IN-V81-12-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12"/>
         </record>
         <record id="attn_VAT-IN-V81-06-EU-C1" model="account.tax.template">
             <field name="sequence">1131</field>
@@ -1055,6 +1124,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-06-EU-C2" model="account.tax.template">
             <field name="sequence">1132</field>
@@ -1067,6 +1137,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-06-EU" model="account.tax.template">
             <field name="sequence">1130</field>
@@ -1080,6 +1151,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-06-EU-C1'), ref('attn_VAT-IN-V81-06-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-00-EU" model="account.tax.template">
             <field name="sequence">1140</field>
@@ -1094,6 +1166,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_86'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-S-C1" model="account.tax.template">
             <field name="sequence">1211</field>
@@ -1107,6 +1180,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-S-C2" model="account.tax.template">
             <field name="sequence">1212</field>
@@ -1119,6 +1193,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-S" model="account.tax.template">
             <field name="sequence">1210</field>
@@ -1132,6 +1207,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-21-EU-S-C1'), ref('attn_VAT-IN-V82-21-EU-S-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_88'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-G-C1" model="account.tax.template">
             <field name="sequence">1221</field>
@@ -1145,6 +1221,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-G-C2" model="account.tax.template">
             <field name="sequence">1222</field>
@@ -1157,6 +1234,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-EU-G" model="account.tax.template">
             <field name="sequence">1220</field>
@@ -1170,6 +1248,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-21-EU-G-C1'), ref('attn_VAT-IN-V82-21-EU-G-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-S-C1" model="account.tax.template">
             <field name="sequence">1231</field>
@@ -1183,6 +1262,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-S-C2" model="account.tax.template">
             <field name="sequence">1232</field>
@@ -1195,6 +1275,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-S" model="account.tax.template">
             <field name="sequence">1230</field>
@@ -1208,6 +1289,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-12-EU-S-C1'), ref('attn_VAT-IN-V82-12-EU-S-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_88'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-G-C1" model="account.tax.template">
             <field name="sequence">1241</field>
@@ -1221,6 +1303,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-G-C2" model="account.tax.template">
             <field name="sequence">1242</field>
@@ -1233,6 +1316,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-EU-G" model="account.tax.template">
             <field name="sequence">1240</field>
@@ -1246,6 +1330,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-12-EU-G-C1'), ref('attn_VAT-IN-V82-12-EU-G-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-S-C1" model="account.tax.template">
             <field name="sequence">1251</field>
@@ -1259,6 +1344,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-S-C2" model="account.tax.template">
             <field name="sequence">1252</field>
@@ -1271,6 +1357,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-S" model="account.tax.template">
             <field name="sequence">1250</field>
@@ -1284,6 +1371,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-06-EU-S-C1'), ref('attn_VAT-IN-V82-06-EU-S-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_88'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-G-C1" model="account.tax.template">
             <field name="sequence">1261</field>
@@ -1297,6 +1385,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-G-C2" model="account.tax.template">
             <field name="sequence">1262</field>
@@ -1309,6 +1398,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-EU-G" model="account.tax.template">
             <field name="sequence">1260</field>
@@ -1322,6 +1412,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-06-EU-G-C1'), ref('attn_VAT-IN-V82-06-EU-G-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-00-EU-S" model="account.tax.template">
             <field name="sequence">1270</field>
@@ -1336,6 +1427,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_88'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V83-21-EU-C1" model="account.tax.template">
             <field name="sequence">1311</field>
@@ -1349,6 +1441,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-21-EU-C2" model="account.tax.template">
             <field name="sequence">1312</field>
@@ -1361,6 +1454,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-21-EU" model="account.tax.template">
             <field name="sequence">1310</field>
@@ -1374,6 +1468,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-21-EU-C1'), ref('attn_VAT-IN-V83-21-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-00-EU-G" model="account.tax.template">
             <field name="sequence">1280</field>
@@ -1388,6 +1483,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_86'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V83-12-EU-C1" model="account.tax.template">
             <field name="sequence">1321</field>
@@ -1401,6 +1497,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-12-EU-C2" model="account.tax.template">
             <field name="sequence">1322</field>
@@ -1413,6 +1510,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-12-EU" model="account.tax.template">
             <field name="sequence">1320</field>
@@ -1426,6 +1524,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-12-EU-C1'), ref('attn_VAT-IN-V83-12-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-EU-C1" model="account.tax.template">
             <field name="sequence">1331</field>
@@ -1439,6 +1538,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-EU-C2" model="account.tax.template">
             <field name="sequence">1332</field>
@@ -1451,6 +1551,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-EU" model="account.tax.template">
             <field name="sequence">1330</field>
@@ -1464,6 +1565,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-06-EU-C1'), ref('attn_VAT-IN-V83-06-EU-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_86'), ref('tax_tag_59'), ref('tax_tag_55'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-00-EU" model="account.tax.template">
             <field name="sequence">1340</field>
@@ -1478,6 +1580,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_86'), ref('tax_tag_84')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V81-21-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2111</field>
@@ -1491,6 +1594,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-21-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2112</field>
@@ -1503,6 +1607,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-21-ROW-CC" model="account.tax.template">
             <field name="sequence">2110</field>
@@ -1515,6 +1620,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-21-ROW-CC-C1'), ref('attn_VAT-IN-V81-21-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2121</field>
@@ -1528,6 +1634,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2122</field>
@@ -1540,6 +1647,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-12-ROW-CC" model="account.tax.template">
             <field name="sequence">2120</field>
@@ -1553,6 +1661,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-12-ROW-CC-C1'), ref('attn_VAT-IN-V81-12-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-06-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2131</field>
@@ -1566,6 +1675,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-06-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2132</field>
@@ -1578,6 +1688,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-06-ROW-CC" model="account.tax.template">
             <field name="sequence">2130</field>
@@ -1591,6 +1702,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V81-06-ROW-CC-C1'), ref('attn_VAT-IN-V81-06-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V81-00-ROW-CC" model="account.tax.template">
             <field name="sequence">2140</field>
@@ -1605,6 +1717,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_81'), ref('tax_tag_87'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V82-21-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2211</field>
@@ -1618,6 +1731,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2212</field>
@@ -1630,6 +1744,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-21-ROW-CC" model="account.tax.template">
             <field name="sequence">2210</field>
@@ -1643,6 +1758,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-21-ROW-CC-C1'), ref('attn_VAT-IN-V82-21-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2221</field>
@@ -1656,6 +1772,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2222</field>
@@ -1668,6 +1785,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-12-ROW-CC" model="account.tax.template">
             <field name="sequence">2220</field>
@@ -1681,6 +1799,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-12-ROW-CC-C1'), ref('attn_VAT-IN-V82-12-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2231</field>
@@ -1694,6 +1813,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2232</field>
@@ -1706,6 +1826,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-06-ROW-CC" model="account.tax.template">
             <field name="sequence">2230</field>
@@ -1719,6 +1840,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V82-06-ROW-CC-C1'), ref('attn_VAT-IN-V82-06-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V82-00-ROW-CC" model="account.tax.template">
             <field name="sequence">2240</field>
@@ -1733,6 +1855,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_82'), ref('tax_tag_87'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V83-21-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2311</field>
@@ -1746,6 +1869,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-21-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2312</field>
@@ -1758,6 +1882,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-21-ROW-CC" model="account.tax.template">
             <field name="sequence">2310</field>
@@ -1771,6 +1896,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-21-ROW-CC-C1'), ref('attn_VAT-IN-V83-21-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_21_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-12-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2321</field>
@@ -1784,6 +1910,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-12-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2322</field>
@@ -1796,6 +1923,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-12-ROW-CC" model="account.tax.template">
             <field name="sequence">2320</field>
@@ -1809,6 +1937,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-12-ROW-CC-C1'), ref('attn_VAT-IN-V83-12-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_12_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-ROW-CC-C1" model="account.tax.template">
             <field name="sequence">2331</field>
@@ -1822,6 +1951,7 @@
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57'), ref('tax_tag_59')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-ROW-CC-C2" model="account.tax.template">
             <field name="sequence">2332</field>
@@ -1834,6 +1964,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-06-ROW-CC" model="account.tax.template">
             <field name="sequence">2330</field>
@@ -1847,6 +1978,7 @@
             <field name="children_tax_ids" eval="[(6, 0, [ref('attn_VAT-IN-V83-06-ROW-CC-C1'), ref('attn_VAT-IN-V83-06-ROW-CC-C2')])]"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_87'), ref('tax_tag_59'), ref('tax_tag_57'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_6_non_eu"/>
         </record>
         <record id="attn_VAT-IN-V83-00-ROW-CC" model="account.tax.template">
             <field name="sequence">2340</field>
@@ -1861,6 +1993,7 @@
             <field name="active" eval="False"/>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_83'), ref('tax_tag_87'), ref('tax_tag_85')])]"/>
+            <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
         <record id="attn_VAT-IN-V61" model="account.tax.template">
             <field name="sequence">9000</field>

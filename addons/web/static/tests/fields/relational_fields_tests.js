@@ -4387,6 +4387,137 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange many2many in one2many list editable', function (assert) {
+        assert.expect(14);
+
+        this.data.product.records.push({
+            id: 1,
+            display_name: "xenomorphe",
+        });
+
+        this.data.turtle.onchanges = {
+            product_id: function (rec) {
+                if (rec.product_id) {
+                    rec.partner_ids = [
+                        [5],
+                        [4, rec.product_id === 41 ? 1 : 2]
+                    ];
+                }
+            },
+        };
+        var partnerOnchange = function (rec) {
+            if (!rec.int_field || !rec.turtles.length) {
+                return;
+            }
+            rec.turtles = [
+                [5],
+                [0, 0, {
+                    display_name: 'new line',
+                    product_id: [37, 'xphone'],
+                    partner_ids: [
+                        [5],
+                        [4, 1]
+                    ]
+                }],
+                [0, rec.turtles[0][1], {
+                    display_name: rec.turtles[0][2].display_name,
+                    product_id: [1, 'xenomorphe'],
+                    partner_ids: [
+                        [5],
+                        [4, 2]
+                    ]
+                }],
+            ];
+        };
+
+        this.data.partner.onchanges = {
+            int_field: partnerOnchange,
+            turtles: partnerOnchange,
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="int_field"/>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="product_id"/>' +
+                                '<field name="partner_ids" widget="many2many_tags"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="display_name"]').val('first').trigger('input');
+        form.$('div[name="product_id"] input').click();
+        $('li.ui-menu-item a').click();
+
+        assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
+            'should display the line in editable mode');
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "xpad",
+            'should display the product');
+        assert.strictEqual(form.$('.o_field_many2manytags.o_input .o_badge_text').text(), "first record",
+            'should display the tag from the onchange');
+
+        form.$('input.o_field_integer[name="int_field"]').click();
+
+        assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xpad",
+            'should display the product xpad');
+        assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "first record",
+            'should display the tag in readonly');
+
+        form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphonexenomorphe",
+            'should display the product xphone and xenomorphe');
+        assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record firstxenomorphe second record ",
+            'should display the name, one2many and many2many value');
+
+        form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
+
+        form.$('.o_list_record_delete:first span').click();
+        form.$('.o_list_record_delete:first span').click();
+
+        form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="display_name"]').val('first').trigger('input');
+        form.$('div[name="product_id"] input').click();
+        $('li.ui-menu-item a').click();
+
+        assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
+            'should display the line in editable mode');
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "xenomorphe",
+            'should display the product xenomorphe');
+        assert.strictEqual(form.$('.o_field_many2manytags.o_input .o_badge_text').text(), "second record",
+            'should display the tag from the onchange');
+
+        form.$('input.o_field_integer[name="int_field"]').click();
+
+        assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphonexenomorphe",
+            'should display the product xphone and xenomorphe');
+        assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "first recordsecond record",
+            'should display the tag in readonly (first record and second record)');
+
+        form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record firstxenomorphe second record ",
+            'should display the name, one2many and many2many value');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record firstxenomorphe second record ",
+            'should display the name, one2many and many2many value after save');
+
+        form.destroy();
+    });
+
     QUnit.test('load view for x2many in one2many', function (assert) {
         assert.expect(2);
 

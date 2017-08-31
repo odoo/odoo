@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
+    <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Icons">
         <xpath expr="//div[@id='info']" position="inside">
-            <h4 class="payment_method_title">Payment Methods</h4>
+            <h4 class="payment_method_title">Payment Icons</h4>
             <ul class="payment_method_list list-inline">
-                <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
+                <t t-foreach="request.website.payment_icons()" t-as="icon">
                     <li>
-                        <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name"}' />
+                        <span t-field="icon.image" t-options='{"widget": "image", "alt-field": "name"}' />
                     </li>
                 </t>
             </ul>

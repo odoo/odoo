@@ -35,6 +35,7 @@ class AccountAccountTag(models.Model):
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
     color = fields.Integer('Color Index', default=10)
+    active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
 
 #----------------------------------------------------------
 # Accounts
@@ -315,6 +316,7 @@ class AccountJournal(models.Model):
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
+    active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
@@ -740,17 +742,20 @@ class AccountTax(models.Model):
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
-    # Technical field to make the 'use_cash_basis' field invisible if the same named field is set to false in 'res.company' model
-    hide_use_cash_basis = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.use_cash_basis')
-    use_cash_basis = fields.Boolean(
-        'Use Cash Basis',
-        help="Select this if the tax should use cash basis,"
-        "which will create an entry for this tax on a given account during reconciliation")
+    # Technical field to make the 'tax_exigibility' field invisible if the same named field is set to false in 'res.company' model
+    hide_tax_exigibility = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.tax_exigibility')
+    tax_exigibility = fields.Selection(
+        [('on_invoice', 'Based on Invoice'),
+         ('on_payment', 'Based on Payment'),
+        ], string='Tax Due', default='on_invoice',
+        oldname='use_cash_basis',
+        help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
+        "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_account = fields.Many2one(
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
-        help='Account use when creating entry for tax cash basis')
+        help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -759,15 +764,13 @@ class AccountTax(models.Model):
     @api.multi
     def unlink(self):
         company_id = self.env.user.company_id.id
-        ir_values = self.env['ir.values']
-        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id) or [])
-        deleted_sup_tax = self.filtered(lambda tax: tax.id in supplier_taxes_id)
-        if deleted_sup_tax:
-            ir_values.sudo().set_default('product.template', "supplier_taxes_id", list(supplier_taxes_id - set(deleted_sup_tax.ids)), for_all_users=True, company_id=company_id)
-        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id) or [])
-        deleted_tax = self.filtered(lambda tax: tax.id in taxes_id)
-        if deleted_tax:
-            ir_values.sudo().set_default('product.template', "taxes_id", list(taxes_id - set(deleted_tax.ids)), for_all_users=True, company_id=company_id)
+        IrDefault = self.env['ir.default']
+        taxes = self.browse(IrDefault.get('product.template', 'taxes_id', company_id=company_id) or [])
+        if self & taxes:
+            IrDefault.sudo().set('product.template', 'taxes_id', (taxes - self).ids, company_id=company_id)
+        taxes = self.browse(IrDefault.get('product.template', 'supplier_taxes_id', company_id=company_id) or [])
+        if self & taxes:
+            IrDefault.sudo().set('product.template', 'supplier_taxes_id', (taxes - self).ids, company_id=company_id)
         return super(AccountTax, self).unlink()
 
     @api.one

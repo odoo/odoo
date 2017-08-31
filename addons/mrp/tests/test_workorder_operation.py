@@ -408,3 +408,56 @@ class TestWorkOrderProcess(common.TransactionCase):
 #         self.assertEqual(move_product_b.quant_ids.qty, move_product_b.product_qty)
 #         self.assertEqual(move_product_c.quant_ids.qty, 3)
 #         self.assertEqual(move_product_c.quant_ids.product_uom_id.id, kg)
+
+    def test_03_test_serial_number_defaults(self):
+        """ Test that the correct serial number is suggested on consecutive work orders. """
+        laptop = self.env.ref("product.product_product_25")
+        graphics_card = self.env.ref("product.product_product_24")
+        unit = self.env.ref("product.product_uom_unit")
+        three_step_routing = self.env.ref("mrp.mrp_routing_1")
+
+        laptop.tracking = 'serial'
+
+        bom_laptop = self.env['mrp.bom'].create({
+            'product_tmpl_id': laptop.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': unit.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': graphics_card.id,
+                'product_qty': 1,
+                'product_uom_id': unit.id
+            })],
+            'routing_id': three_step_routing.id
+        })
+
+        mo_laptop = self.env['mrp.production'].create({
+            'product_id': laptop.id,
+            'product_qty': 3,
+            'product_uom_id': unit.id,
+            'bom_id': bom_laptop.id
+        })
+
+        mo_laptop.button_plan()
+        workorders = mo_laptop.workorder_ids
+        self.assertEqual(len(workorders), 3)
+
+        workorders[0].button_start()
+        serial_a = self.env['stock.production.lot'].create({'product_id': laptop.id})
+        workorders[0].final_lot_id = serial_a
+        workorders[0].record_production()
+        serial_b = self.env['stock.production.lot'].create({'product_id': laptop.id})
+        workorders[0].final_lot_id = serial_b
+        workorders[0].record_production()
+        serial_c = self.env['stock.production.lot'].create({'product_id': laptop.id})
+        workorders[0].final_lot_id = serial_c
+        workorders[0].record_production()
+        self.assertEqual(workorders[0].state, 'done')
+
+        for workorder in workorders - workorders[0]:
+            self.assertEqual(workorder.final_lot_id, serial_a)
+            workorder.record_production()
+            self.assertEqual(workorder.final_lot_id, serial_b)
+            workorder.record_production()
+            self.assertEqual(workorder.final_lot_id, serial_c)
+            workorder.record_production()
+            self.assertEqual(workorder.state, 'done')

@@ -56,8 +56,8 @@ class account_abstract_payment(models.AbstractModel):
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
-        if not self.amount > 0.0:
-            raise ValidationError(_('The payment amount must be strictly positive.'))
+        if self.amount < 0:
+            raise ValidationError(_('The payment amount cannot be negative.'))
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
@@ -269,7 +269,7 @@ class account_payment(models.Model):
 
     company_id = fields.Many2one(store=True)
     name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
 
     payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
@@ -308,6 +308,24 @@ class account_payment(models.Model):
             'tag': 'manual_reconciliation_view',
             'context': action_context,
         }
+
+    @api.onchange('amount', 'currency_id')
+    def _onchange_amount(self):
+        journal_type = ['bank', 'cash']
+        domain = []
+        if self.currency_id.is_zero(self.amount):
+            # In case of payment with 0 amount, allow to select a journal of type 'general' like
+            # 'Miscellaneous Operations' and set this journal by default.
+            journal_type.append('general')
+            self.payment_difference_handling = 'reconcile'
+            self.journal_id = self.env['account.journal'].search([('type', '=', 'general')], limit=1)
+        else:
+            if self.payment_type == 'inbound':
+                domain.append(('at_least_one_inbound', '=', True))
+            else:
+                domain.append(('at_least_one_outbound', '=', True))
+        domain.append(('type', 'in', journal_type))
+        return {'domain': {'journal_id': domain}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -407,7 +425,7 @@ class account_payment(models.Model):
                     move.line_ids.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
-            rec.state = 'cancel'
+            rec.state = 'cancelled'
 
     @api.multi
     def unlink(self):
@@ -465,6 +483,17 @@ class account_payment(models.Model):
     @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
+        
+    def action_validate_invoice_payment(self):
+        """ Posts a payment used to pay an invoice. This function only posts the
+        payment by default but can be overridden to apply specific post or pre-processing.
+        It is called by the "validate" button of the popup window
+        triggered on invoice form by the "Register Payment" button.
+        """
+        if any(len(record.invoice_ids) != 1 for record in self):
+            # For multiple invoices, there is account.register.payments wizard
+            raise UserError(_("This method should only be called to process a single invoice's payment."))
+        self.post();
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
@@ -515,18 +544,19 @@ class account_payment(models.Model):
             writeoff_line['amount_currency'] = amount_currency_wo
             writeoff_line['currency_id'] = currency_id
             writeoff_line = aml_obj.create(writeoff_line)
-            if counterpart_aml['debit']:
+            if counterpart_aml['debit'] or writeoff_line['credit']:
                 counterpart_aml['debit'] += credit_wo - debit_wo
-            if counterpart_aml['credit']:
+            if counterpart_aml['credit'] or writeoff_line['debit']:
                 counterpart_aml['credit'] += debit_wo - credit_wo
             counterpart_aml['amount_currency'] -= amount_currency_wo
 
         #Write counterpart lines
-        if not self.currency_id != self.company_id.currency_id:
-            amount_currency = 0
-        liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
-        liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
-        aml_obj.create(liquidity_aml_dict)
+        if not self.currency_id.is_zero(self.amount):
+            if not self.currency_id != self.company_id.currency_id:
+                amount_currency = 0
+            liquidity_aml_dict = self._get_shared_move_line_vals(credit, debit, -amount_currency, move.id, False)
+            liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
+            aml_obj.create(liquidity_aml_dict)
 
         #validate the payment
         move.post()

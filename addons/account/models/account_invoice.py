@@ -2,6 +2,8 @@
 
 import json
 import re
+import uuid
+
 from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -38,9 +40,12 @@ MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
 
 class AccountInvoice(models.Model):
     _name = "account.invoice"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Invoice"
     _order = "date_invoice desc, number desc, id desc"
+
+    def _get_default_access_token(self):
+        return str(uuid.uuid4())
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'currency_id', 'company_id', 'date_invoice', 'type')
@@ -231,6 +236,9 @@ class AccountInvoice(models.Model):
         ], readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
+    access_token = fields.Char(
+        'Security Token', copy=False,
+        default=_get_default_access_token)
 
     refund_invoice_id = fields.Many2one('account.invoice', string="Invoice for which this invoice is the credit note")
     number = fields.Char(related='move_id.name', store=True, readonly=True, copy=False)
@@ -288,6 +296,7 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]}, copy=True)
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
         readonly=True, states={'draft': [('readonly', False)]}, copy=True)
+    refund_invoice_ids = fields.One2many('account.invoice', 'refund_invoice_id', string='Refund Invoices', readonly=True)
     move_id = fields.Many2one('account.move', string='Journal Entry',
         readonly=True, index=True, ondelete='restrict', copy=False,
         help="Link to the automatically generated Journal Items.")
@@ -352,6 +361,11 @@ class AccountInvoice(models.Model):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    def _compute_portal_url(self):
+        super(AccountInvoice, self)._compute_portal_url()
+        for order in self:
+            order.portal_url = '/my/invoices/%s' % (order.id)
 
     def _no_existing_validated_invoice(self):
         self.ensure_one()
@@ -479,6 +493,27 @@ class AccountInvoice(models.Model):
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+    @api.model_cr_context
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+
+            Overridden here because we need to generate different access tokens
+            and by default _init_column calls the default method once and applies
+            it for every record.
+        """
+        if column_name != 'access_token':
+            super(AccountInvoice, self)._init_column(column_name)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._table, 'column_name': column_name}
+            self.env.cr.execute(query)
+
+    def _generate_access_token(self):
+        for invoice in self:
+            invoice.access_token = self._get_default_access_token()
 
     @api.multi
     def invoice_print(self):
@@ -692,7 +727,6 @@ class AccountInvoice(models.Model):
             raise UserError(_("Invoice must be in draft or open state in order to be cancelled."))
         return self.action_cancel()
 
-
     @api.multi
     def _notification_recipients(self, message, groups):
         groups = super(AccountInvoice, self)._notification_recipients(message, groups)
@@ -715,24 +749,26 @@ class AccountInvoice(models.Model):
             try:
                 record.check_access_rule('read')
             except exceptions.AccessError:
-                pass
+                if self.env.context.get('force_website'):
+                    return {
+                        'type': 'ir.actions.act_url',
+                        'url': '/my/invoices/%s' % self.id,
+                        'target': 'self',
+                        'res_id': self.id,
+                    }
+                else:
+                    pass
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/invoices?',  # No controller /my/invoices/<int>, only a report pdf
+                    'url': '/my/invoices/%s?access_token=%s' % (self.id, self.access_token),
                     'target': 'self',
                     'res_id': self.id,
                 }
         return super(AccountInvoice, self).get_access_action(access_uid)
 
     def get_mail_url(self):
-        self.ensure_one()
-        params = {
-            'model': self._name,
-            'res_id': self.id,
-        }
-        params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-        return '/mail/view?' + url_encode(params)
+        return self.get_share_url()
 
     @api.multi
     def get_formview_id(self, access_uid=None):
@@ -1303,12 +1339,12 @@ class AccountInvoice(models.Model):
     def _get_tax_amount_by_group(self):
         self.ensure_one()
         res = {}
-        currency = self.currency_id or self.company_id.currency_id
         for line in self.tax_line_ids:
-            res.setdefault(line.tax_id.tax_group_id, 0.0)
-            res[line.tax_id.tax_group_id] += line.amount
+            res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
+            res[line.tax_id.tax_group_id]['amount'] += line.amount
+            res[line.tax_id.tax_group_id]['base'] += line.base
         res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(l[0].name, l[1]) for l in res]
+        res = [(l[0].name, l[1]['amount'], l[1]['base']) for l in res]
         return res
 
 
@@ -1343,7 +1379,8 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_line_tax_ids:
             taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
-        if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+        self.price_total = taxes['total_included'] if taxes else self.price_subtotal
+        if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id.date_invoice).compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
@@ -1367,13 +1404,16 @@ class AccountInvoiceLine(models.Model):
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
     price_subtotal = fields.Monetary(string='Amount',
-        store=True, readonly=True, compute='_compute_price')
+        store=True, readonly=True, compute='_compute_price', help="Total amount without taxes")
+    price_total = fields.Monetary(string='Amount',
+        store=True, readonly=True, compute='_compute_price', help="Total amount with taxes")
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
         help="Total amount in the currency of the company, negative for credit note.")

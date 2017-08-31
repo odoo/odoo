@@ -16,7 +16,7 @@ import odoo
 from odoo import api, models
 from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
 from odoo.http import request
-from odoo.tools import config, ustr
+from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -97,12 +97,8 @@ def unslug_url(s):
 # ------------------------------------------------------------
 
 def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
-    location = path_or_uri.strip()
+    current_path = request.httprequest.path     # should already be text
+    location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang is not None
     url = werkzeug.urls.url_parse(location)
 
@@ -199,7 +195,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_default_lang(cls):
-        lang_code = request.env['ir.values'].sudo().get_default('res.partner', 'lang')
+        lang_code = request.env['ir.default'].sudo().get('res.partner', 'lang')
         if lang_code:
             return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return request.env['res.lang'].search([], limit=1)

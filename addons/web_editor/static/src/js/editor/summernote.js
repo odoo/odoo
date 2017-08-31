@@ -649,7 +649,10 @@ dom.isNotBreakable = function (node) {
     return !dom.isText(node) && !dom.isBR(dom.firstChild(node)) && dom.isVoid(dom.firstChild(node));
 };
 dom.isContentEditable = function (node) {
-    return $(node).closest('[contenteditable]').is('[contenteditable="true"]');
+    return $(node).closest('[contenteditable]').prop('contenteditable') === 'true';
+};
+dom.isContentEditableFalse = function (node) {
+    return $(node).closest('[contenteditable]').prop('contenteditable') === 'false';
 };
 dom.isFont = function (node) {
     var nodeName = node && node.nodeName.toUpperCase();

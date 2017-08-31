@@ -10,7 +10,7 @@ odoo.define('web.BasicRenderer', function (require) {
 var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var Domain = require('web.Domain');
+var dom = require('web.dom');
 
 var qweb = core.qweb;
 
@@ -114,6 +114,20 @@ var BasicRenderer = AbstractRenderer.extend({
         return $.when.apply($, defs).then(function () {
             return resetWidgets;
         });
+    },
+    /**
+     * Activates the widget and move the cursor to the given offset
+     *
+     * @param {string} id
+     * @param {string} fieldName
+     * @param {integer} offset
+     */
+    focusField: function (id, fieldName, offset) {
+        this.editRecord(id);
+        if (typeof offset === "number") {
+            var field = _.findWhere(this.allFieldWidgets[id], {name: fieldName});
+            dom.setCursor(field.getFocusableElement(), offset);
+        }
     },
 
     //--------------------------------------------------------------------------

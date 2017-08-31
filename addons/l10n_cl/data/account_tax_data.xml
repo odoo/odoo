@@ -112,6 +112,7 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_cl_09'), ref('tag_cl_14')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_19"/>
     </record>
 
     <record id="OTAX_19" model="account.tax.template">
@@ -124,5 +125,6 @@
       <field name="refund_account_id" ref="231"/>
       <field name="account_id" ref="231"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_cl_05'), ref('tag_cl_18')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_19"/>
     </record>
 </odoo>

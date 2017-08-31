@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
-        <template id="paypal_acquirer_button">
-            <form t-if="acquirer.paypal_email_account" t-att-action="tx_url" method="post" target="_self">
+        <template id="paypal_form">
+            <div>
+                <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
                 <input type="hidden" name="cmd" t-att-value="cmd"/>
                 <input type="hidden" name="business" t-att-value="business"/>
                 <input type="hidden" name="item_name" t-att-value="item_name"/>
@@ -32,14 +32,7 @@
                     t-att-value="notify_url"/>
                 <input t-if="cancel_return" type="hidden" name="cancel_return"
                     t-att-value="cancel_return"/>
-                <!-- submit -->
-                <button type="submit" width="100px"
-                    t-att-class="submit_class">
-                    <img t-if="not submit_txt" src="/payment_paypal/static/src/img/paypal_icon.png"/>
-                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
-                </button>
-            </form>
+            </div>
         </template>
-
     </data>
 </odoo>

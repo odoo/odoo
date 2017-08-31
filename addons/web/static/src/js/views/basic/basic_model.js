@@ -92,10 +92,10 @@ var session = require('web.session');
 var _t = core._t;
 
 var x2ManyCommands = {
-    // (0, virtualId, {values})
+    // (0, virtualID, {values})
     CREATE: 0,
-    create: function (virtualId, values) {
-        return [x2ManyCommands.CREATE, virtualId || false, values];
+    create: function (virtualID, values) {
+        return [x2ManyCommands.CREATE, virtualID || false, values];
     },
     // (1, id, {values})
     UPDATE: 1,
@@ -2826,6 +2826,7 @@ var BasicModel = AbstractModel.extend({
             orderedBy: params.orderedBy || [],
             parentID: params.parentID,
             rawContext: params.rawContext,
+            ref: params.ref || res_id,
             relationField: params.relationField,
             ref: params.ref || res_id,
             res_id: res_id,

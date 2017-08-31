@@ -77,6 +77,14 @@ class AccountMove(models.Model):
             partner = move.line_ids.mapped('partner_id')
             move.partner_id = partner.id if len(partner) == 1 else False
 
+    @api.onchange('date')
+    def _onchange_date(self):
+        '''On the form view, a change on the date will trigger onchange() on account.move
+        but not on account.move.line even the date field is related to account.move.
+        Then, trigger the _onchange_amount_currency manually.
+        '''
+        self.line_ids._onchange_amount_currency()
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
@@ -500,6 +508,20 @@ class AccountMoveLine(models.Model):
         for record in self:
             unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
+
+    @api.onchange('amount_currency', 'currency_id')
+    def _onchange_amount_currency(self):
+        '''Recompute the debit/credit based on amount_currency/currency_id and date.
+        However, date is a related field on account.move. Then, this onchange will not be triggered
+        by the form view by changing the date on the account.move.
+        To fix this problem, see _onchange_date method on account.move.
+        '''
+        for line in self:
+            amount = line.amount_currency
+            if line.currency_id and line.currency_id != line.company_currency_id:
+                amount = self.currency_id.with_context(date=line.date).compute(amount, line.company_currency_id)
+            line.debit = amount > 0 and amount or 0.0
+            line.credit = amount < 0 and amount or 0.0
 
     ####################################################
     # Reconciliation interface methods
@@ -1212,10 +1234,10 @@ class AccountMoveLine(models.Model):
         #the 'tax_ids' is a cash based tax.
         taxes = False
         if vals.get('tax_line_id'):
-            taxes = [{'use_cash_basis': self.env['account.tax'].browse(vals['tax_line_id']).use_cash_basis}]
+            taxes = [{'tax_exigibility': self.env['account.tax'].browse(vals['tax_line_id']).tax_exigibility}]
         if vals.get('tax_ids'):
             taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
-        if taxes and any([tax['use_cash_basis'] for tax in taxes]) and not vals.get('tax_exigible'):
+        if taxes and any([tax['tax_exigibility'] == 'on_payment' for tax in taxes]) and not vals.get('tax_exigible'):
             vals['tax_exigible'] = False
 
         new_line = super(AccountMoveLine, self).create(vals)
@@ -1571,7 +1593,7 @@ class AccountPartialReconcile(models.Model):
                     rounded_amt = line.company_id.currency_id.round(amount)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
-                    if line.tax_line_id and line.tax_line_id.use_cash_basis:
+                    if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the tax line
@@ -1604,7 +1626,7 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml |= line
                             to_clear_aml.reconcile()
 
-                    if any([tax.use_cash_basis for tax in line.tax_ids]):
+                    if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
@@ -1651,6 +1673,7 @@ class AccountPartialReconcile(models.Model):
         move_vals = {
             'journal_id': self.company_id.tax_cash_basis_journal_id.id,
             'tax_cash_basis_rec_id': self.id,
+            'ref': self.credit_move_id.move_id.name if self.credit_move_id.payment_id else self.debit_move_id.move_id.name,
         }
         return self.env['account.move'].create(move_vals)
 

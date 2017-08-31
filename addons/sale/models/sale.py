@@ -308,7 +308,7 @@ class SaleOrder(models.Model):
             query = """UPDATE %(table_name)s
                           SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
                         WHERE %(column_name)s IS NULL
-                    """ % {'table_name': self._name, 'column_name': column_name}
+                    """ % {'table_name': self._table, 'column_name': column_name}
             self.env.cr.execute(query)
 
     def _generate_access_token(self):
@@ -551,18 +551,19 @@ class SaleOrder(models.Model):
             base_tax = 0
             for tax in line.tax_id:
                 group = tax.tax_group_id
-                res.setdefault(group, 0.0)
+                res.setdefault(group, {'amount': 0.0, 'base': 0.0})
                 # FORWARD-PORT UP TO SAAS-17
                 price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
                 taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
                                          product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
-                    res[group] += t['amount']
+                    res[group]['amount'] += t['amount']
+                    res[group]['base'] += t['base']
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = [(l[0].name, l[1]) for l in res]
+        res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
         return res
 
     @api.multi
@@ -651,6 +652,26 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_updateable(self):
         for line in self:
             line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
+
+    @api.depends('invoice_lines',
+                 'invoice_lines.price_total',
+                 'invoice_lines.invoice_id',
+                 'invoice_lines.invoice_id.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids',
+                 'invoice_lines.invoice_id.refund_invoice_ids.state',
+                 'invoice_lines.invoice_id.refund_invoice_ids.amount_total')
+    def _compute_invoice_amount(self):
+        for line in self:
+            # Invoice lines referenced by this line
+            invoice_lines = line.invoice_lines.filtered(lambda l: l.invoice_id.state in ('open', 'paid'))
+            # Refund invoices linked to invoice_lines
+            refund_invoices = invoice_lines.mapped('invoice_id.refund_invoice_ids').filtered(lambda inv: inv.state in ('open', 'paid'))
+            # Total invoiced amount
+            invoiced_amount_total = sum(invoice_lines.mapped('price_total'))
+            # Total refunded amount
+            refund_amount_total = sum(refund_invoices.mapped('amount_total'))
+            line.amt_invoiced = invoiced_amount_total - refund_amount_total
+            line.amt_to_invoice = line.price_total - invoiced_amount_total
 
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
@@ -875,6 +896,8 @@ class SaleOrderLine(models.Model):
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
     procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
+    amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', store=True)
+    amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)

@@ -198,10 +198,10 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                                 <div>
-                                    <field name="tag_ids"/>
+                                    <strong><span><field name="name"/></span></strong>
                                 </div>
                                 <div>
-                                    <strong><span><field name="name"/></span></strong>
+                                  <field name="tag_ids"/>
                                 </div>
                                 <div>
                                     <span><field name="contact_name"/></span>
@@ -305,7 +305,7 @@
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                        <span class="fa fa-bars fa-lg"/>
+                                        <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
@@ -317,10 +317,10 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
-                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <strong><field name="name"/></strong>
                                     </div>
                                     <div>
-                                        <strong><field name="name"/></strong>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <div class="text-muted">
                                         <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
@@ -715,8 +715,9 @@
             'Mark as Lost' in action dropdown
         -->
         <record id="action_mark_as_lost" model="ir.actions.server">
-            <field name="name">Crm: Mark Leads as lost</field>
+            <field name="name">Mark as lost</field>
             <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
 if record:
@@ -724,13 +725,6 @@ if record:
     action_values.update({'context': env.context})
     action = action_values
             </field>
-        </record>
-
-        <record id="ir_mark_as_lost" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'crm.lead'" name="model"/>
-            <field name="name">Mark as lost</field>
-            <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 
         <!--

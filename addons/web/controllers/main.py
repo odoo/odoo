@@ -299,10 +299,6 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def load_actions_from_ir_values(action_slot, model, res_id):
-    actions = request.env['ir.values'].get_actions(action_slot, model, res_id)
-    return [(id, name, clean_action(action)) for id, name, action in actions]
-
 def clean_action(action):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
