@@ -135,7 +135,7 @@
         .o-flex-display();
         .o-justify-content(space-between);
         padding-left: @odoo-horizontal-padding;
-        border-bottom: 1px solid @odoo-brand-secondary;
+        border-bottom: 1px solid @gray-lighter-dark;
         background-color: @odoo-view-background-color;
 
         > .o_statusbar_buttons, > .o_statusbar_status {
@@ -153,7 +153,9 @@
             .o-flex-flow(row, wrap);
 
             > .btn {
-                margin: 2px 3px 2px 0;
+                margin-right: 3px;
+                padding-top: 2px;
+                padding-bottom: 2px;
             }
         }
 
@@ -169,15 +171,17 @@
                 font-weight: bold;
                 position: relative;
                 padding-left: @odoo-statusbar-arrow-width*2;
-                color: @odoo-main-color-muted;
-                .o-transition(all, 0.2s);
+                color: @gray;
+                border-width: 0 0 0;
+                border-radius: 0;
+                .o-transition(all, 0.1s);
 
                 &:first-child {
                     padding-right: @odoo-horizontal-padding; // Compensate container padding
                 }
                 &:last-child {
                     padding-left: @odoo-horizontal-padding - 1;
-                    border-left: 1px solid @odoo-brand-lightsecondary;
+                    border-left: 1px solid @gray-lighter-dark;
                 }
 
                 &:active {
@@ -186,10 +190,8 @@
 
                 &.disabled {
                     opacity: 1.0;
-                    cursor: auto;
-                    pointer-events: auto;
-                    color: @odoo-main-text-color;
-                    border-left: 1px solid @odoo-brand-lightsecondary;
+                    color: @text-muted;
+                    border-left: 1px solid @gray-lighter-dark;
                 }
 
                 &:before, &:after {
@@ -197,8 +199,8 @@
                     display: block;
                     .o-position-absolute(0, -@odoo-statusbar-arrow-width + 1);
 
-                    border-top: @odoo-statusbar-height/2 solid transparent;
-                    border-bottom: @odoo-statusbar-height/2 solid transparent;
+                    border-top: floor(@odoo-statusbar-height/2) solid transparent;
+                    border-bottom: ceil(@odoo-statusbar-height/2) solid transparent;
                     border-right: none;
                     border-left: @odoo-statusbar-arrow-width solid @odoo-view-background-color;
                     .o-transition(border, 0.2s);
@@ -207,25 +209,28 @@
 
                 &:not(.disabled) {
                     &:hover, &:active, &:focus {
-                        color: white;
-                        background-color: @odoo-brand-optional;
+                        color: @odoo-brand-optional;
+                        background-color: @gray-lighter;
+
                         &:after {
-                            border-left-color: @odoo-brand-optional;
+                            border-left-color: @gray-lighter;
                         }
                     }
                 }
 
                 &:before {
                     right: -@odoo-statusbar-arrow-width;
-                    border-left-color: @odoo-brand-lightsecondary;
+                    border-left-color: @gray-lighter-dark;
                 }
 
                 &.btn-primary.disabled {
-                    color: @text-color;
-                    background-color: @odoo-brand-lightsecondary;
+                    color: @odoo-brand-primary;
+                    font-size: 11px;
+                    background-color: @gray-lighter;
+                    cursor: default;
 
                     &:after {
-                        border-left-color: @odoo-brand-lightsecondary;
+                        border-left-color: @gray-lighter;
                     }
                 }
             }
