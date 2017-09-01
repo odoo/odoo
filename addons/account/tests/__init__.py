@@ -5,6 +5,7 @@ from . import test_account_customer_invoice
 from . import test_account_move_closed_period
 from . import test_account_supplier_invoice
 from . import test_account_validate_account_move
+from . import test_account_invoice_rounding
 from . import test_bank_statement_reconciliation
 #TODO re-enableand fix this test
 #from . import test_bank_stmt_reconciliation_widget_ui

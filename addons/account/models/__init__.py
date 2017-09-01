@@ -13,3 +13,4 @@ from . import product
 from . import company
 from . import res_config_settings
 from . import web_planner
+from . import account_cash_rounding

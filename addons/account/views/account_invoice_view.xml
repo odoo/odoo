@@ -94,7 +94,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="base"/>
-                    <field name="amount"/>
+                    <field name="amount_total"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
@@ -111,7 +111,7 @@
                         <field name="account_id" groups="account.group_account_user"/>
                         <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
-                        <field name="amount"/>
+                        <field name="amount_total"/>
                         <field name="base"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
@@ -296,7 +296,9 @@
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                                <field name="amount"/>
+                                                <field name="amount" invisible="1"/>
+                                                <field name="amount_rounding" invisible="1"/>
+                                                <field name="amount_total"/>
                                                 <field name="currency_id" invisible="1"/>
                                             </tree>
                                         </field>
@@ -390,6 +392,8 @@
                                 context="{'search_default_customer':1, 'show_address': 1, 'default_company_type': 'company'}"
                                 options='{"always_reload": True, "no_quick_create": True}'
                                 domain="[('customer', '=', True)]"/>
+                            <field name="payment_term_id"/>
+                            <field name="cash_rounding_id" groups="account.group_cash_rounding"/>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -411,6 +415,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" domain="[('sale_ok','=',True)]"/>
                                     <field name="origin" invisible="1"/>
+                                    <field name="is_rounding_line" invisible="1"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
@@ -468,7 +473,6 @@
                         <page string="Other Info" name="other_info">
                             <group>
                                 <group>
-                                    <field name="payment_term_id"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="journal_id" groups="account.group_account_user"
                                         options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
@@ -492,7 +496,9 @@
                                     <field name="sequence" invisible="1"/>
                                     <field name="manual" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"/>
-                                    <field name="amount"/>
+                                    <field name="amount" invisible="1"/>
+                                    <field name="amount_rounding" invisible="1"/>
+                                    <field name="amount_total"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                             </field>

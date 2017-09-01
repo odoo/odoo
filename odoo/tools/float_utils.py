@@ -47,9 +47,10 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
-       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
-           one rounding up to the closest number with the rule that number>=0.5 is 
-           rounded up to 1, and the latest one always rounding up.
+       :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or 'DOWN',
+           the first one rounding up to the closest number with the rule that
+           number>=0.5 is rounded up to 1, the second always rounding up and the
+           latest one always rounding down.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -79,18 +80,19 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         normalized_value += math.copysign(epsilon, normalized_value)
         rounded_value = round(normalized_value)     # round to integer
 
-    # TIE-BREAKING: UP (for ceiling operations)
-    # When rounding the value up, we instead subtract the epsilon value
+    # TIE-BREAKING: UP (for ceiling[resp. flooring] operations)
+    # When rounding the value up[resp. down], we instead subtract the epsilon value
     # as the the approximation of the real value may be slightly *above* the
-    # tie limit, this would result in incorrectly rounding up to the next number
-    # The math.ceil operation is applied on the absolute value in order to
+    # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
+    # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is
     # restored.
 
-    elif rounding_method == 'UP':
+    else:
+        func = math.floor if rounding_method == 'DOWN' else math.ceil
         sign = math.copysign(1.0, normalized_value)
         normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+        rounded_value = func(abs(normalized_value)) * sign
 
     result = rounded_value * rounding_factor # de-normalize
     return result
