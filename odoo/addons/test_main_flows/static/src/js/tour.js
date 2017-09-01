@@ -371,7 +371,7 @@ tour.register('main_flow_tour', {
     content: _t("Go to Inventory Control"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Reordering Rules')), .oe_secondary_submenu .oe_menu_text:contains('Reordering Rules'):first",
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
@@ -407,12 +407,13 @@ tour.register('main_flow_tour', {
     content: _t("Go to Operations"),
     position: "bottom"
 }, {
-    trigger: ".o_app[data-menu-xmlid='stock.procurement_order_compute_all_menu'], .oe_menu_toggler[data-menu-xmlid='stock.procurement_order_compute_all_menu']",
-    content: _t("Click on schedulers menu"),
+    edition: "community",
+    trigger: ".oe_menu_toggler[data-menu-xmlid='stock.procurement_order_compute_all_menu']",
+    content: _t("Click on submenu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Run Scheduler')), .oe_secondary_submenu .oe_menu_text:contains('Run Scheduler'):first",
-    content: _t("Run the schedulers"),
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_stock_proc_schedulers'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_stock_proc_schedulers']",
+    content: _t("Click on schedulers"),
     position: "bottom"
 }, {
     trigger: ".modal-footer .btn-primary",
