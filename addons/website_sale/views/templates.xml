@@ -405,8 +405,8 @@
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
                                     <div class="carousel-inner">
-                                        <div class="item active" itemprop="image" t-field="product.product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + product.product_variant_id['__last_update']}"/>
-                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + product.product_variant_id['__last_update']}"/>
+                                        <div class="item active" itemprop="image" t-field="product.product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + (product.product_variant_id['__last_update'] or '')}"/>
+                                        <div t-if="variant_img" class="item" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update'] + (product.product_variant_id['__last_update'] or '')}"/>
                                         <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
                                             <div class="item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
                                         </t>
