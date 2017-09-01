@@ -15,7 +15,11 @@
                 <header>
                     <button name="action_pos_session_open" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
-                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
+                    <button name="open_frontend_cb" type="object" string="Continue Selling"
+                        attrs="{'invisible' : ['|', ('login_number', '=', 0), ('state', '!=', 'opened')]}"
+                        class="oe_highlight"/>
+                    <button name="open_frontend_cb" type="object" string="Open Session"
+                        attrs="{'invisible' : ['|', ('login_number', '!=', 0),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
                     <button name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
@@ -72,6 +76,7 @@
                     </h1>
                     <group>
                         <field name="cash_control" invisible="1" />
+                        <field name="login_number" invisible="1" />
                         <group>
                             <field name="user_id"/>
                             <field name="currency_id" invisible="1"/>

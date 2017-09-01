@@ -15,15 +15,6 @@
         </field>
     </record>
 
-    <record id="account_cashbox_line_action" model="ir.actions.act_window">
-        <field name="name">Opening/Closing Values</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">account.cashbox.line</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="account_cashbox_line_view_tree"/>
-    </record>
-
     <record id="pos_config_view_form" model="ir.ui.view">
         <field name="name">pos.config.form.view</field>
         <field name="model">pos.config</field>
@@ -337,10 +328,9 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Default Opening" for="proxy_ip" class="col-md-3 o_light_label" />
-                                        <field name="default_cashbox_lines_ids" widget="many2many_tags" context="{'show_coin_and_value': True}"/>
                                     </div>
-                                    <div>
-                                        <button type="action" name="%(account_cashbox_line_action)d" string="Opening/Closing Values" class="btn-link" icon="fa-arrow-right"/>
+                                    <div class="mt16">
+                                        <field name="default_cashbox_lines_ids" widget="one2many_list" nolabel="1" context="{'show_coin_and_value': True}"/>
                                     </div>
                                 </div>
                             </div>
