@@ -269,7 +269,7 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
-        return self.env.ref('maintenance.equipment_team_maintenance', raise_if_not_found=False)
+        return self.env['maintenance.team'].search([], limit=1)
 
     name = fields.Char('Subjects', required=True)
     description = fields.Text('Description')
@@ -360,6 +360,7 @@ class MaintenanceTeam(models.Model):
     _description = 'Maintenance Teams'
 
     name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
