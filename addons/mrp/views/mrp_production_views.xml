@@ -179,20 +179,18 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.product_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
-                                    </div>
+                                    <span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left text-muted">
                                         <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned_start.value and record.date_planned_start.value.split(' ')[0] or False"/></span>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-attf-class="label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>

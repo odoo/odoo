@@ -117,15 +117,11 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="row mb4">
-                                <div class="col-xs-6">
-                                    <strong><span><t t-esc="record.user_id.value"/></span></strong>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.user_id.value"/></span></strong>
                                 </div>
-                                <div class="col-xs-6 pull-right text-right">
-                                    <strong>
-                                        <span class="badge"><i class="fa fa-money"/> <field name="amount_total"/></span>
-                                    </strong>
-                                </div>
+                                <strong><span class="badge"><i class="fa fa-money"/> <field name="amount_total"/></span></strong>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">

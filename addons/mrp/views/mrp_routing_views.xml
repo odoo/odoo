@@ -124,13 +124,11 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-xs-7">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-5 pull-right text-right">
-                                        <span class="badge"><field name="code"/></span>
-                                    </div>
+                                    <span class="badge"><field name="code"/></span>
                                 </div>
                             </div>
                         </t>

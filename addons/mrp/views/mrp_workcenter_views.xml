@@ -143,10 +143,23 @@
                     <field name="oee_target"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div style="min-width: 400px;" t-attf-class="#{kanban_color(record.color.raw_value)}">
-                                <div t-attf-class="o_kanban_card_header">
-                                    <div class="o_kanban_card_header_title">
-                                        <div class="o_primary"><field name="name"/></div>
+                            <div style="max-width: 250px; margin: 0 10px 10px" t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div t-attf-class="o_kanban_card_header o_kanban_record_top">
+                                    <div class="o_kanban_record_headings o_kanban_card_header_title">
+                                        <span name="wc_stages" class="pull-left">
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status"
+                                                title="No workorder currently in progress. Click to mark work center as blocked."
+                                                attrs="{'invisible': [('working_state','in',('blocked','done'))]}"/>
+                                            <a name="unblock" type="object" class=" o_status o_status_red"
+                                                title="Workcenter blocked, click to unblock."
+                                                attrs="{'invisible': [('working_state','in',('normal','done'))]}"/>
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green"
+                                                title="Work orders in progress. Click to block work center."
+                                                attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
+                                        </span>
+                                        <span class="o_primary ml8" style="display: inline-block">
+                                            <field name="name"/>
+                                        </span>
                                     </div>
                                     <div class="o_kanban_manage_button_section">
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
