@@ -282,32 +282,36 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                    <b t-if="record.partner_name.raw_value">
-                                        <field name="partner_name"/>
-                                    </b><t t-else="1">
-                                        <i><field name="name"/></i><br/>
-                                    </t><br/>
-                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    <div invisible="context.get('search_default_job_id', False)">
-                                        <field name="job_id"/>
-                                    </div>
-                                    <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile fa-fw"/><field name="partner_mobile"/><br/></t>
-                                <div class="oe_kanban_bottom_right">
-                                    <div class="o_kanban_inline_block ml4">
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                    </div>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left mt4" groups="base.group_user">
-                                        <field name="priority" widget="priority"/>
+                                <div class="o_kanban_record_top">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar mr8"/>
+                                    <div class="o_kanban_record_headings">
+                                        <b class="o_kanban_record_title mt8" t-if="record.partner_name.raw_value">
+                                            <field name="partner_name"/><br/>
+                                        </b><t t-else="1">
+                                            <i class="o_kanban_record_title"><field name="name"/></i><br/>
+                                        </t>
+                                        <div class="o_kanban_record_subtitle" invisible="context.get('search_default_job_id', False)">
+                                            <field name="job_id"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_bottom_left mt4">
-                                    <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                    </t>
-                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
-                                </div>
-                                <div class="oe_kanban_footer_left mt4">
+                                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4"/><field name="partner_mobile"/><br/></t>
+                                <div class="o_kanban_record_bottom mt4">
+                                    <div class="oe_kanban_bottom_left">
+                                        <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                        <div class="o_kanban_inline_block mr8">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                        <div class="pull-left mr4" groups="base.group_user">
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
