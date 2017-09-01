@@ -389,7 +389,7 @@ class ProductProduct(models.Model):
         self.check_access_rule("read")
 
         result = []
-        for product in self.sudo():
+        for product in self.sudo().with_prefetch(self._prefetch):
             # display only the attributes with multiple possible values on the template
             variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
             variant = product.attribute_value_ids._variant_name(variable_attributes)
