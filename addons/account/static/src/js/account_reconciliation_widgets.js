@@ -89,7 +89,11 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         var domain_account_id = [['deprecated', '=', false]];
         if (context && context.context && context.context.company_ids) {
             domain_account_id.push(['company_id', 'in', context.context.company_ids]);
-        }
+        };
+        var domain_tax_id = [['type_tax_use','!=','none']];
+        if (context && context.context && context.context.company_ids) {
+            domain_tax_id.push(['company_id', 'in', context.context.company_ids]);
+        };
         this.create_form_fields = {
             account_id: {
                 id: "account_id",
@@ -128,7 +132,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.tax",
                     string: _t("Tax"),
                     type: "many2one",
-                    domain: [['type_tax_use','!=','none']],
+                    domain: domain_tax_id,
                 },
             },
             amount: {
