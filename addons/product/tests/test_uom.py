@@ -47,3 +47,18 @@ class TestUom(TransactionCase):
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEquals(qty, 1, "Converted quantity should be rounded up.")
+
+    def test_06_rounding(self):
+        product_uom = self.env['product.uom'].create({
+            'name': 'Score',
+            'factor_inv': 6,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+            'category_id': self.categ_unit_id
+        })
+
+        qty = self.uom_unit._compute_quantity(721, product_uom)
+        self.assertEquals(qty, 121)
+
+        qty = self.uom_unit._compute_quantity(721, product_uom, rounding_method='DOWN')
+        self.assertEquals(qty, 120)
