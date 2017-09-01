@@ -323,9 +323,9 @@
                                     <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
                                 </div>
                                 <div class="o_event_right">
-                                    <h4><field name="name"/></h4>
+                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
-                                        <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
+                                        <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
                                         <i class="fa fa-clock-o"/>
                                         <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>

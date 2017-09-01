@@ -75,13 +75,15 @@
                                         <field name="name"/>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div class="oe_kanban_global_click" style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.id.raw_value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
+                                                <div class="oe_kanban_global_click" style="max-width: 200px">
+                                                    <div class="o_kanban_record_top">
+                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.id.raw_value)" height="40" width="40" class="oe_avatar oe_kanban_avatar_smallbox mb0"/>
+                                                        <div class="o_kanban_record_headings ml8">
+                                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
                                                         </div>
+                                                        <a t-if="! read_only_mode" type="delete" class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </t>

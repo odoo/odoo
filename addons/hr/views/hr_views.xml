@@ -192,13 +192,17 @@
                             </div>
                         </div>
                         <div class="oe_kanban_details">
-                            <strong>
-                                <field name="name"/>
-                            </strong>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                </div>
+                            </div>
                             <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <ul>
                                 <li id="last_login"/>
-                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                 <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>

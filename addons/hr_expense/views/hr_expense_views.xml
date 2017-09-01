@@ -101,14 +101,12 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.total_amount.value"/></span></strong>
+                                    <div class="col-xs-12">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle pull-right"><span class="text-right"><t t-esc="record.total_amount.value"/></span></strong>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt8">
                                     <div class="col-xs-6 text-muted">
                                         <span><t t-esc="record.employee_id.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
@@ -476,14 +474,12 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.total_amount.value"/></span></strong>
+                                    <div class="col-xs-12">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                        <strong class="o_kanban_record_subtitle pull-right"><span class="text-right"><t t-esc="record.total_amount.value"/></span></strong>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt8">
                                     <div class="col-xs-6 text-muted">
                                         <span><t t-esc="record.employee_id.value"/> <t t-esc="record.accounting_date.value"/></span>
                                     </div>

@@ -97,28 +97,18 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div class="row mb8">
-                                    <div class="col-xs-8">
-                                        <strong>
-                                            <t t-esc="record.survey_id.value"/>
-                                        </strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <span class="pull-right badge">
-                                            <t t-esc="record.type.value"/>
-                                        </span>
-                                    </div>
+                                    <span class="badge"><t t-esc="record.type.value"/></span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-8">
-                                        <strong>
-                                            <field name="date_create"/>
-                                        </strong>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="date_create"/>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <span class="pull-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
-                                        </span>
+                                    <div class="oe_kanban_bottom_right mr4">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
                                     </div>
                                 </div>
                             </div>
@@ -252,12 +242,16 @@
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a type="edit">Edit Survey</a></li>
                                     <li t-if="widget.deletable"><a type="delete">Delete</a></li>
+                                    <li class="divider"/>
+                                    <li>Color</li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
-                            <div class="oe_kanban_content">
-                                <h4 class="oe_center"><field name="title" /></h4>
-                                <div><ul>
+                            <div class="o_kanban_record_top">
+                                <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <ul class="list-unstyled">
                                     <li>
                                         <a name="action_test_survey" type="object">Design</a>
                                     </li>
@@ -273,7 +267,10 @@
                                         <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
                                         <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
-                                </ul></div>
+                                </ul>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
                                 <div class="oe_kanban_bottom_right">
                                     <field name="activity_ids" widget="kanban_activity" />
                                 </div>

@@ -336,8 +336,8 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
-                                <div>
-                                    <span><strong><t t-esc="record.product_id.value"/></strong></span>
+                                <div class="o_kanban_record_top">
+                                    <span><strong class="o_kanban_record_title"><t t-esc="record.product_id.value"/></strong></span>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-7 o_kanban_primary_left">

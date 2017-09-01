@@ -198,25 +198,27 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                                 <div>
-                                    <strong><span><field name="name"/></span></strong>
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                                <div>
+                                    <span class="o_kanban_record_subtitle"><field name="contact_name"/></span>
                                 </div>
                                 <div>
                                   <field name="tag_ids"/>
                                 </div>
-                                <div>
-                                    <span><field name="contact_name"/></span>
-                                </div>
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="priority" widget="priority"/>
-                                    <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                    </t>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <div class="o_kanban_inline_block">
-                                        <field name="activity_ids" widget="kanban_activity"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                        <div class="o_kanban_inline_block">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
                                     </div>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -318,24 +320,24 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
-                                        <strong><field name="name"/></strong>
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="text-muted">
+                                    <div class="text-muted o_kanban_record_subtitle">
                                         <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/><span t-if="record.partner_id.value">,</span></t> <span t-if="record.partner_id.value"> <t t-esc="record.partner_id.value"/></span>
                                     </div>
 
-                                    <div class="o_kanban_footer">
-                                        <field name="priority" widget="priority" groups="base.group_user"/>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
-                                        <div>
-                                            <div class="o_kanban_inline_block">
-                                                <field name="activity_ids" widget="kanban_activity"/>
-                                            </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority" groups="base.group_user"/>
+                                            <t t-if="record.message_needaction_counter.raw_value">
+                                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            </t>
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
                                             <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>

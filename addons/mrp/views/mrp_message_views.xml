@@ -96,7 +96,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div t-if="record.product_id.value">
-                                <strong>Product: <t t-esc="record.product_id.value"/></strong>
+                                <strong class="o_kanban_record_title">Product: <t t-esc="record.name.value"/></strong>
                             </div>
                             <hr class="mt4 mb4"/>
                             <div class="row">

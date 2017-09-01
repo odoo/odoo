@@ -89,17 +89,16 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
-                            <div class="row mb4">
-                                <div class="col-xs-6">
-                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
                                 </div>
-                                <div class="col-xs-6 pull-right text-right">
-                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default',
-                                        'confirm': 'success', 'done': 'success'}}"/>
-                                </div>
+                                <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default', 'confirm': 'success', 'done': 'success'}}"/>
                             </div>
-                            <div>
-                                <i class="fa fa-clock-o"/> <t t-esc="record.date.value"/>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <i class="fa fa-clock-o"/> <t t-esc="record.date.value"/>
+                                </div>
                             </div>
                         </div>
                     </t>

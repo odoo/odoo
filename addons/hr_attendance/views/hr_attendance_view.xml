@@ -27,13 +27,13 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
-                                <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                <span class="ml8">
+                                <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar mr4"/>
+                                <span class="o_kanban_record_title">
                                     <strong><t t-esc="record.employee_id.value"/></strong>
                                 </span>
                             </div>
-                            <hr class="mt4 mb4"/>
-                            <div>
+                            <hr class="mt4 mb8"/>
+                            <div class="o_kanban_record_subtitle">
                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                                 <t t-esc="record.check_in.value"/>
                                 - <t t-esc="record.check_out.value"/>
