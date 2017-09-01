@@ -1,42 +1,204 @@
-.o_composer_subject {
+.o_chat_composer {
+    position: relative;
+    .o-flex(0, 0, auto);
     .o-flex-display();
-    padding-bottom: 5px;
+    .o-align-items(flex-start);
+    margin: 1px 0;
+    border-top: none;
+    background: @gray-lighter;
 
-    > input {
-        .o-flex(1, 1, auto);
-        padding: 5px;
-        margin-right: 30px;
+    .o_composer, .o_composer_subject {
+        position: relative;
+        background: white;
+
+        textarea, input {
+            border: none;
+        }
+    }
+
+    .o_composer_subject {
+        .o-flex-display();
+        padding-bottom: 5px;
+
+        > input {
+            .o-flex(1, 1, auto);
+            padding: 5px;
+            margin-right: 30px;
+        }
+    }
+
+    .o_composer {
+        .o_composer_input > textarea {
+            width: 100%;
+            resize: none;
+        }
+        .o_composer_mention_dropdown .o_mention_proposition > a {
+            .o-text-overflow();
+            width: 100%;
+            padding: 3px 15px;
+            .o_mention_name {
+                font-weight: 500;
+            }
+            .o_mention_info {
+                font-style: italic;
+                color: gray;
+            }
+        }
+        textarea {
+            resize: none;
+        }
+        .btn-icon {
+            .o-hover-opacity(@default-opacity: 0.8, @hover-opacity: 1);
+            border: none;
+        }
+        .o_composer_button_full_composer {
+            .o-position-absolute(0, 0);
+        }
+    }
+
+    // Both inline and not-inline design. Mini-composer disabled.
+    &:not(.o_chat_mini_composer) {
+        padding:  @mail-thread-avatar-size*0.5;
+        padding-left: @grid-gutter-width*0.5 + @mail-thread-avatar-size + @o-mail-chatter-gap;
+        border: 1px solid @gray-lighter-dark;
+        border-top: none;
+
+        .o_chatter_avatar {
+            .o-position-absolute(0, @left:  -@mail-thread-avatar-size - @o-mail-chatter-gap);
+        }
+
+        .o_composer_container, .o_composer_send {
+            .o-flex-display();
+        }
+
+        .o_chatter_composer_info, .o_composer_suggested_partners {
+            .o-flex(0, 0, 100%);
+            margin-bottom: @o-mail-chatter-gap*0.5;
+        }
+
+        .o_composer_container {
+            position: relative;
+            .o-flex-flow(column, nowrap);
+        }
+
+        .o_composer {
+            border-radius: 2px;
+            textarea {
+                padding-right: @grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
+            }
+        }
+
+        .o_composer, .o_composer_subject {
+            border: 1px solid @gray-lighter-dark;
+
+            textarea, input {
+                padding: 0 0 @o-mail-chatter-gap;
+                border: none;
+            }
+        }
+        .o_composer_subject {
+            border-bottom: 0;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .o_chatter_composer_tools {
+            border-top: 1px solid @gray-lighter-dark;
+        }
+
+        &:not(.o_chat_inline_composer) {
+            .o-flex-flow(row, wrap);
+
+            .o_composer_container, .o_composer_button_send {
+                .o-flex(1, 0, 100%);
+            }
+            .o_composer, .o_composer_subject {
+                padding: @o-mail-chatter-gap @o-mail-chatter-gap 0;
+            }
+            .o_composer_send {
+                margin-top: @o-mail-chatter-gap;
+            }
+        }
+
+        &.o_chat_inline_composer {
+            .o_composer_container {
+                .o-flex(1, 0, auto);
+            }
+            .o_composer {
+                padding: @o-mail-chatter-gap @o-mail-chatter-gap*0.5 0 @o-mail-chatter-gap;
+                border-radius: 2px 0 0 2px;
+                border-right: 0;
+            }
+            .o_composer_input {
+                .o-flex-display();
+                .o-flex-flow(row, wrap);
+            }
+            .o_composer_text_field {
+                .o-flex(1, 1, 50%);
+                margin: 0;
+                padding: 0;
+            }
+            .o_chatter_composer_tools {
+                .o-flex(0, 1, auto);
+            }
+            .o_composer_attachments_list {
+                .o-flex(1, 0, 100%);
+            }
+
+            .o_chatter_composer_tools {
+                border: none;
+                border-left: 1px solid @gray-lighter-dark;
+                padding-left: @o-mail-chatter-gap*0.5;
+                .o-transform(translateY(-@o-mail-chatter-gap*0.5));
+            }
+
+            .o_composer_button_send {
+                .o-flex(0, 0, auto);
+                border-radius: 0 3px 3px 0;
+                // Make the button appear as the same size as the subject input
+                padding: 10px @padding-base-horizontal;
+                border: 1px solid darken(@odoo-brand-optional, 5%);
+                border-left-width: 0;
+            }
+        }
+    }
+
+    // Mini-composer enabled
+    &.o_chat_mini_composer {
+        .o_composer_container {
+            border-top: 1px solid @gray-lighter-dark;
+            width: 100%;
+        }
+        .o_composer_input {
+            .o-flex-display();
+            .o-flex-flow(row, nowrap);
+            padding: @o-mail-chatter-gap;
+
+            textarea.o_composer_text_field {
+                .o-flex(1, 1, auto);
+                padding-top: @o-mail-chatter-gap*0.5;
+            }
+
+            .o_chatter_composer_tools {
+                .o-flex(0, 0, auto);
+            }
+        }
+
+        .o_composer_button_send, .o_chatter_avatar, .o_composer_button_add_attachment, .o_composer_attachments_list {
+            display: none;
+        }
     }
 }
 
-.o_composer {
-    .o_composer_input > textarea {
-        width: 100%;
-        resize: none;
-    }
-    .o_composer_mention_dropdown .o_mention_proposition > a {
-        .o-text-overflow();
-        width: 100%;
-        padding: 3px 15px;
-        .o_mention_name {
-            font-weight: 500;
-        }
-        .o_mention_info {
-            font-style: italic;
-            color: gray;
-        }
-    }
-}
-
-.o_composer_attachments_list {
-    margin-bottom: 5px;
+.o_composer_attachments_list:not(:empty) {
+    margin-top: @o-mail-chatter-gap;
     text-align: justify;
 }
 
 // Emoji
 .o_mail_emoji {
     display: inline-block;
-    .square(24px);
+    width: 24px;
+    height: 24px;
 
     > img {
         width: 100%;

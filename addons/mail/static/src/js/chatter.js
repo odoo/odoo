@@ -126,15 +126,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             this.composer.do_hide();
             this.composer.clear_composer();
-            this._muteNewMessageButton(false);
         }
-    },
-    _muteNewMessageButton: function (mute) {
-        // TOCHECK: If this function exist for design pourposes only, it can be removed
-
-        // this.$('.o_chatter_button_new_message')
-        //     .toggleClass('btn-primary', !mute)
-        //     .toggleClass('btn-default', mute);
     },
     _openComposer: function (options) {
         var self = this;
@@ -173,13 +165,11 @@ var Chatter = Widget.extend(chat_mixin, {
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
-            // TOCHECK: Toggle active chatter classes. It may be inproved?
             self.$el.addClass('o_chatter_composer_active');
             self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
             self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
         });
-        this._muteNewMessageButton(true);
     },
     _render: function (def) {
         // the rendering of the chatter is aynchronous: relational data of its fields needs to be
