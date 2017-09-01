@@ -15,6 +15,8 @@ This module adds the batch picking option in warehouse management
         'views/stock_picking_batch_views.xml',
         'data/stock_picking_batch_data.xml',
         'wizard/stock_picking_to_batch_views.xml',
+        'report/stock_picking_batch_report_views.xml',
+        'report/report_picking_batch.xml',
     ],
     'demo': [
         'data/stock_picking_batch_demo.xml',

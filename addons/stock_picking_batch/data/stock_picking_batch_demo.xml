@@ -11,7 +11,6 @@
 
     <!-- Add picking -->
     <record id="Picking_A" model="stock.picking">
-        <field name="name">Picking #1</field>
         <field name="move_type">one</field>
         <field name="priority">2</field>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
@@ -20,7 +19,6 @@
         <field name="location_dest_id" ref="stock.stock_location_output"/>
     </record>
     <record id="Picking_B" model="stock.picking">
-        <field name="name">Picking #2</field>
         <field name="move_type">one</field>
         <field name="state">assigned</field>
         <field name="priority">1</field>
@@ -30,7 +28,6 @@
         <field name="location_dest_id" ref="stock.stock_location_output"/>
     </record>
     <record id="Picking_C" model="stock.picking">
-        <field name="name">Picking #3</field>
         <field name="move_type">one</field>
         <field name="state">assigned</field>
         <field name="priority">1</field>
