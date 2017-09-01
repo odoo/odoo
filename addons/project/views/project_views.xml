@@ -366,7 +366,9 @@
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <header>
-                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"/>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
+                            attrs="{'invisible' : [('user_id', '!=', False)]}"/>
+
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
                     </header>
