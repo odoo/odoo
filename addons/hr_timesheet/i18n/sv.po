@@ -3,14 +3,14 @@
 # * hr_timesheet
 # 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016-2017
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-12-30 12:12+0000\n"
+"PO-Revision-Date: 2017-08-28 07:32+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                Ingen aktivitet ännu på detta kontrakt.\n              </p><p>\n                I Odoo, implementeras kontrakt och projekt med\n                objektkonton. Så att du kan följa upp kostnader, intäkter\n         och dina marginaler på ett enkelt sätt.\n              </p><p>\nKostnader skapas när du registrerar leverantörsfakturor, utlägg och tidrapporterar\n                \n              </p><p>\n             Intäkter skapas när du fakturerar kunder. Kundfakturor kan baseras på kundorder (fastprisfakturor), baserat på tidrapporter eller utgifter (vidarefakturerade resekostnader)\n              </p>\n            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -114,7 +114,7 @@ msgstr "Ändra arbete"
 msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
-msgstr ""
+msgstr "Ändring av datum innebär att denna rad återfinns på en annan tidrapport"
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
@@ -140,7 +140,7 @@ msgstr "Cost"
 #. module: hr_timesheet
 #: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Kostnad/intäkt"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -209,7 +209,7 @@ msgstr "Anställningsnummer"
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr ""
+msgstr "Antälld saknas för denna användare. Vänligen skapa en från konfigurationen."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
@@ -277,7 +277,7 @@ msgstr "ID"
 msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
-msgstr ""
+msgstr "Om du önskar återfakturera dina anställdas arbetstid, länka den anställda till en tjänst för att prissätta arbetet."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -443,7 +443,7 @@ msgstr "Tidrapport"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "Tidrapportkonton"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -467,12 +467,12 @@ msgstr "Tidrapportrad"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "Tidrapportmånad"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "Tidrapport per månad"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -505,7 +505,7 @@ msgstr "Användare"
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "User Alert!"
-msgstr ""
+msgstr "Användarvarning!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -543,7 +543,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr ""
+msgstr "Du bör skapa en objektkontostruktur efter hur du vill följa upp dina kostnader och intäkter. I Odoo används objektkonton även för kundkontrakt."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
