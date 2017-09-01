@@ -127,9 +127,18 @@ var Activity = AbstractActivityField.extend({
                     activity.note = utils.parse_and_transform(activity.note, utils.add_link);
                 }
             });
-            self.$el.html(QWeb.render('mail.activity_items', {
-                activities: setDelayLabel(self.activities),
-            }));
+            var activities = setDelayLabel(self.activities);
+            if (activities.length) {
+                var nbActivities = _.countBy(activities, 'state');
+                self.$el.html(QWeb.render('mail.activity_items', {
+                    activities: activities,
+                    nbPlannedActivities: nbActivities.planned,
+                    nbTodayActivities: nbActivities.today,
+                    nbOverdueActivities: nbActivities.overdue,
+                }));
+            } else {
+                self.$el.empty();
+            }
         });
     },
     _reset: function (record) {

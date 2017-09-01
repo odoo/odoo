@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.activity_items">
-        <div t-if="activities.length" class="o_thread_date_separator o_border_dashed" data-toggle="collapse" data-target="#o_chatter_planned_activities">
-            <t t-set="today_activities" t-value="0"/>
-            <t t-set="planned_activities" t-value="0"/>
-            <t t-set="overdue_activities" t-value="0"/>
-            <t t-foreach="activities" t-as="a">
-                <t t-if="a.state == 'today'" t-set="today_activities" t-value="today_activities + 1"/>
-                <t t-if="a.state == 'overdue'" t-set="overdue_activities" t-value="overdue_activities + 1"/>
-                <t t-if="a.state == 'planned'" t-set="planned_activities" t-value="planned_activities + 1"/>
-            </t>
+        <div class="o_thread_date_separator o_border_dashed" data-toggle="collapse" data-target="#o_chatter_planned_activities">
             <span class="o_thread_date btn">
                 <i class="fa fa-fw fa-caret-down"/>
                 Planned activities
                 <small class="o_chatter_planned_activities_summary ml8">
-                    <span class="label img-circle label-danger"><t t-esc="overdue_activities"/></span>
-                    <span class="label img-circle label-warning"><t t-esc="today_activities"/></span>
-                    <span class="label img-circle label-success"><t t-esc="planned_activities"/></span>
+                    <span class="label img-circle label-danger"><t t-esc="nbOverdueActivities"/></span>
+                    <span class="label img-circle label-warning"><t t-esc="nbTodayActivities"/></span>
+                    <span class="label img-circle label-success"><t t-esc="nbPlannedActivities"/></span>
                 </small>
             </span>
         </div>
-        <div t-if="activities.length" id="o_chatter_planned_activities" class="collapse in">
+        <div id="o_chatter_planned_activities" class="collapse in">
             <t t-foreach="activities" t-as="activity">
                 <div class="o_thread_message" style="margin-bottom: 10px">
                     <div class="o_thread_message_sidebar">
                         <div class="o_avatar_stack">
-                            <img t-attf-src="/web/image/res.users/#{activity.user_id[0]}/image_small" class="o_thread_message_avatar img-circle mb8" t-att-title="activity.create_uid[1]"/>
+                            <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" class="o_thread_message_avatar img-circle mb8" t-att-title="activity.create_uid[1]"/>
                             <i t-att-class="'o_avatar_icon fa ' + activity.icon + ' bg-' + (activity.state == 'planned'? 'success' : (activity.state == 'today'? 'warning' : 'danger')) + '-full'"
                                t-att-title="activity.activity_type_id[1]"/>
                         </div>
@@ -35,7 +27,7 @@
                             <strong><span t-attf-class="o_activity_date o_activity_color_#{activity.state}"><t t-esc="activity.label_delay" /></span></strong>:
                             <strong t-if="activity.summary"> &#8220;<t t-esc="activity.summary"/>&#8221;</strong>
                             <strong t-if="!activity.summary"> <t t-esc="activity.activity_type_id[1]" /></strong>
-                            <i> for </i>
+                            <em> for </em>
                             <t t-esc="activity.user_id[1]" />
                             <a class="btn btn-link btn-info text-muted collapsed o_activity_info ml4" role="button" data-toggle="collapse" t-attf-data-target="#o_chatter_activity_info_#{activity.id}">
                                 <i class="fa fa-info-circle"></i>
@@ -48,17 +40,15 @@
                                     </dd>
                                     <dt>Created By</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image/res.users/#{activity.create_uid[0]}/image_small" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
+                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
                                         <b><t t-esc="activity.create_uid[1]"/></b>
-                                        <!-- TODO: fomat date as "25 Dec 2017" (no time) -->
-                                        <i>, on</i> <t t-esc="activity.create_date"/>
+                                        <em>, on</em> <t t-esc="moment(activity.create_date)"/>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image/res.users/#{activity.user_id[0]}/image_small" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
+                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.create_uid[1]"/>
                                         <b><t t-esc="activity.user_id[1]"/></b>
-                                        <!-- TODO: fomat date as "25 Dec 2017" (no time) -->
-                                        <i>, due to </i><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline"/></span>
+                                        <em>, due to </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="moment(activity.date_deadline)"/></span>
                                     </dd>
                                 </dl>
                             </div>

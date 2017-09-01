@@ -280,26 +280,24 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     },
 
     select_message: function(message_id) {
-        var self = this;
-
         this.$el.addClass('o_mail_selection_mode');
         var message = chat_manager.get_message(message_id);
         this.selected_message = message;
         var subject = "Re: " + message.record_name;
         this.extended_composer.set_subject(subject);
 
-        this.basic_composer.$el.toggleClass('o_hidden', self.channel.type !== 'static');
-        this.extended_composer.$el.addClass('o_hidden');
+        if (this.channel.type !== 'static') {
+            this.basic_composer.do_hide();
+        }
+        this.extended_composer.do_show();
 
         this.thread.scroll_to({id: message_id, duration: 200, only_if_necessary: true});
         this.extended_composer.focus('body');
     },
 
     unselect_message: function() {
-        var self = this;
-
-        this.basic_composer.$el.toggleClass('o_hidden', !(self.channel.type !== 'static' && !self.channel.mass_mailing));
-        this.extended_composer.$el.toggleClass('o_hidden', !(self.channel.type !== 'static' && self.channel.mass_mailing));
+        this.basic_composer.do_toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
+        this.extended_composer.do_toggle(this.channel.type !== 'static' && this.channel.mass_mailing);
 
         if (!config.device.touch) {
             var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;

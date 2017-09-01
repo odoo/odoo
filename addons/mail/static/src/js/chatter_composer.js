@@ -33,6 +33,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
         });
+        this.notInline = true;
     },
 
     should_send: function () {

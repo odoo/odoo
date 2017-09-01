@@ -166,7 +166,6 @@
 
     <t t-name="mail.ChatComposer.Attachments">
         <div t-if="attachments.length > 0" class="o_attachments">
-            <h5 class="mt4 mb0 small text-muted">Attachments:</h5>
             <t t-foreach="attachments" t-as='attachment'>
                 <t t-call="mail.Attachment">
                      <t t-set="editable" t-value="true"/>
