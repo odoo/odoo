@@ -7,7 +7,7 @@
             <form string="Point of Sale Orders" create="0">
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
-                    <button name="action_pos_order_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
+                    <button name="action_pos_order_invoice" string="Invoice" type="object" attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','invoiced')], 'readonly': [('partner_id','=',False)]}"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
@@ -28,6 +28,7 @@
                     <field name="session_id" />
                     <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
+                    <field name="invoice_group" invisible="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
@@ -85,7 +86,7 @@
                             <field name="picking_id" readonly="1"/>
                             <field name="pos_reference"/>
                         </group>
-                        <group string="Accounting Information">
+                        <group string="Accounting Information" groups="account.group_account_manager">
                             <group>
                                 <field name="sale_journal" domain="[('type','=','sale')]"/>
                                 <field name="account_move" readonly="1"
