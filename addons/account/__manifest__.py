@@ -39,7 +39,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',
         'views/report_overdue.xml',
-        'views/report_overdue.xml',
+        'views/account_cash_rounding_view.xml',
         'wizard/account_report_common_view.xml',
         'wizard/account_report_print_journal_view.xml',
         'views/report_journal.xml',
