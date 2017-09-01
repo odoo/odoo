@@ -19,11 +19,15 @@
             <field name="arch" type="xml">
                 <form string="Rounding Form">
                     <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
-                            <field name="name"/>
                             <field name="rounding"/>
                             <field name="strategy"/>
-                            <field name="account_id" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"/>
+                            <field name="account_id" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
+                                groups="account.group_account_user"/>
                             <field name="rounding_method"/>
                         </group>
                     </sheet>

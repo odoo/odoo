@@ -353,9 +353,9 @@ class AccountInvoice(models.Model):
     outstanding_credits_debits_widget = fields.Text(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
     payments_widget = fields.Text(compute='_get_payment_info_JSON', groups="account.group_account_invoice")
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON', groups="account.group_account_invoice")
-    cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding',
+    cash_rounding_id = fields.Many2one('account.cash.rounding', string='Cash Rounding Method',
         readonly=True, states={'draft': [('readonly', False)]},
-        help = 'The smallest coinage of the currency used to pay by cash.')
+        help='Defines the smallest coinage of the currency that can be used to pay by cash.')
 
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
