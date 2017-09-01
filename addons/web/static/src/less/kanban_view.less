@@ -163,6 +163,7 @@
             padding: 3px 6px;
             color: @headings-color;
             font-weight: bold;
+            display: block;
         }
     }
 
@@ -267,29 +268,6 @@
         {
             .o-kanban-record-title(@font-size: 13px);
             display: block;
-    .o_title_div {
-        background-color: white;
-        line-height: 1.5;
-        width: 100%;
-        display: none;
-        margin: 6px;
-        text-align: -webkit-center;
-        padding-top: 7px;
-        padding-left: 4px;
-        padding-right: 4px;
-        input {
-            width: 100%;
-            color: @odoo-main-text-color;
-
-        }
-    }
-
-    .o_kanban_quick_create {
-        margin: 0 @o-kanban-record-margin @o-kanban-record-margin @o-kanban-record-margin;
-        padding: 3px;
-        input {
-            width: 100%;
-            margin: 4px 0;
         }
 
         // If record has multiple rows, the Title column is always 100% width.
@@ -471,6 +449,17 @@
         .o_text_block {
             display: block;
         }
+    }
+    .o_title_div {
+        background-color: white;
+        line-height: 1.5;
+        width: 100%;
+        display: none;
+        margin: 6px;
+        text-align: -webkit-center;
+        padding-top: 7px;
+        padding-left: 4px;
+        padding-right: 4px;
     }
 
     // Kanban Grouped Layout

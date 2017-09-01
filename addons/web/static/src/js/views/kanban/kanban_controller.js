@@ -191,16 +191,18 @@ var KanbanController = BasicController.extend({
         }
     },
     /**
+     * When double click on column this handler will called.
+     *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onColumnEdit: function(event) {
-        self = this;
-        var target = event.target;
+    _onColumnEdit: function (ev) {
+        var self = this;
+        var target = ev.target;
         this._rpc({
             model: target.relation,
             method: 'write',
-            args: [target.id, {name: event.data.name}],
+            args: [target.id, {name: ev.data.name}],
         }).done(function () {
             self.reload();
         });
@@ -370,16 +372,19 @@ var KanbanController = BasicController.extend({
         });
     },
     /**
-     * @param {OdooEvent} event
+     * When undefined column has to be renamed.
+     *
+     * @private
+     * @param {OdooEvent} ev
      */
-    _onUndefinedCreate: function (event) {
+    _onUndefinedCreate: function (ev) {
         var self = this;
         var undefinedColumn = _.findWhere(this.renderer.widgets, {id: false});
-        this.model.createGroup(event.data.value, this.handle).then(function (newGroupID) {
+        this.model.createGroup(ev.data.value, this.handle).then(function (newGroupID) {
             var def = $.Deferred();
             _.each(undefinedColumn.records, function (record, index) {
                 self.model.moveRecord(record.db_id, newGroupID, self.handle).then(function () {
-                    if(index+1 === undefinedColumn.records.length){
+                    if(index+1 === undefinedColumn.records.length) {
                         def.resolve();
                     }
                 });

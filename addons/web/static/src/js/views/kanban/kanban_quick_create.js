@@ -281,9 +281,10 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
 
     /**
      * @private
+     * @param {KeyEvent} ev
      */
-    _onColumnEscape: function (event) {
-        if (event.keyCode === 27) { // escape
+    _onColumnEscape: function (ev) {
+        if (ev.keyCode === 27) { // escape
             this.$input.val('');
             this.$input.blur();
         }

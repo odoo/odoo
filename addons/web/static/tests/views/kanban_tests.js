@@ -959,8 +959,8 @@ QUnit.module('Views', {
             },
             mockRPC: function (route, args) {
                 nbRPCs++;
-                if(args.method === 'write' && args.args[1].name) {
-                    assert.strictEqual(args.args[1].name, 'suh', 'The column name should be now suh')
+                if (args.method === 'write' && args.args[1].name) {
+                    assert.strictEqual(args.args[1].name, 'suh', 'The column name should be now suh');
                 }
                 return this._super(route, args);
             },

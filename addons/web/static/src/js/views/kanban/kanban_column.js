@@ -259,31 +259,33 @@ var KanbanColumn = Widget.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onColumnTitleEdit: function (event) {
-        if (!this.grouped_by_m2o){
+    _onColumnTitleEdit: function (ev) {
+        if (!this.grouped_by_m2o) {
             return;
         }
-        self = this;
-        var $title = this.$('.o_column_title')
+        var self = this;
+        var $title = this.$('.o_column_title');
         var $input = this.$('.o_title_input');
         var $inputWrapper = $input.parent();
         $title.css('display', 'none');
         $inputWrapper.css('display', 'block');
         $input.val($title.text()).focus().select();
-        $input.off().on('focusout keydown', function (event) {
-            if (event.which === $.ui.keyCode.ESCAPE) {
-                $input.off('focusout')
+        $input.off().on('focusout keydown', function (ev) {
+            if (ev.which === $.ui.keyCode.ESCAPE) {
+                $input.off('focusout');
                 $title.css('display', 'block');
                 $inputWrapper.css('display', 'none');
             }
-            if (event.which === $.ui.keyCode.ENTER || event.type === 'focusout') {
+            if (ev.which === $.ui.keyCode.ENTER || ev.type === 'focusout') {
                 var inputVal = $input.val().trim();
-                if (inputVal && inputVal != $title.text()) {
-                    if (!self.id) {//To handle undefined column edit
+                if (inputVal && inputVal !== $title.text()) {
+                    if (!self.id) {
+                        //To handle undefined column edit
                         self.trigger_up('create_undefined_column', {
-                            value: $input.val(),
-                        })
-                    } else { //To handle the columns having id
+                            value: $input.val()
+                        });
+                    } else {
+                        //To handle the columns having id
                         self.trigger_up('kanban_column_edit', {
                             name: inputVal
                         });
