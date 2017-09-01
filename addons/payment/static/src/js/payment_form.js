@@ -17,10 +17,15 @@ odoo.define('payment.payment_form', function (require) {
             'click input[type="radio"]': 'radioClickEvent'
         },
 
+        init: function(parent, options) {
+            this._super.apply(this, arguments);
+            this.options = _.extend(options || {}, {
+            });
+        },
+
         start: function () {
             this.updateNewPaymentDisplayStatus();
             $('[data-toggle="tooltip"]').tooltip();
-
         },
 
         payEvent: function (ev) {
@@ -47,6 +52,9 @@ odoo.define('payment.payment_form', function (require) {
 
                 // if the user is adding a new payment
                 if (this.isNewPaymentRadio(checked_radio)) {
+                    if (this.options.partnerId === undefined) {
+                        console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
+                    }
                     var form_data = this.getFormData(inputs_form);
                     var empty_inputs = false;
 
@@ -115,12 +123,6 @@ odoo.define('payment.payment_form', function (require) {
                 }
                 // if the user is going to pay with a form payment, then
                 else if (this.isFormPaymentRadio(checked_radio)) {
-                    // if neither the dataset or the action url is defined, then we just stop the execution of the function
-                    if (!ds || !ds.dataset.actionUrl) {
-                        console.warn('payment_form: invalid dataset / actionurl');
-                        return;
-                    }
-
                     var $tx_url = this.$el.find('input[name="prepare_tx_url"]');
                     // if there's a prepare tx url set
                     if ($tx_url.length === 1) {
@@ -130,14 +132,19 @@ odoo.define('payment.payment_form', function (require) {
                         ajax.jsonRpc($tx_url[0].value, 'call', {
                             'acquirer_id': parseInt(acquirer_id),
                             'save_token': form_save_token,
+                            'access_token': self.options.accessToken,
+                            'success_url': self.options.successUrl,
+                            'error_url': self.options.errorUrl,
+                            'callback_method': self.options.callbackMethod,
                         }).then(function (result) {
                             if (result) {
                                 // if the server sent us the html form, we create a form element
                                 var newForm = document.createElement('form');
                                 newForm.setAttribute("method", "post"); // set it to post
-                                newForm.setAttribute("action", ds.dataset.actionUrl); // set the action url
                                 newForm.hidden = true; // hide it
                                 newForm.innerHTML = result; // put the html sent by the server inside the form
+                                var action_url = $(newForm).find('input[name="data_set"]').data('actionUrl');
+                                newForm.setAttribute("action", action_url); // set the action url
                                 document.getElementsByTagName('body')[0].appendChild(newForm); // append the form to the body
                                 $(newForm).find('input[data-remove-me]').remove(); // remove all the input that should be removed
                                 newForm.submit(); // and finally submit the form
@@ -379,13 +386,15 @@ odoo.define('payment.payment_form', function (require) {
         },
     });
 
-
-
     require('web.dom_ready'); // only start this when dom is ready
     if (!$('.o_payment_form').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_payment_form'");
     }
-    var form = new PaymentForm();
-    form.attachTo($('.o_payment_form'));
+    $('.o_payment_form').each(function () {
+        var $elem = $(this);
+        var form = new PaymentForm(null, $elem.data());
+        form.attachTo($elem);
+    });
+
 
 });
