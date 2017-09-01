@@ -79,18 +79,19 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         normalized_value += math.copysign(epsilon, normalized_value)
         rounded_value = round(normalized_value)     # round to integer
 
-    # TIE-BREAKING: UP (for ceiling operations)
-    # When rounding the value up, we instead subtract the epsilon value
+    # TIE-BREAKING: UP (for ceiling[resp. flooring] operations)
+    # When rounding the value up[resp. down], we instead subtract the epsilon value
     # as the the approximation of the real value may be slightly *above* the
-    # tie limit, this would result in incorrectly rounding up to the next number
-    # The math.ceil operation is applied on the absolute value in order to
+    # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
+    # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is
     # restored.
 
-    elif rounding_method == 'UP':
+    else:
+        func = math.floor if rounding_method == 'DOWN' else math.ceil
         sign = math.copysign(1.0, normalized_value)
         normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+        rounded_value = func(abs(normalized_value)) * sign
 
     result = rounded_value * rounding_factor # de-normalize
     return result
