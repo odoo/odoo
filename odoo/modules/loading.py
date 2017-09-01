@@ -184,6 +184,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     # Python tests
                     env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
                     report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                    # tests may have reset the environment
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    module = env['ir.module.module'].browse(module_id)
 
             processed_modules.append(package.name)
 
@@ -262,7 +265,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new registry, just created in
         # odoo.modules.registry.Registry.new().
         registry = odoo.registry(cr.dbname)
-        env = api.Environment(cr, SUPERUSER_ID, {})
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -290,6 +292,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             Module = env['ir.module.module']
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
@@ -348,6 +351,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 if model in registry and not registry[model]._abstract and not registry[model]._transient:
@@ -383,6 +387,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
+                env = api.Environment(cr, SUPERUSER_ID, {})
                 pkgs = reversed([p for p in graph if p.name in modules_to_remove])
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
@@ -401,6 +406,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 6: verify custom views on every model
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             View = env['ir.ui.view']
             for model in registry:
                 try:
@@ -414,6 +420,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 8: call _register_hook on every model
+        env = api.Environment(cr, SUPERUSER_ID, {})
         for model in env.values():
             model._register_hook()
 
