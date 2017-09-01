@@ -176,8 +176,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('internal_type')
     def onchange_internal_type(self):
-        if self.internal_type in ('receivable', 'payable'):
-            self.reconcile = True
+        self.reconcile = self.internal_type in ('receivable', 'payable')
 
     @api.onchange('code')
     def onchange_code(self):
@@ -226,6 +225,47 @@ class AccountAccount(models.Model):
         return rslt
 
     @api.multi
+    def _toggle_reconcile_to_true(self):
+        query = """
+            UPDATE account_move_line
+                SET reconciled = CASE
+                    WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true
+                    ELSE false
+                    END,
+                full_reconcile_id = NULL,
+                amount_residual = (debit-credit),
+                amount_residual_currency = amount_currency
+            WHERE account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    @api.multi
+    def _toggle_reconcile_to_false(self):
+        partial_lines_count = self.env['account.move.line'].search_count([
+            ('account_id', 'in', self.ids),
+            ('full_reconcile_id', '=', False),
+            ('|'),
+            ('matched_debit_ids', '!=', False),
+            ('matched_credit_ids', '!=', False),
+        ])
+        if partial_lines_count > 0:
+            raise UserError(_('You cannot switch an account to not allow the reconciliation'
+                              'if some partial reconciliations are still pending.'))
+        query = """
+            UPDATE account_move_line
+                SET reconciled = CASE
+                    WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true
+                    ELSE false
+                    END,
+                amount_residual = (debit-credit),
+                amount_residual_currency = amount_currency
+            WHERE full_reconcile_id = NULL AND account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    @api.multi
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
         if vals.get('company_id', False):
@@ -233,13 +273,11 @@ class AccountAccount(models.Model):
             for account in self:
                 if (account.company_id.id != vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
-        # If user change the reconcile flag, all aml should be recomputed for that account and this is very costly.
-        # So to prevent some bugs we add a constraint saying that you cannot change the reconcile field if there is any aml existing
-        # for that account.
-        if vals.get('reconcile'):
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            if len(move_lines):
-                raise UserError(_('You cannot change the value of the reconciliation on this account as it already has some moves'))
+        if 'reconcile' in vals:
+            if not self.reconcile and vals.get('reconcile'):
+                self._toggle_reconcile_to_true()
+            elif self.reconcile and not vals.get('reconcile'):
+                self._toggle_reconcile_to_false()
         return super(AccountAccount, self).write(vals)
 
     @api.multi
