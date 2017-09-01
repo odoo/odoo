@@ -65,13 +65,15 @@ def py2exe_options():
             ],
             'options': {
                 'py2exe': {
-                    'skip_archive': 1,
+                    'compressed': False,
+                    #'skip_archive': True,
                     'optimize': 0,  # Keep the assert running as the integrated tests rely on them.
                     'dist_dir': 'dist',
                     'includes' : [
                         'asynchat',
                         'asyncore',
                         'decimal',
+                        'docutils',
                         'imaplib',
                         'poplib',
                         'pydot',
@@ -79,12 +81,12 @@ def py2exe_options():
                         'select',
                         'smtplib',
                         'uuid', 
+                        'odoo.tests',
                         'win32service',
                         'win32serviceutil',
                     ],
                     'packages': [
                         'dateutil',
-                        'docutils',
                         'email',
                         'encodings',
                         'jinja2',
@@ -92,8 +94,8 @@ def py2exe_options():
                         'mako',
                         'markupsafe',
                         'mock',
+                        #'odoo',
                         'ofxparse',
-                        'odoo',
                         'passlib',
                         'PIL',
                         'psutil',
@@ -176,5 +178,6 @@ setup(
     tests_require=[
         'mock',
     ],
+    zipfile=None,
     **py2exe_options()
 )
