@@ -343,6 +343,7 @@ class Holidays(models.Model):
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
             self.message_subscribe_users(user_ids=employee.user_id.ids)
+
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
@@ -354,7 +355,6 @@ class Holidays(models.Model):
         holiday = super(Holidays, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(current_employee.id)
         return holiday
-
 
     @api.multi
     def write(self, values):
@@ -442,6 +442,10 @@ class Holidays(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
+                linked_requests = holiday.mapped('linked_request_ids')
+                for linked_request in linked_requests:
+                    if linked_request.state == 'confirm':
+                        linked_request.action_approve()
                 return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
             else:
                 holiday.action_validate()
