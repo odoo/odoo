@@ -97,6 +97,8 @@
                         </div>
                     </div>
                     <div class="panel-body">
+                        <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>
@@ -260,5 +262,24 @@
         <p t-if="invoice.fiscal_position_id.note">
             <span t-field="invoice.fiscal_position_id.note"/>
         </p>
+    </template>
+
+    <template id="portal_invoice_error" name="Invoice error/warning display">
+        <div class="row">
+            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_invoice_success" name="Invoice success display">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
     </template>
 </odoo>
