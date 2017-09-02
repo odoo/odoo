@@ -196,17 +196,21 @@ class ProcurementOrder(models.Model):
     def run(self, autocommit=False):
         # TDE CLEANME: unused context key procurement_auto_defer remove
         new_self = self.filtered(lambda order: order.state not in ['running', 'done', 'cancel'])
-        res = super(ProcurementOrder, new_self).run(autocommit=autocommit)
+        res = True
+        if new_self:
+            res = super(ProcurementOrder, new_self).run(autocommit=autocommit)
 
-        # after all the procurements are run, check if some created a draft stock move that needs to be confirmed
-        # (we do that in batch because it fasts the picking assignation and the picking state computation)
-        new_self.filtered(lambda order: order.state == 'running' and order.rule_id.action == 'move').mapped('move_ids').filtered(lambda move: move.state == 'draft').action_confirm()
+            # after all the procurements are run, check if some created a draft stock move that needs to be confirmed
+            # (we do that in batch because it fasts the picking assignation and the picking state computation)
+            move_ids = new_self.filtered(lambda order: order.state == 'running' and order.rule_id.action == 'move').mapped('move_ids').filtered(lambda move: move.state == 'draft')
+            if move_ids:
+                move_ids.action_confirm()
 
-        # TDE FIXME: action_confirm in stock_move already call run() ... necessary ??
-        # If procurements created other procurements, run the created in batch
-        new_procurements = self.search([('move_dest_id.procurement_id', 'in', new_self.ids)], order='id')
-        if new_procurements:
-            res = new_procurements.run(autocommit=autocommit)
+            # TDE FIXME: action_confirm in stock_move already call run() ... necessary ??
+            # If procurements created other procurements, run the created in batch
+            new_procurements = self.search([('move_dest_id.procurement_id', 'in', new_self.ids)], order='id')
+            if new_procurements:
+                res = new_procurements.run(autocommit=autocommit)
         return res
 
     @api.multi
