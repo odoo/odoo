@@ -119,12 +119,16 @@ class MrpUnbuild(models.Model):
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
                 original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
-                self.env['stock.move.lots'].create({
-                    'move_id': produce_move.id,
-                    'lot_id': original.lot_id.id,
-                    'quantity_done': produce_move.product_uom_qty,
-                    'quantity': produce_move.product_uom_qty
-                })
+                group_by_lot = {}
+                for o in original:
+                    group_by_lot.setdefault(o.lot_id.id, 0) += o.qty
+                for key, value in group_by_lot.items():
+                    self.env['stock.move.lots'].create({
+                        'move_id': produce_move.id,
+                        'lot_id': key,
+                        'quantity_done': value,
+                        'quantity': value
+                    })
             else:
                 produce_move.quantity_done = produce_move.product_uom_qty
         produce_moves.move_validate()
