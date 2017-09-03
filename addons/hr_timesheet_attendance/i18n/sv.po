@@ -3,7 +3,7 @@
 # * hr_timesheet_attendance
 # 
 # Translators:
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
@@ -72,7 +72,7 @@ msgstr "Skillnad"
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "Skillnader"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
@@ -110,6 +110,8 @@ msgstr "Period"
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
 msgstr ""
+"Vänligen tillse att skillnaden mellan närvaro och rapporterad tid är mindre "
+"än %.2f."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_attendance_sheet_id
@@ -228,7 +230,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Du kan inte ange ett närvarodatum utanför tidrapporten"
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:96
@@ -237,6 +239,8 @@ msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
 msgstr ""
+"Du kan inte registrera närvaro på en redan inskickad tidrapport. Be en chef "
+"att öppna den igen."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
@@ -249,13 +253,13 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Du kan inte registrera närvaro utanför tidrapporten."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:119
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
+msgstr "Du kan inte ändra en rad i en bekräftad tidrapport."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
