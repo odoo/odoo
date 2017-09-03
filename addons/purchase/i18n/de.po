@@ -24,13 +24,14 @@
 # Henry Mineehen <info@mineehen.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Andi <flimflam@salasar.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-18 14:45+0000\n"
 "PO-Revision-Date: 2017-04-18 14:45+0000\n"
-"Last-Translator: Dejan Dinic <dejan.dinic@bluewin.ch>, 2017\n"
+"Last-Translator: Andi <flimflam@salasar.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -286,6 +287,7 @@ msgstr ""
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr ""
+"Eine Warnung kann auf ein Produkt oder einen Kunden gesetzt werden (Einkauf)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.stock_config_settings_view_form_inherit_purchase
@@ -300,7 +302,7 @@ msgstr "Beschaffungsauftrag hinzufügen"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
-msgstr ""
+msgstr "Bestellungen bearbeiten zulassen"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.account_config_settings_view_form_inherit_purchase
@@ -389,7 +391,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr ""
+msgstr "Rechnungszeilen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
@@ -400,12 +402,12 @@ msgstr "Verrechnete Menge"
 #: code:addons/purchase/models/purchase.py:578
 #, python-format
 msgid "Billed Quantity"
-msgstr ""
+msgstr "Abgerechnete Menge"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
-msgstr ""
+msgstr "Fakturastatus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
@@ -416,7 +418,7 @@ msgstr "Rechnung"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Bills Received"
-msgstr ""
+msgstr "Erhaltene Rechnungen"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -513,7 +515,7 @@ msgstr "Klicken Sie hier, um eine Angebotsanfrage zu erstellen."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a vendor bill."
-msgstr ""
+msgstr "Klicken Sie, um eine Lieferantenrechnung zu erstellen."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -575,7 +577,7 @@ msgstr "Bestellung in einem Schritt bestätigen"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr ""
+msgstr "Bestätigte Bestellungen sind nicht bearbeitbar"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1048,6 +1050,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Bei Warenausgangsmengen: Rechnungskontrolle anhand der bestellten Mengen.\n"
+"Bei Wareneingang: Rechnungkontrolle anhand der gelieferten Menge."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1331,12 +1335,12 @@ msgstr "Bestellpositionen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
 msgid "Purchase Order Modification"
-msgstr ""
+msgstr "Änderung der Bestellung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_lock
 msgid "Purchase Order Modification *"
-msgstr ""
+msgstr "Änderung der Bestellung *"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_lock
@@ -1345,6 +1349,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Bestelländerung wird verwendet, wenn Sie die Bestellung nach der Bestätigung"
+" bearbeiten möchten."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1371,7 +1377,7 @@ msgstr "Bestellposition gelöscht."
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Fakturierte Bestellungen."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1482,7 +1488,7 @@ msgstr "Angenommene Menge"
 #: code:addons/purchase/models/purchase.py:577
 #, python-format
 msgid "Received Quantity"
-msgstr ""
+msgstr "Gelieferte Menge"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1654,7 +1660,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set date to all order lines"
-msgstr ""
+msgstr "Datum auf alle Auftragszeilen setzen"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -1751,6 +1757,8 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your bills and receipts."
 msgstr ""
+"Die Bestellmenge wurde verringert. Vergessen Sie nicht, dies auf Ihren "
+"Rechnungen und Belegen zu berücksichtigen."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
