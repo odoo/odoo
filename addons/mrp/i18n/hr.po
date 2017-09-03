@@ -127,7 +127,7 @@ msgstr "<span class=\"o_stat_text\">Otpisi</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-msgstr "<span class=\"o_stat_text\">Vremenska<br/> Analiza</span>"
+msgstr "<span class=\"o_stat_text\">Vremenska<br/> analiza</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -314,6 +314,8 @@ msgid ""
 "An unbuild order will do a reverse bill of materials, unbuilding products\n"
 "            you produced, but you can also use it to unbuild products you purchased."
 msgstr ""
+"Nalog za rastavljanje napravit će obrnutu sastavnicu rastavljajući proizvode\n"
+"koje ste proizveli, ali možete ga koristiti i za rastavljanje proizvoda koje ste nabavili."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -359,7 +361,7 @@ msgstr "Raspoloživost"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr "Gubici dostupnosti"
+msgstr "Gubitci dostupnosti"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -476,7 +478,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "Bills of materials may produce residual products (A + B --> C + D)"
-msgstr "Sastavnica može proizvosti nusproizvode (A + B --> C + D)"
+msgstr "Sastavnica može proizvesti nusproizvode (A + B --> C + D)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -851,12 +853,12 @@ msgstr "Datum"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr "Krajnji rok kraj"
+msgstr "Krajnji rok završetka"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
 msgid "Deadline Start"
-msgstr "Krajnji rok početak"
+msgstr "Krajnji rok početka"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1618,8 +1620,9 @@ msgid ""
 "Messages can be configured to appear during any operation: receptions, delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
-"Poruke se mogu konfigurirati da se pojavljuju tijekom bilo koje operacije: "
-"primanje, nalozi za isporuku, nalozi za proizvodnju, radni nalozi itd."
+"Poruke se mogu konfigurirati tako da se pojavljuju tijekom bilo koje "
+"operacije: primanje, nalozi za isporuku, nalozi za proizvodnju, radni nalozi"
+" itd."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1713,7 +1716,7 @@ msgstr "Nema usmjerenja"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr "Nema nus proizvoda u sastavnici (A + B --> C)"
+msgstr "Nema nusproizvoda u sastavnici (A + B --> C)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2183,7 +2186,7 @@ msgstr "Produktivni sat(i) tijekom prošlog mjeseca"
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
-msgstr "Gubici produktivnosti"
+msgstr "Gubitci produktivnosti"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -2219,7 +2222,7 @@ msgstr "Kvaliteta"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Quality Losses"
-msgstr "Gubici kvalitete"
+msgstr "Gubitci kvalitete"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_lots
@@ -2672,12 +2675,12 @@ msgstr "Sub sastavnica"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "TPM Big Loss"
-msgstr ""
+msgstr "TPM veći gubitak"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 msgid "TPM Big Losses"
-msgstr ""
+msgstr "TPM veći gubitci"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_head
@@ -3011,7 +3014,7 @@ msgstr "Nalog za rastavljanje"
 #: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr "Količine na nalogu za rastavljanje moraju biti uvjek pozitivne."
+msgstr "Količine na nalogu za rastavljanje moraju biti uvijek pozitivne."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
@@ -3082,7 +3085,7 @@ msgid ""
 "Use Master Production Schedule in order to create procurements based on "
 "forecasts"
 msgstr ""
-"Koristite Master Plan Proizvodnje za kreiranje nabava prema predviđanjima "
+"Koristite Master plan proizvodnje za kreiranje nabava prema predviđanjima "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
@@ -3091,8 +3094,8 @@ msgid ""
 "                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
-"Koristite poruke za upozorenje djelatnicima u proizvodnji ili skladištu o promjenama u\n"
-"proizvodima, procesima ili radnjama o kojima trebaju brinuti. (npr.: Upozorenje! Sastavnica se promijenila, provjerite detalje na novom radnom listu)"
+"Koristite poruke za upozorenje djelatnicima u proizvodnji ili skladištu o promjenama na\n"
+"proizvodima, procesima ili radnjama o kojima trebaju brinuti. (npr.: Upozorenje! Sastavnica se promijenila, provjerite detalje na novom radnom listu)."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3133,7 +3136,7 @@ msgstr "Vrlo hitno"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,availability:0
 msgid "Waiting"
-msgstr "Waiting"
+msgstr "Na čekanju"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3248,7 +3251,7 @@ msgstr "Radni centri"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Dashboard"
-msgstr "Nazorna ploča radnih centara"
+msgstr "Nadzorna ploča radnih centara"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -3430,7 +3433,7 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
-"Možete postaviti nus-proizvode u sastavnici.\n"
+"Možete postaviti nusproizvode u sastavnici.\n"
 "Bez ovog modula: A + B + C -> D.\n"
 "Sa ovim modulom: A + B + C -> D + E.\n"
 "- ovo instalira modul mrp_byproduct."
@@ -3492,7 +3495,7 @@ msgid ""
 msgstr ""
 "Trebate definirati najmanje jedan gubitak u produktivnosti u kategoriji "
 "'Učinak'. Kreirajte ga iz aplikacije proizvodnje, meni: Konfiguracija / "
-"Gubici u produktivnosti."
+"Gubitci u produktivnosti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:349
@@ -3504,7 +3507,7 @@ msgid ""
 msgstr ""
 "Trebate definirati najmanje jedan gubitak u produktivnosti u kategoriji "
 "'Produktivnost'. Kreirajte ga iz aplikacije proizvodnje, meni: Konfiguracija"
-" / Gubici u produktivnosti."
+" / Gubitci u produktivnosti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:401
@@ -3514,9 +3517,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Trebate definirati najmanje jedan neaktivan gubitak u produktivno0sti u "
+"Trebate definirati najmanje jedan neaktivan gubitak u produktivnosti u "
 "kategoriji 'Učinak'. Kreirajte ga iz aplikacije proizvodnje, meni: "
-"Konfiguracija / Gubici u produktivnosti."
+"Konfiguracija / Gubitci u produktivnosti."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:99
@@ -3613,7 +3616,7 @@ msgstr "stock.scrap"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "to"
-msgstr "za"
+msgstr "do"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
