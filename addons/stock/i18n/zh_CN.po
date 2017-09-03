@@ -97,7 +97,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", 假如会计或采购模块已安装"
+msgstr ", 如果会计或采购模块已安装"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1136,7 +1136,7 @@ msgstr "勾选这次拣货关联的数量的存在"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr "检查在拣货打包作业的存在"
+msgstr "检查在拣货上的包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -2137,7 +2137,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr "包裹里面的东西应该在同一个位置"
+msgstr "所有包裹里面的东西应该在同一个位置"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2384,7 +2384,7 @@ msgstr "硬盘 SH-1"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
 msgid "Has Pack Operations"
-msgstr "有包装作业"
+msgstr "有包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
@@ -2543,7 +2543,7 @@ msgstr "如果产品没有在正确的位置上，设置检查数量为0，并�
 msgid ""
 "If checked, this shows the packs to be moved as a whole in the Operations "
 "tab all the time, even if there was no entire pack reserved."
-msgstr "如果选用，包裹会被在作业页卡不断的移动，即便没有全部的包裹被预留"
+msgstr "如果勾选，即使没有保留整个包，也会一直要在“操作”选项卡中显示整体移动的包。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_propagate
@@ -2869,19 +2869,19 @@ msgstr "内部参考号码，它不同于制造商的批次/序列号码"
 #: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "非法的域左操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:259
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "非法的域操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:261
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "非法的域右操作符 %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3078,7 +3078,7 @@ msgstr "是时候创建期初库存了,在Odoo中可以这样做："
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr "指定包装的属性如数量,类型等"
+msgstr "它指定包装的属性,如数量,类型等"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_type
@@ -3223,7 +3223,7 @@ msgstr "最近的盘点及移动"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_launch_pack_operations
 msgid "Launch Pack Operations"
-msgstr "启动包装作业"
+msgstr "启动包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_days
@@ -3414,7 +3414,7 @@ msgstr "批次/序列号码必须"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation_lot
 msgid "Lot/Serial number for pack ops"
-msgstr "打包作业的批次/序列号码"
+msgstr "包裹作业的批次/序列号码"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_production_lot
@@ -3817,7 +3817,7 @@ msgstr "新的调拨"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_fresh_record
 msgid "Newly created pack operation"
-msgstr "新建的打包作业"
+msgstr "新建的包裹作业"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -3882,7 +3882,7 @@ msgstr "非欧洲客户"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_product_ids
 msgid "Non pack"
-msgstr "没有打包"
+msgstr "没有包裹"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -4219,22 +4219,22 @@ msgstr "P&L Qty"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_pack_ids
 #, python-format
 msgid "Pack"
-msgstr "打包"
+msgstr "包裹"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.pack_details
 msgid "Pack Details"
-msgstr "打包细节"
+msgstr "包裹细节"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
 msgid "Pack Operation / Moves Link"
-msgstr "打包作业 / 移动连接"
+msgstr "包裹作业 / 移动连接"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
 msgid "Pack Type"
-msgstr "打包类型"
+msgstr "包裹类型"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:14
@@ -5099,7 +5099,7 @@ msgstr "重新计算"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_recompute_pack_op
 msgid "Recompute pack operation?"
-msgstr "重新计算打包作业？"
+msgstr "重新计算包裹作业？"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_lot:0
@@ -5134,7 +5134,7 @@ msgstr "单据的参照"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_ids
 msgid "Related Packing Operations"
-msgstr "相关的打包作业"
+msgstr "相关的包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_remaining_qty
@@ -7082,7 +7082,7 @@ msgstr "已经被用于库存移动，你不能变更该产品的计量单位。
 #: code:addons/stock/models/stock_pack_operation.py:160
 #, python-format
 msgid "You can not delete pack operations of a done picking"
-msgstr "已经完成的拣货不能被删除"
+msgstr "你不可以删除已完成的拣货的打包作业"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:143
