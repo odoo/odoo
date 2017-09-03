@@ -14,4 +14,8 @@ List of contributors:
 
 Diogo Duarte dduarte@odoogap.com https://github.com/dduarte-odoogap
 
+Diogo Duarte diogocarvalhoduarte@gmail.com https://github.com/dduarte-odoogap
+
 Carlos Fonseca cfonseca@odoogap.com https://github.com/cfonseca-odoogap
+
+Carlos Fonseca carlosmigueldafonseca@gmail.com https://github.com/cpintofonseca
