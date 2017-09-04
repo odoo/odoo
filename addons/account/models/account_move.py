@@ -112,8 +112,8 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation."
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
-    auto_reverse = fields.Boolean(string='Auto reverse',default=False)
-    reverse_date = fields.Date(string='Reversal date')
+    auto_reverse = fields.Boolean(string='Reverse Automatically', default=False, help='If this checkbox is ticked, this entry will be automatically reversed at the reversal date you defined.')
+    reverse_date = fields.Date(string='Reversal Date', help='Date of the reverse accounting entry.')
     reverse_entry_id = fields.Many2one('account.move', String="Reverse entry", store=True, readonly=True)
 
     @api.model
@@ -231,12 +231,12 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
-    def _reverse_move(self, date=None, journal_id=None):
+    def _reverse_move(self, date=None, journal_id=None, auto=False):
         self.ensure_one()
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('reversal of: ') + self.name,
+            'ref': _('%sreversal of: ') % ('Automatic ' if auto else '') + self.name,
             'auto_reverse': False})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
@@ -248,12 +248,13 @@ class AccountMove(models.Model):
         return reversed_move
 
     @api.multi
-    def reverse_moves(self, date=None, journal_id=None):
+    def reverse_moves(self, date=None, journal_id=None, auto=False):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
             reversed_move = ac_move._reverse_move(date=date,
-                                                  journal_id=journal_id)
+                                                  journal_id=journal_id,
+                                                  auto=auto)
             reversed_moves |= reversed_move
             #unreconcile all lines reversed
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
@@ -284,7 +285,10 @@ class AccountMove(models.Model):
             ('reverse_date', '<=', fields.Date.today()),
             ('reverse_entry_id', '=', False)])
         for move in records:
-            move.reverse_moves()
+            date = None
+            if move.reverse_date and (not self.env.user.company_id.period_lock_date or move.reverse_date > self.env.user.company_id.period_lock_date):
+                date = move.reverse_date
+            move.reverse_moves(date=date, auto=True)
             
     @api.multi
     def action_view_reverse_entry(self):
