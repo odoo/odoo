@@ -292,8 +292,8 @@ class Slide(models.Model):
     def _get_image(self):
         for record in self:
             if record.image:
-                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=4)
-                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=6)
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
                 record.iamge_thumb = False

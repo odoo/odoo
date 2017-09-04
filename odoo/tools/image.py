@@ -157,7 +157,7 @@ def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', fi
 # ----------------------------------------
 # Crop Image
 # ----------------------------------------
-def crop_image(data, type='top', ratio=False, thumbnail_ratio=None, image_format="PNG"):
+def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
     """ Used for cropping image and create thumbnail
         :param data: base64 data of image.
         :param type: Used for cropping position possible
@@ -165,8 +165,9 @@ def crop_image(data, type='top', ratio=False, thumbnail_ratio=None, image_format
         :param ratio: Cropping ratio
             e.g for (4,3), (16,9), (16,10) etc
             send ratio(1,1) to generate square image
-        :param thumbnail_ratio: It is size reduce ratio for thumbnail
-            e.g. thumbnail_ratio=2 will reduce your 500x500 image converted in to 250x250
+        :param size: Resize image to size
+            e.g (200, 200)
+            after crop resize to 200x200 thumbnail
         :param image_format: return image format PNG,JPEG etc
     """
     if not data:
@@ -196,12 +197,13 @@ def crop_image(data, type='top', ratio=False, thumbnail_ratio=None, image_format
         cropped_image.save(output_stream, format=image_format)
     else:
         raise ValueError('ERROR: invalid value for crop_type')
-    # TDE FIXME: should not have a ratio, makes no sense -> should have maximum width (std: 64; 256 px)
-    if thumbnail_ratio:
-        thumb_image = Image.open(io.BytesIO(output_stream.getvalue()))
-        thumb_image.thumbnail((new_w // thumbnail_ratio, new_h // thumbnail_ratio), Image.ANTIALIAS)
-        thumb_image.save(output_stream, image_format)
-    return base64.b64encode(output_stream.getvalue())
+    if size:
+        thumbnail = Image.open(io.BytesIO(output_stream.getvalue()))
+        output_stream.truncate(0)
+        output_stream.seek(0)  # for python 3
+        thumbnail.thumbnail(size, Image.ANTIALIAS)
+        thumbnail.save(output_stream, image_format)
+    return output_stream.getvalue().encode('base64')
 
 # ----------------------------------------
 # Colors
