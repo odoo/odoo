@@ -7,8 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
