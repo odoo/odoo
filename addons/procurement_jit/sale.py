@@ -8,8 +8,8 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     @api.multi
-    def _action_procurement_create(self):
-        res = super(SaleOrderLine, self)._action_procurement_create()
+    def _action_launch_procurement_rule(self):
+        res = super(SaleOrderLine, self)._action_launch_procurement_rule()
         orders = list(set(x.order_id for x in self))
         for order in orders:
             reassign = order.picking_ids.filtered(lambda x: x.state=='confirmed' or ((x.state in ['partially_available', 'waiting']) and not x.printed))

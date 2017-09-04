@@ -589,7 +589,10 @@ class StockMove(models.Model):
 
         # create procurements for make to order moves
         for move in move_create_proc:
-            self.env['procurement.group'].run(move._prepare_procurement_from_move())
+            values = move._prepare_procurement_values()
+            origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
+            self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
+                                              values)
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
@@ -600,9 +603,12 @@ class StockMove(models.Model):
         self._push_apply()
         return self
 
-    def _prepare_procurement_from_move(self):
+    def _prepare_procurement_values(self):
+        """ Prepare specific key for moves or other componenets that will be created from a procurement rule
+        comming from a stock move. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
         self.ensure_one()
-        origin = (self.group_id and (self.group_id.name + ":") or "") + (self.rule_id and self.rule_id.name or self.origin or self.picking_id.name or "/")
         group_id = self.group_id or False
         if self.rule_id:
             if self.rule_id.group_propagation_option == 'fixed' and self.rule_id.group_id:
@@ -610,14 +616,8 @@ class StockMove(models.Model):
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
         return {
-            'name': self.rule_id and self.rule_id.name or "/",
-            'origin': origin,
             'company_id': self.company_id,
             'date_planned': self.date,
-            'product_id': self.product_id,
-            'product_qty': self.product_uom_qty,
-            'product_uom': self.product_uom,
-            'location_id': self.location_id,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,

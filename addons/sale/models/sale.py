@@ -917,6 +917,14 @@ class SaleOrderLine(models.Model):
         return invoice_lines
 
     @api.multi
+    def _prepare_procurement_values(self, group_id=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from a sale order line. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
+        return {}
+
+    @api.multi
     def _get_display_price(self, product):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':

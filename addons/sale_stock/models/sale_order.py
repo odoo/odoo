@@ -37,7 +37,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         result = super(SaleOrder, self).action_confirm()
         for order in self:
-            order.order_line._action_procurement_create()
+            order.order_line._action_launch_procurement_rule()
         return result
 
     @api.depends('picking_ids')
@@ -89,7 +89,7 @@ class SaleOrderLine(models.Model):
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            line._action_procurement_create()
+            line._action_launch_procurement_rule()
         return line
 
     @api.multi
@@ -101,7 +101,7 @@ class SaleOrderLine(models.Model):
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_procurement_create()
+            lines._action_launch_procurement_rule()
         return res
     
 
@@ -186,31 +186,32 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.multi
-    def _prepare_order_line_procurement(self, group_id=False):
+    def _prepare_procurement_values(self, group_id=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from a sale order line. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
+        values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
         date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
-        return {
-            'name': self.name,
-            'origin': self.order_id.name,
-            'product_id': self.product_id,
-            'product_qty': self.product_uom_qty,
-            'product_uom': self.product_uom,
+        values.update({
             'company_id': self.order_id.company_id,
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'location_id': self.order_id.partner_shipping_id.property_stock_customer,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_dest_id': self.order_id.partner_shipping_id
-        }
+        })
+        return values
 
     @api.multi
-    def _action_procurement_create(self):
+    def _action_launch_procurement_rule(self):
         """
-        Create procurements based on quantity ordered. If the quantity is increased, new
-        procurements are created. If the quantity is decreased, no automated action is taken.
+        Launch procurement group run method with required/custom fields genrated by a
+        sale order line. procurement group will launch '_run_move', '_run_buy' or '_run_manufacture'
+        depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
@@ -223,16 +224,15 @@ class SaleOrderLine(models.Model):
                 continue
 
             if not line.order_id.procurement_group_id:
-                line.order_id.procurement_group_id = self.env["procurement.group"].create({
+                line.order_id.procurement_group_id = self.env['procurement.group'].create({
                     'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
                     'sale_id': line.order_id.id
                 })
-            vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id)
-            vals['product_qty'] = line.product_uom_qty - qty
+            values = line._prepare_procurement_values(group_id=line.order_id.procurement_group_id)
+            product_qty = line.product_uom_qty - qty
 
-            new_proc = self.env["procurement.group"].run(vals)
+            self.env['procurement.group'].run(line.product_id, product_qty, line.product_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
         return True
-
 
     @api.multi
     def _get_delivered_qty(self):
