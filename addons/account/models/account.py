@@ -169,7 +169,7 @@ class AccountAccount(models.Model):
         elif self.internal_type == 'receivable':
             action_context = {'show_mode_selector': False, 'mode': 'customers'}
         else:
-            action_context = {'show_mode_selector': False, 'account_ids': [self.id,]}
+            action_context = {'show_mode_selector': False, 'mode': 'accounts', 'account_ids': [self.id,]}
         return {
             'type': 'ir.actions.client',
             'tag': 'manual_reconciliation_view',
