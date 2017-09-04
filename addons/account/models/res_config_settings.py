@@ -25,8 +25,6 @@ class ResConfigSettings(models.TransientModel):
         ('round_globally', 'Round globally calculation of taxes '),
         ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
     module_account_accountant = fields.Boolean(string='Accounting')
-    group_multi_currency = fields.Boolean(string='Allow multi currencies',
-        implied_group='base.group_multi_currency')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
     group_warning_account = fields.Boolean(string="Warnings", implied_group='account.group_warning_account')

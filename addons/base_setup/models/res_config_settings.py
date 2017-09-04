@@ -22,7 +22,7 @@ class ResConfigSettings(models.TransientModel):
     module_auth_ldap = fields.Boolean("LDAP Authentification")
     module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
     module_inter_company_rules = fields.Boolean("Manage Inter Company")
-    module_pad = fields.Boolean("External Pads")
+    module_pad = fields.Boolean("Collaborative Pads")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"

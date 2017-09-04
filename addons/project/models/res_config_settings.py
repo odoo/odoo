@@ -7,7 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    module_pad = fields.Boolean("Collaborative Pads")
     module_hr_timesheet = fields.Boolean("Timesheets")
     module_rating_project = fields.Boolean(string="Rating on Tasks")
     module_project_forecast = fields.Boolean(string="Forecasts")

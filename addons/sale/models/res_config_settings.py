@@ -11,10 +11,6 @@ class ResConfigSettings(models.TransientModel):
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
         oldname='default_use_sale_note')
-    group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
-        implied_group='product.group_sale_pricelist',
-        help="""Allows to manage different prices based on rules per category of customers.
-                Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
@@ -46,8 +42,8 @@ class ResConfigSettings(models.TransientModel):
         ('total', 'Tax-Included Prices')], string="Tax Display",
         required=True)
     default_invoice_policy = fields.Selection([
-        ('order', 'Ordered quantities'),
-        ('delivery', 'Delivered quantities or service hours')
+        ('order', 'Invoice what is ordered'),
+        ('delivery', 'Invoice what is delivered')
         ], 'Invoicing Policy',
         default='order',
         default_model='product.template')
@@ -65,7 +61,7 @@ class ResConfigSettings(models.TransientModel):
         ('b2c', 'Free sign up (B2C)'),
     ], string='Customer Account')
 
-    module_delivery = fields.Boolean("Shipping Costs")
+    module_delivery = fields.Boolean("Manage shipping internally")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")

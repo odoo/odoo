@@ -7,7 +7,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     expense_alias_prefix = fields.Char('Default Alias Name for Expenses')
-    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     use_mailgateway = fields.Boolean(string='Let your employees record expenses by email')
     module_sale = fields.Boolean(string="Customer Billing")
 
