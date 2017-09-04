@@ -100,6 +100,7 @@ var KanbanRenderer = BasicRenderer.extend({
                 activeCurrencyId: 0,
                 animationVal: [],
                 progressVal: {},
+                activeFilter: {},                
             };
             var setCounter = function (counter) {
                 var activeColumn = counter.columnId;
@@ -119,13 +120,17 @@ var KanbanRenderer = BasicRenderer.extend({
                     globalCounter.progressVal[activeColumn] = {};
                     globalCounter.progressVal[activeColumn] = counter.progressVal[activeColumn];
                 }
+                if (counter.activeFilter != undefined) {
+                    globalCounter.activeFilter[activeColumn] = counter.activeFilter;
+                }
             };
             var getCounter = function (counter) {
                 return {
                     counter: globalCounter[counter.columnId] || 0,
                     activeCurrencyId: globalCounter.activeCurrencyId || 0,
                     animationVal: globalCounter.animationVal || false,
-                    progressVal: globalCounter.progressVal[counter.columnId]
+                    progressVal: globalCounter.progressVal[counter.columnId],
+                    activeFilter: globalCounter.activeFilter[counter.columnId]            
                 };
             };
             return {

@@ -1783,7 +1783,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Project Kanban Progress Bar Test', function (assert) {
-        assert.expect(3);
+        assert.expect(2);
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1803,8 +1803,6 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_counter').length, this.data.product.records.length, "Kanban counter should be created.");
         var record_length = kanban.$('.o_kanban_group')[0];
         assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side')[0].innerText), kanban.$('.o_kanban_group')[0].childNodes.length - 5, "Kanban counter should be display correct no of records");
-        kanban.$('.o_progress_success')[0].click();
-        assert.strictEqual(kanban.$('.oe_kanban_card_warning').css('opacity'),'0.5', "Kanban Record Opacity should be decrease");
         kanban.destroy();
     });
 });

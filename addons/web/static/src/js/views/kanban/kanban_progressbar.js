@@ -8,8 +8,8 @@ var session = require('web.session');
 var ColumnProgressBar =  Widget.extend({
     template: 'KanbanView.ProgressBar',
     events: {
+        'click .o_kanban_counter_progress': '_oncounterProgressBarClick',
         'click .progress-bar': '_onProgressBarClick',
-        'click .o_kanban_counter_progress': '_oncounterProgressBarClick'
     },
 
     init: function (parent, barOptions, fieldsInfo, header) {
@@ -79,7 +79,7 @@ var ColumnProgressBar =  Widget.extend({
         this.result = {};
         this.progressVal = {};
         this.progressVal[this.columnId] = {};
-        var isLastRecord = false;
+        this.isLastRecord = false;
 
         $(records).each(function () {
             var groupField = this.state.data[self.fieldName];
@@ -109,12 +109,11 @@ var ColumnProgressBar =  Widget.extend({
                 var lastBarWidth = self.lastProgressResult[key] ? (self.lastProgressResult[key].count / self.lastProgressResult[key].sumCount)*100 : 0;
                 if (self['$bar_'+val].length && lastBarWidth == 100 ) {
                     dataVals > 0 ? self['$bar_'+val].width((dataVals / sumCount) * 100 + "%").addClass('o_bar_active').removeClass('transition-off') : self['$bar_'+val].width(0).removeClass('active o_bar_active transition-off progress-bar-striped');
-                } else if (self.$kanban_group.hasClass('o_kanban_group_show') && dataVals === 0) {
-                    isLastRecord = true;
+                } else if (self.activeFilter === val && dataVals === 0) {
+                    self.isLastRecord = true;
                 }
             });
         }
-        this._animateTotal(this.$kanban_group.data('state'), !isLastRecord);
         //To provide proper time in decresing process of ProgressBar.To avoide flickering problem.
         setTimeout(function(){
             _.each(self.colors, function (val, key) {
@@ -206,18 +205,26 @@ var ColumnProgressBar =  Widget.extend({
      * @param {Boolean} isReverse true/false
      */
     _animateTotal: function (state, isReverse) {
-        var isToggle = this.$kanban_group.is('.o_kanban_group_show_'+this.colors[state]);
+        var isToggle = this.$kanban_group.is('.o_kanban_group_show_'+this.colors[state]) || this.isLastRecord && this.activeFilter ? true : false;
         isToggle = isReverse ? !isToggle : isToggle;
         this.removeAllClass(this.$kanban_group);
         if(isToggle){
+            this.counterModel.setCounter({
+                activeFilter: false,
+                columnId: this.columnId
+            });
             var sum = _.reduce(this.result, function(sum, data){ return sum + data.val || 0;}, 0);
             this._animateNumber(sum, this.$side_c, 1000, this.currencyPrefix, this.remaining > 0 ? this.currencyPrefix+"+":this.currencySuffix);
         } else if (this.result[state]) {
+            this.counterModel.setCounter({
+                activeFilter: this.colors[state],
+                columnId: this.columnId
+            });
             this._animateNumber(this.result[state].val, this.$side_c, 1000, this.currencyPrefix, this.currencySuffix);
             this.$kanban_group.toggleClass('o_kanban_group_show_'+this.colors[state]).toggleClass('o_kanban_group_show');
             this.$kanban_group.data('state', state);
         }
-        if (!isReverse) {
+        if (!isReverse && this.clickedBar) {
             this.clickedBar.toggleClass('active progress-bar-striped').siblings().removeClass('active progress-bar-striped');
         }
     },
@@ -298,6 +305,7 @@ var ColumnProgressBar =  Widget.extend({
         this.totalCounterValue = model.counter;
         this.activeCurrencyId = model.activeCurrencyId;
         this.lastProgressResult = model.progressVal;
+        this.activeFilter = model.activeFilter || false;
 
         //Applying Default lastwidth to the progressBar without animation.
         _.each(this.lastProgressResult, function (val, key) {
@@ -315,6 +323,11 @@ var ColumnProgressBar =  Widget.extend({
         this.progressCounter(this.records);
         this._barAttrs();
         this.removeAllClass(this.$el);
+        if (this.activeFilter && !this.$kanban_group.hasClass('o_kanban_group_show') && !this.isLastRecord) {
+            this['$bar_'+this.activeFilter].trigger('click');
+        } else {
+            this._animateTotal(this.$kanban_group.data('state'), !this.isLastRecord);
+        }
     },
 
     //--------------------------------------------------------------------------
