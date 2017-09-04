@@ -786,6 +786,7 @@ class Post(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
             'target': 'self',
+            'target_type': 'public',
             'res_id': self.id,
         }
 
