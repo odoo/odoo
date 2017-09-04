@@ -10,17 +10,11 @@ class TestPurchase(TestStockCommon):
     def _create_make_procurement(self, product, product_qty, date_planned=False):
         ProcurementGroup = self.env['procurement.group']
         order_values = {
-            'name': product.name, 
-            'product_id': product,
-            'product_qty': product_qty,
-            'product_uom': self.uom_unit,
             'warehouse_id': self.warehouse_1,
             'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-            'location_id': self.warehouse_1.lot_stock_id,
-            'origin': '/',
             'group_id': self.env['procurement.group'],
         }
-        return ProcurementGroup.run(order_values)
+        return ProcurementGroup.run(product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id, product.name, '/', order_values)
 
     @classmethod
     def setUpClass(cls):

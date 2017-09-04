@@ -20,17 +20,6 @@ class StockMove(models.Model):
             line.qty_delivered = line._get_delivered_qty()
         return result
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
-
-    def _get_stock_move_values(self, values, rule, group_id):
-        result = super(ProcurementGroup, self)._get_stock_move_values(values, rule, group_id)
-        if values.get('sale_line_id', False):
-            result['sale_line_id'] = values['sale_line_id']
-        return result
-
     @api.multi
     def write(self, vals):
         res = super(StockMove, self).write(vals)
@@ -43,9 +32,24 @@ class ProcurementGroup(models.Model):
         return res
 
 
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    sale_id = fields.Many2one('sale.order', 'Sale Order')
+
+
+class ProcurementRule(models.Model):
+    _inherit = 'procurement.rule'
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
+        result = super(ProcurementRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
+        if values.get('sale_line_id', False):
+            result['sale_line_id'] = values['sale_line_id']
+        return result
+
+
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
-
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
 

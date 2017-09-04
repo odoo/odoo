@@ -105,6 +105,20 @@ class PurchaseRequisition(models.Model):
             raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
         self.write({'state': 'done'})
 
+    def _prepare_tender_values(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+        return{
+            'origin': origin,
+            'date_end': values['date_planned'],
+            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
+            'company_id': values['company_id'].id,
+            'line_ids': [(0, 0, {
+                'product_id': product_id.id,
+                'product_uom_id': product_uom.id,
+                'product_qty': product_qty,
+                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False,
+            })],
+        }
+
 
 class PurchaseRequisitionLine(models.Model):
     _name = "purchase.requisition.line"
@@ -296,24 +310,14 @@ class ProductTemplate(models.Model):
         string='Procurement', default='rfq')
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementRule(models.Model):
+    _inherit = 'procurement.rule'
 
     @api.multi
-    def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values, log_activites=False):
+    def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         if product_id.purchase_requisition != 'tenders':
-            return super(ProcurementGroup, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values, log_activites)
-        self.env['purchase.requisition'].create({
-            'origin': origin,
-            'date_end': values['date_planned'],
-            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
-            'company_id': values['company_id'].id,
-            'picking_type_id': self.picking_type_id.id,
-            'line_ids': [(0, 0, {
-                'product_id': product_id.id,
-                'product_uom_id': product_uom.id,
-                'product_qty': product_qty,
-                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False,
-            })],
-        })
+            return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
+        values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
+        values['picking_type_id'] = self.picking_type_id.id
+        self.env['purchase.requisition'].create(values)
         return True

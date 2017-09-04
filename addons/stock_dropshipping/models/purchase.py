@@ -17,12 +17,12 @@ class PurchaseOrderLine(models.Model):
         return res
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class ProcurementRule(models.Model):
+    _inherit = 'procurement.rule'
 
     @api.model
-    def _prepare_purchase_order_line(self, values, rule, po, supplier):
-        res = super(ProcurementGroup, self)._prepare_purchase_order_line(values, rule, po, supplier)
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):
+        res = super(ProcurementRule, self)._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
         res['sale_line_id'] = values.get('sale_line_id', False)
         return res
 
