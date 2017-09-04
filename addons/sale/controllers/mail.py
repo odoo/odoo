@@ -26,4 +26,4 @@ class MailController(MailController):
                         force_website=True).get_access_action(uid)
                     if record_action['type'] == 'ir.actions.act_url':
                         return werkzeug.utils.redirect(record_action['url'])
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=None)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
