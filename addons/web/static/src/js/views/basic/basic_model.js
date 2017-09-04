@@ -780,6 +780,55 @@ var BasicModel = AbstractModel.extend({
         }
     },
     /**
+     * Resequences records.
+     *
+     * @param {string} modelName the resIDs model
+     * @param {Array[integer]} resIDs the new sequence of ids
+     * @param {string} parentID the localID of the parent
+     * @param {object} [options]
+     * @param {integer} [options.offset]
+     * @param {string} [options.field] the field name used as sequence
+     * @returns {Deferred<string>} resolves to the local id of the parent
+     */
+    resequence: function (modelName, resIDs, parentID, options) {
+        options = options || {};
+        if ((resIDs.length <= 1)) {
+            return $.when(parentID); // there is nothing to sort
+        }
+        var self = this;
+        var data = this.localData[parentID];
+        var params = {
+            model: modelName,
+            ids: resIDs,
+        };
+        if (options.offset) {
+            params.offset = options.offset;
+        }
+        if (options.field) {
+            params.field = options.field;
+        }
+        return this._rpc({
+                route: '/web/dataset/resequence',
+                params: params,
+            })
+            .then(function () {
+                data.data = _.sortBy(data.data, function (d) {
+                    return _.indexOf(resIDs, self.localData[d].res_id);
+                });
+                data.res_ids = [];
+                _.each(data.data, function (d) {
+                    var dataPoint = self.localData[d];
+                    if (dataPoint.type === 'record') {
+                        data.res_ids.push(dataPoint.res_id);
+                    } else {
+                        data.res_ids = data.res_ids.concat(dataPoint.res_ids);
+                    }
+                });
+                self._updateParentResIDs(data);
+                return parentID;
+            });
+    },
+    /**
      * Save a local resource, if needed.  This is a complicated operation,
      * - it needs to check all changes,
      * - generate commands for x2many fields,
