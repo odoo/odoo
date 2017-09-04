@@ -9,7 +9,7 @@ class ResConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    alias_prefix = fields.Char('Default Alias Name for Leads')
+    crm_alias_prefix = fields.Char('Default Alias Name for Leads')
     alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
@@ -37,14 +37,14 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('generate_lead_from_alias')
     def _onchange_generate_lead_from_alias(self):
-        self.alias_prefix = 'info' if self.generate_lead_from_alias else False
+        self.crm_alias_prefix = 'info' if self.generate_lead_from_alias else False
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         alias = self._find_default_lead_alias_id()
         res.update(
-            alias_prefix=alias.alias_name if alias else False,
+            crm_alias_prefix=alias.alias_name if alias else False,
             generate_lead_from_alias=self.env['ir.config_parameter'].sudo().get_param('crm.generate_lead_from_alias')
         )
         return res
@@ -55,8 +55,8 @@ class ResConfigSettings(models.TransientModel):
         self.env['ir.config_parameter'].sudo().set_param('crm.generate_lead_from_alias', self.generate_lead_from_alias)
         alias = self._find_default_lead_alias_id()
         if alias:
-            alias.write({'alias_name': self.alias_prefix})
+            alias.write({'alias_name': self.crm_alias_prefix})
         else:
             self.env['mail.alias'].with_context(
                 alias_model_name='crm.lead',
-                alias_parent_model_name='crm.team').create({'alias_name': self.alias_prefix})
+                alias_parent_model_name='crm.team').create({'alias_name': self.crm_alias_prefix})
