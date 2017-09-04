@@ -31,7 +31,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
-from odoo.tools import topological_sort, html_escape, pycompat
+from odoo.tools import crop_image, topological_sort, html_escape, pycompat
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt
 from odoo.tools.safe_eval import safe_eval
@@ -1004,7 +1004,7 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
-    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0):
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
@@ -1015,7 +1015,11 @@ class Binary(http.Controller):
 
         height = int(height or 0)
         width = int(width or 0)
-        if content and (width or height):
+
+        if crop and (width or height):
+            content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+
+        elif content and (width or height):
             # resize maximum 500*500
             if width > 500:
                 width = 500
