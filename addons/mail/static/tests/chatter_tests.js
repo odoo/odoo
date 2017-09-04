@@ -494,6 +494,92 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         });
 });
 
+QUnit.test('chatter: Attachment viewer', function (assert) {
+    assert.expect(5);
+    this.data.partner.records[0].message_ids = [1];
+    var messages = [{
+        attachment_ids: [{
+            filename: 'image1.jpg',
+            id:1,
+            mimetype: 'image/jpeg',
+            name: 'Test Image 1',
+            url: '/web/content/1?download=true'
+        },{
+            filename: 'image2.jpg',
+            id:2,
+            mimetype: 'image/jpeg',
+            name: 'Test Image 2',
+            url: '/web/content/2?download=true'
+        },{
+            filename: 'image3.jpg',
+            id:3,
+            mimetype: 'image/jpeg',
+            name: 'Test Image 3',
+            url: '/web/content/3?download=true'
+        }],
+        author_id: ["1", "John Doe"],
+        body: "Attachement viewer test",
+        date: moment("2016-12-20 09:35:40"),
+        displayed_author: "John Doe",
+        id: 1,
+        is_note: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route) {
+            if(_.str.contains(route, '/mail/attachment/preview/')){
+                var canvas = document.createElement('canvas');
+                return $.when(canvas.toDataURL());
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            get_messages: function (event) {
+                event.stopPropagation();
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(event.data.options.ids, msg.id);
+                });
+                event.data.callback($.when(requested_msgs));
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+        },
+    });
+    assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 3,
+        "there should be three attachment on message");
+    assert.strictEqual(form.$('.o_thread_message .o_attachment .caption a').first().attr('href'), '/web/content/1?download=true',
+        "image caption should have correct download link");
+    // click on first image attachement
+    form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/1?unique=1"]').length, 1,
+        "Modal popup should open with first image src");
+    //  click on next button
+    $('.modal .arrow.arrow-right.move_next span').click();
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/2?unique=1"]').length, 1,
+        "Modal popup should have now second image src");
+    assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
+        "Modal popup should have download button");
+    // close attachment popup
+    $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
+    form.destroy();
+});
+
 QUnit.test('form activity widget: schedule next activity', function (assert) {
     assert.expect(5);
     this.data.partner.records[0].activity_ids = [1];

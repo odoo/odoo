@@ -238,36 +238,60 @@
     100% { background: @odoo-brand-optional }
 }
 
-@o-mail-attachment-image-size: 60px;
+@o-mail-attachment-image-size: 100px;
 .o_attachment {
     position: relative;
-    width: 2*@o-mail-attachment-image-size;
+    vertical-align: top;
     display: inline-block;
-    height: @o-mail-attachment-image-size;
     text-align: center;
-    margin-bottom: 15px;
-
-    .o_image {
-        .o-position-absolute(@top: 0, @left: @o-mail-attachment-image-size/2);
-        width: @o-mail-attachment-image-size;
-        height: @o-mail-attachment-image-size;
+    width: @o-mail-attachment-image-size;
+    margin: 5px;
+    .o_image_box {
+        position: relative;
+        img {
+            width: @o-mail-attachment-image-size;
+            height: @o-mail-attachment-image-size;
+        }
+        .o_image_overlay{
+            display: none;
+        }
+        &:hover .o_image_overlay {
+            display: block;
+            .o-position-absolute(@top: 0, @left: 0, @right:0, @bottom:0);
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            cursor: pointer;
+            .o_attachment_download {
+                .o-position-absolute(@left: 10px, @bottom:5px);
+            }
+            .o_attachment_play {
+                .o-position-absolute(@top: 50%, @left: 50%);
+                transform: translate(-50%, -50%);
+            }
+            .o_overlay_download {
+                width: 100%;
+                height: 100%;
+            }
+            i {
+                color: #FFFFFF;
+            }
+        }
     }
-
-    .o_attachment_name {
-        display: inline-block;
-        max-width: 100%;
-        margin-top: @o-mail-attachment-image-size;
-        overflow: hidden;
+    .caption {
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: @odoo-main-text-color;
+        overflow: hidden;
+        padding: 5px;
+        a {
+            color: @odoo-main-text-color;
+        }
     }
-
     .o_attachment_progress_bar {
         display: none;
     }
     .o_attachment_delete {
-        .o-position-absolute(@top: 0, @right: 0);
+        .o-position-absolute(@top: -10px, @right: -8px);
         color: @odoo-main-text-color;
         cursor: pointer;
         opacity: 0;
@@ -289,9 +313,76 @@
             display: none;
         }
     }
-
     &:hover .o_attachment_delete {
         opacity: 1;
         .o-transition(opacity, 0.2s, linear);
+    }
+}
+
+.o_modal_fullscreen {
+    .o_viewer_content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        .o_viewer-header {
+            width: 100%;
+            height: 45px;
+            padding: 10px 10px 0;
+            background-color: rgba(0, 0, 0, 0.45);
+            cursor: auto;
+            .o_image_caption {
+                color: #FFFFFF;
+                display: inline;
+            }
+        }
+        .o_loading_img {
+            .o-position-absolute(@top: 50%);
+            width: 25px;
+            right: 50%;
+            z-index: 1;
+        }
+        .o_viewer_img_wrapper {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            .o_viewer_zoomer {
+                width: 100%;
+                height: 100%;
+                .o-flex-display();
+                justify-content: center;
+                align-items: center;
+                img, video {
+                    max-width: 100%;
+                    max-height: 100%;
+                    transition: 0.3s cubic-bezier(0, 0, 0.49, 1.6) 0s, opacity 0.15s;
+                }
+                .o_viewer_video {
+                    height: 80%;
+                }
+            }
+        }
+        .o_viewer_toolbar {
+            .o-position-absolute(@left: 50%);
+            bottom: 15px;
+            transform: translate(-50%, -50%);
+            padding: 8px 10px 0px 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+        }
+    }
+    .arrow {
+        .o-position-absolute(@top: 50%);
+        color: #FFFFFF;
+    }
+    .arrow-left {
+        left: 0;
+    }
+        
+    .arrow-right {
+        right: 0;
+    }
+    i.fa {
+        color: #FFFFFF;
     }
 }
