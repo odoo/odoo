@@ -68,6 +68,8 @@
     color: @headings-color;
     font-size: @font-size;
     font-weight: 500;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 .o-kanban-dropdown(@padding-base: @o-kanban-inside-vgutter) {
     margin: -1px -1px auto auto; // compensate border
@@ -204,15 +206,16 @@
                 line-height: 1.2;
                 .o-flex(1, 1, auto);
 
-                .o_kanban_record_title {
-                    .o-kanban-record-title (@font-size: 13px);
-                }
-
-                .o_kanban_record_subtitle {
-                    display: block;
-                    margin-top: @o-kanban-inner-hmargin*0.5;
-                }
             }
+        }
+
+        .o_kanban_record_title {
+            .o-kanban-record-title (@font-size: 13px);
+        }
+
+        .o_kanban_record_subtitle {
+            display: block;
+            margin-top: @o-kanban-inner-hmargin*0.5;
         }
 
         .o_kanban_record_bottom {
