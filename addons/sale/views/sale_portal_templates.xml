@@ -133,7 +133,6 @@
         <t t-set="sales_order" t-value="order"/> <!-- rename to ensure breadcrumb compatibility (differentiate with purchase orders) -->
         <div id="optional_placeholder"></div>
         <div class="container">
-
           <div class="panel panel-default">
             <div class="panel-heading">
               <div class="row">
@@ -152,7 +151,8 @@
               </div>
             </div>
             <div class="panel-body">
-              <!-- <hr/> -->
+              <t t-if="error or warning" t-call="sale.portal_order_error"/>
+              <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
               </div>
@@ -282,4 +282,22 @@
       </t>
     </template>
 
+    <template id="portal_order_error" name="Order error/warning display">
+        <div class="row">
+            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_order_success" name="Order success display">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
 </odoo>

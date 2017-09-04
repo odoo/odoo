@@ -54,6 +54,14 @@ class CustomerPortal(CustomerPortal):
         }
         if access_token:
             values['no_breadcrumbs'] = True
+
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+
         history = request.session.get('my_orders_history', [])
         values.update(get_records_pager(history, order))
         return values
