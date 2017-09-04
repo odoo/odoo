@@ -421,15 +421,27 @@ var BasicModel = AbstractModel.extend({
         if (element._keepChangesUnsorted) {
             // only apply a subset (by default 0) of changes before sorting
             count = element._keepChangesUnsortedCount || 0;
-            element = this._applyX2ManyOperations(element, {to: count});
+            element = this._applyX2ManyOperations(element, {to: count, position: 'bottom'});
         } else {
             // apply all changes before sorting
-            element = this._applyX2ManyOperations(element);
+            element = this._applyX2ManyOperations(element, {position: 'bottom'});
         }
         this._sortList(element);
         if (element._keepChangesUnsorted) {
             // apply the remaining changes after the sort
-            element = this._applyX2ManyOperations(element, {from: count});
+            element = this._applyX2ManyOperations(element, {from: count, position: 'bottom'});
+        }
+        if (element._changes) {
+            _.each(element._changes, function (change) {
+                if (change.operation === 'ADD' && change.isNew) {
+                    element.data = _.without(element.data, change.id);
+                    if (change.position === 'top') {
+                        element.data.unshift(change.id);
+                    } else {
+                        element.data.push(change.id);
+                    }
+                }
+            });
         }
         var list = {
             aggregateValues: _.extend({}, element.aggregateValues),
@@ -700,6 +712,10 @@ var BasicModel = AbstractModel.extend({
             if (!options.keepChanges) {
                 this.discardChanges(id, {rollback: false});
             }
+        } else if (element._changes) {
+            _.each(element._changes, function (change) {
+                delete change.isNew;
+            });
         }
 
         if (options.context !== undefined) {
@@ -892,6 +908,10 @@ var BasicModel = AbstractModel.extend({
         var list = this.localData[list_id];
         if (list.type === 'record') {
             return;
+        } else if (list._changes) {
+            _.each(list._changes, function (change) {
+                delete change.isNew;
+            });
         }
         // the user manually selected a sort order, so we sort the list with all
         // the changes he made so far, even if it is editable, however, changes
@@ -991,7 +1011,7 @@ var BasicModel = AbstractModel.extend({
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
             var position = options && options.position || 'top';
-            list._changes.push({operation: 'ADD', id: id, position: position});
+            list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
             var record = self.localData[id];
             list._cache[record.res_id] = id;
             return id;
@@ -1448,13 +1468,15 @@ var BasicModel = AbstractModel.extend({
      *
      * @private
      * @param {Object} dataPoint of type list
-     * @param {Object} [range] the range of operations to apply
-     * @param {Object} [range.from=0] the index of the first operation to apply
-     * @param {Object} [range.to=length] the index of the last operation to apply
+     * @param {Object} [options] mostly contains the range of operations to apply
+     * @param {Object} [options.from=0] the index of the first operation to apply
+     * @param {Object} [options.to=length] the index of the last operation to apply
+     * @param {Object} [options.position] if set, each new operation will be set
+     *   accordingly at the top or the bottom of the list
      * @returns {Object} element of type list in which the commands have been
      *   applied
      */
-    _applyX2ManyOperations: function (list, range) {
+    _applyX2ManyOperations: function (list, options) {
         if (!list.static) {
             // this function only applies on x2many lists
             return list;
@@ -1463,9 +1485,9 @@ var BasicModel = AbstractModel.extend({
         list = _.extend({}, list);
         list.res_ids = list.res_ids.slice(0);
         var changes = list._changes || [];
-        if (range) {
-            var to = range.to === 0 ? 0 : (range.to || changes.length);
-            changes = changes.slice(range.from || 0, to);
+        if (options) {
+            var to = options.to === 0 ? 0 : (options.to || changes.length);
+            changes = changes.slice(options.from || 0, to);
         }
         _.each(changes, function (change) {
             var relRecord;
@@ -1476,7 +1498,7 @@ var BasicModel = AbstractModel.extend({
                 case 'ADD':
                     list.count++;
                     var resID = relRecord ? relRecord.res_id : change.resID;
-                    if (change.position === 'top') {
+                    if (change.position === 'top' && (options ? options.position !== 'bottom' : true)) {
                         list.res_ids.unshift(resID);
                     } else {
                         list.res_ids.push(resID);
