@@ -737,6 +737,10 @@ var MockServer = Class.extend({
                     return false;
                 } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
+                } else if (aggregateFunction === 'week') {
+                    return moment(val).format('ww YYYY');
+                } else if (aggregateFunction === 'year') {
+                    return moment(val).format('Y');
                 } else {
                     return moment(val).format('MMMM YYYY');
                 }
@@ -750,12 +754,7 @@ var MockServer = Class.extend({
                 value = (value ? value + ',' : value) + groupByField + '#';
                 var fieldName = groupByField.split(':')[0];
                 if (fields[fieldName].type === 'date') {
-                    var aggregateFunction = groupByField.split(':')[1] || 'month';
-                    if (aggregateFunction === 'day') {
-                        value += moment(record[fieldName]).format('YYYY-MM-DD');
-                    } else {
-                        value += moment(record[fieldName]).format('MMMM YYYY');
-                    }
+                    value += formatValue(groupByField, record[fieldName]);
                 } else {
                     value += record[groupByField];
                 }
@@ -790,7 +789,28 @@ var MockServer = Class.extend({
                 } else {
                     res[groupByField] = val;
                 }
-                res.__domain = [[fieldName, "=", val]].concat(res.__domain);
+
+                if (field.type === 'date') {
+                    var aggregateFunction = groupByField.split(':')[1];
+                    var startDate, endDate;
+                    if (aggregateFunction === 'day') {
+                        startDate = moment(val, 'YYYY-MM-DD');
+                        endDate = startDate.clone().add(1, 'days');
+                    } else if (aggregateFunction === 'week') {
+                        startDate = moment(val, 'ww YYYY');
+                        endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'year') {
+                        startDate = moment(val, 'Y');
+                        endDate = startDate.clone().add(1, 'years');
+                    } else {
+                        startDate = moment(val, 'MMMM YYYY');
+                        endDate = startDate.clone().add(1, 'months');
+                    }
+                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
+                } else {
+                    res.__domain = [[fieldName, '=', val]].concat(res.__domain);
+                }
+
             });
 
             // compute count key to match dumb server logic...
