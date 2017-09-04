@@ -2601,7 +2601,7 @@ class BaseModel(object):
 
     @api.model_cr
     def _table_exist(self):
-        query = "SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s"
+        query = "SELECT relname FROM pg_class WHERE relkind IN ('r','v','m') AND relname=%s"
         self._cr.execute(query, (self._table,))
         return self._cr.rowcount
 
