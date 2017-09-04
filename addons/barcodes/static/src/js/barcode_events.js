@@ -26,7 +26,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     suffix: /[\n\r\t]+/,
     // Keys from a barcode scanner are usually processed as quick as possible,
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
-    max_time_between_keys_in_ms: 55,
+    max_time_between_keys_in_ms: 100,
 
     init: function() {
         mixins.PropertiesMixin.init.call(this);
