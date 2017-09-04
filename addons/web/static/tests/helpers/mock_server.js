@@ -846,7 +846,7 @@ var MockServer = Class.extend({
             case '/web/dataset/search_read':
                 return $.when(this._mockSearchReadController(args));
         }
-        if (route.indexOf('/web/image/') === 0) {
+        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();
         }
         switch (args.method) {

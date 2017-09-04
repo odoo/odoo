@@ -123,9 +123,6 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
             }
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/view/add_custom') {
                 assert.step('add custom');
                 return $.when(true);
@@ -207,9 +204,6 @@ QUnit.test('can sort a sub list', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -249,9 +243,6 @@ QUnit.test('can open a record', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -295,9 +286,6 @@ QUnit.test('can drag and drop a view', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -345,9 +333,6 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
