@@ -824,15 +824,12 @@ class Orderpoint(models.Model):
 
     @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from an orderpoint. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
         return {
-            'name': self.name,
             'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
-            'product_id': self.product_id,
-            'product_qty': product_qty,
-            'company_id': self.company_id,
-            'product_uom': self.product_uom,
-            'location_id': self.location_id,
-            'origin': self.name,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
             'group_id': group or self.group_id,
