@@ -1368,7 +1368,7 @@
     </template>
 
     <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
-        <xpath expr="//t[@id='acquirers_list']" position="before">
+        <xpath expr="//div[@id='payment_method']" position="before">
             <div class="oe_accept_cgv_button">
                 <label>
                     <input type="checkbox" checked="checked" id="checkbox_cgv" />
