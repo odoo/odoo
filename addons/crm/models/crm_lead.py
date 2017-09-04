@@ -936,7 +936,7 @@ class Lead(FormatAddress, models.Model):
                     result['activity']['today'] += 1
                 if date.today() <= date_action <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date.today() and not opp.date_closed:
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:
