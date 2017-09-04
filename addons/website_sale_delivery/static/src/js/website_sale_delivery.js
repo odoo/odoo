@@ -1,8 +1,14 @@
 $(document).ready(function () {
 
-    // When choosing an delivery carrier, update the quotation and the acquirers
+    var $pay_button = $('.oe_sale_acquirer_button button');
+    $pay_button.prop('disabled', false);
+
+    // When choosing an delivery carrier, update the quotation and the acquirers. Disable the 'Pay
+    // Now' button to avoid being redirected to payment acquier if the delivery carrier update is
+    // not over.
     var $carrier = $("#delivery_carrier");
     $carrier.find("input[name='delivery_type']").click(function (ev) {
+        $pay_button.prop('disabled', true);
         var carrier_id = $(ev.currentTarget).val();
         window.location.href = '/shop/payment?carrier_id=' + carrier_id;
     });
