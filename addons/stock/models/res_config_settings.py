@@ -7,9 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env.user.company_id, required=True)
     module_procurement_jit = fields.Selection([
         (1, 'Immediately after sales order confirmation'),
         (0, 'Manually or based on automatic scheduler')

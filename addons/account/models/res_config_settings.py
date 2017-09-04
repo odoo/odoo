@@ -7,8 +7,6 @@ from odoo import api, fields, models, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")

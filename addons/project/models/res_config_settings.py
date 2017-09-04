@@ -7,8 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
     module_pad = fields.Boolean("Collaborative Pads")
     module_hr_timesheet = fields.Boolean("Timesheets")
     module_rating_project = fields.Boolean(string="Rating on Tasks")

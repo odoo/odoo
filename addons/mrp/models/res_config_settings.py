@@ -7,8 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
     manufacturing_lead = fields.Float(related='company_id.manufacturing_lead', string="Manufacturing Lead Time")
     use_manufacturing_lead = fields.Boolean(string="Default Manufacturing Lead Time", oldname='default_use_manufacturing_lead')
     module_mrp_byproduct = fields.Boolean("By-Products")

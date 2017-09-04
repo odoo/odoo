@@ -7,8 +7,6 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        copy=False, default=lambda self: self.env['res.company']._company_default_get())
     plafond_secu = fields.Float(related='company_id.plafond_secu', string="Plafond de la Securite Sociale")
     nombre_employes = fields.Integer(related='company_id.nombre_employes', string="Nombre d'employes")
     cotisation_prevoyance = fields.Float(related='company_id.cotisation_prevoyance', string='Cotisation Patronale Prevoyance')

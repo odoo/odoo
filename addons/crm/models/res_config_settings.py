@@ -7,8 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    company_id = fields.Many2one('res.company', string='Company', required=True,
-        default=lambda self: self.env.user.company_id)
     crm_alias_prefix = fields.Char('Default Alias Name for Leads')
     alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
