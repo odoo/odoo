@@ -1,11 +1,4 @@
 <odoo>
-
-    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Portal Sale">
-      <xpath expr="." position="inside">
-          <link rel='stylesheet' href='/sale/static/src/less/sale_portal.less'/>
-      </xpath>
-    </template>
-
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_layout" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'quote' or sales_order and sales_order.state == 'sent'">
@@ -135,7 +128,7 @@
       </t>
     </template>
 
-    <template id="orders_followup" name="Sales Order">
+    <template id="portal_order_page" name="Sales Order">
       <t t-call="portal.portal_layout">
         <t t-set="sales_order" t-value="order"/> <!-- rename to ensure breadcrumb compatibility (differentiate with purchase orders) -->
         <div id="optional_placeholder"></div>
