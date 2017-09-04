@@ -1517,7 +1517,9 @@ class IrModelData(models.Model):
                 if model == 'ir.model.fields':
                     # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
                     # has been turned off on the model.
-                    field = self.env[model].browse(res_id)
+                    field = self.env[model].browse(res_id).with_context(
+                        prefetch_fields=False,
+                    )
                     if not field.exists():
                         _logger.info('Deleting orphan external_ids %s', external_ids)
                         external_ids.unlink()
