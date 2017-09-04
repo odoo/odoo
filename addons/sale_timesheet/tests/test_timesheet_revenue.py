@@ -3,7 +3,7 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_repr
+from odoo.tools import float_repr
 
 
 class TestSaleTimesheet(TestSale):
@@ -21,7 +21,6 @@ class TestSaleTimesheet(TestSale):
         self.project = self.env['project.project'].create({
             'name': 'Project for my timesheets',
             'allow_timesheets': True,
-            'use_tasks': True,
         })
 
         # create service products

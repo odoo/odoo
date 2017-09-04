@@ -41,7 +41,7 @@
                                                     <i class="fa fa-envelope"/> Email : <t t-esc="project.alias_name"/>@<t t-esc="project.alias_domain"/>
                                                 </p>
                                                 <div class="row">
-                                                    <div t-if="project.use_tasks" class="col-md-6 text-center">
+                                                    <div class="col-md-6 text-center">
                                                         <h2><t t-esc="len(project.task_ids)"/></h2>
                                                         <p><t t-esc="project.label_tasks"/></p>
                                                     </div>

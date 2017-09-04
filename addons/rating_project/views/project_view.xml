@@ -117,7 +117,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button name="%(rating_rating_action_view_project_rating_task)d"
-                        attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('use_tasks','=', False), ('percentage_satisfaction_task', '=', -1)]}"
+                        attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}"
                         class="oe_stat_button oe_percent"
                         type="action"
                         icon="fa-smile-o">
@@ -144,7 +144,7 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
+                <field name="partner_id" position="after">
                     <field name="percentage_satisfaction_project" invisible="1"/>
                     <field name="rating_status" invisible="1"/>
                 </field>

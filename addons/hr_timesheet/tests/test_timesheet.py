@@ -13,7 +13,6 @@ class TestTimesheet(TransactionCase):
         self.project_customer = self.env['project.project'].create({
             'name': 'Project X',
             'allow_timesheets': True,
-            'use_tasks': True,
         })
         self.task1 = self.env['project.task'].create({
             'name': 'Task One',

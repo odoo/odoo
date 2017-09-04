@@ -56,7 +56,7 @@ class ProcurementOrder(models.Model):
                 account = self.sale_line_id.order_id.project_id
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
-                project_id = account.project_create({'name': account.name, 'use_tasks': True})
+                project_id = account.project_create({'name': account.name})
                 project = Project.browse(project_id)
         return project
 

@@ -166,12 +166,6 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    @api.model
-    def default_get(self, flds):
-        result = super(Project, self).default_get(flds)
-        result['use_tasks'] = True
-        return result
-
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
@@ -256,7 +250,7 @@ class Project(models.Model):
 
     @api.model
     def create(self, vals):
-        # Prevent double project creation when 'use_tasks' is checked
+        # Prevent double project creation
         self = self.with_context(project_creation_in_progress=True, mail_create_nosubscribe=True)
         project = super(Project, self).create(vals)
         if not vals.get('subtask_project_id'):
@@ -878,7 +872,6 @@ class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    use_tasks = fields.Boolean(string='Use Tasks', help="Check this box to manage internal activities through this project")
     company_uom_id = fields.Many2one('product.uom', related='company_id.project_time_mode_id', string="Company UOM")
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects')
     project_count = fields.Integer(compute='_compute_project_count', string='Project Count')
@@ -892,7 +885,7 @@ class AccountAnalyticAccount(models.Model):
         '''
         This function is used to decide if a project needs to be automatically created or not when an analytic account is created. It returns True if it needs to be so, False otherwise.
         '''
-        return vals.get('use_tasks') and 'project_creation_in_progress' not in self.env.context
+        return 'project_creation_in_progress' not in self.env.context
 
     @api.multi
     def project_create(self, vals):
@@ -906,7 +899,6 @@ class AccountAnalyticAccount(models.Model):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': self.id,
-                'use_tasks': True,
             }
             return Project.create(project_values).id
         return False

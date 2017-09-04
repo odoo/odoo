@@ -27,10 +27,7 @@
             <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <group name="options" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </group>
-                <field name="use_tasks" position="after">
+                <field name="user_id" position="after">
                     <field name="allow_timesheets"/>
                 </field>
             </field>
@@ -115,7 +112,7 @@
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <field name="use_tasks" position="after">
+                <field name="partner_id" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[last()]" position="after">

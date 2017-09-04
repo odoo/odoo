@@ -56,7 +56,7 @@
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                             </td>
                             <td>
-                                <a t-if="project.use_tasks" t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
+                                <a t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
                                     <t t-esc="project.task_count" />
                                     <t t-esc="project.label_tasks" />
                                 </a>
