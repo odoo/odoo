@@ -1949,6 +1949,67 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('embedded one2many (editable list) with handle widget', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="p">' +
+                                    '<tree editable="top">' +
+                                        '<field name="int_field" widget="handle"/>' +
+                                        '<field name="foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        testUtils.intercept(form, "field_changed", function (event) {
+            assert.step(event.data.changes.p.data.int_field.toString());
+        }, true);
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should have the 3 rows in the correct order");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should still have the 3 rows in the correct order");
+
+        // Drag and drop the second line in first position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.verifySteps(["0", "1", "2"],
+            "sequences values should be incremental starting from the previous minimum one");
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should have the 3 rows in the new order");
+
+        form.$('tbody tr:first td:first').click();
+
+        assert.strictEqual(form.$('tbody tr:first td.o_data_cell:not(.o_handle_cell) input').val(), "blip",
+            "should edit the correct row");
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should still have the 3 rows in the new order");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many field when using the pager', function (assert) {
         assert.expect(13);
 
