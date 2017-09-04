@@ -266,6 +266,7 @@ class BlogPost(osv.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (post.blog_id.id, post.id),
             'target': 'self',
+            'target_type': 'public',
             'res_id': post.id,
         }
 
