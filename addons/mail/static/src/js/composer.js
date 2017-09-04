@@ -2,6 +2,7 @@ odoo.define('mail.composer', function (require) {
 "use strict";
 
 var chat_mixin = require('mail.chat_mixin');
+var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
 var core = require('web.core');
@@ -354,6 +355,8 @@ var BasicComposer = Widget.extend(chat_mixin, {
         "click .o_composer_button_send": "send_message",
         "click .o_composer_button_add_attachment": "on_click_add_attachment",
         "click .o_attachment_delete": "on_attachment_delete",
+        "click .o_attachment_download": "_onAttachmentDownload",
+        "click .o_attachment_view": "_onAttachmentView",
     },
     // RPCs done to fetch the mention suggestions are throttled with the following value
     MENTION_THROTTLE: 200,
@@ -757,6 +760,29 @@ var BasicComposer = Widget.extend(chat_mixin, {
     },
     focus: function () {
         this.$input.focus();
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentDownload: function (event) {
+        event.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentView: function (event) {
+        var activeAttachmentID = $(event.currentTarget).data('id');
+        var attachments = this.get('attachment_ids');
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
     },
 });
 

@@ -2,6 +2,7 @@ odoo.define('mail.ChatThread', function (require) {
 "use strict";
 
 var core = require('web.core');
+var DocumentViewer = require('mail.DocumentViewer');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -30,6 +31,8 @@ var Thread = Widget.extend({
         "click img": "on_click_redirect",
         "click strong": "on_click_redirect",
         "click .o_thread_show_more": "on_click_show_more",
+        "click .o_attachment_download": "_onAttachmentDownload",
+        "click .o_attachment_view": "_onAttachmentView",
         "click .o_thread_message_needaction": function (event) {
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
@@ -109,6 +112,8 @@ var Thread = Widget.extend({
             options: options,
             ORDER: ORDER,
         }));
+
+        this.attachments = _.uniq(_.flatten(_.map(messages, 'attachment_ids')));
 
         _.each(msgs, function(msg) {
             var $msg = self.$('.o_thread_message[data-message-id="'+ msg.id +'"]');
@@ -299,6 +304,29 @@ var Thread = Widget.extend({
     },
     destroy: function () {
         clearInterval(this.update_timestamps_interval);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentDownload: function (event) {
+        event.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentView: function (event) {
+        var activeAttachmentID = $(event.currentTarget).data('id');
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
     },
 });
 

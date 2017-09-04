@@ -18,6 +18,87 @@
         </div>
     </t>
 
+
+    <t t-name="DocumentViewer.Content">
+        <div class="o_viewer_content">
+            <div class="o_viewer-header">
+                <h2 class="o_image_caption"><t t-esc="widget.activeAttachment.name"/></h2>
+                <ul class="list-inline pull-right">
+                    <li t-if="widget.activeAttachment.type == 'image'">
+                        <a class="o_print_btn" href="#">
+                            <i class="fa fa-2x fa-print"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_close_btn" href="#">
+                            <i class="fa fa-2x fa-times"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="o_viewer_img_wrapper">
+                <div class="o_viewer_zoomer">
+                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img">
+                        <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"/>
+                    </div>
+                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1"/>
+                    <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
+                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
+                    </video>
+                </div>
+            </div>
+            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
+                <ul class="list-inline">
+                    <li>
+                        <a class="o_zoom_out" href="#">
+                            <i class="fa fa-2x fa-search-minus"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_zoom_in" href="#">
+                            <i class="fa fa-2x fa-search-plus"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="o_download_btn" href="#">
+                            <i class="fa fa-2x fa-download"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="DocumentViewer">
+        <div class="modal o_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
+            <t t-call="DocumentViewer.Content"/>
+            <a class="arrow arrow-left move_previous" href="#">
+                <span class="fa fa-3x fa-chevron-left"/>
+            </a>
+            <a class="arrow arrow-right move_next" href="#">
+                <span class="fa fa-3x fa-chevron-right"/>
+            </a>
+        </div>
+    </t>
+    <t t-name="PrintImage">
+        <html>
+            <head>
+                <script>
+                    function onload_img() {
+                        setTimeout('print_img()', 10);
+                    }
+                    function print_img() {
+                        window.print();
+                        window.close();
+                    }
+                </script>
+            </head>
+            <body onload='onload_img()'>
+                <img t-att-src='src' />
+            </body>
+        </html>
+    </t>
+
     <!-- When a channel is empty-->
     <div t-name="mail.EmptyChannel" class="o_mail_no_content">
         <t t-if="options.channel_id==='channel_inbox'">
@@ -175,10 +256,47 @@
     </t>
 
     <t t-name="mail.Attachment">
+        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
-            <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
-                <span class='o_attachment_name'><t t-esc='attachment.name'/></span>
-            </a>
+            <t t-if="type == 'image'">
+                <div class="o_image_box">
+                    <img t-attf-src="/web/image/#{attachment.id}/200x200/?crop=True"/>
+                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
+                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="type == 'video'">
+                <div class="o_image_box o_image_preview">
+                    <img class="o_image" t-att-data-mimetype="attachment.mimetype"/>
+                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <a class="o_attachment_play">
+                            <i t-attf-class="fa fa-2x fa-play-circle" title="Play this video" aria-hidden="true"></i>
+                        </a>
+                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
+                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_image_box">
+                    <img class="o_image" t-att-data-mimetype="attachment.mimetype"/>
+                    <div t-attf-class="o_image_overlay">
+                        <a class="o_overlay_download" t-att-href='attachment.url' target="_blank"/>
+                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
+                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <div class="caption">
+                <a t-att-href='attachment.url' target="_blank">
+                    <t t-esc='attachment.name'/>
+                </a>
+            </div>
             <t t-if="editable">
                 <div class="o_attachment_delete">
                     <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
