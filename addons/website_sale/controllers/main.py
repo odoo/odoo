@@ -760,27 +760,6 @@ class WebsiteSale(http.Controller):
 
         return request.render("website_sale.payment", render_values)
 
-    @http.route(['/shop/payment/transaction_token/confirm'], type='json', auth="public", website=True)
-    def payment_transaction_token_confirm(self, tx, **kwargs):
-        tx = request.env['payment.transaction'].sudo().browse(int(tx))
-        if not tx or not request.website.sale_get_transaction() or tx != request.website.sale_get_transaction():
-            return dict(success=False, error='Tx missmatch')
-        res = tx.confirm_sale_token()
-        if res is not True:
-            return dict(success=False, error=res)
-        return dict(success=True, url='/shop/payment/validate')
-
-    @http.route(['/shop/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
-    def payment_transaction_token(self, tx_id, **kwargs):
-        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
-        if (tx and request.website.sale_get_transaction() and
-                tx.id == request.website.sale_get_transaction().id and
-                tx.payment_token_id and
-                tx.partner_id == tx.sale_order_id.partner_id):
-            return request.render("website_sale.payment_token_form_confirm", dict(tx=tx))
-        else:
-            return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
-
     @http.route(['/shop/payment/transaction/',
         '/shop/payment/transaction/<int:so_id>',
         '/shop/payment/transaction/<int:so_id>/<string:access_token>'], type='json', auth="public", website=True)
