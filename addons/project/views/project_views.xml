@@ -109,7 +109,7 @@
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
+                        <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
@@ -126,9 +126,8 @@
                         </h1>
                         <div name="options_active" class="oe_edit_only">
                             <div>
-                                <field name="use_tasks" class="oe_inline"/>
-                                <label for="use_tasks" class="oe_inline" string="Name of the tasks :"/>
-                                <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
+                                <label for="label_tasks" class="oe_inline" string="Name of the tasks :"/>
+                                <field name="label_tasks" class="oe_inline oe_input_align"/>
                             </div>
                         </div>
                     </div>
@@ -225,9 +224,6 @@
                                 </div>
                                 <field name="user_id" invisible="1"/>
                             </group>
-                            <group name='options' invisible="1">
-                                <field name="use_tasks"/>
-                            </group>
                         </group>
                         <footer>
                             <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
@@ -256,7 +252,6 @@
                 <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban" on_create="project.open_create_project">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="use_tasks"/>
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="task_needaction_count"/>
@@ -286,7 +281,7 @@
                                             <div groups="project.group_project_manager">
                                                 <a type="edit">Settings</a>
                                             </div>
-                                            <div attrs="{'invisible': [('use_tasks', '=', False)]}">
+                                            <div>
                                                 <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
                                             </div>
                                         </div>
@@ -301,7 +296,7 @@
                                 </div>
 
                                 <div class="o_project_kanban_boxes">
-                                    <div t-if="record.use_tasks.raw_value" class="o_project_kanban_box">
+                                    <div class="o_project_kanban_box">
                                         <a name="%(act_project_project_2_project_task_all)d" type="action">
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
@@ -395,7 +390,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True)]" context="{'default_use_tasks':1}"/>
+                            <field name="project_id" domain="[('active', '=', True)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
@@ -604,10 +599,6 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks" groups="base.group_no_one"/>
-                    <label for="use_tasks" groups="base.group_no_one"/>
-                </xpath>
                 <xpath expr="//button[@name='toggle_active']" position="before">
                     <button class="oe_stat_button" type="object" name="projects_action"
                         icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
