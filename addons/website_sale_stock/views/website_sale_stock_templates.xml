@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="orders_followup_shipping" name="Orders Shipping Followup" inherit_id="sale.orders_followup">
+  <template id="portal_order_page_shipping" name="Orders Shipping Followup" inherit_id="sale.portal_order_page">
     <xpath expr="//div[@id='shipping_address']" position="inside">
       <t t-if="order.picking_ids">
         <div>

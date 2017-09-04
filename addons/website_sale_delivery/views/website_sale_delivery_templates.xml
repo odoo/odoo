@@ -48,7 +48,7 @@
         </xpath>
     </template>
 
-    <template id="shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.orders_followup_shipping">
+    <template id="portal_order_page_shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.portal_order_page_shipping">
         <xpath expr="//div[@id='picking_info']" position="after">
             <div t-if="i.carrier_tracking_ref">
                 Tracking: <span t-field="i.carrier_id.name"/>

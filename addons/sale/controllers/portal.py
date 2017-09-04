@@ -160,11 +160,11 @@ class CustomerPortal(CustomerPortal):
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order>'], type='http', auth="public", website=True)
-    def orders_followup(self, order=None, access_token=None, **kw):
+    def portal_order_page(self, order=None, access_token=None, **kw):
         try:
             order_sudo = self._order_check_access(order, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
 
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
-        return request.render("sale.orders_followup", values)
+        return request.render("sale.portal_order_page", values)

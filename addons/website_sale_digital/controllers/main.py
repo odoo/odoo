@@ -29,8 +29,8 @@ class WebsiteSaleDigital(CustomerPortal):
     @http.route([
         '/my/orders/<int:order>',
     ], type='http', auth='user', website=True)
-    def orders_followup(self, order=None, **post):
-        response = super(WebsiteSaleDigital, self).orders_followup(order=order, **post)
+    def portal_order_page(self, order=None, **post):
+        response = super(WebsiteSaleDigital, self).portal_order_page(order=order, **post)
         if not 'order' in response.qcontext:
             return response
         order = response.qcontext['order']
