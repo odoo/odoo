@@ -60,11 +60,11 @@
         <field name="name">mod303[12-13]</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="mod303_14_15_sale" model="account.account.tag">
+    <record id="mod_303_14_15_sale" model="account.account.tag">
         <field name="name">mod303[14-15]sale</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="mod303_14_15_purchase" model="account.account.tag">
+    <record id="mod_303_14_15_purchase" model="account.account.tag">
         <field name="name">mod303[14-15]purchase</field>
         <field name="applicability">taxes</field>
     </record>
@@ -140,7 +140,7 @@
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva21s" model="account.tax.template">
         <field name="description">S_IVA21S</field>
@@ -152,7 +152,7 @@
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva21isp" model="account.tax.template">
         <field name="description">S_IVA21ISP</field>
@@ -164,7 +164,7 @@
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_bc" model="account.tax.template">
         <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de compras -->
@@ -202,7 +202,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_sp_in_2" model="account.tax.template">
         <field name="description">P_IVA21_SP_IN_2</field>
@@ -251,7 +251,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bc" model="account.tax.template">
         <field name="description">P_IVA21_IC_BC</field>
@@ -287,7 +287,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bi" model="account.tax.template">
         <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes de inversión</field>
@@ -346,7 +346,7 @@
         <field name="amount" eval="-4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_ex_2" model="account.tax.template">
         <field name="description">P_IVA4_SP_EX_2</field>
@@ -382,7 +382,7 @@
         <field name="amount" eval="-10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sp_ex_2" model="account.tax.template">
         <field name="description">P_IVA10_SP_EX_2</field>
@@ -418,7 +418,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_sp_ex_2" model="account.tax.template">
         <field name="description">P_IVA21_SP_EX_2</field>
@@ -467,7 +467,7 @@
         <field name="amount" eval="-4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bc" model="account.tax.template">
         <field name="amount" eval="100"/>
@@ -504,7 +504,7 @@
         <field name="amount" eval="-4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bi" model="account.tax.template">
         <field name="amount" eval="100"/>
@@ -540,7 +540,7 @@
         <field name="amount" eval="-10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bc" model="account.tax.template">
         <field name="amount" eval="100"/>
@@ -576,7 +576,7 @@
         <field name="amount" eval="-10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bi" model="account.tax.template">
         <field name="amount" eval="100"/>
@@ -781,7 +781,7 @@
         <field name="amount" eval="4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod303_14_15_sale'), ref('mod_303_01_03')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_14_15_sale'), ref('mod_303_01_03')])]"/>
     </record>
     <record id="account_tax_template_s_iva10b" model="account.tax.template">
         <field name="description">S_IVA10B</field>
@@ -793,7 +793,7 @@
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
         <field name="description">P_IVA0_ND</field>
@@ -814,7 +814,7 @@
         <field name="amount" eval="4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_01_03'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_01_03'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva10s" model="account.tax.template">
         <field name="description">S_IVA10S</field>
@@ -826,7 +826,7 @@
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod303_14_15_sale')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_req014" model="account.tax.template">
         <field name="description">S_REQ014</field>
@@ -1213,7 +1213,7 @@
         <field name="amount" eval="-10"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sp_in_2" model="account.tax.template">
         <field name="description">P_IVA10_SP_IN_2</field>
@@ -1249,7 +1249,7 @@
         <field name="amount" eval="-4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_in_2" model="account.tax.template">
         <field name="description">P_IVA4_SP_IN_2</field>
@@ -1368,7 +1368,7 @@
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_isp" model="account.tax.template">
         <field name="description">P_IVA4_ISP</field>
@@ -1404,7 +1404,7 @@
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_isp" model="account.tax.template">
         <field name="description">P_IVA10_ISP</field>
@@ -1440,7 +1440,7 @@
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod303_14_15_purchase')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_isp" model="account.tax.template">
         <field name="description">P_IVA21_ISP</field>
