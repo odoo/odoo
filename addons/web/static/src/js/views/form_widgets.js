@@ -1008,6 +1008,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         var FieldMany2One = core.form_widget_registry.get('many2one');
         this.m2o = new FieldMany2One(this.fm, { attrs: {
             name: 'Referenced Document',
+            domain: this.node.attrs.domain,
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
             context: this.build_context().eval(),
         }});
