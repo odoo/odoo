@@ -68,13 +68,12 @@
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="price_unit"/>
-                    <field name="remaining_qty"/>
                     <field name="value" sum="Stock Valuation"/>
-                    <field name="remaining_value" sum="Stock Valuation"/>
+                    <field name="remaining_qty" invisible="context.get('is_avg')"/>
+                    <field name="remaining_value" sum="Stock Valuation" invisible="context.get('is_avg')"/>
                 </tree>
             </field>
         </record>
-        
         <record id="stock_move_valuation_action" model="ir.actions.act_window">
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
