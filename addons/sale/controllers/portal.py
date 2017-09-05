@@ -176,3 +176,19 @@ class CustomerPortal(CustomerPortal):
 
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
         return request.render("sale.portal_order_page", values)
+
+    @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
+    def portal_order_report(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._order_check_access(order_id, access_token)
+        except AccessError:
+            return request.redirect('/my')
+
+        # print report as sudo, since it require access to taxes, payment term, ... and portal
+        # does not have those access rights.
+        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(pdf)),
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)

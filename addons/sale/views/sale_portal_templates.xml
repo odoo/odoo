@@ -136,17 +136,18 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <div class="row">
-                <div class="col-md-12">
-                  <h4>
-                    <t t-call='portal.record_pager'/>
-                    <t t-if="order.state == 'sent'">
-                      Quotation
-                    </t>
-                    <t t-if="order.state != 'sent'">
-                      Order
-                    </t>
-                    <span t-esc="order.name"/>
-                  </h4>
+                <div class="col-md-6">
+                    <h4>
+                        <t t-call='portal.record_pager'/>
+                        <t t-if="order.state == 'sent'">Quotation</t>
+                        <t t-if="order.state != 'sent'">Order</t>
+                        <span t-esc="order.name"/>
+                    </h4>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_order_actions">
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="pull-right" title="Download">
+                        <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                    </a>
                 </div>
               </div>
             </div>
