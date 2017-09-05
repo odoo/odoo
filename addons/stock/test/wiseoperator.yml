@@ -14,6 +14,7 @@
     name: Incoming picking (wise unit)
     partner_id: base.res_partner_2
     picking_type_id: picking_type_in
+    origin: pick1_wise
     move_lines:
       - product_id: product_wise
         product_uom_qty: 10.00
@@ -63,6 +64,7 @@
     name: outgoing picking 1 (wise unit)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
+    origin: delivery_order_wise1
     move_lines:
       - product_id: product_wise
         product_uom_qty: 5.0
@@ -82,6 +84,7 @@
     name: outgoing picking 2 (wise unit)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
+    origin: delivery_order_wise2
     move_lines:
       - product_id: product_wise
         product_uom_qty: 5.0

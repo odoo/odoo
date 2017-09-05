@@ -20,6 +20,7 @@
     name: Incoming picking (negative product)
     partner_id: base.res_partner_2
     picking_type_id: picking_type_in
+    origin: pick_neg
     move_lines:
       - product_id: product_neg
         product_uom_qty: 300.00
@@ -78,6 +79,7 @@
     name: outgoing picking (negative product)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
+    origin: delivery_order_neg
     move_lines:
       - product_id: product_neg
         product_uom_qty: 300.00
@@ -129,6 +131,7 @@
     name: reconciling_delivery
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_in
+    origin: delivery_reconcile
     move_lines:
       - product_id: product_neg
         product_uom_qty: 20.0

@@ -23,6 +23,7 @@ class TestStockCommon(common.TestProductCommon):
             'picking_type_id': warehouse.in_type_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': warehouse.lot_stock_id.id,
+            'origin': 'don\'t autoconfirm',
         }
         return Picking.create(picking_values)
 

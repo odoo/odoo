@@ -20,6 +20,7 @@
     name: Incoming picking
     partner_id: base.res_partner_2
     picking_type_id: picking_type_in
+    origin: pick1
     move_lines:
       - product_id: product1
         product_uom_qty: 300.00
@@ -100,6 +101,7 @@
     name: outgoing picking
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
+    origin: delivery_order1
     move_lines:
       - product_id: product1
         product_uom_qty: 300.00
