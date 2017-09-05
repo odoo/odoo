@@ -263,27 +263,6 @@
     // Provide a basic style for different kanban record layouts
     // ---------------------------------------------------------
     .oe_kanban_card, .o_kanban_record {
-        // Identify the Title
-        .oe_partner_heading,                                      // Contacts
-        .oe_module_desc > h4,                                     // Apps List
-        .oe_kanban_details > strong,                              // Fleet, Employees
-        > .row:first-child > .col-xs-6:first-child > strong,      // Quotations (Sales)
-        > .row:first-child > .col-xs-10:last-child > div > strong // Timesheets
-        {
-            .o-kanban-record-title(@font-size: 13px);
-            display: block;
-        }
-
-        // If record has multiple rows, the Title column is always 100% width.
-        > .row:first-child {
-            margin-bottom: @o-kanban-inner-hmargin*0.5;
-
-            > .col-xs-6 {
-                width: 100%;
-                text-align: left;
-            }
-        }
-
         // Apps List records sizing
         &.oe_module_vignette {
             .o-flex(1, 1, 350px);
