@@ -43,28 +43,23 @@ var BaseSettingRenderer = FormRenderer.extend({
                     order: key=== self.activeSettingTab ? 0 : index+1
                 });
                 view.addClass("o_hidden");
-                view.prepend($("<div>").html('<img class="icon" src="'+imgurl+'"><span class="appName">'+string+'</span>').addClass('settingSearchHeader o_hidden'));
+                view.prepend($("<div>").html(self._getSearchHeader(imgurl, string)));
             } else {
                 $(settingView).remove();
             }
         });
 
         this.modules = _.sortBy(this.modules,function(m){return m.order});
-        var tabs = $(QWeb.render('BaseSetting.Tabs',{tabItems : this.modules}));
-        tabs.appendTo(this.$(".settings_tab"));
+        this._renderTabs();
 
         $.expr[':'].contains = function(a, i, m) {
             return jQuery(a).text().toUpperCase()
                 .indexOf(m[3].toUpperCase()) >= 0;
         };
 
-        this.searchText = "";
-        this.searchInput = this.$('.searchInput');
+        this._initSearch();
         core.bus.on("DOM_updated", this, function() {
-            if (!this.activeTab)
-                this._moveToTab(_.findIndex(this.modules,function(m){
-                    return m.key === self.activeSettingTab
-                }));
+            this._moveToTab(this.currentIndex);
         });
     },
 
@@ -73,7 +68,7 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _moveToTab: function (index) {
-        this.currentIndex = index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
+        this.currentIndex = !index || index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
         if (this.currentIndex != -1) {
             if (this.activeView) {
                 this.activeView.addClass("o_hidden");
@@ -188,6 +183,19 @@ var BaseSettingRenderer = FormRenderer.extend({
         return text.replace(word,hilitedWord);
     },
 
+    _getSearchHeader: function (imgUrl, string) {
+        var data = {
+            imgurl: imgUrl,
+            string: string
+        };
+        return $(QWeb.render('BaseSetting.SearchHeader',{headerData : data}));
+    },
+
+    _initSearch: function () {
+        this.searchText = "";
+        this.searchInput = this.$('.searchInput');
+    },
+
     _resetSearch: function() {
         this.searchInput.val("");
         _.each(this.modules,function(module) {
@@ -210,6 +218,27 @@ var BaseSettingRenderer = FormRenderer.extend({
         if (node.attrs.placeholder) {
             $el.attr('placeholder', node.attrs.placeholder);
         }
+    },
+
+    _render: function () {
+        var res = this._super.apply(this, arguments);
+        if (this.modules) {
+            var self = this;
+            _.each(this.modules,function (module) {
+                module.settingView = self.$('.app_settings_block[data-key="'+module.key+'"]');
+                module.settingView.addClass("o_hidden");
+                module.settingView.prepend(self._getSearchHeader(module.imgurl, module.string));
+            });
+            this._renderTabs();
+            this._initSearch();
+            this._moveToTab(this.currentIndex);
+        }
+        return res;
+    },
+
+    _renderTabs: function () {
+        var tabs = $(QWeb.render('BaseSetting.Tabs',{tabItems : this.modules}));
+        tabs.appendTo(this.$(".settings_tab"));
     },
 });
 
