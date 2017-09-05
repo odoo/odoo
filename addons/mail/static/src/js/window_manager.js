@@ -14,7 +14,7 @@ var QWeb = core.qweb;
 
 // chat window management
 //----------------------------------------------------------------
-var CHAT_WINDOW_WIDTH = 300 + 5;  // 5 pixels between windows
+var CHAT_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
 var chat_sessions = [];
 var new_chat_session;
 var display_state = {

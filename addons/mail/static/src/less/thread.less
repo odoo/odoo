@@ -11,7 +11,7 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        border-bottom: solid @gray-lighter 2px;
+        border-bottom: 1px solid @gray-lighter;
         text-align: center;
 
         .o_thread_date {
@@ -102,10 +102,6 @@
             max-width: 100%;
             word-wrap: break-word;
 
-            &.o_mail_note {
-                background-color: @gray-lighter;
-            }
-
             .o_mail_subject {
                 font-style: italic;
             }
@@ -143,6 +139,10 @@
                 .text-muted();
                 .o_mail_mailto, .o_mail_mailto:hover {
                     .text-muted();
+                }
+
+                strong {
+                    color: @headings-color;
                 }
             }
 

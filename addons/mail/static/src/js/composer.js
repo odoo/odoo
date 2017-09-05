@@ -417,6 +417,14 @@ var BasicComposer = Widget.extend(chat_mixin, {
 
         // Emojis
         this.emoji_container_classname = 'o_composer_emoji';
+
+        this.isMini = options.isMini;
+
+        this.avatarURL = session.uid > 0 ? session.url('/web/image', {
+            model: 'res.users',
+            field: 'image_small',
+            id: session.uid,
+        }) : '/web/static/src/img/user_menu_avatar.png';
     },
 
     start: function () {
@@ -461,10 +469,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
     destroy: function () {
         $(window).off(this.fileupload_id);
         return this._super.apply(this, arguments);
-    },
-
-    toggle: function(state) {
-        this.$el.toggle(state);
     },
 
     preprocess_message: function () {

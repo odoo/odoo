@@ -285,17 +285,20 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.selected_message = message;
         var subject = "Re: " + message.record_name;
         this.extended_composer.set_subject(subject);
+
         if (this.channel.type !== 'static') {
-            this.basic_composer.toggle(false);
+            this.basic_composer.do_hide();
         }
-        this.extended_composer.toggle(true);
+        this.extended_composer.do_show();
+
         this.thread.scroll_to({id: message_id, duration: 200, only_if_necessary: true});
         this.extended_composer.focus('body');
     },
 
     unselect_message: function() {
-        this.basic_composer.toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
-        this.extended_composer.toggle(this.channel.type !== 'static' && this.channel.mass_mailing);
+        this.basic_composer.do_toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
+        this.extended_composer.do_toggle(this.channel.type !== 'static' && this.channel.mass_mailing);
+
         if (!config.device.touch) {
             var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
             composer.focus();

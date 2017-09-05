@@ -17,22 +17,24 @@
     </t>
     <t t-name="mail.chat.Sidebar">
         <div class="o_mail_chat_sidebar">
-            <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_inbox') ? 'o_active': ''}"
+            <div t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id == 'channel_inbox') ? 'o_active': ''}"
                  data-channel-id="channel_inbox">
-                <span class="o_channel_name"> <i class="fa fa-at"/> Inbox </span>
+                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
                 <t t-set="counter" t-value="needaction_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
-            <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_starred') ? 'o_active': ''}"
+            <div t-attf-class="o_mail_chat_title_main o_mail_chat_title_starred o_mail_chat_channel_item #{(active_channel_id == 'channel_starred') ? 'o_active': ''}"
                  data-channel-id="channel_starred">
-                <span class="o_channel_name"> <i class="fa fa-star-o"/> Starred </span>
+                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
                 <t t-set="counter" t-value="starred_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
+            <hr class="mb8"/>
 
             <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Channels</t>
+                <t t-set="channel_icon">fa-users</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_hash" t-value="true"/>
@@ -42,18 +44,20 @@
             <t t-set="channel_type" t-value="'dm'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Direct Messages</t>
+                <t t-set="channel_icon">fa-user</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_status" t-value="true"/>
-                <t t-set="input_placeholder">Open chat</t>
+                <t t-set="input_placeholder">User name</t>
             </t>
 
             <t t-set="channel_type" t-value="'private'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Private Channels</t>
+                <t t-set="channel_icon">fa-eye-slash</t>
             </t>
             <t t-call="mail.chat.SidebarItems">
-                <t t-set="input_placeholder">Add a channel</t>
+                <t t-set="input_placeholder">Add a private channel</t>
                 <t t-set="display_hash" t-value="true"/>
             </t>
         </div>
@@ -76,7 +80,10 @@
         </t>
         <t t-if="!disable_add_channel || !empty">
             <div class="o_mail_sidebar_title">
-                <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''"><t t-esc="channel_title"/></h4>
+                <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''">
+                    <i t-if="channel_icon" t-attf-class="mr4 fa-fw fa #{channel_icon}"></i>
+                    <b><t t-esc="channel_title"/></b>
+                </h4>
                 <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}"/>
             </div>
         </t>
