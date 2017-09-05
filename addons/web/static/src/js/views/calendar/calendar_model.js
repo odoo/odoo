@@ -390,7 +390,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: moment().startOf('week').isoWeekday(),
+            firstDay: _t.database.parameters.week_start,
         };
     },
     /**

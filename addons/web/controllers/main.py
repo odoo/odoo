@@ -585,7 +585,7 @@ class WebClient(http.Controller):
         if langs:
             lang_params = langs.read([
                 "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep"])[0]
+                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
