@@ -516,7 +516,7 @@ class ProductTemplate(models.Model):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]
-        action['context'] = {'search_default_locationgroup': 1, 'search_default_internal_loc': 1}
+        action['context'] = {'search_default_internal_loc': 1}
         return action
 
     @api.multi
