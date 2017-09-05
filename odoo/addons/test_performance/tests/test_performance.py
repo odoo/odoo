@@ -124,7 +124,7 @@ class TestPerformance(TransactionCase):
                 record.value = 30
 
         # write on a tracked field
-        with self.assertMaxQueries("Write on a tracked field", 49):
+        with self.assertMaxQueries("Write on a tracked field", 48):
             records[0].track = 'X'
 
     def test_create_base(self):
@@ -157,5 +157,5 @@ class TestPerformance(TransactionCase):
             model.with_context(tracking_disable=True).create({'name': 'X'})
 
         # create with tracking changes
-        with self.assertMaxQueries("Create record with tracking fields", 88):
+        with self.assertMaxQueries("Create record with tracking fields", 87):
             model.create({'name': 'X'})
