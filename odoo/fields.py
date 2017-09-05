@@ -317,6 +317,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'group_operator': None,         # operator for aggregating values
         'group_expand': None,           # name of method to expand groups in read_group()
         'prefetch': True,               # whether the field is prefetched
+        'context_dependent': False,     # whether the field's value depends on context
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -414,6 +415,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            attrs['context_dependent'] = attrs.get('context_dependent', True)
         if attrs.get('related'):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
@@ -427,6 +429,10 @@ class Field(MetaField('DummyField', (object,), {})):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
+            attrs['context_dependent'] = attrs.get('context_dependent', True)
+        if attrs.get('translate'):
+            # by default, translatable fields are context-dependent
+            attrs['context_dependent'] = attrs.get('context_dependent', True)
 
         return attrs
 
@@ -718,6 +724,13 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Conversion of values
     #
+
+    def cache_key(self, record):
+        """ Return the key to get/set the value of ``self`` on ``record`` in
+            cache, the full cache key being ``(self, record.id, key)``.
+        """
+        env = record.env
+        return env if self.context_dependent else (env.cr, env.uid)
 
     def null(self, record):
         """ Return the null value for this field in the record format. """
@@ -1589,6 +1602,7 @@ class Binary(Field):
     type = 'binary'
     _slots = {
         'prefetch': False,              # not prefetched by default
+        'context_dependent': True,      # depends on context (content or size)
         'attachment': False,            # whether value is stored in attachment
     }
 
@@ -1968,6 +1982,9 @@ class Many2one(_Relational):
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
+    _slots = {
+        'context_dependent': True,      # depends on context (active_test)
+    }
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``. """

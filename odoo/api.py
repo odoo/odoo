@@ -740,7 +740,7 @@ class Environment(Mapping):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
-        self.cache = Cache()
+        self.cache = envs.cache
         self._protected = defaultdict(frozenset)    # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
@@ -929,6 +929,7 @@ class Environments(object):
     """ A common object for all environments in a request. """
     def __init__(self):
         self.envs = WeakSet()           # weak set of environments
+        self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
         self.recompute = True
@@ -945,38 +946,46 @@ class Environments(object):
 class Cache(object):
     """ Implementation of the cache of records. """
     def __init__(self):
-        self._data = defaultdict(dict)          # {field: {id: value}}
+        # {field: {record_id: {key: value}}}
+        self._data = defaultdict(lambda: defaultdict(dict))
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
-        return record.id in self._data[field]
+        key = field.cache_key(record)
+        return key in self._data[field].get(record.id, ())
 
     def get(self, record, field):
         """ Return the value of ``field`` for ``record``. """
-        value = self._data[field][record.id]
+        key = field.cache_key(record)
+        value = self._data[field][record.id][key]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
-        self._data[field][record.id] = value
+        key = field.cache_key(record)
+        self._data[field][record.id][key] = value
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
-        del self._data[field][record.id]
+        key = field.cache_key(record)
+        del self._data[field][record.id][key]
 
     def contains_value(self, record, field):
         """ Return whether ``record`` has a regular value for ``field``. """
-        value = self._data[field].get(record.id, SpecialValue(None))
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key, SpecialValue(None))
         return not isinstance(value, SpecialValue)
 
     def get_value(self, record, field, default=None):
         """ Return the regular value of ``field`` for ``record``. """
-        value = self._data[field].get(record.id, SpecialValue(None))
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
 
     def set_special(self, record, field, getter):
         """ Set the value of ``field`` for ``record`` to return ``getter()``. """
-        self._data[field][record.id] = SpecialValue(getter)
+        key = field.cache_key(record)
+        self._data[field][record.id][key] = SpecialValue(getter)
 
     def set_failed(self, records, fields, exception):
         """ Mark ``fields`` on ``records`` with the given exception. """
@@ -989,38 +998,44 @@ class Cache(object):
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
-            if name != 'id' and record.id in self._data[field]:
+            key = field.cache_key(record)
+            if name != 'id' and key in self._data[field].get(record.id, ()):
                 yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        return model.browse(self._data[field])
+        browse = model.browse
+        ids = [record_id
+               for record_id, field_record_cache in self._data[field].items()
+               if field.cache_key(browse(record_id)) in field_record_cache]
+        return browse(ids)
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """
         if spec is None:
-            for env in list(Environment.envs):
-                env.cache._data.clear()
+            self._data.clear()
         elif spec:
-            for env in list(Environment.envs):
-                data = env.cache._data
-                for field, ids in spec:
-                    if ids is None:
-                        if field in data:
-                            del data[field]
-                    else:
-                        field_cache = data[field]
-                        for id in ids:
-                            field_cache.pop(id, None)
+            data = self._data
+            for field, ids in spec:
+                if ids is None:
+                    data.pop(field, None)
+                else:
+                    field_cache = data[field]
+                    for id in ids:
+                        field_cache.pop(id, None)
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
         # make a full copy of the cache, and invalidate it
         dump = defaultdict(dict)
-        for field, field_cache in env.cache._data.items():
-            for record_id, value in field_cache.items():
+        for field, field_cache in self._data.items():
+            browse = env[field.model_name].browse
+            for record_id, field_record_cache in field_cache.items():
                 if record_id:
-                    dump[field][record_id] = value
+                    key = field.cache_key(browse(record_id))
+                    if key in field_record_cache:
+                        dump[field][record_id] = field_record_cache[key]
+
         self.invalidate()
 
         # re-fetch the records, and compare with their former cache
