@@ -1,33 +1,45 @@
+// Default chatter layout.
+// Extended in enterprise by form_view.less to achieve the side-chatter
 .o_chatter {
     width: 100%;
-
-    .o_chat_composer {
-        margin-top: 10px;
-
-        .o_chatter_composer_info {
-            display: inline-block;
-            margin-bottom: 5px;
-            color: @odoo-main-color-muted;
-            font-style: italic;
-        }
-
-        .o_composer {
-            margin-top: 10px;
-            .o_composer_input {
-                width: 100%;
-                .box-sizing(content-box);
-                resize: vertical;
-                margin-bottom: 5px;
-            }
-        }
-    }
-
-    .o_mail_thread {
-        margin-top: 10px;
-    }
+    padding-top: 0!important;
 
     .o_spinner {
         text-align: center;
         font-size: large;
+    }
+
+    .o_chatter_topbar {
+        height: @odoo-statusbar-height;
+        position: relative;
+        margin: @grid-gutter-width*0.5 -@grid-gutter-width*0.5 0;
+        padding: 0 @grid-gutter-width*0.5;
+        .o-flex-display();
+
+        > .btn {
+            height: @odoo-statusbar-height + 1;
+            border: 1px solid transparent;
+        }
+
+        > .o_followers {
+            height: @odoo-statusbar-height + 1;
+            border-bottom: 1px solid transparent;
+            .o-flex(1,1,auto);
+        }
+    }
+
+    &.o_chatter_composer_active .o_chatter_topbar {
+        > .btn, > .o_followers{
+            border-radius: @border-radius-small @border-radius-small 0 0;
+            border-width: 0 0 1px;
+            border-bottom-color: @gray-lighter-dark;
+
+            &.o_active {
+                color: @odoo-brand-primary;
+                background-color: @gray-lighter;
+                border-color: @gray-lighter-dark;
+                border-width: 1px 1px 0;
+            }
+        }
     }
 }

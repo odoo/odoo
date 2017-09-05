@@ -122,6 +122,7 @@
 
     .open .dropdown-menu {
         max-height: 90vh; // the dropdown should not overstep the viewport
+        min-width: 100%;
         overflow: auto;
         margin-top: 0;
 
@@ -134,8 +135,16 @@
         .o-menu-indentation(3);
     }
 
-    .oe_topbar_avatar {
-        height: 15px;
+    .open .dropdown-toggle {
+        background-color: @odoo-navbar-inverse-link-hover-bg;
+    }
+    .o_user_menu {
+        margin-left: 6px;
+
+        .oe_topbar_avatar {
+            height: 17px;
+            .o-transform(translateY(-2px));
+        }
     }
 
     @media (max-width: @screen-xs-max) {

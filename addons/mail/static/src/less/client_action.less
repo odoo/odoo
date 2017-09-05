@@ -2,6 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 @mail-chat-sidebar-width: 250px;
+
 .o_mail_chat {
     .o-position-absolute(0, 0, 0, 0);
     height: 100%;
@@ -44,8 +45,7 @@
         height: 100%;
         float: left;
         overflow: auto;
-        padding: 8px 0;
-        font-weight: 300;
+        padding: @odoo-horizontal-padding 0;
 
         @media (max-width: @screen-xs-max) {
             width: 100%;
@@ -53,9 +53,13 @@
             display: none;
         }
 
+        @media (min-width: @screen-lg-min) {
+            width: @mail-chat-sidebar-width + 50px;
+        }
+
         .o_mail_sidebar_title {
             .o-flex-display();
-            padding: 12px 8px 5px @odoo-horizontal-padding;
+            padding: 6px @odoo-horizontal-padding 0 @odoo-horizontal-padding;
             align-items: center;
             justify-content: space-between;
             h4 {
@@ -72,7 +76,8 @@
         .o_mail_chat_channel_item {
             .o-flex-display();
             width: 100%;
-            padding: 2px 8px 2px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
+            padding: 2px @odoo-horizontal-padding 2px (@odoo-horizontal-padding + 23px); // compensate icon
+
             .o_channel_name {
                 .o-flex(1, 1, auto);
                 .o-text-overflow();
@@ -90,21 +95,27 @@
                 margin-left: 3px;
             }
 
+            &.o_mail_chat_title_main {
+                padding: @padding-base-vertical @odoo-horizontal-padding;
+                margin-bottom: 2px;
+            }
         }
+
+        .o_mail_chat_channel_item + .o_mail_sidebar_title {
+            margin-top: @padding-base-vertical;
+        }
+
         .o_mail_add_channel {
             width: 100%;
-            padding: 5px 1.5*@odoo-horizontal-padding; // larger padding-left than titles
+            padding: 5px (@odoo-horizontal-padding + 23px); // compensate icon
             position: relative;
 
             > input {
                 width: 100%;
                 padding: 2px 5px;
-                padding-left: 12px;
             }
             > span {
-                position: absolute;
-                top: 7px;
-                left: 27px;
+                .o-position-absolute(7px, @left: 27px);
             }
         }
     }
@@ -123,6 +134,10 @@
             margin-left: 0;
         }
 
+        @media (min-width: @screen-lg-min) {
+            margin-left: @mail-chat-sidebar-width + 50px;
+        }
+
         .o_mail_thread {
             .o-flex(1, 0, 0);
             overflow: auto;
@@ -133,33 +148,7 @@
                 text-align: justify;
             }
         }
-        .o_chat_composer {
-            .o-flex(0, 0, auto);
-            .o-webclient-padding(@top: 2px, @bottom: 8px);
 
-            .o_composer {
-                .o-flex-display();
-
-                .o_composer_input {
-                    .o-flex(1, 1, auto);
-                    margin-right: 5px;
-                    > textarea {
-                        padding: 5px;
-                        border: none;
-                    }
-                }
-                &.o_extended_composer .o_composer_input {
-                    margin-right: 0;
-                }
-            }
-
-            .o_composer_buttons {
-                .o-flex(0, 0, auto);
-                .o_composer_button_send {
-                    float: right;
-                }
-            }
-        }
         .o_mail_snackbar {
             .o-position-absolute(15px, 15px);
             padding-top: 10px;
@@ -174,24 +163,27 @@
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
-@sidebar-icon-opacity: 0.6;
+@sidebar-icon-opacity: 0.7;
+
 .o_mail_chat {
     .o_mail_chat_sidebar {
-        background-color: darken(@gray, 8%);
-        color: lighten(@gray, 60%);
-        opacity: 0.9;
+        background-color: @gray-dark;
+        color: @gray-lighter-dark;
 
         .o_mail_chat_channel_item {
             cursor: pointer;
 
             &:hover {
-                background-color: darken(@gray, 12%);;
+                background-color: darken(@gray-dark,2%);
+
                 .o_mail_partner_unpin {
                     opacity: @sidebar-icon-opacity;
                 }
             }
+
             &.o_active {
-                background-color: darken(@gray, 15%);
+                background-color: @gray-darker;
+                box-shadow: inset 3px 0 0 @odoo-brand-optional;
             }
 
             .o_mail_hash {
@@ -199,10 +191,7 @@
             }
 
             .o_mail_partner_unpin {
-                opacity: 0;
-                &:hover {
-                    opacity: 1;
-                }
+                .o-hover-opacity(@default-opacity: 0, @hover-opacity: 1);
             }
             &.o_unread_message {
                 color: white;
@@ -212,7 +201,23 @@
             > .badge {
                 color: white;
                 background-color: @odoo-brand-optional;
+                font-size: 10px;
+                line-height: 16px;
+                height: 18px;
             }
+
+            &.o_mail_chat_title_main {
+                font-size: @font-size-base;
+
+                &.o_mail_chat_title_starred > .badge {
+                    background-color: @gray-light;
+                    border-color: @gray-light;
+                }
+            }
+        }
+
+        > hr {
+            border-color: @gray;
         }
 
         .o_mail_add_channel {
@@ -227,35 +232,24 @@
 
         .o_mail_sidebar_title {
             h4 {
-                font-size: 13px;
+                margin: 0;
+                font-size: @font-size-small;
                 text-transform: uppercase;
+                color: @gray-light;
                 &.o_mail_open_channels:hover {
                     color: white;
                 }
             }
             .o_add {
                 cursor: pointer;
-                opacity: @sidebar-icon-opacity;
-                &:hover {
-                    opacity: 1;
-                }
+                .o-hover-opacity(@sidebar-icon-opacity, 1);
+                .o-hover-text-color(@gray-light, white);
             }
         }
     }
 
     .o_mail_chat_content {
         background-color: white;
-
-        .o_chat_composer {
-            border-top: 1px solid @odoo-brand-optional;
-            background-color: @odoo-brand-optional;
-
-            .o_attachment {
-                .o_attachment_name, .o_attachment_delete {
-                    color: white;
-                }
-            }
-        }
     }
 
     &.o_mail_selection_mode {
@@ -270,15 +264,14 @@
     }
 }
 
-// User status bullet
 .o_mail_user_status {
-    font-size: 10px;
+    font-size: 1em;
     position: relative;
-    bottom: 1px;
+
     &.o_user_online {
-        color: @odoo-brand-optional;
+        color: @brand-success;
     }
     &.o_user_idle {
-        color: orange;
+        color: @brand-warning;
     }
 }
