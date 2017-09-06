@@ -2291,6 +2291,50 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
 
+    def _create_picking_test_immediate_validate_5(self, picking_type_id, product_id):
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': picking_type_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'move1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'picking_type_id': picking_type_id.id,
+            'product_id': product_id.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        picking.action_confirm()
+
+        for line in picking.move_line_ids:
+            line.qty_done = line.product_uom_qty
+
+        return picking
+
+    def test_immediate_validate_5(self):
+        """ Create a picking and simulates validate button effect.
+            Test that tracked products can be received without specifying a serial
+            number when the picking type is configured that way.
+        """
+        picking_type_id = self.env.ref('stock.picking_type_in')
+        product_id = self.product2
+        self.assertTrue(picking_type_id.use_create_lots or picking_type_id.use_existing_lots)
+        self.assertEqual(product_id.tracking, 'serial')
+
+        picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
+        # should raise because no serial numbers were specified
+        self.assertRaises(UserError, picking.do_new_transfer)
+
+        picking_type_id.use_create_lots = False
+        picking_type_id.use_existing_lots = False
+        picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
+        picking.do_new_transfer()
+        self.assertEqual(picking.state, 'done')
+
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_done_1',
