@@ -89,12 +89,13 @@
 .o-kanban-dropdown-open() {
     position: relative;
     background: white;
-    border-color: @gray-lighter-dark;
+    border-color: @gray-lighter-darker;
     z-index: 2; // Make the dropdown link appear over the dropdown-menu
 }
 .o-kanban-dropdown-menu() {
     .o-position-absolute(@right: -1px);
     margin-top: -1px;
+    border-color: @gray-lighter-darker;
     z-index: 1; // Make the dropdown-menu appear under the dropdown link
 }
 .o-kanban-colorpicker() {
@@ -171,6 +172,7 @@
     .o_kanban_record {
         position: relative;
         display: inline-block; // Force the creation of a block formatting context to clear float items
+        border-color: @gray-lighter-darker;
         min-width: 150px;
         margin: 0 @o-kanban-record-margin -1px;
 
@@ -178,7 +180,7 @@
         // Records colours
         &::after {
             content: "";
-            .o-position-absolute(0, auto, 0, 0);
+            .o-position-absolute(0, auto, 0, -1px);
             width: @o-kanban-color-border-width;
         }
 
@@ -371,7 +373,7 @@
 
         &.ui-sortable-helper {
             .o-transform(rotate(-3deg));
-            box-shadow: 0 10px 25px -15px black;
+            box-shadow: 0 5px 25px -10px black;
             .transition(~"transform 0.6s, box-shadow 0.3s");
         }
 
@@ -457,13 +459,16 @@
     &.o_kanban_grouped {
         min-height: 100%;
         padding: 0 @odoo-horizontal-padding - @o-kanban-group-padding - @o-kanban-record-margin;
-        .o_kanban_record {
+        background-color: @gray-lighter;
+
+        .o_kanban_record, .o_kanban_quick_create {
             width: @o-kanban-default-record-width;
         }
+
         &.o_kanban_small_column .o_kanban_group {
             &:not(.o_column_folded) {
                 width: @o-kanban-small-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
-                .o_kanban_record {
+                .o_kanban_record, .o_kanban_quick_create {
                     width: @o-kanban-small-record-width;
                 }
             }
@@ -474,6 +479,10 @@
     .o_kanban_group {
         .o-flex(0, 0, auto);
         padding: 0 @o-kanban-group-padding;
+        border: 1px solid @gray-lighter-dark;
+        background-color: @gray-lighter;
+        border-width: 0 1px;
+        margin-left: -1px;
 
         .o_kanban_header {
             .o-kanban-header();
@@ -482,7 +491,8 @@
                 .o-flex(1, 1, auto);
                 padding-top: 5px;
                 .o-text-overflow();
-                font-size: 18px;
+                font-size: 16px;
+                font-weight: 500;
             }
 
             .o_column_unfold {
@@ -517,7 +527,7 @@
         }
 
         &.ui-sortable-helper {
-            box-shadow: 0 0 40px -10px black;
+            box-shadow: 0 0 30px -10px black;
         }
 
         &:not(.o_column_folded) {
@@ -540,8 +550,11 @@
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
         .o-kanban-slim-col();
-        margin-left: 1px;
-        background-color: darken(@gray-lighter-dark, 2%);
+        background-color: @gray-lighter-dark;
+
+        & + .o_kanban_group.o_column_folded {
+            margin-left: 1px;
+        }
 
         .o_kanban_header {
             position: relative;
