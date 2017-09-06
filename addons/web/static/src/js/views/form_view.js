@@ -1092,7 +1092,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many'
                         || field.field.type === 'binary'
-                        || field.password) {
+                        || field.password
+                        || !_.isEmpty(field.field.depends)) {
                     return false;
                 }
 
