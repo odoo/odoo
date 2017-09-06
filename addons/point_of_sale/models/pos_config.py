@@ -119,6 +119,7 @@ class PosConfig(models.Model):
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders lines.", copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
+    cashier_ids = fields.Many2many('res.users', string='Cashier(s)', domain=lambda self: [('groups_id', 'in', self.env.ref('point_of_sale.group_pos_user').id)])
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
