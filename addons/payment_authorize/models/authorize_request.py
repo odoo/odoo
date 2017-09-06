@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import io
+import requests
 from lxml import etree, objectify
-from urllib2 import urlopen, Request
-from StringIO import StringIO
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 from uuid import uuid4
 
 from odoo import _
@@ -21,7 +21,7 @@ def strip_ns(xml, ns):
     :rtype: etree._Element
     :return: the parsed xml string with the namespace prefix removed
     """
-    it = ET.iterparse(StringIO(xml))
+    it = ET.iterparse(io.BytesIO(xml))
     ns_prefix = '{%s}' % XMLNS
     for _, el in it:
         if el.tag.startswith(ns_prefix):
@@ -58,13 +58,12 @@ class AuthorizeAPI():
 
         :param etree._Element data: etree data to process
         """
-        data = etree.tostring(data, xml_declaration=True, encoding='utf-8')
-        request = Request(self.url, data)
-        request.add_header('Content-Type', 'text/xml')
-        response = urlopen(request).read()
-        response = strip_ns(response, XMLNS)
+        data = etree.tostring(data, encoding='utf-8')
+        r = requests.post(self.url, data=data, headers={'Content-Type': 'text/xml'})
+        r.raise_for_status()
+        response = strip_ns(r.content, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
-            messages = map(lambda m: m.text, response.findall('messages/message/text'))
+            messages = [m.text for m in response.findall('messages/message/text')]
             raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
         return response
 
@@ -162,6 +161,33 @@ class AuthorizeAPI():
         etree.SubElement(root_profile, "customerPaymentProfileId").text = res['payment_profile_id']
         response_profile = self._authorize_request(root_profile)
         res['name'] = response_profile.find('paymentProfile/payment/creditCard/cardNumber').text
+        return res
+
+    def credit(self, token, amount, transaction_id):
+        """ Refund a payment for the given amount.
+
+        :param record token: the payment.token record that must be refunded.
+        :param str amount: transaction amount
+        :param str transaction_id: the reference of the transacation that is going to be refunded.
+
+        :return: a dict containing the response code, transaction id and transaction type
+        :rtype: dict
+        """
+        root = self._base_tree('createTransactionRequest')
+        tx = etree.SubElement(root, "transactionRequest")
+        etree.SubElement(tx, "transactionType").text = "refundTransaction"
+        etree.SubElement(tx, "amount").text = str(amount)
+        payment = etree.SubElement(tx, "payment")
+        credit_card = etree.SubElement(payment, "creditCard")
+        idx = token.name.find(' - ')
+        etree.SubElement(credit_card, "cardNumber").text = token.name[idx-4:idx] # shitty hack, but that's the only way to get the 4 last digits
+        etree.SubElement(credit_card, "expirationDate").text = "XXXX"
+        etree.SubElement(tx, "refTransId").text = transaction_id
+        response = self._authorize_request(root)
+        res = dict()
+        res['x_response_code'] = response.find('transactionResponse/responseCode').text
+        res['x_trans_id'] = transaction_id
+        res['x_type'] = 'refund'
         return res
 
     # Transaction management

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_res_country_extended_form" model="ir.ui.view">
+        <field name="name">view_res_country_extended_form</field>
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='div_address_format']" position="after">
+                <field name="street_format" groups="base.group_no_one" placeholder="Street format..."/>
+                <div colspan="2" class="text-muted">Change how the system computes the full street field based on the different street subfields</div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_structured_form" model="ir.ui.view">
+        <field name="name">view_partner_structured_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                <div class="o_row">
+                    <label for="street_number" class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <label for="street_number2" class="oe_edit_only"/>
+                    <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_address_structured_form" model="ir.ui.view">
+        <field name="name">view_partner_address_structured_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_address_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                <div class="o_row">
+                    <label for="street_number" class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <label for="street_number2" class="oe_edit_only"/>
+                    <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_company_extended_form" model="ir.ui.view">
+        <field name="name">view_res_company_extended_form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_name" placeholder="Street Name..."/>
+                <div class="o_row">
+                    <label for="street_number" class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number"/>
+                    <label for="street_number2" class="oe_edit_only"/>
+                    <field name="street_number2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

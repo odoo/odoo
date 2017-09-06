@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mails & quote templates is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <record id="website_quote_template_default" model="sale.quote.template">
+            <field name="name">Default Template</field>
+            <field name="number_of_days">30</field>
+            <field name="website_description" type="xml">
+                <section data-snippet-id="title">
+                    <h1 class="page-header">About us</h1>
+                </section>
+                <section data-snippet-id="text-block">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                This is a <strong>sample quotation template</strong>. You should
+                                customize it to fit your own needs from the <i>Sale</i>
+                                application, using the menu: Configuration /
+                                Quotation Templates.
+                            </p><p>
+                                Great quotation templates will significantly
+                                <strong>boost your success rate</strong>. The
+                                first section is usually about your company,
+                                your references, your methodology or
+                                guarantees, your team, SLA, terms and conditions, etc.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet-id="quality">
+                    <div class="row mt32">
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Our Quality</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                       Product quality is the foundation we
+                                       stand on; we build it with a relentless
+                                       focus on fabric, performance and craftsmanship.
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Our Service</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                       As a leading professional services firm,
+                                       we know that success is all about the
+                                       commitment we put on strong services.
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                   <center><h3 class="panel-title">Price</h3></center>
+                                </div>
+                                <div class="panel-body">
+                                   <p>
+                                       We always ensure that our products are
+                                       set at a fair price so that you will be
+                                       happy to buy them.
+                                   </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet-id="text-block">
+                    <h1 class="page-header">Our Offer</h1>
+                    <p>
+                        You can <strong>set a description per product</strong>. Odoo will
+                        automatically create a quotation using the descriptions
+                        of all products in the proposal. The table of content
+                        on the left is generated automatically using the styles you
+                        used in your description (heading 1, heading 2, ...)
+                    </p><p>
+                        If edit a quotation from the 'Preview' of a quotation, you will
+                        update the quotation for this customer only. If you edit the quotation
+                        template (from the Configuration menu), all future quotations will
+                        use this modified template.
+                    </p>
+                </section>
+            </field>
+        </record>
+        
+        <record id="confirmation_mail" model="mail.template">
+            <field name="name">Online Quote: confirmation e-mail</field>
+            <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
+            <field name="subject">Your order ${object.name} is confirmed</field>
+            <field name="email_to">${ctx.get('email_to') or object.partner_id.email}</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body_html"><![CDATA[
+<div summary="o_mail_template" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="center" width="200" style="padding:0px 10px 5px 5px;font-size: 12px">
+                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+            </td>
+        </tr></tbody>
+    </table>
+    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td valign="top" style="width:600px; padding:0px 10px 5px 5px;">
+                <div>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
+                </div>
+            </td>
+        </tr></tbody>
+    </table>
+</div>
+<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+        <tbody><tr>
+            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                <p>Dear ${object.partner_id.name},</p><br/>
+                <p>Your order <a href="/quote/${object.id}/${object.access_token}">${object.name}</a> has been validated!</p><br/>
+                
+                % if object.partner_id.user_ids
+                <p>You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #875A7B;" href="/my/home">Online Portal</a>.</p><br/>
+                % endif
+
+                <p>If you have any question, do not hesitate to contact us.</p><br/>
+                <p>Thank you for choosing ${object.company_id.name or "us"}!</p>
+            </td>
+        </tr><tr>
+            <td style="padding:0px 10px 5px 5px;font-size: 14px;">
+                % if user.signature
+                <p style="font-size: 14px;">${user.signature | safe}
+                </p>
+                % endif
+                <p style="font-size: 11px;"><strong>Sent by
+                <a href="${user.company_id.website}" style="text-decoration:none; color: #875A7B;">
+                    <strong>${user.company_id.name}</strong>
+                </a> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;"><strong>Odoo</strong></a>
+                </strong></p>
+            </td>
+        </tr></tbody>
+    </table>
+</div>]]></field>
+        </record>
+
+    </data>
+</odoo>

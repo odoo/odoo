@@ -10,8 +10,6 @@ from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 
-from odoo.addons.base.res.res_partner import FormatAddress
-
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
@@ -32,7 +30,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'contact_name',
     'description',
-    'fax',
     'mobile',
     'partner_name',
     'phone',
@@ -43,18 +40,17 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'zip',
     'create_date',
     'date_action_last',
-    'date_action_next',
     'email_from',
     'email_cc',
+    'website',
     'partner_name']
 
 
-class Lead(FormatAddress, models.Model):
-
+class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority desc,date_action,id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
+    _order = "priority desc,activity_date_deadline,id desc"
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def _default_probability(self):
@@ -72,10 +68,10 @@ class Lead(FormatAddress, models.Model):
         help="Linked partner (optional). Usually created when converting the lead.")
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
-    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
-        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.')
+    website = fields.Char('Website', index=True, help="Website of the contact")
+    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Activity State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
@@ -91,7 +87,7 @@ class Lead(FormatAddress, models.Model):
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Rating', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
+    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
     stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
@@ -100,25 +96,19 @@ class Lead(FormatAddress, models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
-    date_open = fields.Datetime('Assigned', readonly=True, default=lambda self: fields.Datetime.now())
+    date_open = fields.Datetime('Assigned', readonly=True, default=fields.Datetime.now)
     day_open = fields.Float(compute='_compute_day_open', string='Days to Assign', store=True)
     day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
     date_conversion = fields.Datetime('Conversion Date', readonly=True)
 
     # Messaging and marketing
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
+    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
 
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-
-    # CRM Actions
-    next_activity_id = fields.Many2one("crm.activity", string="Next Activity", index=True)
-    date_action = fields.Date('Next Activity Date', index=True)
-    title_action = fields.Char('Next Activity Summary')
-
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
@@ -134,7 +124,6 @@ class Lead(FormatAddress, models.Model):
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
     phone = fields.Char('Phone')
-    fax = fields.Char('Fax')
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
@@ -167,8 +156,8 @@ class Lead(FormatAddress, models.Model):
         today = date.today()
         for lead in self:
             kanban_state = 'grey'
-            if lead.date_action:
-                lead_date = fields.Date.from_string(lead.date_action)
+            if lead.activity_date_deadline:
+                lead_date = fields.Date.from_string(lead.activity_date_deadline)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
@@ -234,9 +223,9 @@ class Lead(FormatAddress, models.Model):
                 'email_from': partner.email,
                 'phone': partner.phone,
                 'mobile': partner.mobile,
-                'fax': partner.fax,
                 'zip': partner.zip,
                 'function': partner.function,
+                'website': partner.website,
             }
         return {}
 
@@ -261,22 +250,19 @@ class Lead(FormatAddress, models.Model):
         values = self._onchange_user_values(self.user_id.id)
         self.update(values)
 
+    @api.constrains('user_id')
+    @api.multi
+    def _valid_team(self):
+        for lead in self:
+            if lead.user_id:
+                values = lead.with_context(team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
+                if values:
+                    lead.update(values)
+
     @api.onchange('state_id')
     def _onchange_state(self):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
-
-    @api.onchange('next_activity_id')
-    def _onchange_next_activity_id(self):
-        values = {
-            'title_action': False,
-            'date_action': False,
-        }
-        if self.next_activity_id:
-            values['title_action'] = self.next_activity_id.description
-            if self.next_activity_id.days:
-                values['date_action'] = fields.Datetime.to_string(datetime.now() + timedelta(days=self.next_activity_id.days))
-        self.update(values)
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
@@ -284,7 +270,7 @@ class Lead(FormatAddress, models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's sales team which is needed
+        # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -312,9 +298,9 @@ class Lead(FormatAddress, models.Model):
         # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and 'probability' not in vals:
             vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
-        if vals.get('probability') >= 100 or not vals.get('active', True):
+        if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif 'probability' in vals and vals['probability'] < 100:
+        elif 'probability' in vals:
             vals['date_closed'] = False
         return super(Lead, self).write(vals)
 
@@ -331,15 +317,15 @@ class Lead(FormatAddress, models.Model):
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if self._context.get('opportunity_id'):
             opportunity = self.browse(self._context['opportunity_id'])
             action = opportunity.get_formview_action()
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        res = super(Lead, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(Lead, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(res['arch'])
+            res['arch'] = self._fields_view_get_address(res['arch'])
         return res
 
     # ----------------------------------------
@@ -365,7 +351,52 @@ class Lead(FormatAddress, models.Model):
         for lead in self:
             stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
-        return True
+            if lead.user_id and lead.team_id and lead.planned_revenue:
+                query = """
+                    SELECT
+                        SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                    FROM crm_lead
+                    WHERE
+                        type = 'opportunity'
+                    AND
+                        active = True
+                    AND
+                        probability = 100
+                    AND
+                        DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+                    AND
+                        (user_id = %(user_id)s OR team_id = %(team_id)s)
+                """
+                lead.env.cr.execute(query, {'user_id': lead.user_id.id,
+                                            'team_id': lead.team_id.id})
+                query_result = self.env.cr.dictfetchone()
+
+                message = False
+                if query_result['total_won'] == 1:
+                    message = _('Go, go, go! Congrats for your first deal.')
+                elif query_result['max_team_30'] == lead.planned_revenue:
+                    message = _('Boom! Team record for the past 30 days.')
+                elif query_result['max_team_7'] == lead.planned_revenue:
+                    message = _('Yeah! Deal of the last 7 days for the team.')
+                elif query_result['max_user_30'] == lead.planned_revenue:
+                    message = _('You just beat your personal record for the past 30 days.')
+                elif query_result['max_user_7'] == lead.planned_revenue:
+                    message = _('You just beat your personal record for the past 7 days.')
+
+                if message:
+                    return {
+                        'effect': {
+                            'fadeout': 'slow',
+                            'message': message,
+                            'img_url': '/web/image/%s/%s/image' % (lead.team_id.user_id._name, lead.team_id.user_id.id) if lead.team_id.user_id.image else '/web/static/src/img/smile.svg',
+                            'type': 'rainbow_man',
+                        }
+                    }
+            return True
 
     @api.multi
     def action_schedule_meeting(self):
@@ -378,7 +409,6 @@ class Lead(FormatAddress, models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'search_default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
@@ -390,6 +420,18 @@ class Lead(FormatAddress, models.Model):
     @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def edit_dialog(self):
+        form_view = self.env.ref('crm.crm_case_form_view_oppor')
+        return {
+            'name': _('Opportunity'),
+            'res_model': 'crm.lead',
+            'res_id': self.id,
+            'views': [(form_view.id, 'form'),],
+            'type': 'ir.actions.act_window',
+            'target': 'inline'
+        }
 
     # ----------------------------------------
     # Business Methods
@@ -459,9 +501,6 @@ class Lead(FormatAddress, models.Model):
             res = _get_first_not_null(attr, opportunities)
             return res.id if res else False
 
-        def _concat_all(attr, opportunities):
-            return '\n\n'.join(filter(None, (opp[attr] for opp in opportunities)))
-
         # process the fields' values
         data = {}
         for field_name in fields:
@@ -473,7 +512,7 @@ class Lead(FormatAddress, models.Model):
             elif field.type == 'many2one':
                 data[field_name] = _get_first_not_null_id(field_name, self)  # take the first not null
             elif field.type == 'text':
-                data[field_name] = _concat_all(field_name, self)  # contact field of all opportunities
+                data[field_name] = '\n\n'.join(it for it in self.mapped(field_name) if it)
             else:
                 data[field_name] = _get_first_not_null(field_name, self)
 
@@ -586,7 +625,7 @@ class Lead(FormatAddress, models.Model):
             The resulting lead/opportunity will be the most important one (based on its confidence level)
             updated with values from other opportunities to merge.
             :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-            :param team : the id of the sales team. If not given, will be determined by `_merge_data`.
+            :param team : the id of the sales channel. If not given, will be determined by `_merge_data`.
             :return crm.lead record resulting of th merge
         """
         if len(self.ids) <= 1:
@@ -610,7 +649,7 @@ class Lead(FormatAddress, models.Model):
         # the first (head opp) will be a priority.
         merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
-        # force value for saleperson and sales team
+        # force value for saleperson and sales channel
         if user_id:
             merged_data['user_id'] = user_id
         if team_id:
@@ -619,7 +658,7 @@ class Lead(FormatAddress, models.Model):
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head.merge_dependences(opportunities_tail)
 
-        # check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
+        # check if the stage is in the stages of the sales channel. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
             team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
@@ -657,13 +696,15 @@ class Lead(FormatAddress, models.Model):
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        else:
+            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
         return self.search(domain)
 
     @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
-            :param team_id : identifier of the sales team to determine the stage
+            :param team_id : identifier of the sales channel to determine the stage
         """
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
@@ -702,7 +743,7 @@ class Lead(FormatAddress, models.Model):
         return True
 
     @api.multi
-    def _lead_create_contact(self, name, is_company, parent_id=False):
+    def _create_lead_partner_data(self, name, is_company, parent_id=False):
         """ extract data from lead to create a partner
             :param name : furtur name of the partner
             :param is_company : True if the partner is a company
@@ -710,7 +751,7 @@ class Lead(FormatAddress, models.Model):
             :returns res.partner record
         """
         email_split = tools.email_split(self.email_from)
-        values = {
+        return {
             'name': name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
@@ -719,7 +760,6 @@ class Lead(FormatAddress, models.Model):
             'phone': self.phone,
             'mobile': self.mobile,
             'email': email_split[0] if email_split else False,
-            'fax': self.fax,
             'title': self.title.id,
             'function': self.function,
             'street': self.street,
@@ -728,33 +768,34 @@ class Lead(FormatAddress, models.Model):
             'city': self.city,
             'country_id': self.country_id.id,
             'state_id': self.state_id.id,
+            'website': self.website,
             'is_company': is_company,
             'type': 'contact'
         }
-        return self.env['res.partner'].create(values)
 
     @api.multi
     def _create_lead_partner(self):
         """ Create a partner from lead data
             :returns res.partner record
         """
+        Partner = self.env['res.partner']
         contact_name = self.contact_name
         if not contact_name:
-            contact_name = self.env['res.partner']._parse_partner_name(self.email_from)[0] if self.email_from else False
+            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
 
         if self.partner_name:
-            partner_company = self._lead_create_contact(self.partner_name, True)
+            partner_company = Partner.create(self._create_lead_partner_data(self.partner_name, True))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
             partner_company = None
 
         if contact_name:
-            return self._lead_create_contact(contact_name, False, partner_company.id if partner_company else False)
+            return Partner.create(self._create_lead_partner_data(contact_name, False, partner_company.id if partner_company else False))
 
         if partner_company:
             return partner_company
-        return self._lead_create_contact(self.name, False)
+        return Partner.create(self._create_lead_partner_data(self.name, False))
 
     @api.multi
     def handle_partner_assignation(self,  action='create', partner_id=False):
@@ -885,7 +926,7 @@ class Lead(FormatAddress, models.Model):
         return self.message_post(body=message)
 
     # ----------------------------------------
-    # Sales Team Dashboard
+    # Sales Channel Dashboard
     # ----------------------------------------
 
     @api.model
@@ -921,25 +962,26 @@ class Lead(FormatAddress, models.Model):
 
         for opp in opportunities:
             # Expected closing
-            if opp.date_deadline:
-                date_deadline = fields.Date.from_string(opp.date_deadline)
-                if date_deadline == date.today():
-                    result['closing']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['closing']['next_7_days'] += 1
-                if date_deadline < date.today() and not opp.date_closed:
-                    result['closing']['overdue'] += 1
-            # Next activities
-            if opp.next_activity_id and opp.date_action:
-                date_action = fields.Date.from_string(opp.date_action)
-                if date_action == date.today():
-                    result['activity']['today'] += 1
-                if date.today() <= date_action <= date.today() + timedelta(days=7):
-                    result['activity']['next_7_days'] += 1
-                if date_action < date.today():
-                    result['activity']['overdue'] += 1
+            if opp.activity_date_deadline:
+                if opp.date_deadline:
+                    date_deadline = fields.Date.from_string(opp.date_deadline)
+                    if date_deadline == date.today():
+                        result['closing']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['closing']['next_7_days'] += 1
+                    if date_deadline < date.today() and not opp.date_closed:
+                        result['closing']['overdue'] += 1
+                # Next activities
+                for activity in opp.activity_ids:
+                    date_deadline = fields.Date.from_string(activity.date_deadline)
+                    if date_deadline == date.today():
+                        result['activity']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['activity']['next_7_days'] += 1
+                    if date_deadline < date.today():
+                        result['activity']['overdue'] += 1
             # Won in Opportunities
-            if opp.date_closed:
+            if opp.date_closed and opp.stage_id.probability == 100:
                 date_closed = fields.Date.from_string(opp.date_closed)
                 if date.today().replace(day=1) <= date_closed <= date.today():
                     if opp.planned_revenue:
@@ -953,19 +995,19 @@ class Lead(FormatAddress, models.Model):
         # crm.activity is a very messy model so we need to do that in order to retrieve the actions done.
         self._cr.execute("""
             SELECT
-                m.id,
-                m.subtype_id,
-                m.date,
-                l.user_id,
-                l.type
-            FROM mail_message M
-                LEFT JOIN crm_lead L ON (M.res_id = L.id)
-                INNER JOIN crm_activity A ON (M.subtype_id = A.subtype_id)
+                mail_message.id,
+                mail_message.subtype_id,
+                mail_message.mail_activity_type_id,
+                mail_message.date,
+                crm_lead.user_id,
+                crm_lead.type
+            FROM mail_message
+                LEFT JOIN crm_lead  ON (mail_message.res_id = crm_lead.id)
+                INNER JOIN mail_activity_type activity_type ON (mail_message.mail_activity_type_id = activity_type.id)
             WHERE
-                (M.model = 'crm.lead') AND (L.user_id = %s) AND (L.type = 'opportunity')
+                (mail_message.model = 'crm.lead') AND (crm_lead.user_id = %s) AND (crm_lead.type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
-
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])
@@ -1058,12 +1100,21 @@ class Lead(FormatAddress, models.Model):
         return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
-    def get_formview_id(self):
+    def get_formview_id(self, access_uid=None):
         if self.type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         else:
             view_id = super(Lead, self).get_formview_id()
         return view_id
+
+    @api.multi
+    def message_get_default_recipients(self):
+        return {
+            r.id : {'partner_ids': [],
+                    'email_to': r.email_from,
+                    'email_cc': False}
+            for r in self.sudo()
+        }
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -1127,6 +1178,19 @@ class Lead(FormatAddress, models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
+    def _message_post_after_hook(self, message):
+        if self.email_from and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email_from', '=', new_partner.email),
+                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+        return super(Lead, self)._message_post_after_hook(message)
+
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
         result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
@@ -1146,7 +1210,7 @@ class Tag(models.Model):
     _description = "Category of lead"
 
     name = fields.Char('Name', required=True, translate=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=10)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),

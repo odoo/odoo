@@ -23,5 +23,5 @@ class TestStockCommon(common.TestProductCommon):
             'name': 'Fabricette Manivelle',
             'login': 'fabricette',
             'email': 'f.f@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_employee.id])]})

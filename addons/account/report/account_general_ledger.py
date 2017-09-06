@@ -28,7 +28,7 @@ class ReportGeneralLedger(models.AbstractModel):
         """
         cr = self.env.cr
         MoveLine = self.env['account.move.line']
-        move_lines = dict(map(lambda x: (x, []), accounts.ids))
+        move_lines = {x: [] for x in accounts.ids}
 
         # Prepare initial sql query and Get the initial move lines
         if init_balance:
@@ -109,7 +109,7 @@ class ReportGeneralLedger(models.AbstractModel):
         return account_res
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
@@ -125,7 +125,7 @@ class ReportGeneralLedger(models.AbstractModel):
 
         accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         accounts_res = self.with_context(data['form'].get('used_context',{}))._get_account_move_entry(accounts, init_balance, sortby, display_account)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': self.model,
             'data': data['form'],
@@ -134,4 +134,3 @@ class ReportGeneralLedger(models.AbstractModel):
             'Accounts': accounts_res,
             'print_journal': codes,
         }
-        return self.env['report'].render('account.report_generalledger', docargs)

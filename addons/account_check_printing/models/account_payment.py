@@ -31,8 +31,8 @@ class AccountRegisterPayments(models.TransientModel):
             super(AccountRegisterPayments, self)._onchange_amount()
         self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
 
-    def get_payment_vals(self):
-        res = super(AccountRegisterPayments, self).get_payment_vals()
+    def _prepare_payment_vals(self, invoices):
+        res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,
@@ -68,9 +68,9 @@ class AccountPayment(models.Model):
 
     @api.onchange('amount')
     def _onchange_amount(self):
-        if hasattr(super(AccountPayment, self), '_onchange_amount'):
-            super(AccountPayment, self)._onchange_amount()
+        res = super(AccountPayment, self)._onchange_amount()
         self.check_amount_in_words = self._get_check_amount_in_words(self.amount)
+        return res
 
     def _check_communication(self, payment_method_id, communication):
         super(AccountPayment, self)._check_communication(payment_method_id, communication)

@@ -3,15 +3,15 @@
 # * hr_payroll
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:46
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -227,7 +227,7 @@ msgstr "Számítások"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégse"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -235,14 +235,14 @@ msgid "Cancel Payslip"
 msgstr "Fizetési jegyzék visszavonása"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:238
+#: code:addons/hr_payroll/models/hr_payroll.py:240
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr "Nem törölhet befejezett fizetési jegyzéket."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9067
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Kategória"
@@ -348,7 +348,7 @@ msgstr "Bérjegyzék beállítás"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
-msgstr "Megerősítés"
+msgstr "Megerősít"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
@@ -569,7 +569,7 @@ msgid "Employees"
 msgstr "Alkalmazottak"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:41
+#: code:addons/hr_payroll/models/hr_payroll.py:43
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Hiba ! Nem hozhat létre egy visszatérő fizetési szerkezetet."
@@ -789,7 +789,7 @@ msgstr "Fizetési meghagyás létrehozása? "
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
 msgid "Manager"
-msgstr "Igazgató"
+msgstr "Menedzser"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
@@ -827,7 +827,7 @@ msgid "Name"
 msgstr "Név"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:323
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Normál munkanap 100%-an fizetve"
@@ -938,7 +938,7 @@ msgid "Payslip"
 msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:224
+#: code:addons/hr_payroll/models/hr_payroll.py:226
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
@@ -1124,7 +1124,7 @@ msgid "Refund"
 msgstr "Visszatérítés"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:244
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "Visszatérítés: "
@@ -1195,8 +1195,8 @@ msgid "Salary Rules"
 msgstr "Fizetési szabályok"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:548
-#: code:addons/hr_payroll/models/hr_payroll.py:595
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "%s fizetési jegyzéke, időszak: %s"
@@ -1402,7 +1402,7 @@ msgid "Worked Days & Inputs"
 msgstr "Ledolgozott napok és adatbevitelek"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:770
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1410,19 +1410,19 @@ msgstr ""
 "fizetési szabálynak %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:776
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Téves python kód meghatározás erre a fizetési szabályra %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:799
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Téves python feltétel meghatározás erre a fizetési szabályra %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:763
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1430,14 +1430,14 @@ msgstr ""
 "%s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:793
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 "Rosszúl lett a tartomány meghatározva ehhez a fizetési szabályhoz %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:268
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1451,7 +1451,7 @@ msgstr ""
 "Alkalmazotta(ka)t kell kiválasztani a fizetési jegyzék(ek) generálásához."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:838
+#: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
+
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -27,7 +29,14 @@ class PosSession(models.Model):
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
             for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
                 if order.state not in ('paid'):
-                    raise UserError(_("You cannot confirm all orders of this session, because they have not the 'paid' status"))
+                    raise UserError(
+                        _("You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
+                          "{reference} is in state {state}, total amount: {total}, paid: {paid}").format(
+                            reference=order.pos_reference or order.name,
+                            state=order.state,
+                            total=order.amount_total,
+                            paid=order.amount_paid,
+                        ))
                 order.action_pos_order_done()
             orders = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'])
             orders.sudo()._reconcile_payments()
@@ -57,7 +66,7 @@ class PosSession(models.Model):
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
-    cash_control = fields.Boolean(compute='_compute_cash_all',    string='Has Cash Control')
+    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control')
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
     cash_register_id = fields.Many2one('account.bank.statement', compute='_compute_cash_all', string='Cash Register', store=True)
 
@@ -75,7 +84,7 @@ class PosSession(models.Model):
         related='cash_register_id.total_entry_encoding',
         string='Total Cash Transaction',
         readonly=True,
-        help="Total of all paid sale orders")
+        help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         related='cash_register_id.balance_end',
         digits=0,
@@ -96,8 +105,12 @@ class PosSession(models.Model):
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
     picking_count = fields.Integer(compute='_compute_picking_count')
+    rescue = fields.Boolean(string='Recovery Session',
+        help="Auto-generated session for orphan orders, ignored in constraints",
+        readonly=True,
+        copy=False)
 
-    _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
+    _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
     @api.multi
     def _compute_picking_count(self):
@@ -133,7 +146,7 @@ class PosSession(models.Model):
         if self.search_count([
                 ('state', 'not in', ('closed', 'closing_control')),
                 ('user_id', '=', self.user_id.id),
-                ('name', 'not like', 'RESCUE FOR'),
+                ('rescue', '=', False)
             ]) > 1:
             raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
@@ -142,9 +155,9 @@ class PosSession(models.Model):
         if self.search_count([
                 ('state', '!=', 'closed'),
                 ('config_id', '=', self.config_id.id),
-                ('name', 'not like', 'RESCUE FOR'),
+                ('rescue', '=', False)
             ]) > 1:
-            raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
+            raise ValidationError(_("Another session is already opened for this point of sale."))
 
     @api.model
     def create(self, values):
@@ -162,7 +175,7 @@ class PosSession(models.Model):
             default_journals = pos_config.with_context(ctx).default_get(['journal_id', 'invoice_journal_id'])
             if (not default_journals.get('journal_id') or
                     not default_journals.get('invoice_journal_id')):
-                raise UserError(_("Unable to open the session. You have to assign a sale journal to your point of sale."))
+                raise UserError(_("Unable to open the session. You have to assign a sales journal to your point of sale."))
             pos_config.with_context(ctx).sudo().write({
                 'journal_id': default_journals['journal_id'],
                 'invoice_journal_id': default_journals['invoice_journal_id']})
@@ -237,17 +250,23 @@ class PosSession(models.Model):
 
     @api.multi
     def action_pos_session_closing_control(self):
+        self._check_pos_session_balance()
+        for session in self:
+            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+            if not session.config_id.cash_control:
+                session.action_pos_session_close()
+
+    @api.multi
+    def _check_pos_session_balance(self):
         for session in self:
             for statement in session.statement_ids:
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
-            #DO NOT FORWARD-PORT
-            if session.state == 'closing_control':
-                session.action_pos_session_close()
-                continue
-            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
-            if not session.config_id.cash_control:
-                session.action_pos_session_close()
+
+    @api.multi
+    def action_pos_session_validate(self):
+        self._check_pos_session_balance()
+        self.action_pos_session_close()
 
     @api.multi
     def action_pos_session_close(self):
@@ -258,7 +277,7 @@ class PosSession(models.Model):
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
-                    if not self.env['ir.model.access'].check_groups("point_of_sale.group_pos_manager"):
+                    if not self.user_has_groups("point_of_sale.group_pos_manager"):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
@@ -277,7 +296,7 @@ class PosSession(models.Model):
         if not self.ids:
             return {}
         for session in self.filtered(lambda s: s.user_id.id != self.env.uid):
-            raise UserError(_("You cannot use the session of another users. This session is owned by %s. "
+            raise UserError(_("You cannot use the session of another user. This session is owned by %s. "
                               "Please first close this one to use this point of sale.") % session.user_id.name)
         return {
             'type': 'ir.actions.act_url',

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_wizard_valuation_history" model="ir.ui.view">
-        <field name="name">Inventory at Date</field>
+        <field name="name">Inventory Valuation Report</field>
         <field name="model">wizard.valuation.history</field>
         <field name="arch" type="xml">
             <form string="Choose your date">
-                <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
-                    Choose a date in the past to get the inventory at that date.
-                </p>
-                <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', True)]}">
-                    Retrieve the curent stock valuation.
-                </p>
                 <group>
-                    <field name="choose_date"/>
-                    <field name="date" attrs="{'invisible': [('choose_date', '=', False)]}"/>
+                    <group>
+                        <field name="compute_at_date" widget="radio"/>
+                        <field name="date" attrs="{'invisible': [('compute_at_date', '=', 0)]}"/>
+                    </group>
                 </group>
                 <footer>
                     <button name="open_table" string="Retrieve the Inventory Value" type="object" class="btn-primary"/>
@@ -23,12 +19,13 @@
         </field>
     </record>
     <record id="action_wizard_stock_valuation_history" model="ir.actions.act_window">
-        <field name="name">Inventory at Date</field>
+        <field name="name">Inventory Valuation Report</field>
         <field name="res_model">wizard.valuation.history</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_wizard_valuation_history"/>
         <field name="target">new</field>
+        <field name="context">{'default_compute_at_date': 0}</field>
     </record>
-    <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.menu_warehouse_report" sequence="1" groups="base.group_no_one"/>
+    <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="action_wizard_stock_valuation_history"/>
 </odoo>

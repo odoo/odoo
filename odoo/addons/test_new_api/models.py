@@ -5,6 +5,7 @@ import datetime
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import pycompat
 
 
 class Category(models.Model):
@@ -45,7 +46,7 @@ class Category(models.Model):
             categories.append(category[0])
         categories.append(self)
         # assign parents following sequence
-        for parent, child in zip(categories, categories[1:]):
+        for parent, child in pycompat.izip(categories, categories[1:]):
             if parent and child:
                 child.parent = parent
         # assign name of last category, and reassign display_name (to normalize it)
@@ -268,7 +269,7 @@ class MixedModel(models.Model):
 
     @api.model
     def _reference_models(self):
-        models = self.env['ir.model'].search([('state', '!=', 'manual')])
+        models = self.env['ir.model'].sudo().search([('state', '!=', 'manual')])
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]
@@ -286,7 +287,7 @@ class Foo(models.Model):
     _name = 'test_new_api.foo'
 
     name = fields.Char()
-    value1 = fields.Integer()
+    value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
 
 
@@ -350,23 +351,12 @@ class CompanyDependentAttribute(models.Model):
         for record in self:
             record.bar = (record.company.foo or '') * record.quantity
 
-class Sparse(models.Model):
-    _name = 'test_new_api.sparse'
-
-    data = fields.Serialized()
-    boolean = fields.Boolean(sparse='data')
-    integer = fields.Integer(sparse='data')
-    float = fields.Float(sparse='data')
-    char = fields.Char(sparse='data')
-    selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
-    partner = fields.Many2one('res.partner', sparse='data')
-
 
 class ComputeRecursive(models.Model):
     _name = 'test_new_api.recursive'
 
     name = fields.Char(required=True)
-    parent = fields.Many2one('test_new_api.recursive')
+    parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
     display_name = fields.Char(compute='_compute_display_name', store=True)
 
     @api.depends('name', 'parent.display_name')

@@ -5,6 +5,7 @@ from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 TYPE2FIELD = {
     'char': 'value_text',
@@ -70,7 +71,7 @@ class Property(models.Model):
         if field == 'value_reference':
             if isinstance(value, models.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, pycompat.integer_types):
                 field_id = values.get('fields_id')
                 if not field_id:
                     if not prop:
@@ -79,7 +80,7 @@ class Property(models.Model):
                 else:
                     field_id = self.env['ir.model.fields'].browse(field_id)
 
-                value = '%s,%d' % (field_id.relation, value)
+                value = '%s,%d' % (field_id.sudo().relation, value)
 
         values[field] = value
         return values
@@ -216,7 +217,7 @@ class Property(models.Model):
                 prop.write({'value': value})
 
         # create new properties for records that do not have one yet
-        for ref, id in refs.iteritems():
+        for ref, id in refs.items():
             value = clean(values[id])
             if value != default_value:
                 self.create({
@@ -247,13 +248,13 @@ class Property(models.Model):
             elif operator in ('!=', '<=', '<', '>', '>='):
                 value = makeref(value)
             elif operator in ('in', 'not in'):
-                value = map(makeref, value)
+                value = [makeref(v) for v in value]
             elif operator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
                 # most probably inefficient... but correct
                 target = self.env[comodel]
                 target_names = target.name_search(value, operator=operator, limit=None)
-                target_ids = map(itemgetter(0), target_names)
-                operator, value = 'in', map(makeref, target_ids)
+                target_ids = [n[0] for n in target_names]
+                operator, value = 'in', [makeref(v) for v in target_ids]
         elif field.type in ('integer', 'float'):
             # No record is created in ir.property if the field's type is float or integer with a value
             # equal to 0. Then to match with the records that are linked to a property field equal to 0,

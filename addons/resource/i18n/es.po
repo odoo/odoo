@@ -18,10 +18,10 @@
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Luis M. Triana <luis.triana@jarsa.com.mx>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -104,11 +104,6 @@ msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "Duración"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
 msgstr "Factor de eficiciencia"
@@ -120,7 +115,7 @@ msgid "End Date"
 msgstr "Fecha finalización"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
+#: code:addons/resource/models/resource.py:741
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
@@ -355,23 +350,14 @@ msgid "Sunday"
 msgstr "Domingo"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
-"Este campo representa la eficiencia de los recursos para completar tareas, "
-"por ejemplo, un recurso puesto solo en una fase de 5 días con 5 tareas "
-"asignadas a él, mostrará una carga de 100% para esta fase por defecto, pero "
-"si ponemos una eficiencia de un 200%, entonces su carga sólo será del 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

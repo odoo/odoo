@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -20,8 +21,6 @@ OPERATORS = {
 class Product(models.Model):
     _inherit = "product.product"
 
-    reception_count = fields.Integer('Receipt', compute='_compute_reception_count')
-    delivery_count = fields.Integer('Delivery', compute='_compute_delivery_count')
     stock_quant_ids = fields.One2many('stock.quant', 'product_id', help='Technical: used to compute quantities.')
     stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
     qty_available = fields.Float(
@@ -77,27 +76,7 @@ class Product(models.Model):
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
 
-    def _compute_reception_count(self):
-        move_data = self.env['stock.move'].read_group([
-            ('product_id', 'in', self.ids),
-            ('location_id.usage', '!=', 'internal'),
-            ('location_dest_id.usage', '=', 'internal'),
-            ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
-        res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.reception_count = res.get(move.id, 0)
-
-    def _compute_delivery_count(self):
-        move_data = self.env['stock.move'].read_group([
-            ('product_id', 'in', self.ids),
-            ('location_id.usage', '=', 'internal'),
-            ('location_dest_id.usage', '!=', 'internal'),
-            ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
-        res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.delivery_count = res.get(move.id, 0)
-
-    @api.depends('stock_quant_ids', 'stock_move_ids')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in self:
@@ -145,7 +124,7 @@ class Product(models.Model):
         domain_move_out_todo = [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_move_out
         moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id']))
         moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id']))
-        quants_res = dict((item['product_id'][0], item['qty']) for item in Quant.read_group(domain_quant, ['product_id', 'qty'], ['product_id']))
+        quants_res = dict((item['product_id'][0], item['quantity']) for item in Quant.read_group(domain_quant, ['product_id', 'quantity'], ['product_id']))
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
@@ -175,14 +154,20 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, force_company, compute_child
         '''
-        # TDE FIXME: clean that brol, context seems overused
         Warehouse = self.env['stock.warehouse']
 
+        if self.env.context.get('company_owned', False):
+            company_id = self.env.user.company_id.id
+            return (
+                [('location_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
+            ])
         location_ids = []
         if self.env.context.get('location', False):
-            if isinstance(self.env.context['location'], (int, long)):
+            if isinstance(self.env.context['location'], pycompat.integer_types):
                 location_ids = [self.env.context['location']]
-            elif isinstance(self.env.context['location'], basestring):
+            elif isinstance(self.env.context['location'], pycompat.string_types):
                 domain = [('complete_name', 'ilike', self.env.context['location'])]
                 if self.env.context.get('force_company', False):
                     domain += [('company_id', '=', self.env.context['force_company'])]
@@ -191,9 +176,9 @@ class Product(models.Model):
                 location_ids = self.env.context['location']
         else:
             if self.env.context.get('warehouse', False):
-                if isinstance(self.env.context['warehouse'], (int, long)):
+                if isinstance(self.env.context['warehouse'], pycompat.integer_types):
                     wids = [self.env.context['warehouse']]
-                elif isinstance(self.env.context['warehouse'], basestring):
+                elif isinstance(self.env.context['warehouse'], pycompat.string_types):
                     domain = [('name', 'ilike', self.env.context['warehouse'])]
                     if self.env.context.get('force_company', False):
                         domain += [('company_id', '=', self.env.context['force_company'])]
@@ -288,9 +273,9 @@ class Product(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
+        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'])
         for quant in quants_groupby:
-            if OPERATORS[operator](quant['qty'], value):
+            if OPERATORS[operator](quant['quantity'], value):
                 product_ids.add(quant['product_id'][0])
         return list(product_ids)
 
@@ -330,7 +315,7 @@ class Product(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(Product, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if self._context.get('location') and isinstance(self._context['location'], (int, long)):
+        if self._context.get('location') and isinstance(self._context['location'], pycompat.integer_types):
             location = self.env['stock.location'].browse(self._context['location'])
             fields = res.get('fields')
             if fields:
@@ -399,6 +384,8 @@ class ProductTemplate(models.Model):
         ('lot', 'By Lots'),
         ('none', 'No Tracking')], string="Tracking", default='none', required=True)
     description_picking = fields.Text('Description on Picking', translate=True)
+    description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
+    description_pickingin = fields.Text('Description on Receptions', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         digits=dp.get_precision('Product Unit of Measure'))
@@ -425,6 +412,9 @@ class ProductTemplate(models.Model):
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids')
+
+    def _is_cost_method_standard(self):
+        return True
 
     def _compute_quantities(self):
         res = self._compute_quantities_dict()

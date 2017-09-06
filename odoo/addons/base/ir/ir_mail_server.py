@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email import Encoders
+from email import encoders
 from email.charset import Charset
 from email.header import Header
 from email.mime.base import MIMEBase
@@ -13,9 +13,11 @@ import re
 import smtplib
 import threading
 
+import html2text
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -26,31 +28,19 @@ class MailDeliveryException(except_orm):
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
 
+# Python 3: patch SMTP's internal printer/debugger
+def _print_debug(self, *args):
+    _logger.debug(' '.join(str(a) for a in args))
+smtplib.SMTP._print_debug = _print_debug
 
+# Python 2: replace smtplib's stderr
 class WriteToLogger(object):
-    """debugging helper: behave as a fd and pipe to logger at the given level"""
-    def __init__(self, logger, level=logging.DEBUG):
-        self.logger = logger
-        self.level = level
-
     def write(self, s):
-        self.logger.log(self.level, s)
+        _logger.debug(s)
+smtplib.stderr = WriteToLogger()
 
-
-def try_coerce_ascii(string_utf8):
-    """Attempts to decode the given utf8-encoded string
-       as ASCII after coercing it to UTF-8, then return
-       the confirmed 7-bit ASCII string.
-
-       If the process fails (because the string
-       contains non-ASCII characters) returns ``None``.
-    """
-    try:
-        string_utf8.decode('ascii')
-    except UnicodeDecodeError:
-        return
-    return string_utf8
-
+def is_ascii(s):
+    return all(ord(cp) < 128 for cp in s)
 
 def encode_header(header_text):
     """Returns an appropriate representation of the given header value,
@@ -68,16 +58,10 @@ def encode_header(header_text):
     """
     if not header_text:
         return ""
-    # convert anything to utf-8, suitable for testing ASCIIness, as 7-bit chars are
-    # encoded as ASCII in utf-8
-    header_text_utf8 = ustr(header_text).encode('utf-8')
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    # if this header contains non-ASCII characters,
-    # we'll need to wrap it up in a message.header.Header
-    # that will take care of RFC2047-encoding it as
-    # 7-bit string.
-    return header_text_ascii or Header(header_text_utf8, 'utf-8')
-
+    header_text = ustr(header_text) # FIXME: require unicode higher up?
+    if is_ascii(header_text):
+        return pycompat.to_native(header_text)
+    Header(header_text, 'utf-8')
 
 def encode_header_param(param_text):
     """Returns an appropriate RFC2047 encoded representation of the given
@@ -95,10 +79,10 @@ def encode_header_param(param_text):
     # For details see the encode_header() method that uses the same logic
     if not param_text:
         return ""
-    param_text_utf8 = ustr(param_text).encode('utf-8')
-    param_text_ascii = try_coerce_ascii(param_text_utf8)
-    return param_text_ascii or Charset('utf8').header_encode(param_text_utf8)
-
+    param_text = ustr(param_text) # FIXME: require unicode higher up?
+    if is_ascii(param_text):
+        return pycompat.to_native(param_text) # TODO: is that actually necessary?
+    return Charset("utf-8").header_encode(param_text)
 
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 
@@ -109,8 +93,8 @@ def extract_rfc2822_addresses(text):
     """
     if not text:
         return []
-    candidates = address_pattern.findall(ustr(text).encode('utf-8'))
-    return filter(try_coerce_ascii, candidates)
+    candidates = address_pattern.findall(ustr(text))
+    return [c for c in candidates if is_ascii(c)]
 
 
 def encode_rfc2822_address_header(header_text):
@@ -122,12 +106,21 @@ def encode_rfc2822_address_header(header_text):
     """
     def encode_addr(addr):
         name, email = addr
-        if not try_coerce_ascii(name):
-            name = str(Header(name, 'utf-8'))
+        # If s is a <text string>, then charset is a hint specifying the
+        # character set of the characters in the string. The Unicode string
+        # will be encoded using the following charsets in order: us-ascii,
+        # the charset hint, utf-8. The first character set to not provoke a
+        # UnicodeError is used.
+        # -> always pass a text string to Header
+
+        # also Header.__str__ in Python 3 "Returns an approximation of the
+        # Header as a string, using an unlimited line length.", the old one
+        # was "A synonym for Header.encode()." so call encode() directly?
+        name = Header(pycompat.to_text(name)).encode()
         return formataddr((name, email))
 
-    addresses = getaddresses([ustr(header_text).encode('utf-8')])
-    return COMMASPACE.join(map(encode_addr, addresses))
+    addresses = getaddresses([pycompat.to_native(ustr(header_text))])
+    return COMMASPACE.join(encode_addr(a) for a in addresses)
 
 
 class IrMailServer(models.Model):
@@ -140,8 +133,8 @@ class IrMailServer(models.Model):
     name = fields.Char(string='Description', required=True, index=True)
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
-    smtp_user = fields.Char(string='Username', size=64, help="Optional username for SMTP authentication")
-    smtp_pass = fields.Char(string='Password', size=64, help="Optional password for SMTP authentication")
+    smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication")
+    smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication")
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
@@ -157,14 +150,6 @@ class IrMailServer(models.Model):
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
 
-    def __init__(self, *args, **kwargs):
-        # Make sure we pipe the smtplib outputs to our own DEBUG logger
-        if not isinstance(smtplib.stderr, WriteToLogger):
-            logpiper = WriteToLogger(_logger)
-            smtplib.stderr = logpiper
-            smtplib.stdout = logpiper
-        super(IrMailServer, self).__init__(*args, **kwargs)
-
     @api.multi
     def name_get(self):
         return [(server.id, "(%s)" % server.name) for server in self]
@@ -174,9 +159,7 @@ class IrMailServer(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self.connect(server.smtp_host, server.smtp_port, user=server.smtp_user,
-                                    password=server.smtp_pass, encryption=server.smtp_encryption,
-                                    smtp_debug=server.smtp_debug)
+                smtp = self.connect(mail_server_id=server.id)
             except Exception as e:
                 raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % ustr(e))
             finally:
@@ -188,28 +171,65 @@ class IrMailServer(models.Model):
                     pass
         raise UserError(_("Connection Test Succeeded! Everything seems properly set up!"))
 
-    def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
-        """Returns a new SMTP connection to the give SMTP server, authenticated
-           with ``user`` and ``password`` if provided, and encrypted as requested
-           by the ``encryption`` parameter.
-        
-           :param host: host or IP of SMTP server to connect to
+    def connect(self, host=None, port=None, user=None, password=None, encryption=None,
+                smtp_debug=False, mail_server_id=None):
+        """Returns a new SMTP connection to the given SMTP server.
+           When running in test mode, this method does nothing and returns `None`.
+
+           :param host: host or IP of SMTP server to connect to, if mail_server_id not passed
            :param int port: SMTP port to connect to
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
            :param string encryption: optional, ``'ssl'`` | ``'starttls'``
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
+           :param mail_server_id: ID of specific mail server to use (overrides other parameters)
         """
-        if encryption == 'ssl':
-            if not 'SMTP_SSL' in smtplib.__all__:
-                raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
-                                  "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
-            connection = smtplib.SMTP_SSL(host, port)
+        # Do not actually connect while running in test mode
+        if getattr(threading.currentThread(), 'testing', False):
+            return None
+
+        mail_server = smtp_encryption = None
+        if mail_server_id:
+            mail_server = self.sudo().browse(mail_server_id)
+        elif not host:
+            mail_server = self.sudo().search([], order='sequence', limit=1)
+
+        if mail_server:
+            smtp_server = mail_server.smtp_host
+            smtp_port = mail_server.smtp_port
+            smtp_user = mail_server.smtp_user
+            smtp_password = mail_server.smtp_pass
+            smtp_encryption = mail_server.smtp_encryption
+            smtp_debug = smtp_debug or mail_server.smtp_debug
         else:
-            connection = smtplib.SMTP(host, port)
+            # we were passed individual smtp parameters or nothing and there is no default server
+            smtp_server = host or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if port is None else port
+            smtp_user = user or tools.config.get('smtp_user')
+            smtp_password = password or tools.config.get('smtp_password')
+            smtp_encryption = encryption
+            if smtp_encryption is None and tools.config.get('smtp_ssl'):
+                smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
+
+        if not smtp_server:
+            raise UserError(
+                (_("Missing SMTP Server") + "\n" +
+                 _("Please define at least one SMTP server, "
+                   "or provide the SMTP parameters explicitly.")))
+
+        if smtp_encryption == 'ssl':
+            if 'SMTP_SSL' not in smtplib.__all__:
+                raise UserError(
+                    _("Your OpenERP Server does not support SMTP-over-SSL. "
+                      "You could use STARTTLS instead."
+                       "If SSL is needed, an upgrade to Python 2.6 on the server-side "
+                       "should do the trick."))
+            connection = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        else:
+            connection = smtplib.SMTP(smtp_server, smtp_port)
         connection.set_debuglevel(smtp_debug)
-        if encryption == 'starttls':
+        if smtp_encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
             # and will discard the previous list of services
             # after successfully performing STARTTLS command,
@@ -218,14 +238,14 @@ class IrMailServer(models.Model):
             # will be correctly detected for next step
             connection.starttls()
 
-        if user:
+        if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
             # The user/password must be converted to bytestrings in order to be usable for
             # certain hashing schemes, like HMAC.
             # See also bug #597143 and python issue #5285
-            user = ustr(user).encode('utf-8')
-            password = ustr(password).encode('utf-8')
-            connection.login(user, password)
+            smtp_user = pycompat.to_native(ustr(smtp_user))
+            smtp_password = pycompat.to_native(ustr(smtp_password))
+            connection.login(smtp_user, smtp_password)
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
@@ -272,8 +292,8 @@ class IrMailServer(models.Model):
         email_bcc = email_bcc or []
         body = body or u''
 
-        email_body_utf8 = ustr(body).encode('utf-8')
-        email_text_part = MIMEText(email_body_utf8, _subtype=subtype, _charset='utf-8')
+        email_body = ustr(body)
+        email_text_part = MIMEText(email_body, _subtype=subtype, _charset='utf-8')
         msg = MIMEMultipart()
 
         if not message_id:
@@ -298,21 +318,21 @@ class IrMailServer(models.Model):
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
-        for key, value in headers.iteritems():
-            msg[ustr(key).encode('utf-8')] = encode_header(value)
+        for key, value in headers.items():
+            msg[pycompat.to_native(ustr(key))] = encode_header(value)
 
-        if subtype == 'html' and not body_alternative and html2text:
+        if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
+            text = html2text.html2text(email_body_utf8)
             alternative_part = MIMEMultipart(_subtype="alternative")
-            alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
+            alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
         elif body_alternative:
             # Include both alternatives, as specified, within a multipart/alternative part
             alternative_part = MIMEMultipart(_subtype="alternative")
-            body_alternative_utf8 = ustr(body_alternative).encode('utf-8')
-            alternative_body_part = MIMEText(body_alternative_utf8, _subtype=subtype_alternative, _charset='utf-8')
+            body_alternative_ = ustr(body_alternative)
+            alternative_body_part = MIMEText(body_alternative_, _subtype=subtype_alternative, _charset='utf-8')
             alternative_part.attach(alternative_body_part)
             alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
@@ -320,9 +340,13 @@ class IrMailServer(models.Model):
             msg.attach(email_text_part)
 
         if attachments:
-            for (fname, fcontent) in attachments:
+            for (fname, fcontent, mime) in attachments:
                 filename_rfc2047 = encode_header_param(fname)
-                part = MIMEBase('application', "octet-stream")
+                if mime and '/' in mime:
+                    maintype, subtype = mime.split('/', 1)
+                    part = MIMEBase(maintype, subtype)
+                else:
+                    part = MIMEBase('application', "octet-stream")
 
                 # The default RFC2231 encoding of Message.add_header() works in Thunderbird but not GMail
                 # so we fix it by using RFC2047 encoding for the filename instead.
@@ -330,7 +354,7 @@ class IrMailServer(models.Model):
                 part.add_header('Content-Disposition', 'attachment', filename=filename_rfc2047)
 
                 part.set_payload(fcontent)
-                Encoders.encode_base64(part)
+                encoders.encode_base64(part)
                 msg.attach(part)
         return msg
 
@@ -340,10 +364,10 @@ class IrMailServer(models.Model):
 
         The default bounce address is used to set the envelop address if no
         envelop address is provided in the message.  It is formed by properly
-        joining the parameters "mail.catchall.alias" and
+        joining the parameters "mail.bounce.alias" and
         "mail.catchall.domain".
 
-        If "mail.catchall.alias" is not set it defaults to "postmaster-odoo".
+        If "mail.bounce.alias" is not set it defaults to "postmaster-odoo".
 
         If "mail.catchall.domain" is not set, return None.
 
@@ -356,7 +380,8 @@ class IrMailServer(models.Model):
 
     @api.model
     def send_email(self, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False):
+                   smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
+                   smtp_session=None):
         """Sends an email directly (no queuing).
 
         No retries are done, the caller should handle MailDeliveryException in order to ensure that
@@ -372,6 +397,10 @@ class IrMailServer(models.Model):
                         ``Return-Path`` (if present), or will be set to the default bounce address.
                         The envelope recipients will be extracted from the combined list of ``To``,
                         ``CC`` and ``BCC`` headers.
+        :param smtp_session: optional pre-established SMTP session. When provided,
+                             overrides `mail_server_id` and all the `smtp_*` parameters.
+                             Passing the matching `mail_server_id` may yield better debugging/log
+                             messages. The caller is in charge of disconnecting the session.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
         :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
@@ -398,7 +427,12 @@ class IrMailServer(models.Model):
         email_cc = message['Cc']
         email_bcc = message['Bcc']
 
-        smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses, [email_to, email_cc, email_bcc])))
+        smtp_to_list = [
+            address
+            for base in [email_to, email_cc, email_bcc]
+            for address in extract_rfc2822_addresses(base)
+            if address
+        ]
         assert smtp_to_list, self.NO_VALID_RECIPIENT
 
         x_forge_to = message['X-Forge-To']
@@ -413,49 +447,17 @@ class IrMailServer(models.Model):
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
-        # Get SMTP Server Details from Mail Server
-        mail_server = None
-        if mail_server_id:
-            mail_server = self.sudo().browse(mail_server_id)
-        elif not smtp_server:
-            mail_server = self.sudo().search([], order='sequence', limit=1)
-
-        if mail_server:
-            smtp_server = mail_server.smtp_host
-            smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
-            smtp_port = mail_server.smtp_port
-            smtp_encryption = mail_server.smtp_encryption
-            smtp_debug = smtp_debug or mail_server.smtp_debug
-        else:
-            # we were passed an explicit smtp_server or nothing at all
-            smtp_server = smtp_server or tools.config.get('smtp_server')
-            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
-            smtp_user = smtp_user or tools.config.get('smtp_user')
-            smtp_password = smtp_password or tools.config.get('smtp_password')
-            if smtp_encryption is None and tools.config.get('smtp_ssl'):
-                smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
-
-        if not smtp_server:
-            raise UserError(_("Missing SMTP Server") + "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
-
         try:
             message_id = message['Message-Id']
-
-            # Add email in Maildir if smtp_server contains maildir.
-            if smtp_server.startswith('maildir:/'):
-                from mailbox import Maildir
-                maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path, factory=None, create=True)
-                mdir.add(message.as_string(True))
-                return message_id
-
-            smtp = None
+            smtp = smtp_session
             try:
-                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
+                smtp = smtp or self.connect(
+                    smtp_server, smtp_port, smtp_user, smtp_password,
+                    smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                if smtp is not None:
+                # do not quit() a pre-established smtp_session
+                if smtp is not None and not smtp_session:
                     smtp.quit()
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))

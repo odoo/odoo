@@ -14,9 +14,10 @@ class SaleReport(models.Model):
 
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Date Order', readonly=True)
+    confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
-    product_uom_qty = fields.Float('# of Qty', readonly=True)
+    product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
@@ -25,12 +26,14 @@ class SaleReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
+    amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
     country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     state = fields.Selection([
@@ -55,9 +58,12 @@ class SaleReport(models.Model):
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
+                    sum(l.amt_to_invoice / COALESCE(cr.rate, 1.0)) as amt_to_invoice,
+                    sum(l.amt_invoiced / COALESCE(cr.rate, 1.0)) as amt_invoiced,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
+                    s.confirmation_date as confirmation_date,
                     s.state as state,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
@@ -100,6 +106,7 @@ class SaleReport(models.Model):
                     t.categ_id,
                     s.name,
                     s.date_order,
+                    s.confirmation_date,
                     s.partner_id,
                     s.user_id,
                     s.state,
@@ -122,3 +129,16 @@ class SaleReport(models.Model):
             FROM ( %s )
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
+
+class SaleOrderReportProforma(models.AbstractModel):
+    _name = 'report.sale.report_saleproforma'
+
+    @api.multi
+    def get_report_values(self, docids, data=None):
+        docs = self.env['sale.order'].browse(docids)
+        return {
+            'doc_ids': docs.ids,
+            'doc_model': 'sale.order',
+            'docs': docs,
+            'proforma': True
+        }

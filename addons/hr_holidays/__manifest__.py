@@ -6,7 +6,7 @@
     'version': '1.5',
     'category': 'Human Resources',
     'sequence': 27,
-    'summary': 'Holidays, Allocation and Leave Requests',
+    'summary': 'Leave allocations and leave requests',
     'website': 'https://www.odoo.com/page/employees',
     'description': """
 Manage leave requests and allocations
@@ -24,7 +24,7 @@ You can keep track of leaves in different ways by following reports:
 
 A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a leave request is accepted by setting up a type of meeting in Leave Type.
 """,
-    'depends': ['hr', 'calendar', 'resource', 'product', 'report'],
+    'depends': ['hr', 'calendar', 'resource'],
     'data': [
         'data/report_paperformat.xml',
         'data/hr_holidays_data.xml',

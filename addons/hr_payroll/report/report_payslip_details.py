@@ -3,7 +3,6 @@
 
 from odoo import api, models
 
-
 class PayslipDetailsReport(models.AbstractModel):
     _name = 'report.hr_payroll.report_payslipdetails'
 
@@ -37,9 +36,9 @@ class PayslipDetailsReport(models.AbstractModel):
                 result.setdefault(x[2], {})
                 result[x[2]].setdefault(x[1], [])
                 result[x[2]][x[1]].append(x[0])
-            for payslip_id, lines_dict in result.iteritems():
+            for payslip_id, lines_dict in result.items():
                 res.setdefault(payslip_id, [])
-                for rule_categ_id, line_ids in lines_dict.iteritems():
+                for rule_categ_id, line_ids in lines_dict.items():
                     rule_categories = RuleCateg.browse(rule_categ_id)
                     lines = PayslipLine.browse(line_ids)
                     level = 0
@@ -69,9 +68,9 @@ class PayslipDetailsReport(models.AbstractModel):
             result.setdefault(line.slip_id.id, {})
             result[line.slip_id.id].setdefault(line.register_id, line)
             result[line.slip_id.id][line.register_id] |= line
-        for payslip_id, lines_dict in result.iteritems():
+        for payslip_id, lines_dict in result.items():
             res.setdefault(payslip_id, [])
-            for register, lines in lines_dict.iteritems():
+            for register, lines in lines_dict.items():
                 res[payslip_id].append({
                     'register_name': register.name,
                     'total': sum(lines.mapped('total')),
@@ -87,9 +86,9 @@ class PayslipDetailsReport(models.AbstractModel):
         return res
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         payslips = self.env['hr.payslip'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'docs': payslips,
@@ -97,4 +96,3 @@ class PayslipDetailsReport(models.AbstractModel):
             'get_details_by_rule_category': self.get_details_by_rule_category(payslips.mapped('details_by_salary_rule_category').filtered(lambda r: r.appears_on_payslip)),
             'get_lines_by_contribution_register': self.get_lines_by_contribution_register(payslips.mapped('line_ids').filtered(lambda r: r.appears_on_payslip)),
         }
-        return self.env['report'].render('hr_payroll.report_payslipdetails', docargs)

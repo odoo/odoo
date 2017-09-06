@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_expense_sheet">
-        <t t-call="report.html_container">
+        <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="report.external_layout">
+                <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Expenses Report</h2>
 
@@ -106,6 +106,7 @@
         report_type="qweb-pdf"
         name="hr_expense.report_expense_sheet"
         file="hr_expense.report_expense_sheet"
+        print_report_name="'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
     />
 
 </odoo>

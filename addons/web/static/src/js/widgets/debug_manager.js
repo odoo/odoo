@@ -2,12 +2,11 @@ odoo.define('web.DebugManager', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
-var common = require('web.form_common');
+var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 var framework = require('web.framework');
-var Model = require('web.Model');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -18,8 +17,6 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var ADD = function (id) { return [4, id, false]; },
-    REMOVE = function (id) { return [3, id, false]; };
 /**
  * DebugManager base + general features (applicable to any context)
  */
@@ -64,11 +61,19 @@ var DebugManager = Widget.extend({
         // whether group is currently enabled for current user
         this._has_features = false;
         // whether the current user is an administrator
-        this._is_admin = session.is_admin;
+        this._is_admin = session.is_system;
         return $.when(
-            new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
+            this._rpc({
+                    model: 'res.users',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                }),
             session.user_has_group('base.group_no_one'),
-            new Model('ir.model.data').call('xmlid_to_res_id', {xmlid: 'base.group_no_one'}),
+            this._rpc({
+                    model: 'ir.model.data',
+                    method: 'xmlid_to_res_id',
+                    kwargs: {xmlid: 'base.group_no_one'},
+                }),
             this._super()
         ).then(function (can_write_user, has_group_no_one, group_no_one_id) {
             this._features_group = can_write_user && group_no_one_id;
@@ -159,17 +164,21 @@ var DebugManager = Widget.extend({
     },
     select_view: function () {
         var self = this;
-        new common.SelectCreateDialog(this, {
+        new dialogs.SelectCreateDialog(this, {
             res_model: 'ir.ui.view',
             title: _t('Select a view'),
             disable_multiple_selection: true,
             domain: [['type', '!=', 'qweb'], ['type', '!=', 'search']],
             on_selected: function (element_ids) {
-                new Model('ir.ui.view')
-                    .query(['name', 'model', 'type'])
-                    .filter([['id', '=', element_ids[0]]])
-                    .first()
-                    .then(function (view) {
+                self._rpc({
+                        model: 'ir.ui.view',
+                        method: 'search_read',
+                        domain: [['id', '=', element_ids[0]]],
+                        fields: ['name', 'model', 'type'],
+                        limit: 1,
+                    })
+                    .then(function (views) {
+                        var view = views[0];
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
@@ -186,15 +195,6 @@ var DebugManager = Widget.extend({
             target: 'new',
             type: 'ir.actions.act_url',
             url: '/web/tests?mod=*'
-        });
-    },
-    toggle_technical_features: function () {
-        if (!this._features_group) { return; }
-        var command = this._has_features ? REMOVE(this._features_group) : ADD(this._features_group);
-        new Model('res.users').call('write', [session.uid, {
-            groups_id: [command]
-        }]).then(function () {
-            window.location.reload();
         });
     },
     split_assets: function() {
@@ -236,16 +236,21 @@ DebugManager.include({
     get_view_fields: function () {
         var self = this;
         var model = this._action.res_model;
-        new Model(model).call('fields_get', {
-            attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
-        }).done(function (fields) {
-            new Dialog(self, {
-                title: _.str.sprintf(_t("Fields of %s"), model),
-                $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
-                    fields: fields
-                }))
-            }).open();
-        });
+        this._rpc({
+                model: model,
+                method: 'fields_get',
+                kwargs: {
+                    attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
+                },
+            })
+            .done(function (fields) {
+                new Dialog(self, {
+                    title: _.str.sprintf(_t("Fields of %s"), model),
+                    $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
+                        fields: fields
+                    }))
+                }).open();
+            });
     },
     manage_filters: function () {
         this.do_action({
@@ -259,22 +264,13 @@ DebugManager.include({
             }
         });
     },
-    edit_workflow: function () {
-        return this.do_action({
-            res_model: 'workflow',
-            name: _t('Edit Workflow'),
-            domain: [['osv', '=', this._action.res_model]],
-            views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-            type: 'ir.actions.act_window',
-            view_type: 'list',
-            view_mode: 'list'
-        });
-    },
     translate: function() {
-        var model = this._action.res_model;
-        new Model("ir.translation")
-                .call('get_technical_translations', [model])
-                .then(this.do_action);
+        this._rpc({
+                model: 'ir.translation',
+                method: 'get_technical_translations',
+                args: [this._action.res_model],
+            })
+            .then(this.do_action);
     }
 });
 
@@ -288,16 +284,22 @@ DebugManager.include({
         this._can_edit_views = false;
         return $.when(
             this._super(),
-            new Model('ir.ui.view').call(
-                'check_access_rights', {operation: 'write', raise_exception: false}
-            ).then(function (ar) {
-                this._can_edit_views = ar;
-            }.bind(this))
+            this._rpc({
+                    model: 'ir.ui.view',
+                    method: 'check_access_rights',
+                    kwargs: {operation: 'write', raise_exception: false},
+                })
+                .then(function (ar) {
+                    this._can_edit_views = ar;
+                }.bind(this))
         );
     },
     update: function (tag, descriptor, widget) {
         switch (tag) {
         case 'action':
+            if (this._view_manager) {
+                this._view_manager.off('switch_mode', this);
+            }
             if (!(widget instanceof ViewManager)) {
                 this._active_view = null;
                 this._view_manager = null;
@@ -324,47 +326,149 @@ DebugManager.include({
 
     get_metadata: function() {
         var ds = this._view_manager.dataset;
-        if (!this._active_view.controller.get_selected_ids().length) {
+        if (!this._active_view.controller.getSelectedIds().length) {
             console.warn(_t("No metadata available"));
-            return
+            return;
         }
-        ds.call('get_metadata', [this._active_view.controller.get_selected_ids()]).done(function(result) {
+        ds.call('get_metadata', [this._active_view.controller.getSelectedIds()]).done(function(result) {
+            var metadata = result[0];
+            metadata.creator = field_utils.format.many2one(metadata.create_uid);
+            metadata.lastModifiedBy = field_utils.format.many2one(metadata.write_uid);
+            var createDate = field_utils.parse.datetime(metadata.create_date);
+            metadata.create_date = field_utils.format.datetime(createDate);
+            var modificationDate = field_utils.parse.datetime(metadata.write_date);
+            metadata.write_date = field_utils.format.datetime(modificationDate);
             new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
-                    perm : result[0],
-                    format : formats.format_value
+                    perm : metadata,
                 })
             }).open();
         });
     },
     set_defaults: function() {
-        this._active_view.controller.open_defaults_dialog();
+        var self = this;
+
+        var display = function (fieldInfo, value) {
+            var displayed = value;
+            if (value && fieldInfo.type === 'many2one') {
+                displayed = value.data.display_name;
+                value = value.data.id;
+            } else if (value && fieldInfo.type === 'selection') {
+                displayed = _.find(fieldInfo.selection, function (option) {
+                    return option[0] === value;
+                })[1];
+            }
+            return [value, displayed];
+        };
+
+        var renderer = this._active_view.controller.renderer;
+        var fields = self._active_view.fields_view.fields;
+        var fieldsInfo = self._active_view.fields_view.fieldsInfo.form;
+        var fieldNamesInView = renderer.state.getFieldNames();
+        var fieldsValues = renderer.state.data;
+        var modifierDatas = {};
+        _.each(fieldNamesInView, function (fieldName) {
+            modifierDatas[fieldName] = _.find(renderer.allModifiersData, function (modifierdata) {
+                return modifierdata.node.attrs.name === fieldName;
+            });
+        });
+        this.fields = _.chain(fieldNamesInView)
+            .map(function (fieldName) {
+                var modifierData = modifierDatas[fieldName];
+                var invisibleOrReadOnly;
+                if (modifierData) {
+                    var evaluatedModifiers = modifierData.evaluatedModifiers[renderer.state.id];
+                    invisibleOrReadOnly = evaluatedModifiers.invisible || evaluatedModifiers.readonly;
+                }
+                var fieldInfo = fields[fieldName];
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                 // ignore fields which are empty, invisible, readonly, o2m
+                // or m2m
+                if (!value || invisibleOrReadOnly || fieldInfo.type === 'one2many' ||
+                    fieldInfo.type === 'many2many' || fieldInfo.type === 'binary' ||
+                    fieldsInfo[fieldName].options.isPassword) {
+                    return false;
+                }
+                return {
+                    name: fieldName,
+                    string: fieldInfo.string,
+                    value: value,
+                    displayed: displayed,
+                };
+            })
+            .compact()
+            .sortBy(function (field) { return field.string; })
+            .value();
+
+        var conditions = _.chain(fieldNamesInView)
+            .filter(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                return fieldInfo.change_default;
+            })
+            .map(function (fieldName) {
+                var fieldInfo = fields[fieldName];
+                var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
+                var value = valueDisplayed[0];
+                var displayed = valueDisplayed[1];
+                return {
+                    name: fieldName,
+                    string: fieldInfo.string,
+                    value: value,
+                    displayed: displayed,
+                };
+            })
+            .value();
+        var d = new Dialog(this, {
+            title: _t("Set Default"),
+            buttons: [
+                {text: _t("Close"), close: true},
+                {text: _t("Save default"), click: function () {
+                    var $defaults = d.$el.find('#formview_default_fields');
+                    var fieldToSet = $defaults.val();
+                    if (!fieldToSet) {
+                        $defaults.parent().addClass('o_form_invalid');
+                        return;
+                    }
+                    var allUsers = d.$el.find('#formview_default_all').is(':checked');
+                    var condition = d.$el.find('#formview_default_conditions').val();
+                    var value = _.find(self.fields, function (field) {
+                        return field.name === fieldToSet;
+                    }).value;
+                    self._rpc({
+                        model: 'ir.values',
+                        method: 'set_default',
+                        args: [
+                            self._active_view.fields_view.model,
+                            fieldToSet,
+                            value,
+                            allUsers,
+                            true,
+                            condition || false,
+                        ],
+                    }).done(function () { d.close(); });
+                }}
+            ]
+        });
+        d.args = {
+            fields: this.fields,
+            conditions: conditions,
+        };
+        d.template = 'FormView.set_default';
+        d.open();
     },
     fvg: function() {
-        var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();
-        $('<pre>').text(utils.json_node_to_xml(
-            this._active_view.controller.fields_view.arch, true)
-        ).appendTo(dialog.$el);
-    },
-    print_workflow: function() {
-        var ids = this._active_view.controller.get_selected_ids();
-        framework.blockUI();
-        var action = {
-            context: { active_ids: ids },
-            report_name: "workflow.instance.graph",
-            datas: {
-                model: this._view_manager.dataset.model,
-                id: ids[0],
-                nested: true,
-            }
-        };
-        session.get_file({
-            url: '/web/report',
-            data: {action: JSON.stringify(action)},
-            complete: framework.unblockUI
+        var self = this;
+        var dialog = new Dialog(this, { title: _t("Fields View Get") });
+        dialog.opened().then(function () {
+            $('<pre>').text(utils.json_node_to_xml(
+                self._active_view.controller.renderer.arch, true)
+            ).appendTo(dialog.$el);
         });
+        dialog.open();
     },
 });
 function make_context(width, height, fn) {

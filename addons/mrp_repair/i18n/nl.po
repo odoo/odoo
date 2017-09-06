@@ -3,17 +3,17 @@
 # * mrp_repair
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgid ""
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 " * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe reparatieopdracht aan het ingeven is.\n"
-"* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigd.\n"
+"* De 'Bevestigd' status wordt gebruikt wanneer een gebruiker de reparatieopdracht bevestigt.\n"
 "* De 'Gereed voor reparatie' status wordt gebruikt om te beginnen met het repareren. De gebruiker kan beginnen met de reparatie nadat reparatieopdracht is bevestigd.\n"
 "* De 'Te factureren \" status wordt gebruikt om de factuur vóór of na de reparatie te genereren.\n"
 "* De 'Verwerkt' status wordt ingesteld als de reparatie is voltooid.\n"
@@ -87,7 +87,7 @@ msgstr "<strong>Product om te repareren:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr "<strong>Afleveradres:</strong>"
+msgstr "<strong>Verzendadres:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -173,7 +173,7 @@ msgstr "Klik om een reparatie order aan te maken."
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -234,8 +234,8 @@ msgstr "Huidige locatie"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
-msgstr "Standaard address id"
+msgid "Default Address"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -266,7 +266,7 @@ msgstr "Best. Locatie"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
@@ -383,7 +383,7 @@ msgstr "Factuur adres:"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Invoice and shipping address:"
-msgstr "Factuur- en afleveradres"
+msgstr "Factuur- en verzendadres"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
@@ -451,6 +451,11 @@ msgid "Move created by the repair order"
 msgstr "Mutatie aangemaakt door reparatie order"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr "Mijn activiteiten"
+
+#. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
 msgstr "Geen factuur"
@@ -502,6 +507,11 @@ msgstr "Bewerkingregels"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
 msgstr "Bewerkingen"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
+msgstr "Activiteiten over tijd"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
@@ -733,6 +743,11 @@ msgid "Set to Draft"
 msgstr "Zet op concept"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
 msgid "Source Location"
 msgstr "Bronlocatie"
@@ -758,7 +773,7 @@ msgstr "Subtotaal"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Tax"
-msgstr "BTW"
+msgstr "Belasting"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
@@ -766,7 +781,7 @@ msgstr "BTW"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Belastingen"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:166
@@ -800,7 +815,7 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
-"De status van een reparatie regel is automatisch ingesteld op de status van "
+"De status van een reparatie lijn is automatisch ingesteld op de status van "
 "de gerelateerde reparatie order."
 
 #. module: mrp_repair
@@ -822,6 +837,11 @@ msgstr "Te factureren"
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
 msgstr "Nog te factureren"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr "Activiteiten van vandaag"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
@@ -858,12 +878,17 @@ msgstr "Maateenheid"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Onbelast bedrag"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr "Excl. BTW"
+msgstr "Onbelast bedrag"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder

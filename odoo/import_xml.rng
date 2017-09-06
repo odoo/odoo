@@ -54,38 +54,22 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="workflow">
-        <rng:element name="workflow">
-            <rng:attribute name="model" />
-            <rng:attribute name="action"/>
-            <rng:optional><rng:attribute name="uid"/></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:choice>
-                <rng:attribute name="ref" />
-                <rng:ref name="value"/>
-            </rng:choice>
-        </rng:element>
-    </rng:define>
-
     <rng:define name="report">
         <rng:element name="report">
             <rng:optional><rng:attribute name="id"/></rng:optional>
             <rng:attribute name="string"/>
             <rng:attribute name="model"/>
             <rng:attribute name="name"/>
+            <rng:optional><rng:attribute name="print_report_name"/></rng:optional>
             <rng:optional><rng:attribute name="report_type"/></rng:optional>
             <rng:optional><rng:attribute name="multi"/></rng:optional>
             <rng:optional><rng:attribute name="menu"/></rng:optional>
             <rng:optional><rng:attribute name="keyword"/></rng:optional>
-            <rng:optional><rng:attribute name="rml"/></rng:optional><!-- pending deprecation after v6.0 -->
             <rng:optional><rng:attribute name="file"/></rng:optional>
-            <rng:optional><rng:attribute name="sxw"/></rng:optional>
             <rng:optional><rng:attribute name="xml"/></rng:optional>
-            <rng:optional><rng:attribute name="xsl"/></rng:optional>
             <rng:optional><rng:attribute name="parser"/></rng:optional>
             <rng:optional> <rng:attribute name="auto" /> </rng:optional>
             <rng:optional> <rng:attribute name="header" /> </rng:optional>
-            <rng:optional> <rng:attribute name="webkit_header" /> </rng:optional>
             <rng:optional> <rng:attribute name="attachment" /> </rng:optional>
             <rng:optional> <rng:attribute name="attachment_use" /> </rng:optional>
             <rng:optional> <rng:attribute name="groups"/> </rng:optional>
@@ -242,9 +226,7 @@
             <rng:optional> <rng:attribute name="action"/> </rng:optional>
             <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
             <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional>
-                <rng:attribute name="load_xmlid"><rng:value>True</rng:value></rng:attribute>
-            </rng:optional>
+            <rng:optional> <rng:attribute name="active"/> </rng:optional>
             <!-- TODO: remove icon stuff -->
             <rng:optional> <rng:attribute name="icon"/> </rng:optional>
             <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
@@ -339,7 +321,6 @@
                     <rng:ref name="url" />
                     <rng:ref name="assert" />
                     <rng:ref name="report" />
-                    <rng:ref name="workflow" />
                     <rng:ref name="function" />
                     <rng:ref name="ir_set" />
                 </rng:choice>

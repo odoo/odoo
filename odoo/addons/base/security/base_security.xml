@@ -57,6 +57,7 @@
             <field name="name">Portal</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual Odoo groups.</field>
+            <field name="is_portal" eval="True"/>
         </record>
         <!--
             A group dedicated to the public user only, making groups
@@ -103,10 +104,19 @@
             <field name="perm_write" eval="False"/>
         </record>
 
-        <record model="ir.rule" id="ir_values_default_rule">
-            <field name="name">Defaults: alter personal values only</field>
-            <field name="model_id" ref="model_ir_values"/>
-            <field name="domain_force">[('key','=','default'),('user_id','=',user.id)]</field>
+        <record model="ir.rule" id="ir_default_user_rule">
+            <field name="name">Defaults: alter personal defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_system_rule">
+            <field name="name">Defaults: alter all defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
             <field name="perm_read" eval="False"/>
         </record>
 
@@ -126,16 +136,6 @@
             -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
 	</record>
-
-    <record id="ir_config_parameter_rule" model="ir.rule">
-        <field name="name">ICP read rule</field>
-        <field name="model_id" ref="model_ir_config_parameter"/>
-        <field name="domain_force">['|',('group_ids','in', [g.id for g in user.groups_id]), ('group_ids','=',False)]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
 
         <record id="res_currency_rate_rule" model="ir.rule">
             <field name="name">multi-company currency rate rule</field>

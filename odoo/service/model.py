@@ -13,7 +13,7 @@ from odoo.models import check_method_name
 from odoo.tools.translate import translate
 from odoo.tools.translate import _
 
-import security
+from . import security
 
 _logger = logging.getLogger(__name__)
 
@@ -30,13 +30,13 @@ def dispatch(method, params):
     params = params[3:]
     if method == 'obj_list':
         raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
-    if method not in ['execute', 'execute_kw', 'exec_workflow']:
+    if method not in ['execute', 'execute_kw']:
         raise NameError("Method not available %s" % method)
     security.check(db,uid,passwd)
     registry = odoo.registry(db).check_signaling()
     fn = globals()[method]
-    res = fn(db, uid, *params)
-    registry.signal_caches_change()
+    with registry.manage_changes():
+        res = fn(db, uid, *params)
     return res
 
 def check(f):
@@ -66,10 +66,6 @@ def check(f):
                         ctx = request.env.context
                     except Exception:
                         pass
-
-            uid = 1
-            if args and isinstance(args[0], (long, int)):
-                uid = args[0]
 
             lang = ctx and ctx.get('lang')
             if not (lang or hasattr(src, '__call__')):
@@ -116,7 +112,7 @@ def check(f):
                 tries += 1
                 _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                 time.sleep(wait_time)
-            except IntegrityError, inst:
+            except IntegrityError as inst:
                 registry = odoo.registry(dbname)
                 for key in registry._sql_error.keys():
                     if key in inst[0]:
@@ -165,13 +161,3 @@ def execute(db, uid, obj, method, *args, **kw):
         if res is None:
             _logger.info('The method %s of the object %s can not return `None` !', method, obj)
         return res
-
-def exec_workflow_cr(cr, uid, obj, signal, *args):
-    res_id = args[0]
-    return execute_cr(cr, uid, obj, 'signal_workflow', [res_id], signal)[res_id]
-
-
-@check
-def exec_workflow(db, uid, obj, signal, *args):
-    with odoo.registry(db).cursor() as cr:
-        return exec_workflow_cr(cr, uid, obj, signal, *args)

@@ -21,14 +21,14 @@ class WebsiteForm(http.Controller):
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
-        model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
+        model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
             return json.dumps(False)
 
         try:
             data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
-        except ValidationError, e:
+        except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception
             return json.dumps({'error_fields' : e.args[0]})
 
@@ -43,8 +43,9 @@ class WebsiteForm(http.Controller):
         except IntegrityError:
             return json.dumps(False)
 
+        request.session['form_builder_model_model'] = model_record.model
         request.session['form_builder_model'] = model_record.name
-        request.session['form_builder_id']    = id_record
+        request.session['form_builder_id'] = id_record
 
         return json.dumps({'id': id_record})
 
@@ -159,11 +160,11 @@ class WebsiteForm(http.Controller):
         # def website_form_input_filter(self, values):
         #     values['name'] = '%s\'s Application' % values['partner_name']
         #     return values
-        dest_model = request.env[model.model]
+        dest_model = request.env[model.sudo().model]
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in authorized_fields.iteritems() if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in authorized_fields.items() if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 

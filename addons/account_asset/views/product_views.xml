@@ -6,10 +6,11 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
-            <field name="property_account_expense_id" position="before">
+            <field name="property_account_expense_id" position="after">
                 <field name="asset_category_id"
                     domain="[('type', '=', 'purchase')]"
-                    context="{'default_type': 'purchase'}"/>
+                    context="{'default_type': 'purchase'}"
+                    groups="account.group_account_user"/>
             </field>
         </field>
     </record>

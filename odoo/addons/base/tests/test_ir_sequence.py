@@ -154,7 +154,7 @@ class TestIrSequenceGenerate(unittest.TestCase):
             self.assertTrue(seq)
 
         with environment() as env:
-            for i in xrange(1, 10):
+            for i in range(1, 10):
                 n = env['ir.sequence'].next_by_code('test_sequence_type_5')
                 self.assertEqual(n, str(i))
 
@@ -169,7 +169,7 @@ class TestIrSequenceGenerate(unittest.TestCase):
             self.assertTrue(seq)
 
         with environment() as env:
-            for i in xrange(1, 10):
+            for i in range(1, 10):
                 n = env['ir.sequence'].next_by_code('test_sequence_type_6')
                 self.assertEqual(n, str(i))
 

@@ -6,7 +6,7 @@ from psycopg2 import OperationalError
 from odoo import api, fields, models, registry, _
 from odoo.exceptions import UserError
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
@@ -16,12 +16,12 @@ class ProcurementGroup(models.Model):
     The procurement group class is used to group products together
     when computing procurements. (tasks, physical products, ...)
 
-    The goal is that when you have one sale order of several products
+    The goal is that when you have one sales order of several products
     and the products are pulled from the same or several location(s), to keep
-    having the moves grouped into pickings that represent the sale order.
+    having the moves grouped into pickings that represent the sales order.
 
     Used in: sales order (to group delivery order lines like the so), pull/push
-    rules (to pack like the delivery order), on orderpoints (e.g. for wave picking
+    rules (to pack like the delivery order), on orderpoints (e.g. for batch picking
     all the similar products together).
 
     Grouping is made only if the source and the destination is the same.
@@ -31,7 +31,7 @@ class ProcurementGroup(models.Model):
     move from input will have a stock.picking with 2 grouped lines and the move
     from stock will have 2 grouped lines also.
 
-    The name is usually the name of the original document (sale order) or a
+    The name is usually the name of the original document (sales order) or a
     sequence computed if created manually.
     '''
     _name = 'procurement.group'
@@ -53,7 +53,7 @@ class ProcurementRule(models.Model):
     ''' A rule describe what a procurement should do; produce, buy, move, ... '''
     _name = 'procurement.rule'
     _description = "Procurement Rule"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char(
         'Name', required=True, translate=True,
@@ -82,7 +82,7 @@ class ProcurementOrder(models.Model):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority desc, date_planned, id asc'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread']
 
 
     name = fields.Text('Description', required=True)
@@ -103,7 +103,7 @@ class ProcurementOrder(models.Model):
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
     rule_id = fields.Many2one(
         'procurement.rule', 'Rule',
-        track_visibility='onchange',
+        track_visibility='onchange', ondelete='restrict',
         help="Chosen rule for the procurement resolution. Usually chosen by the system but can be manually set by the procurement manager to force an unusual behavior.")
 
     product_id = fields.Many2one(
@@ -127,9 +127,23 @@ class ProcurementOrder(models.Model):
         ('done', 'Done')], string='Status', default='confirmed',
         copy=False, required=True, track_visibility='onchange')
 
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for p in self:
+            result.append((p.id, p.origin and (p.origin+': '+p.name) or p.name))
+        return result
+
     @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'exception')]
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            domain = ['|', ('name',operator,name), ('origin',operator,name)]
+            procs = self.search(domain + args, limit=limit)
+        else:
+            procs = self.search(args, limit=limit)
+        return procs.name_get()
 
     @api.model
     def create(self, vals):

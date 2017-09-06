@@ -3,22 +3,21 @@
 {
     'name': 'Online Events',
     'category': 'Marketing',
-    'sequence': 135,
-    'summary': 'Schedule, Promote and Sell Events',
+    'sequence': 166,
+    'summary': 'Publish Events and Manage Online Registrations on your Website',
     'website': 'https://www.odoo.com/page/website-builder',
-    'description': """
-Online Events
-        """,
+    'description': "",
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
     'data': [
-        'data/website_event_data.xml',
-        'views/website_event_templates.xml',
-        'views/website_event_views.xml',
+        'data/event_data.xml',
+        'views/res_config_settings_views.xml',
+        'views/event_templates.xml',
+        'views/event_views.xml',
         'security/ir.model.access.csv',
-        'security/website_event_security.xml',
+        'security/event_security.xml',
     ],
     'demo': [
-        'data/website_event_demo.xml'
+        'data/event_demo.xml'
     ],
     'application': True,
 }

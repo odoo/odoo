@@ -44,8 +44,11 @@
                         <field name="type" groups="base.group_no_one"/>
                     </group>
                     <group>
-                        <field name="interval"/>
-                        <field name="duration"/>
+                        <label for="duration"/>
+                        <div>
+                            <field name="duration" class="oe_inline"/>
+                            <field name="interval" class="oe_inline ml8"/>
+                        </div>
                     </group>
                 </group>
             </form>
@@ -104,7 +107,7 @@
                         </h2>
                     </div>
                     <notebook>
-                        <page string="Meeting Details">
+                        <page name="page_details" string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
                                 <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
                                     <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
@@ -139,7 +142,7 @@
                             <label for="description"/>
                             <field name="description"/>
                         </page>
-                        <page string="Options">
+                        <page name="page_options" string="Options">
                             <group>
                                 <div>
                                     <group>
@@ -194,7 +197,7 @@
                             </group>
                         </page>
 
-                        <page string="Invitations" groups="base.group_no_one">
+                        <page name="page_invitations" string="Invitations" groups="base.group_no_one">
                             <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
@@ -208,7 +211,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Misc" groups="base.group_no_one">
+                        <page name="page_misc" string="Misc" groups="base.group_no_one">
                             <group>
                                 <label for="user_id" string="Owner"/>
                                 <field name="user_id" nolabel="1"/>
@@ -261,12 +264,13 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
-                         display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
-                         use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
+                readonly_form_view_id="%(calendar.view_calendar_event_form_popup)s"
+                event_open_popup="true"
+                event_limit="3"
+                color="partner_id">
                 <field name="name"/>
-                <field name="user_id"/>
-                <field name="color_partner_id"/>
-                <field name="partner_ids"/>
+                <field name="partner_ids" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_small"/>
+                <field name="is_highlighted" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -306,7 +310,7 @@
             Click to schedule a new meeting.
           </p><p>
             The calendar is shared between employees and fully integrated with
-            other applications such as the employee holidays or the business
+            other applications such as the employee leaves or the business
             opportunities.
           </p>
         </field>

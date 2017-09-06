@@ -107,7 +107,7 @@ var UsernameWidget = PosBaseWidget.extend({
         });
     },
     get_name: function(){
-        var user = this.pos.cashier || this.pos.user;
+        var user = this.pos.get_cashier();
         if(user){
             return user.name;
         }else{
@@ -270,7 +270,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Unpaid Orders ?'),
-                'body':  _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                'body':  _t('This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_unpaid_orders();
                     window.location = '/';
@@ -292,6 +292,10 @@ var DebugWidget = PosBaseWidget.extend({
                 _t("paid orders") + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.json',
                 ".export_paid_orders", ".download_paid_orders"
             );
+        });
+
+        this.$('.button.display_refresh').click(function () {
+            self.pos.proxy.message('display_refresh', {});
         });
 
         this.$('.button.import_orders input').on('change', function(event) {
@@ -325,6 +329,7 @@ var DebugWidget = PosBaseWidget.extend({
 
 var StatusWidget = PosBaseWidget.extend({
     status: ['connected','connecting','disconnected','warning','error'],
+
     set_status: function(status,msg){
         for(var i = 0; i < this.status.length; i++){
             this.$('.js_'+this.status[i]).addClass('oe_hidden');
@@ -392,6 +397,7 @@ var ProxyStatusWidget = StatusWidget.extend({
                     msg += _t('Scale');
                 }
             }
+
             msg = msg ? msg + ' ' + _t('Offline') : msg;
             this.set_status(warning ? 'warning' : 'connected', msg);
         }else{
@@ -426,6 +432,112 @@ var SaleDetailsButton = PosBaseWidget.extend({
         this.$el.click(function(){
             self.pos.proxy.print_sale_details();
         });
+    },
+});
+
+/* User interface for distant control over the Client display on the posbox */
+// The boolean posbox_supports_display (in devices.js) will allow interaction to the posbox on true, prevents it otherwise
+// We don't want the incompatible posbox to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
+var ClientScreenWidget = PosBaseWidget.extend({
+    template: 'ClientScreenWidget',
+
+    change_status_display: function(status) {
+        var msg = ''
+        if (status === 'success') {
+            this.$('.js_warning').addClass('oe_hidden');
+            this.$('.js_disconnected').addClass('oe_hidden');
+            this.$('.js_connected').removeClass('oe_hidden');
+        } else if (status === 'warning') {
+            this.$('.js_disconnected').addClass('oe_hidden');
+            this.$('.js_connected').addClass('oe_hidden');
+            this.$('.js_warning').removeClass('oe_hidden');
+            msg = _t('Connected, Not Owned');
+        } else {
+            this.$('.js_warning').addClass('oe_hidden');
+            this.$('.js_connected').addClass('oe_hidden');
+            this.$('.js_disconnected').removeClass('oe_hidden');
+            msg = _t('Disconnected')
+            if (status === 'not_found') {
+                msg = _t('Client Screen Unsupported. Please upgrade the PosBox')
+            }
+        }
+
+        this.$('.oe_customer_display_text').text(msg);
+    },
+
+    status_loop: function() {
+        var self = this;
+        function loop() {
+            if (self.pos.proxy.posbox_supports_display) {
+                var deffered = self.pos.proxy.test_ownership_of_client_screen();
+                if (deffered) {
+                    deffered.then(
+                        function(data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if (data.status === 'OWNER') {
+                                self.change_status_display('success');
+                            } else {
+                                self.change_status_display('warning');
+                              }
+                        },
+                        
+                        function(err) {
+                            if (typeof err == "undefined") {
+                                self.change_status_display('failure');
+                            } else {
+                                self.change_status_display('not_found');
+                                self.pos.proxy.posbox_supports_display = false;
+                            }
+                        })
+    
+                    .always(function () {
+                        setTimeout(loop,3000);
+                    });
+                }
+            }   
+        }
+        loop();
+    },
+
+    start: function(){
+        if (this.pos.config.iface_customer_facing_display) {
+                this.show();
+                var self = this;
+                this.$el.click(function(){
+                    self.pos.render_html_for_customer_facing_display().then(function(rendered_html) {
+                        self.pos.proxy.take_ownership_over_client_screen(rendered_html).then(
+       
+                        function(data) {
+                            if (typeof data === 'string') {
+                                data = JSON.parse(data);
+                            }
+                            if (data.status === 'success') {
+                               self.change_status_display('success');
+                            } else {
+                               self.change_status_display('warning');
+                            }
+                            if (!self.pos.proxy.posbox_supports_display) {
+                                self.pos.proxy.posbox_supports_display = true;
+                                self.status_loop();
+                            }
+                        }, 
+        
+                        function(err) {
+                            if (typeof err == "undefined") {
+                                self.change_status_display('failure');
+                            } else {
+                                self.change_status_display('not_found');
+                            }
+                        });
+                    });
+
+                });
+                this.status_loop();
+        } else {
+            this.hide();
+        }
     },
 });
 
@@ -697,6 +809,11 @@ var Chrome = PosBaseWidget.extend({
             'append':  '.pos-rightheader',
             'condition': function(){ return this.pos.config.use_proxy; },
         },{
+            'name': 'screen_status',
+            'widget': ClientScreenWidget,
+            'append': '.pos-rightheader',
+            'condition': function(){ return this.pos.config.use_proxy; },
+        },{
             'name':   'notification',
             'widget': SynchNotificationWidget,
             'append':  '.pos-rightheader',
@@ -799,6 +916,7 @@ return {
     OrderSelectorWidget: OrderSelectorWidget,
     ProxyStatusWidget: ProxyStatusWidget,
     SaleDetailsButton: SaleDetailsButton,
+    ClientScreenWidget: ClientScreenWidget,
     StatusWidget: StatusWidget,
     SynchNotificationWidget: SynchNotificationWidget,
     UsernameWidget: UsernameWidget,

@@ -2,8 +2,11 @@
 
 import re
 
+import collections
+
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import pycompat
 
 
 def sanitize_account_number(acc_number):
@@ -26,7 +29,6 @@ class Bank(models.Model):
     country = fields.Many2one('res.country')
     email = fields.Char()
     phone = fields.Char()
-    fax = fields.Char()
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 
@@ -60,7 +62,7 @@ class ResPartnerBank(models.Model):
     acc_type = fields.Char(compute='_compute_acc_type', help='Bank account type, inferred from account number')
     acc_number = fields.Char('Account Number', required=True)
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
-    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)])
+    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], default=lambda self: self.env.user.company_id.partner_id)
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name')
     bank_bic = fields.Char(related='bank_id.bic')
@@ -89,7 +91,7 @@ class ResPartnerBank(models.Model):
             if args[pos][0] == 'acc_number':
                 op = args[pos][1]
                 value = args[pos][2]
-                if hasattr(value, '__iter__'):
+                if not isinstance(value, pycompat.string_types) and isinstance(value, collections.Iterable):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)

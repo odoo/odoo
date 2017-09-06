@@ -1,16 +1,13 @@
 odoo.define('hr_attendance.greeting_message', function (require) {
 "use strict";
 
-var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
-
 var core = require('web.core');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 
 
-var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
+var GreetingMessage = Widget.extend({
     template: 'HrAttendanceGreetingMessage',
 
     events: {
@@ -20,12 +17,12 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
     init: function(parent, action) {
         var self = this;
         this._super.apply(this, arguments);
-        BarcodeHandlerMixin.init.apply(this, arguments);
+        this.activeBarcode = true;
 
         // if no correct action given (due to an erroneous back or refresh from the browser), we set the dismiss button to return
         // to the (likely) appropriate menu, according to the user access rights
         if(!action.attendance) {
-            this.stop_listening();
+            this.activeBarcode = false;
             this.session.user_has_group('hr_attendance.group_hr_attendance_user').then(function(has_group) {
                 if(has_group) {
                     self.next_action = 'hr_attendance.hr_attendance_action_kiosk_mode';
@@ -39,7 +36,7 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
         this.next_action = action.next_action || 'hr_attendance.hr_attendance_action_my_attendances';
         // no listening to barcode scans if we aren't coming from the kiosk mode (and thus not going back to it with next_action)
         if (this.next_action != 'hr_attendance.hr_attendance_action_kiosk_mode' && this.next_action.tag != 'hr_attendance_kiosk_mode') {
-            this.stop_listening();
+            this.activeBarcode = false;
         }
         this.attendance = action.attendance;
         // check in/out times displayed in the greeting message template.
@@ -52,6 +49,9 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
     start: function() {
         if (this.attendance) {
             this.attendance.check_out ? this.farewell_message() : this.welcome_message();
+        }
+        if (this.activeBarcode) {
+            core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         }
     },
 
@@ -101,7 +101,7 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
             if(now.valueOf() - last_check_in_date.valueOf() > 1000*60*60*12){
                 this.$('.o_hr_attendance_warning_message').append(_t("Warning! Last check in was over 12 hours ago.<br/>If this isn't right, please contact Human Resources."));
                 clearTimeout(this.return_to_main_menu);
-                this.stop_listening();
+                this.activeBarcode = false;
             } else if(now.valueOf() - last_check_in_date.valueOf() > 1000*60*60*8){
                 this.$('.o_hr_attendance_random_message').html(_t("Another good day's work! See you soon!"));
             }
@@ -127,13 +127,16 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
         }
     },
 
-    on_barcode_scanned: function(barcode) {
+    _onBarcodeScanned: function(barcode) {
         var self = this;
         if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
             clearTimeout(this.return_to_main_menu);
         }
-        var hr_employee = new Model('hr.employee');
-        hr_employee.call('attendance_scan', [barcode, ])
+        this._rpc({
+                model: 'hr.employee',
+                method: 'attendance_scan',
+                args: [barcode, ],
+            })
             .then(function (result) {
                 if (result.action) {
                     self.do_action(result.action);
@@ -144,6 +147,7 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
     },
 
     destroy: function () {
+        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearTimeout(this.return_to_main_menu);
         this._super.apply(this, arguments);
     },

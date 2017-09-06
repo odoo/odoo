@@ -4,8 +4,8 @@
 from odoo import api, models
 
 
-class IrActionsReportXml(models.Model):
-    _inherit = 'ir.actions.report.xml'
+class IrActionsReport(models.Model):
+    _inherit = 'ir.actions.report'
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -13,4 +13,4 @@ class IrActionsReportXml(models.Model):
         if model_id:
             model = self.env['ir.model'].browse(model_id).model
             args.append(('model', '=', model))
-        return super(IrActionsReportXml, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        return super(IrActionsReport, self).search(args, offset=offset, limit=limit, order=order, count=count)

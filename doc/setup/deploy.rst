@@ -48,7 +48,7 @@ Configuration samples
 
 in ``/etc/odoo.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: ini
 
   [options]
   dbfilter = ^mycompany.*$
@@ -60,7 +60,7 @@ in ``/etc/odoo.conf`` set:
 
 in ``/etc/odoo.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: ini
 
   [options]
   dbfilter = ^%d$
@@ -101,7 +101,7 @@ Configuration sample
 
 in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: text
 
   # IPv4 local connections:
   host    all             all             127.0.0.1/32            md5
@@ -109,7 +109,7 @@ in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
 
 in ``/etc/postgresql/9.5/main/postgresql.conf`` set:
   
-.. code-block:: apacheconf
+.. code-block:: text
   
   listen_addresses = 'localhost,192.168.1.2'
   port = 5432
@@ -154,7 +154,7 @@ Configuration sample
 
 in ``/etc/odoo.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: ini
 
   [options]
   admin_passwd = mysupersecretpassword
@@ -226,7 +226,7 @@ Configuration sample
 
 in ``/etc/odoo.conf``:
 
-.. code-block:: apacheconf
+.. code-block:: ini
 
   [options]
   limit_memory_hard = 1677721600
@@ -267,13 +267,13 @@ Configuration sample
 
 in ``/etc/odoo.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: ini
 
   proxy_mode = True
 
 in ``/etc/nginx/sites-enabled/odoo.conf`` set:
 
-.. code-block:: apacheconf
+.. code-block:: nginx
 
   #odoo server
   upstream odoo {

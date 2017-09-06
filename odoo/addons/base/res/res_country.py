@@ -32,23 +32,38 @@ class Country(models.Model):
     _description = 'Country'
     _order = 'name'
 
-    name = fields.Char(string='Country Name', required=True, translate=True, help='The full name of the country.')
-    code = fields.Char(string='Country Code', size=2,
-                help='The ISO country code in two chars. \nYou can use this field for quick search.')
-    address_format = fields.Text(help="""You can state here the usual format to use for the \
-addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address \
-(for example, use '%(street)s' to display the field 'street') plus
-            \n%(state_name)s: the name of the state
-            \n%(state_code)s: the code of the state
-            \n%(country_name)s: the name of the country
-            \n%(country_code)s: the code of the country""",
-            default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
+    name = fields.Char(
+        string='Country Name', required=True, translate=True, help='The full name of the country.')
+    code = fields.Char(
+        string='Country Code', size=2,
+        help='The ISO country code in two chars. \nYou can use this field for quick search.')
+    address_format = fields.Text(string="Layout in Reports",
+        help="Display format to use for addresses belonging to this country.\n\n"
+             "You can use python-style string pattern with all the fields of the address "
+             "(for example, use '%(street)s' to display the field 'street') plus"
+             "\n%(state_name)s: the name of the state"
+             "\n%(state_code)s: the code of the state"
+             "\n%(country_name)s: the name of the country"
+             "\n%(country_code)s: the code of the country",
+        default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
+    address_view_id = fields.Many2one(
+        comodel_name='ir.ui.view', string="Input View",
+        domain=[('model', '=', 'res.partner'), ('type', '=', 'form')],
+        help="Use this field if you want to replace the usual way to encode a complete address. "
+             "Note that the address_format field is used to modify the way to display addresses "
+             "(in reports for example), while this field is used to modify the input form for "
+             "addresses.")
     currency_id = fields.Many2one('res.currency', string='Currency')
     image = fields.Binary(attachment=True)
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
+    name_position = fields.Selection([
+            ('before', 'Before Address'),
+            ('after', 'After Address'),
+        ], string="Customer Name Position", default="before",
+        help="Determines where the customer/company name should be placed, i.e. after or before the address.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
@@ -81,7 +96,7 @@ class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
@@ -96,8 +111,20 @@ class CountryState(models.Model):
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
 
-    name_search = location_name_search
-
     _sql_constraints = [
         ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
     ]
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if args is None:
+            args = []
+        if self.env.context.get('country_id'):
+            args = args + [('country_id', '=', self.env.context.get('country_id'))]
+        firsts_records = self.search([('code', '=ilike', name)] + args, limit=limit)
+        search_domain = [('name', operator, name)]
+        search_domain.append(('id', 'not in', firsts_records.ids))
+        records = firsts_records + self.search(search_domain + args, limit=limit)
+        return [(record.id, record.display_name) for record in records]
+
+

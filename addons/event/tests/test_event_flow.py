@@ -15,14 +15,10 @@ class TestEventFlow(TestEventCommon):
     @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
-        event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
-            'auto_confirmation': 1
-        })
-        event_config.execute()
-
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
+            'auto_confirm': True,
             'date_begin': datetime.datetime.now() + relativedelta(days=-1),
             'date_end': datetime.datetime.now() + relativedelta(days=1),
             'seats_max': 2,
@@ -66,13 +62,10 @@ class TestEventFlow(TestEventCommon):
         with self.assertRaises(UserError):
             test_event.button_cancel()
 
-
     @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """
-        self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', False)
-
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
@@ -113,13 +106,12 @@ class TestEventFlow(TestEventCommon):
             (4, self.env.ref('base.group_erp_manager').id)
         ]})
         with self.assertRaises(AccessError):
-            event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
-                'auto_confirmation': 1
+            event_config = self.env['res.config.settings'].sudo(self.user_eventmanager).create({
             })
             event_config.execute()
 
     def test_event_data(self):
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'tomorrow')
 
     def test_event_date_range(self):
         self.patcher = patch('odoo.addons.event.models.event.fields.Datetime', wraps=Datetime)
@@ -128,19 +120,16 @@ class TestEventFlow(TestEventCommon):
         self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 31, 12, 0))
 
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 18, 0)
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Today')
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'today')
 
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 1, 6, 0)
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'Tomorrow')
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'tomorrow')
 
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 2, 6, 0)
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'This week')
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'in 2 days')
 
-        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 2, 1, 6, 0)
-        self.assertTrue('T' in self.event_0.registration_ids.get_date_range_str())
-
-        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 15, 12, 0))
-        self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 6, 0)
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'This month')
+        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 10, 12, 0))
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 25, 6, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'next month')
 
         self.patcher.stop()

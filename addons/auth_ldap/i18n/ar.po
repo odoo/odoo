@@ -1,29 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_ldap
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Ali zuaby <ali@zuaby.net>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # abdulaziz <azzam773@gmail.com>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
-# SaFi J. <safi2266@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: SaFi J. <safi2266@gmail.com>, 2016\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-01-01 21:44+0000\n"
+"Last-Translator: abdulaziz <azzam773@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
@@ -68,21 +62,16 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "إعدادات LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 msgid "LDAP Parameters"
 msgstr "باراميترات LDAP"
-
-#. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
-msgid "LDAP Parameters *"
-msgstr " معلمات LDAP *"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
@@ -137,14 +126,14 @@ msgstr "معلومات تسجيل الدخول"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "باراميتر العملية"
+msgstr "متغير العملية"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication"
-" attempts will fail."
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
 msgstr ""
 "طلب تشفير TLS/SSL عند الاتصال بسيرفر LDAP. هذا الاختيار يتطلب أن يكون قد تم "
 "إعداد STATTLS، وإلا ستفشل محاولة المصادقة."
@@ -157,7 +146,7 @@ msgstr "المسلسل"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "معلومات السيرفر"
+msgstr "معلومات الخادم"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
@@ -167,7 +156,7 @@ msgstr "اضبط سيرفر LDAP الخاص بك"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr "المستخدم القالب"
+msgstr "مستخدم القالب"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -198,17 +187,12 @@ msgstr "معلومات المستخدم"
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr "قالب المستخدم لنسخه عند إنشاء مستخدمين جدد"
+msgstr "المستخدم للنسخ عند إنشاء مستخدمين جدد"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "المستخدمون"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap

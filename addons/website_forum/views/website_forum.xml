@@ -693,7 +693,8 @@
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" t-attf-id="content-#{str(object.id)}" class="form-control load_editor" required="True"
                 t-att-data-karma="forum.karma_editor"/>
-            <button type="submit" class="btn btn-primary mb16">Post Comment</button>
+            <button type="submit" class="btn btn-primary mb16" t-if="question.post_type != 'discussion'">Post Comment</button>
+            <button type="submit" class="btn btn-primary mb16" t-if="question.post_type == 'discussion'">Post Answer</button>
         </form>
     </div>
 </template>
@@ -718,7 +719,12 @@
                 t-att-data-karma="forum.karma_editor"/>
         <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} mt16 #{not question.can_answer and 'karma_required' or ''}"
                 t-att-data-karma="question.forum_id.karma_answer"
+                t-if="question.post_type != 'discussion'"
                 data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
+        <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} mt16 #{not question.can_answer and 'karma_required' or ''}"
+                t-att-data-karma="question.forum_id.karma_answer"
+                t-if="question.post_type == 'discussion'"
+                data-social-target-type="answer" data-hashtags="#answer">Post Comment</button>
     </form>
 </template>
 
@@ -894,8 +900,13 @@
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
-                        <li t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
-                            <a t-attf-class="fa fa-reply" href="#post_reply"> Reply</a>
+                        <li t-if="(question.post_type in ('link','question') and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                            <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or ''}"
+                            t-att-data-karma="question.forum_id.karma_answer"
+                            href="#post_reply"> Reply</a>
+                        </li>
+                        <li t-if="question.post_type == 'discussion'">
+                            <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
                         </li>
                         <li t-if="question.post_type == 'question'">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
@@ -926,7 +937,7 @@
             </t>
         </div>
         <div id="post_reply"
-                t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                t-if="(question.post_type != 'question' or question.post_type == 'question' and not question.uid_has_answered) and question.state != 'close' and question.active != False and question.can_answer">
             <t t-call="website_forum.post_answer"/>
         </div>
         <div t-if="question.post_type == 'question' and question.uid_has_answered" class="mb16">
@@ -973,6 +984,13 @@
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
                 <ul class="list-inline pull-right mb0">
+                    <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))">
+                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
+                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
+                        </a>
+                    </li>
                     <li>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
@@ -1008,15 +1026,8 @@
                     </li>
                 </ul>
                 <ul class="list-inline mb0">
-                    <li t-if="question.post_type == 'question'">
-                        <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
-                            t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
-                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
-                        </a>
-                    </li>
                     <li t-if="question.post_type != 'question'">
-                        <a t-attf-class="fa fa-reply" style="cursor: pointer" data-toggle="collapse"
+                        <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" style="cursor: pointer" data-toggle="collapse"
                             t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
                         </a>
                     </li>
@@ -1037,6 +1048,19 @@
                 <t t-call="website_forum.post_answers">
                     <t t-set="answer" t-value="child_answer"/>
                 </t>
+            </div>
+            <div class="clearfix" t-if="len(answer.website_message_ids)">
+                <div class="col-sm-offset-2 col-sm-2">
+                    <ul class="list-inline mb0">
+                        <li t-if="question.post_type == 'question'">
+                            <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
+                                t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
+                                style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
+                                t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -1276,74 +1300,80 @@
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
         <div class="row">
-            <div class="col-md-2">
-                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
-            </div>
-            <div class="col-md-10">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form">
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input name="user_id" t-att-value="user.id" type="hidden"/>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
-                    </div>
+                <input type="file" class="hidden o_forum_file_upload" name="ufile" accept="image/*"/>
+                <div class="col-md-2">
+                    <a href="#" class="o_forum_profile_pic_edit">
+                        <i class="fa fa-pencil fa-1g pull-left" title="Edit"></i>
+                    </a>
+                    <a href="#">
+                        <i class="fa fa-trash-o fa-1g pull-right o_forum_profile_pic_clear" title="Clear"></i>
+                    </a>
+                    <img class="img img-responsive img-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
-                    <div class="col-md-8 mb16" t-if="user.id == uid">
-                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
-                        <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                <div class="col-md-10">
+                    <input name="user_id" t-att-value="user.id" type="hidden"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_website">Website</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                        <div class="col-md-8 mb16" t-if="user.id == uid">
+                            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
+                            <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
-                        <button type="button" class="close" data-dismiss="alert">x</button>
-                        <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_website">Website</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
+                        </div>
                     </div>
-                    <label class="col-md-2 control-label mb16" for="user_email">Email</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                    <div class="form-group">
+                        <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
+                            <button type="button" class="close" data-dismiss="alert">x</button>
+                            <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
+                        </div>
+                        <label class="col-md-2 control-label mb16" for="user_email">Email</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="user_city">City</label>
-                    <div class="col-md-8 mb16">
-                        <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="user_city">City</label>
+                        <div class="col-md-8 mb16">
+                            <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16">Country</label>
-                    <div class="col-md-8 mb16">
-                        <select class="form-control" name="country">
-                            <option value="">Country...</option>
-                            <t t-foreach="countries or []" t-as="country">
-                                <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                            </t>
-                         </select>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16">Country</label>
+                        <div class="col-md-8 mb16">
+                            <select class="form-control" name="country">
+                                <option value="">Country...</option>
+                                <t t-foreach="countries or []" t-as="country">
+                                    <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                                </t>
+                             </select>
+                        </div>
                     </div>
-                </div>
-                <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                <div class="form-group">
-                    <label class="col-md-2 control-label mb16" for="description">Biography</label>
-                    <div class="col-md-8 mb16">
-                        <textarea name="description" id="description" style="min-height: 120px" required="True"
-                            class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                    <!--Note: using website_description fiels instead of using commnt firld of partner-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label mb16" for="description">Biography</label>
+                        <div class="col-md-8 mb16">
+                            <textarea name="description" id="description" style="min-height: 120px" required="True"
+                                class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-offset-2 col-md-2 mb16">
-                    <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    <div class="col-sm-offset-2 col-md-2 mb16">
+                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    </div>
                 </div>
             </form>
-            </div>
         </div>
-
     </t>
 </template>
 
@@ -1404,10 +1434,12 @@
                 </table>
                 <div class="well well-sm">
                     <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
-                    <t t-if="uid == user.id">
-                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"> Edit Your Bio</a>
-                    </t>
                 </div>
+                <t t-if="uid == user.id">
+                    <div>
+                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit">Edit Your Profile</a>
+                    </div>
+                </t>
             </div>
         </div>
 
@@ -1529,7 +1561,7 @@
 
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
         <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>

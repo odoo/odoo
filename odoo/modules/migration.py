@@ -87,13 +87,12 @@ class MigrationManager(object):
             return "%s.%s" % (release.major_version, version)
 
         def _get_migration_versions(pkg):
-            versions = list(set(
+            versions = sorted({
                 ver
                 for lv in self.migrations[pkg.name].values()
                 for ver, lf in lv.items()
                 if lf
-            ))
-            versions.sort(key=lambda k: parse_version(convert_version(k)))
+            }, key=lambda k: parse_version(convert_version(k)))
             return versions
 
         def _get_migration_files(pkg, version, stage):
@@ -107,7 +106,7 @@ class MigrationManager(object):
                 'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
             }
 
-            for x in mapping.keys():
+            for x in mapping:
                 if version in m.get(x):
                     for f in m[x][version]:
                         if not f.startswith(stage + '-'):
@@ -137,7 +136,8 @@ class MigrationManager(object):
                     try:
                         fp, fname = tools.file_open(pyfile, pathinfo=True)
 
-                        if not isinstance(fp, file):
+                        # FIXME: imp.load_source removed in P3, and so is the ``file`` object...
+                        if not isinstance(fp, file):# pylint: disable=file-builtin
                             # imp.load_source need a real file object, so we create
                             # one from the file-like object we get from file_open
                             fp2 = os.tmpfile()

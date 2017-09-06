@@ -5,7 +5,8 @@
 
 """
 from collections import Mapping, defaultdict, deque
-from contextlib import closing
+from contextlib import closing, contextmanager
+from functools import partial
 from operator import attrgetter
 from weakref import WeakValueDictionary
 import logging
@@ -14,8 +15,9 @@ import threading
 
 import odoo
 from .. import SUPERUSER_ID
-from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, topological_sort, OrderedSet)
+from odoo.tools import (assertion_report, config, existing_tables,
+                        lazy_classproperty, lazy_property, table_exists,
+                        topological_sort, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -97,10 +99,8 @@ class Registry(Mapping):
                     cr.commit()
 
         registry.ready = True
+        registry.registry_invalidated = bool(update_module)
 
-        if update_module:
-            # only in case of update, otherwise we'll have an infinite reload loop!
-            registry.signal_registry_change()
         return registry
 
     def init(self, db_name):
@@ -110,9 +110,11 @@ class Registry(Mapping):
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+        self._post_init_queue = deque()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
+        self.updated_modules = []       # installed/updated modules
 
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name)
@@ -120,8 +122,9 @@ class Registry(Mapping):
         # special cursor for test mode; None means "normal" mode
         self.test_cr = None
 
-        # Indicates that the registry is 
-        self.ready = False
+        # Indicates that the registry is
+        self.loaded = False             # whether all modules are loaded
+        self.ready = False              # whether everything is set up
 
         # Inter-process signaling (used only when odoo.multi_process is True):
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -131,10 +134,9 @@ class Registry(Mapping):
         self.registry_sequence = None
         self.cache_sequence = None
 
-        self.cache = LRU(8192)
-        # Flag indicating if at least one model cache has been cleared.
-        # Useful only in a multi-process context.
-        self.cache_cleared = False
+        # Flags indicating invalidation of the registry or the cache.
+        self.registry_invalidated = False
+        self.cache_invalidated = False
 
         with closing(self.cursor()) as cr:
             has_unaccent = odoo.modules.db.has_unaccent(cr)
@@ -147,14 +149,15 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                cls.registries[db_name].clear_caches()
-                del cls.registries[db_name]
+                registry = cls.registries.pop(db_name)
+                registry.clear_caches()
+                registry.registry_invalidated = True
 
     @classmethod
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in cls.registries.keys():
+            for db_name in list(cls.registries.keys()):
                 cls.delete(db_name)
 
     #
@@ -190,8 +193,8 @@ class Registry(Mapping):
         # map fields on their dependents
         dependents = {
             field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
-            for model in self.itervalues()
-            for field in model._fields.itervalues()
+            for model in self.values()
+            for field in model._fields.values()
         }
         # sort them topologically, and associate a sequence number to each field
         mapping = {
@@ -199,20 +202,6 @@ class Registry(Mapping):
             for num, field in enumerate(reversed(topological_sort(dependents)))
         }
         return mapping.get
-
-    def clear_manual_fields(self):
-        """ Invalidate the cache for manual fields. """
-        self._fields_by_model = None
-
-    def get_manual_fields(self, cr, model_name):
-        """ Return the manual fields (as a dict) for the given model. """
-        if self._fields_by_model is None:
-            # Query manual fields for all models at once
-            self._fields_by_model = dic = defaultdict(dict)
-            cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
-            for field in cr.dictfetchall():
-                dic[field['model']][field['name']] = field
-        return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
@@ -261,42 +250,43 @@ class Registry(Mapping):
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
-    def setup_models(self, cr, partial=False):
+    def setup_models(self, cr):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
-
-            :param partial: ``True`` if all models have not been loaded yet.
         """
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
-        # load custom models
-        ir_model = env['ir.model']
-        cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
-        for model_data in cr.dictfetchall():
-            model_class = ir_model._instanciate(model_data)
-            model_class._build_model(self, cr)
+        # add manual models
+        if self._init_modules:
+            env['ir.model']._add_manual_models()
 
         # prepare the setup on all models
-        models = env.values()
+        models = list(env.values())
         for model in models:
             model._prepare_setup()
 
         # do the actual setup from a clean state
         self._m2m = {}
         for model in models:
-            model._setup_base(partial)
+            model._setup_base()
 
         for model in models:
-            model._setup_fields(partial)
+            model._setup_fields()
 
         for model in models:
             model._setup_complete()
 
+        self.registry_invalidated = True
+
+    def post_init(self, func, *args, **kwargs):
+        """ Register a function to call at the end of :meth:`~.init_models`. """
+        self._post_init_queue.append(partial(func, *args, **kwargs))
+
     def init_models(self, cr, model_names, context):
         """ Initialize a list of models (given by their name). Call methods
-            ``_auto_init``, ``init``, and ``_auto_end`` on each model to create
-            or update the database tables supporting the models.
+            ``_auto_init`` and ``init`` on each model to create or update the
+            database tables supporting the models.
 
             The ``context`` may contain the following items:
              - ``module``: the name of the module being installed/updated, if any;
@@ -305,31 +295,25 @@ class Registry(Mapping):
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
 
-        context = dict(context, todo=[])
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
         for model in models:
             model._auto_init()
             model.init()
-            cr.commit()
 
-        for model in models:
-            model._auto_end()
-            cr.commit()
-
-        for _, func, args in sorted(context['todo']):
-            func(*args)
+        while self._post_init_queue:
+            func = self._post_init_queue.popleft()
+            func()
 
         if models:
             models[0].recompute()
-        cr.commit()
 
         # make sure all tables are present
-        missing = [name
-                   for name, model in env.items()
-                   if not model._abstract and not model._table_exist()]
-        if missing:
+        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+        if missing_tables:
+            missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
             deps = {name: model._depends for name, model in env.items()}
@@ -337,18 +321,27 @@ class Registry(Mapping):
                 if name in missing:
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
-                    cr.commit()
             # check again, and log errors if tables are still missing
-            for name, model in env.items():
-                if not model._abstract and not model._table_exist():
-                    _logger.error("Model %s has no table.", name)
+            missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+            for table in missing_tables:
+                _logger.error("Model %s has no table.", table2model[table])
+
+    @lazy_property
+    def cache(self):
+        """ A cache for model methods. """
+        # this lazy_property is automatically reset by lazy_property.reset_all()
+        return LRU(8192)
+
+    def _clear_cache(self):
+        """ Clear the cache and mark it as invalidated. """
+        self.cache.clear()
+        self.cache_invalidated = True
 
     def clear_caches(self):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        self.cache.clear()
-        for model in self.models.itervalues():
+        for model in self.models.values():
             model.clear_caches()
 
     def setup_signaling(self):
@@ -397,29 +390,50 @@ class Registry(Mapping):
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
                 self.clear_caches()
-                self.cache_cleared = False
+                self.cache_invalidated = False
             self.registry_sequence = r
             self.cache_sequence = c
 
         return self
 
-    def signal_registry_change(self):
-        """ Notifies other processes that the registry has changed. """
-        if odoo.multi_process:
+    def signal_changes(self):
+        """ Notifies other processes if registry or cache has been invalidated. """
+        if odoo.multi_process and self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
                 self.registry_sequence = cr.fetchone()[0]
 
-    def signal_caches_change(self):
-        """ Notifies other processes if caches have been invalidated. """
-        if odoo.multi_process and self.cache_cleared:
-            # signal it through the database to other processes
+        # no need to notify cache invalidation in case of registry invalidation,
+        # because reloading the registry implies starting with an empty cache
+        elif odoo.multi_process and self.cache_invalidated:
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_cache_signaling')")
                 self.cache_sequence = cr.fetchone()[0]
-                self.cache_cleared = False
+
+        self.registry_invalidated = False
+        self.cache_invalidated = False
+
+    def reset_changes(self):
+        """ Reset the registry and cancel all invalidations. """
+        if self.registry_invalidated:
+            with closing(self.cursor()) as cr:
+                self.setup_models(cr)
+                self.registry_invalidated = False
+        if self.cache_invalidated:
+            self.cache.clear()
+            self.cache_invalidated = False
+
+    @contextmanager
+    def manage_changes(self):
+        """ Context manager to signal/discard registry and cache invalidations. """
+        try:
+            yield self
+            self.signal_changes()
+        except Exception:
+            self.reset_changes()
+            raise
 
     def in_test_mode(self):
         """ Test whether the registry is in 'test' mode. """
@@ -468,43 +482,3 @@ class DummyRLock(object):
         self.acquire()
     def __exit__(self, type, value, traceback):
         self.release()
-
-
-class RegistryManager(object):
-    """ Model registries manager.
-
-    This is deprecated, use :class:`Registry` instead.
-
-    """
-    @classmethod
-    def get(cls, db_name, force_demo=False, status=None, update_module=False):
-        return Registry(db_name)
-
-    @classmethod
-    def new(cls, db_name, force_demo=False, status=None, update_module=False):
-        return Registry.new(db_name, force_demo, status, update_module)
-
-    @classmethod
-    def delete(cls, db_name):
-        return Registry.delete(db_name)
-
-    @classmethod
-    def delete_all(cls):
-        return Registry.delete_all()
-
-    @classmethod
-    def clear_caches(cls, db_name):
-        return Registry(db_name).clear_caches()
-
-    @classmethod
-    def check_registry_signaling(cls, db_name):
-        registry = Registry(db_name)
-        return registry != registry.check_signaling()
-
-    @classmethod
-    def signal_caches_change(cls, db_name):
-        return Registry(db_name).signal_caches_change()
-
-    @classmethod
-    def signal_registry_change(cls, db_name):
-        return Registry(db_name).signal_registry_change()

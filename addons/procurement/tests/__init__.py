@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import test_procurement
+from . import test_procurement

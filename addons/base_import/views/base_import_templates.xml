@@ -5,7 +5,15 @@
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/base_import/static/src/less/base_import.less"/>
                 <script type="text/javascript" src="/base_import/static/lib/javascript-state-machine/state-machine.js"></script>
-                <script type="text/javascript" src="/base_import/static/src/js/base_import.js"></script>
+                <script type="text/javascript" src="/base_import/static/src/js/import_action.js"></script>
+                <script type="text/javascript" src="/base_import/static/src/js/import_buttons.js"></script>
+            </xpath>
+        </template>
+
+
+        <template id="qunit_suite" name="base_import_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/base_import/static/tests/import_buttons_tests.js"></script>
             </xpath>
         </template>
     </data>

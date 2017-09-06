@@ -5,13 +5,13 @@ import random
 import re
 from collections import Counter
 from itertools import product
-from urlparse import urljoin
+
+from werkzeug import urls
 
 from odoo import _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
-from odoo.addons.website.models.website import slug
-
 
 class TestSurvey(TransactionCase):
 
@@ -99,15 +99,15 @@ class TestSurvey(TransactionCase):
             self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
                 Validation function for type numerical_box is unable to notify if answer is violating the validation rules")
 
-    def test_05_question_datetime(self):
+    def test_05_question_date(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'datetime', 'validation_required': True,
-            'validation_min_date': '2015-03-20 00:00:00', 'validation_max_date': '2015-03-25 00:00:00', 'validation_error_msg': "Error"})
+            'page_id': self.page1.id, 'question': 'Q0', 'type': 'date', 'validation_required': True,
+            'validation_min_date': '2015-03-20', 'validation_max_date': '2015-03-25', 'validation_error_msg': "Error"})
         answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-        results = [('2015-55-10', _('This is not a date/time')), ('2015-03-19 00:00:00', 'Error'), ('2015-03-26 00:00:00', 'Error')]
+        results = [('2015-55-10', _('This is not a date')), ('2015-03-19', 'Error'), ('2015-03-26', 'Error')]
         for i in range(len(results)):
             self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
-                Validation function for type datetime is unable to notify if answer is violating the validation rules")
+                Validation function for type date is unable to notify if answer is violating the validation rules")
 
     def test_06_survey_sharing(self):
         # Case-1: Executing action with correct data.
@@ -176,12 +176,12 @@ class TestSurvey(TransactionCase):
 
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in urltypes.iteritems():
+        for urltype, urltxt in urltypes.items():
             survey_url = getattr(self.survey1, urltype + '_url')
             survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
             self.assertTrue(validate_url(survey_url))
             url = "survey/%s/%s" % (urltxt, slug(self.survey1))
-            full_url = urljoin(base_url, url)
+            full_url = urls.url_join(base_url, url)
             self.assertEqual(full_url, survey_url)
             self.assertEqual('/' + url, survey_url_relative)
             if urltype == 'public':
@@ -208,8 +208,8 @@ class TestSurvey(TransactionCase):
         answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
         expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}
         for answer in answers:
-            for field, value in expected_values.iteritems():
-                self.assertEqual(getattr(answer, field), value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
+            for field, value in expected_values.items():
+                self.assertEqual(answer[field], value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
 
     def test_10_survey_result_simple_multiple_choice(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
@@ -223,9 +223,7 @@ class TestSurvey(TransactionCase):
         lines = [line.value_suggested.id for line in question.user_input_line_ids]
         answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id} for label in question.labels_ids]
         prp_result = self.env['survey.survey'].prepare_result(question)['answers']
-        answers.sort()
-        prp_result.sort()
-        self.assertEqual(prp_result, answers, msg="Statistics of simple, multiple choice questions are different from expectation")
+        self.assertItemsEqual(prp_result, answers, msg="Statistics of simple, multiple choice questions are different from expectation")
 
     def test_11_survey_result_matrix(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
@@ -244,7 +242,7 @@ class TestSurvey(TransactionCase):
 
     def test_12_survey_result_numeric_box(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0', 'type': 'numerical_box'})
-        num = map(float, random.sample(range(1, 100), 3))
+        num = [float(n) for n in random.sample(range(1, 100), 3)]
         nsum = sum(num)
         for i in range(3):
             self.env['survey.user_input'].sudo(self.user_public).create({'survey_id': self.survey1.id, 'user_input_line_ids': [(0, 0, {
@@ -253,7 +251,7 @@ class TestSurvey(TransactionCase):
             'average': round((nsum / len(num)), 2), 'max': round(max(num), 2),
             'min': round(min(num), 2), 'sum': nsum, 'most_common': Counter(num).most_common(5)}
         result = self.env['survey.survey'].prepare_result(question)
-        for key in exresult.keys():
+        for key in exresult:
             self.assertEqual(result[key], exresult[key], msg="Statistics of numeric box type questions are different from expectations")
 
     def test_13_survey_actions(self):
@@ -264,7 +262,7 @@ class TestSurvey(TransactionCase):
             'print': {'method': 'print', 'token': '/test', 'text': 'Print'},
             'result': {'method': 'result', 'token': '', 'text': 'Results of the'},
             'test': {'method': 'public', 'token': '/phantom', 'text': 'Results of the'}}
-        for action, val in actions.iteritems():
+        for action, val in actions.items():
             result = getattr(self.survey1.with_context({'survey_token': val['token'][1:]}), 'action_' + action + '_survey')()
             url = getattr(self.survey1.with_context({'relative_url': True}), val['method'] + '_url') + val['token']
             self.assertEqual(result['url'], url)

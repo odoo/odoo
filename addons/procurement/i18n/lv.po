@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# JanisJanis <jbojars@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: JanisJanis <jbojars@gmail.com>, 2017\n"
-"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-10 13:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -34,8 +33,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
@@ -55,11 +56,6 @@ msgid "All at once"
 msgstr "Visu uzreiz"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
-msgid "Archived"
-msgstr "Arhīvs"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Atcelt"
@@ -75,6 +71,12 @@ msgid "Cancelled"
 msgstr "Atcelts"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state."
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
 msgstr ""
@@ -82,9 +84,8 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
 
 #. module: procurement
@@ -133,8 +134,9 @@ msgstr "Izveidots"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+#, fuzzy
 msgid "Delivery Type"
-msgstr ""
+msgstr "Piegādes Metode"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -147,7 +149,7 @@ msgstr "Apraksts"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Display Name"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -224,7 +226,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
 msgid "Last Modified on"
-msgstr "Last Modified on"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
@@ -253,6 +255,11 @@ msgid "Leave Empty"
 msgstr ""
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.mrp_company
+msgid "Logistics"
+msgstr "Loģistika"
+
+#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -266,7 +273,7 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:189
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -313,7 +320,7 @@ msgstr "Iepirkumu izņēmumi"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr "Procurement Group"
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -336,7 +343,7 @@ msgstr ""
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "Procurement Rule"
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
@@ -405,8 +412,8 @@ msgstr "Atsauksme"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement. This is "
-"automatically completed by Odoo."
+"Reference of the document that created this Procurement.\n"
+"This is automatically completed by Odoo."
 msgstr ""
 
 #. module: procurement
@@ -503,14 +510,9 @@ msgstr "Ļoti steidzams"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/models/procurement.py:144
-#, python-format
-msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
 
 #. module: procurement
@@ -522,3 +524,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr ""
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Pēdējā ierakstam piesaistītā ziņojuma datums."
+
+#~ msgid "Followers"
+#~ msgstr "Sekotāji"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ja atzīmēts, tad jauni ziņojumi pieprasīs jūsu uzmanību."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Pēdēja ziņojuma datums"
+
+#~ msgid "Messages"
+#~ msgstr "Ziņojumi"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Ziņojumu un komunikācijas vēsture"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neizlasīti ziņojumi"

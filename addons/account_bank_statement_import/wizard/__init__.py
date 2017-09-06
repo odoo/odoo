@@ -1,1 +1,1 @@
-import journal_creation
+from . import journal_creation

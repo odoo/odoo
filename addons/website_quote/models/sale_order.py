@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import uuid
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
+
+from werkzeug.urls import url_encode
 
 
 class SaleOrderLine(models.Model):
@@ -46,16 +47,15 @@ class SaleOrderLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_default_template_id(self):
-        return self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+    def _get_default_template(self):
+        template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        return template and template.active and template or False
 
-    access_token = fields.Char(
-        'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
-        required=True)
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
-        default=_get_default_template_id, readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+        readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=_get_default_template)
     website_description = fields.Html('Description', sanitize_attributes=False, translate=html_translate)
     options = fields.One2many(
         'sale.order.option', 'order_id', 'Optional Products Lines',
@@ -65,10 +65,11 @@ class SaleOrder(models.Model):
         'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+        (0, 'Online Signature'),
+        (1, 'Online Payment')], default=0, string='Confirmation Mode',
+        help="Choose how you want to confirm an order to launch the delivery process. You can either "
+             "request a digital signature or an upfront payment. With a digital signature, you can "
+             "request the payment when issuing the invoice.")
 
     @api.multi
     def copy(self, default=None):
@@ -83,6 +84,11 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        super(SaleOrder, self).onchange_partner_id()
+        self.note = self.template_id.note or self.note
 
     @api.onchange('partner_id')
     def onchange_update_description_lang(self):
@@ -163,17 +169,26 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the online quote if it exists. """
         self.ensure_one()
-        if not self.template_id:
-            return super(SaleOrder, self).get_access_action()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+
+        if not self.template_id or (not user.share and not self.env.context.get('force_website')):
+            return super(SaleOrder, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
             'url': '/quote/%s/%s' % (self.id, self.access_token),
             'target': 'self',
             'res_id': self.id,
         }
+
+    def get_mail_url(self):
+        self.ensure_one()
+        if self.state not in ['sale', 'done']:
+            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+            return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
+        return super(SaleOrder, self).get_mail_url()
 
     @api.multi
     def _confirm_online_quote(self, transaction):
@@ -197,10 +212,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _get_payment_type(self):
         self.ensure_one()
-        if self.require_payment == 2:
-            return 'form_save'
-        else:
-            return 'form'
+        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderOption(models.Model):
@@ -208,7 +220,7 @@ class SaleOrderOption(models.Model):
     _description = "Sale Options"
     _order = 'sequence, id'
 
-    order_id = fields.Many2one('sale.order', 'Sale Order Reference', ondelete='cascade', index=True)
+    order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])

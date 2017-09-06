@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_saleorder_document">
-    <t t-call="report.external_layout">
+    <t t-call="web.external_layout">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
         <div class="page">
             <div class="oe_structure"/>
             <div class="row">
                 <div class="col-xs-6">
-                    <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
-                    <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
-                    <div t-field="doc.partner_invoice_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                    <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
-                    <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
-                        <strong>Shipping address:</strong>
-                        <div t-field="doc.partner_shipping_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                        <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
-                    </div>
+                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+                             and doc.partner_invoice_id != doc.partner_id
+                             or doc.partner_shipping_id != doc.partner_invoice_id">
+                        <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
+                        <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
+                        <div t-field="doc.partner_invoice_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
+                            <strong>Shipping address:</strong>
+                            <div t-field="doc.partner_shipping_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </div>
+                    </t>
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
                     <div t-field="doc.partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
                 </div>
             </div>
 
             <h2>
-                <span t-if="doc.state not in ['draft','sent']">Order # </span>
-                <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                <t t-if="not env.context.get('proforma', False)">
+                    <span t-if="doc.state not in ['draft','sent']">Order # </span>
+                    <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                </t>
+                <t t-if="env.context.get('proforma', False)">
+                    <span>Pro-Forma Invoice # </span>
+                </t>
                 <span t-field="doc.name"/>
             </h2>
 
@@ -36,9 +44,12 @@
                     <strong>Your Reference:</strong>
                     <p t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.date_order" class="col-xs-3">
-                    <strong t-if="doc.state not in ['draft','sent']">Date Ordered:</strong>
-                    <strong t-if="doc.state in ['draft','sent']">Quotation Date:</strong>
+                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-xs-3">
+                    <strong>Date Ordered:</strong>
+                    <p t-field="doc.confirmation_date"/>
+                </div>
+                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-3">
+                    <strong>Quotation Date:</strong>
                     <p t-field="doc.date_order"/>
                 </div>
                 <div t-if="doc.user_id.name" class="col-xs-3">
@@ -63,7 +74,7 @@
                             <th class="text-right">Unit Price</th>
                             <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                             <th class="text-right">Taxes</th>
-                            <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                            <th class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
                             <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                         </tr>
                    </thead>
@@ -125,33 +136,47 @@
                 </t>
             </t>
 
-            <div class="row" name="total">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
-                        <tr class="border-black">
-                            <td><strong>Total Without Taxes</strong></td>
-                            <td class="text-right">
-                                <span t-field="doc.amount_untaxed"
-                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                            </td>
-                        </tr>
-                        <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
-                            <tr>
-                                <td><span t-esc="amount_by_group[0] or 'Taxes'"/></td>
+            <div class="clearfix">
+                <div class="row pull-right" name="total">
+                    <div>
+                        <table class="table-condensed" style="min-width: 200px;max-width: 350px;">
+                            <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                                <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
-                                    <span t-esc="amount_by_group[1]"
+                                    <span t-field="doc.amount_untaxed"
                                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                 </td>
                             </tr>
-                        </t>
-                        <tr class="border-black">
-                            <td><strong>Total</strong></td>
-                            <td class="text-right">
-                                <span t-field="doc.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                            </td>
-                        </tr>
-                    </table>
+                            <t t-set="tax_groups_length" t-value="len(doc._get_tax_amount_by_group())"/>
+                            <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                                <tr style="border-bottom:1px solid #dddddd;">
+                                    <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
+                                        <td><span t-esc="amount_by_group[0]"/></td>
+                                        <td class="text-right">
+                                            <span t-esc="amount_by_group[1]"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                    <t t-else ="">
+                                        <td class='text-muted' style="font-size:12px;">
+                                            <span t-esc="amount_by_group[0]"/><span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
+                                        </td>
+                                        <td class="text-right text-muted" style="font-size:12px;">
+                                            <span t-esc="amount_by_group[1]"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <tr class="border-black">
+                                <td><strong>Total</strong></td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -170,7 +195,7 @@
 
 
 <template id="report_saleorder">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
             <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
         </t>

@@ -1,60 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-# 
+#
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-04-17 23:12+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: website_mail_channel
-#: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Hello,</p>\n"
-"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
-"<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
-"</data>"
-msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Здравствуйте,</p>\n"
-"<p>Вы попросили подписаться на список рассылки <strong>${object.name}</strong></p>\n"
-"<p>Для подтверждения, пожалуйста, перейдите по следующей ссылке:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>Если это была ошибка или вы не просили это действие, не обращайте внимания на это сообщение.</p>\n"
-"</data>"
-
-#. module: website_mail_channel
-#: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Hello,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
-"<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
-"</data>"
-msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Здравствуйте,</p>\n"
-"<p>Вы попросили подписаться на список рассылки <strong>${object.name}</strong></p>\n"
-"<p>Для подтверждения, пожалуйста, перейдите по следующей ссылке:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>Если это была ошибка или вы не просили это действие, не обращайте внимания на это сообщение.</p>\n"
-"</data>"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -76,12 +41,12 @@ msgstr "В одиночку мы можем сделать очень мало; 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
-msgstr "Архивы"
+msgstr "Архив"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Browse archives"
-msgstr "Просмотреть архивы"
+msgstr "Загрузить архивы"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -99,11 +64,6 @@ msgstr "По цепочке"
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Change Discussion List"
 msgstr "Изменить список обсуждений"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Описание"
 
 #. module: website_mail_channel
 #. openerp-web
@@ -128,11 +88,6 @@ msgid "Follow-Ups"
 msgstr "Напоминания"
 
 #. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
-msgid "Invalid or expired confirmation link."
-msgstr "Неверный или истек срок ссылки для подтверждения."
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
 msgstr "Список рассылки"
@@ -144,7 +99,7 @@ msgid "Mailing Lists"
 msgstr "Списки рассылки"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:23
 #, python-format
 msgid "Mailing-List"
 msgstr "Список рассылки"
@@ -160,8 +115,8 @@ msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "pull-right\"/>"
 msgstr ""
-"Нужно отписаться? Это возможно прямо отсюда! <span class=\"fa fa-2x fa-"
-"arrow-down pull-right\"/>"
+"Нужно отписаться? Это возможно прямо отсюда! <span class=\"fa fa-2x fa-arrow-"
+"down pull-right\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -169,17 +124,7 @@ msgid "Outgoing Mails"
 msgstr "Исходящие письма"
 
 #. module: website_mail_channel
-#: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
-msgid "Please confirm subscription to ${object.name}"
-msgstr "Пожалуйста, подтвердите подписку на ${object.name}"
-
-#. module: website_mail_channel
-#: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
-msgid "Please confirm unsubscription to ${object.name}"
-msgstr "Пожалуйста, подтвердите отписку к ${object.name}"
-
-#. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:24
 #, python-format
 msgid "Post to"
 msgstr "Показывать на"
@@ -206,8 +151,7 @@ msgid "Subscribe"
 msgstr "Подписаться"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
-#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
+#: code:addons/website_mail_channel/models/mail_mail.py:25
 #, python-format
 msgid "Unsubscribe"
 msgstr "Отписаться"
@@ -224,16 +168,6 @@ msgstr ""
 #: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
 msgid "Visible on the website as a comment"
 msgstr "Видят на сайте как комментарий"
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
-msgid "You have been correctly"
-msgstr "Вы были правильно"
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "a confirmation email has been sent."
-msgstr "подтверждение по электронной почте было отправлено."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -294,25 +228,15 @@ msgid "show"
 msgstr "показать"
 
 #. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
-msgid "subscribed"
-msgstr "подписан"
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
-msgid "to the mailing list."
-msgstr "в список рассылки."
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
+msgid "unknown"
+msgstr "неизвестен"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "unsubscribe"
 msgstr "отписаться"
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
-msgid "unsubscribed"
-msgstr "отписан"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

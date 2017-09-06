@@ -155,11 +155,12 @@ gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
 var SelectionPopupWidget = PopupWidget.extend({
     template: 'SelectionPopupWidget',
     show: function(options){
-        options = options || {};
         var self = this;
+        options = options || {};
         this._super(options);
 
-        this.list    = options.list    || [];
+        this.list = options.list || [];
+        this.is_selected = options.is_selected || function (item) { return false; };
         this.renderElement();
     },
     click_item : function(event) {
@@ -223,11 +224,12 @@ var PackLotLinePopupWidget = PopupWidget.extend({
         pack_lot_lines.remove_empty_model();
         pack_lot_lines.set_quantity_by_lot();
         this.options.order.save_to_db();
+        this.options.order_line.trigger('change', this.options.order_line);
         this.gui.close_popup();
     },
 
     add_lot: function(ev) {
-        if (ev.keyCode === $.ui.keyCode.ENTER){
+        if (ev.keyCode === $.ui.keyCode.ENTER && this.options.order_line.product.tracking == 'serial'){
             var pack_lot_lines = this.options.pack_lot_lines,
                 $input = $(ev.target),
                 cid = $input.attr('cid'),

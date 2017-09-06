@@ -153,7 +153,7 @@ def main():
     elif len(sys.argv) == 2 and sys.argv[1] in cmds:
         cmds[sys.argv[1]]()
     else:
-        sys.exit('Unknow command. Command available: %r' % (cmds.keys(),))
+        sys.exit('Unknow command. Command available: %r' % (list(cmds,))
 
 if __name__ == "__main__":
     main()

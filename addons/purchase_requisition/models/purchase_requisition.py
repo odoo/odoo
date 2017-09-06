@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -29,7 +29,7 @@ class PurchaseRequisitionType(models.Model):
 class PurchaseRequisition(models.Model):
     _name = "purchase.requisition"
     _description = "Purchase Requisition"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = "id desc"
 
     def _get_picking_in(self):
@@ -66,7 +66,7 @@ class PurchaseRequisition(models.Model):
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type', required=True, default=_get_picking_in)
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
 
     @api.multi
     @api.depends('purchase_ids')
@@ -145,6 +145,22 @@ class PurchaseRequisitionLine(models.Model):
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
+    @api.multi
+    def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+        self.ensure_one()
+        requisition = self.requisition_id
+        return {
+            'name': name,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_id.uom_po_id.id,
+            'product_qty': product_qty,
+            'price_unit': price_unit,
+            'taxes_id': [(6, 0, taxes_ids)],
+            'date_planned': requisition.schedule_date or fields.Date.today(),
+            'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
+            'account_analytic_id': self.account_analytic_id.id,
+        }
+
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -216,17 +232,10 @@ class PurchaseOrder(models.Model):
                 price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
 
             # Create PO line
-            order_lines.append((0, 0, {
-                'name': name,
-                'product_id': line.product_id.id,
-                'product_uom': line.product_id.uom_po_id.id,
-                'product_qty': product_qty,
-                'price_unit': price_unit,
-                'taxes_id': [(6, 0, taxes_ids)],
-                'date_planned': requisition.schedule_date or fields.Date.today(),
-                'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
-                'account_analytic_id': line.account_analytic_id.id,
-            }))
+            order_line_values = line._prepare_purchase_order_line(
+                name=name, product_qty=product_qty, price_unit=price_unit,
+                taxes_ids=taxes_ids)
+            order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
     @api.multi

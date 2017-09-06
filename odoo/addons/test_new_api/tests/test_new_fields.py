@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 from odoo.exceptions import AccessError, except_orm
 from odoo.tests import common
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, float_repr, pycompat
 
 
 class TestFields(common.TransactionCase):
@@ -16,8 +16,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, basestring)
-        self.assertIsInstance(discussion['name'], basestring)
+        self.assertIsInstance(discussion.name, pycompat.string_types)
+        self.assertIsInstance(discussion['name'], pycompat.string_types)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()
@@ -202,6 +202,11 @@ class TestFields(common.TransactionCase):
         self.assertEqual(c.display_name, 'X / C')
         self.assertEqual(d.display_name, 'X / C / D')
 
+        # delete b; both c and d are deleted in cascade; c should also be marked
+        # to recompute, but recomputation should not fail...
+        b.unlink()
+        self.assertEqual((a + b + c + d).exists(), a)
+
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
@@ -305,21 +310,65 @@ class TestFields(common.TransactionCase):
         record.number = 2.4999999999999996
         self.assertEqual(record.number, 2.50)
 
+    def check_monetary(self, record, amount, currency, msg=None):
+        # determine the possible roundings of amount
+        if currency:
+            ramount = currency.round(amount)
+            samount = float(float_repr(ramount, currency.decimal_places))
+        else:
+            ramount = samount = amount
+
+        # check the currency on record
+        self.assertEqual(record.currency_id, currency)
+
+        # check the value on the record
+        self.assertIn(record.amount, [ramount, samount], msg)
+
+        # check the value in the database
+        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', [record.id])
+        value = self.cr.fetchone()[0]
+        self.assertEqual(value, samount, msg)
+
     def test_20_monetary(self):
         """ test monetary fields """
-        record = self.env['test_new_api.mixed'].create({})
-        self.assertTrue(record.currency_id)
-        self.assertEqual(record.currency_id.rounding, 0.01)
+        model = self.env['test_new_api.mixed']
+        currency = self.env['res.currency'].with_context(active_test=False)
+        amount = 14.70126
 
-        # the conversion to cache should round the value to 14.700000000000001
-        record.amount = 14.7
-        self.assertNotEqual(record.amount, 14.7)
-        self.assertEqual(record.amount, 14.700000000000001)
+        for rounding in [0.01, 0.0001, 1.0, 0]:
+            # first retrieve a currency corresponding to rounding
+            if rounding:
+                currency = currency.search([('rounding', '=', rounding)], limit=1)
+                self.assertTrue(currency, "No currency found for rounding %s" % rounding)
+            else:
+                # rounding=0 corresponds to currency=False
+                currency = currency.browse()
 
-        # however when stored to database, it should be serialized as 14.70
-        self.cr.execute('SELECT amount FROM test_new_api_mixed WHERE id=%s', (record.id,))
-        (amount,) = self.cr.fetchone()
-        self.assertEqual(amount, 14.7)
+            # case 1: create with amount and currency
+            record = model.create({'amount': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'create(amount, currency)')
+
+            # case 2: assign amount
+            record.amount = 0
+            record.amount = amount
+            self.check_monetary(record, amount, currency, 'assign(amount)')
+
+            # case 3: write with amount and currency
+            record.write({'amount': 0, 'currency_id': False})
+            record.write({'amount': amount, 'currency_id': currency.id})
+            self.check_monetary(record, amount, currency, 'write(amount, currency)')
+
+            # case 4: write with amount only
+            record.write({'amount': 0})
+            record.write({'amount': amount})
+            self.check_monetary(record, amount, currency, 'write(amount)')
+
+            # case 5: write with amount on several records
+            records = record + model.create({'currency_id': currency.id})
+            records.write({'amount': 0})
+            records.write({'amount': amount})
+            for record in records:
+                self.check_monetary(record, amount, currency, 'multi write(amount)')
 
     def test_21_date(self):
         """ test date fields """
@@ -330,10 +379,10 @@ class TestFields(common.TransactionCase):
         self.assertFalse(record.date)
 
         # one may assign date and datetime objects
-        record.date = date(2012, 05, 01)
+        record.date = date(2012, 5, 1)
         self.assertEqual(record.date, '2012-05-01')
 
-        record.date = datetime(2012, 05, 01, 10, 45, 00)
+        record.date = datetime(2012, 5, 1, 10, 45, 00)
         self.assertEqual(record.date, '2012-05-01')
 
         # one may assign dates in the default format, and it must be checked
@@ -539,40 +588,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(attribute_record.company.foo, 'DEF')
         self.assertEqual(attribute_record.bar, 'DEFDEF')
         self.assertFalse(self.env.has_todo())
-
-    def test_28_sparse(self):
-        """ test sparse fields. """
-        record = self.env['test_new_api.sparse'].create({})
-        self.assertFalse(record.data)
-
-        partner = self.env.ref('base.main_partner')
-        values = [
-            ('boolean', True),
-            ('integer', 42),
-            ('float', 3.14),
-            ('char', 'John'),
-            ('selection', 'two'),
-            ('partner', partner.id),
-        ]
-        for n, (key, val) in enumerate(values):
-            record.write({key: val})
-            self.assertEqual(record.data, dict(values[:n+1]))
-
-        for key, val in values[:-1]:
-            self.assertEqual(record[key], val)
-        self.assertEqual(record.partner, partner)
-
-        for n, (key, val) in enumerate(values):
-            record.write({key: False})
-            self.assertEqual(record.data, dict(values[n+1:]))
-
-        # check reflection of sparse fields in 'ir.model.fields'
-        names = [name for name, _ in values]
-        domain = [('model', '=', 'test_new_api.sparse'), ('name', 'in', names)]
-        fields = self.env['ir.model.fields'].search(domain)
-        self.assertEqual(len(fields), len(names))
-        for field in fields:
-            self.assertEqual(field.serialization_field_id.name, 'data')
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """

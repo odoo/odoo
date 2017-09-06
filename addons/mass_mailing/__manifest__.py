@@ -2,13 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mass Mailing Campaigns',
+    'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
-    'description': """
-Easily send mass mailing to your leads, opportunities or customers. Track
-marketing campaigns performance to improve conversion rates. Design
-professional emails and reuse templates in a few clicks.
-    """,
+    'description': "",
     'version': '2.0',
     'sequence': 110,
     'website': 'https://www.odoo.com/page/mailing',
@@ -30,7 +26,7 @@ professional emails and reuse templates in a few clicks.
         'views/link_tracker_views.xml',
         'views/mass_mailing_template.xml',
         'views/mass_mailing_views.xml',
-        'views/res_config_views.xml',
+        'views/res_config_settings_views.xml',
         'security/ir.model.access.csv',
         'views/editor_field_html.xml',
         'views/themes_templates.xml',

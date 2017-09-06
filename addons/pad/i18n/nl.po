@@ -4,20 +4,27 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+msgid "API Key"
+msgstr "API-code"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -27,7 +34,7 @@ msgstr "Bedrijven"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_base_config_settings_pad_key
@@ -40,6 +47,21 @@ msgstr "Etherpad lite api sleutel."
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Etherpad lite server. Bijvoorbeeld: beta.mijnprimairpad.com"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:27
+#, python-format
+msgid "Exit full screen"
+msgstr ""
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:27
+#: code:addons/pad/static/src/xml/pad.xml:14
+#, python-format
+msgid "Full screen"
+msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_id
@@ -62,6 +84,11 @@ msgid "Pad Api Key *"
 msgstr "Pad Api Key *"
 
 #. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
+msgid "Pad Server"
+msgstr "Pad Server"
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_server
 msgid "Pad Server *"
 msgstr "Pad Server *"
@@ -77,38 +104,29 @@ msgstr ""
 "met uw connectie."
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
-msgid "Pad server"
-msgstr "Pad server"
-
-#. module: pad
-#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
-msgid "Pads"
-msgstr "Paden"
-
-#. module: pad
 #. openerp-web
 #: code:addons/pad/static/src/xml/pad.xml:6
 #, python-format
 msgid ""
 "Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings > Configure your company data', in the 'Configuration' tab of your "
-"company."
+"Settings'."
 msgstr ""
-"U dient de etherpad koppeling in te stellen in het menu 'Instellingen > "
-"Algemene instellingen> Configureer uw bedrijfsgegevens', op het configuratie"
-" tabblad van uw bedrijf."
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+msgid "Server"
+msgstr "Server"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:53
+#: code:addons/pad/static/src/js/pad.js:55
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Dit pad wordt geinitialiseerd bij de eerste bewerking"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:50
+#: code:addons/pad/static/src/js/pad.js:52
 #, python-format
 msgid "Unable to load pad"
 msgstr "Kan pad niet laden"
@@ -119,7 +137,7 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
 msgid "e.g. beta.primarypad.com"
 msgstr "bijv. beta.mijnprimairpad.com"
 

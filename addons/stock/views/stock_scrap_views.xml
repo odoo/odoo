@@ -85,16 +85,17 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_scrap">
-            <field name="name">Scrap</field>
+            <field name="name">Scrap Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.scrap</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to scrap products.
+                Click here to scrap products.
               </p><p>
-                Products you scrap will be removed from the stock and moved to a specific scrap location, for reporting purposes.
+                Scrapping a product will remove it from your stock. The product will
+                end up in a scrap location that can be used for reporting purpose.
               </p>
             </field>
         </record>
@@ -115,13 +116,13 @@
                             </div>
                         </group>
                         <group>
-                            <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                            <field name="picking_id" invisible="1"/>
                             <field name="tracking" invisible="1"/>
                             <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="package_id" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                            <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" />
                         </group>
                     </group>
                     <footer>
@@ -135,7 +136,7 @@
     <menuitem
         id="menu_stock_scrap"
         name="Scrap"
-        parent="menu_stock_inventory_control"
+        parent="stock_picking_menu_product"
         action="action_stock_scrap"
         sequence="99"/>
 

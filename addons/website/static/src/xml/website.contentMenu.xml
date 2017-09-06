@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.contentMenu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
@@ -40,15 +41,22 @@
             <t t-call="website.contentMenu.dialog.submenu"/>
         </t>
     </ul>
-    <div class="mt16">
-        <div class="pull-right text-muted">
+    <div class="mt32">
+        <small class="pull-right text-muted">
             Drag a menu to the right to create a sub-menu
-        </div>
-        <div>
-            <a href="#" class="js_add_menu">
-                <i class="fa fa-plus-circle"/> Add Menu Entry
-            </a>
-        </div>
+        </small>
+        <a href="#" class="js_add_menu">
+            <i class="fa fa-plus-circle"/> Add Menu Entry
+        </a>
     </div>
 </div>
+<t t-name="website.contentMenu.dialog.edit.link_menu_options">
+    <div class="form-group">
+        <label class="control-label col-sm-3">Link</label>
+        <div class="col-sm-9">
+            <input type="radio" name="link_menu_options" id="url" value="url" checked="checked"/> <label class="control-label mr16" for="url" >URL or Email</label>
+            <input type="radio" name="link_menu_options" id="new_page" value="new_page"/> <label class="control-label" for="new_page">New Page</label>
+        </div>
+    </div>
+</t>
 </templates>

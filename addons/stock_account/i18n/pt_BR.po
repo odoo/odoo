@@ -3,20 +3,20 @@
 # * stock_account
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Mateus Lopes <mateus1@gmail.com>, 2016
 # falexandresilva <falexandresilva@gmail.com>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +48,11 @@ msgstr ""
 "de produtos."
 
 #. module: stock_account
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "At a Specific Date"
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Price"
@@ -60,25 +65,25 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:244
+#: code:addons/stock_account/models/stock.py:252
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
-"Não é possível encontrar uma conta de estoque para o produto% s. Você deve "
+"Não é possível encontrar uma conta de estoque para o produto %s. Você deve "
 "definir um na categoria de produto, ou no local, antes de processar esta "
 "operação."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:246
+#: code:addons/stock_account/models/stock.py:254
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Não é possível encontrar uma conta de estoque para o produto% s. Você deve "
+"Não é possível encontrar uma conta de estoque para o produto %s. Você deve "
 "definir um na categoria de produto, ou no local, antes de processar esta "
 "operação."
 
@@ -95,9 +100,9 @@ msgid "Change Standard Price"
 msgstr "Altera o Preço Padrão"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Choose a date in the past to get the inventory at that date."
-msgstr "Escolha uma data passada para obter o inventário."
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_date
+msgid "Choose a date to get the inventory at that date"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -108,6 +113,12 @@ msgstr ""
 "Escolha a data contábil no qual pretende valorizar as movimentações de "
 "estoque criadas pelo inventário em vez do padrão (a data de término do "
 "inventário)"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
+msgid ""
+"Choose to analyze the current inventory or from a specific date in the past."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -121,7 +132,18 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:338
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_compute_at_date
+msgid "Compute"
+msgstr "Calcular"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average cost"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:327
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -138,8 +160,8 @@ msgstr "Custo"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-msgid "Cost method"
-msgstr "Método de Formação de Custo"
+msgid "Cost Method"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -166,9 +188,9 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
-msgid "Date"
-msgstr "Data"
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "Current Inventory"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -274,14 +296,17 @@ msgid "Inventory Valuation"
 msgstr "Valorização de Inventário"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+msgid "Inventory Valuation Report"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
 msgid "Inventory Value"
 msgstr "Valor de Inventário"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
-#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
 msgid "Inventory at Date"
 msgstr "Inventário na Data"
 
@@ -337,7 +362,7 @@ msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Gerenciar Avaliação de Estoque e Métodos de Custeio"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:109
+#: code:addons/stock_account/models/product.py:108
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr "Nenhuma diferença entre o preço padrão e o novo preço!"
@@ -425,15 +450,10 @@ msgid "Retrieve the Inventory Value"
 msgstr "Recuperar o valor do inventário"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Retrieve the curent stock valuation."
-msgstr "Recuperar a avaliação atual de estoque."
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Set standard price"
-msgstr "Definir preço padrão"
+msgid "Set standard cost"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -447,8 +467,8 @@ msgid "Standard Price"
 msgstr "Preço Padrão"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:126
-#: code:addons/stock_account/models/product.py:131
+#: code:addons/stock_account/models/product.py:125
+#: code:addons/stock_account/models/product.py:130
 #, python-format
 msgid "Standard Price changed"
 msgstr "Preço padrão alterado"
@@ -484,7 +504,7 @@ msgstr "Contando Estoque"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_history
 msgid "Stock History"
-msgstr "Histórico de Estoque"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -530,7 +550,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Conta de Valorização do Estoque (Saindo)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/wizard_valuation_history.py:24
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:39
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -545,14 +565,14 @@ msgid "Templates for Account Chart"
 msgstr "Modelos para Plano de Contas"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:273
+#: code:addons/stock_account/models/stock.py:281
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
-"O valor de avaliação encontrado para o produto% s é zero. O que significa "
+"O valor de avaliação encontrado para o produto %s é zero. O que significa "
 "que provavelmente há um erro de configuração. Verifique o método de cálculo "
 "de custos eo preço padrão"
 
@@ -685,7 +705,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Assistente que abre a tabela história a avaliação de ações"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:242
+#: code:addons/stock_account/models/stock.py:250
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -695,8 +715,8 @@ msgstr ""
 "produto, verifique se você instalou um plano de contas"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:111
-#: code:addons/stock_account/models/stock.py:248
+#: code:addons/stock_account/models/product.py:110
+#: code:addons/stock_account/models/stock.py:256
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

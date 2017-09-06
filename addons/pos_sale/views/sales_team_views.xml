@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_team_view_form_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">crm.team.form</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='dashboard_graph_model']" position="attributes">
+                <attribute name="attrs">{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='dashboard_graph_group']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('dashboard_graph_model', '=', 'crm.opportunity.report'), ('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='dashboard_graph_group']" position="after">
+                <field name="dashboard_graph_group_pos" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_session_search_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">pos.session.search.view</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='config_id']" position="after">
+                <field name="crm_team_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_session_action_from_crm_team" model="ir.actions.act_window">
+        <field name="name">Open Sessions</field>
+        <field name="src_model">crm.team</field>
+        <field name="res_model">pos.session</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_open_sessions': True, 'search_default_crm_team_id': active_id}</field>
+    </record>
+
+    <record id="view_pos_config_search_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">pos.config.search.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="crm_team_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_salesteams_view_kanban_inherit_pos_sale" model="ir.ui.view"> 
+        <field name="name">crm.team.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//templates" position="before">
+                <field name="team_type"/>
+            </xpath>
+
+            <xpath expr="//div[@name='orders_to_invoice']" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='sales_report']" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='invoices_report']" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                <t t-if="record.team_type.raw_value == 'pos'">
+                    <a name="%(point_of_sale.action_report_pos_order_all)d" type="action">
+                        Sales
+                    </a>
+                </t>
+            </xpath>
+
+            <xpath expr="//t[@name='first_options']" position="before">
+                <div class="row" t-if="record.team_type.raw_value == 'pos'">
+                    <div class="col-xs-8">
+                        <a name="%(pos_session_action_from_crm_team)d" type="action">
+                            <field name="pos_sessions_open_count"/>
+                            <t t-if="record.pos_sessions_open_count.raw_value == 1">Session Running</t>
+                            <t t-else="">Sessions Running</t>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <field name="pos_order_amount_total" widget="monetary"/>
+                    </div>
+                </div>
+            </xpath>
+
+        </data>
+        </field>
+    </record>
+
+</odoo>

@@ -7,15 +7,10 @@
             <field name="object">sale.order</field>
         </record>
 
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Sales Management application installed!</field>
-            <field name="body"><![CDATA[<p>This application lets you create and send quotations and process your sales orders; from delivery to invoicing.</p>
-<p>If you need to manage your sales pipeline (leads, opportunities, phonecalls), the <i>CRM</i> application may be useful.</p>]]></field>
+        <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="use_quotations" eval="True"/>
+            <field name="use_invoices" eval="True"/>
+            <field name="dashboard_graph_model">sale.report</field>
         </record>
 
         <!-- Sale-related subtypes for messaging / Chatter -->

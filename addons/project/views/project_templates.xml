@@ -10,4 +10,9 @@
                 <script type="text/javascript" src="/project/static/src/js/web_planner_project.js"></script>
             </xpath>
         </template>
+        <template id="qunit_suite" name="project_test" inherit_id="web.qunit_suite">
+             <xpath expr="//t[@t-set='head']" position="inside">
+                 <script type="text/javascript" src="/project/static/tests/project_tests.js"></script>
+            </xpath>
+        </template>
 </odoo>

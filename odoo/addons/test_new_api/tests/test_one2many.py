@@ -45,7 +45,7 @@ class One2manyCase(TransactionCase):
         # Check the lines first
         self.assertItemsEqual(
             self.multi.lines.mapped('name'),
-            map(str, range(10)))
+            [str(i) for i in range(10)])
         # Modify the first line and drop the last one
         self.multi.lines[0].name = "hello"
         self.multi.lines = self.multi.lines[:-1]

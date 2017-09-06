@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- These templates are accessible in backend and frontend -->
+
+<div t-name="Dialog" t-attf-class="modal#{technical ? ' o_technical_modal' : ''}" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" t-att-id="_.uniqueId('modal_')">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small"><t t-esc="subtitle"/></span></h4>
+            </div>
+            <div class="modal-body"/>
+            <div class="modal-footer"/>
+        </div>
+    </div>
+</div>
+
+</templates>

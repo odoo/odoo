@@ -24,7 +24,7 @@ tour.register('shop_customize', {
     [
         {
             content: "open customize menu",
-            trigger: '#customize-menu-button',
+            trigger: '#customize-menu > a',
         },
         {
             content: "click on 'Product Attribute's Filters'",
@@ -85,7 +85,7 @@ tour.register('shop_customize', {
         {
             content: "open customize menu bis",
             extra_trigger: '#products_grid_before .js_attributes',
-            trigger: '#customize-menu-button',
+            trigger: '#customize-menu > a',
         },
         {
             content: "remove 'Product Attribute's Filters'",

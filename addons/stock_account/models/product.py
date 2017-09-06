@@ -3,7 +3,9 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, pycompat
+from odoo.addons import decimal_precision as dp
+
 
 
 class ProductTemplate(models.Model):
@@ -14,17 +16,17 @@ class ProductTemplate(models.Model):
         ('manual_periodic', 'Periodic (manual)'),
         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
         company_dependent=True, copy=True, default='manual_periodic',
-        help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
-             "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products.")
+        help="""Manual: The accounting entries to value the inventory are not posted automatically.
+        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.""")
     valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('average', 'Average Price'),
-        ('real', 'Real Price')], string='Costing Method',
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string='Costing Method',
         company_dependent=True, copy=True,
-        help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
-                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
-                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""")
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.""")
     cost_method = fields.Char(compute='_compute_cost_method', inverse='_set_cost_method')
     property_stock_account_input = fields.Many2one(
         'account.account', 'Stock Input Account',
@@ -51,14 +53,12 @@ class ProductTemplate(models.Model):
     def _compute_cost_method(self):
         self.cost_method = self.property_cost_method or self.categ_id.property_cost_method
 
+    def _is_cost_method_standard(self):
+        return self.property_cost_method == 'standard'
+
     @api.one
     def _set_cost_method(self):
         return self.write({'property_cost_method': self.cost_method})
-
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
 
     @api.multi
     def _get_product_accounts(self):
@@ -87,10 +87,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
+    stock_value = fields.Float(
+        'Value', compute='_compute_stock_value')
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
@@ -122,12 +120,12 @@ class ProductProduct(models.Model):
                         'journal_id': product_accounts[product.id]['stock_journal'].id,
                         'company_id': location.company_id.id,
                         'line_ids': [(0, 0, {
-                            'name': _('Standard Price changed'),
+                            'name': _('Standard Price changed  - %s') % (product.display_name),
                             'account_id': debit_account_id,
                             'debit': abs(diff * qty_available),
                             'credit': 0,
                         }), (0, 0, {
-                            'name': _('Standard Price changed'),
+                            'name': _('Standard Price changed  - %s') % (product.display_name),
                             'account_id': credit_account_id,
                             'debit': 0,
                             'credit': abs(diff * qty_available),
@@ -139,32 +137,45 @@ class ProductProduct(models.Model):
         self.write({'standard_price': new_price})
         return True
 
+    def _get_fifo_candidates_in_move(self):
+        """ Find IN moves that can be used to value OUT moves.
+        """
+        self.ensure_one()
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date, id')
+        return candidates
+
+    @api.multi
+    def _compute_stock_value(self):
+        for product in self:
+            if product.cost_method in ['standard', 'average']:
+                product.stock_value = product.standard_price * product.with_context(company_owned=True).qty_available
+            elif product.cost_method == 'fifo':
+                StockMove = self.env['stock.move']
+                domain = [('product_id', '=', product.id)] + StockMove._get_all_base_domain()
+                moves = StockMove.search(domain)
+                product.stock_value = sum(moves.mapped('value'))
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
     property_valuation = fields.Selection([
-        ('manual_periodic', 'Periodic (manual)'),
-        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        ('manual_periodic', 'Manual'),
+        ('real_time', 'Automated')], string='Inventory Valuation',
         company_dependent=True, copy=True, required=True,
-        help="If perpetual valuation is enabled for a product, the system "
-             "will automatically create journal entries corresponding to "
-             "stock moves, with product price as specified by the 'Costing "
-             "Method'. The inventory variation account set on the product "
-             "category will represent the current inventory value, and the "
-             "stock input and stock output account will hold the counterpart "
-             "moves for incoming and outgoing products.")
+        help="""Manual: The accounting entries to value the inventory are not posted automatically.
+        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
+        """)
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('average', 'Average Price'),
-        ('real', 'Real Price')], string="Costing Method",
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string="Costing Method",
         company_dependent=True, copy=True, required=True,
-        help="Standard Price: The cost price is manually updated at the end "
-             "of a specific period (usually once a year).\nAverage Price: "
-             "The cost price is recomputed at each incoming shipment and "
-             "used for the product valuation.\nReal Price: The cost price "
-             "displayed is the price of the last outgoing product (will be "
-             "used in case of inventory loss for example).""")
+        help=""""Standard Price: The products are valued at their standard cost defined on the product.
+        Average Cost (AVCO): The products are valued at weighted average cost.
+        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
+        """)
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")

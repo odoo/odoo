@@ -1,12 +1,12 @@
 odoo.define('website_links.website_links', function (require) {
 'use strict';
 
+require('web.dom_ready');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
-var website = require('website.website');
-var Model = require('web.Model');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -14,27 +14,27 @@ var ZeroClipboard = window.ZeroClipboard;
 
 var exports = {};
 
-if(!$('.o_website_links_create_tracked_url').length) {
+if (!$('.o_website_links_create_tracked_url').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_website_links_create_tracked_url'");
 }
 
     var SelectBox = Widget.extend({
-        init: function(obj) {
-            this.obj = new Model(obj);
+        init: function (obj) {
+            this.obj = obj;
         },
-        start: function(element, placeholder) {
+        start: function (element, placeholder) {
             var self = this;
             this.element = element;
             this.placeholder = placeholder;
 
-            this.fetch_objects().then(function(results) {
+            this.fetch_objects().then(function (results) {
                 self.objects = results;
 
                 element.select2({
                     placeholder: self.placeholder,
                     allowClear: true,
-                    createSearchChoice:function(term) {
-                        if(self.object_exists(term)) { return null; }
+                    createSearchChoice: function (term) {
+                        if (self.object_exists(term)) { return null; }
 
                         return {id:term, text:_.str.sprintf("Create '%s'", term)};
                     },
@@ -43,68 +43,77 @@ if(!$('.o_website_links_create_tracked_url').length) {
                     data: self.objects,
                 });
 
-                element.on('change', function(e) {
+                element.on('change', function (e) {
                     self.on_change(e);
                 });
             });
         },
-        fetch_objects: function() {
-            return this.obj.call('search_read', [[]]).then(function(result) {
-                return _.map(result, function(val) {
-                    return {id: val.id, text:val.name};
+        fetch_objects: function () {
+            return rpc.query({
+                    model: this.obj,
+                    method: 'search_read',
+                })
+                .then(function (result) {
+                    return _.map(result, function (val) {
+                        return {id: val.id, text:val.name};
+                    });
                 });
-            });
         },
-        object_exists: function(query) {
-            return _.find(this.objects, function(val) {
+        object_exists: function (query) {
+            return _.find(this.objects, function (val) {
                 return val.text.toLowerCase() === query.toLowerCase();
             }) !== undefined;
         },
-        on_change: function(e) {
-            if(e.added && _.isString(e.added.id)) {
+        on_change: function (e) {
+            if (e.added && _.isString(e.added.id)) {
                 this.create_object(e.added.id);
             }
         },
-        create_object: function(name) {
+        create_object: function (name) {
             var self = this;
 
-            return this.obj.call('create', [{name:name}]).then(function(record) {
-                self.element.attr('value', record);
-                self.objects.push({'id': record, 'text': name});
-            });
+            return rpc.query({
+                    model: this.obj,
+                    method: 'create',
+                    args: [{name:name}],
+                })
+                .then(function (record) {
+                    self.element.attr('value', record);
+                    self.objects.push({'id': record, 'text': name});
+                });
         },
     });
-    
+
     var RecentLinkBox = Widget.extend({
         template: 'website_links.RecentLink',
         events: {
             'click .btn_shorten_url_clipboard':'toggle_copy_button',
             'click .o_website_links_edit_code':'edit_code',
-            'click .o_website_links_ok_edit':function(e) {
+            'click .o_website_links_ok_edit':function (e) {
                 e.preventDefault();
                 this.submit_code();
             },
-            'click .o_website_links_cancel_edit':function(e) {
+            'click .o_website_links_cancel_edit': function (e) {
                 e.preventDefault();
                 this.cancel_edit();
             },
-            'submit #o_website_links_edit_code_form':function(e) {
+            'submit #o_website_links_edit_code_form': function (e) {
                 e.preventDefault();
                 this.submit_code();
             },
         },
-        init: function(parent, link_obj) {
+        init: function (parent, link_obj) {
             this._super(parent);
             this.link_obj = link_obj;
             this.animating_copy = false;
         },
-        start: function() {
+        start: function () {
             new ZeroClipboard(this.$('.btn_shorten_url_clipboard'));
         },
-        toggle_copy_button: function() {
+        toggle_copy_button: function () {
             var self = this;
 
-            if(!this.animating_copy) {
+            if (!this.animating_copy) {
                 this.animating_copy = true;
                 var top = this.$('.o_website_links_short_url').position().top;
                 this.$('.o_website_links_short_url').clone()
@@ -118,19 +127,19 @@ if(!$('.o_website_links_create_tracked_url').length) {
                     .animate({
                         opacity: 0,
                         top: "-=20",
-                    }, 500, function() {
+                    }, 500, function () {
                         self.$('.animated-link').remove();
                         self.animating_copy = false;
                     });
             }
         },
-        remove: function() {
+        remove: function () {
             this.getParent().remove_link(this);
         },
-        notification: function(message) {
+        notification: function (message) {
             this.$('.notification').append('<strong>' + message + '</strong>');
         },
-        edit_code: function() {
+        edit_code: function () {
             var init_code = this.$('#o_website_links_code').html();
 
             this.$('#o_website_links_code').html("<form style='display:inline;' id='o_website_links_edit_code_form'><input type='hidden' id='init_code' value='" + init_code + "'/><input type='text' id='new_code' value='" + init_code + "'/></form>");
@@ -138,7 +147,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
             this.$('.copy-to-clipboard').hide();
             this.$('.o_website_links_edit_tools').show();
         },
-        cancel_edit: function() {
+        cancel_edit: function () {
             this.$('.o_website_links_edit_code').show();
             this.$('.copy-to-clipboard').show();
             this.$('.o_website_links_edit_tools').hide();
@@ -150,13 +159,13 @@ if(!$('.o_website_links_create_tracked_url').length) {
             this.$('#code-error').remove();
             this.$('#o_website_links_code form').remove();
         },
-        submit_code: function() {
+        submit_code: function () {
             var self = this;
 
             var init_code = this.$('#o_website_links_edit_code_form #init_code').val();
             var new_code = this.$('#o_website_links_edit_code_form #new_code').val();
 
-            if(new_code === '') {
+            if (new_code === '') {
                 self.$('.o_website_links_code_error').html("The code cannot be left empty");
                 self.$('.o_website_links_code_error').show();
                 return;
@@ -174,22 +183,22 @@ if(!$('.o_website_links_create_tracked_url').length) {
 
                 // Update button copy to clipboard
                 self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + new_code);
-                
+
                 // Show action again
                 self.$('.o_website_links_edit_code').show();
                 self.$('.copy-to-clipboard').show();
                 self.$('.o_website_links_edit_tools').hide();
             }
 
-            if(init_code == new_code) {
+            if (init_code === new_code) {
                 show_new_code(new_code);
             }
             else {
                 ajax.jsonRpc('/website_links/add_code', 'call', {'init_code':init_code, 'new_code':new_code})
-                    .then(function(result) {
+                    .then(function (result) {
                         show_new_code(result[0].code);
                     })
-                    .fail(function() {
+                    .fail(function () {
                         self.$('.o_website_links_code_error').show();
                         self.$('.o_website_links_code_error').html("This code is already taken");
                     }) ;
@@ -198,44 +207,44 @@ if(!$('.o_website_links_create_tracked_url').length) {
     });
 
     var RecentLinks = Widget.extend({
-        init: function() {
+        init: function () {
             this._super();
         },
-        get_recent_links: function(filter) {
+        get_recent_links: function (filter) {
             var self = this;
 
             ajax.jsonRpc('/website_links/recent_links', 'call', {'filter':filter, 'limit':20})
-                .then(function(result) {
-                    _.each(result.reverse(), function(link) {
+                .then(function (result) {
+                    _.each(result.reverse(), function (link) {
                         self.add_link(link);
                     });
 
                     self.update_notification();
                 })
-                .fail(function() {
+                .fail(function () {
                     var message = _t("Unable to get recent links");
                     self.$el.append("<div class='alert alert-danger'>" + message + "</div>");
-                });            
+                });
         },
-        add_link: function(link) {
+        add_link: function (link) {
             var nb_links = this.getChildren().length;
 
             var recent_link_box = new RecentLinkBox(this, link);
             recent_link_box.prependTo(this.$el);
             $('.link-tooltip').tooltip();
 
-            if(nb_links === 0) {
+            if (nb_links === 0) {
                 this.update_notification();
             }
         },
-        remove_links: function() {
+        remove_links: function () {
             _.invoke(this.getChildren(), 'remove');
         },
-        remove_link: function(link) {
+        remove_link: function (link) {
             link.destroy();
         },
-        update_notification: function() {
-            if(this.getChildren().length === 0) {
+        update_notification: function () {
+            if (this.getChildren().length === 0) {
                 var message = _t("You don't have any recent links.");
                 $('.o_website_links_recent_links_notification').html("<div class='alert alert-info'>" + message + "</div>");
             }
@@ -247,9 +256,9 @@ if(!$('.o_website_links_create_tracked_url').length) {
 
     ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
 
-    base.ready().done(function() {
+    base.ready().done(function () {
 
-        ZeroClipboard.config({swfPath: location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
+        ZeroClipboard.config({swfPath: window.location.origin + "/website_links/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
         // UTMS selects widgets
         var campaign_select = new SelectBox('utm.campaign');
@@ -266,33 +275,33 @@ if(!$('.o_website_links_create_tracked_url').length) {
             recent_links.appendTo($("#o_website_links_recent_links"));
             recent_links.get_recent_links('newest');
 
-        $('#filter-newest-links').click(function() {
+        $('#filter-newest-links').click(function () {
             recent_links.remove_links();
             recent_links.get_recent_links('newest');
         });
 
-        $('#filter-most-clicked-links').click(function() {
+        $('#filter-most-clicked-links').click(function () {
             recent_links.remove_links();
             recent_links.get_recent_links('most-clicked');
         });
 
-        $('#filter-recently-used-links').click(function() {
+        $('#filter-recently-used-links').click(function () {
             recent_links.remove_links();
             recent_links.get_recent_links('recently-used');
         });
-        
-        // Clipboard Library
-        var client = new ZeroClipboard($("#btn_shorten_url"));
 
-        $("#generated_tracked_link a").click(function() {
+        // Clipboard Library
+        new ZeroClipboard($("#btn_shorten_url"));
+
+        $("#generated_tracked_link a").click(function () {
             $("#generated_tracked_link a").text("Copied").removeClass("btn-primary").addClass("btn-success");
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#generated_tracked_link a").text("Copy").removeClass("btn-success").addClass("btn-primary");
             }, '5000');
         });
 
-        $('#url').on('keyup', function(e) {
-            if($('#btn_shorten_url').hasClass('btn-copy') && e.which != 13) {
+        $('#url').on('keyup', function (e) {
+            if ($('#btn_shorten_url').hasClass('btn-copy') && e.which !== 13) {
                 $('#btn_shorten_url').removeClass('btn-success btn-copy').addClass('btn-primary').html('Get tracked link');
                 $('#generated_tracked_link').css('display', 'none');
                 $('.o_website_links_utm_forms').show();
@@ -300,9 +309,9 @@ if(!$('.o_website_links_create_tracked_url').length) {
         });
 
         var url_copy_animating = false;
-        $('#btn_shorten_url').click(function() {
-            if($('#btn_shorten_url').hasClass('btn-copy')) {
-                if(!url_copy_animating) {
+        $('#btn_shorten_url').click(function () {
+            if ($('#btn_shorten_url').hasClass('btn-copy')) {
+                if (!url_copy_animating) {
                     url_copy_animating = true;
 
                     $('#generated_tracked_link').clone()
@@ -316,18 +325,18 @@ if(!$('.o_website_links_create_tracked_url').length) {
                         .animate({
                             opacity: 0,
                             bottom: "+=20",
-                        }, 500, function() {
+                        }, 500, function () {
                             $('.url-animated-link').remove();
                             url_copy_animating = false;
                         });
                 }
             }
         });
-        
-        // Add the RecentLinkBox widget and send the form when the user generate the link
-        $("#o_website_links_link_tracker_form").submit(function(event) {
 
-            if($('#btn_shorten_url').hasClass('btn-copy')) {
+        // Add the RecentLinkBox widget and send the form when the user generate the link
+        $("#o_website_links_link_tracker_form").submit(function (event) {
+
+            if ($('#btn_shorten_url').hasClass('btn-copy')) {
                 event.preventDefault();
                 return;
             }
@@ -336,27 +345,26 @@ if(!$('.o_website_links_create_tracked_url').length) {
             event.stopPropagation();
 
             // Get URL and UTMs
-            var url = $("#url").val();
             var campaign_id = $('#campaign-select').attr('value');
             var medium_id = $('#channel-select').attr('value');
             var source_id = $('#source-select').attr('value');
 
             var params = {};
             params.url = $("#url").val();
-            if(campaign_id !== '') { params.campaign_id = parseInt(campaign_id); }
-            if(medium_id !== '') { params.medium_id = parseInt(medium_id); }
-            if(source_id !== '') { params.source_id = parseInt(source_id); }
+            if (campaign_id !== '') { params.campaign_id = parseInt(campaign_id); }
+            if (medium_id !== '') { params.medium_id = parseInt(medium_id); }
+            if (source_id !== '') { params.source_id = parseInt(source_id); }
 
             $('#btn_shorten_url').text(_t('Generating link...'));
 
             ajax.jsonRpc("/website_links/new", 'call', params)
                 .then(function (result) {
-                    if('error' in result) {
+                    if ('error' in result) {
                         // Handle errors
-                        if(result.error === 'empty_url')  {
+                        if (result.error === 'empty_url')  {
                             $('.notification').html("<div class='alert alert-danger'>The URL is empty.</div>");
                         }
-                        else if(result.error == 'url_not_found') {
+                        else if (result.error === 'url_not_found') {
                             $('.notification').html("<div class='alert alert-danger'>URL not found (404)</div>");
                         }
                         else {

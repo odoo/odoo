@@ -1,0 +1,203 @@
+/* Common */
+.o_mail_activity {
+    &.o_field_widget {
+        display: block;
+    }
+
+    .o_thread_date_separator.o_border_dashed {
+        border-bottom-style: dashed;
+
+        &[data-toggle="collapse"] {
+            cursor: pointer;
+
+            .o_chatter_planned_activities_summary {
+                display: none;
+            }
+
+            &.collapsed {
+                margin-bottom: 0;
+                .o-transition(margin, 0.8s);
+
+                .o_chatter_planned_activities_summary {
+                    display: inline-block;
+
+                    span {
+                        padding: 0 5px;
+                        border-radius: 100%;
+                        font-size: 11px;
+                    }
+                }
+
+                i.fa-caret-down:before {
+                    content: '\f0da';
+                }
+            }
+        }
+    }
+
+    #o_chatter_planned_activities {
+        .o_thread_message {
+            .o_thread_message_sidebar {
+                .o_avatar_stack {
+                    position: relative;
+                    text-align: left;
+                    margin-bottom: 8px;
+
+                    img {
+                        .square(31px);
+                    }
+
+                    .o_avatar_icon {
+                        .o-position-absolute(@right: -5px, @bottom: -5px);
+                        .square(25px);
+                        padding: 6px 5px;
+                        text-align: center;
+                        line-height: 1.2;
+                        color: white;
+                        border-radius: 100%;
+                        border: 2px solid white;
+                    }
+                }
+            }
+
+            .o_mail_info {
+                .o_activity_info {
+                    vertical-align: baseline;
+                    padding: 4px 6px;
+                    background: @gray-lighter;
+                    border-radius: 2px 2px 0 0;
+                    .o-hover-opacity(1, 1);
+
+                    &.collapsed {
+                        .o-hover-opacity(0.5, 1);
+                        background: transparent;
+                    }
+                }
+            }
+
+            .o_thread_message_collapse .dl-horizontal.well {
+                display: inline-block;
+                margin-bottom: 0;
+
+                dt {
+                    max-width: 80px;
+                }
+                dd {
+                    margin-left: 95px;
+                }
+            }
+
+            .o_thread_message_note {
+                margin: 2px 0 5px;
+            }
+
+            .o_thread_message_tools {
+                .o_activity_link {
+                    padding: 0 @padding-base-horizontal;
+                }
+                .o_activity_done {
+                    padding-left: 0;
+                }
+            }
+        }
+    }
+
+    .o_thread_message_core.o_mail_note {
+        padding: 0px 3px;
+    }
+
+    .o_activity_color_default {
+        color: #dddddd;
+    }
+
+    .o_activity_color_planned {
+        color: @brand-success;
+    }
+    .o_activity_color_overdue {
+        color: @brand-danger;
+    }
+    .o_activity_color_today {
+        color: @brand-warning;
+    }
+}
+
+/* Feedback popover (form view) */
+.o_mail_activity_feedback {
+    max-width: 410px;
+    outline: none;
+
+    textarea {
+        min-width: 250px;
+    }
+}
+
+/* Kanban View */
+.o_kanban_record {
+    .o_kanban_inline_block {
+        display: inline-block;
+    }
+
+    .o_mail_activity {
+        .o_activity_btn {
+            span.fa {
+                overflow: visible;
+                line-height: 1;
+                vertical-align: middle;
+            }
+        }
+
+        .o_activity_link_kanban {
+            visibility: hidden;
+        }
+
+        ul.o_activity {
+            width: 290px;
+
+            & > li:last-child {
+                background-color: @odoo-brand-lightsecondary;
+                color: @gray-dark;
+                line-height: 3em;
+            }
+            li > ul.o_activity_log {
+                max-height: 300px;
+                overflow-y: auto;
+                color: @text-color;
+
+                li {
+                    width: 100%;
+                    display: inline-block;
+
+                    &.o_activity_label {
+                        line-height: 2.5em;
+                        padding: 0px 5px;
+                        background-color: @odoo-brand-lightsecondary;
+                    }
+
+                    &.o_schedule_activity {
+                        padding: 8px 10px 8px 0px;
+                        vertical-align: middle;
+                        &:hover {
+                            background-color: @gray-lighter;
+                            .o_activity_link_kanban {
+                                visibility: visible;
+                            }
+                        }
+
+                        .o_activity_title {
+                            width: 85%;
+                            padding: 0px 5px 0px 10px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+
+            .o_no_activity {
+                padding: 10px;
+                cursor: initial;
+            }
+        }
+    }
+}

@@ -1,47 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_check_printing
-# 
+#
 # Translators:
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Tina Rittmüller <tr@ife.de>, 2016
-# Ermin Trevisan <trevi@twanda.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# JackTheHunter <Maximilian.N98@gmail.com>, 2016
-# darenkster <inactive+darenkster@transifex.com>, 2016
+# darenkster <renkosp@gmail.com>, 2015
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
-# Henry Mineehen <info@mineehen.de>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-05-27 06:21+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:57
+#: code:addons/account_check_printing/account_journal.py:56
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Nummernkreis für Schecks"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:37
-#: code:addons/account_check_printing/models/account_payment.py:74
+#: code:addons/account_check_printing/account_payment.py:35
+#: code:addons/account_check_printing/account_payment.py:72
 #, python-format
 msgid " and %s/100"
 msgstr " und %s/100"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:83
+#: code:addons/account_check_printing/account_payment.py:81
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Eine Schecknotiz darf 60 Zeichen nicht überschreiten."
@@ -56,11 +51,6 @@ msgstr "Betrag in Worten"
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
 msgstr "Abbrechen"
-
-#. module: account_check_printing
-#: model:account.payment.method,name:account_check_printing.account_payment_method_check
-msgid "Check"
-msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
@@ -108,7 +98,7 @@ msgid "Checks numbering sequence."
 msgstr "Scheck-Nummernfolge"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:96
+#: code:addons/account_check_printing/account_journal_dashboard.py:23
 #, python-format
 msgid "Checks to Print"
 msgstr "Auszudruckende Schecks"
@@ -121,7 +111,7 @@ msgstr "Auszudruckende Schecks"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr "Angelegt von"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_date
@@ -139,11 +129,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:103
+#: code:addons/account_check_printing/account_payment.py:101
 #, python-format
 msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
+"In order to print multiple checks at once, they must belong to the same bank "
+"journal."
 msgstr ""
 "Zum Druck mehrerer Schecks, müssen diese zum gleichen Bankjournal gehören."
 
@@ -183,8 +173,8 @@ msgstr "Nächste Schecknummer"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
 msgid ""
-"Number of the check corresponding to this payment. If your pre-printed check"
-" are not already numbered, you can manage the numbering in the journal "
+"Number of the check corresponding to this payment. If your pre-printed check "
+"are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
 "Nummer des Schecks für diese Bezahlung. Falls Ihre vorab gedruckten Schecks "
@@ -194,10 +184,10 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "Zahlungen"
+msgstr "Anzeige Zahlungen"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:100
+#: code:addons/account_check_printing/account_payment.py:98
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -209,15 +199,15 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
+"Please enter the number of the first pre-printed check that you are about to "
+"print on."
 msgstr ""
 "Bitte geben Sie die Nummer für den ersten vorab auszudruckenden Scheck ein."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print"
-msgstr "Druck"
+msgstr "Drucken"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -230,7 +220,7 @@ msgid "Print Checks"
 msgstr "Scheck drucken"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:116
+#: code:addons/account_check_printing/account_payment.py:114
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -250,22 +240,22 @@ msgstr "Laufende Nummer für den nächsten Scheckdruck. "
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
+"Technical feature used to know whether check printing was enabled as payment "
+"method."
 msgstr ""
 "Technische Funktion zur Prüfung, ob Schecks als offizieller Zahlungsweg "
 "aktiviert wurden."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:26
+#: code:addons/account_check_printing/account_journal.py:25
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
 "Die letzte Nummer für einen Scheck war %s. Um eine Ablehnung eines Schecks "
-"seitens der Bank zu verhindern, müssen Se auf jeden Fall eine größere Nummer"
-" wählen."
+"seitens der Bank zu verhindern, müssen Se auf jeden Fall eine größere Nummer "
+"wählen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -279,11 +269,12 @@ msgstr ""
 "die Konfiguration Ihres Journals anpassen."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:137
+#: code:addons/account_check_printing/account_payment.py:135
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
-"Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
+"Make sure the proper check printing module is installed and its "
+"configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
 "Es wurde noch kein Schecklayout konfiguriert. Stellen Sie sicher, dass "
 "Scheckdruck als Modul installiert wurde."

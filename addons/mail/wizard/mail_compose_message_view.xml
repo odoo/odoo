@@ -18,19 +18,29 @@
                         <field name="active_domain" invisible="1"/>
 
                         <!-- Various warnings -->
-                        <field name="use_active_domain" invisible="1"/>
                         <div colspan="2" class="oe_form_box_info oe_text_center"
-                                attrs="{'invisible': [('use_active_domain', '!=', True)]}">
-                            <p>
-                                <strong>All records matching your current search filter will be mailed,
-                                    not only the ids selected in the list view.</strong><br />
-                                If you want to work only with selected ids, please uncheck the
-                                list header checkbox.
+                                attrs="{'invisible': [('active_domain', '=', False)]}">
+                            <p attrs="{'invisible': [('use_active_domain', '=', False)]}">
+                                <strong>
+                                    All records matching your current search filter will be mailed,
+                                    not only the ids selected in the list view.
+                                </strong><br />
+                                If you want to send a lot of emails, we recommend you to use the mass mailing module.<br />
+                                Confirming this wizard will probably take a few minutes blocking your browser.
                             </p>
-                            <br/>
-                            <p>
-                                <strong>Moreover, if you want to send a lot of emails, we recommend you to use the mass mailing module</strong>. <br />
-                                Confirming this wizard will probably take a few minutes blocking your browser.</p>
+                            <p attrs="{'invisible': [('use_active_domain', '=', True)]}">
+                                <strong>Only records checked in list view will be used.</strong><br />
+                                If you want to send a lot of emails, we recommend you to use the mass mailing module.
+                            </p>
+                            <p class="mt8">
+                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">
+                                    If you want to use all records according to you search criterion instead check this selection box :
+                                </span>
+                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">
+                                    If you want to use only selected records please uncheck this selection box :
+                                </span>
+                                <field class="oe_inline" name="use_active_domain"/>
+                            </p>
                         </div>
                         <!-- visible wizard -->
                         <field name="email_from"
@@ -64,7 +74,8 @@
                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                     </group>
                     <footer>
-                        <button string="Send" name="send_mail_action" type="object" class="btn-primary"/>
+                        <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="send_mail_action" type="object" class="btn-primary o_mail_send"/>
+                        <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="send_mail_action" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
 
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"

@@ -3,27 +3,26 @@
 # * procurement
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -56,10 +55,10 @@ msgid ""
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
-"Una <b>orden de adquisición</b> se utiliza para registrar la necesidad de un"
-" producto específico en una ubicación específica. Las órdenes de adquisición"
-" son usualmente creadas automáticamente a partir de <i>órdenes de venta, "
-"descargue las reglas logísticas o reglas mínimas de stock.</i>"
+"Una < b> para la contratación </b > se utiliza para registrar la necesidad de un specific\n"
+"producto en una ubicación específica. Órdenes de adquisición son usualmente\n"
+"creado automáticamente a partir de <i>órdenes de venta, descargue reglas de logística o\n"
+"reglas del stock mínimo.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -284,9 +283,9 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
-"Las excepciones más comunes son los productos para comprar que no tienen un "
-"proveedor definido y los productos para fabricar sin una lista de "
-"materiales."
+"Las excepciones más comunes son los productos comprados que \n"
+"                no tienen un proveedor definido y los productos\n"
+"                fabricados sin una lista de materiales."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -294,7 +293,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:189
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ninguna regla casa con este abastecimiento"
@@ -382,6 +381,18 @@ msgid "Procurement started late"
 msgstr "El abastecieminto se inició con retraso"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
+
+#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
@@ -448,11 +459,6 @@ msgstr "Regla"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Ejecutar abastecimiento"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr "Ejecutar Abastecimientos"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -541,7 +547,7 @@ msgstr ""
 "                orden de compra, de fabricación, etc."
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:144
+#: code:addons/procurement/models/procurement.py:158
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
 msgstr ""

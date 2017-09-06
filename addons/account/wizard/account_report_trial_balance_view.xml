@@ -25,20 +25,14 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="account_report_balance_view"/>
         <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_account" />
+        <field name="binding_type">report</field>
     </record>
 
     <menuitem id="menu_general_Balance_report"
         name="Trial Balance"
         parent="account.menu_finance_legal_statement"
-        action="action_account_balance_menu"/>
-
-    <record id="action_account_balance_report_values1" model="ir.values">
-        <field name="model_id" ref="account.model_account_account" />
-        <field name="name">Trial Balance</field>
-        <field name="key2">client_print_multi</field>
-        <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_balance_menu'))" />
-        <field name="key">action</field>
-        <field name="model">account.account</field>
-    </record>
+        action="action_account_balance_menu"
+        groups="account.group_account_user"/>
 
 </odoo>

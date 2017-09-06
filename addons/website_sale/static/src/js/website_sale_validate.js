@@ -12,7 +12,7 @@ $(document).ready(function () {
         if (! order_node || order_node.data('order-id') === undefined) {
             return;
         }
-        var order_id = order_node.data('order-id');
+        var order_id = parseInt(order_node.data('order-id'));
         return ajax.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
         }).then(function (result) {
             _poll_nbr += 1;

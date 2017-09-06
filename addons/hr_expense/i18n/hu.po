@@ -5,16 +5,15 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# Kisrobert <kisrobi@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +23,33 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"<b>Note:</b> Set the same email address on your employee form than\n"
-"                            the one you use are your \"From:\". Otherwise, your\n"
-"                            expenses will not be accepted by email."
+msgid "(e.g. expenses@mycompany.odoo.com)"
 msgstr ""
-"<b>Megjegyzés:</b> Állítsa be ugyanazt az e-mail címet az alkalmazotti űrlapon \n"
-"                            amit a saját \"Űrlapon:\" használ. Egyébként az\n"
-"                            email-on küldött kiadásait nem fogadják el."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "(if the expense has been paid by the employee directly);"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "(only such email addresses are authorized)"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "(used for reimbursement)"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ". Here are some advises to avoid conflictual situations:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "2 ways to record expenses:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -51,7 +69,7 @@ msgid ""
 "report, explain the reason using the <i>New Message</i> button in the "
 "bottom.</p>"
 msgstr ""
-"<p>Igazgatók jóváhagyhatják vagy elutasíthatják a költség "
+"<p>Felső vezetők jóváhagyhatják vagy elutasíthatják a költség "
 "kimutatást.</p><p>Ha visszautasít egy jelentést, magyarázza meg az okot az "
 "<i>Új üzenet</i> alsó gomb használatával.</p>"
 
@@ -83,11 +101,56 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"<strong class=\"text-info\">[PRODUCT CODE]</strong> Free Description <strong"
-" class=\"text-primary\">PRICE</strong>"
+"<span class=\"panel-title\">\n"
+"                                        <strong>By email (advised)</strong><br/>\n"
+"                                        <span class=\"small\">Send a snapshot whenever you get an expense</span>\n"
+"                                    </span>"
 msgstr ""
-"<strong class=\"text-info\">[TERMÉK KÓD]</strong> Szabad leírás <strong "
-"class=\"text-primary\">ÁR</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Centralized</strong><br/>\n"
+"                                        <span class=\"small\">HR officer, manager</span>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Classic encoding</strong><br/>\n"
+"                                        <span class=\"small\">Log in in the system</span>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Decentralized</strong><br/>\n"
+"                                        <span class=\"small\">Employee’s team manager</span>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>In batch (one report)</strong><br/>\n"
+"                                        <span class=\"small\">Advised if lots of expenses</span>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>One at a time</strong><br/>\n"
+"                                        <span class=\"small\">Advised if few expenses</span>\n"
+"                                    </span>"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -100,9 +163,35 @@ msgid "<strong>Description:</strong>"
 msgstr "<strong>Leírás:</strong>"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Employee(s) record expenses, </strong>and send expense reports to "
+"their manager;"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Employee:</strong>"
-msgstr "<strong>Munkavállaló:</strong>"
+msgstr "<strong>Alkalmazott:</strong>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Hotel</strong><br/>\n"
+"                                    Cost: 0.00 <i>(the cost of the ticket will be recorded on every expense)</i>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "<strong>Manager(s) approve or refuse expense reports;</strong>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Others</strong><br/>\n"
+"                                    Cost: 0.00"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -110,23 +199,35 @@ msgid "<strong>Payment By:</strong>"
 msgstr "<strong>Által fizetve:</strong>"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Restaurant</strong><br/>\n"
+"                                    Cost: 0.00 <i>(the cost of the ticket will be recorded on every expense)</i>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>The accounting department posts journal entries and reimburses "
+"employees </strong>"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Total</strong>"
 msgstr "<strong>Összesen</strong>"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"<strong>Travel with Personal Car</strong><br/>\n"
+"                                    Cost: 0.30 <i>(the price per mile reimbursed by the company is fixed)</i>"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
 msgstr "<strong>Által jóváhagyva:</strong>"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"<strong>Your email gateway is not configured.</strong> Please configure your email\n"
-"                            gateway from the Settings app, menu <i>General Settings</i>."
-msgstr ""
-"<strong>Az e-mail átjárója nincs beállítva.</strong> Kérem állítsa be az e-mail \n"
-"                            átjáróját a Beállítások alkalmazás <i>Általános beállítások</i> menüjében."
 
 #. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:79
@@ -164,15 +265,19 @@ msgid "Accounting Entries"
 msgstr "Könyvelési tételek"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Accounting: Accountant or Adviser"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
 msgstr "Aktuális költség, ráfordítás táblázatok, nem az elutasítottak"
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.air_ticket
-#: model:product.template,name:hr_expense.air_ticket_product_template
-msgid "Air Flight"
-msgstr "Légi utazás"
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Agree in advance with the customer:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_domain
@@ -195,12 +300,7 @@ msgstr "Összes költség, ráfordítás"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
-msgstr "Gyűjtő/elemző könyvelés"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
-msgid "An expense account is expected"
-msgstr ""
+msgstr "Analitikus/elemző könyvelés"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -224,6 +324,16 @@ msgid "Approved Expenses"
 msgstr "Jóváhagyott készpénzes kiadás"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "As employees, there are"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Ask your expert accountant what tax must be claimed to your customer"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "Bank Journal"
 msgstr "Banki napló"
@@ -234,7 +344,11 @@ msgid "Bill Reference"
 msgstr "Számla hivatkozás"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Business trip"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr "Költségként elszámolható"
@@ -244,13 +358,7 @@ msgstr "Költségként elszámolható"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Cancel"
-msgstr "Érvénytelenít"
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.car_travel
-#: model:product.template,name:hr_expense.car_travel_product_template
-msgid "Car Travel Expenses"
-msgstr "Gépjármű utazási költségek"
+msgstr "Mégse"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -275,7 +383,7 @@ msgid "Click here to create new expenses."
 msgstr "Kattintson új kiadások létrehozásához."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:304
+#: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "Click to add a new expense,"
 msgstr "Kattintson egy új költség hozzáadásához,"
@@ -322,6 +430,11 @@ msgid "Configure Expense"
 msgstr "Költség kiadások beállítása"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Configure expense types"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Confirmed Expenses"
@@ -336,6 +449,11 @@ msgstr "Gratulálok, elvégezte!"
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create a new expense.<br>"
 msgstr "Kattintson egy új költség kiadás létrehozásához.<br>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Create employees with a Work Email"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_uid
@@ -371,13 +489,18 @@ msgstr "Dátum"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr "Alapértelmezett álneve a költség kiadásnak"
+msgstr "Alapértelmezett álnevek a költség kiadásoknak"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Department"
 msgstr "Osztály, részleg"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Depending on your company structure, the"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_description
@@ -433,6 +556,11 @@ msgid "End"
 msgstr "Vége"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Enjoy your Odoo experience,"
+msgstr "Élvezze az Odoo élményt,"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
@@ -448,6 +576,11 @@ msgstr "Készpénzes kiadás leírása"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Expense Email Alias"
 msgstr "Költség kiadás E-mail álnév"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Expense Flow"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_journal_id
@@ -524,6 +657,11 @@ msgid "Expense Sheet"
 msgstr "Költségkiadás táblázat"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Expense Types"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
 msgstr "Kiadás elutasításának oka"
@@ -547,6 +685,11 @@ msgstr "Költség kiadás elutasítva"
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense report submitted, waiting approval"
 msgstr "Költség kiadás könyvelésre beküldve, jóváhagyásra vár"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
+msgid "Expense: Submit To Manager"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -599,13 +742,18 @@ msgid "Expenses by Month"
 msgstr "Kiadások havi lebontásban"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:399
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Expenses follow this flow:"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:400
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Költség kiadásoknak ugyanahhoz az alkalmazotthoz kell tartozzon"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:511
+#: code:addons/hr_expense/models/hr_expense.py:512
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -615,7 +763,7 @@ msgstr ""
 "főkönyvi számla tételeket hozzon létre."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:403
+#: code:addons/hr_expense/models/hr_expense.py:404
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -644,6 +792,20 @@ msgid "Expenses will go through these steps:"
 msgstr "Költség kiadások a következő három lépcsőn mennek át:"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Expenses: Manager"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"For the Odoo Team,<br/>\n"
+"                            Fabien Pinckaers, Founder"
+msgstr ""
+"Az Oddo rendszer csapatának,<br/>\n"
+"                          Fabien Pinckaers, Alapító"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Former Employees"
@@ -656,12 +818,7 @@ msgid ""
 "expenses which are verified by the HR Manager."
 msgstr ""
 "Innen a főkönyvi számlán jóváhagyhatja valamint elutasíthatja a költség "
-"kiadásokat, melyeket a HR Emberi Erőforrás igazgató felülvizsgálta."
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "From: Your Email"
-msgstr "Feladó: Az Ön e-mail címe"
+"kiadásokat, melyeket a HR Emberi Erőforrás Felső vezetője felülvizsgálta."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -670,8 +827,18 @@ msgstr "Általános információk"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "Get Mobile"
-msgstr "Mobilszámot szerezzen"
+msgid "Grant such accountants with following access rights:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Grant such users with “Officer” rights for Expense app"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Grant this user with “Manager” rights for Expense app"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -680,25 +847,19 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+msgid "HR Department"
+msgstr "Emberi erőforrás Osztály, részleg"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Have a wonderful day,<br/>- The Odoo Team"
 msgstr "Legyen szép napja,<br/>- Az Odoo csapata"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_hide_payment_method
-msgid "Hide payment method"
-msgstr "Fizetés módjának elrejtése"
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.hotel_rent
-#: model:product.template,name:hr_expense.hotel_rent_product_template
-msgid "Hotel Accommodation"
-msgstr "Szállás elhelyezés"
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_department
-msgid "Hr Department"
-msgstr "Emberi erőforrás Osztály, részleg"
+msgid "Hide Payment Method"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
@@ -715,9 +876,34 @@ msgstr "Költség kiadás emberi erőforrás általi elutasításának ok varáz
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_9286
 msgid "ID"
 msgstr "Azonosító ID"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "If you track expenses on customer projects, you can charge them"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Install Analytic Accounting add-on"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Install Sales app"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Invoice Customers"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Invoicing at cost vs. at negotiated price"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_account_move_id
@@ -759,7 +945,7 @@ msgstr "Utoljára frissítve "
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Manager"
-msgstr "Igazgató"
+msgstr "Menedzser"
 
 #. module: hr_expense
 #. openerp-web
@@ -767,7 +953,7 @@ msgstr "Igazgató"
 #, python-format
 msgid "Managers can get all reports to approve from this menu."
 msgstr ""
-"Vezetők megkaphatják az összes jelentést az ebből a menüből történő "
+"Felső vezetők megkaphatják az összes jelentést az ebből a menüből történő "
 "jóváhagyásra."
 
 #. module: hr_expense
@@ -819,7 +1005,7 @@ msgid "New Mail"
 msgstr "Új e-mail"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:251
+#: code:addons/hr_expense/models/hr_expense.py:252
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -829,7 +1015,7 @@ msgstr ""
 "kategóriájára), kérem hozzon létre egyet."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:218
+#: code:addons/hr_expense/models/hr_expense.py:219
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
@@ -837,7 +1023,7 @@ msgstr ""
 " egyet."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:197
+#: code:addons/hr_expense/models/hr_expense.py:198
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -866,15 +1052,35 @@ msgid "Officer"
 msgstr "Hivatalnok"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Once a month"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Once approved, your expense report, goes to the accounting,"
-msgstr "Miután jóváhagyottá vált, a költség kiadásai a könyvelésre kerülnek."
+msgstr ""
+"Miután jóváhagyottá vált, a költség kiadás jelentése a könyvelésre kerülnek."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Once approved, your expenses report goes to the accounting,"
-msgstr "Miután jóváhagyottá vált, a költség kiadásai a könyvelésre kerülnek."
+msgstr "Miután jóváhagyottá vált, a költség kiadása a könyvelésre kerülnek."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Once expense reports approved by managers, the accounting department checks "
+"accounts, products and taxes used. Then they"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Once setup, you get an efficient expenses tracking process for all your "
+"employees."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -889,16 +1095,15 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
-"Ha elkészítette a költség kiadásait, küldje el a főnökének jóváhagyásra."
+"Ha elkészítette a költség kiadásait, küldje el a Felső vezetőknek "
+"jóváhagyásra."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
-"Once your email gateway is configured, come back to this screen\n"
-"                            to setup the next steps."
+"Optionally, <strong>expenses are invoiced to the customer "
+"afterwards.</strong>"
 msgstr ""
-"Miután az e-mail átjáróját beállította, jöjjön vissza erre a képernyőre\n"
-"                            a következő lépések beállításához."
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -942,7 +1147,8 @@ msgstr "Fizetés típusa:"
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Periodically, you submit expenses report to your manager,"
-msgstr "Időszakonként, a költség kiadásai jelentését küldje be a vezetőjének."
+msgstr ""
+"Időszakonként, a költség kiadásai jelentését küldje be a Felső vezetőnek."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_web_planner
@@ -950,7 +1156,7 @@ msgid "Planner"
 msgstr "Tervező"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:255
+#: code:addons/hr_expense/models/hr_expense.py:256
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -958,6 +1164,11 @@ msgid ""
 msgstr ""
 "Kérem határozza meg az alapértelmezett költség kiadási számlát egy termék "
 "készpénzes vásárlásához: `property_account_expense_categ_id`."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Populate your list of employees"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -991,6 +1202,12 @@ msgid "Product Template"
 msgstr "Terméksablon"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Provide your customer with detailed reports (along with copies of receipts)"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Qty"
 msgstr "Menny."
@@ -1001,6 +1218,11 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Quicker to get reimbursed"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_description
 msgid "Reason"
 msgstr "Ok"
@@ -1009,6 +1231,16 @@ msgstr "Ok"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse expense."
 msgstr "Kiadási költségek elutasításának oka."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Record a first expense"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Recording Mode"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1048,6 +1280,11 @@ msgid "Register Payment"
 msgstr "Kiegyenlítés rögzítése"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Reimbursement"
+msgstr "Megtérítés"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Report"
 msgstr "Kimutatás"
@@ -1060,8 +1297,8 @@ msgstr "Jelentett"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
-msgid "Reports"
-msgstr "Kimutatások"
+msgid "Reporting"
+msgstr "Riport készítés"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_request_approve_expense_sheet
@@ -1084,6 +1321,11 @@ msgid "Resubmit"
 msgstr "Újra benyújt"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Review expenses to approve"
+msgstr ""
+
+#. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:25
 #, python-format
@@ -1091,8 +1333,18 @@ msgid ""
 "Save the report, your manager will receive a notification by email to "
 "approve it."
 msgstr ""
-"Mentse el a jelentést, a vezetője e-mail értesítést fog kapni a "
+"Mentse el a jelentést, a Felső vezetője e-mail értesítést fog kapni a "
 "jóváhagyáshoz."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "See how to invoice expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "See how to manage payables"
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:88
@@ -1105,10 +1357,35 @@ msgstr ""
 "kategóriájával."
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Send an expense by email"
+msgstr ""
+
+#. module: hr_expense
 #: model:web.planner,tooltip_planner:hr_expense.planner_hr_expense
 msgid "Send receipts by email to create expenses efficiently."
 msgstr ""
 "Küldje el a nyugtákat e-mail-en a költség kimutatások hatékony készítéséhez."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Set Home Address to employees"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Set a manager in the employee form"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Set an email alias"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Set invoicing method on expense products"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
@@ -1116,17 +1393,11 @@ msgid "Settings"
 msgstr "Beállítások"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "Setup"
-msgstr "Beállít"
-
-#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Setup your domain alias"
 msgstr "Állítsa be a domén álneveket"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr ""
@@ -1152,13 +1423,8 @@ msgstr "Költség kiadás állapota"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "Subject:"
-msgstr "Tárgy:"
-
-#. module: hr_expense
-#: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
-msgid "Submit To Manager"
-msgstr "Felső vezetőnek rendelkezésére"
+msgid "Submit for Approval"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -1192,19 +1458,6 @@ msgstr ""
 "naplókhoz csak egy elérhető és az a 'kézi'"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"The <strong class=\"text-info\">PRODUCT CODE</strong> is optional and should be the\n"
-"                            internal code of one of your expense product. This\n"
-"                            will set the right product automatically on your\n"
-"                            expense Odoo."
-msgstr ""
-"A <strong class=\"text-info\">TERMÉK KÓD</strong> opcionális és az egyik költség \n"
-"                            kiadás termék belső kódjának kell lennie. Ez \n"
-"                            fogja automatikusan az Odoo rendszer költség kiadására a megfelelő \n"
-"                            terméket beállítani."
-
-#. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:37
 #, python-format
@@ -1226,14 +1479,18 @@ msgid "The accountant validates journal entries and reimburse you."
 msgstr "A könyvelő jóváhagyja a napló tételeket és visszatérít."
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "The first step if to"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
 msgid "The journal used when the expense is done."
 msgstr "A napló amit a kiadás elvégzése után használ."
 
 #. module: hr_expense
-#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
-#, python-format
-msgid "The payment amount must be strictly positive."
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "The next step is to settle an internal policy to"
 msgstr ""
 
 #. module: hr_expense
@@ -1242,21 +1499,15 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr "Az a fizetési mód, melyet a költség kiadására használ a vállalat."
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"The photo of the receipt and the description of the email will\n"
-"                            be attached to the expense. That way, you get everything attached\n"
-"                            to fill the remaining fields later on."
-msgstr ""
-"A bizonylat fotója és az e-mail leírása melléklete lesz l\n"
-"                            a költség kiadásnak. Így, minden mellékelve lesz\n"
-"                            a későbbi hiányzó mezők kitöltéséhez."
-
-#. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "The steps to process expenses are:"
 msgstr "A költség kiadások végrehajtásának lépései:"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "This guide helps you start with Odoo Expenses."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
@@ -1282,19 +1533,8 @@ msgstr "Benyújt"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"To create expenses by email, take photos of your\n"
-"                            receipts and send them by email with the following\n"
-"                            information:"
+msgid "To do:"
 msgstr ""
-"Költség kiadás e-mailek létrehozása, hozzon létre fotót a \n"
-"                            nyugtáiról és küldje el e-mail-be a következő\n"
-"                            informácóval:"
-
-#. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "To:"
-msgstr "Címzett:"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_total_amount
@@ -1326,9 +1566,18 @@ msgid "Unreported Expenses"
 msgstr "Nem jelentett költség kiadások"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid ""
+"Use this app to track expenses done by employees and reimbursed by the "
+"company, or paid with a company credit cards directly. If a vendor bill is "
+"sent to the company for payment, it’s better to use Vendor Bills instead of "
+"expenses in the Accounting app."
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
 msgid "Validate"
-msgstr "Jóváhagyás"
+msgstr "Jóváhagyott"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_responsible_id
@@ -1338,7 +1587,7 @@ msgstr "Által jóváhagyva"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
 msgid "View Attached Documents"
-msgstr "Mellékelt dokumentumok megtekintésa"
+msgstr "Mellékelt dokumentumok megtekintése"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1365,20 +1614,25 @@ msgid "We hope this feature helped you manage your expenses efficiently."
 msgstr "Reméljük ez a jellemző segít a költség kiadásai hatékony kezelésében."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:508
-#, python-format
-msgid "You can only generate accounting entry for approved expense(s)."
-msgstr "Csak jóváhagyott költsége(k) tudnak főkönyvi bejegyzést generálni."
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "Welcome"
+msgstr "Üdvözlet"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid ""
-"You can set an optionnal <strong class=\"text-primary\">PRICE</strong>\n"
-"                            at the end of the subject of your email."
+msgid "What it covers and what are the limits"
 msgstr ""
-"Beállíthat egy <strong class=\"text-primary\">ÁR</strong>\n"
-"lehetőséget\n"
-"                            az e-mail tárgyának végén."
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "When you charge"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:509
+#, python-format
+msgid "You can only generate accounting entry for approved expense(s)."
+msgstr "Csak jóváhagyott költsége(k) tudnak főkönyvi bejegyzést generálni."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -1398,23 +1652,10 @@ msgstr ""
 "                                    az e-mail tárgyába a költség kiadáshoz történő hozzáadáshoz."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:566
-#, python-format
-msgid "You cannot add expense lines of another employee."
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:433
+#: code:addons/hr_expense/models/hr_expense.py:426
 #, python-format
 msgid "You cannot delete a posted expense."
 msgstr "Nem törölhet könyvelésre feladott kiadásokat."
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:559
-#, python-format
-msgid ""
-"You cannot have a positive and negative amounts on the same expense report."
-msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106
@@ -1428,7 +1669,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:104
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr "Nem jelentheti ugyanazt a sot kétszer!"
+msgstr "Nem jelentheti ugyanazt a sort kétszer!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -1442,12 +1683,7 @@ msgid "You record expenses,"
 msgstr "Költség kiadásokat jegyez az adatbázisba,"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
-msgid "Your Email Address"
-msgstr "E-mail címe"
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:490
+#: code:addons/hr_expense/models/hr_expense.py:491
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -1457,6 +1693,31 @@ msgstr ""
 "%s költsége elutasításra került.<br/><ul "
 "class=o_timeline_tracking_value_list><li>Elutasítás oka<span> : </span><span"
 " class=o_timeline_tracking_value>%s</span></li></ul>"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "and"
+msgstr "és"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "approval process"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "back to your customers automatically"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "can be:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "configure the expense types"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1479,20 +1740,35 @@ msgid "hr.expense.config.settings"
 msgstr "hr.expense.config.settings"
 
 #. module: hr_expense
-#: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
-msgid "or"
-msgstr "vagy"
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:305
+#: code:addons/hr_expense/models/hr_expense.py:306
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr "vagy küldje a bizonylatokat e-maillel ide: %s."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "post them into the books"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "proceed with the employee reimbursement"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "send us an email"
 msgstr "küldjön nekünk egy e-mailt"
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "submit expenses to managers"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
+msgid "that your company allows. Here are some examples:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner

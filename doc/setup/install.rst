@@ -439,7 +439,7 @@ Source installation requires manually installing dependencies:
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
         C:\> cd \YourOdooPath
         C:\YourOdooPath> C:\Python27\Scripts\pip.exe install -r requirements.txt
@@ -484,7 +484,7 @@ Source installation requires manually installing dependencies:
   - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
     update the :envvar:`PATH`) and install less:
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
         C:\> npm install -g less
 
@@ -517,7 +517,7 @@ Common necessary configurations are:
 
 Under Windows a typical way to execute odoo would be:
 
-.. code-block:: ps1
+.. code-block:: doscon
 
     C:\YourOdooPath> python odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 

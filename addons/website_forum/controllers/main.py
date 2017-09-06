@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
 import json
 import lxml
+import requests
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
 from datetime import datetime
-from urllib2 import urlopen, URLError
 
 from odoo import http, modules, SUPERUSER_ID, tools, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import binary_content
-from odoo.addons.website.models.website import slug
 from odoo.http import request
 
 
@@ -84,7 +83,7 @@ class WebsiteForum(http.Controller):
         forums = request.env['forum.forum'].search([])
         return request.render("website_forum.forum_all", {'forums': forums})
 
-    @http.route('/forum/new', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", add_menu=False):
         forum_id = request.env['forum.forum'].create({'name': forum_name})
         if add_menu:
@@ -94,7 +93,7 @@ class WebsiteForum(http.Controller):
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
             })
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return "/forum/%s" % slug(forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
@@ -217,9 +216,11 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
-            arch = lxml.html.parse(urlopen(kwargs.get('url')))
+            req = requests.get(kwargs.get('url'), stream=True)
+            req.raise_for_status()
+            arch = lxml.html.parse(req.raw)
             return arch.find(".//title").text
-        except URLError:
+        except IOError:
             return False
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
@@ -545,9 +546,9 @@ class WebsiteForum(http.Controller):
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) / 3 + 1)]
+        users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
-            users[index / 3].append(user)
+            users[index // 3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)
@@ -576,7 +577,7 @@ class WebsiteForum(http.Controller):
             img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
-            content = image.encode('base64')
+            content = base64.b64encode(image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -656,8 +657,8 @@ class WebsiteForum(http.Controller):
         posts = {}
         for act in activities:
             posts[act.res_id] = True
-        posts_ids = Post.search([('id', 'in', posts.keys())])
-        posts = dict(map(lambda x: (x.id, (x.parent_id or x, x.parent_id and x or False)), posts_ids))
+        posts_ids = Post.search([('id', 'in', list(posts))])
+        posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
         # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
         if user == request.env.user:
@@ -705,6 +706,13 @@ class WebsiteForum(http.Controller):
             'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
             'website_description': kwargs.get('description'),
         }
+
+        if 'clear_image' in kwargs:
+            values['image'] = False
+        elif kwargs.get('ufile'):
+            image = kwargs.get('ufile').read()
+            values['image'] = base64.b64encode(image)
+
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'
         user.write(values)

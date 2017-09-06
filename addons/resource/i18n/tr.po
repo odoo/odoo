@@ -1,33 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
-# Saban Yildiz <sabany@projetgrup.com>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
-# Murat Kaplan <muratk@projetgrup.com>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# gezgin biri <gezginbiri@hotmail.com>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: gezgin biri <gezginbiri@hotmail.com>, 2016\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-10-12 12:56+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -70,7 +62,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
@@ -97,7 +89,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Görüntülenen İsim"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -116,8 +108,7 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Hata! İzin başlangıç tarihi izin bitiş tarihinden önce olmalı."
 
@@ -135,7 +126,7 @@ msgstr "Grupla"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr "Saatler"
+msgstr "Saat"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -156,8 +147,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Boşsa, bu firma için genel bir tatildir. Bir kaynak ayarlanmışsa, tatil/izin"
-" yalnızca bu kaynak içindir"
+"Boşsa, bu firma için genel bir tatildir. Bir kaynak ayarlanmışsa, tatil/izin "
+"yalnızca bu kaynak içindir"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
@@ -171,7 +162,7 @@ msgstr ""
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "Pasif"
+msgstr "Etkinsiz"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -179,7 +170,7 @@ msgstr "Pasif"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son değiştirme tarihi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
@@ -195,7 +186,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme"
+msgstr "Son Güncellenen"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -230,14 +221,14 @@ msgstr "Pazartesi"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "Adı"
+msgstr "Ad"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "Sebep"
+msgstr "Neden"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
@@ -299,7 +290,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Kaynaklar spesifik bir proje aşamasında bulunması kaynak yaratma ve yönetmenize olanak sağlar. Ayrıca etkililik seviyesini ve haftalık çalışma saatine bağlı olarak iş yükünü de\n"
+"Kaynaklar spesifik bir proje aşamasında bulunması kaynak yaratma ve "
+"yönetmenize olanak sağlar. Ayrıca etkililik seviyesini ve haftalık çalışma "
+"saatine bağlı olarak iş yükünü de\n"
 "ayarlayabilirisiniz."
 
 #. module: resource
@@ -348,23 +341,17 @@ msgid "Sunday"
 msgstr "Pazar"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 "This field depict the efficiency of the resource to complete tasks. e.g "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -379,7 +366,7 @@ msgstr "Salı"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
-msgstr "tip"
+msgstr "Tür"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_user_id

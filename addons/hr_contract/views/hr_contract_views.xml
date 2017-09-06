@@ -5,8 +5,12 @@
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                'search_default_employee_id': [active_id],
+                'default_employee_id': active_id,
+                'search_default_group_by_state': 1
+            }</field>
         </record>
 
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
@@ -15,7 +19,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[@name='button_box']" position="inside">
+                    <xpath expr="//button[@name='toggle_active']" position="before">
                         <button name="%(act_hr_employee_2_hr_contract)d"
                             class="oe_stat_button"
                             icon="fa-book"
@@ -55,7 +59,7 @@
                     <field name="name" string="Contracts"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="working_hours"/>
+                    <field name="resource_calendar_id"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="state"/>
@@ -68,6 +72,7 @@
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
                         <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
             </field>
@@ -82,7 +87,7 @@
                         <field name="state" widget="statusbar" clickable="1"/>
                     </header>
                     <sheet>
-                    <div class="oe_title">
+                    <div class="oe_title" name="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Contract Reference"/>
@@ -91,40 +96,41 @@
                     <group>
                         <group>
                             <field name="employee_id"/>
+                            <field name="department_id"/>
                             <field name="job_id"/>
                         </group>
                         <group>
-                            <field name="department_id"/>
                             <field name="type_id"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Information" name="information">
-                            <group>
-                                <group name="salary_and_advantages" string="Salary and Advantages">
-                                    <field name="wage"/>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
-                                </group>
-                                <group name="duration_group" string="Duration">
-                                    <label for="trial_date_start" string="Trial Period Duration"/>
-                                    <div>
-                                        <field name="trial_date_start" class="oe_inline"/> - <field name="trial_date_end" class="oe_inline"/>
+                        <page string="Salary Information" name="information">
+                            <group name="main_info">
+                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" nolabel="1"/>
+                                        <span>/ month</span>
                                     </div>
-                                    <label for="date_start" string="Duration"/>
-                                    <div>
-                                        <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
-                                    </div>
-                                    <field name="working_hours"/>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
                                 </group>
                             </group>
-                            <separator string="Notes"/>
-                            <field name="notes"/>
                         </page>
-                        <page string="Work Permit">
-                            <group col="4">
-                                <field name="visa_no"/>
-                                <field name="permit_no"/>
-                                <field name="visa_expire"/>
+                        <page string="Other Information" name="other">
+                            <group>
+                                <group name="duration_group" string="Contract Terms">
+                                    <field name="date_start"/>
+                                    <label for="date_end"/>
+                                    <div class="o_row">
+                                        <field name="date_end" nolabel="1"/>
+                                        <span class="text-muted">(If fixed-term contract)</span>
+                                    </div>
+                                    <field name="trial_date_end"/>
+                                    <field name="resource_calendar_id"/>
+                                </group>
+                            </group>
+                            <group string="Notes">
+                                <field name="notes" nolabel="1"/>
                             </group>
                         </page>
                     </notebook>
@@ -144,9 +150,9 @@
                 <tree string="Contracts" decoration-bf="message_needaction == True">
                     <field name="name"/>
                     <field name="employee_id"/>
-                    <field name="type_id"/>
                     <field name="job_id"/>
-                    <field name="working_hours"/>
+                    <field name="type_id"/>
+                    <field name="resource_calendar_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="wage" invisible="1"/>
@@ -155,13 +161,50 @@
             </field>
         </record>
 
+        <record id="hr_contract_view_kanban" model="ir.ui.view">
+            <field name="name">hr.contract.kanban</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column">
+                    <field name="employee_id"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Contract</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="text-muted">
+                                    <field name="job_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('hr.employee', 'image_medium', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_current':1}</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('employee_id', '!=', False)]</field>
+            <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -226,5 +269,6 @@
             parent="hr.menu_hr_root"
             sequence="4"
             groups="hr.group_hr_manager"/>
+
 
 </odoo>

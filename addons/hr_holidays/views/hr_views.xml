@@ -15,7 +15,7 @@
                     <field name="absence_of_today"/>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
                             <a name="%(hr_holidays_action_request_from_department)d" type="action">
@@ -38,20 +38,20 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="after">
                     <div class="col-xs-12 o_kanban_primary_bottom">
                         <div class="row">
                             <div class="col-xs-3">
                                 <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose leaves request are either confirmed or validated on today">Absence</a>
                             </div>
                             <div class="col-xs-9">
-                                <field name="absence_of_today" widget="progress" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
+                                <field name="absence_of_today" widget="progressbar" options="{'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
                             </div>
                         </div>
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(hr_holidays_action_request_from_department)d" type="action">
@@ -69,7 +69,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action">
@@ -130,7 +130,7 @@
                     </div>
                 </group>
             </xpath>
-            <div name="button_box" position="inside">
+            <button name="toggle_active" position="before">
                 <field name="show_leaves" invisible="1"/>
                 <button name="%(act_hr_employee_holiday_request)d"
                         type="action"
@@ -141,7 +141,7 @@
                         help="Remaining leaves">
                     <field string="Leaves Left" name="leaves_count" widget="statinfo"/>
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 

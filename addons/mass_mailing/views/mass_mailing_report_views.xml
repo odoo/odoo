@@ -35,14 +35,14 @@
                         <field name="scheduled_date"/>
                     </group>
                     <group expand="1" string="Group By...">
-                        <filter string="Mass Mailing Campaign"
+                        <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
                             domain="[]" context="{'group_by':'campaign'}"/>
-                        <filter string="State" domain="[]"
+                        <filter string="State" domain="[]" name="state"
                             context="{'group_by':'state'}"/>
-                        <filter string="Sent By" domain="[]"
+                        <filter string="Sent By" domain="[]" name="sent_by"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Scheduled Month"
+                        <filter string="Scheduled Month" name="scheduled_month"
                             domain="[]" context="{'group_by':'scheduled_date:month'}"/>
                     </group>
                 </search>
@@ -54,11 +54,11 @@
            <field name="name">Mass Mailing Analysis</field>
            <field name="res_model">mail.statistics.report</field>
            <field name="view_type">form</field>
-           <field name="view_mode">pivot,graph</field>
+           <field name="view_mode">graph,pivot</field>
            <field name="help">Mass Mailing Statistics allows you to check different mailing related information like number of bounced mails, opened mails, replied mails. You can sort out your analysis by different groups to get accurate grained analysis.</field>
        </record>
 
        <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="60"/>
-       <menuitem name="Reports" id="menu_mass_mailing_report" sequence="99"
+       <menuitem name="Reporting" id="menu_mass_mailing_report" sequence="99"
             parent="mass_mailing_menu_root" action="action_mail_statistics_report" groups="mass_mailing.group_mass_mailing_user"/>
 </odoo>

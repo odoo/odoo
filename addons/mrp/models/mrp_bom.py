@@ -52,10 +52,10 @@ class MrpBom(models.Model):
         ('asap', 'The components of 1st operation')], string='Manufacturing Readiness',
         default='asap', required=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type', domain=[('code', '=', 'mrp_operation')],
-        help=u"When a procurement has a ‘produce’ route with a picking type set, it will try to create "
-             "a Manufacturing Order for that product using a BoM of the same picking type. That allows "
-             "to define procurement rules which trigger different manufacturing orders with different BoMs. ")
+        'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
+        help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
+             "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
+             "to define procurement rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
@@ -284,7 +284,7 @@ class MrpBomLine(models.Model):
         return {
             'name': _('Attachments'),
             'domain': domain,
-            'res_model': 'ir.attachment',
+            'res_model': 'mrp.document',
             'type': 'ir.actions.act_window',
             'view_id': attachment_view.id,
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],

@@ -20,8 +20,6 @@ import sys
 import threading
 import time
 import traceback
-import urllib2
-import urlparse
 import warnings
 from os.path import join as opj
 from zlib import adler32
@@ -37,6 +35,7 @@ import werkzeug.local
 import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
+from werkzeug import urls
 from werkzeug.wsgi import wrap_file
 
 try:
@@ -45,12 +44,12 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo.service.server import memory_info
-from odoo.service import security, model as service_model
-from odoo.tools.func import lazy_property
-from odoo.tools import ustr, consteq, frozendict
+from .service.server import memory_info
+from .service import security, model as service_model
+from .tools.func import lazy_property
+from .tools import ustr, consteq, frozendict, pycompat, unique
 
-from odoo.modules.module import module_manifest
+from .modules.module import module_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -131,11 +130,11 @@ def dispatch_rpc(service_name, method, params):
         return result
     except NO_POSTMORTEM:
         raise
-    except odoo.exceptions.DeferredException, e:
+    except odoo.exceptions.DeferredException as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
         odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
         raise
-    except Exception, e:
+    except Exception as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
@@ -163,8 +162,12 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
-    if urlparse.urlparse(url, scheme='http').scheme not in ('http', 'https'):
-        url = 'http://' + url
+    # FIXME: decide whether urls should be bytes or text, apparently
+    # addons/website/controllers/main.py:91 calls this with a bytes url
+    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
+    url = pycompat.to_text(url)
+    if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
+        url = u'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
@@ -276,6 +279,10 @@ class WebRequest(object):
         if self._cr:
             if exc_type is None and not self._failed:
                 self._cr.commit()
+                if self.registry:
+                    self.registry.signal_changes()
+            elif self.registry:
+                self.registry.reset_changes()
             self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
@@ -283,8 +290,8 @@ class WebRequest(object):
 
     def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
-        arguments = dict((k, v) for k, v in arguments.iteritems()
-                         if not k.startswith("_ignored_"))
+        arguments ={k: v for k, v in arguments.items()
+                         if not k.startswith("_ignored_")}
         self.endpoint_arguments = arguments
         self.endpoint = endpoint
         self.auth_method = auth
@@ -298,7 +305,8 @@ class WebRequest(object):
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
-        raise
+        # otherwise "no active exception to reraise"
+        raise exception
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -346,7 +354,7 @@ class WebRequest(object):
             debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
 
         if not debug and self.httprequest.referrer:
-            debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
+            debug = 'debug' in urls.url_parse(self.httprequest.referrer).decode_query()
         return debug
 
     @contextlib.contextmanager
@@ -364,7 +372,7 @@ class WebRequest(object):
 
             use :attr:`.env`
         """
-        return odoo.registry(self.db) if self.db else None
+        return odoo.registry(self.db)
 
     @property
     def db(self):
@@ -389,7 +397,7 @@ class WebRequest(object):
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
-        hm = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        hm = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return '%so%s' % (hm, max_ts)
 
     def validate_csrf(self, csrf):
@@ -413,7 +421,7 @@ class WebRequest(object):
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
-        hm_expected = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
 def route(route=None, **kw):
@@ -507,7 +515,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, basestring):
+            if isinstance(response, (bytes, pycompat.text_type)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -594,7 +602,7 @@ class JsonRequest(WebRequest):
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
             # regular jsonrpc2
-            request = self.httprequest.stream.read()
+            request = self.httprequest.stream.read().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -623,10 +631,10 @@ class JsonRequest(WebRequest):
             # We need then to manage http sessions manually.
             response['session_id'] = self.session.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (self.jsonp, json.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, json.dumps(response, default=ustr),)
         else:
             mime = 'application/json'
-            body = json.dumps(response)
+            body = json.dumps(response, default=ustr)
 
         return Response(
                     body, headers=[('Content-Type', mime),
@@ -689,7 +697,7 @@ class JsonRequest(WebRequest):
                     rpc_request.debug(logline)
 
             return self._json_response(result)
-        except Exception, e:
+        except Exception as e:
             return self._handle_exception(e)
 
 def serialize_exception(e):
@@ -697,7 +705,7 @@ def serialize_exception(e):
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
         "message": ustr(e),
-        "arguments": to_jsonable(e.args),
+        "arguments": e.args,
         "exception_type": "internal_error"
     }
     if isinstance(e, odoo.exceptions.UserError):
@@ -717,19 +725,6 @@ def serialize_exception(e):
     elif isinstance(e, odoo.exceptions.except_orm):
         tmp["exception_type"] = "except_orm"
     return tmp
-
-def to_jsonable(o):
-    if isinstance(o, str) or isinstance(o,unicode) or isinstance(o, int) or isinstance(o, long) \
-        or isinstance(o, bool) or o is None or isinstance(o, float):
-        return o
-    if isinstance(o, list) or isinstance(o, tuple):
-        return [to_jsonable(x) for x in o]
-    if isinstance(o, dict):
-        tmp = {}
-        for k, v in o.items():
-            tmp[u"%s" % k] = to_jsonable(v)
-        return tmp
-    return ustr(o)
 
 class HttpRequest(WebRequest):
     """ Handler for the ``http`` request type.
@@ -771,7 +766,7 @@ class HttpRequest(WebRequest):
             req = request.httprequest
             if req.method == 'POST':
                 request.session.save_request_data()
-                redirect = '/web/proxy/post{r.path}?{r.query_string}'.format(r=req)
+                redirect = '/web/proxy/post{r.full_path}'.format(r=req)
             elif not request.params.get('noredirect'):
                 redirect = req.url
             if redirect:
@@ -779,7 +774,7 @@ class HttpRequest(WebRequest):
                     'redirect': redirect,
                 })
                 return werkzeug.utils.redirect('/web/login?%s' % query)
-        except werkzeug.exceptions.HTTPException, e:
+        except werkzeug.exceptions.HTTPException as e:
             return e
 
     def dispatch(self):
@@ -845,7 +840,7 @@ more details.
         """
         response = Response(data, headers=headers)
         if cookies:
-            for k, v in cookies.iteritems():
+            for k, v in cookies.items():
                 response.set_cookie(k, v)
         return response
 
@@ -916,8 +911,7 @@ class ControllerType(type):
             return
         controllers_per_module[module].append(name_class)
 
-class Controller(object):
-    __metaclass__ = ControllerType
+Controller = ControllerType('Controller', (object,), {})
 
 class EndPoint(object):
     def __init__(self, method, routing):
@@ -949,14 +943,12 @@ def routing_map(modules, nodb_only, converters=None):
             result = [klass]
         return result
 
-    uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
-
     for module in modules:
         if module not in controllers_per_module:
             continue
 
         for _, cls in controllers_per_module[module]:
-            subclasses = uniq(c for c in get_subclasses(cls) if c is not cls)
+            subclasses = list(unique(c for c in get_subclasses(cls) if c is not cls))
             if subclasses:
                 name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                 cls = type(name, tuple(reversed(subclasses)), {})
@@ -968,8 +960,8 @@ def routing_map(modules, nodb_only, converters=None):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
                     # update routing attributes from subclasses(auth, methods...)
-                    for claz in reversed(mv.im_class.mro()):
-                        fn = getattr(claz, mv.func_name, None)
+                    for claz in reversed(mv.__self__.__class__.mro()):
+                        fn = getattr(claz, mv.__name__, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
                             methods_done.append(fn)
                             routing.update(fn.routing)
@@ -1058,7 +1050,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         security.check(self.db, self.uid, self.password)
 
     def logout(self, keep_db=False):
-        for k in self.keys():
+        for k in list(self):
             if not (keep_db and k == 'db'):
                 del self[k]
         self._default_values()
@@ -1163,7 +1155,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         try:
             if data:
                 # regenerate files filenames with the current session store
-                for name, (storename, filename, content_type) in data['files'].iteritems():
+                for name, (storename, filename, content_type) in data['files'].items():
                     path = os.path.join(root.session_store.path, storename)
                     files.add(name, (path, filename, content_type))
                 yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
@@ -1265,7 +1257,7 @@ class DisableCacheMiddleware(object):
     def __call__(self, environ, start_response):
         def start_wrapped(status, headers):
             referer = environ.get('HTTP_REFERER', '')
-            parsed = urlparse.urlparse(referer)
+            parsed = urls.url_parse(referer)
             debug = parsed.query.count('debug') >= 1
 
             new_headers = []
@@ -1393,13 +1385,13 @@ class Root(object):
         if isinstance(result, Response) and result.is_qweb:
             try:
                 result.flatten()
-            except(Exception), e:
+            except Exception as e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
                 else:
                     raise
 
-        if isinstance(result, basestring):
+        if isinstance(result, (bytes, pycompat.text_type)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
@@ -1451,7 +1443,7 @@ class Root(object):
             def _dispatch_nodb():
                 try:
                     func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
-                except werkzeug.exceptions.HTTPException, e:
+                except werkzeug.exceptions.HTTPException as e:
                     return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
                 result = request.dispatch()
@@ -1479,14 +1471,13 @@ class Root(object):
                             result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
-                        ir_http.pool.signal_caches_change()
                 else:
                     result = _dispatch_nodb()
 
                 response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
-        except werkzeug.exceptions.HTTPException, e:
+        except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
     def get_db_router(self, db):
@@ -1504,8 +1495,14 @@ def db_filter(dbs, httprequest=None):
     d, _, r = h.partition('.')
     if d == "www" and r:
         d = r.partition('.')[0]
-    r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
-    dbs = [i for i in dbs if re.match(r, i)]
+    if odoo.tools.config['dbfilter']:
+        r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
+    elif odoo.tools.config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will
+        # use the value of --database as a comma seperated list of exposed databases.
+        exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs
 
 def db_monodb(httprequest=None):
@@ -1568,7 +1565,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, (str, unicode)):
+    if isinstance(filepath_or_fp, pycompat.string_types):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1618,7 +1615,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, unicode)
+                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
                 else filename
             ) & 0xffffffff
         ))
@@ -1632,7 +1629,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
-    escaped = urllib2.quote(filename.encode('utf8'))
+    escaped = urls.url_quote(filename.encode('utf8'))
     browser = request.httprequest.user_agent.browser
     version = int((request.httprequest.user_agent.version or '0').split('.')[0])
     if browser == 'msie' and version < 9:

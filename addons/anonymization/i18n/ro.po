@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-07 16:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -58,23 +61,23 @@ msgid "Anonymized Fields"
 msgstr "Campuri anonimizate"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:194
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:69
+#: code:addons/anonymization/anonymization.py:284
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your"
-" database."
+"Before executing the anonymization process, you should make a backup of your "
+"database."
 msgstr ""
-"Inainte de a executa procesul de anonimizare, ar trebui sa faceti o copie de"
-" rezerva a bazei dumneavoastra de date."
+"Inainte de a executa procesul de anonimizare, ar trebui sa faceti o copie de "
+"rezerva a bazei dumneavoastra de date."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:191
+#: code:addons/anonymization/anonymization.py:430
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
@@ -87,7 +90,7 @@ msgstr ""
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Clear"
-msgstr "Golește"
+msgstr "Ștergeți"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_create_uid
@@ -131,7 +134,7 @@ msgstr "Direcție"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_display_name
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_display_name
 msgid "Display Name"
-msgstr "Nume afișat"
+msgstr "Afiseaza nume"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -139,8 +142,8 @@ msgid "Done"
 msgstr "Efectuat"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:139
-#: code:addons/anonymization/wizard/anonymize_wizard.py:263
+#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Error !"
 msgstr "Eroare !"
@@ -163,14 +166,14 @@ msgstr "Câmp"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
-msgid "Field name"
-msgstr ""
+msgid "Field Name"
+msgstr "Nume câmp"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Fields"
-msgstr "Câmpuri"
+msgstr "Campuri"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_name
@@ -196,7 +199,7 @@ msgid "Import"
 msgstr "Importați"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:263
+#: code:addons/anonymization/anonymization.py:521
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
@@ -244,13 +247,7 @@ msgstr "Model"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
-msgstr "Nou"
-
-#. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:153
-#, python-format
-msgid "No fields are going to be anonymized."
-msgstr ""
+msgstr "Nou(a)"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -265,7 +262,7 @@ msgstr "Obiect"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
 msgid "Object Name"
-msgstr "Nume obiect"
+msgstr "Numele Obiectului"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
@@ -286,11 +283,10 @@ msgstr "Secvență"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Started"
-msgstr "Început"
+msgstr "Inceput"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
 msgstr "Stare"
@@ -298,7 +294,7 @@ msgstr "Stare"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
 msgid "Summary"
-msgstr "Sumar"
+msgstr "Rezumat"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
@@ -306,7 +302,7 @@ msgid "Target Version"
 msgstr "Versiunea Tinta"
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:55
+#: code:addons/anonymization/anonymization.py:75
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -319,7 +315,7 @@ msgstr ""
 "sa scrieti sau sa stergeti campuri."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:120
+#: code:addons/anonymization/anonymization.py:342
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -332,8 +328,8 @@ msgstr ""
 "orice altceva."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:143
-#: code:addons/anonymization/wizard/anonymize_wizard.py:259
+#: code:addons/anonymization/anonymization.py:375
+#: code:addons/anonymization/anonymization.py:514
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -346,13 +342,13 @@ msgstr ""
 "ceva."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:141
+#: code:addons/anonymization/anonymization.py:373
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr "Baza de date este anonimizata, nu o puteti anonimiza din nou."
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:53
+#: code:addons/anonymization/anonymization.py:73
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -360,7 +356,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:257
+#: code:addons/anonymization/anonymization.py:512
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -370,8 +366,8 @@ msgstr ""
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the "
-"'.pickle' extention."
+"This is the file created by the anonymization process. It should have the '."
+"pickle' extention."
 msgstr ""
 "Acesta este fisierul creat prin procesul de anonimizare. Ar trebui sa aiba "
 "extensia '.pickle'."
@@ -382,7 +378,7 @@ msgid "Unstable"
 msgstr "Instabil"
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:32
+#: code:addons/anonymization/anonymization.py:49
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
@@ -427,3 +423,8 @@ msgstr "python"
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
 msgstr "sql"
+
+#. module: anonymization
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
+msgid "unknown"
+msgstr "necunoscut(a)"

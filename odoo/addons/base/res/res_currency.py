@@ -31,11 +31,12 @@ class Currency(models.Model):
 
     _sql_constraints = [
         ('unique_name', 'unique (name)', 'The currency code must be unique!'),
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
     ]
 
     @api.multi
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Datetime.now()
+        date = self._context.get('date') or fields.Date.today()
         company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
         # the subquery selects the last rate before 'date' for the given currency/company
         query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
@@ -159,27 +160,6 @@ class Currency(models.Model):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
-    @api.model
-    def get_format_currencies_js_function(self):
-        """ Returns a string that can be used to instanciate a javascript function that formats numbers as currencies.
-            That function expects the number as first parameter and the currency id as second parameter.
-            If the currency id parameter is false or undefined, the company currency is used.
-        """
-        company_currency = self.env.user.with_env(self.env).company_id.currency_id
-        function = ""
-        for currency in self.search([]):
-            symbol = currency.symbol or currency.name
-            format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69,%s]}, 0.00)" % currency.decimal_places
-            if currency.position == 'after':
-                return_str = "return %s + '\\xA0' + %s;" % (format_number_str, json.dumps(symbol))
-            else:
-                return_str = "return %s + '\\xA0' + %s;" % (json.dumps(symbol), format_number_str)
-            function += "if (arguments[1] === %s) { %s }" % (currency.id, return_str)
-            if (currency == company_currency):
-                company_currency_format = return_str
-                function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
-        return function
-
     def _select_companies_rates(self):
         return """
             SELECT
@@ -203,12 +183,16 @@ class CurrencyRate(models.Model):
     _description = "Currency Rate"
     _order = "name desc"
 
-    name = fields.Datetime(string='Date', required=True, index=True,
-                           default=lambda self: fields.Date.today() + ' 00:00:00')
+    name = fields.Date(string='Date', required=True, index=True,
+                           default=lambda self: fields.Date.today())
     rate = fields.Float(digits=(12, 6), help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
+
+    _sql_constraints = [
+        ('unique_name_per_day', 'unique (name,currency_id,company_id)', 'Only one currency rate per day allowed!'),
+    ]
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):

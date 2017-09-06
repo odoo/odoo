@@ -3,7 +3,7 @@
     <data noupdate="1">
 
         <record id="account_payment_method_check" model="account.payment.method">
-            <field name="name">Check</field>
+            <field name="name">Checks</field>
             <field name="code">check_printing</field>
             <field name="payment_type">outbound</field>
         </record>
@@ -14,19 +14,11 @@
         <record model="ir.actions.server" id="action_account_print_checks">
             <field name="name">Print Checks</field>
             <field name="model_id" ref="account.model_account_payment"/>
+            <field name="binding_model_id" ref="account.model_account_payment" />
             <field name="code">
 if records:
     action = records.print_checks()
             </field>
-        </record>
-
-        <record model="ir.values" id="account_print_checks">
-            <field name="model_id" ref="account.model_account_payment" />
-            <field name="name">Print Checks</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_print_checks'))" />
-            <field name="key">action</field>
-            <field name="model">account.payment</field>
         </record>
 
     </data>

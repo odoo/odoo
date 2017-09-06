@@ -3,23 +3,16 @@
 
 import inspect
 import logging
-import math
-import unicodedata
-import re
-import urlparse
 import hashlib
-import werkzeug
+import re
+
+from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
-# optional python-slugify import (https://github.com/un33k/python-slugify)
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-from odoo import api, fields, models
-from odoo import tools
-from odoo.tools import ustr
+from odoo import api, fields, models, tools
+from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.addons.portal.controllers.portal import pager
+from odoo.tools import pycompat
 from odoo.http import request
 from odoo.tools.translate import _
 
@@ -36,117 +29,6 @@ DEFAULT_CDN_FILTERS = [
 ]
 
 
-def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
-    location = path_or_uri.strip()
-    force_lang = lang is not None
-    url = urlparse.urlparse(location)
-
-    if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(current_path, location)
-
-        lang = lang or request.context.get('lang')
-        langs = [lg[0] for lg in request.website.get_languages()]
-
-        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
-            ps = location.split('/')
-            if ps[1] in langs:
-                # Replace the language only if we explicitly provide a language to url_for
-                if force_lang:
-                    ps[1] = lang.encode('utf-8')
-                # Remove the default language unless it's explicitly provided
-                elif ps[1] == request.website.default_lang_code:
-                    ps.pop(1)
-            # Insert the context language or the provided language
-            elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang.encode('utf-8'))
-            location = '/'.join(ps)
-
-    return location.decode('utf-8')
-
-
-def is_multilang_url(local_url, langs=None):
-    if not langs:
-        langs = [lg[0] for lg in request.website.get_languages()]
-    spath = local_url.split('/')
-    # if a language is already in the path, remove it
-    if spath[1] in langs:
-        spath.pop(1)
-        local_url = '/'.join(spath)
-    try:
-        # Try to match an endpoint in werkzeug's routing table
-        url = local_url.split('?')
-        path = url[0]
-        query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return (func.routing.get('website', False) and
-                func.routing.get('multilang', func.routing['type'] == 'http'))
-    except Exception:
-        return False
-
-
-####################################################
-# Slug API
-####################################################
-
-def slugify(s, max_length=None):
-    """ Transform a string to a slug that can be used in a url path.
-        This method will first try to do the job with python-slugify if present.
-        Otherwise it will process string by stripping leading and ending spaces,
-        converting unicode chars to ascii, lowering all chars and replacing spaces
-        and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
-        :rtype: str
-    """
-    s = ustr(s)
-    if slugify_lib:
-        # There are 2 different libraries only python-slugify is supported
-        try:
-            return slugify_lib.slugify(s, max_length=max_length)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    slug_str = re.sub('[\W_]', ' ', uni).strip().lower()
-    slug_str = re.sub('[-\s]+', '-', slug_str)
-
-    return slug_str[:max_length]
-
-
-def slug(value):
-    if isinstance(value, models.BaseModel):
-        if isinstance(value.id, models.NewId):
-            raise ValueError("Cannot slug non-existent record %s" % value)
-        # [(id, name)] = value.name_get()
-        identifier, name = value.id, value.display_name
-    else:
-        # assume name_search result tuple
-        identifier, name = value
-    slugname = slugify(name or '').strip().strip('-')
-    if not slugname:
-        return str(identifier)
-    return "%s-%d" % (slugname, identifier)
-
-# NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
-
-
-def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
-    """
-    m = _UNSLUG_RE.match(s)
-    if not m:
-        return None, None
-    return m.group(1), int(m.group(2))
-
-
 class Website(models.Model):
 
     _name = "website"  # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
@@ -156,7 +38,7 @@ class Website(models.Model):
         return self.env['res.lang'].search([]).ids
 
     def _default_language(self):
-        lang_code = self.env['ir.values'].get_default('res.partner', 'lang')
+        lang_code = self.env['ir.default'].get('res.partner', 'lang')
         def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return def_lang.id if def_lang else self._active_languages()[0]
 
@@ -174,9 +56,10 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account')
     social_googleplus = fields.Char('Google+ Account')
     google_analytics_key = fields.Char('Google Analytics Key')
+    google_management_client_id = fields.Char('Google Client ID')
+    google_management_client_secret = fields.Char('Google Client Secret')
 
     user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
-    compress_html = fields.Boolean('Compress HTML') # TODO: REMOVE ME IN SAAS-14
     cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
@@ -204,12 +87,16 @@ class Website(models.Model):
     #----------------------------------------------------------
 
     @api.model
-    def new_page(self, name, template='website.default_page', ispage=True):
+    def new_page(self, name, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
+            :param namespace : module part of the xml_id if none, the template module name is used
         """
-        template_module, dummy = template.split('.')
+        if namespace:
+            template_module = namespace
+        else:
+            template_module, dummy = template.split('.')
         website_id = self._context.get('website_id')
 
         # completely arbitrary max_length
@@ -362,7 +249,7 @@ class Website(models.Model):
 
         def get_url_localized(router, lang):
             arguments = dict(request.endpoint_arguments)
-            for key, val in arguments.items():
+            for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
@@ -374,7 +261,7 @@ class Website(models.Model):
             shorts.append(lg_codes[0])
             uri = get_url_localized(router, code) if request.endpoint else request.httprequest.path
             if req.query_string:
-                uri += '?' + req.query_string
+                uri += u'?' + req.query_string.decode('utf-8')
             lang = {
                 'hreflang': ('-'.join(lg_codes)).lower(),
                 'short': lg_codes[0],
@@ -417,7 +304,7 @@ class Website(models.Model):
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
-        if isinstance(template, (int, long)):
+        if isinstance(template, pycompat.integer_types):
             view_id = template
         else:
             if '.' not in template:
@@ -429,62 +316,7 @@ class Website(models.Model):
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
-        """ Generate a dict with required value to render `website.pager` template. This method compute
-            url, page range to display, ... in the pager.
-            :param url : base url of the page link
-            :param total : number total of item to be splitted into pages
-            :param page : current page
-            :param step : item per page
-            :param scope : number of page to display on pager
-            :param url_args : additionnal parameters to add as query params to page url
-            :type url_args : dict
-            :returns dict
-        """
-        # Compute Pager
-        page_count = int(math.ceil(float(total) / step))
-
-        page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
-        scope -= 1
-
-        pmin = max(page - int(math.floor(scope/2)), 1)
-        pmax = min(pmin + scope, page_count)
-
-        if pmax - pmin < scope:
-            pmin = pmax - scope if pmax - scope > 0 else 1
-
-        def get_url(page):
-            _url = "%s/page/%s" % (url, page) if page > 1 else url
-            if url_args:
-                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
-            return _url
-
-        return {
-            "page_count": page_count,
-            "offset": (page - 1) * step,
-            "page": {
-                'url': get_url(page),
-                'num': page
-            },
-            "page_start": {
-                'url': get_url(pmin),
-                'num': pmin
-            },
-            "page_previous": {
-                'url': get_url(max(pmin, page - 1)),
-                'num': max(pmin, page - 1)
-            },
-            "page_next": {
-                'url': get_url(min(pmax, page + 1)),
-                'num': min(pmax, page + 1)
-            },
-            "page_end": {
-                'url': get_url(pmax),
-                'num': pmax
-            },
-            "pages": [
-                {'url': get_url(page), 'num': page} for page in xrange(pmin, pmax+1)
-            ]
-        }
+        return pager(url, total, page=page, step=step, scope=scope, url_args=url_args)
 
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
@@ -495,7 +327,7 @@ class Website(models.Model):
         endpoint = rule.endpoint
         methods = endpoint.routing.get('methods') or ['GET']
 
-        converters = rule._converters.values()
+        converters = list(rule._converters.values())
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
@@ -527,7 +359,6 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        request.context = dict(request.context, **self.env.context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
@@ -539,15 +370,15 @@ class Website(models.Model):
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
             values = [{}]
-            convitems = converters.items()
             # converters with a domain are processed after the other ones
-            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]')
-            convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
+            convitems = sorted(
+                converters.items(),
+                key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
                     query = i == len(convitems)-1 and query_string
-                    for value_dict in converter.generate(query=query, args=val):
+                    for value_dict in converter.generate(uid=self.env.uid, query=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
                         del value_dict['loc']
@@ -583,7 +414,7 @@ class Website(models.Model):
     def image_url(self, record, field, size=None):
         """ Returns a local url that points to the image field of a given browse record. """
         sudo_record = record.sudo()
-        sha = hashlib.sha1(getattr(sudo_record, '__last_update')).hexdigest()[0:7]
+        sha = hashlib.sha1(getattr(sudo_record, '__last_update').encode('utf-8')).hexdigest()[0:7]
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
@@ -595,8 +426,14 @@ class Website(models.Model):
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
                 if flt and re.match(flt, uri):
-                    return urlparse.urljoin(cdn_url, uri)
+                    return urls.url_join(cdn_url, uri)
         return uri
+
+    @api.model
+    def action_dashboard_redirect(self):
+        if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
+            return self.env.ref('website.backend_dashboard').read()[0]
+        return self.env.ref('website.action_website').read()[0]
 
 
 class Menu(models.Model):
@@ -657,7 +494,7 @@ class Menu(models.Model):
             self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
-            if isinstance(mid, basestring):
+            if isinstance(mid, pycompat.string_types):
                 new_menu = self.create({'name': menu['name']})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:

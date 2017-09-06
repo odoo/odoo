@@ -1,22 +1,21 @@
+///
+/// This file regroups basic style rules for web_editor enable page edition and backend utils.
+///
+
 html, body {
     width: 100%;
     height: 100%;
 }
 
-/* ----- EDITOR ----- */
 .css_non_editable_mode_hidden {
     display: none !important;
 }
-
 .editor_enable .css_editable_mode_hidden {
-  display: none !important;
+    display: none !important;
 }
-
-/* ----- Editor (for public user, like forum) ----- */
 .note-toolbar {
     margin-left: 0 !important;
 }
-
 .note-popover .popover > .arrow {
     display: none;
 }
@@ -30,13 +29,17 @@ html, body {
             min-width: 20px;
         }
     }
+    @media (max-width: @screen-xs-max) {
+        .table-responsive > table.table {
+            table-layout: auto;
+        }
+    }
 }
 
-/* Media */
+// Medias
 img.shadow {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
 }
-
 img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
     padding: 4px;
 }
@@ -50,47 +53,25 @@ img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
     padding: 32px;
 }
 
-div.media_iframe_video {
-    &.padding-small iframe {
-        padding: 4px;
-    }
-    &.padding-medium iframe {
-        padding: 8px;
-    }
-    &.padding-large iframe {
-        padding: 16px;
-    }
-    &.padding-xl iframe {
-        padding: 32px;
-    }
-}
-
-/* font awsome */
 .fa-6x {
     font-size: 6em;
 }
-
 .fa-7x {
     font-size: 7em;
 }
-
 .fa-8x {
     font-size: 8em;
 }
-
 .fa-9x {
     font-size: 9em;
 }
-
 .fa-10x {
     font-size: 10em;
 }
-
 .fa.center-block {
     text-align: center;
 }
 
-/* video */
 div.media_iframe_video {
     margin: 0 auto;
     text-align: center;
@@ -103,6 +84,18 @@ div.media_iframe_video {
         .o-position-absolute(@top: 0);
         margin: 0 auto;
         margin-left: -50%;
+    }
+    &.padding-small iframe {
+        padding: 4px;
+    }
+    &.padding-medium iframe {
+        padding: 8px;
+    }
+    &.padding-large iframe {
+        padding: 16px;
+    }
+    &.padding-xl iframe {
+        padding: 32px;
     }
 
     .media_iframe_video_size {
@@ -125,7 +118,6 @@ html[data-browser^="msie"] div.media_iframe_video iframe {
     margin-left: 0;
 }
 
-/* Mobile view */
 @media (max-width: @screen-xs-max) {
     img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
         -webkit-transform: none !important;
@@ -136,7 +128,7 @@ html[data-browser^="msie"] div.media_iframe_video iframe {
     }
 }
 
-/* ---- fields --- */
+// Fields
 address {
     .fa.fa-mobile-phone {
         margin: 0 3px 0 2px;
@@ -150,12 +142,8 @@ span[data-oe-type="monetary"] {
     white-space: nowrap;
 }
 
-/* ---- MENU ---- {{{ */
-div.oe_menu_buttons {
-    top: -8px;
-    right: -8px;
-}
-
+// Menus
+// TODO should not be here but used by web_studio so must stay here for now
 ul.oe_menu_editor {
     .fa-home {
         display: none;
@@ -171,11 +159,6 @@ ul.oe_menu_editor {
     }
     li div {
         cursor: move;
-    }
-    .disclose {
-        cursor: pointer;
-        width: 10px;
-        display: none;
     }
 }
 
@@ -246,7 +229,7 @@ a.o_underline {
 @color-delta: #0D6759;
 @color-epsilon: #0B2E59;
 
-//Greyscale transparent colours
+// Greyscale transparent colours
 @color-black-25: fade(black, 25%);
 @color-black-50: fade(black, 50%);
 @color-black-75: fade(black, 75%);
@@ -254,25 +237,37 @@ a.o_underline {
 @color-white-50: fade(white, 50%);
 @color-white-75: fade(white, 75%);
 
-.o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
-    .bg-@{class_name} {
+.o-create-color-classes(@name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
+    .bg-@{name} {
         background-color: @color;
         color: @complementary;
         .text-muted {
             color: fade(@complementary, 40%);
         }
     }
-    body .text-@{class_name} { // html to make the rules more important that bg-* ones
+    body .text-@{name} { // body to make the rules more important that bg-* ones
         color: @content-color;
     }
 }
+.o-create-color-btn-classes(@name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @border-color: darken(@color, 5%)) {
+    .btn-@{name} {
+        .button-variant(@complementary, @color, @border-color);
+    }
+}
 
-// Create classes for theme colors
+// Create classes for theme colors...
 .o-create-color-classes(alpha, @color-alpha);
 .o-create-color-classes(beta, @color-beta);
 .o-create-color-classes(gamma, @color-gamma);
 .o-create-color-classes(delta, @color-delta);
 .o-create-color-classes(epsilon, @color-epsilon);
+
+// ... and button classes
+.o-create-color-btn-classes(alpha, @color-alpha);
+.o-create-color-btn-classes(beta, @color-beta);
+.o-create-color-btn-classes(gamma, @color-gamma);
+.o-create-color-btn-classes(delta, @color-delta);
+.o-create-color-btn-classes(epsilon, @color-epsilon);
 
 // Create classes for UI colors
 .o-create-color-classes(primary, @brand-primary);

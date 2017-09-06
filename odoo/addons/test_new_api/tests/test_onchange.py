@@ -157,6 +157,51 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+    def test_onchange_one2many_reference(self):
+        """ test the effect of onchange() on one2many fields with line references """
+        BODY = "What a beautiful day!"
+        USER = self.env.user
+        REFERENCE = "virtualid42"
+
+        field_onchange = self.Discussion._onchange_spec()
+        self.assertEqual(field_onchange.get('name'), '1')
+        self.assertEqual(field_onchange.get('messages'), '1')
+        self.assertItemsEqual(
+            strip_prefix('messages.', field_onchange),
+            ['author', 'body', 'name', 'size', 'important'],
+        )
+
+        # modify discussion name, and check that the reference of the new line
+        # is returned
+        values = {
+            'name': "Foo",
+            'categories': [],
+            'moderator': False,
+            'participants': [],
+            'messages': [
+                (0, REFERENCE, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                    'important': False,
+                }),
+            ],
+        }
+        self.env.invalidate_all()
+        result = self.Discussion.onchange(values, 'name', field_onchange)
+        self.assertIn('messages', result['value'])
+        self.assertItemsEqual(result['value']['messages'], [
+            (5,),
+            (0, REFERENCE, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.name_get()[0],
+                'size': len(BODY),
+                'important': False,
+            }),
+        ])
+
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
         partner = self.env.ref('base.res_partner_1')
@@ -230,6 +275,28 @@ class TestOnChange(common.TransactionCase):
             [(5,)] + [(1, user.id, {'display_name': user.display_name})
                       for user in discussion.participants + demo],
         )
+
+    def test_onchange_default(self):
+        """ test the effect of a conditional user-default on a field """
+        Foo = self.env['test_new_api.foo']
+        field_onchange = Foo._onchange_spec()
+        self.assertTrue(Foo._fields['value1'].change_default)
+        self.assertEqual(field_onchange.get('value1'), '1')
+
+        # create a user-defined default based on 'value1'
+        self.env['ir.default'].set('test_new_api.foo', 'value2', 666, condition='value1=42')
+
+        # setting 'value1' to 42 should trigger the change of 'value2'
+        self.env.invalidate_all()
+        values = {'name': 'X', 'value1': 42, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {'value2': 666})
+
+        # setting 'value1' to 24 should not trigger the change of 'value2'
+        self.env.invalidate_all()
+        values = {'name': 'X', 'value1': 24, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {})
 
     def test_onchange_one2many_value(self):
         """ test the value of the one2many field inside the onchange """

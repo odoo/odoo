@@ -1,3 +1,7 @@
+///
+/// This file regroups the odoo LESS mixins. They are available in every asset bundle.
+///
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
@@ -83,7 +87,7 @@
     -moz-flex: @grow @schrink @basis;
     -webkit-box-flex: @grow;
     -webkit-flex: @grow @schrink @basis;
-    
+
     flex: @grow @schrink @basis;
 }
 .o-justify-content(@justify) {
@@ -205,9 +209,9 @@
 // ------------------------------------------------------------------
 // Text overflow
 // ------------------------------------------------------------------
-.o-text-overflow(@display: inline-block) {
+.o-text-overflow(@display: inline-block, @max-width: 100%) {
     display: @display;
-    max-width: 100%;
+    max-width: @max-width;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -249,4 +253,22 @@
     -ms-transform: @transform;
     -o-transform: @transform;
     transform: @transform;
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+.o-hover-opacity(@default-opacity: 0.5, @hover-opacity: 1) {
+    opacity: @default-opacity;
+
+    &:hover, &:focus, &.focus {
+        opacity: @hover-opacity;
+    }
+}
+.o-hover-text-color(@default-color: @text-color, @hover-color: @link-color) {
+    color: @default-color;
+
+    &:hover, &:focus, &.focus {
+        color: @hover-color;
+    }
 }

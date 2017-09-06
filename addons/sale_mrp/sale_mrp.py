@@ -11,14 +11,15 @@ class MrpProduction(models.Model):
     sale_name = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Name', help='Indicate the name of sales order.')
     sale_ref = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Reference', help='Indicate the Customer Reference from sales order.')
 
+    def _get_parent_move(self, move):
+        if move.move_dest_ids:
+            return self._get_parent_move(move.move_dest_ids[0])
+        return move
+
     @api.multi
     def _compute_sale_name_sale_ref(self):
-        def get_parent_move(move):
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id)
-            return move
         for production in self:
-            move = get_parent_move(production.move_finished_ids[0])
+            move = production._get_parent_move(production.move_finished_ids[0])
             production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
             production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
 
@@ -29,31 +30,16 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_delivered_qty(self):
         self.ensure_one()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        # In the case of a kit, we need to check if all components are shipped. We use a all or
-        # nothing policy. A product can have several BoMs, we don't know which one was used when the
-        # delivery was created.
-        bom_delivered = {}
+        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+        # have changed, we don't compute the quantities but verify the move state.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
-            bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
-            boms, lines = bom.explode(self.product_id, product_uom_qty_bom)
-            for bom_line, data in lines:
-                qty = 0.0
-                for move in self.procurement_ids.mapped('move_ids'):
-                    if move.state == 'done' and move.product_id.id == bom_line.product_id.id:
-                        qty += move.product_uom._compute_quantity(move.product_uom_qty, bom_line.product_uom_id)
-                if float_compare(qty, data['qty'], precision_digits=precision) < 0:
-                    bom_delivered[bom.id] = False
-                    break
-                else:
-                    bom_delivered[bom.id] = True
-        if bom_delivered and any(bom_delivered.values()):
-            return self.product_uom_qty
-        elif bom_delivered:
-            return 0.0
+            bom_delivered = all([move.state == 'done' for move in self.procurement_ids.mapped('move_ids')])
+            if bom_delivered:
+                return self.product_uom_qty
+            else:
+                return 0.0
         return super(SaleOrderLine, self)._get_delivered_qty()
 
     @api.multi
@@ -106,7 +92,7 @@ class AccountInvoiceLine(models.Model):
                 if bom.type == 'phantom':
                     average_price_unit = 0
                     components = s_line._get_bom_component_qty(bom)
-                    for product_id in components.keys():
+                    for product_id in components:
                         factor = components[product_id]['qty']
                         prod_moves = [m for m in moves if m.product_id.id == product_id]
                         prod_qty_done = factor * qty_done

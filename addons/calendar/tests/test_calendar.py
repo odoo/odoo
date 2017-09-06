@@ -97,3 +97,50 @@ class TestCalendar(TransactionCase):
         self.assertEqual(calendar_event_sprint_review.month_by, 'day', 'rrule_type should be mothly')
         self.assertEqual(calendar_event_sprint_review.byday, '1', 'rrule_type should be mothly')
         self.assertEqual(calendar_event_sprint_review.week_list, 'MO', 'rrule_type should be mothly')
+
+    def test_event_order(self):
+        """ check the ordering of events when searching """
+        def create_event(name, date):
+            return self.CalendarEvent.create({
+                'name': name,
+                'start': date + ' 12:00:00',
+                'stop': date + ' 14:00:00',
+                'duration': 2.0,
+            })
+        foo1 = create_event('foo', '2011-04-01')
+        foo2 = create_event('foo', '2011-06-01')
+        bar1 = create_event('bar', '2011-05-01')
+        bar2 = create_event('bar', '2011-06-01')
+        domain = [('id', 'in', (foo1 + foo2 + bar1 + bar2).ids)]
+
+        # sort them by name only
+        events = self.CalendarEvent.search(domain, order='name')
+        self.assertEqual(events.mapped('name'), ['bar', 'bar', 'foo', 'foo'])
+        events = self.CalendarEvent.search(domain, order='name desc')
+        self.assertEqual(events.mapped('name'), ['foo', 'foo', 'bar', 'bar'])
+
+        # sort them by start date only
+        events = self.CalendarEvent.search(domain, order='start')
+        self.assertEqual(events.mapped('start'), (foo1 + bar1 + foo2 + bar2).mapped('start'))
+        events = self.CalendarEvent.search(domain, order='start desc')
+        self.assertEqual(events.mapped('start'), (foo2 + bar2 + bar1 + foo1).mapped('start'))
+
+        # sort them by name then start date
+        events = self.CalendarEvent.search(domain, order='name asc, start asc')
+        self.assertEqual(list(events), [bar1, bar2, foo1, foo2])
+        events = self.CalendarEvent.search(domain, order='name asc, start desc')
+        self.assertEqual(list(events), [bar2, bar1, foo2, foo1])
+        events = self.CalendarEvent.search(domain, order='name desc, start asc')
+        self.assertEqual(list(events), [foo1, foo2, bar1, bar2])
+        events = self.CalendarEvent.search(domain, order='name desc, start desc')
+        self.assertEqual(list(events), [foo2, foo1, bar2, bar1])
+
+        # sort them by start date then name
+        events = self.CalendarEvent.search(domain, order='start asc, name asc')
+        self.assertEqual(list(events), [foo1, bar1, bar2, foo2])
+        events = self.CalendarEvent.search(domain, order='start asc, name desc')
+        self.assertEqual(list(events), [foo1, bar1, foo2, bar2])
+        events = self.CalendarEvent.search(domain, order='start desc, name asc')
+        self.assertEqual(list(events), [bar2, foo2, bar1, foo1])
+        events = self.CalendarEvent.search(domain, order='start desc, name desc')
+        self.assertEqual(list(events), [foo2, bar2, bar1, foo1])

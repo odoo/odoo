@@ -47,7 +47,7 @@
                                     <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                                    <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" options="{'no_create':True}" groups="product.group_product_variant"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" domain="[('routing_id', '=', parent.routing_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
                             </field>
@@ -88,6 +88,33 @@
                 </tree>
             </field>
         </record>
+
+        <record id="mrp_bom_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.bom.kanban</field>
+            <field name="model">mrp.bom</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="product_tmpl_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-7">
+                                        <strong><span><field name="product_tmpl_id"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <strong><span class="pull-right badge"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_mrp_bom_filter" model="ir.ui.view">
             <field name="name">mrp.bom.select</field>
             <field name="model">mrp.bom</field>
@@ -110,11 +137,12 @@
             </field>
         </record>
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
-            <field name="name">Bill of Materials</field>
+            <field name="name">Bills of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- force empty -->
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -132,7 +160,7 @@
         <menuitem id="menu_mrp_bom_form_action"
             action="mrp_bom_form_action"
             parent="menu_mrp_bom"
-            sequence="99"/>
+            sequence="13"/>
 
         <!-- BOM Line -->
         <record id="mrp_bom_line_view_form" model="ir.ui.view">
@@ -150,7 +178,7 @@
                             </div>
                         </group>
                         <group string="BoM details">
-                            <field name="sequence" widget="handle"/>
+                            <field name="sequence"/>
                             <field name="operation_id" groups="mrp.group_mrp_routings"/>
                         </group>
                     </group>
@@ -211,12 +239,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_line_tree_view"/>
             <field name="view_type">tree</field>
-        </record>
-        <record id="ir_BOM_structure" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'mrp.bom'" name="model"/>
-            <field name="name">Bill of Materials Structure</field>
-            <field eval="'ir.actions.act_window,'+str(mrp_bom_line_action_from_bom)" name="value"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
         </record>
 
         <record id="template_open_bom" model="ir.actions.act_window">

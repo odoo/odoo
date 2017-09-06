@@ -3,17 +3,17 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -29,18 +29,15 @@ msgid ""
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Levering wordt "
-"bijgewerkt na het kiezen van een nieuwe leveringsmethode\"> Levering:</span>"
+"geüpdatet na het kiezen van een nieuwe leveringsmethode\"> Levering:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
 "A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+" This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
-"Een omschrijving van het product die u wilt delen met uw klanten. Deze "
-"omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
-"factuur/creditfactuur."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -115,6 +112,7 @@ msgstr "Afleveringsbedrag"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.website_config_settings_view_form_inherit_sale_delivery
 msgid "Delivery Methods"
 msgstr "Verzendwijzes"
 
@@ -281,7 +279,7 @@ msgid ""
 "Those products show up on the product page."
 msgstr ""
 "Stel duurdere alternatieven voor aan uw klanten (upselling strategie).\n"
-"Deze pagina's worden zichtbaar op de product pagina."
+"Deze producten worden zichtbaar op de product pagina."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery

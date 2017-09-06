@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 from itertools import islice
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 import logging
 import re
-import urllib2
+
+import requests
 import werkzeug.utils
 import werkzeug.wrappers
 
 import odoo
-from odoo import http
+from odoo import http, models
 from odoo import fields
 from odoo.http import request
-from odoo.osv.orm import browse_record
 
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
+
+from odoo.tools import pycompat, OrderedSet
 
 logger = logging.getLogger(__name__)
 
@@ -32,27 +34,29 @@ class QueryURL(object):
     def __init__(self, path='', path_args=None, **args):
         self.path = path
         self.args = args
-        self.path_args = set(path_args or [])
+        self.path_args = OrderedSet(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
         for key, value in self.args.items():
             kw.setdefault(key, value)
-        path_args = set(path_args or []).union(self.path_args)
-        paths, fragments = [], []
+        path_args = OrderedSet(path_args or []) | self.path_args
+        paths, fragments = {}, []
         for key, value in kw.items():
             if value and key in path_args:
-                if isinstance(value, browse_record):
-                    paths.append((key, slug(value)))
+                if isinstance(value, models.BaseModel):
+                    paths[key] = slug(value)
                 else:
-                    paths.append((key, value))
+                    paths[key] = u"%s" % value
             elif value:
                 if isinstance(value, list) or isinstance(value, set):
                     fragments.append(werkzeug.url_encode([(key, item) for item in value]))
                 else:
                     fragments.append(werkzeug.url_encode([(key, value)]))
-        for key, value in paths:
-            path += '/' + key + '/%s' % value
+        for key in path_args:
+            value = paths.get(key)
+            if value is not None:
+                path += '/' + key + '/' + value
         if fragments:
             path += '?' + '&'.join(fragments)
         return path
@@ -83,7 +87,7 @@ class Website(Home):
         response = super(Website, self).web_login(redirect=redirect, *args, **kw)
         if not redirect and request.params['login_success']:
             if request.env['res.users'].browse(request.uid).has_group('base.group_user'):
-                redirect = '/web?' + request.httprequest.query_string
+                redirect = b'/web?' + request.httprequest.query_string
             else:
                 redirect = '/'
             return http.redirect_with_hash(redirect)
@@ -99,7 +103,7 @@ class Website(Home):
             lang = request.website.default_lang_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
-        redirect.set_cookie('website_lang', lang)
+        redirect.set_cookie('frontend_lang', lang)
         return redirect
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, cache=300)
@@ -110,13 +114,13 @@ class Website(Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/' + page[8:], code=301)
+            return request.redirect(b'/page/%s?%s' % (page[8:].encode('utf-8'), request.httprequest.query_string), code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 
         try:
             request.website.get_template(page)
-        except ValueError, e:
+        except ValueError as e:
             # page not found
             if request.website.is_publisher():
                 values.pop('deletable')
@@ -145,7 +149,7 @@ class Website(Home):
 
         def create_sitemap(url, content):
             return Attachment.create({
-                'datas': content.encode('base64'),
+                'datas': base64.b64encode(content),
                 'mimetype': mimetype,
                 'type': 'binary',
                 'name': url,
@@ -158,7 +162,7 @@ class Website(Home):
             create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap.datas.decode('base64')
+                content = base64.b64decode(sitemap.datas)
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
@@ -168,7 +172,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_context(use_public_user=True).enumerate_pages()
+            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -192,7 +196,7 @@ class Website(Home):
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+                pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = View.render_template('website.sitemap_index_xml', {
@@ -207,7 +211,7 @@ class Website(Home):
     def website_info(self):
         try:
             request.website.get_template('website.website_info').name
-        except Exception, e:
+        except Exception as e:
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
@@ -247,6 +251,11 @@ class Website(Home):
     def snippets(self):
         return request.env['ir.ui.view'].render_template('website.snippets')
 
+    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    def get_switchable_related_views(self, key):
+        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')
@@ -267,20 +276,11 @@ class Website(Home):
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``.
-            returns templates info (which can be active or not)
-            ``full=False`` returns only the customize_show template
-            ``bundles=True`` returns also the asset bundles
-        """
-        return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
-
     @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang, mods=None):
         Modules = request.env['ir.module.module'].sudo()
         modules = Modules.search([
-            ('name', 'ilike', 'website'),
+            '|', ('name', 'ilike', 'website'), ('name', '=', 'web_editor'),
             ('state', '=', 'installed')
         ]).mapped('name')
         if mods:
@@ -303,12 +303,13 @@ class Website(Home):
         language = lang.split("_")
         url = "http://google.com/complete/search"
         try:
-            req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
-                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})))
-            response = urllib2.urlopen(req)
-        except (urllib2.HTTPError, urllib2.URLError):
+            req = requests.get(url, params={
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})
+            req.raise_for_status()
+            response = req.content
+        except IOError:
             return []
-        xmlroot = ET.fromstring(response.read())
+        xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     #------------------------------------------------------
@@ -317,9 +318,14 @@ class Website(Home):
 
     def get_view_ids(self, xml_ids):
         ids = []
+        View = request.env["ir.ui.view"].with_context(active_test=False)
         for xml_id in xml_ids:
             if "." in xml_id:
-                record_id = request.env.ref(xml_id).id
+                # Get website-specific view if possible
+                record_id = View.search([
+                    ("website_id", "=", request.website.id),
+                    ("key", "=", xml_id),
+                ]).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
             ids.append(record_id)
@@ -380,7 +386,7 @@ class Website(Home):
         action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
-        if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
+        if isinstance(path_or_xml_id_or_id, pycompat.string_types) and '.' in path_or_xml_id_or_id:
             action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
         if not action:
             action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)

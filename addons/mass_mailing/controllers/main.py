@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 import werkzeug
 
-from odoo import http, _
+from odoo import _, exceptions, http
 from odoo.http import request
+from odoo.tools import consteq
 
 
 class MassMailController(http.Controller):
 
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
-    def mailing(self, mailing_id, email=None, res_id=None, **post):
+    def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
+            res_id = res_id and int(res_id)
             res_ids = []
             if mailing.mailing_model == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([
@@ -22,6 +25,10 @@ class MassMailController(http.Controller):
                 res_ids = contacts.ids
             else:
                 res_ids = [res_id]
+
+            right_token = mailing._unsubscribe_token(res_id, email)
+            if not consteq(str(token), right_token):
+                raise exceptions.AccessDenied()
             mailing.update_opt_out(email, res_ids, True)
             return _('You have been unsubscribed successfully')
 
@@ -31,7 +38,7 @@ class MassMailController(http.Controller):
         request.env['mail.mail.statistics'].sudo().set_opened(mail_mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
-        response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
+        response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 
         return response
 

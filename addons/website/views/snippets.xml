@@ -14,7 +14,7 @@
     </section>
 </template>
 
-<template id="s_banner" name="Banner">
+<template id="s_banner" name="Slider">
     <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 400px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
@@ -25,12 +25,12 @@
                 <div class="container">
                     <div class="row content">
                         <div class="carousel-content col-md-4 col-md-offset-1 mt128 mb96">
-                            <h2>Your Banner Title</h2>
+                            <h2>Your Slide Title</h2>
                             <h4>Click to customize this text</h4>
                             <p><a href="/page/website.contactus" class="btn btn-warning btn-large">Contact us</a></p>
                         </div>
                         <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs mt48">
-                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Banner Odoo Image"/>
+                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
                         </div>
                     </div>
                 </div>
@@ -87,8 +87,8 @@
     </section>
 </template>
 
-<template id="s_big_message" name="Big message">
-    <section class="jumbotron s_big_message" style="background-image: url('/web/image/website.s_background_image_01');">
+<template id="s_big_message" name="Big Message">
+    <section class="jumbotron s_big_message oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_background_image_01');">
         <div class="container">
             <div class="row">
                 <div class="mb32 col-md-offset-1 col-md-8">
@@ -280,7 +280,7 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_editable_mode_display">Add Images from the 'Customize' menu</div>
+            <div class="alert alert-info css_editable_mode_display text-center" ><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
         </div>
     </section>
 </template>
@@ -291,14 +291,14 @@
             <h2 class="text-center">Our Offers</h2>
             <div class="row">
                 <div class="col-md-4 col-xs-12">
-                    <div class="panel panel-info">
-                        <div class="panel-heading text-center">
+                    <div class="panel bg-gray-light">
+                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Beginner</h3>
-                            <p style="margin: 0" class="text-muted">
+                            <p style="margin: 0">
                                 Starter package
                             </p>
                         </div>
-                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <div class="panel-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">35</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -317,12 +317,12 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-xs-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading text-center">
+                    <div class="panel bg-beta">
+                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Professional</h3>
                             <p style="margin: 0">Enterprise package</p>
                         </div>
-                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <div class="panel-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">65</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -339,12 +339,12 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-xs-12">
-                    <div class="panel panel-info">
-                        <div class="panel-heading text-center">
+                    <div class="panel bg-gray-light">
+                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Expert</h3>
-                            <p style="margin: 0" class="text-muted">Ultimate package</p>
+                            <p style="margin: 0">Ultimate package</p>
                         </div>
-                        <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
+                        <div class="panel-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">125</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -357,6 +357,78 @@
                         <div class="panel-footer text-center">
                             <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
                             <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_company_team" name="Company Team">
+    <section class="s_company_team">
+        <div class="container">
+            <h1 class="text-center mb32">
+                Meet the Executive Team
+            </h1>
+            <div class="row">
+                <div class="col-md-6 mb32">
+                    <div class="row s_no_resize_cols">
+                        <div class="col-md-4">
+                            <img src="/web/image/website.s_company_team_image_1" class="img-responsive img-circle center-block shadow"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Tony Fred, CEO</h4>
+                            <p class="text-muted">
+                                Founder and chief visionary, Tony is the driving force behind Company. He loves
+                                to keep his hands full by participating in the development of the software,
+                                marketing and the Customer Experience strategies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb32">
+                    <div class="row s_no_resize_cols">
+                        <div class="col-md-4">
+                            <img src="/web/image/website.s_company_team_image_2" class="img-responsive img-circle center-block shadow"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Mich Stark, COO</h4>
+                            <p class="text-muted">
+                                Mich loves taking on challenges. With his multi-year experience as Commercial
+                                Director in the software industry, Mich has helped Company to get where it
+                                is today. Mich is among the best minds.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb32">
+                    <div class="row s_no_resize_cols">
+                        <div class="col-md-4">
+                            <img src="/web/image/website.s_company_team_image_3" class="img-responsive img-circle center-block shadow"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Aline Turner, CTO</h4>
+                            <p class="text-muted">
+                                Aline is one of the iconic person in life who can say she loves what she does.
+                                She mentors 100+ in-house developers and looks after the community of over
+                                thousands developers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb32">
+                    <div class="row s_no_resize_cols">
+                        <div class="col-md-4">
+                            <img src="/web/image/website.s_company_team_image_4" class="img-responsive img-circle center-block shadow"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Iris Joe, CFO</h4>
+                            <p class="text-muted">
+                                Iris, with her international experience, helps us easily understand the numbers and
+                                improves them. She is determined to drive success and delivers her professional
+                                acumen to bring Company at the next level.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -387,60 +459,62 @@
     </section>
 </template>
 
-<template id="s_faq_collapse" name="Accordion">
+<template id="s_faq_collapse" name="FAQ">
     <section class="s_faq_collapse">
         <div class="container">
-            <h2 class="page-header">Point of Sale Questions <small>v7</small></h2>
+            <h2 class="page-header"> General Terms and Conditions / Service Policies </h2>
             <div class="panel-group" role="tablist">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                <div class="panel">
+                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
                         <h4 class="panel-title">
-                            Which hardware does Odoo POS support?
+                            Terms of service
                         </h4>
                     </div>
                     <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body">
+                        <div class="panel-body bg-white-50">
                             <p>
-                                Odoo's POS is a web application that can run on any device that
-                                can display websites with little to no setup required.
+                                These terms of service ("Terms", "Agreement") are an agreement between the website
+                                ("Website operator", "us", "we" or "our") and you ("User", "you" or "your").
                             </p>
                             <p>
-                                The Point of Sale works perfectly on any kind of touch enabled
-                                device, whether it's multi-touch tablets like an iPad or
-                                keyboardless resistive touchscreen terminals.
+                                This Agreement sets forth the general terms and conditions of your use of this website
+                                and any of its products or services (collectively, "Website" or "Services").
                             </p>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                <div class="panel">
+                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
                         <h4 class="panel-title">
-                            Does it works offline?
+                            Links to other websites
                         </h4>
                     </div>
                     <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body">
+                        <div class="panel-body bg-white-50">
                             <p>
-                                Deploy new stores with just an internet connection: no
-                                installation, no specific hardware required. It works with any
-                                iPad, Tablet PC, laptop or industrial POS machine.
+                                Although this Website may be linked to other websites, we are not, directly or
+                                indirectly, implying any approval, association, sponsorship, endorsement, or
+                                affiliation with any linked website, unless specifically stated herein.
                             </p>
                             <p>
-                                While an internet connection is required to start the Point of
-                                Sale, it will stay operational even after a complete disconnection.
+                                You should carefully review the legal statements and other conditions of use of
+                                any website which you access through a link from this Website. Your linking to
+                                any other off-site pages or other websites is at your own risk.
                             </p>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" data-toggle="collapse">
+                <div class="panel">
+                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
                         <h4 class="panel-title">
-                            Can I use it to manage projects based on agile methodologies?
+                            Use Of Cookies
                         </h4>
                     </div>
                     <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body">
-                            <p>Yes</p>
+                        <div class="panel-body bg-white-50">
+                            <p>Website may use cookies to personalize and facilitate maximum navigation of the
+                                User by this site. The User may configure his / her browser to notify and
+                                reject the installation of the cookies sent by us.</p>
                         </div>
                     </div>
                 </div>
@@ -481,45 +555,49 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-md-offset-1">
-                    <div class="col-md-12 mt16 mb16">
-                        <h3 class="mb0">List of Features</h3>
-                        <h5 class="text-muted mb16">Add a great slogan</h5>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Change Icons</h4>
-                        <p>Click on the icon to adapt it to your feature</p><br/>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Duplicate</h4>
-                        <p>Duplicate blocks to add more features.</p><br/>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Delete Blocks</h4>
-                        <p>Select and delete blocks to remove some features.</p><br/>
+                    <div class="row">
+                        <div class="col-md-12 mt16 mb16">
+                            <h3 class="mb0">List of Features</h3>
+                            <h5 class="text-muted mb16">Add a great slogan</h5>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Change Icons</h4>
+                            <p>Click on the icon to adapt it to your feature</p><br/>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Duplicate</h4>
+                            <p>Duplicate blocks to add more features.</p><br/>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Delete Blocks</h4>
+                            <p>Select and delete blocks to remove some features.</p><br/>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <div class="col-md-12 mt16 mb16">
-                        <h3 class="mb0">Second List</h3>
-                        <h5 class="text-muted mb16">Add a great slogan</h5>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Great Value</h4>
-                        <p>Tell features the visitor would like to know, not what you'd like to say.</p>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Change Background</h4>
-                        <p>From the main container, you can change the background to highlight features.</p>
-                    </div>
-                    <div class="col-md-12">
-                        <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16"></span>
-                        <h4 class="mt0 mb0">Sample images</h4>
-                        <p>All these icons are licensed under creative commons so that you can use them.</p>
+                    <div class="row">
+                        <div class="col-md-12 mt16 mb16">
+                            <h3 class="mb0">Second List</h3>
+                            <h5 class="text-muted mb16">Add a great slogan</h5>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Great Value</h4>
+                            <p>Tell features the visitor would like to know, not what you'd like to say.</p>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Change Background</h4>
+                            <p>From the main container, you can change the background to highlight features.</p>
+                        </div>
+                        <div class="col-md-12">
+                            <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16"></span>
+                            <h4 class="mt0 mb0">Sample images</h4>
+                            <p>All these icons are licensed under creative commons so that you can use them.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -528,15 +606,15 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax oe_custom_bg oe_img_bg"
+    <section class="parallax s_parallax oe_img_bg"
         style="background-image: url(/web/image/website.s_background_image_04);"
-        data-scroll-background-ratio="0.3"><div class="oe_structure"/></section>
+        data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
 </template>
 
 <template id="s_parallax_slider" name="Parallax Slider">
     <section class="parallax s_parallax_slider oe_custom_bg oe_img_bg"
              style="background-image: url(/web/image/website.s_parallax_slider_default_image);"
-            data-scroll-background-ratio="0.3">
+            data-scroll-background-ratio="1.6">
         <div><div><div class="oe_structure">
                 <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
                     <!-- Indicators -->
@@ -606,7 +684,7 @@
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                     <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_slider.png"/>
                 </div>
             </div>
 
@@ -617,6 +695,7 @@
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
                     <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
+                    <t t-snippet="website.s_company_team" t-thumbnail="/website/static/src/img/blocks/block_company_team.png"/>
                     <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
@@ -653,62 +732,24 @@
     </xpath>
 </template>
 
+<template id="external_snippets" inherit_id="website.snippets" priority="8">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
+    </xpath>
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
+        <t t-install="website_mail_channel" string="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
+        <t t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+    </xpath>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
-    <div data-js='background'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
-            <ul class="dropdown-menu">
-                <li data-background=""><a href="#">None</a></li>
-                <li class="divider"></li>
-                <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
-                <li class="divider"></li>
-                <li data-background="/web/image/website.s_background_image_01"><a href="#">Peak</a></li>
-                <li data-background="/web/image/website.s_background_image_02"><a href="#">Downtown</a></li>
-                <li data-background="/web/image/website.s_background_image_03"><a href="#">Panama Sky</a></li>
-                <li data-background="/web/image/website.s_background_image_04"><a href="#">Cubes</a></li>
-                <li data-background="/web/image/website.s_background_image_05"><a href="#">Building Profile</a></li>
-                <li data-background="/web/image/website.s_background_image_06"><a href="#">Type</a></li>
-                <li data-background="/web/image/website.s_background_image_07"><a href="#">People</a></li>
-                <li data-background="/web/image/website.s_background_image_08"><a href="#">City</a></li>
-                <li data-background="/web/image/website.s_background_image_09"><a href="#">Sails</a></li>
-            </ul>
-        </li>
-    </div>
-
-    <div data-js='background_position'
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
-        <li class="background_position_li" data-background_position="background_position">
-            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
-        </li>
-    </div>
-
-    <div data-js="colorpicker"
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
-            <ul class="dropdown-menu">
-                <li></li>
-            </ul>
-        </li>
-    </div>
-    <div data-js="colorpicker"
-        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
-        data-palette-exclude="grayscale"
-        data-palette-default="transparent_grayscale"
-        data-palette-title="Overlay Color">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
-            <ul class="dropdown-menu">
-                <li></li>
-            </ul>
-        </li>
-    </div>
-
-
     <div data-js='gallery' data-selector=".o_gallery">
+        <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
+        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li class="separator"/>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
             <ul class="dropdown-menu">
@@ -744,10 +785,10 @@
             <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
 
             <ul class="dropdown-menu">
-                <li data-select_class="o_spc-none"><a href="#">None</a></li>
-                <li data-select_class="o_spc-small"><a href="#">Small</a></li>
-                <li data-select_class="o_spc-medium"><a href="#">Medium</a></li>
-                <li data-select_class="o_spc-big"><a href="#">Big</a></li>
+                <li data-select-class="o_spc-none"><a href="#">None</a></li>
+                <li data-select-class="o_spc-small"><a href="#">Small</a></li>
+                <li data-select-class="o_spc-medium"><a href="#">Medium</a></li>
+                <li data-select-class="o_spc-big"><a href="#">Big</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
@@ -760,15 +801,65 @@
                <li data-styling="shadow"><a href="#">Shadows</a></li>
            </ul>
         </li>
-       <li class="separator"></li>
-       <li data-images_add="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-       <li data-images_rm="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li class="separator"/>
+    </div>
+
+    <div data-js='background'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
+            <ul class="dropdown-menu">
+                <li data-choose-image="true" data-no-preview="true"><a href="#"><b>Set Custom Image...</b></a></li>
+                <li class="divider"></li>
+                <li data-background="" class="none"><a href="#">None</a></li>
+                <li class="divider"></li>
+                <li data-background="/web/image/website.s_background_image_01"><a href="#">Peak</a></li>
+                <li data-background="/web/image/website.s_background_image_02"><a href="#">Downtown</a></li>
+                <li data-background="/web/image/website.s_background_image_03"><a href="#">Panama Sky</a></li>
+                <li data-background="/web/image/website.s_background_image_04"><a href="#">Cubes</a></li>
+                <li data-background="/web/image/website.s_background_image_05"><a href="#">Building Profile</a></li>
+                <li data-background="/web/image/website.s_background_image_06"><a href="#">Type</a></li>
+                <li data-background="/web/image/website.s_background_image_07"><a href="#">People</a></li>
+                <li data-background="/web/image/website.s_background_image_08"><a href="#">City</a></li>
+                <li data-background="/web/image/website.s_background_image_09"><a href="#">Sails</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-js='background_position'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
+        <li class="background_position_li" data-background-position="true" data-no-preview="true">
+            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
+        </li>
+    </div>
+
+    <div data-js="colorpicker"
+        data-selector="section, :not(.o_gallery > .container) > .carousel"
+        data-exclude=".parallax">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+    <div data-js="colorpicker"
+        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
+        data-palette-exclude="grayscale"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Overlay Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
     </div>
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" data-no-preview="true">
                 <li data-position="first"><a href="#">Move to first</a></li>
                 <li data-position="prev"><a href="#">Move to previous</a></li>
                 <li data-position="next"><a href="#">Move to next</a></li>
@@ -779,6 +870,7 @@
 
     <div data-js='carousel'
         data-selector=":not(.o_gallery > .container) > .carousel">
+        <li class="divider"></li>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
             <ul class="dropdown-menu">
@@ -790,13 +882,12 @@
                  <li data-interval="0"><a href="#">Disable autoplay</a></li>
             </ul>
         </li>
-        <li class="divider"></li>
-        <li data-add_slide="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
-        <li data-remove_slide="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
+        <li data-add-slide="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
+        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
     </div>
 
     <div data-js='margin-y'
-        data-selector="section, .row > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
+        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
     <div data-js='resize'
@@ -805,8 +896,8 @@
     </div>
 
     <div data-js='margin-x'
-        data-selector=".row > [class*='col-md-']"
-        data-drop-near=".row > [class*='col-md-']">
+        data-selector=".row:not(.s_no_resize_cols) > [class*='col-md-']"
+        data-drop-near=".row:not(.s_no_resize_cols) > [class*='col-md-']">
     </div>
 
     <div data-js='content'
@@ -824,11 +915,11 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
             <ul class="dropdown-menu">
-                <li data-select_class="o_margin_xl"><a href="#">Extra-Large</a></li>
-                <li data-select_class="o_margin_l"><a href="#">Large</a></li>
-                <li data-select_class="o_margin_m"><a href="#">Medium</a></li>
-                <li data-select_class="o_margin_s"><a href="#">Small</a></li>
-                <li data-select_class=""><a href="#">None</a></li>
+                <li data-select-class="o_margin_xl"><a href="#">Extra-Large</a></li>
+                <li data-select-class="o_margin_l"><a href="#">Large</a></li>
+                <li data-select-class="o_margin_m"><a href="#">Medium</a></li>
+                <li data-select-class="o_margin_s"><a href="#">Small</a></li>
+                <li data-select-class=""><a href="#">None</a></li>
             </ul>
         </li>
     </div>
@@ -836,9 +927,9 @@
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
-            <ul class="dropdown-menu">
-                <li data-select_class="pull-left" data-only="click"><a href="#">Left</a></li>
-                <li data-select_class="pull-right" data-only="click"><a href="#">Right</a></li>
+            <ul class="dropdown-menu" data-no-preview="true">
+                <li data-select-class="pull-left"><a href="#">Left</a></li>
+                <li data-select-class="pull-right"><a href="#">Right</a></li>
             </ul>
         </li>
     </div>
@@ -847,19 +938,21 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-scroll="0"><a href="#">Static</a></li>
-                <li data-scroll="0.3"><a href="#">Very Slow</a></li>
-                <li data-scroll="0.6"><a href="#">Slow</a></li>
+                <li data-scroll="0"><a href="#">No-scroll</a></li>
+                <li class="separator"/>
                 <li data-scroll="1"><a href="#">Fixed</a></li>
-                <li data-scroll="1.4"><a href="#">Fast</a></li>
-                <li data-scroll="1.7"><a href="#">Very Fast</a></li>
+                <li class="separator"/>
+                <li data-scroll="0.6"><a href="#">Very Slow</a></li>
+                <li data-scroll="1.2"><a href="#">Slow</a></li>
+                <li data-scroll="1.6"><a href="#">Fast</a></li>
+                <li data-scroll="2"><a href="#">Very Fast</a></li>
             </ul>
         </li>
     </div>
 
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <li data-toggle_class="o_ul_folded"><a href="#">Folded list</a></li>
+        <li data-toggle-class="o_ul_folded"><a href="#">Folded list</a></li>
     </div>
 
     <div data-js='collapse'
@@ -868,11 +961,12 @@
     </div>
 
     <div data-js="menu_data"
-         data-selector="#top_menu li > a:not(.dropdown-toggle)"
+         data-selector="#top_menu li > a"
+         data-exclude=".dropdown-toggle"
          data-no-check="true"/>
 
     <div data-js="company_data"
-         data-selector="img[src='/logo.png'], [data-oe-expression='res_company.partner_id']"
+         data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 </template>
 </odoo>

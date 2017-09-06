@@ -121,6 +121,7 @@ from functools import partial
 from zlib import crc32
 
 import odoo.modules
+from odoo.tools import pycompat
 from ..models import MAGIC_COLUMNS, BaseModel
 import odoo.tools as tools
 
@@ -336,7 +337,7 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         # We have to fit a crc32 hash and one underscore
         # into a 63 character alias. The remaining space we can use to add
         # a human readable prefix.
-        alias_hash = hex(crc32(alias))[2:]
+        alias_hash = hex(crc32(alias.encode('utf-8')))[2:]
         ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
         alias = "%s_%s" % (
             alias[:ALIAS_PREFIX_LENGTH], alias_hash)
@@ -376,7 +377,7 @@ def normalize_leaf(element):
 
 def is_operator(element):
     """ Test whether an object is a valid domain operator. """
-    return isinstance(element, basestring) and element in DOMAIN_OPERATORS
+    return isinstance(element, pycompat.string_types) and element in DOMAIN_OPERATORS
 
 
 def is_leaf(element, internal=False):
@@ -397,7 +398,7 @@ def is_leaf(element, internal=False):
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
-        and ((isinstance(element[0], basestring) and element[0])
+        and ((isinstance(element[0], pycompat.string_types) and element[0])
              or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
 
 
@@ -696,11 +697,11 @@ class expression(object):
                         return the list of related ids
             """
             names = []
-            if isinstance(value, basestring):
+            if isinstance(value, pycompat.string_types):
                 names = [value]
-            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, basestring) for item in value):
+            elif value and isinstance(value, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in value):
                 names = value
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, pycompat.integer_types):
                 return [value]
             if names:
                 return list({
@@ -924,7 +925,7 @@ class expression(object):
                     domain = domain(model)
                 is_integer_m2o = comodel._fields[field.inverse_name].type == 'integer'
                 if right is not False:
-                    if isinstance(right, basestring):
+                    if isinstance(right, pycompat.string_types):
                         op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
                         ids2 = [x[0] for x in comodel.name_search(right, domain or [], op, limit=None)]
                         if ids2:
@@ -987,12 +988,12 @@ class expression(object):
                     else:
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
                         # avoid flattening of argument in to_sql()
-                        subquery = cr.mogrify(subquery, [tuple(ids2)])
+                        subquery = cr.mogrify(subquery, [tuple(ids2)]).decode('utf-8')
                         push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [])), internal=True))
                 else:
                     call_null_m2m = True
                     if right is not False:
-                        if isinstance(right, basestring):
+                        if isinstance(right, pycompat.string_types):
                             op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
                             domain = field.domain
                             if callable(domain):
@@ -1017,7 +1018,7 @@ class expression(object):
                             subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                             subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
                             # avoid flattening of argument in to_sql()
-                            subquery = cr.mogrify(subquery, [tuple(filter(None, res_ids))])
+                            subquery = cr.mogrify(subquery, [tuple(it for it in res_ids if it)]).decode('utf-8')
                             push(create_substitution_leaf(leaf, ('id', subop, (subquery, [])), internal=True))
 
                     if call_null_m2m:
@@ -1050,8 +1051,8 @@ class expression(object):
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
-                    if isinstance(right, basestring) or \
-                            right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
+                    if isinstance(right, pycompat.string_types) or \
+                            right and isinstance(right, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in right):
                         push(create_substitution_leaf(leaf, _get_expression(comodel, left, right, operator), model))
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
@@ -1199,7 +1200,7 @@ class expression(object):
                     else:
                         field = model._fields[left]
                         instr = ','.join([field.column_format] * len(params))
-                        params = map(partial(field.convert_to_column, record=model), params)
+                        params = [field.convert_to_column(p, record=model) for p in params]
                     query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
@@ -1262,21 +1263,16 @@ class expression(object):
 
             add_null = False
             if need_wildcard:
-                if isinstance(right, str):
-                    str_utf8 = right
-                elif isinstance(right, unicode):
-                    str_utf8 = right.encode('utf-8')
-                else:
-                    str_utf8 = str(right)
-                params = '%%%s%%' % str_utf8
-                add_null = not str_utf8
+                native_str = pycompat.to_native(right)
+                params = '%%%s%%' % native_str
+                add_null = not native_str
             elif left in model:
                 params = model._fields[left].convert_to_column(right, model)
 
             if add_null:
                 query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
 
-        if isinstance(params, basestring):
+        if isinstance(params, pycompat.string_types):
             params = [params]
         return query, params
 

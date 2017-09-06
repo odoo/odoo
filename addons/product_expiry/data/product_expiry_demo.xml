@@ -20,8 +20,8 @@
         
         <record id="product_package_jambon" model="product.packaging">
             <field name="name">box of 10</field>
-            <field name="qty">12</field>
-            <field name="product_tmpl_id" ref="product_product_jambon_product_template" />
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_jambon" />
         </record>
 
         <record id="product_product_from" model="product.product">
@@ -41,8 +41,8 @@
         </record>
         <record id="product_package_from" model="product.packaging">
             <field name="name">Box of 5</field>
-            <field name="qty">12</field>
-            <field name="product_tmpl_id" ref="product_product_from_product_template" />
+            <field name="qty">5</field>
+            <field name="product_id" ref="product_product_from" />
         </record>
 
         <record id="product_product_pain" model="product.product">
@@ -62,8 +62,8 @@
         </record>
         <record id="product_package_pain" model="product.packaging">
             <field name="name">Bag of 2</field>
-            <field name="qty">6</field>
-            <field name="product_tmpl_id" ref="product_product_pain_product_template" />
+            <field name="qty">2</field>
+            <field name="product_id" ref="product_product_pain" />
         </record>
 
         <record id="product_product_lait" model="product.product">
@@ -83,8 +83,8 @@
         </record>
         <record id="product_package_lait" model="product.packaging">
             <field name="name">Boxes of 1 liter</field>
-            <field name="qty">4</field>
-            <field name="product_tmpl_id" ref="product_product_lait_product_template" />
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_lait" />
         </record>
     </data>
 </odoo>

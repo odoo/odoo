@@ -2,45 +2,14 @@ odoo.define('mail.systray', function (require) {
 "use strict";
 
 var core = require('web.core');
+var framework = require('web.framework');
+var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
 var chat_manager = require('mail.chat_manager');
 
 var QWeb = core.qweb;
-
-/**
- * Menu item appended in the systray part of the navbar, redirects to the Inbox in Discuss
- * Also displays the needaction counter (= Inbox counter)
- */
-var InboxItem = Widget.extend({
-    template:'mail.chat.InboxItem',
-    events: {
-        "click": "on_click",
-    },
-    start: function () {
-        this.$needaction_counter = this.$('.o_notification_counter');
-        chat_manager.bus.on("update_needaction", this, this.update_counter);
-        chat_manager.is_ready.then(this.update_counter.bind(this));
-        return this._super();
-    },
-    update_counter: function () {
-        var counter = chat_manager.get_needaction_counter();
-        this.$needaction_counter.text(counter);
-        this.$el.toggleClass('o_no_notification', !counter);
-    },
-    on_click: function (event) {
-        event.preventDefault();
-        chat_manager.is_ready.then(this.discuss_redirect.bind(this));
-    },
-    discuss_redirect: _.debounce(function () {
-        var self = this;
-        this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true}).then(function () {
-            self.trigger_up('hide_app_switcher');
-            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
-        });
-    }, 1000, true),
-});
 
 /**
  * Menu item appended in the systray part of the navbar
@@ -56,12 +25,13 @@ var MessagingMenu = Widget.extend({
         "click": "on_click",
         "click .o_filter_button": "on_click_filter_button",
         "click .o_new_message": "on_click_new_message",
-        "click .o_mail_channel_preview": "on_click_channel",
+        "click .o_mail_channel_preview": "_onClickChannel",
     },
     start: function () {
         this.$filter_buttons = this.$('.o_filter_button');
         this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
         this.filter = false;
+        chat_manager.bus.on("update_needaction", this, this.update_counter);
         chat_manager.bus.on("update_channel_unread_counter", this, this.update_counter);
         chat_manager.is_ready.then(this.update_counter.bind(this));
         return this._super();
@@ -70,10 +40,9 @@ var MessagingMenu = Widget.extend({
         return this.$el.hasClass('open');
     },
     update_counter: function () {
-        var counter = chat_manager.get_unread_conversation_counter();
+        var counter =  chat_manager.get_needaction_counter() + chat_manager.get_unread_conversation_counter();
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
-        this.$el.toggleClass('o_unread_chat', !!chat_manager.get_chat_unread_counter());
         if (this.is_open()) {
             this.update_channels_preview();
         }
@@ -94,8 +63,23 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
-
-            chat_manager.get_channels_preview(channels).then(self._render_channels_preview.bind(self));
+            chat_manager.get_messages({channel_id: 'channel_inbox'}).then(function(result) {
+                var res = [];
+                _.each(result, function (message) {
+                    message.unread_counter = 1;
+                    var duplicatedMessage = _.findWhere(res, {model: message.model, 'res_id': message.res_id});
+                    if (message.model && message.res_id && duplicatedMessage) {
+                        message.unread_counter = duplicatedMessage.unread_counter + 1;
+                        res[_.findIndex(res, duplicatedMessage)] = message;
+                    } else {
+                        res.push(message);
+                    }
+                });
+                if (self.filter === 'channel_inbox' || !self.filter) {
+                    channels = _.union(channels, res);
+                }
+                chat_manager.get_channels_preview(channels).then(self._render_channels_preview.bind(self));
+            });
         });
     },
     _render_channels_preview: function (channels_preview) {
@@ -136,16 +120,175 @@ var MessagingMenu = Widget.extend({
     on_click_new_message: function () {
         chat_manager.bus.trigger('open_chat');
     },
-    on_click_channel: function (event) {
-        var channel_id = $(event.currentTarget).data('channel_id');
-        var channel = chat_manager.get_channel(channel_id);
-        if (channel) {
-            chat_manager.open_channel(channel);
+
+    // Handlers
+
+    /**
+     * When a channel is clicked on, we want to open chat/channel window
+     * If channel is inbox then redirect to that record view
+     * If record not linked redirect to Inbox
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickChannel: function (event) {
+        var channelID = $(event.currentTarget).data('channel_id');
+        if (channelID == 'channel_inbox') {
+            var resID = $(event.currentTarget).data('res_id');
+            var resModel = $(event.currentTarget).data('res_model');
+            if (resModel && resID) {
+                this.do_action({
+                    type: 'ir.actions.act_window',
+                    res_model: resModel,
+                    views: [[false, 'form'], [false, 'kanban']],
+                    res_id: resID
+                });
+            } else {
+                // if no model linked redirect to inbox
+                framework.redirect('mail/view?message_id=channel_inbox');
+            }
+        } else {
+            var channel = chat_manager.get_channel(channelID);
+            if (channel) {
+                chat_manager.open_channel(channel);
+            }
         }
     },
 });
 
-SystrayMenu.Items.push(MessagingMenu);
-SystrayMenu.Items.push(InboxItem);
+/**
+ * Menu item appended in the systray part of the navbar, redirects to the next activities of all app
+ */
+var ActivityMenu = Widget.extend({
+    template:'mail.chat.ActivityMenu',
+    events: {
+        "click": "_onActivityMenuClick",
+        "click .o_activity_filter_button, .o_mail_channel_preview": "_onActivityFilterClick",
+    },
+    start: function () {
+        this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
+        chat_manager.bus.on("activity_updated", this, this._updateCounter);
+        chat_manager.is_ready.then(this._updateCounter.bind(this));
+        this._updateActivityPreview();
+        return this._super();
+    },
 
+    // Private
+
+    /**
+     * Make RPC and get current user's activity details
+     * @private
+     */
+    _getActivityData: function(){
+        var self = this;
+
+        return self._rpc({
+            model: 'res.users',
+            method: 'activity_user_count',
+        }).then(function (data) {
+            self.activities = data;
+            self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
+            self.$('.o_notification_counter').text(self.activityCounter);
+            self.$el.toggleClass('o_no_notification', !self.activityCounter);
+        });
+    },
+    /**
+     * Get particular model view to redirect on click of activity scheduled on that model.
+     * @private
+     * @param {string} model
+     */
+    _getActivityModelViewID: function (model) {
+        return this._rpc({
+            model: model,
+            method: 'get_activity_view_id'
+        });
+    },
+    /**
+     * Check wether activity systray dropdown is open or not
+     * @private
+     * @returns {boolean}
+     */
+    _isOpen: function () {
+        return this.$el.hasClass('open');
+    },
+    /**
+     * Update(render) activity system tray view on activity updation.
+     * @private
+     */
+    _updateActivityPreview: function () {
+        var self = this;
+        self._getActivityData().then(function (){
+            self.$activities_preview.html(QWeb.render('mail.chat.ActivityMenuPreview', {
+                activities : self.activities
+            }));
+        });
+    },
+    /**
+     * update counter based on activity status(created or Done)
+     * @private
+     * @param {Object} [data] key, value to decide activity created or deleted
+     * @param {String} [data.type] notification type
+     * @param {Boolean} [data.activity_deleted] when activity deleted
+     * @param {Boolean} [data.activity_created] when activity created
+     */
+    _updateCounter: function (data) {
+        if (data) {
+            if (data.activity_created) {
+                this.activityCounter ++;
+            }
+            if (data.activity_deleted && this.activityCounter > 0) {
+                this.activityCounter --;
+            }
+            this.$('.o_notification_counter').text(this.activityCounter);
+            this.$el.toggleClass('o_no_notification', !this.activityCounter);
+        }
+    },
+
+
+    // Handlers
+
+    /**
+     * Redirect to particular model view
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onActivityFilterClick: function (event) {
+        event.stopPropagation();
+        var $target = $(event.currentTarget);
+        var context = {};
+        if ($target.data('filter')=='my') {
+            context['search_default_activities_overdue'] = 1;
+            context['search_default_activities_today'] = 1;
+        } else {
+            context['search_default_activities_' + $target.data('filter')] = 1;
+        }
+        this.do_action({
+            type: 'ir.actions.act_window',
+            name: $target.data('model_name'),
+            res_model:  $target.data('res_model'),
+            views: [[false, 'kanban'], [false, 'form']],
+            search_view_id: [false],
+            domain: [['activity_user_id', '=', session.uid]],
+            context:context,
+        });
+    },
+    /**
+     * When menu clicked update activity preview if counter updated
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onActivityMenuClick: function () {
+        if (!this._isOpen()) {
+            this._updateActivityPreview();
+        }
+    },
+
+});
+
+SystrayMenu.Items.push(MessagingMenu);
+SystrayMenu.Items.push(ActivityMenu);
+
+// to test activity menu in qunit test cases we need it
+return {
+    ActivityMenu: ActivityMenu,
+};
 });

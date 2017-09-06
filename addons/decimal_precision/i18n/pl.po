@@ -1,36 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * decimal_precision
-# 
+#
 # Translators:
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2016\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-27 09:17+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzone przez"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_date
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_create_date
 msgid "Created on"
-msgstr "Data utworzenia"
+msgstr "Utworzono"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
@@ -53,22 +52,7 @@ msgstr "Cyfry"
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_display_name
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
-
-#. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
-msgid "Float"
-msgstr "Zmiennoprzecinkowy"
-
-#. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
-msgid "Float 2"
-msgstr ""
-
-#. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
-msgid "Float 4"
-msgstr ""
+msgstr "Wyświetlana nazwa "
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
@@ -80,25 +64,24 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision___last_update
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test___last_update
 msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
+msgstr "Ostatnio modyfikowano"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_uid
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr "Ostatnio modyfikowane przez"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_write_date
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr "Ostatnia zmiana"
 
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr ""
-"Tylko jedna wartość może zostać określona dla każdego podanego użycia!"
+msgstr "Tylko jedna wartość może zostać określona dla każdego podanego użycia!"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
@@ -119,3 +102,10 @@ msgstr "decimal.precision.test"
 #: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
 msgid "ir.qweb.field.float"
 msgstr "ir.qweb.field.float"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "unknown"
+msgstr "nieznane"

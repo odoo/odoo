@@ -1,31 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
-# p_amoruso <p.amoruso@elvenstudio.it>, 2016
-# Giovanni Perteghella <giovanni@perteghella.org>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-11 13:56+0000\n"
+"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -86,8 +80,6 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Definire l'orario di lavoro e la tabella oraria che potrebbe essere "
-"programmato per i membri del progetto"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -95,7 +87,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Nome Visualizzato"
+msgstr "Visualizza Nome"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -114,8 +106,7 @@ msgid "End Date"
 msgstr "Data di fine"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 "Errore! La data inizio permesso deve essere minore di quella della fine."
@@ -178,7 +169,7 @@ msgstr "Inattivo"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
 msgid "Last Modified on"
-msgstr "Ultima modifica il"
+msgstr "Data di ultima modifica"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
@@ -251,7 +242,7 @@ msgstr "Nome utente per controllare accessi per la risorsa"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
-msgstr "Risorsa"
+msgstr "Risorse"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -299,7 +290,7 @@ msgid ""
 "workload based on their weekly working hours."
 msgstr ""
 "Risorse permettono di creare e gestire risorse che possono essere coinvolte "
-"in una specifica fase di un progetto. È inoltre possibile indicare un "
+"in una specifica fase di un progetto. E' inoltre possibile indicare un "
 "livello di efficienza e carico di lavoro basato sulle loro ore di lavoro "
 "settimanali."
 
@@ -349,18 +340,12 @@ msgid "Sunday"
 msgstr "Domenica"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 "Questo campo rappresenta l'efficienza della risorsa sull'esecuzione delle "
 "attività. Per es. una risorsa impiegata da sola su una fase di 5 giorni con "
@@ -432,4 +417,4 @@ msgstr "Periodo lavorativo"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
-msgstr "Orario lavorativo"
+msgstr "Tempo di lavoro"

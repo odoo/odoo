@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
 from odoo.exceptions import ValidationError
 from odoo.modules.module import get_module_resource
-
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +31,7 @@ class Job(models.Model):
     _description = "Job Position"
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Job Title', required=True, index=True, translate=True)
+    name = fields.Char(string='Job Position', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
@@ -93,72 +92,90 @@ class Job(models.Model):
 
 
 class Employee(models.Model):
-
     _name = "hr.employee"
     _description = "Employee"
-    _order = 'name_related'
-    _inherits = {'resource.resource': "resource_id"}
-    _inherit = ['mail.thread']
+    _order = 'name'
+    _inherit = ['mail.thread', 'resource.mixin']
 
     _mail_post_access = 'read'
 
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
-    # we need a related field in order to be able to sort the employee by name
-    name_related = fields.Char(related='resource_id.name', string="Resource Name", readonly=True, store=True)
-    country_id = fields.Many2one('res.country', string='Nationality (Country)')
-    birthday = fields.Date('Date of Birth', groups='hr.group_hr_user')
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups='hr.group_hr_user')
-    sinid = fields.Char('SIN No', help='Social Insurance Number', groups='hr.group_hr_user')
-    identification_id = fields.Char(string='Identification No', groups='hr.group_hr_user')
+    # resource and user
+    name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id')
+    active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
+    # private partner
+    address_home_id = fields.Many2one(
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+    is_address_home_a_company = fields.Boolean(
+        'The employee adress has a company linked',
+        compute='_compute_is_address_home_a_company',
+    )
+    country_id = fields.Many2one(
+        'res.country', 'Nationality (Country)')
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups='hr.group_hr_user')
+    ], groups="hr.group_hr_user", default="male")
     marital = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married'),
+        ('married', 'Married (or similar)'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups='hr.group_hr_user')
-    department_id = fields.Many2one('hr.department', string='Department')
-    address_id = fields.Many2one('res.partner', string='Working Address')
-    address_home_id = fields.Many2one('res.partner', string='Home Address')
-    bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account Number',
-        domain="[('partner_id', '=', address_home_id)]", help='Employee bank salary account', groups='hr.group_hr_user')
+    ], string='Marital Status', groups="hr.group_hr_user", default='single')
+    birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
+    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user")
+    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user")
+    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user")
+    passport_id = fields.Char('Passport No', groups="hr.group_hr_user")
+    bank_account_id = fields.Many2one(
+        'res.partner.bank', 'Bank Account Number',
+        domain="[('partner_id', '=', address_home_id)]",
+        groups="hr.group_hr_user",
+        help='Employee bank salary account')
+    permit_no = fields.Char('Work Permit No')
+    visa_no = fields.Char('Visa No')
+    visa_expire = fields.Date('Visa Expire Date')
+
+    # image: all image fields are base64 encoded and PIL-supported
+    image = fields.Binary(
+        "Photo", default=_default_image, attachment=True,
+        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+    image_medium = fields.Binary(
+        "Medium-sized photo", attachment=True,
+        help="Medium-sized photo of the employee. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized photo", attachment=True,
+        help="Small-sized photo of the employee. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+    # work
+    address_id = fields.Many2one(
+        'res.partner', 'Work Address')
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
-    notes = fields.Text('Notes')
-    parent_id = fields.Many2one('hr.employee', string='Manager')
-    category_ids = fields.Many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', string='Tags')
+    # employee in company
+    job_id = fields.Many2one('hr.job', 'Job Position')
+    department_id = fields.Many2one('hr.department', 'Department')
+    parent_id = fields.Many2one('hr.employee', 'Manager')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
-    resource_id = fields.Many2one('resource.resource', string='Resource',
-        ondelete='cascade', required=True, auto_join=True)
-    coach_id = fields.Many2one('hr.employee', string='Coach')
-    job_id = fields.Many2one('hr.job', string='Job Title')
-    passport_id = fields.Char('Passport No', groups='hr.group_hr_user')
+    coach_id = fields.Many2one('hr.employee', 'Coach')
+    category_ids = fields.Many2many(
+        'hr.employee.category', 'employee_category_rel',
+        'emp_id', 'category_id',
+        string='Tags')
+    # misc
+    notes = fields.Text('Notes')
     color = fields.Integer('Color Index', default=0)
-    city = fields.Char(related='address_id.city')
-    login = fields.Char(related='user_id.login', readonly=True)
-    last_login = fields.Datetime(related='user_id.login_date', string='Latest Connection', readonly=True)
-
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary("Photo", default=_default_image, attachment=True,
-        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
-    image_medium = fields.Binary("Medium-sized photo", attachment=True,
-        help="Medium-sized photo of the employee. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary("Small-sized photo", attachment=True,
-        help="Small-sized photo of the employee. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -182,12 +199,20 @@ class Employee(models.Model):
 
     @api.onchange('user_id')
     def _onchange_user(self):
-        self.work_email = self.user_id.email
-        self.name = self.user_id.name
-        self.image = self.user_id.image
+        if self.user_id:
+            self.update(self._sync_user(self.user_id))
+
+    def _sync_user(self, user):
+        return dict(
+            name=user.name,
+            image=user.image,
+            work_email=user.email,
+        )
 
     @api.model
     def create(self, vals):
+        if vals.get('user_id'):
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
         return super(Employee, self).create(vals)
 
@@ -238,15 +263,22 @@ class Employee(models.Model):
         # Do not notify user it has been marked as follower of its employee.
         return
 
+    @api.depends('address_home_id.parent_id')
+    def _compute_is_address_home_a_company(self):
+        """Checks that choosen address (res.partner) is not linked to a company.
+        """
+        for employee in self:
+            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
 
 class Department(models.Model):
-
     _name = "hr.department"
-    _description = "Hr Department"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = "HR Department"
+    _inherit = ['mail.thread']
     _order = "name"
+    _rec_name = 'complete_name'
 
     name = fields.Char('Department Name', required=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
@@ -255,22 +287,20 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=1)
+
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for department in self:
+            if department.parent_id:
+                department.complete_name = '%s / %s' % (department.parent_id.complete_name, department.name)
+            else:
+                department.complete_name = department.name
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive departments.'))
-
-    @api.multi
-    def name_get(self):
-        result = []
-        for record in self:
-            name = record.name
-            if record.parent_id:
-                name = "%s / %s" % (record.parent_id.name_get()[0][1], name)
-            result.append((record.id, name))
-        return result
 
     @api.model
     def create(self, vals):
@@ -298,12 +328,16 @@ class Department(models.Model):
                 # subscribe the manager user
                 if manager.user_id:
                     self.message_subscribe_users(user_ids=manager.user_id.ids)
-            employees = self.env['hr.employee']
-            for department in self:
-                employees = employees | self.env['hr.employee'].search([
-                    ('id', '!=', manager_id),
-                    ('department_id', '=', department.id),
-                    ('parent_id', '=', department.manager_id.id)
-                ])
-            employees.write({'parent_id': manager_id})
+            # set the employees's parent to the new manager
+            self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)
+
+    def _update_employee_manager(self, manager_id):
+        employees = self.env['hr.employee']
+        for department in self:
+            employees = employees | self.env['hr.employee'].search([
+                ('id', '!=', manager_id),
+                ('department_id', '=', department.id),
+                ('parent_id', '=', department.manager_id.id)
+            ])
+        employees.write({'parent_id': manager_id})

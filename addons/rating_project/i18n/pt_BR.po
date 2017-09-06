@@ -5,16 +5,15 @@
 # Translators:
 # grazziano <gra.negocia@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +79,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -90,7 +89,7 @@ msgid ""
 "                    <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>\n"
 "                % endif\n"
 "                % if object.project_id.rating_status == 'periodic':\n"
-"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.\n"
+"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</p>\n"
 "                % endif\n"
 "                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
 "            </td></tr>\n"
@@ -118,15 +117,10 @@ msgstr "Status de kanban automático"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Modificar automaticamente o estado kanban quando o cliente responder ao "
-"feedback para este estágio. * Um bom feedback do cliente irá atualizar o "
-"estado kanban para \"pronto para a nova etapa\" (green bullet). * * Um "
-"feedback médio ou ruim Irá definir o estado kanban para 'bloqueado' "
-"(marcador vermelho).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -157,7 +151,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr "Avaliações de Clientes"
+msgstr "Avaliações de Cliente(s)"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -197,6 +191,14 @@ msgstr ""
 "Avaliação periódica: Email será enviado periodicamenteNão se esqueça de "
 "configurar os modelos de e-mail Nos estágios para os quais você deseja obter"
 " os feedbacks do cliente."
+
+#. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"If set and if the project's rating configuration is 'Rating when changing "
+"stage', then an email will be sent to the customer when the task reaches "
+"this step."
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
@@ -248,6 +250,13 @@ msgid "Project"
 msgstr "Projeto"
 
 #. module: rating_project
+#: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
+#: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
+#: model:ir.cron,name:rating_project.ir_cron_rating_project
+msgid "Project: Send rating"
+msgstr ""
+
+#. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
 msgstr "Trimestralmente"
@@ -269,8 +278,8 @@ msgstr "Freqüência de avaliação"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
-msgid "Rating request deadline"
-msgstr "Prazo de solicitação de avaliação"
+msgid "Rating Request Deadline"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -281,15 +290,6 @@ msgstr "Avaliação ao mudar de fase"
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
 msgstr "Avaliações"
-
-#. module: rating_project
-#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
-msgid ""
-"Select an email template. An email will be sent to the customer when the "
-"task reach this step."
-msgstr ""
-"Escolha um modelo de e-mail. Um e-mail será enviado para o cliente quando a "
-"tarefa  chegar a esta etapa."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

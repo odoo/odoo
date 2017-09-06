@@ -83,10 +83,55 @@
             </field>
         </record>
 
+        <record id="view_survey_user_input_kanban" model="ir.ui.view">
+            <field name="name">survey.user_input.kanban</field>
+            <field name="model">survey.user_input</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="survey_id"/>
+                    <field name="date_create"/>
+                    <field name="partner_id"/>
+                    <field name="email"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb8">
+                                    <div class="col-xs-8">
+                                        <strong>
+                                            <t t-esc="record.survey_id.value"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span class="pull-right badge">
+                                            <t t-esc="record.type.value"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <strong>
+                                            <field name="date_create"/>
+                                        </strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span class="pull-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_survey_user_input">
             <field name="name">Answers</field>
             <field name="res_model">survey.user_input</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="survey_user_input_tree"></field>
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
@@ -126,14 +171,14 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                             <button name="action_survey_user_input"
                                 type="object"
                                 class="oe_stat_button"
                                 icon="fa-pencil-square-o">
                                 <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <div class="oe_title" style="width: 100%;">
@@ -161,6 +206,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -194,12 +240,14 @@
                     <field name="color" />
                     <field name="auth_required" />
                     <field name="public_url" />
+                    <field name="activity_ids" />
+                    <field name="activity_state" />
                     <templates>
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a type="edit">Edit Survey</a></li>
@@ -226,6 +274,9 @@
                                         <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
                                 </ul></div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="activity_ids" widget="kanban_activity" />
+                                </div>
                             </div>
                         </div>
                     </templates>
@@ -239,6 +290,18 @@
                 <search string="Survey">
                     <field string="Title" name="title"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 </search>
             </field>
         </record>
@@ -353,8 +416,8 @@
                                         <i class="fa fa-2x">123..</i>
                                     </div>
                                     <!-- Date and Time -->
-                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
-                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
+                                    <div attrs="{'invisible': [('type', '!=', 'date')]}">
+                                        <p class="o_datetime">YYYY-MM-DD
                                             <i class="fa fa-calendar fa-2x"/>
                                         </p>
                                     </div>
@@ -427,7 +490,7 @@
                                         <field name="constr_mandatory" string="Mandatory Answer"/>
                                         <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
                                         <group>
                                             <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
                                         </group>
@@ -436,8 +499,8 @@
                                             <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                             <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
                                             <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
                                             <field name="validation_error_msg" colspan="4"/>
                                         </group>
                                     </div>
@@ -616,25 +679,15 @@
         </record>
 
         <record id="survey_action_server_clean_test_answers" model="ir.actions.server">
-            <field name="name">Clean test answers</field>
-            <field name="condition">True</field>
+            <field name="name">Survey: Clean test answers</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_survey_survey" />
+            <field name="binding_model_id" ref="model_survey_survey" />
             <field name="state">code</field>
             <field name="code">
 if records:
     env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
             </field>
-        </record>
-
-        <record id="survey_values_action_clean_test_answers" model="ir.values">
-            <field name="name">Survey clean test answers</field>
-            <field name="action_id" ref="survey_action_server_clean_test_answers" />
-            <field name="value" eval="'ir.actions.server,' + str(ref('survey_action_server_clean_test_answers'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_survey_survey" />
-            <field name="model">survey.survey</field>
-            <field name="key2">client_action_multi</field>
         </record>
 
         <!-- MENU ELEMENTS -->

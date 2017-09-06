@@ -25,7 +25,7 @@ class Stage(models.Model):
     @api.model
     def default_get(self, fields):
         """ Hack :  when going from the pipeline, creating a stage with a sales team in
-            context should not create a stage for the current sales team only
+            context should not create a stage for the current sales channel only
         """
         ctx = dict(self.env.context)
         if ctx.get('default_team_id') and not ctx.get('crm_team_mono'):

@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -50,140 +50,180 @@ class StockLocation(models.Model):
              "This has no effect for internal locations.")
 
 
-class StockQuant(models.Model):
-    _inherit = "stock.quant"
-
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
+    
     @api.multi
-    def _compute_inventory_value(self):
-        real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method == 'real')
-        for quant in real_value_quants:
-            quant.inventory_value = quant.cost * quant.qty
-        return super(StockQuant, self - real_value_quants)._compute_inventory_value()
+    def write(self, vals):
+        if 'qty_done' in vals:
+            # We need to update the `value`, `remaining_value` and `remaining_qty` on the linked
+            # stock move.
+            moves_to_update = {}
+            for move_line in self.filtered(lambda ml: ml.state == 'done'):
+                moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
 
-    @api.multi
-    def _price_update(self, newprice):
-        ''' This function is called at the end of negative quant reconciliation
-        and does the accounting entries adjustemnts and the update of the product
-        cost price if needed '''
-        super(StockQuant, self)._price_update(newprice)
-        for quant in self:
-            move = quant._get_latest_move()
-            valuation_update = newprice - quant.cost
-            # this is where we post accounting entries for adjustment, if needed
-            # If neg quant period already closed (likely with manual valuation), skip update
-            if not quant.company_id.currency_id.is_zero(valuation_update) and move._check_lock_date():
-                quant.with_context(force_valuation_amount=valuation_update)._account_entry_move(move)
-
-            # update the standard price of the product, only if we would have
-            # done it if we'd have had enough stock at first, which means
-            # 1) the product cost's method is 'real'
-            # 2) we just fixed a negative quant caused by an outgoing shipment
-            if quant.product_id.cost_method == 'real' and quant.location_id.usage != 'internal':
-                move._store_average_cost_price()
-
-    def _account_entry_move(self, move):
-        """ Accounting Valuation Entries """
-        if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
-            # no stock valuation for consumable products
-            return False
-        if any(quant.owner_id or quant.qty <= 0 for quant in self):
-            # if the quant isn't owned by the company, we don't make any valuation en
-            # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
-            # At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
-            # to make the adjustments when we know the real cost price.
-            return False
-
-        location_from = move.location_id
-        location_to = self[0].location_id  # TDE FIXME: as the accounting is based on this value, should probably check all location_to to be the same
-        company_from = location_from.usage == 'internal' and location_from.company_id or False
-        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
-
-        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
-        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
-            journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
-            if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_dest, acc_valuation, journal_id)
-            else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(move, acc_src, acc_valuation, journal_id)
-
-        # Create Journal Entry for products leaving the company
-        if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
-            journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
-            if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_src, journal_id)
-            else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(move, acc_valuation, acc_dest, journal_id)
-
-        if move.company_id.anglo_saxon_accounting and move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'customer':
-            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
-            journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
-            self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
-
-    def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
-        # group quants by cost
-        quant_cost_qty = defaultdict(lambda: 0.0)
-        for quant in self:
-            quant_cost_qty[quant.cost] += quant.qty
-
-        AccountMove = self.env['account.move']
-        for cost, qty in quant_cost_qty.iteritems():
-            move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
-            if move_lines:
-                date = self._context.get('force_period_date', fields.Date.context_today(self))
-                new_account_move = AccountMove.create({
-                    'journal_id': journal_id,
-                    'line_ids': move_lines,
-                    'date': date,
-                    'ref': move.picking_id.name})
-                new_account_move.post()
-
-    def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
-        quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
-        quant._account_entry_move(move)
-        if move.product_id.valuation == 'real_time':
-            # If the precision required for the variable quant cost is larger than the accounting
-            # precision, inconsistencies between the stock valuation and the accounting entries
-            # may arise.
-            # For example, a box of 13 units is bought 15.00. If the products leave the
-            # stock one unit at a time, the amount related to the cost will correspond to
-            # round(15/13, 2)*13 = 14.95. To avoid this case, we split the quant in 12 + 1, then
-            # record the difference on the new quant.
-            # We need to make sure to able to extract at least one unit of the product. There is
-            # an arbitrary minimum quantity set to 2.0 from which we consider we can extract a
-            # unit and adapt the cost.
-            curr_rounding = move.company_id.currency_id.rounding
-            cost_rounded = float_round(quant.cost, precision_rounding=curr_rounding)
-            cost_correct = cost_rounded
-            if float_compare(quant.product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
-                    and float_compare(quant.qty * quant.cost, quant.qty * cost_rounded, precision_rounding=curr_rounding) != 0\
-                    and float_compare(quant.qty, 2.0, precision_rounding=quant.product_id.uom_id.rounding) >= 0:
-                quant_correct = quant._quant_split(quant.qty - 1.0)
-                cost_correct += (quant.qty * quant.cost) - (quant.qty * cost_rounded)
-                quant.sudo().write({'cost': cost_rounded})
-                quant_correct.sudo().write({'cost': cost_correct})
-        return quant
-
-    def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
-        res = super(StockQuant, self)._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
-        self._account_entry_move(move)
-        return res
+            for move_id, qty_difference in moves_to_update.items():
+                # more/less units are available, update `value`, `remaining_value` and
+                # `remaining_qty` on the linked stock move.
+                move_vals = {
+                    'value': move_id.value + qty_difference * move_id.price_unit,
+                    'remaining_value': move_id.remaining_value + qty_difference * move_id.price_unit,
+                    'remaining_qty': move_id.remaining_qty + qty_difference,
+                }
+                move_id.write(move_vals)
+                if move_id.product_id.valuation == 'real_time':
+                    move_id.with_context(force_valuation_amount=qty_difference*move_id.price_unit)._account_entry_move()
+        return super(StockMoveLine, self).write(vals)
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    def _set_default_price_moves(self):
-        # When the cost method is in real or average price, the price can be set to 0.0 on the PO
-        # So the price doesn't have to be updated
-        moves = super(StockMove, self)._set_default_price_moves()
-        return moves.filtered(lambda m: not m.product_id.cost_method in ('real', 'average'))
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)",
+                               help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+    value = fields.Float()
+    remaining_qty = fields.Float()
+    remaining_value = fields.Float()
+    account_move_ids = fields.One2many('account.move', 'stock_move_id')
+
+    @api.multi
+    def action_get_account_moves(self):
+        self.ensure_one()
+        action_ref = self.env.ref('account.action_move_journal_line')
+        if not action_ref:
+            return False
+        action_data = action_ref.read()[0]
+        action_data['domain'] = [('id', 'in', self.account_move_ids.ids)]
+        return action_data
+
+    def get_price_unit(self):
+        """ Returns the unit price to store on the quant """
+        return self.price_unit or self.product_id.standard_price
+
+    @api.model
+    def _get_in_base_domain(self, company_id=False):
+        domain = [
+            ('state', '=', 'done'),
+            ('location_id.company_id', '=', False),
+            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id)
+        ]
+        return domain
+
+    @api.model
+    def _get_all_base_domain(self, company_id=False):
+        domain = [
+            ('state', '=', 'done'),
+            '|',
+                '&',
+                    ('location_id.company_id', '=', False),
+                    ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                '&',
+                    ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+                    ('location_dest_id.company_id', '=', False)
+        ]
+        return domain
+
+    def _get_in_domain(self):
+        return [('product_id', '=', self.product_id.id)] + self._get_in_base_domain(company_id=self.company_id.id)
+
+    def _get_all_domain(self):
+        return [('product_id', '=', self.product_id.id)] + self._get_all_base_domain(company_id=self.company_id.id)
+
+    def _is_in(self):
+        """ Check if the move should be considered as entering the company so that the cost method
+        will be able to apply the correct logic.
+
+        :return: True if the move is entering the company else False
+        """
+        return not self.location_id.company_id and self.location_dest_id.company_id.id == self.company_id.id
+
+    def _is_out(self):
+        """ Check if the move should be considered as leaving the company so that the cost method
+        will be able to apply the correct logic.
+
+        :return: True if the move is leaving the company else False
+        """
+        return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
 
     @api.multi
     def action_done(self):
         self.product_price_update_before_done()
         res = super(StockMove, self).action_done()
-        self.product_price_update_after_done()
+        for move in res:
+            if move._is_in():
+                if move.product_id.cost_method in ['fifo', 'average']:
+                    price_unit = move.price_unit or move.get_price_unit()
+                    value = price_unit * move.product_qty
+                    vals = {
+                        'price_unit': price_unit,
+                        'value': value,
+                        'remaining_value': value,
+                    }
+                    if move.product_id.cost_method == 'fifo':
+                        vals['remaining_qty'] = move.product_qty
+                    move.write(vals)
+                else:  # standard
+                    move.write({
+                        'price_unit': move.product_id.standard_price,
+                        'value': move.product_id.standard_price * move.product_qty,
+                    })
+            elif move._is_out():
+                if move.product_id.cost_method == 'fifo':
+                    # Find back incoming stock moves (called candidates here) to value this move.
+                    qty_to_take_on_candidates = move.product_qty
+                    candidates = move.product_id._get_fifo_candidates_in_move()
+                    new_standard_price = 0
+                    tmp_value = 0  # to accumulate the value taken on the candidates
+                    for candidate in candidates:
+                        new_standard_price = candidate.price_unit
+                        if candidate.remaining_qty <= qty_to_take_on_candidates:
+                            qty_taken_on_candidate = candidate.remaining_qty
+                        else:
+                            qty_taken_on_candidate = qty_to_take_on_candidates
+
+                        value_taken_on_candidate = qty_taken_on_candidate * candidate.price_unit
+                        candidate_vals = {
+                            'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                            'remaining_value': candidate.remaining_value - value_taken_on_candidate,
+                        }
+                        candidate.write(candidate_vals)
+
+                        qty_to_take_on_candidates -= qty_taken_on_candidate
+                        tmp_value += value_taken_on_candidate
+                        if qty_to_take_on_candidates == 0:
+                            break
+
+                    # Update the standard price with the price of the last used candidate, if any.
+                    if new_standard_price:
+                        move.product_id.standard_price = new_standard_price
+
+                    # If there's still quantity to value but we're out of candidates, we fall in the
+                    # negative stock use case. We chose to value the out move at the price of the
+                    # last out and a correction entry will be made once `_fifo_vacuum` is called.
+                    if qty_to_take_on_candidates == 0:
+                        move.write({
+                            'value': -tmp_value,  # outgoing move are valued negatively
+                            'price_unit': -tmp_value / move.product_qty,
+                        })
+                    elif qty_to_take_on_candidates > 0:
+                        last_fifo_price = new_standard_price or move.product_id.standard_price
+                        negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
+                        vals = {
+                            'remaining_qty': -qty_to_take_on_candidates,
+                            'remaining_value': negative_stock_value,
+                            'value': -tmp_value + negative_stock_value,
+                            'price_unit': (-tmp_value + negative_stock_value) / move.product_qty,
+                        }
+                        move.write(vals)
+                elif move.product_id.cost_method in ['standard', 'average']:
+                    curr_rounding = move.company_id.currency_id.rounding
+                    value = -float_round(move.product_id.standard_price * move.product_qty, precision_rounding=curr_rounding)
+                    move.write({
+                        'value': value,
+                        'price_unit': value / move.product_qty,
+                    })
+        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time'):
+            move._account_entry_move()
         return res
 
     @api.multi
@@ -194,8 +234,7 @@ class StockMove(models.Model):
         for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
 
-            # if the incoming move is for a purchase order with foreign currency, need to call this to get the same value that the quant will use.
-            if product_tot_qty_available <= 0:
+            if product_tot_qty_available == 0:
                 new_std_price = move.get_price_unit()
             else:
                 # Get the standard price
@@ -207,35 +246,69 @@ class StockMove(models.Model):
             move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
 
-    @api.multi
-    def product_price_update_after_done(self):
-        ''' Adapt standard price on outgoing moves, so that a
-        return or an inventory loss is made using the last value used for an outgoing valuation. '''
-        to_update_moves = self.filtered(lambda move: move.location_dest_id.usage != 'internal')
-        to_update_moves._store_average_cost_price()
-
-    def _store_average_cost_price(self):
-        """ Store the average price of the move on the move and product form (costing method 'real')"""
-        for move in self.filtered(lambda move: move.product_id.cost_method == 'real'):
-            # product_obj = self.pool.get('product.product')
-            if any(q.qty <= 0 for q in move.quant_ids) or move.product_qty == 0:
-                # if there is a negative quant, the standard price shouldn't be updated
+    @api.model
+    def _fifo_vacuum(self):
+        """ Every moves that need to be fixed are identifiable by having a negative `remaining_qty`.
+        """
+        # FIXME: sort by date (does filtered lose the order?)
+        for move in self.filtered(lambda m: (m._is_in() or m._is_out()) and m.remaining_qty < 0):
+            domain = [
+                '|',
+                    ('date', '>', move.date),
+                    '&',
+                        ('date', '=', move.date),
+                        ('id', '>', move.id)
+            ]
+            domain += self._get_in_domain()
+            candidates = self.search(domain, order='date, id')
+            if not candidates:
                 return
-            # Note: here we can't store a quant.cost directly as we may have moved out 2 units
-            # (1 unit to 5€ and 1 unit to 7€) and in case of a product return of 1 unit, we can't
-            # know which of the 2 costs has to be used (5€ or 7€?). So at that time, thanks to the
-            # average valuation price we are storing we will valuate it at 6€
-            valuation_price = sum(q.qty * q.cost for q in move.quant_ids)
-            average_valuation_price = valuation_price / move.product_qty
+            qty_to_take_on_candidates = abs(move.remaining_qty)
+            tmp_value = 0
+            for candidate in candidates:
+                if candidate.remaining_qty <= qty_to_take_on_candidates:
+                    qty_taken_on_candidate = candidate.remaining_qty
+                else:
+                    qty_taken_on_candidate = qty_to_take_on_candidates
 
-            move.product_id.with_context(force_company=move.company_id.id).sudo().write({'standard_price': average_valuation_price})
-            move.write({'price_unit': average_valuation_price})
+                value_taken_on_candidate = qty_taken_on_candidate * candidate.price_unit
+                candidate_vals = {
+                    'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                    'remaining_value': candidate.remaining_value - value_taken_on_candidate,
+                }
+                candidate.write(candidate_vals)
 
-        for move in self.filtered(lambda move: move.product_id.cost_method != 'real' and not move.origin_returned_move_id):
-            # Unit price of the move should be the current standard price, taking into account
-            # price fluctuations due to products received between move creation (e.g. at SO
-            # confirmation) and move set to done (delivery completed).
-            move.write({'price_unit': move.product_id.standard_price})
+                qty_to_take_on_candidates -= qty_taken_on_candidate
+                tmp_value += value_taken_on_candidate
+                if qty_to_take_on_candidates == 0:
+                    break
+
+            corrected_value = move.remaining_value + tmp_value
+            if move.product_id.valuation == 'real_time':
+                if move._is_in():
+                    # If we just compensated an IN move that has a negative remaining
+                    # quantity, it means the move has returned more items than it received.
+                    # The correction should behave as a return too. As `_account_entry_move`
+                    # will post the natural values for an IN move (credit IN account, debit
+                    # OUT one), we inverse the sign to create the correct entries.
+                    move.with_context(force_valuation_amount=-corrected_value)._account_entry_move()
+                else:
+                    move.with_context(force_valuation_amount=corrected_value)._account_entry_move()
+
+            if qty_to_take_on_candidates == 0:
+                move.write({
+                    'value': move.value - corrected_value,
+                    'remaining_value': 0,
+                    'remaining_qty': 0,
+                })
+            elif qty_to_take_on_candidates > 0:
+                # It's possible that `remaining_value` is equals to 0 even if the move needs to be
+                # compensated (negative stock for the first ever out in FIFO).
+                move.write({
+                    'value': move.value - corrected_value,
+                    'remaining_value': 0 if not move.remaining_value else move.remaining_value + corrected_value,
+                    'remaining_qty': -qty_to_take_on_candidates,
+                })
 
     @api.multi
     def _get_accounting_data_for_valuation(self):
@@ -267,7 +340,7 @@ class StockMove(models.Model):
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
-
+    
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
@@ -278,13 +351,11 @@ class StockMove(models.Model):
         if self._context.get('force_valuation_amount'):
             valuation_amount = self._context.get('force_valuation_amount')
         else:
-            if self.product_id.cost_method == 'average':
-                valuation_amount = cost if self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'internal' else self.product_id.standard_price
-            else:
-                valuation_amount = cost if self.product_id.cost_method == 'real' else self.product_id.standard_price
+            valuation_amount = cost
+
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
-        debit_value = self.company_id.currency_id.round(valuation_amount * qty)
+        debit_value = self.company_id.currency_id.round(valuation_amount)
 
         # check that all data is correct
         if self.company_id.currency_id.is_zero(debit_value):
@@ -349,3 +420,75 @@ class StockMove(models.Model):
             }
             res.append((0, 0, price_diff_line))
         return res
+
+    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
+        self.ensure_one()
+        AccountMove = self.env['account.move']
+        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id)
+        if move_lines:
+            date = self._context.get('force_period_date', fields.Date.context_today(self))
+            new_account_move = AccountMove.create({
+                'journal_id': journal_id,
+                'line_ids': move_lines,
+                'date': date,
+                'ref': self.picking_id.name,
+                'stock_move_id': self.id,
+            })
+            new_account_move.post()
+
+    def _account_entry_move(self):
+        """ Accounting Valuation Entries """
+        self.ensure_one()
+        if self.product_id.type != 'product':
+            # no stock valuation for consumable products
+            return False
+        if self.restrict_partner_id:
+            # if the move isn't owned by the company, we don't make any valuation
+            return False
+
+        location_from = self.location_id
+        location_to = self.location_dest_id
+        company_from = location_from.usage == 'internal' and location_from.company_id or False
+        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
+
+        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
+        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        if company_to and (self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage == 'internal' or company_from != company_to):
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            if location_from and location_from.usage == 'customer':  # goods returned from customer
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
+            else:
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
+
+        # Create Journal Entry for products leaving the company
+        if company_from and (self.location_id.usage == 'internal' and self.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            if location_to and location_to.usage == 'supplier':  # goods returned to supplier
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
+            else:
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
+
+        if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund:
+                move.to_refund = True
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

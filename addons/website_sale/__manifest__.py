@@ -5,26 +5,23 @@
     'summary': 'Sell Your Products Online',
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
-    'description': """
-Odoo E-Commerce
-==================
-
-        """,
-    'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_mail', 'website_form', 'rating'],
+    'description': "",
+    'depends': ['website', 'sale', 'sale_payment', 'payment', 'website_payment', 'website_mail', 'website_form', 'website_rating'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_sale.xml',
         'data/data.xml',
         'data/web_planner_data.xml',
-        'views/views.xml',
-        'views/backend.xml',
+        'views/product_views.xml',
+        'views/account_views.xml',
+        'views/sale_report_views.xml',
+        'views/sale_order_views.xml',
+        'views/crm_team_views.xml',
         'views/templates.xml',
-        'views/payment.xml',
-        'views/product_attribute_views.xml',
-        'views/sale_order.xml',
+        'views/payment_views.xml',
         'views/snippets.xml',
         'views/report_shop_saleorder.xml',
-        'views/res_config_view.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/demo.xml',

@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+
+import requests
 from dateutil import parser
 import json
 import logging
 import operator
 import pytz
-import urllib2
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import exception_to_unicode
@@ -23,15 +25,13 @@ class Meta(type):
     """ This Meta class allow to define class as a structure, and so instancied variable
         in __init__ to avoid to have side effect alike 'static' variable """
     def __new__(typ, name, parents, attrs):
-        methods = dict((k, v) for k, v in attrs.iteritems()
-                       if callable(v))
-        attrs = dict((k, v) for k, v in attrs.iteritems()
-                     if not callable(v))
+        methods = {k: v for k, v in attrs.items() if callable(v)}
+        attrs = {k: v for k, v in attrs.items() if not callable(v)}
 
         def init(self, **kw):
-            for key, val in attrs.iteritems():
+            for key, val in attrs.items():
                 setattr(self, key, val)
-            for key, val in kw.iteritems():
+            for key, val in kw.items():
                 assert key in attrs
                 setattr(self, key, val)
 
@@ -40,9 +40,7 @@ class Meta(type):
         return type.__new__(typ, name, parents, methods)
 
 
-class Struct(object):
-    __metaclass__ = Meta
-
+Struct = Meta('Struct', (object,), {})
 
 class OdooEvent(Struct):
     event = False
@@ -260,7 +258,7 @@ class GoogleCalendar(models.AbstractModel):
         """
         data = self.generate_data(event, isCreating=True)
 
-        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urllib2.quote('id,updated'), self.get_token())
+        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urls.url_quote('id,updated'), self.get_token())
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='POST')
@@ -291,8 +289,8 @@ class GoogleCalendar(models.AbstractModel):
 
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except urllib2.HTTPError, e:
-            if e.code == 401:  # Token invalid / Acces unauthorized
+        except requests.HTTPError as e:
+            if e.response.status_code == 401:  # Token invalid / Acces unauthorized
                 error_msg = _("Your token is invalid or has been revoked !")
 
                 self.env.user.write({'google_calendar_token': False, 'google_calendar_token_validity': False})
@@ -356,7 +354,7 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', google_id)
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except Exception, e:
+        except Exception as e:
             _logger.info("Calendar Synchro - In except of get_one_event_synchro")
             _logger.info(exception_to_unicode(e))
             return False
@@ -550,7 +548,7 @@ class GoogleCalendar(models.AbstractModel):
                     _logger.info("[%s] Calendar Synchro - Failed - NEED RESET  !", user_to_sync)
                 else:
                     _logger.info("[%s] Calendar Synchro - Done with status : %s  !", user_to_sync, resp.get("status"))
-            except Exception, e:
+            except Exception as e:
                 _logger.info("[%s] Calendar Synchro - Exception : %s !", user_to_sync, exception_to_unicode(e))
         _logger.info("Calendar Synchro - Ended by cron")
 
@@ -676,13 +674,13 @@ class GoogleCalendar(models.AbstractModel):
         if lastSync:
             try:
                 all_event_from_google = self.get_event_synchro_dict(lastSync=lastSync)
-            except urllib2.HTTPError, e:
-                if e.code == 410:  # GONE, Google is lost.
+            except requests.HTTPError as e:
+                if e.response.code == 410:  # GONE, Google is lost.
                     # we need to force the rollback from this cursor, because it locks my res_users but I need to write in this tuple before to raise.
                     self.env.cr.rollback()
                     self.env.user.write({'google_calendar_last_sync_date': False})
                     self.env.cr.commit()
-                error_key = json.loads(str(e))
+                error_key = e.response.json()
                 error_key = error_key.get('error', {}).get('message', 'nc')
                 error_msg = _("Google is lost... the next synchro will be a full synchro. \n\n %s") % error_key
                 raise self.env['res.config.settings'].get_config_warning(error_msg)
@@ -788,7 +786,7 @@ class GoogleCalendar(models.AbstractModel):
         #      DO ACTION     #
         ######################
         for base_event in event_to_synchronize:
-            event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].iteritems(), key=operator.itemgetter(0))
+            event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].items(), key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
                 self.env.cr.commit()
                 event = current_event[1]  # event is an Sync Event !
@@ -804,7 +802,7 @@ class GoogleCalendar(models.AbstractModel):
                     if actSrc == 'GG':
                         self.create_from_google(event, my_partner_id)
                     elif actSrc == 'OE':
-                        raise "Should be never here, creation for OE is done before update !"
+                        raise AssertionError("Should be never here, creation for OE is done before update !")
                     #TODO Add to batch
                 elif isinstance(actToDo, Update):
                     if actSrc == 'GG':
@@ -842,7 +840,7 @@ class GoogleCalendar(models.AbstractModel):
                         try:
                             # if already deleted from gmail or never created
                             recs.delete_an_event(current_event[0])
-                        except Exception, e:
+                        except Exception as e:
                             if e.code in (401, 410,):
                                 pass
                             else:
@@ -919,14 +917,14 @@ class GoogleCalendar(models.AbstractModel):
         self.env.user.sudo().write(vals)
 
     def get_minTime(self):
-        number_of_week = self.env['ir.config_parameter'].get_param('calendar.week_synchro', default=13)
+        number_of_week = self.env['ir.config_parameter'].sudo().get_param('calendar.week_synchro', default=13)
         return datetime.now() - timedelta(weeks=number_of_week)
 
     def get_need_synchro_attendee(self):
-        return self.env['ir.config_parameter'].get_param('calendar.block_synchro_attendee', default=True)
+        return self.env['ir.config_parameter'].sudo().get_param('calendar.block_synchro_attendee', default=True)
 
     def get_disable_since_synchro(self):
-        return self.env['ir.config_parameter'].get_param('calendar.block_since_synchro', default=False)
+        return self.env['ir.config_parameter'].sudo().get_param('calendar.block_since_synchro', default=False)
 
     def get_print_log(self):
-        return self.env['ir.config_parameter'].get_param('calendar.debug_print', default=False)
+        return self.env['ir.config_parameter'].sudo().get_param('calendar.debug_print', default=False)

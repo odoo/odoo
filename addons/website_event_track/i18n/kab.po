@@ -1,22 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_track
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Muḥend Belqasem <belkacem77@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Muḥend Belqasem <belkacem77@gmail.com>, 2016\n"
-"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-02-20 10:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
+"Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_track
@@ -82,7 +80,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
+"                                    different topics. Most topics are "
+"accepted in lightning talks."
 msgstr ""
 
 #. module: website_event_track
@@ -110,11 +109,6 @@ msgid "About The Author"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_active
-msgid "Active"
-msgstr "Urmid"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
 msgstr ""
@@ -125,7 +119,7 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:26
+#: code:addons/website_event_track/models/event.py:160
 #, python-format
 msgid "Agenda"
 msgstr ""
@@ -139,7 +133,8 @@ msgstr "Tibzimin imaṛṛa"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
+"                                    presentation, for publishing on our "
+"website."
 msgstr ""
 
 #. module: website_event_track
@@ -151,11 +146,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
 msgstr "Asnas"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Archived"
-msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -333,7 +323,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid ""
-"Find out what people see and say about this event,\n"
+"Find out what people see and say about this event, \n"
 "                        and join the conversation."
 msgstr ""
 
@@ -643,7 +633,7 @@ msgid "Responsible"
 msgstr "Amasay"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8539
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr ""
@@ -675,7 +665,7 @@ msgid "Speaker Biography"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/website_event_track.py:122
+#: code:addons/website_event_track/models/event.py:116
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
 #, python-format
 msgid "Speakers"
@@ -730,6 +720,11 @@ msgid "Submit Proposal"
 msgstr ""
 
 #. module: website_event_track
+#: model:web.tip,description:website_event_track.event_track_tip_1
+msgid "Switch to the calendar view to see the availability of each room."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Tabzimt"
@@ -751,7 +746,7 @@ msgid "Talk Introduction"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:28
+#: code:addons/website_event_track/models/event.py:162
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
@@ -762,7 +757,7 @@ msgid "Talk Title"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:25
+#: code:addons/website_event_track/models/event.py:159
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -865,8 +860,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 msgid ""
-"Tracks define the agenda of your event. These can bea talk, a round table, a"
-" meeting, etc."
+"Tracks define the agenda of your event. These can bea talk, a round table, a "
+"meeting, etc."
 msgstr ""
 
 #. module: website_event_track
@@ -929,7 +924,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "event.sponsor"
-msgstr "event.sponsor"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
@@ -943,11 +938,56 @@ msgid "hours"
 msgstr "Isragen"
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.tracks
+msgid "not published"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
 msgstr ""
 
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.tracks
-msgid "unpublished"
-msgstr ""
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
+
+#~ msgid "Event Blog"
+#~ msgstr "Ablug n tedyant"
+
+#~ msgid "Followers"
+#~ msgstr "Imeltaɣen"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Azemz n yizen aneggaru"
+
+#~ msgid "Mail"
+#~ msgstr "Izen"
+
+#~ msgid "Messages"
+#~ msgstr "Iznan"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Amazray n iznan  d  teywalin"
+
+#~ msgid "News"
+#~ msgstr "Isalen"
+
+#~ msgid "Phone"
+#~ msgstr "Tiliɣri"
+
+#~ msgid "Website Messages"
+#~ msgstr "Iznan n n usmel  Web"
+
+#~ msgid "Website URL"
+#~ msgstr "URL n usmel WEB"
+
+#~ msgid "Website communication history"
+#~ msgstr "Amazray n Taywalt n usmel  Web"
+
+#~ msgid "Website meta description"
+#~ msgstr "Aɣef-aglam n usmel Web"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Aɣef-awalen n tsura n usmel Web"

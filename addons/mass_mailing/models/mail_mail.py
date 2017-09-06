@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import urlparse
 import werkzeug.urls
 
 from odoo import api, fields, models, tools
@@ -28,21 +27,27 @@ class MailMail(models.Model):
         return mail
 
     def _get_tracking_url(self, partner=None):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        track_url = urlparse.urljoin(
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        track_url = werkzeug.urls.url_join(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
                 'mail_id': self.id,
-                'params': werkzeug.url_encode({'db': self.env.cr.dbname})
+                'params': werkzeug.urls.url_encode({'db': self.env.cr.dbname})
             }
         )
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, email_to):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        url = urlparse.urljoin(
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.mailing_id.id,
-                'params': werkzeug.url_encode({'db': self.env.cr.dbname, 'res_id': self.res_id, 'email': email_to})
+                'params': werkzeug.urls.url_encode({
+                    'db': self.env.cr.dbname,
+                    'res_id': self.res_id,
+                    'email': email_to,
+                    'token': self.mailing_id._unsubscribe_token(
+                        self.res_id, email_to),
+                }),
             }
         )
         return url
@@ -67,12 +72,12 @@ class MailMail(models.Model):
                     body = body.replace(href, new_href)
 
         # prepend <base> tag for images using absolute urls
-        domain = self.env["ir.config_parameter"].get_param("web.base.url")
+        domain = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
         base = "<base href='%s'>" % domain
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
         # resolve relative image url to absolute for outlook.com
         def _sub_relative2absolute(match):
-            return match.group(1) + urlparse.urljoin(domain, match.group(2))
+            return match.group(1) + werkzeug.urls.url_join(domain, match.group(2))
         body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
         body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
 
@@ -87,7 +92,7 @@ class MailMail(models.Model):
     def send_get_email_dict(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self).send_get_email_dict(partner)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if self.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False

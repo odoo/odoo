@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
+# Martin Trigaux, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-30 13:52+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -29,9 +30,9 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
-"Dacă bifați, CUI-urile Partenerilor vor fi  validate fără folosirea "
-"serviciului de verificare VIES al Uniunii Europene, decât prin simpla "
-"validare a formatului (sumacontrol)."
+"Daca bifati, numerele de TVA ale Partenerilor vor fi complet validate "
+"impotriva serviciului VIES al Uniunii Europene decat prin simpla validare a "
+"unui format (checksum)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -39,17 +40,17 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:131
+#: code:addons/base_vat/base_vat.py:128
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"CUI -ul [% s] pentru acest partener [% s] nu pare să fie valid. \n"
-"Notă: formatul așteptat este% s"
+"CUI -ul [%s] pentru acest partener [%s] nu pare să fie valid. \n"
+"Notă: formatul așteptat este %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:130
+#: code:addons/base_vat/base_vat.py:127
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -61,9 +62,12 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
-msgstr "Verifică TVA VIES"
+msgstr "Verifica TVA VIES"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr "exemplu RO08486157"
+msgstr "de exemplu BE0477472701"
+
+#~ msgid "Importing VAT Number [%s] is not valid !"
+#~ msgstr "Importul CUI [%s] nu este valid!"

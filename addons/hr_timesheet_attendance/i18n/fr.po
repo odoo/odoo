@@ -3,23 +3,22 @@
 # * hr_timesheet_attendance
 # 
 # Translators:
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Frédéric LIETART <stuff@tifred.fr>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
-# Micky Jault <micky037@hotmail.fr>, 2017
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Frédéric LIETART <stuff@tifred.fr>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Micky Jault <micky037@hotmail.fr>, 2017\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +82,7 @@ msgstr "Différences"
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
@@ -130,7 +129,7 @@ msgstr "Feuille"
 #, python-format
 msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
-"no Check Out)."
+"no Check Out."
 msgstr ""
 
 #. module: hr_timesheet_attendance
@@ -189,6 +188,7 @@ msgid "Timesheets by Period"
 msgstr "Feuilles de temps par période"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_attendance
 msgid "Total Attendance"
 msgstr "Total des pointages"
@@ -199,11 +199,13 @@ msgid "Total Attendances"
 msgstr "Total des présences"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
 msgid "Total Difference"
 msgstr "Différence Totale"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_total_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_day_tree
@@ -211,24 +213,9 @@ msgid "Total Timesheet"
 msgstr "Total des feuilles de temps"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
-msgid "Total attendance"
-msgstr ""
-
-#. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
-msgid "Total difference"
-msgstr ""
-
-#. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
-msgid "Total timesheet"
-msgstr ""
-
-#. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
-msgid "User id"
-msgstr "Identifiant"
+msgid "User"
+msgstr "Utilisateur"
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:98

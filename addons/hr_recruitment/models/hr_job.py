@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class Job(models.Model):
@@ -20,12 +20,14 @@ class Job(models.Model):
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
+    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", track_visibility='onchange',
+        help="Person responsible of validating the employee's contracts.")
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
-    color = fields.Integer("Color Index")
+    color = fields.Integer("Color Index", default=1)
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
@@ -47,7 +49,7 @@ class Job(models.Model):
 
     @api.multi
     def _compute_application_count(self):
-        read_group_result = self.env['hr.applicant'].read_group([('job_id', '=', self.id)], ['job_id'], ['job_id'])
+        read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
         for job in self:
             job.application_count = result.get(job.id, 0)
@@ -82,9 +84,17 @@ class Job(models.Model):
         return action
 
     @api.multi
-    def action_set_no_of_recruitment(self, value):
-        return self.write({'no_of_recruitment': value})
-
-    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def edit_dialog(self):
+        form_view = self.env.ref('hr.view_hr_job_form')
+        return {
+            'name': _('Job'),
+            'res_model': 'hr.job',
+            'res_id': self.id,
+            'views': [(form_view.id, 'form'),],
+            'type': 'ir.actions.act_window',
+            'target': 'inline'
+        }

@@ -6,6 +6,19 @@ from odoo.addons.sale.tests.test_sale_common import TestSale
 
 
 class TestSaleTimesheet(TestSale):
+
+    def setUp(self):
+        super(TestSaleTimesheet, self).setUp()
+        # link hr employee to res.users of sale tests
+        self.employee_user = self.env['hr.employee'].create({
+            'name': 'Employee User',
+            'user_id': self.user.id,
+        })
+        self.employee_manager = self.env['hr.employee'].create({
+            'name': 'Employee Manager',
+            'user_id': self.manager.id,
+        })
+
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products """
         # intial so
@@ -26,7 +39,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 10.5,
-            'user_id': self.manager.id,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(so.order_line.qty_delivered, 10.5, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
@@ -35,7 +48,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 39.5,
-            'user_id': self.user.id,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(so.order_line.qty_delivered, 50, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
@@ -44,7 +57,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 10,
-            'user_id': self.user.id,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(so.order_line.qty_delivered, 60, 'Sale Timesheet: timesheet does not increase delivered quantity on so line')
         self.assertEqual(so.invoice_status, 'upselling', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
@@ -69,7 +82,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 10.5,
-            'user_id': self.manager.id,
+            'employee_id': self.employee_manager.id,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should set the so in "to invoice" status when logged')
         inv_id = so.action_invoice_create()
@@ -80,7 +93,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 39.5,
-            'user_id': self.user.id,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
         so.action_invoice_create()
@@ -90,7 +103,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 10,
-            'user_id': self.user.id,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale Timesheet: supplementary timesheets do not change the status of the SO')
 
@@ -113,7 +126,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 16,
-            'user_id': self.manager.id,
+            'employee_id': self.employee_manager.id,
         })
         self.assertEqual(so.order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
 
@@ -121,7 +134,7 @@ class TestSaleTimesheet(TestSale):
             'name': 'Test Line',
             'project_id': so.project_project_id.id,
             'unit_amount': 24,
-            'user_id': self.user.id,
+            'employee_id': self.employee_user.id,
         })
         so.action_invoice_create()
         self.assertEqual(so.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')

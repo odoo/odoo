@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -46,7 +47,7 @@ class SaleOrderLine(models.Model):
 
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
-    so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
+    so_line = fields.Many2one('sale.order.line', string='Sales Order Line')
 
     def _get_invoice_price(self, order):
         if self.product_id.expense_policy == 'sales_price':
@@ -109,7 +110,7 @@ class AccountAnalyticLine(models.Model):
                 result.update({'so_line': so_lines[0].id})
             else:
                 if order.state != 'sale':
-                    raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
+                    raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
                 order_line_vals = self._get_sale_order_line_vals(order, price)
                 if order_line_vals:
                     so_line = self.env['sale.order.line'].create(order_line_vals)

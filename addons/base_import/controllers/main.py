@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cgi
 import json
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import misc
 
 
 class ImportController(http.Controller):
@@ -20,4 +20,4 @@ class ImportController(http.Controller):
             'file_type': file.content_type,
         })
 
-        return 'window.top.%s(%s)' % (cgi.escape(jsonp), json.dumps({'result': written}))
+        return 'window.top.%s(%s)' % (misc.html_escape(jsonp), json.dumps({'result': written}))

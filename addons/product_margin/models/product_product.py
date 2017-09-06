@@ -5,6 +5,7 @@ import time
 
 from odoo import api, fields, models
 
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
@@ -67,8 +68,8 @@ class ProductProduct(models.Model):
                         prod_re[prod.id] = re_ind
                 re_ind += 1
             res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
-            for key in res_val.keys():
-                for l in res_val[key].keys():
+            for key in res_val:
+                for l in res_val[key]:
                     re = res[prod_re[key]]
                     if re.get(l):
                         re[l] += res_val[key][l]

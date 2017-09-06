@@ -3,7 +3,7 @@
 @mail-thread-side-date-opacity: 0.6;
 @mail-thread-note: @gray-lighter;
 
-.o_mail_thread {
+.o_mail_thread, .o_mail_activity {
     .o_thread_show_more {
         text-align: center;
     }
@@ -11,7 +11,7 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        border-bottom: solid @gray-lighter 2px;
+        border-bottom: 1px solid @gray-lighter;
         text-align: center;
 
         .o_thread_date {
@@ -69,14 +69,14 @@
                 opacity: 0;
             }
         }
-
-
-        i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply, i.o_thread_message_email  {
+        .o_thread_icons {
             cursor: pointer;
-            opacity: 0;
-            &.fa-star {
-                opacity: @mail-thread-icon-opacity;
-                color: gold;
+            > .o_thread_icon {
+                opacity: 0;
+                &.fa-star {
+                    opacity: @mail-thread-icon-opacity;
+                    color: gold;
+                }
             }
         }
 
@@ -84,8 +84,7 @@
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }
-
-            i.o_thread_message_star, i.o_thread_message_needaction, i.o_thread_message_reply, i.o_thread_message_email {
+            .o_thread_icons > * {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -102,10 +101,6 @@
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
-
-            &.o_mail_note {
-                background-color: @gray-lighter;
-            }
 
             .o_mail_subject {
                 font-style: italic;
@@ -132,7 +127,6 @@
             }
             img {
                 max-width: 100%;
-                height: auto;
             }
 
             .o_mail_body_long {
@@ -144,6 +138,10 @@
                 .text-muted();
                 .o_mail_mailto, .o_mail_mailto:hover {
                     .text-muted();
+                }
+
+                strong {
+                    color: @headings-color;
                 }
             }
 
@@ -205,5 +203,13 @@
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
+    }
+}
+
+.o_web_client.o_touch_device {
+    .o_thread_icons {
+        > .o_thread_icon {
+            opacity: @mail-thread-icon-opacity;
+        }
     }
 }

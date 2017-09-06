@@ -21,17 +21,18 @@ The following topics are covered by this module:
     * Repair quotation report
     * Notes for the technician and for the final customer
 """,
-    'depends': ['stock', 'sale', 'account'],
+    'depends': ['stock', 'sale_management', 'account'],
     'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
         'security/mrp_repair_security.xml',
-        'data/ir_sequence_data.xml',
         'wizard/mrp_repair_cancel_views.xml',
         'wizard/mrp_repair_make_invoice_views.xml',
         'views/mrp_repair_views.xml',
         'report/mrp_repair_reports.xml',
         'report/mrp_repair_templates_repair_order.xml',
+        'data/ir_sequence_data.xml',
+        'data/mrp_repair_data.xml',
     ],
     'demo': ['data/mrp_repair_demo.yml'],
     'test': [],

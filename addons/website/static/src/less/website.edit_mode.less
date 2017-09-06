@@ -43,6 +43,11 @@
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
+        &:empty {
+            height: 300px;
+            background: url(/website/static/src/img/drag_here.png) center no-repeat;
+            background-size: 380px;
+        }
         > p:empty:only-child {
             color: #aaa;
         }

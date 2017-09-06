@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_restaurant
-# 
+#
 # Translators:
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Bàrbara Partegàs <barbararof@gmail.com>, 2016
-# Eric Rial <erialmedina@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Antones <eantones@users.noreply.github.com>, 2016
+# Eric Rial <erialmedina@gmail.com>, 2015
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:26+0000\n"
-"PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-12-05 12:56+0000\n"
+"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_restaurant
@@ -35,10 +31,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid ""
-"A restaurant floor represents the place where customers are served, this is where you can\n"
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
 "                define and position the tables."
 msgstr ""
-"Una sala del restaurant representa el lloc on es serveixen els clients, es allí on podeu\n"
+"Una sala del restaurant representa el lloc on es serveixen els clients, es "
+"allí on podeu\n"
 "definir i situar les taules. "
 
 #. module: pos_restaurant
@@ -85,7 +83,7 @@ msgstr " Aparició "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:550
+#: code:addons/pos_restaurant/static/src/js/floors.js:543
 #, python-format
 msgid "Are you sure ?"
 msgstr "Estàs segur?"
@@ -146,11 +144,18 @@ msgstr "CANCEL·LAT "
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:297
-#: code:addons/pos_restaurant/static/src/js/floors.js:411
+#: code:addons/pos_restaurant/static/src/js/floors.js:404
 #, python-format
 msgid "Changes could not be saved"
 msgstr "El canvis no poden ser desats "
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:405
+#, python-format
+msgid "Check your internet connection and access rights"
+msgstr "Comproveu la vostra connexió a internet i els vostres permisos "
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -200,16 +205,24 @@ msgstr "Descomptes"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Mostra Nom"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+#, fuzzy
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
-"                Proxy where the printer can be found, and a list of product categories.\n"
-"                An Order Printer will only print updates for products belonging to one of\n"
+"                Proxy where the printer can be found, and a list of product "
+"categories.\n"
+"                An Order Printer will only print updates for products "
+"belonging to one of\n"
 "                its categories."
 msgstr ""
+"Cada impressora de comandes te una adreça IP que es defineix al PosBox o \n"
+"proxy de maquinari on la impressora es troba, i una llista de categories de "
+"productes.\n"
+"Una impressora de comandes només imprimeix comandes de productes que\n"
+"pertanyen a una d'aquestes categories. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -242,7 +255,7 @@ msgstr "Comensals"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:925
+#: code:addons/pos_restaurant/static/src/js/floors.js:918
 #, python-format
 msgid "Guests ?"
 msgstr "Comensals?"
@@ -251,9 +264,9 @@ msgstr "Comensals?"
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:10
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
-#, python-format
+#, fuzzy, python-format
 msgid "Guests:"
-msgstr "Convidats:"
+msgstr "Comensals"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -275,32 +288,31 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_active
 msgid ""
-"If false, the table is deactivated and will not be available in the point of"
-" sale"
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
 msgstr ""
-"Si és fals, la taula serà desactivada i no estarà disponible al punt de "
-"venda"
+"Si és fals, la taula serà desactivada i no estarà disponible al punt de venda"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer___last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table___last_update
 msgid "Last Modified on"
-msgstr "Última modificació el "
+msgstr "Darrera modificació feta el"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_write_uid
 msgid "Last Updated by"
-msgstr "Última actualització per"
+msgstr "Actualitzat per última vegada per"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_write_date
 msgid "Last Updated on"
-msgstr "Última actualització el"
+msgstr "Actualitzat per última vegada el dia"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -326,7 +338,7 @@ msgstr "Nota"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:483
+#: code:addons/pos_restaurant/static/src/js/floors.js:476
 #, python-format
 msgid "Number of Seats ?"
 msgstr "Nombre de comensals?"
@@ -356,9 +368,11 @@ msgstr "Impressores de comanda "
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
-"                order updates in the kitchen/bar when the waiter updates the order."
+"                order updates in the kitchen/bar when the waiter updates the "
+"order."
 msgstr ""
-"Les impressores de comandes són utilitzades pels bars i restaurants per imprimir les\n"
+"Les impressores de comandes són utilitzades pels bars i restaurants per "
+"imprimir les\n"
 "comandes dels clients a la cuina i/o bar mentre el cambrer agafa la comanda."
 
 #. module: pos_restaurant
@@ -379,14 +393,15 @@ msgid "Payment"
 msgstr "Pagaments/Cobraments"
 
 #. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
 msgid "Point of Sale"
-msgstr "Punt de Venda"
+msgstr "Terminal Punt de Venda"
 
 #. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_pos_order
-msgid "Point of Sale Orders"
-msgstr ""
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
+msgid "Pos Orders"
+msgstr "Comandes TPV "
 
 #. module: pos_restaurant
 #. openerp-web
@@ -412,7 +427,7 @@ msgstr "Adreça IP proxy "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:551
+#: code:addons/pos_restaurant/static/src/js/floors.js:544
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "L'eliminació d'una taula no és pot desfer "
@@ -503,7 +518,7 @@ msgstr "Nom de la Taula "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:471
+#: code:addons/pos_restaurant/static/src/js/floors.js:464
 #, python-format
 msgid "Table Name ?"
 msgstr "Nom de la taula? "
@@ -551,6 +566,11 @@ msgid "The list of tables in this floor"
 msgstr "Lllista de taules en aquesta sala"
 
 #. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
+msgid "The orders served at this table"
+msgstr "Les comandes servides en aquesta taula "
+
+#. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
 msgstr "Les sales del restaurant servides per aquest punt de venda"
@@ -562,8 +582,7 @@ msgstr "La taula on és servirà aquesta comanda "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
-msgid ""
-"The table's color, expressed as a valid 'background' CSS property value"
+msgid "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
 "El color de la taula, expressat com un valor vàlid de la propietat CSS "
 "'background' "
@@ -576,8 +595,8 @@ msgstr "L'alçada de la taula en píxels "
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
-"The table's horizontal position from the left side to the table's center, in"
-" pixels"
+"The table's horizontal position from the left side to the table's center, in "
+"pixels"
 msgstr ""
 "La posició horitzontal de la taula des del costat esquerre fins a al centre "
 "de la taula, en píxels "
@@ -587,8 +606,8 @@ msgstr ""
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
 msgstr ""
-"La posició vertical de la taula des de la part superior fins al centre de la"
-" taula, en píxels "
+"La posició vertical de la taula des de la part superior fins al centre de la "
+"taula, en píxels "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
@@ -597,7 +616,7 @@ msgstr "L'amplada de la taula amb píxels "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Aquesta sala no te més taules, utilitza el "
@@ -607,7 +626,7 @@ msgstr "Aquesta sala no te més taules, utilitza el "
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr "Transferència"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -640,15 +659,6 @@ msgstr "Amb un "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:298
-#: code:addons/pos_restaurant/static/src/js/floors.js:412
-#, python-format
-msgid "You must be connected to the internet to save your changes."
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -664,7 +674,7 @@ msgstr "a la taula "
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr "botó a la barra d'edició per a crear noves taules."

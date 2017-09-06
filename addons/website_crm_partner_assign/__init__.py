@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import controllers
-import models
-import report
-import tests
-import wizard
+from . import controllers
+from . import models
+from . import report
+from . import wizard

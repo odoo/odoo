@@ -8,7 +8,7 @@
 </template>
 
 <template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
-    <xpath expr="//div[@class='oe_structure']" position="after">
+    <xpath expr="//div[hasclass('oe_structure')]" position="after">
         <section class="container" id="team">
             <div class="col-sm-12 text-center" t-if="len(employees)">
                 <h2>Our Team</h2>

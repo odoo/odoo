@@ -6,10 +6,10 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -79,7 +79,7 @@ msgstr "定义资源调度"
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr "定义你的项目成员可计划的工时和时间表"
+msgstr "定义您的项目成员可计划的工时和时间表"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -88,11 +88,6 @@ msgstr "定义你的项目成员可计划的工时和时间表"
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
 msgstr "显示名称"
-
-#. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "有效期"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
@@ -106,7 +101,7 @@ msgid "End Date"
 msgstr "结束日期"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
+#: code:addons/resource/models/resource.py:741
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "错误！休假的开始日期必须小于结束日期。"
@@ -216,7 +211,7 @@ msgstr "周一"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "名字"
+msgstr "名称"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -332,21 +327,14 @@ msgid "Sunday"
 msgstr "周日"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
-"这个字段描述完成任务的资源的效率。比如：例如： 资源单独投入一个阶段， 5 天 5 个任务指派给他，这一阶段默认情况将显示 "
-"100%的负荷，下，但如果我们把效率设置为 200%，他的负荷将只是 50%。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -377,7 +365,7 @@ msgstr "周三"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr "工作详情"
+msgstr "工作细节"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from

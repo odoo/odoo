@@ -1,3 +1,9 @@
+///
+/// This file regroups the LESS variables that style odoo components.
+/// They are available in every asset bundle.
+///
+
+// Font sizes
 @odoo-font-size-base: 13px;
 
 // Colors
@@ -5,6 +11,9 @@
 @odoo-brand-optional: #7c7bad;
 @odoo-brand-secondary: #f0eeee;
 @odoo-brand-lightsecondary: #e2e2e0;
+@odoo-color-silver: #F9F9F9;
+@odoo-color-silver-dark: #E5E5E5;
+@odoo-color-silver-darker: #E8E7E7;
 
 @odoo-color-pink: #875A7B;
 @odoo-main-color-muted: #a8a8a8;
@@ -13,10 +22,9 @@
 @odoo-view-background-color: white;
 @odoo-shadow-color: #303030;
 
-@odoo-webclient-background-color: @odoo-brand-secondary;
-@odoo-control-panel-background-color: @odoo-webclient-background-color;
+@odoo-webclient-background-color: @odoo-color-silver-darker;
+@odoo-control-panel-background-color: @odoo-color-silver;
 @odoo-form-lightsecondary: #ccc;
-@odoo-list-grey: @odoo-brand-lightsecondary;
 
 @odoo-list-footer-color: @odoo-main-text-color;
 @odoo-list-footer-bg-color: #eee;
@@ -26,6 +34,21 @@
 @odoo-tooltip-color: white;
 @odoo-tooltip-arrow-color: black;
 
+// UI custom colors for tags, kanban records' colors, ...
+@odoo-color-0: #00C7AB;
+@odoo-color-1: #F06050;
+@odoo-color-2: #F4A460;
+@odoo-color-3: #F7CD1F;
+@odoo-color-4: #6CC1ED;
+@odoo-color-5: #814968;
+@odoo-color-6: #EB7E7F;
+@odoo-color-7: #2C8397;
+@odoo-color-8: #475577;
+@odoo-color-9: #D6145F;
+@odoo-color-10: #30C381;
+@odoo-color-11: #9365B8;
+@odoo-color-12: #B05048;
+
 // Layout
 @screen-xs-min: 475px;
 @screen-xxs-max: (@screen-xs-min - 1);
@@ -34,7 +57,7 @@
 @odoo-form-spacing-unit: 5px;
 @odoo-horizontal-padding: 16px;
 @odoo-innergroup-rpadding: 45px;
-@odoo-dropdown-hpadding: 25px;
+@odoo-dropdown-hpadding: 20px;
 
 @border-radius-base: 3px;
 
@@ -42,8 +65,9 @@
 
 @odoo-avatar-size: 90px;
 
-@odoo-statusbar-height: 36px;
+@odoo-statusbar-height: 33px;
 @odoo-statusbar-arrow-width: @odoo-statusbar-height/3;
+@odoo-statusbar-disabled-bg: lighten(@odoo-brand-lightsecondary, 7%);
 
 @odoo-label-font-size-factor: 0.8;
 @odoo-navbar-height: 34px;

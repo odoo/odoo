@@ -4,27 +4,29 @@
         <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/variables.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/vendor-prefixes.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/buttons.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/clearfix.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/size.less"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/variables.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
     </template>
 
-    <template id="web.assets_common">
+    <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
-
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/bootstrap-datetimepicker.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/_bootstrap-datetimepicker.less"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/modal.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/rainbow.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
 
         <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
@@ -54,36 +56,45 @@
         <script src="/web/static/lib/bootstrap/js/tab.js"></script>
         <script src="/web/static/lib/bootstrap/js/transition.js"></script>
 
-        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/config.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/class.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/translation.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/ajax.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/time.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/mixins.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/widget.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/registry.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/dom_utils.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/qweb.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/bus.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/local_storage.js"></script>
-
         <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        <script type="text/javascript" src="/web/static/lib/clipboard/clipboard.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/autocomplete.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/bootstrap.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
+        <script type="text/javascript" src="/web/static/src/js/core/translation.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/rpc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/qweb.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
     </template>
 
-    <template id="web.assets_backend">
+    <template id="web.assets_backend" name="Backend Assets (used in backend interface)">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
 
-        <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/bootstrap_overridden.less"/>
@@ -91,34 +102,35 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_layout.less"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/domain_selector.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/model_field_selector.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/progress_bar.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/tooltip.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/debug_manager.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/control_panel.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/control_panel_layout.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/views.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/pivot_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/graph_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/tree_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_layout.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/modal.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/data_export.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/switch_company_menu.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_layout_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_dashboard.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/web_calendar.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view_extra.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/data_export.less"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/base_settings.less"/>
+        <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
-        <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
-        <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
         <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
         <script type="text/javascript" src="/web/static/lib/fuzzy-master/fuzzy.js"></script>
 
@@ -130,20 +142,16 @@
         <!-- Special case: core.js declares $.browser needed by ba-bbq -->
         <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-        <script type="text/javascript" src="/web/static/src/js/framework/data_model.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/action_manager.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/control_panel.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/view_manager.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/abstract_web_client.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/web_client.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/data.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/compatibility.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/framework/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/domain.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/pyeval.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/control_panel.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/view_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -152,39 +160,84 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/iframe_widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/loading.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/model_field_selector.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/priority.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/progress_bar.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/pager.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/sidebar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/pager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/systray_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/form_view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/form_common.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/form_widgets.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/form_upgrade_widgets.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/form_relational_widgets.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/list_view_editable.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/pivot_view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/graph_view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/graph_widget.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/search_view.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/search_filters.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/user_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/search_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/search_filters.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/search_inputs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/search_menus.js"></script>
         <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/fields/abstract_field.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/basic_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/relational_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/special_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/upgrade_fields.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/field_manager_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_dialogs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_quick_create.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_editable_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_view.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_quick_create.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/report/qwebactionmanager.js"/>
+        <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
+        <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/report_backend.less"/>
     </template>
 
-    <template id="web.assets_frontend">
+    <template id="web.assets_frontend" name="Website Assets">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
     </template>
 
@@ -338,45 +391,152 @@
         </a>
     </template>
 
-    <template id="web.webclient_script">
-        <script type="text/javascript">
-            odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClient');
-                var web_client = new WebClient();
-                $(function() {
-                    web_client.setElement($(document.body));
-                    web_client.start();
-                });
-                return web_client;
-            });
-        </script>
-    </template>
-
     <template id="web.qunit_suite">
         <t t-call="web.layout">
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-            <t t-set="title">Odoo Web Tests</t>
+            <t t-set="title">Web Tests</t>
             <t t-set="head">
-                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-1.17.1.css"/>
-                <script type="text/javascript" src="/web/static/lib/qunit/qunit-1.17.1.js"></script>
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.2.1.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.2.1.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
 
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
-                <t t-call="web.webclient_script"/>
 
-                <script type="text/javascript" src="/web/static/test/testing.js"></script>
-                <script type="text/javascript" src="/web/static/test/registry.js"></script>
-                <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
-                <script type="text/javascript" src="/web/static/test/mutex.js"></script>
-                <script type="text/javascript" src="/web/static/test/data.js"></script>
-                <script type="text/javascript" src="/web/static/test/evals.js"></script>
-                <script type="text/javascript" src="/web/static/test/form.js"></script>
-                <script type="text/javascript" src="/web/static/test/formats.js"></script>
-                <script type="text/javascript" src="/web/static/test/framework.js"></script>
-                <script type="text/javascript" src="/web/static/test/list.js"></script>
-                <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
-                <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
-                <script type="text/javascript" src="/web/static/test/search.js"></script>
+                <!-- add lazy-loaded libs -->
+                <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
+                <script type="text/javascript" src="/web/static/lib/fullcalendar/js/fullcalendar.js"></script>
+                <link rel="stylesheet" type="text/css" href="/web/static/lib/nvd3/nv.d3.css"/>
+                <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
+                <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
+                <script type="text/javascript" src="/web/static/src/js/libs/nvd3.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/ace.odoo-custom.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
+                <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
+
+                <script type="text/javascript">
+                    // define the 'web.web_client' module because some other modules require it
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        // override _call_service to prevent the web_client from doing RPCs
+                        web_client._call_service = function () {};
+                        return web_client;
+                    });
+                </script>
+
+                <style>
+                    body {
+                        position: relative; // bootstrap-datepicker needs this
+                    }
+                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+                        opacity: 0 !important;
+                    }
+                    #qunit-testrunner-toolbar label {
+                        font-weight: inherit;
+                        margin-bottom: inherit;
+                    }
+                    #qunit-testrunner-toolbar input[type=text] {
+                        width: inherit;
+                        display: inherit;
+                    }
+                </style>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/fields/basic_fields_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/field_utils_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/relational_fields_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/special_fields.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/views/abstract_view_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/form_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/graph_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/list_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/pivot_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/kanban_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/calendar_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/basic_model_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/kanban_model_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/view_dialogs_tests.js"></script>
+                <script type="text/javascript" src="/base/static/src/tests/base_setting_test.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/registry_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/pyeval_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/class_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/rpc_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/domain_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/mixins_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/time_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/concurrency_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/util_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/core/widget_tests.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/chrome/search_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/chrome/pager_tests.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
+                <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
+                <script type="text/javascript" src="/web/static/tests/widgets/model_field_selector_tests.js"/>
+                <script type="text/javascript" src="/web/static/tests/widgets/rainbow_man_tests.js"/>
+
+                <script type="text/javascript" src="/web/static/tests/boot_tests.js"></script>
+            </t>
+
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
+    </template>
+
+    <template id="web.benchmark_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Benchmarks</t>
+            <t t-set="head">
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.2.1.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.2.1.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <script type="text/javascript">
+                    QUnit.config.hidepassed = false;
+
+                    // define the 'web.web_client' module because some other modules require it
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        // override _call_service to prevent the web_client from doing RPCs
+                        web_client._call_service = function () {};
+                        return web_client;
+                    });
+                </script>
+
+                <style>
+                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+                        opacity: 0 !important;
+                    }
+                    #qunit-testrunner-toolbar label {
+                        font-weight: inherit;
+                        margin-bottom: inherit;
+                    }
+                    #qunit-testrunner-toolbar input[type=text] {
+                        width: inherit;
+                        display: inherit;
+                    }
+                </style>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+
+                <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
             </t>
 
             <div id="qunit"/>
@@ -402,7 +562,17 @@
                     <![endif]-->
                 ]]>
 
-                <t t-call="web.webclient_script"/>
+                <script type="text/javascript">
+                    odoo.define('web.web_client', function (require) {
+                        var WebClient = require('web.WebClient');
+                        var web_client = new WebClient();
+                        $(function() {
+                            web_client.setElement($(document.body));
+                            web_client.start();
+                        });
+                        return web_client;
+                    });
+                </script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>

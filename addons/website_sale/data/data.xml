@@ -28,7 +28,9 @@
         </record>
 
         <record model="crm.team" id="sales_team.salesteam_website_sales">
-            <field name="use_quotations" eval="False"/>
+            <field name="active" eval="True"/>
+            <field name="dashboard_graph_model">sale.report</field>
+            <field name="dashboard_graph_period">week</field>
         </record>
 
         <record model="website" id="website.default_website">
@@ -43,7 +45,7 @@
     <data>
         <record id="sale.model_sale_order" model="ir.model">
             <field name="website_form_access" eval="True"/>
-            <field name="website_form_label">Sale Order</field>
+            <field name="website_form_label">Sales Order</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>
@@ -60,7 +62,7 @@
             <value>res.partner</value>
             <value eval="[
                 'name', 'phone', 'email',
-                'city', 'zip', 'street', 'state_id', 'country_id',
+                'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
                 'vat', 'company_name'
             ]"/>
         </function>

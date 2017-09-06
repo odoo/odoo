@@ -15,7 +15,7 @@ odoo.define('website_crm.tour', function(require) {
     }, {
         content: "Complete phone number",
         trigger: "input[name=phone]",
-        run: "text 118.218"
+        run: "text +32 485 118.218"
     }, {
         content: "Complete Email",
         trigger: "input[name=email_from]",

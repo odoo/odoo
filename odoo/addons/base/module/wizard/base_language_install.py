@@ -36,3 +36,9 @@ class BaseLanguageInstall(models.TransientModel):
             'target': 'new',
             'res_id': self.id,
         }
+
+    def reload(self):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }

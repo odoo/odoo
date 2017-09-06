@@ -164,55 +164,9 @@ class WebsiteSlides(http.Controller):
     @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas and slide.datas.decode('base64') or ''
+        response.data = slide.datas and base64.b64decode(slide.datas) or b''
         response.mimetype = 'application/pdf'
         return response
-
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True)]"):slide>/comment''', type='http', auth="public", methods=['POST'], website=True)
-    def slide_comment(self, slide, **post):
-        """ Controller for message_post. Public user can post; their name and
-        email is used to find or create a partner and post as admin with the
-        right partner. Their comments are unpublished by default. Logged
-        users can post as usual. """
-        # TDE TODO :
-        # - subscribe partner instead of user writing the message ?
-        # - public user -> cannot create mail.message ?
-        if not post.get('comment'):
-            return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-        # public user: check or find author based on email, do not subscribe public user
-        # and do not publish their comments by default to avoid direct spam
-        if request.uid == request.website.user_id.id:
-            if not post.get('email'):
-                return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
-            # TDE FIXME: public user has no right to create mail.message, should
-            # be investigated - using SUPERUSER_ID meanwhile
-            contextual_slide = slide.sudo().with_context(mail_create_nosubcribe=True)
-            # TDE FIXME: check in mail_thread, find partner from emails should maybe work as public user
-            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0]
-            if partner_id:
-                partner = request.env['res.partner'].sudo().browse(partner_id)
-            else:
-                partner = request.env['res.partner'].sudo().create({
-                    'name': post.get('name', post['email']),
-                    'email': post['email']
-                })
-            post_kwargs = {
-                'author_id': partner.id,
-                'website_published': False,
-                'email_from': partner.email,
-            }
-        # logged user: as usual, published by default
-        else:
-            contextual_slide = slide
-            post_kwargs = {}
-
-        contextual_slide.message_post(
-            body=post['comment'],
-            message_type='comment',
-            subtype='mt_comment',
-            **post_kwargs
-        )
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#discuss")
 
     @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('download_security', '=', 'public')]"):slide>/download''', type='http', auth="public", website=True)
     def slide_download(self, slide):
@@ -263,10 +217,10 @@ class WebsiteSlides(http.Controller):
                 'caption': slide.name,
                 'url': slide.website_url
             }
-        vals = map(slide_mapped_dict, slide.get_related_slides(slides_to_suggest))
+        vals = [slide_mapped_dict(s) for s in slide.get_related_slides(slides_to_suggest)]
         add_more_slide = slides_to_suggest - len(vals)
         if max(add_more_slide, 0):
-            vals += map(slide_mapped_dict, slide.get_most_viewed_slides(add_more_slide))
+            vals.extend(slide_mapped_dict(s) for s in slide.get_most_viewed_slides(add_more_slide))
         return vals
 
     # --------------------------------------------------
@@ -319,7 +273,7 @@ class WebsiteSlides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------
@@ -333,7 +287,7 @@ class WebsiteSlides(http.Controller):
 
         # determine if it is embedded from external web page
         referrer_url = request.httprequest.headers.get('Referer', '')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         is_embedded = referrer_url and not bool(base_url in referrer_url) or False
         # try accessing slide, and display to corresponding template
         try:

@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-# 
+#
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Seksan Poltree <seksan.poltree@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Seksan Poltree <seksan.poltree@gmail.com>, 2016\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-04-03 15:14+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
+"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: procurement
@@ -35,15 +37,17 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are usually\n"
-"                created automatically from <i>sales orders, pull logistic rules or\n"
+"                product at a specific location. Procurement orders are "
+"usually\n"
+"                created automatically from <i>sales orders, pull logistic "
+"rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
-msgstr "การดำเนินการ"
+msgstr "ปฏิบัติ"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -54,11 +58,6 @@ msgstr "เปิดใช้งาน"
 #: selection:procurement.group,move_type:0
 msgid "All at once"
 msgstr "ทั้งหมดในครั้งเดียว"
-
-#. module: procurement
-#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
-msgid "Archived"
-msgstr "ถูกเก็บ"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -73,7 +72,13 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "ยกเลิกแล้ว"
+msgstr "ถูกยกเลิก"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state."
+msgstr ""
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -83,9 +88,8 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but"
-" can be manually set by the procurement manager to force an unusual "
-"behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but "
+"can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
 
 #. module: procurement
@@ -134,13 +138,14 @@ msgstr "สร้างเมื่อ"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+#, fuzzy
 msgid "Delivery Type"
-msgstr ""
+msgstr "วิธีการจัดส่งสินค้า"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
 msgid "Description"
-msgstr "คำอธิบาย"
+msgstr "รายละเอียด"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_display_name
@@ -153,7 +158,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "เสร็จสิ้น"
+msgstr "เสร็จสมบูรณ์"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -193,7 +198,7 @@ msgstr "โกลบอล"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "จัดกลุ่มตาม"
+msgstr "จัดกลุ่มโดย"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -207,7 +212,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
 msgid "ID"
-msgstr "ID"
+msgstr "รหัส"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
@@ -254,6 +259,11 @@ msgid "Leave Empty"
 msgstr ""
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.mrp_company
+msgid "Logistics"
+msgstr "โลจิสติกส์"
+
+#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -267,7 +277,7 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: procurement
-#: code:addons/procurement/models/procurement.py:189
+#: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -302,7 +312,7 @@ msgstr "ระดับความสำคัญ"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement"
-msgstr "การจัดซื้อ"
+msgstr "จัดซื้อ"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
@@ -314,7 +324,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr "กลุ่มจัดซื้อ"
+msgstr "กลุ่มจัดซื้อจัดจ้าง"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -331,18 +341,18 @@ msgstr ""
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "การขอการจัดซื้อ"
+msgstr "คำร้องขอให้จัดซื้อจัดจ้าง"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "เกณฑ์การจัดซื้อ"
+msgstr "กฎการจัดซื้อจัดจ้าง"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr "เกณฑ์การจัดซื้อ"
+msgstr "กฎจัดซื้อจัดจ้าง"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
@@ -371,7 +381,7 @@ msgstr "สินค้า"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
 msgid "Product Unit of Measure"
-msgstr "หน่วยวัดสินค้า"
+msgstr "หน่วยการวัดสินค้า"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -391,7 +401,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
 msgid "Quantity"
-msgstr "ปริมาณ"
+msgstr "จำนวน"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -401,19 +411,19 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
 msgid "Reference"
-msgstr "อ้างอิง"
+msgstr "อ้างอิงถึง"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement. This is "
-"automatically completed by Odoo."
+"Reference of the document that created this Procurement.\n"
+"This is automatically completed by Odoo."
 msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
 msgid "Rule"
-msgstr "เกณฑ์"
+msgstr "กฎ"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -465,12 +475,12 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
 msgid "Sequence"
-msgstr "ลำดับ"
+msgstr "กำหนดเลขที่เอกสาร"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
 msgid "Source Document"
-msgstr "ต้นฉบับ"
+msgstr "เอกสารที่มา"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_state
@@ -486,7 +496,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Unit of Measure"
-msgstr "หน่วยวัด"
+msgstr "หน่วยของการวัด"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -504,14 +514,9 @@ msgstr "ด่วนมาก"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: purchase\n"
+"                creates the necessary operations to fulfill the need: "
+"purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/models/procurement.py:144
-#, python-format
-msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
 
 #. module: procurement
@@ -523,3 +528,51 @@ msgstr "เช่น ซื้อ"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "เช่น SO005"
+
+#~ msgid "Action Needed"
+#~ msgstr "ต้องดำเนินการ"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
+
+#~ msgid "Followers"
+#~ msgstr "ผู้ติดตาม"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "Is Follower"
+#~ msgstr "เป็นผู้ติดตาม"
+
+#~ msgid "Last Message Date"
+#~ msgstr "วันที่ข้อความล่าสุด"
+
+#~ msgid "Messages"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "ข้อความและประวัติการติดต่อ"
+
+#~ msgid "Number of Actions"
+#~ msgstr "จำนวนกิจกรรม"
+
+#~ msgid "Unread Messages"
+#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

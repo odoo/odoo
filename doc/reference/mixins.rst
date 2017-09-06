@@ -428,9 +428,6 @@ The urls in the actions list can be generated automatically by calling the
           self-explanatory
         ``unfollow``
           self-explanatory
-        ``workflow``
-          trigger a workflow signal; the signal's name should be
-          provided as the kwarg ``signal``
         ``method``
           call a method on the record; the method's name should be
           provided as the kwarg ``method``
@@ -555,7 +552,7 @@ Alias support integration
 
 Aliases are usually configured on a parent model which will then create specific
 record when contacted by e-mail. For example, Project have aliases to create tasks
-or issues, Sales Team have aliases to generate Leads.
+or issues, Sales Channel have aliases to generate Leads.
 
 .. note:: The model that will be created by the alias **must** inherit the
           ``mail_thread`` model.
@@ -740,6 +737,65 @@ you to make your alias easily configurable from the record's form view.
                 defaults.update(custom_values or {})
                 res = super(BusinessExpense, self).message_new(msg, custom_values=defaults)
                 return res
+
+.. _reference/mixins/mail/activities:
+
+Activities tracking
+-------------------
+
+Activities are actions users have to take on a document like making a phone call
+or organizing a meeting. Activities come with the mail module as they are 
+integrated in the Chatter but are *not bundled with mail.thread*. Activities
+are records of the ``mail.activity`` class, which have a type (``mail.activity.type``),
+name, description, scheduled time (among others). Pending activities are visible
+above the message history in the chatter widget.
+
+You can integrate activities using the ``mail.activity.mixin`` class on your object
+and the specific widgets to display them (via the field ``activity_ids``) in the form
+view and kanban view of your records (``mail_activity`` and ``kanban_activity``
+widgets, respectively).
+
+.. admonition:: Example
+
+    Organizing a business trip is a tedious process and tracking needed activities
+    like ordering plane tickets or a cab for the airport could be useful. To do so,
+    we will add the activities mixin on our model and display the next planned activities
+    in the message history of our trip.
+
+    .. code-block:: python
+
+        class BusinessTrip(models.Model):
+            _name = 'business.trip'
+            _inherit = ['mail.thread', 'mail.activity.mixin']
+            _description = 'Business Trip'
+
+            name = fields.Char()
+            # [...]
+
+    We modify the form view of our trips to display their next activites:
+
+    .. code-block:: xml
+
+        <record id="businness_trip_form" model="ir.ui.view">
+            <field name="name">business.trip.form</field>
+            <field name="model">business.trip</field>
+            <field name="arch" type="xml">
+                <form string="Business Trip">
+                    <!-- Your usual form view goes here -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+You can find concrete examples of integration in the following models:
+
+* ``crm.lead`` in the CRM (*crm*) Application
+* ``sale.order`` in the Sales (*sale*) Application
+* ``project.task`` in the Project (*poject*) Application
 
 
 .. _reference/mixins/website:

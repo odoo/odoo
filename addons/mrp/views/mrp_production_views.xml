@@ -15,26 +15,18 @@
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="origin"/>
+                    <field name="origin" groups="base.group_no_one"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
 
         <record id="production_order_server_action" model="ir.actions.server">
-            <field name="name">Plan Orders</field>
+            <field name="name">Mrp: Plan Production Orders</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
             <field name="state">code</field>
             <field name="code">records.button_plan()</field>
-        </record>
-
-        <record id="run_procurement_order_action" model="ir.values">
-            <field name="model_id" ref="mrp.model_mrp_production" />
-            <field name="name">Plan Orders</field>
-            <field name="key2">client_action_multi</field>
-            <field name="key">action</field>
-            <field name="model">mrp.production</field>
-            <field name="value" eval="'ir.actions.server,' + str(ref('production_order_server_action'))" />
         </record>
 
         <record id="mrp_production_form_view" model="ir.ui.view">
@@ -60,14 +52,14 @@
                     <field name="unreserve_visible" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="workorder_done_count" widget="statinfo" nolabel="1"/> / <field name="workorder_count" widget="statinfo" nolabel="1"/></span>
                                 <span class="o_stat_text">Work Orders</span>
                             </div>
                         </button>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'cancel', 'done'))]}"/>
                         <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="scrap_count"/></span>
                                 <span class="o_stat_text">Scraps</span>
                             </div>
@@ -81,7 +73,8 @@
                         <group>
                             <field name="has_moves" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False)]"/>
+                            <field name="id" invisible="1"/>
+                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
@@ -89,7 +82,7 @@
                                 <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
-                                    string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
+                                    string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('id', '=', False)]}"/>
                             </div>
                             <field name="bom_id"
                                 domain="['&amp;', '|',
@@ -105,14 +98,14 @@
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
                             <field name="user_id"/>
-                            <field name="origin"/>
+                            <field name="origin" groups="base.group_no_one"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="reserved_availability &lt; product_uom_qty" create="0">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
@@ -121,7 +114,7 @@
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>
+                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
                                     <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
@@ -163,6 +156,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -210,7 +204,7 @@
             <field name="model">mrp.production</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="routing_id" date_start="date_planned_start" string="Manufacturing Orders">
+                <calendar date_start="date_planned_start" string="Manufacturing Orders" color="routing_id">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -267,6 +261,18 @@
                     <field name="move_raw_ids" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Routing" domain="[]" context="{'group_by':'routing_id'}"/>
@@ -288,14 +294,13 @@
             <field name="context">{'search_default_todo': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a manufacturing order.
+                Click here to create a Manufacturing Order.
               </p><p>
-                A manufacturing order, based on a bill of materials, will
-                consume raw materials and produce finished products.
+                Based on a Bill of Material, a Manufacturing Order will consume raw materials
+                and produce finished products.
               </p><p>
-                Manufacturing orders are usually proposed automatically based
-                on customer requirements or automated rules like the minimum
-                stock rule.
+                Manufacturing Orders can be generated automatically based on customer
+                requirements or reordering rules.
               </p>
             </field>
         </record>
@@ -323,7 +328,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="domain">[('state', '=', 'confirmed'), ('routing_id', '!=', False)]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -344,7 +349,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('availability', 'in', ('waiting', 'partially_available'))]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -365,7 +370,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
         <field name="view_type">form</field>
-        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="view_mode">graph,pivot,list,form</field>
     </record>
 
     <menuitem id="menu_mrp_workorder_todo"

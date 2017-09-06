@@ -29,4 +29,4 @@ class HolidaysSummaryEmployee(models.TransientModel):
             'model': 'hr.employee',
             'form': data
         }
-        return self.env['report'].get_action(employees, 'hr_holidays.report_holidayssummary', data=datas)
+        return self.env.ref('hr_holidays.action_report_holidayssummary').report_action(employees, data=datas)

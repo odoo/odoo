@@ -10,7 +10,7 @@
         <field name="applicability">accounts</field>
     </record>
 
-    <menuitem id="account_reports_fr_statements_menu" name="French Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+    <menuitem id="account_reports_fr_statements_menu" name="France" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
     <!--
         Plan comptable général pour la France.
@@ -2298,6 +2298,13 @@
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
 
+    <record id="pcg_445204" model="account.account.template">
+      <field name="name">TVA due imports</field>
+      <field name="code">445204</field>
+      <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
     <record id="pcg_44551" model="account.account.template">
       <field name="name">TVA à décaisser</field>
       <field name="code">44551</field>
@@ -2343,6 +2350,13 @@
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
 
+    <record id="pcg_445663" model="account.account.template">
+      <field name="name">TVA déductible imports</field>
+      <field name="code">445663</field>
+      <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
     <record id="pcg_44567" model="account.account.template">
       <field name="name">Crédit de TVA à reporter</field>
       <field name="code">44567</field>
@@ -2384,6 +2398,14 @@
     <record id="pcg_44578" model="account.account.template">
       <field name="name">Taxes collectées assimilées à la TVA</field>
       <field name="code">44578</field>
+      <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+      <field name="reconcile" eval="True"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
+    <record id="pcg_445800" model="account.account.template">
+      <field name="name">Taxes sur le chiffre d'affaires à régulariser ou en attente</field>
+      <field name="code">445800</field>
       <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
       <field name="reconcile" eval="True"/>
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>

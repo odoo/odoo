@@ -7,7 +7,9 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
+
+from odoo.tools import pycompat
 
 
 class ProductCategory(models.Model):
@@ -16,20 +18,28 @@ class ProductCategory(models.Model):
     _parent_name = "parent_id"
     _parent_store = True
     _parent_order = 'name'
+    _rec_name = 'complete_name'
     _order = 'parent_left'
 
     name = fields.Char('Name', index=True, required=True, translate=True)
+    complete_name = fields.Char(
+        'Complete Name', compute='_compute_complete_name',
+        store=True)
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
     child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
-    type = fields.Selection([
-        ('view', 'View'),
-        ('normal', 'Normal')], 'Category Type', default='normal',
-        help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure.")
     parent_left = fields.Integer('Left Parent', index=1)
     parent_right = fields.Integer('Right Parent', index=1)
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
+
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for category in self:
+            if category.parent_id:
+                category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
+            else:
+                category.complete_name = category.name
 
     def _compute_product_count(self):
         read_group_res = self.env['product.template'].read_group([('categ_id', 'in', self.ids)], ['categ_id'], ['categ_id'])
@@ -43,46 +53,9 @@ class ProductCategory(models.Model):
             raise ValidationError(_('Error ! You cannot create recursive categories.'))
         return True
 
-    @api.multi
-    def name_get(self):
-        def get_names(cat):
-            """ Return the list [cat.name, cat.parent_id.name, ...] """
-            res = []
-            while cat:
-                res.append(cat.name)
-                cat = cat.parent_id
-            return res
-
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
-
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        if not args:
-            args = []
-        if name:
-            # Be sure name_search is symetric to name_get
-            category_names = name.split(' / ')
-            parents = list(category_names)
-            child = parents.pop()
-            domain = [('name', operator, child)]
-            if parents:
-                names_ids = self.name_search(' / '.join(parents), args=args, operator='ilike', limit=limit)
-                category_ids = [name_id[0] for name_id in names_ids]
-                if operator in expression.NEGATIVE_TERM_OPERATORS:
-                    categories = self.search([('id', 'not in', category_ids)])
-                    domain = expression.OR([[('parent_id', 'in', categories.ids)], domain])
-                else:
-                    domain = expression.AND([[('parent_id', 'in', category_ids)], domain])
-                for i in range(1, len(category_names)):
-                    domain = [[('name', operator, ' / '.join(category_names[-1 - i:]))], domain]
-                    if operator in expression.NEGATIVE_TERM_OPERATORS:
-                        domain = expression.AND(domain)
-                    else:
-                        domain = expression.OR(domain)
-            categories = self.search(expression.AND([domain, args]), limit=limit)
-        else:
-            categories = self.search(args, limit=limit)
-        return categories.name_get()
+    def name_create(self, name):
+        return self.create({'name': name}).name_get()[0]
 
 
 class ProductPriceHistory(models.Model):
@@ -121,7 +94,7 @@ class ProductProduct(models.Model):
         help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
-    code = fields.Char('Internal Reference', compute='_compute_product_code')
+    code = fields.Char('Reference', compute='_compute_product_code')
     partner_ref = fields.Char('Customer Ref', compute='_compute_partner_ref')
 
     active = fields.Boolean(
@@ -154,8 +127,9 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
-        help="Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
-             "Expressed in the default unit of measure of the product.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume', help="The volume in m3.")
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
@@ -164,8 +138,12 @@ class ProductProduct(models.Model):
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
 
+    packaging_ids = fields.One2many(
+        'product.packaging', 'product_id', 'Product Packages',
+        help="Gives the different ways to package the same product.")
+
     _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
+        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     ]
 
     def _compute_product_price(self):
@@ -177,11 +155,11 @@ class ProductProduct(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, basestring):
+            if isinstance(pricelist_id_or_name, pycompat.string_types):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
                     pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, (int, long)):
+            elif isinstance(pricelist_id_or_name, pycompat.integer_types):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
@@ -575,13 +553,14 @@ class ProductPackaging(models.Model):
     _description = "Packaging"
     _order = 'sequence'
 
-    name = fields.Char('Packaging Type', required=True)
+    name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
-    product_tmpl_id = fields.Many2one('product.template', string='Product')
+    product_id = fields.Many2one('product.product', string='Product')
     qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
+    barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
 
 
-class SuppliferInfo(models.Model):
+class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
     _order = 'sequence, min_qty desc, price'
@@ -619,10 +598,11 @@ class SuppliferInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        help="When this field is filled in, the vendor data will only apply to the variant.")
+        help="If not set, the vendor price will apply to all variants of this products.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")

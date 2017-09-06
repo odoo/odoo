@@ -1,36 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Renzo Meister <info@jamotion.ch>, 2016
-# darenkster <inactive+darenkster@transifex.com>, 2016
-# JackTheHunter <Maximilian.N98@gmail.com>, 2016
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Henry Mineehen <info@mineehen.de>, 2016
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2015-2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>, 2016\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-01-17 20:16+0000\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (Kopie)"
+msgstr "%s (copy)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
@@ -62,7 +54,7 @@ msgstr "Unternehmen"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
 msgid "Created by"
-msgstr "Erstellt von"
+msgstr "Angelegt von"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_date
@@ -80,7 +72,7 @@ msgstr "Wochentag"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr "Definieren Sie den Einsatzplan für diese Ressource"
+msgstr "Termin für Ressource festlegen"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -97,7 +89,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Anzeigename"
+msgstr "Angezeigter Name"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -116,12 +108,10 @@ msgid "End Date"
 msgstr "Enddatum"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
-"Fehler ! Das Start Datum für die Abwesenheit muss vor dem Ende Datum liegen "
-"!"
+"Fehler ! Das Start Datum für die Abwesenheit muss vor dem Ende Datum liegen !"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -132,7 +122,7 @@ msgstr "Freitag"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Gruppiert nach..."
+msgstr "Gruppiere nach"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -212,7 +202,7 @@ msgstr "Abwesenheit Monat"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
 msgid "Leaves"
-msgstr "Urlaubsanträge"
+msgstr "Urlaubstage"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -230,14 +220,14 @@ msgstr "Montag"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "Name"
+msgstr "Bezeichnung"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "Grund"
+msgstr "Begründung"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
@@ -301,8 +291,8 @@ msgid ""
 msgstr ""
 "Ressourcen ermöglichen die Erstellung und Verwaltung bestimmter Ressourcen, "
 "die Sie für die Definition Ihrer Projektphasen benötigen. Sie können "
-"ausserdem die wöchentliche Arbeitszeit / Bürozeit (Verfügbarkeitszeit) sowie"
-" den Effizienzfaktor hinterlegen."
+"ausserdem die wöchentliche Arbeitszeit / Bürozeit (Verfügbarkeitszeit) sowie "
+"den Effizienzfaktor hinterlegen."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -350,23 +340,17 @@ msgid "Sunday"
 msgstr "Sonntag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 "Dieses Feld beschreibt die Effizienz von Ressourcen, bei der Erledigung von "
 "Arbeitsaufträgen. Wenn Sie z.B. im Standard einer einzige Ressource einer "
-"Phase über 5 Tagen mit 5 Aufgaben zuweisen, wird bei ihm eine Auslastung von"
-" 100% für diese Phase standardmäßig angezeigt, wenn wir allerdings die "
+"Phase über 5 Tagen mit 5 Aufgaben zuweisen, wird bei ihm eine Auslastung von "
+"100% für diese Phase standardmäßig angezeigt, wenn wir allerdings die "
 "Effizienz auf 200% ändern, würde seine Auslastung im Ergebnis nur noch 50% "
 "betragen."
 

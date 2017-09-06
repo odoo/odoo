@@ -6,6 +6,10 @@
             <script type="text/javascript" src="/account_asset/static/src/js/account_asset.js"></script>
         </xpath>
     </template>
+
+    <template id="qunit_suite" name="account_asset_tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/account_asset/static/tests/account_asset_tests.js"></script>
+        </xpath>
+    </template>
 </odoo>
-
-

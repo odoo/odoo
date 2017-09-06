@@ -8,8 +8,12 @@ from odoo.tools.float_utils import float_compare
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    purchase_id = fields.Many2one('purchase.order', string='Add Purchase Order',
-        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.')
+    purchase_id = fields.Many2one(
+        comodel_name='purchase.order',
+        string='Add Purchase Order',
+        readonly=True, states={'draft': [('readonly', False)]},
+        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.'
+    )
 
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
     def _onchange_allowed_purchase_ids(self):
@@ -47,7 +51,7 @@ class AccountInvoice(models.Model):
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
             'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-            'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
+            'price_unit': line.order_id.currency_id.with_context(date=self.date_invoice).compute(line.price_unit, self.currency_id, round=False),
             'quantity': qty,
             'discount': 0.0,
             'account_analytic_id': line.account_analytic_id.id,
@@ -75,14 +79,16 @@ class AccountInvoice(models.Model):
             new_lines += new_line
 
         self.invoice_line_ids += new_lines
+        self.payment_term_id = self.purchase_id.payment_term_id
+        self.env.context = dict(self.env.context, from_purchase_order_change=True)
         self.purchase_id = False
         return {}
 
-    @api.onchange('currency_id')
+    @api.onchange('currency_id', 'date_invoice')
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
+                line.price_unit = line.purchase_id.currency_id.with_context(date=self.date_invoice).compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
 
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):
@@ -92,7 +98,10 @@ class AccountInvoice(models.Model):
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
+        payment_term_id = self.env.context.get('from_purchase_order_change') and self.payment_term_id or False
         res = super(AccountInvoice, self)._onchange_partner_id()
+        if payment_term_id:
+            self.payment_term_id = payment_term_id
         if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
                 self.type in ['in_invoice', 'in_refund'] and\
                 self.currency_id != self.partner_id.property_purchase_currency_id:
@@ -137,7 +146,6 @@ class AccountInvoice(models.Model):
             # reference_account_id is the stock input account
             reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
             diff_res = []
-            account_prec = inv.company_id.currency_id.decimal_places
             # calculate and write down the possible price difference between invoice price and product price
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
@@ -171,13 +179,13 @@ class AccountInvoice(models.Model):
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
                         price_before = line.get('price', 0.0)
-                        line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
+                        line.update({'price': company_currency.round(valuation_price_unit * line['quantity'])})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
-                            'price_unit': round(price_unit - valuation_price_unit, account_prec),
+                            'price_unit': company_currency.round(price_unit - valuation_price_unit),
                             'quantity': line['quantity'],
-                            'price': round(price_before - line.get('price', 0.0), account_prec),
+                            'price': company_currency.round(price_before - line.get('price', 0.0)),
                             'account_id': acc,
                             'product_id': line['product_id'],
                             'uom_id': line['uom_id'],

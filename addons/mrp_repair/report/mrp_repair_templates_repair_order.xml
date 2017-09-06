@@ -3,7 +3,7 @@
 <data>
 <template id="report_mrprepairorder">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.external_layout">
+            <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
                 <div class="page">
                     <div class="oe_structure"/>
@@ -14,13 +14,13 @@
                             <div t-if="o.partner_invoice_id">
                                 <strong t-if="o.address_id != o.partner_invoice_id">Invoice address: </strong>
                                 <div t-field="o.partner_invoice_id" 
-                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             </div>
                             <div t-if="o.address_id != o.partner_invoice_id">
                                 <strong>Shipping address :</strong>
                                 <div t-field="o.address_id" 
-                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                 <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
                             </div>                        
                         </div>
@@ -42,18 +42,18 @@
                             <p t-field="o.product_id.name"/>
                         </div>
                         <div class="col-xs-3" groups="stock.group_production_lot">
-                            <strong>Lot Number</strong>
+                            <strong>Lot/Serial Number:</strong>
                             <t t-if="o.lot_id">
                                 <span t-field="o.lot_id.name"/>
                             </t>
                         </div>
                         <div t-if="o.guarantee_limit" class="col-xs-3">
-                            <strong>Guarantee Limit:</strong>
+                            <strong>Warranty:</strong>
                             <p t-field="o.guarantee_limit"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Printing Date:</strong>
-                            <p t-esc="time.strftime('%Y-%m-%d')"/>
+                            <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}"/>
                         </div>
                     </div>
 
@@ -61,60 +61,61 @@
                         <thead>
                             <tr>
                                 <th>Description</th>
-                                <th class="text-center">Tax</th>
                                 <th class="text-right">Quantity</th>
-                                <th class="text-right">Unit Price</th>
-                                <th class="text-right">Price</th>
+                                <t t-if="o.invoice_method != 'none'">
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-center">Tax</th>
+                                    <th class="text-right">Price</th>
+                                </t>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-if="o.operations">
-                                <tr><td colspan="5"><strong>Operation Line(s)</strong></td></tr>
+                                <tr><td colspan="5"><strong>Parts</strong></td></tr>
                                 <tr t-foreach="o.operations" t-as="line">
-                                    <t t-if="(line.to_invoice is True)">
-                                        <td>
-                                            <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
-                                            <p t-if="line.type == 'remove'">(<i>Remove</i>) <span t-field="line.name"/></p>
+                                    <td>
+                                        <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
+                                        <p t-if="line.type == 'remove'">(<i>Remove</i>) <span t-field="line.name"/></p>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span groups="product.group_uom" t-field="line.product_uom.name"/>
+                                    </td>
+                                    <t t-if="(line.repair_id.invoice_method != 'none')">
+                                        <td class="text-right">
+                                            <span t-field="line.price_unit"/>
                                         </td>
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-field="line.product_uom_qty"/>
-                                            <span groups="product.group_uom" t-field="line.product_uom.name"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="line.price_unit"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="line.price_subtotal" 
-                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
                                     </t>
                                 </tr>
                             </t>
                             <t t-if="o.fees_lines">
-                                <tr><td colspan="5"><strong>Fees Line(s)</strong></td></tr>
+                                <tr><td colspan="5"><strong>Operations</strong></td></tr>
                                 <tr t-foreach="o.fees_lines" t-as="fees">
-                                   <t t-if="fees.to_invoice is True">
-                                        <td>
-                                            <span t-field="fees.name"/>
+                                    <td>
+                                        <span t-field="fees.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="fees.product_uom_qty"/>
+                                        <span groups="product.group_uom" t-field="fees.product_uom.name"/>
+                                    </td>
+                                    <t t-if="(fees.repair_id.invoice_method != 'none')">
+                                        <td class="text-right">
+                                            <span t-field="fees.price_unit"/>
                                         </td>
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, fees.tax_id))"/>
                                         </td>
                                         <td class="text-right">
-                                            <span t-field="fees.product_uom_qty"/>
-                                            <span groups="product.group_uom" t-field="fees.product_uom.name"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="fees.price_unit"/>
-                                        </td>
-                                        <td class="text-right">
                                             <span t-field="fees.price_subtotal"
                                                 t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
                                        </td>
-                                   </t>
+                                    </t>
                                 </tr>
                             </t>
                         </tbody>
@@ -123,27 +124,29 @@
                     <div class="row">
                         <div class="col-xs-4 pull-right">
                             <table class="table table-condensed">
-                                <tr class="border-black">
-                                    <td><strong>Total Without Taxes</strong></td>
-                                    <td class="text-right">
-                                        <span t-field="o.amount_untaxed"
-                                            t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Taxes</td>
-                                    <td class="text-right">
-                                        <span t-field="o.amount_tax"
-                                            t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
-                                    </td>
-                                </tr>
-                                <tr class="border-black">
-                                    <td><strong>Total</strong></td>
-                                    <td class="text-right">
-                                        <span t-field="o.amount_total"
-                                            t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
-                                    </td>
-                                </tr>
+                                <t t-if="o.invoice_method !='none'">
+                                    <tr class="border-black">
+                                        <td><strong>Total Without Taxes</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.amount_untaxed"
+                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taxes</td>
+                                        <td class="text-right">
+                                            <span t-field="o.amount_tax"
+                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.amount_total"
+                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
                             </table>
                         </div>
                     </div>
@@ -156,7 +159,7 @@
 </template>
 
 <template id="report_mrprepairorder2">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
             <t t-call="mrp_repair.report_mrprepairorder" t-lang="doc.partner_id.lang"/>
         </t>

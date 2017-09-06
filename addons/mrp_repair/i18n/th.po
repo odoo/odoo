@@ -1,25 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Sumonchai Wongphithak <sumonchai@gmail.com>, 2016
-# Seksan Poltree <seksan.poltree@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Seksan Poltree <seksan.poltree@gmail.com>, 2016\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-04-03 15:14+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
+"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"#-#-#-#-#  th.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair "
+"order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -30,17 +47,6 @@ msgstr "(<i>ลบ</i>)"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "(update)"
 msgstr "(อัพเดท)"
-
-#. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-msgid ""
-"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
-"* The 'Confirmed' status is used when a user confirms the repair order.\n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
-"* The 'Done' status is set when repairing is completed.\n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -79,8 +85,9 @@ msgstr "สินค้าที่ซ่อม"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "ที่อยู่ในการจัดส่ง"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -91,6 +98,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>ทั้งหมด</strong>"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:24
+#, python-format
+msgid "Active ID not Found"
+msgstr ""
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -118,12 +131,6 @@ msgid "Before Repair"
 msgstr "ก่อนซ่อม"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:206
-#, python-format
-msgid "Can only confirm draft repairs."
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
@@ -144,13 +151,7 @@ msgstr "ยกเลิกคำสั่งซ่อม"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
-msgstr "ยกเลิกแล้ว"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:221
-#, python-format
-msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "ถูกยกเลิก"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -180,8 +181,7 @@ msgid "Confirmed"
 msgstr "ยืนยันแล้ว"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:508
-#: code:addons/mrp_repair/models/mrp_repair.py:570
+#: code:addons/mrp_repair/mrp_repair.py:524
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -193,12 +193,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Create Invoice"
-msgstr "สร้างใบวางบิล"
+msgstr "สร้างใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Create invoices"
-msgstr "สร้างใบวางบิล"
+msgstr "สร้างใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
@@ -221,12 +221,7 @@ msgstr "สร้างเมื่อ"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
-msgstr "สถานที่ปัจจุบัน"
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
-msgstr ""
+msgstr "ตำแหน่งปัจจุบัน"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -236,19 +231,19 @@ msgstr "ที่อยู่จัดส่ง"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
 msgid "Delivery Location"
-msgstr "สถานที่จัดส่ง"
+msgstr "ตำแหน่งจัดส่ง"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_name
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Description"
-msgstr "คำอธิบาย"
+msgstr "รายละเอียด"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
 msgid "Dest. Location"
-msgstr "สถานที่ปลายทาง"
+msgstr "ตำแหน่งปลายทาง"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
@@ -267,12 +262,12 @@ msgstr "คุณต้องการสร้างใบแจ้งหนี
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Done"
-msgstr "เสร็จสิ้น"
+msgstr "เสร็จสมบูรณ์"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Draft"
-msgstr "ร่าง"
+msgstr "ฉบับร่าง"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -293,7 +288,7 @@ msgstr "ค่าธรรมเนียม"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "จัดกลุ่มตาม"
+msgstr "จัดกลุ่มโดย"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
@@ -328,7 +323,8 @@ msgstr "ID"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 
@@ -346,6 +342,11 @@ msgstr "การเคลื่อนย้ายสินค้าคงคล
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
 msgid "Invoice"
 msgstr "ใบแจ้งหนี้"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Invoice Corrected"
+msgstr "แจ้งหนี้ถูกต้อง"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -366,7 +367,7 @@ msgstr "วิธีแจ้งหนี้"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Invoice address:"
-msgstr "ที่อยู่การแจ้งหนี้"
+msgstr "ที่อยู่ในใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -444,34 +445,32 @@ msgid "No Invoice"
 msgstr "ไม่แจ้งหนี้"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:499
-#: code:addons/mrp_repair/models/mrp_repair.py:561
+#: code:addons/mrp_repair/mrp_repair.py:511
 #, python-format
 msgid "No Pricelist!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:260
+#: code:addons/mrp_repair/mrp_repair.py:322
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:285
-#: code:addons/mrp_repair/models/mrp_repair.py:313
+#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:379
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:306
+#: code:addons/mrp_repair/mrp_repair.py:372
 #, python-format
 msgid "No product defined on Fees!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:506
-#: code:addons/mrp_repair/models/mrp_repair.py:568
+#: code:addons/mrp_repair/mrp_repair.py:522
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr ""
@@ -489,7 +488,7 @@ msgstr "รายการดำเนินการ"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
-msgstr "ปฏิบัติการ"
+msgstr "การดำเนินการ"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
@@ -534,7 +533,7 @@ msgstr "ปริมาณสินค้า"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_uom
 msgid "Product Unit of Measure"
-msgstr "หน่วยวัดสินค้า"
+msgstr "หน่วยการวัดสินค้า"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
@@ -552,12 +551,12 @@ msgstr "สินค้าที่ซ่อมเป็นของล็อต
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Quantity"
-msgstr "ปริมาณ"
+msgstr "จำนวน"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Quotation"
-msgstr "เสนอราคา"
+msgstr "ใบเสนอราคา"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
@@ -583,6 +582,11 @@ msgstr "พร้อมซ่อม"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "พร้อมซ่อม"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Recreate Invoice"
+msgstr "สร้างใบแจ้งหนี้ใหม่"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -634,37 +638,13 @@ msgid "Repair Reference"
 msgstr "อ้างอิงการซ่อม"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:194
-#, python-format
-msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:343
-#, python-format
-msgid "Repair must be confirmed before starting reparation."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:371
-#, python-format
-msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:354
-#, python-format
-msgid "Repair must be under repair in order to end reparation."
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:223
+#: code:addons/mrp_repair/mrp_repair.py:285
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "คำสั่งซ่อมถูกแจ้งหนี้แล้ว"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
+#: code:addons/mrp_repair/wizard/cancel_repair.py:32
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "คำสั่งซ่อมไม่ถูกแจ้งหนี้"
@@ -693,8 +673,9 @@ msgstr "คำสั่งซ่อม"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#, fuzzy
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "ค้นหาคำสั่งซ่อม"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -708,7 +689,7 @@ msgstr ""
 "\"ไม่แจ้งหนี้\" หมายความว่าคุณไม่ต้องการว่าบิลคำสั่งซ่อมนี้"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:213
+#: code:addons/mrp_repair/mrp_repair.py:272
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "ต้องใช้เลขซีเรียลสำหรับรายการดำเนินงานกับสินค้า \"%s\""
@@ -716,12 +697,12 @@ msgstr "ต้องใช้เลขซีเรียลสำหรับร
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr "กำหนดให้เป็นฉบับร่าง"
+msgstr "กำหนดให้เป็นแบบร่าง"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
 msgid "Source Location"
-msgstr "สถานที่ต้นทาง"
+msgstr "ตำแหน่งที่มา"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -755,7 +736,7 @@ msgid "Taxes"
 msgstr "ภาษี"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:166
+#: code:addons/mrp_repair/mrp_repair.py:207
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -771,7 +752,8 @@ msgstr "ชื่อของโมดูลจะต้องไม่ซ้ำ
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
 msgstr ""
 
@@ -793,7 +775,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_to_invoice
 msgid "To Invoice"
-msgstr "ที่จะแจ้งหนี้"
+msgstr "ไปยังใบแจ้งหนี้"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -803,7 +785,7 @@ msgstr "ที่จะถูกแจ้งหนี้"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
-msgstr "รวมทั้งหมด"
+msgstr "รวม"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -813,7 +795,7 @@ msgstr "จำนวนรวม"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
 msgid "Type"
-msgstr "ประเภท"
+msgstr "ชนิด"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -825,12 +807,12 @@ msgstr "กำลังซ่อม"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Unit Price"
-msgstr "หน่วยละ"
+msgstr "ราคาต่อหน่วย"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Unit of Measure"
-msgstr "หน่วยวัด"
+msgstr "หน่วยของการวัด"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
@@ -848,10 +830,10 @@ msgid "VAT:"
 msgstr "ภาษีมูลค่าเพิ่ม:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:166
+#: code:addons/mrp_repair/mrp_repair.py:207
 #, python-format
 msgid "Warning"
-msgstr "คำเตือน"
+msgstr "แจ้งเตือน"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
@@ -864,16 +846,71 @@ msgid "Yes"
 msgstr "ใช่"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:248
+#: code:addons/mrp_repair/mrp_repair.py:308
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:501
-#: code:addons/mrp_repair/models/mrp_repair.py:563
+#: code:addons/mrp_repair/mrp_repair.py:513
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
-" Please set one before choosing a product."
+"Please set one before choosing a product."
 msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "unknown"
+msgstr "ไม่ทราบ"
+
+#~ msgid "Action Needed"
+#~ msgstr "ต้องดำเนินการ"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
+
+#~ msgid "Followers"
+#~ msgstr "ผู้ติดตาม"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "ผู้ติดตาม (ช่องทาง)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "ผู้ติดตาม (คู่ค้า)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#~ msgid "Is Follower"
+#~ msgstr "เป็นผู้ติดตาม"
+
+#~ msgid "Last Message Date"
+#~ msgstr "วันที่ข้อความล่าสุด"
+
+#~ msgid "Messages"
+#~ msgstr "ข้อความ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "ข้อความและประวัติการติดต่อ"
+
+#~ msgid "Number of Actions"
+#~ msgstr "จำนวนกิจกรรม"
+
+#~ msgid "Reair Orders"
+#~ msgstr "คำสั่งซ่อม"
+
+#~ msgid "Unread Messages"
+#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
+
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

@@ -12,6 +12,7 @@ Delivery Costs
     'data': [
         'views/website_sale_delivery_templates.xml',
         'views/website_sale_delivery_views.xml',
+        'views/res_config_settings_views.xml',
         'data/website_sale_delivery_data.xml'
     ],
     'demo': [
@@ -19,4 +20,5 @@ Delivery Costs
     ],
     'qweb': [],
     'installable': True,
+    'auto_install': True,
 }

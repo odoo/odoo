@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-26 14:46+0000\n"
-"PO-Revision-Date: 2017-06-26 14:46+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,15 +34,31 @@ msgid "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 msgstr ""
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:63
-#, python-format
-msgid "Campaign"
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_team_id
+msgid "Default Sales Channel"
 msgstr ""
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:62
-#, python-format
-msgid "Create Date"
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+msgid "Default Sales Channels"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+msgid "Default Salesperson"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+msgid "Default sales channel for new leads created through the Contact Us form."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
@@ -62,7 +78,6 @@ msgstr ""
 
 #. module: website_crm
 #. openerp-web
-#: code:addons/website_crm/controllers/main.py:53
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
 #, python-format
 msgid "Leads"
@@ -83,26 +98,18 @@ msgid "Leads Analysis"
 msgstr ""
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:64
-#, python-format
-msgid "Medium"
-msgstr ""
-
-#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr ""
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:57
-#, python-format
-msgid "Previous Leads"
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Sales Channel"
 msgstr ""
 
 #. module: website_crm
-#: code:addons/website_crm/controllers/main.py:65
-#, python-format
-msgid "Source"
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Salesperson"
 msgstr ""
 
 #. module: website_crm
@@ -128,6 +135,11 @@ msgid "We will get back to you shortly."
 msgstr ""
 
 #. module: website_crm
+#: model:ir.model,name:website_crm.model_website
+msgid "Website"
+msgstr ""
+
+#. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
 msgid "Website Contact Form"
 msgstr ""
@@ -150,5 +162,10 @@ msgstr ""
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website_config_settings
+msgid "website.config.settings"
 msgstr ""
 

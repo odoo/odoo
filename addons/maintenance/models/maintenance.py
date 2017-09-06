@@ -39,7 +39,7 @@ class MaintenanceEquipmentCategory(models.Model):
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
-        'mail.alias', 'Alias', ondelete='cascade', required=True,
+        'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
         "create new maintenance request for this equipment category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
@@ -89,7 +89,7 @@ class MaintenanceEquipmentCategory(models.Model):
 
 class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Equipment'
 
     @api.multi
@@ -142,7 +142,7 @@ class MaintenanceEquipment(models.Model):
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
-    maintenance_duration = fields.Float(help="Maintenance Duration in minutes and seconds.")
+    maintenance_duration = fields.Float(help="Maintenance Duration in hours.")
 
     @api.depends('period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
     def _compute_next_maintenance(self):
@@ -251,7 +251,7 @@ class MaintenanceEquipment(models.Model):
 
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Maintenance Requests'
     _order = "id desc"
 
@@ -322,8 +322,8 @@ class MaintenanceRequest(models.Model):
         # context: no_log, because subtype already handle this
         self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
-        if request.owner_user_id:
-            request.message_subscribe_users(user_ids=[request.owner_user_id.id])
+        if request.owner_user_id or request.technician_user_id:
+            request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
         return request
@@ -334,12 +334,17 @@ class MaintenanceRequest(models.Model):
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
-        if vals.get('owner_user_id'):
-            self.message_subscribe_users(user_ids=[vals['owner_user_id']])
         res = super(MaintenanceRequest, self).write(vals)
+        if vals.get('owner_user_id') or vals.get('technician_user_id'):
+            self._add_followers()
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
         return res
+
+    def _add_followers(self):
+        for request in self:
+            user_ids = (request.owner_user_id + request.technician_user_id).ids
+            request.message_subscribe_users(user_ids=user_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -355,8 +360,8 @@ class MaintenanceTeam(models.Model):
     _description = 'Maintenance Teams'
 
     name = fields.Char(required=True)
-    partner_id = fields.Many2one('res.partner', string='Subcontracting Partner')
-    color = fields.Integer(default=0)
+    member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
+    color = fields.Integer("Color Index", default=1)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)
 
@@ -366,6 +371,7 @@ class MaintenanceTeam(models.Model):
     todo_request_count_date = fields.Integer(compute='_compute_todo_requests')
     todo_request_count_high_priority = fields.Integer(compute='_compute_todo_requests')
     todo_request_count_block = fields.Integer(compute='_compute_todo_requests')
+    todo_request_count_unscheduled = fields.Integer(compute='_compute_todo_requests')
 
     @api.one
     @api.depends('request_ids.stage_id.done')
@@ -375,6 +381,7 @@ class MaintenanceTeam(models.Model):
         self.todo_request_count_date = len(self.todo_request_ids.filtered(lambda e: e.schedule_date != False))
         self.todo_request_count_high_priority = len(self.todo_request_ids.filtered(lambda e: e.priority == '3'))
         self.todo_request_count_block = len(self.todo_request_ids.filtered(lambda e: e.kanban_state == 'blocked'))
+        self.todo_request_count_unscheduled = len(self.todo_request_ids.filtered(lambda e: not e.schedule_date))
 
     @api.one
     @api.depends('equipment_ids')

@@ -14,10 +14,10 @@ class AccountInvoice(models.Model):
 
     def _default_comment(self):
         invoice_type = self.env.context.get('type', 'out_invoice')
-        if invoice_type == 'out_invoice':
+        if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
             return self.env.user.company_id.sale_note
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
+    team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')
     comment = fields.Text(default=_default_comment)
     partner_shipping_id = fields.Many2one(
         'res.partner',
@@ -56,17 +56,17 @@ class AccountInvoice(models.Model):
     def _refund_cleanup_lines(self, lines):
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
         if self.env.context.get('mode') == 'modify':
-            for i in xrange(0, len(lines)):
-                for name, field in lines[i]._fields.iteritems():
+            for i, line in enumerate(lines):
+                for name, field in line._fields.items():
                     if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, lines[i][name].ids)]
-                        lines[i][name] = False
+                        result[i][2][name] = [(6, 0, line[name].ids)]
+                        line[name] = False
         return result
 
     @api.multi
     def order_lines_layouted(self):
         """
-        Returns this sale order lines ordered by sale_layout_category sequence. Used to render the report.
+        Returns this sales order lines ordered by sale_layout_category sequence. Used to render the report.
         """
         self.ensure_one()
         report_pages = [[]]
@@ -96,12 +96,22 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _order = 'invoice_id, layout_category_id, sequence, id'
 
+    @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
+        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
+        'invoice_id.date_invoice')
+    def _compute_total_price(self):
+        for line in self:
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.invoice_line_tax_ids.compute_all(price, line.invoice_id.currency_id, line.quantity, product=line.product_id, partner=line.invoice_id.partner_id)
+            line.price_total = taxes['total_included']
+
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
-        string='Sale Order Lines', readonly=True, copy=False)
+        string='Sales Order Lines', readonly=True, copy=False)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(
         related='layout_category_id.sequence',
         string='Layout Sequence', store=True)
+    price_total = fields.Monetary(compute='_compute_total_price', string='Total Amount', store=True)

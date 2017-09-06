@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel
 import collections
 import datetime
 import pytz
@@ -18,8 +19,18 @@ class WebsiteEventTrackController(http.Controller):
         values = {'track': track, 'event': track.event_id, 'main_object': track}
         return request.render("website_event_track.track_view", values)
 
+    def _get_locale_time(self, dt_time, lang_code):
+        """ Get locale time from datetime object
+
+            :param dt_time: datetime object
+            :param lang_code: language code (eg. en_US)
+        """
+        locale = babel.Locale.parse(lang_code)
+        return babel.dates.format_time(dt_time, format='short', locale=locale)
+
     def _prepare_calendar(self, event, event_track_ids):
         local_tz = pytz.timezone(event.date_tz or 'UTC')
+        lang_code = request.env.context.get('lang')
         locations = {}                  # { location: [track, start_date, end_date, rowspan]}
         dates = []                      # [ (date, {}) ]
         for track in event_track_ids:
@@ -34,8 +45,9 @@ class WebsiteEventTrackController(http.Controller):
 
             # New TR, align all events
             if forcetr or (start_date>dates[-1][0]) or not location:
-                dates.append((start_date, {}, bool(location)))
-                for loc in locations.keys():
+                formatted_time = self._get_locale_time(start_date, lang_code)
+                dates.append((start_date, {}, bool(location), formatted_time))
+                for loc in list(locations):
                     if locations[loc] and (locations[loc][-1][2] > start_date):
                         locations[loc][-1][3] += 1
                     elif not locations[loc] or locations[loc][-1][2] <= start_date:
@@ -53,36 +65,30 @@ class WebsiteEventTrackController(http.Controller):
             'dates': dates
         }
 
-    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event", "[('website_track','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
-        for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
+        for track in event.track_ids.sorted(lambda track: (track.date or '', bool(track.location_id))):
             if not track.date:
                 continue
             days_tracks[track.date[:10]].append(track)
 
         days = {}
-        days_tracks_count = {}
-        for day, tracks in days_tracks.iteritems():
-            days_tracks_count[day] = len(tracks)
+        tracks_by_days = {}
+        for day, tracks in days_tracks.items():
+            tracks_by_days[day] = tracks
             days[day] = self._prepare_calendar(event, tracks)
-
-        speakers = {}
-        for track in event.sudo().track_ids:
-            speakers_name = u" – ".join(track.speaker_ids.mapped('name'))
-            speakers[track.id] = speakers_name
 
         return request.render("website_event_track.agenda", {
             'event': event,
             'days': days,
-            'days_nbr': days_tracks_count,
-            'speakers': speakers,
+            'tracks_by_days': tracks_by_days,
             'tag': tag
         })
 
     @http.route([
-        '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track''',
-        '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
+        '''/event/<model("event.event", "[('website_track','=',1)]"):event>/track''',
+        '''/event/<model("event.event", "[('website_track','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
         ], type='http', auth="public", website=True)
     def event_tracks(self, event, tag=None, **post):
         searches = {}
@@ -102,7 +108,7 @@ class WebsiteEventTrackController(http.Controller):
         }
         return request.render("website_event_track.tracks", values)
 
-    @http.route(['''/event/<model("event.event", "[('show_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
+    @http.route(['''/event/<model("event.event", "[('website_track_proposal','=',1)]"):event>/track_proposal'''], type='http', auth="public", website=True)
     def event_track_proposal(self, event, **post):
         return request.render("website_event_track.event_track_proposal", {'event': event})
 

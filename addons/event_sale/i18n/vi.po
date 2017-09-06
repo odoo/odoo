@@ -1,28 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# fanha99 <fanha99@hotmail.com>, 2016
-# Duy Pham <phamduy1812@gmail.com>, 2016
-# Phạm Lân <phamquanglan@gmail.com>, 2016
-# son dang <son.dang@doda100.com>, 2016
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2016
-# Tuan Tran <tmtuan.projects@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Tuan Tran <tmtuan.projects@gmail.com>, 2017\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-12-29 08:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
+"vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:170
+#, python-format
+msgid " with ticket %s"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -31,13 +31,14 @@ msgstr "Áp dụng"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
 msgid "Asset Type"
-msgstr ""
+msgstr "Loại sự kiện"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 msgid "Attendee"
-msgstr "Người tham dự"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
@@ -86,7 +87,12 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo vào"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -99,7 +105,6 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -131,22 +136,16 @@ msgid "Event"
 msgstr "Sự kiện"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
-msgid "Event Name"
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
 msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
-msgid "Event Registration"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
-msgid "Event Registrations"
+msgid "Event Subscription"
 msgstr ""
 
 #. module: event_sale
@@ -164,9 +163,9 @@ msgid "Event Tickets"
 msgstr ""
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
-msgid "Event's Ticket"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
+msgid "Event Type"
+msgstr "Loại sự kiện"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -203,7 +202,7 @@ msgstr "Sửa lần cuối vào"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Last Updated by"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
@@ -229,13 +228,13 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:107
+#: code:addons/event_sale/models/event.py:131
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:129
+#: code:addons/event_sale/models/event.py:153
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr ""
@@ -272,11 +271,6 @@ msgid "Price Reduce"
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
-msgid "Price Reduce Tax inc"
-msgstr ""
-
-#. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_product_id
 msgid "Product"
@@ -288,9 +282,7 @@ msgid "Product Template"
 msgstr "Mẫu sản phẩm"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:19
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
-#, python-format
 msgid "Registration"
 msgstr ""
 
@@ -341,6 +333,14 @@ msgid "Seats used"
 msgstr ""
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
+#: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
+msgid ""
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+
+#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
 msgstr "Bỏ qua"
@@ -359,9 +359,23 @@ msgid "Standard"
 msgstr "Standard"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:21
+#, python-format
+msgid "Subscription"
+msgstr "Subscription"
+
+#. module: event_sale
 #: model:product.product,name:event_sale.event_3_product
 #: model:product.template,name:event_sale.event_3_product_product_template
 msgid "Technical Training"
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:168
+#, python-format
+msgid ""
+"The registration has been created for event %(event_name)s%(ticket)s from "
+"sale order %(order)s"
 msgstr ""
 
 #. module: event_sale
@@ -373,6 +387,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
+#: model:ir.model.fields,field_description:event_sale.field_product_template_event_type_id
+msgid "Type of Event"
 msgstr ""
 
 #. module: event_sale
@@ -390,6 +410,11 @@ msgstr "Không giới hạn"
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
 #: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
+msgid "event_ok"
 msgstr ""
 
 #. module: event_sale

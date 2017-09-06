@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
-        <menuitem name="Blog" id="menu_website_blog_root" sequence="20" parent="website.menu_website_configuration"/>
+        <menuitem name="Blog"
+            id="menu_website_blog_root"
+            sequence="20"
+            parent="website.menu_website_configuration"
+            groups="website.group_website_designer"/>
 
         <!-- Blog views -->
         <record id="view_blog_blog_list" model="ir.ui.view">
@@ -61,12 +65,12 @@
                 <form string="Blog Post">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                             <button class="oe_stat_button" name="website_publish_button"
                                 type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
+                            </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
                         <group>
@@ -77,7 +81,7 @@
                         </group>
                         <group string="Publishing Options">
                             <field name="author_id"/>
-                            <field name="create_date"/>
+                            <field name="create_date" groups="base.group_no_one"/>
                             <field name="post_date"/>
                             <field name="write_uid"/>
                             <field name="write_date"/>

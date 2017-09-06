@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
-    """Add several date fields to Sale Orders, computed or user-entered"""
+    """Add several date fields to Sales Orders, computed or user-entered"""
     _inherit = 'sale.order'
 
     commitment_date = fields.Datetime(compute='_compute_commitment_date', string='Commitment Date', store=True,

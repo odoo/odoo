@@ -3,25 +3,12 @@
 
 Index: addons/openacademy/__manifest__.py
 ===================================================================
---- addons.orig/openacademy/__manifest__.py 2014-08-26 17:26:21.535783052 +0200
-+++ addons/openacademy/__manifest__.py  2014-08-26 17:26:21.531783052 +0200
-@@ -21,7 +21,7 @@
-     'version': '0.1',
-
-     # any module necessary for this one to work correctly
--    'depends': ['base'],
-+    'depends': ['base', 'report'],
-
-     # always loaded
-     'data': [
-Index: addons/openacademy/__manifest__.py
-===================================================================
 --- addons.orig/openacademy/__manifest__.py	2014-08-29 08:39:43.975536806 +0200
 +++ addons/openacademy/__manifest__.py	2014-08-29 08:39:52.000000000 +0200
-@@ -31,6 +31,7 @@
+@@ -30,6 +30,7 @@
+         'templates.xml',
          'views/openacademy.xml',
          'views/partner.xml',
-         'views/session_workflow.xml',
 +        'reports.xml',
      ],
      # only loaded in demonstration mode
@@ -32,7 +19,7 @@ Index: addons/openacademy/reports.xml
 +++ addons/openacademy/reports.xml	2014-08-29 08:41:12.663540061 +0200
 @@ -0,0 +1,30 @@
 +<odoo>
-+<data>
++
 +    <report
 +        id="report_session"
 +        model="openacademy.session"
@@ -59,5 +46,5 @@ Index: addons/openacademy/reports.xml
 +            </t>
 +        </t>
 +    </template>
-+</data>
++
 +</odoo>
