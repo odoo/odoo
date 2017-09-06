@@ -1,5 +1,3 @@
-@dashboard-bg-color: white;
-
 .o_kanban_view.o_kanban_dashboard.o_account_kanban {
 
     &:not(.o_kanban_nocontent) .o_account_dashboard_header{
@@ -8,7 +6,13 @@
 
     .o_account_dashboard_header {
         .o-flex(1, 0, 100%);
-        background-color: @dashboard-bg-color;
+        background-color: @odoo-view-background-color;
+
+        h4 {
+            font-size: @font-size-base;
+            font-weight: 500;
+        }
+
         .fa-gift {
             color: #eeeeee;
             &:hover {
@@ -17,12 +21,15 @@
         }
 
         .o_arrow_button.btn-default {
-            color: @odoo-brand-optional;
+            color: @gray-dark;
+
             &.o_action_done {
-                color: grey;
-            }
-            &:hover {
-                color: white;
+                color: @text-muted;
+                pointer-events: none;
+
+                .fa-check {
+                    color: @brand-success;
+                }
             }
         }
     }
