@@ -414,6 +414,8 @@ class Lead(models.Model):
             'default_partner_ids': partner_ids,
             'default_team_id': self.team_id.id,
             'default_name': self.name,
+            'default_res_id': self.id,
+            'default_res_model_id': self.env['ir.model'].search([('model', '=', self._name)], limit=1).id
         }
         return action
 
