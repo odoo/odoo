@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_editor.timezone">
+        <select class="form-control">
+            <t t-foreach="timezones" t-as="tmzone">
+                <option t-att-value="tmzone"><t t-esc="tmzone"/></option>
+            </t>
+        </select>
+    </t>
+</templates>
