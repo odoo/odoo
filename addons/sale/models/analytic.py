@@ -100,17 +100,32 @@ class AccountAnalyticLine(models.Model):
         }
 
     @api.multi
-    def _sale_determine_order_line(self):
-        """ Automatically set the SO line on the analytic line, for the expense/vendor bills flow. It retrives
-            an existing line, or create a new one (upselling expenses).
-        """
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.account_id and aal.product_id and aal.product_id.expense_policy != 'no'):
-            # determine SO : first SO open linked to AA
+    def _sale_determine_order(self):
+        mapping = {}
+        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
             sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id), ('state', '=', 'sale')], limit=1)
             if not sale_order:
                 sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id)], limit=1)
             if not sale_order:
                 continue
+            mapping[analytic_line.id] = sale_order
+        return mapping
+
+    @api.multi
+    def _sale_determine_order_line(self):
+        """ Automatically set the SO line on the analytic line, for the expense/vendor bills flow. It retrives
+            an existing line, or create a new one (upselling expenses).
+        """
+        # determine SO : first SO open linked to AA
+        sale_order_map = self._sale_determine_order()
+        # determine so line
+        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+            sale_order = sale_order_map.get(analytic_line.id)
+            if not sale_order:
+                continue
+
+            if sale_order.state != 'sale':
+                raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
 
             price = analytic_line._sale_get_invoice_price(sale_order)
             so_line = self.env['sale.order.line'].search([
@@ -124,9 +139,8 @@ class AccountAnalyticLine(models.Model):
                 if sale_order.state != 'sale':
                     raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
                 so_line_values = analytic_line._sale_prepare_sale_order_line_values(sale_order, price)
-                if so_line_values:
-                    so_line = self.env['sale.order.line'].create(so_line_values)
-                    so_line._compute_tax_id()
+                so_line = self.env['sale.order.line'].create(so_line_values)
+                so_line._compute_tax_id()
 
             if so_line:  # if so line found or created, then update AAL (this will trigger the recomputation of qty delivered on SO line)
                 analytic_line.write({'so_line': so_line.id})
