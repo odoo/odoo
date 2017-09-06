@@ -180,11 +180,25 @@
         }
 
         .o_kanban_card_header + .container.o_kanban_card_content {
+            .o-flex(1, 0, auto);
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+            .o-justify-content(space-between);
             margin-top: @o-kanban-dashboard-vpadding * 2;
             padding-right: 0;
             padding-left: 0;
 
+            &::before, &::after {
+                content: normal; // so that space-between works
+            }
+
+            a {
+                position: relative;
+                .o-text-overflow(inline-block);
+            }
+
             .o_kanban_primary_bottom {
+                margin-top: @o-kanban-dashboard-vpadding;
                 margin-bottom: -@o-kanban-dashboard-vpadding;
 
                 &.bottom_block {
