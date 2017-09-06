@@ -227,6 +227,7 @@ class BlogPost(models.Model):
             'type': 'ir.actions.act_url',
             'url': self.url,
             'target': 'self',
+            'target_type': 'public',
             'res_id': self.id,
         }
 

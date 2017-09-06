@@ -306,7 +306,7 @@ class WebRequest(object):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
         # otherwise "no active exception to reraise"
-        raise exception
+        raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -1420,7 +1420,8 @@ class Root(object):
         #   (the one using the cookie). That is a special feature of the Session Javascript class.
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
-            response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
+            response.set_cookie(
+                'session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60, httponly=True)
 
         return response
 

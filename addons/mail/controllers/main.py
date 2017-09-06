@@ -76,7 +76,10 @@ class MailController(http.Controller):
                 record_action = record_sudo.get_access_action(access_uid=uid)
         else:
             record_action = record_sudo.get_access_action()
+            if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
+                return cls._redirect_to_messaging()
 
+        record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
             return werkzeug.utils.redirect(record_action['url'])

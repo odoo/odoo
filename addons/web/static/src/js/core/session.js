@@ -308,11 +308,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             }).always(function () {
                 self.avoid_recursion = false;
             });
-        } else {
-            // normal use case, just use the cookie
-            self.session_id = utils.get_cookie("session_id");
-            return $.when();
         }
+        return $.when();
     },
     /**
      * Executes an RPC call, registering the provided callbacks.

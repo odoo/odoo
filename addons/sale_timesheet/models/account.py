@@ -26,8 +26,8 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, values):
-        # prevent to update invoiced timesheets if product_id is not of type order
-        if self.so_line.product_id.invoice_policy != "order" and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
+        # prevent to update invoiced timesheets if one line is of type delivery
+        if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
             if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets.'))
 
@@ -123,7 +123,9 @@ class AccountAnalyticLine(models.Model):
                 revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
                 billable_type = 'billable_time'
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.track_service == 'task':
-                quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
+                quantity_hour = unit_amount
+                if so_line.product_uom.category_id == timesheet_uom.category_id:
+                    quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
                 # compute the total revenue the SO since we are in fixed price
                 total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
                 # compute the total revenue already existing (without the current timesheet line)

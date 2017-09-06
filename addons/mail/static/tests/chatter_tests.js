@@ -1150,5 +1150,65 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     $('.modal-footer .btn-primary').click();
 });
 
+QUnit.test('fieldmany2many tags email (edition)', function (assert) {
+    assert.expect(15);
+
+    this.data.partner.records[0].timmy = [12];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        res_id: 1,
+        arch:'<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="display_name"/>' +
+                    '<field name="timmy" widget="many2many_tags_email"/>' +
+                '</sheet>' +
+            '</form>',
+        viewOptions: {
+            mode: 'edit',
+        },
+        mockRPC: function (route, args) {
+            if (args.method ==='read' && args.model === 'partner_type') {
+                assert.step(args.args[0]);
+                assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner_type,false,form': '<form string="Types"><field name="display_name"/><field name="email"/></form>',
+        },
+    });
+
+    assert.verifySteps([[12]]);
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_10').length, 1,
+        "should contain one tag");
+
+    // add an other existing tag
+    var $input = form.$('.o_field_many2manytags input');
+    $input.click(); // opens the dropdown
+    $input.autocomplete('widget').find('li:first').click(); // add 'silver'
+
+    assert.strictEqual($('.modal-body.o_act_window').length, 1,
+        "there should be one modal opened to edit the empty email");
+    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
+        "the opened modal should be a form view dialog with the partner_type 14");
+    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+        "there should be an email field in the modal");
+
+    // set the email and save the modal (will rerender the form view)
+    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('.modal-footer .btn-primary').click();
+
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_10').length, 2,
+        "should contain the second tag");
+    // should have read [14] three times: when opening the dropdown, when opening the modal, and
+    // after the save
+    assert.verifySteps([[12], [14], [14], [14]]);
+
+    form.destroy();
+});
+
 });
 });

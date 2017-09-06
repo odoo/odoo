@@ -446,6 +446,7 @@ class Slide(models.Model):
                 'type': 'ir.actions.act_url',
                 'url': '%s' % self.website_url,
                 'target': 'self',
+                'target_type': 'public',
                 'res_id': self.id,
             }
         return super(Slide, self).get_access_action(access_uid)

@@ -337,7 +337,6 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (element.type === 'record') {
-
             var data = _.extend({}, element.data, element._changes);
             var relDataPoint;
             for (var fieldName in data) {
@@ -412,16 +411,46 @@ var BasicModel = AbstractModel.extend({
         }
 
         // here, type === 'list'
-        // apply potential changes (only for x2many lists)
-        element = this._applyX2ManyOperations(element);
-        var listData = _.map(element.data, function (elemID) {
-            return self.get(elemID, options);
-        });
+        // apply potential changes (only for x2many lists):
+        // for list having the flag _keepChangesUnsorted set to true (typically,
+        // editable lists), we sort before apply changes by default (to keep the
+        // changes unsorted, i.e. the edited line at the same place). However, if
+        // the user forces a sort, all changes done so far are sorted (this is the
+        // purpose of the _keepChangesUnsortedCount key), and changes done later
+        // on won't be sorted.
+        var count;
+        if (element._keepChangesUnsorted) {
+            // only apply a subset (by default 0) of changes before sorting
+            count = element._keepChangesUnsortedCount || 0;
+            element = this._applyX2ManyOperations(element, {to: count, position: 'bottom'});
+        } else {
+            // apply all changes before sorting
+            element = this._applyX2ManyOperations(element, {position: 'bottom'});
+        }
+        this._sortList(element);
+        if (element._keepChangesUnsorted) {
+            // apply the remaining changes after the sort
+            element = this._applyX2ManyOperations(element, {from: count, position: 'bottom'});
+        }
+        if (element._changes) {
+            _.each(element._changes, function (change) {
+                if (change.operation === 'ADD' && change.isNew) {
+                    element.data = _.without(element.data, change.id);
+                    if (change.position === 'top') {
+                        element.data.unshift(change.id);
+                    } else {
+                        element.data.push(change.id);
+                    }
+                }
+            });
+        }
         var list = {
             aggregateValues: _.extend({}, element.aggregateValues),
             context: _.extend({}, element.context),
             count: element.count,
-            data: listData,
+            data: _.map(element.data, function (elemID) {
+                return self.get(elemID, options);
+            }),
             domain: element.domain.slice(0),
             fields: element.fields,
             getContext: element.getContext,
@@ -435,7 +464,7 @@ var BasicModel = AbstractModel.extend({
             offset: element.offset,
             orderedBy: element.orderedBy,
             res_id: element.res_id,
-            res_ids: element.res_ids,
+            res_ids: element.res_ids.slice(0),
             type: 'list',
             value: element.value,
             viewType: element.viewType,
@@ -443,7 +472,6 @@ var BasicModel = AbstractModel.extend({
         if (element.fieldsInfo) {
             list.fieldsInfo = element.fieldsInfo;
         }
-        this._sortList(list);
         return list;
     },
     /**
@@ -685,6 +713,10 @@ var BasicModel = AbstractModel.extend({
             if (!options.keepChanges) {
                 this.discardChanges(id, {rollback: false});
             }
+        } else if (element._changes) {
+            _.each(element._changes, function (change) {
+                delete change.isNew;
+            });
         }
 
         if (options.context !== undefined) {
@@ -877,8 +909,15 @@ var BasicModel = AbstractModel.extend({
         var list = this.localData[list_id];
         if (list.type === 'record') {
             return;
+        } else if (list._changes) {
+            _.each(list._changes, function (change) {
+                delete change.isNew;
+            });
         }
-        list.offset = 0;
+        // the user manually selected a sort order, so we sort the list with all
+        // the changes he made so far, even if it is editable, however, changes
+        // he'll made after won't be sorted if the list is editable
+        list._keepChangesUnsortedCount = list._changes ? list._changes.length : 0;
         if (list.orderedBy.length === 0) {
             list.orderedBy.push({name: fieldName, asc: true});
         } else if (list.orderedBy[0].name === fieldName){
@@ -973,7 +1012,7 @@ var BasicModel = AbstractModel.extend({
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
             var position = options && options.position || 'top';
-            list._changes.push({operation: 'ADD', id: id, position: position});
+            list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
             var record = self.localData[id];
             list._cache[record.res_id] = id;
             return id;
@@ -1368,10 +1407,16 @@ var BasicModel = AbstractModel.extend({
                 // no 'ADD' operation for that dataPoint, as it would mean
                 // that the record wasn't in the relation yet
                 var idsToRemove = command.ids;
-                list._changes = _.reject(list._changes, function (change) {
+                list._changes = _.reject(list._changes, function (change, index) {
                     var idInCommands = _.contains(command.ids, change.id);
                     if (idInCommands && change.operation === 'ADD') {
                         idsToRemove = _.without(idsToRemove, change.id);
+                    }
+                    // decrement _keepChangesUnsortedCount if we filter out an
+                    // operation whose index is smaller than the count (as there
+                    // will be one operation less to apply before sorting)
+                    if (idInCommands && index < list._keepChangesUnsortedCount) {
+                        list._keepChangesUnsortedCount--;
                     }
                     return idInCommands;
                 });
@@ -1425,19 +1470,28 @@ var BasicModel = AbstractModel.extend({
      *
      * @private
      * @param {Object} dataPoint of type list
+     * @param {Object} [options] mostly contains the range of operations to apply
+     * @param {Object} [options.from=0] the index of the first operation to apply
+     * @param {Object} [options.to=length] the index of the last operation to apply
+     * @param {Object} [options.position] if set, each new operation will be set
+     *   accordingly at the top or the bottom of the list
      * @returns {Object} element of type list in which the commands have been
      *   applied
      */
-    _applyX2ManyOperations: function (list) {
+    _applyX2ManyOperations: function (list, options) {
         if (!list.static) {
             // this function only applies on x2many lists
             return list;
         }
         var self = this;
         list = _.extend({}, list);
-        list.data = list.data.slice(0);
         list.res_ids = list.res_ids.slice(0);
-        _.each(list._changes, function (change) {
+        var changes = list._changes || [];
+        if (options) {
+            var to = options.to === 0 ? 0 : (options.to || changes.length);
+            changes = changes.slice(options.from || 0, to);
+        }
+        _.each(changes, function (change) {
             var relRecord;
             if (change.id) {
                 relRecord = self.localData[change.id];
@@ -1446,7 +1500,7 @@ var BasicModel = AbstractModel.extend({
                 case 'ADD':
                     list.count++;
                     var resID = relRecord ? relRecord.res_id : change.resID;
-                    if (change.position === 'top') {
+                    if (change.position === 'top' && (options ? options.position !== 'bottom' : true)) {
                         list.res_ids.unshift(resID);
                     } else {
                         list.res_ids.push(resID);
@@ -2150,6 +2204,7 @@ var BasicModel = AbstractModel.extend({
                     rawContext: rawContext,
                     relationField: field.relation_field,
                     viewType: view ? view.type : fieldInfo.viewType,
+                    _keepChangesUnsorted: fieldInfo.keepChangesUnsorted,
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
@@ -2836,6 +2891,7 @@ var BasicModel = AbstractModel.extend({
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
             orderedBy: params.orderedBy || [],
+            _keepChangesUnsorted: params._keepChangesUnsorted,
             parentID: params.parentID,
             rawContext: params.rawContext,
             ref: params.ref || res_id,
@@ -3370,7 +3426,9 @@ var BasicModel = AbstractModel.extend({
                         change.id = dataPoint.id;
                     }
                 });
-                list.data.push(dataPoint.id);
+                if (_.contains(list.res_ids, id)) {
+                    list.data.push(dataPoint.id);
+                }
             });
             return list;
         });
@@ -3461,20 +3519,32 @@ var BasicModel = AbstractModel.extend({
     },
     /**
      * Do a in-memory sort of a list resource data points. This method assumes
-     * that the list data has already been fetched, and that the changes have
-     * been applied. Its intended use is for static datasets, such as a one2many
-     * in a form view.
+     * that the list data has already been fetched, and that the changes that
+     * need to be sorted have already been applied. Its intended use is for
+     * static datasets, such as a one2many in a form view.
      *
-     * @param {Object} list list dataPoint on which changes have been applied
+     * @param {Object} list list dataPoint on which (some) changes might have
+     *   been applied; it is a copy of an internal dataPoint, not the result of
+     *   get
      */
     _sortList: function (list) {
+        if (!list.static) {
+            // only sort x2many lists
+            return;
+        }
+
         if (list.orderedBy.length) {
+            var self = this;
+
             // sort records according to ordered_by[0]
             var order = list.orderedBy[0];
             var data = list.data;
-            data.sort(function (r1, r2) {
-                var data1 = r1.data;
-                var data2 = r2.data;
+            var res_ids = list.res_ids;
+            data.sort(function (record1ID, record2ID) {
+                var r1 = self.localData[record1ID];
+                var r2 = self.localData[record2ID];
+                var data1 = _.extend({}, r1.data, r1._changes);
+                var data2 = _.extend({}, r2.data, r2._changes);
                 if (data1[order.name] < data2[order.name]) {
                     return order.asc ? -1 : 1;
                 }
@@ -3483,6 +3553,15 @@ var BasicModel = AbstractModel.extend({
                 }
                 return 0;
             });
+
+            // sort res_ids accordingly (only the current range of ids, the one
+            // mapping the data, needs to be sorted)
+            var preRangeIDs = res_ids.slice(0, list.offset); // resIDs before the range
+            var postRangeIDs = res_ids.slice(list.offset + list.limit); // resIDs after the range
+            var rangeIDs = _.map(data, function (dataPointID) {
+                return self.localData[dataPointID].res_id;
+            });
+            list.res_ids = preRangeIDs.concat(rangeIDs).concat(postRangeIDs);
         }
     },
     /**

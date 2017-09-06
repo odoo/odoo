@@ -252,6 +252,24 @@ return AbstractRenderer.extend({
         this.color_map[key] = index;
         return index;
     },
+    /**
+     * @override
+     */
+    getLocalState: function () {
+        var $fcScroller = this.$calendar.find('.fc-scroller');
+        return {
+            scrollPosition: $fcScroller.scrollTop(),
+        };
+    },
+    /**
+     * @override
+     */
+    setLocalState: function (localState) {
+        if (localState.scrollPosition) {
+            var $fcScroller = this.$calendar.find('.fc-scroller');
+            $fcScroller.scrollTop(localState.scrollPosition);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -376,6 +394,7 @@ return AbstractRenderer.extend({
         var $calendar = this.$calendar;
         var $fc_view = $calendar.find('.fc-view');
         var scrollPosition = $fc_view.scrollLeft();
+        var scrollTop = this.$calendar.find('.fc-scroller').scrollTop();
 
         $fc_view.scrollLeft(0);
         $calendar.fullCalendar('unselect');
@@ -420,7 +439,11 @@ return AbstractRenderer.extend({
 
         this._renderFilters();
         this.$calendar.appendTo('body');
-        this.$calendar.fullCalendar('render');
+        if (scrollTop) {
+            this.$calendar.fullCalendar('reinitView');
+        } else {
+            this.$calendar.fullCalendar('render');
+        }
         this._renderEvents();
         this.$calendar.prependTo(this.$('.o_calendar_view'));
 
