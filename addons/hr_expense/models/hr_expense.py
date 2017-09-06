@@ -140,6 +140,7 @@ class HrExpense(models.Model):
             'product_uom_id': line.get('uom_id'),
             'analytic_account_id': line.get('analytic_account_id'),
             'payment_id': line.get('payment_id'),
+            'expense_id': line.get('expense_id'),
         }
 
     @api.multi
@@ -236,6 +237,7 @@ class HrExpense(models.Model):
                     'amount_currency': diff_currency_p and total_currency or False,
                     'currency_id': diff_currency_p and expense.currency_id.id or False,
                     'payment_id': payment_id,
+                    'expense_id': expense.id,
                     })
 
             #convert eml into an osv-valid format
@@ -274,6 +276,7 @@ class HrExpense(models.Model):
             'product_id': self.product_id.id,
             'uom_id': self.product_uom_id.id,
             'analytic_account_id': self.analytic_account_id.id,
+            'expense_id': self.id,
         }
         return move_line
 
@@ -297,6 +300,7 @@ class HrExpense(models.Model):
                     'price': tax['amount'],
                     'account_id': tax['account_id'] or move_line['account_id'],
                     'tax_line_id': tax['id'],
+                    'expense_id': expense.id,
                 })
         return account_move
 
