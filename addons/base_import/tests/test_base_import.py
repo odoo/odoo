@@ -152,7 +152,7 @@ class TestMatchHeadersMultiple(TransactionCase):
 
     def test_noheaders(self):
         self.assertEqual(
-            self.env['base_import.import']._match_headers([], [], {}), (None, None)
+            self.env['base_import.import']._match_headers([], [], {}), ([], {})
         )
 
     def test_nomatch(self):
