@@ -354,4 +354,21 @@
         </div>
     </template>
 
+    <!--
+        Container signature template for frontend
+        :partner-name string: customer name that signs
+        :res-model string: model of the signed document
+        :res-id stringied int: id of the signed document
+        :call-url string: url to call once clicking on the sign button
+        :access-token string: access token for customer portal
+    -->
+
+    <template id="portal_signature" name="Ask Signature">
+        <div t-att-class="'o_portal_signature_form'"
+            t-att-data-partner-name="partner_name"
+            t-att-data-res-model="object._name"
+            t-att-data-res-id="object.id"
+            t-att-data-call-url="callUrl"
+            t-att-data-access-token="accessToken"/>
+    </template>
 </odoo>

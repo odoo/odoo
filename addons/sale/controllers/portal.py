@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
-
+from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 
 
@@ -54,8 +56,19 @@ class CustomerPortal(CustomerPortal):
         }
         if access_token:
             values['no_breadcrumbs'] = True
+            values['access_token'] = access_token
+        values['portal_confirmation'] = request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
+
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+
         history = request.session.get('my_orders_history', [])
         values.update(get_records_pager(history, order))
+
         return values
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
@@ -168,3 +181,48 @@ class CustomerPortal(CustomerPortal):
 
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
         return request.render("sale.portal_order_page", values)
+
+    @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
+    def portal_order_report(self, order_id, access_token=None, **kw):
+        try:
+            order_sudo = self._order_check_access(order_id, access_token)
+        except AccessError:
+            return request.redirect('/my')
+
+        # print report as sudo, since it require access to taxes, payment term, ... and portal
+        # does not have those access rights.
+        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(pdf)),
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
+    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
+    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
+        if request.env['ir.config_parameter'].sudo().get_param(
+                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
+            return False
+        try:
+            order_sudo = self._order_check_access(res_id, access_token=access_token)
+        except AccessError:
+            return {
+                'error': _('Invalid order')
+            }
+
+        if order_sudo.state != 'sent':
+            return {
+                'error': _('Order is not in a state requiring customer validation.')
+            }
+        order_sudo.action_confirm()
+
+        _message_post_helper(
+            res_model='sale.order',
+            res_id=order_sudo.id,
+            message=_('Order signed by %s') % (partner_name,),
+            attachments=[('signature.png', base64.b64decode(signature))] if signature else [],
+            **({'token': access_token, 'token_field': 'access_token'} if access_token else {}))
+        return {
+            'success': _('Your Order has been confirmed.'),
+            'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
+        }

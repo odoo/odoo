@@ -45,6 +45,13 @@ class PortalAccount(CustomerPortal):
         }
         if access_token:
             values['no_breadcrumbs'] = True
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+
         return values
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)

@@ -131,28 +131,41 @@
     <template id="portal_order_page" name="Sales Order">
       <t t-call="portal.portal_layout">
         <t t-set="sales_order" t-value="order"/> <!-- rename to ensure breadcrumb compatibility (differentiate with purchase orders) -->
+        <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
+        <t t-set="invoices_amount" t-value="sum(i.amount_total for i in invoices)"/>
         <div id="optional_placeholder"></div>
         <div class="container">
-
           <div class="panel panel-default">
             <div class="panel-heading">
               <div class="row">
-                <div class="col-md-12">
-                  <h4>
-                    <t t-call='portal.record_pager'/>
-                    <t t-if="order.state == 'sent'">
-                      Quotation
+                <div class="col-md-6">
+                    <h4>
+                        <t t-call='portal.record_pager'/>
+                        <t t-if="order.state == 'sent'">Quotation</t>
+                        <t t-if="order.state != 'sent'">Order</t>
+                        <span t-esc="order.name"/>
+                    </h4>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_order_actions">
+                    <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
+                        <a class="btn btn-primary ml8 pull-right" href="#portal_sign">
+                            <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
+                        </a>
                     </t>
-                    <t t-if="order.state != 'sent'">
-                      Order
+                    <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
+                        <a class="btn btn-success ml8 pull-right" disabled="disabled">
+                            <i class="fa fa-check-circle"/> Signed
+                        </a>
                     </t>
-                    <span t-esc="order.name"/>
-                  </h4>
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right" title="Download">
+                        <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                    </a>
                 </div>
               </div>
             </div>
             <div class="panel-body">
-              <!-- <hr/> -->
+              <t t-if="error or warning" t-call="sale.portal_order_error"/>
+              <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
               </div>
@@ -164,14 +177,13 @@
                   <div>
                     <address t-field="order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                   </div>
-                  <t t-set="invoices" t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
                   <t t-if="invoices">
                     <div>
                       <strong>Invoices</strong>
                     </div>
                     <div>
                       <t t-foreach="invoices" t-as="i">
-                        <t t-set="report_url" t-value="'/my/invoices/pdf/%s' % i.id"/>
+                        <t t-set="report_url" t-value="'/my/invoices/pdf/%s?%s' % (i.id, 'access_token=%s' % i.access_token if access_token else '')"/>
                         <div>
                           <a t-att-href="report_url"><span class="fa fa-download"/></a>
                           <a t-att-href="report_url"><span t-esc="i.number"/></a>
@@ -276,10 +288,41 @@
                 </div>
               </div>
             </div>
+            <div class="panel-body">
+                <div class="row" t-if="order.state == 'sent' and portal_confirmation == 'sign'" id="portal_sign">
+                    <div class="col-md-offset-3 col-md-6">
+                        <h4>Accept order</h4>
+                        <t t-call="portal.portal_signature">
+                            <t t-set="object" t-value="order"/>
+                            <t t-set="partner_name" t-value="order.partner_id.name"/>
+                            <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
+                            <t t-set="accessToken" t-value="order.access_token"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
           </div>
         </div>
         <div class="oe_structure mb32"/>
       </t>
     </template>
 
+    <template id="portal_order_error" name="Order error/warning display">
+        <div class="row">
+            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_order_success" name="Order success display">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
 </odoo>

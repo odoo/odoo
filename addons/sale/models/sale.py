@@ -572,21 +572,39 @@ class SaleOrder(models.Model):
         portal users or if force_website=True in the context. """
         # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
-        if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
-            return super(SaleOrder, self).get_access_action(access_uid)
 
-        user = self.env['res.users'].sudo().browse(access_uid) if access_uid else self.env.user
-        if user.share or self.env.context.get('force_website'):
-            return {
-                'type': 'ir.actions.act_url',
-                'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
-                'target': 'self',
-                'res_id': self.id,
-            }
+        if self.state != 'cancel' and (self.state != 'draft' or self.env.context.get('mark_so_as_sent')):
+            user, record = self.env.user, self
+            if access_uid:
+                user = self.env['res.users'].sudo().browse(access_uid)
+                record = self.sudo(user)
+            if user.share or self.env.context.get('force_website'):
+                try:
+                    record.check_access_rule('read')
+                except AccessError:
+                    if self.env.context.get('force_website'):
+                        return {
+                            'type': 'ir.actions.act_url',
+                            'url': '/my/orders/%s' % self.id,
+                            'target': 'self',
+                            'res_id': self.id,
+                        }
+                    else:
+                        pass
+                else:
+                    return {
+                        'type': 'ir.actions.act_url',
+                        'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
+                        'target': 'self',
+                        'res_id': self.id,
+                    }
         return super(SaleOrder, self).get_access_action(access_uid)
 
     def get_mail_url(self):
         return self.get_share_url()
+
+    def get_portal_confirmation_action(self):
+        return self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
 
     @api.multi
     def _notification_recipients(self, message, groups):
