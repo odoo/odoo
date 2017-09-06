@@ -26,17 +26,16 @@ class Company(models.Model):
     def _create_leave_project_task(self):
         for company in self:
             if not company.leave_timesheet_project_id:
-                project = self.env['project.project'].sudo().create({
+                project = self.env['project.project'].create({
                     'name': _('Internal Project'),
                     'allow_timesheets': True,
                     'active': False,
-                    'company_id': company.id,
                 })
                 company.write({
                     'leave_timesheet_project_id': project.id,
                 })
             if not company.leave_timesheet_task_id:
-                task = self.env['project.task'].sudo().create({
+                task = self.env['project.task'].create({
                     'name': _('Leaves'),
                     'project_id': company.leave_timesheet_project_id.id,
                     'active': False,
@@ -44,3 +43,5 @@ class Company(models.Model):
                 company.write({
                     'leave_timesheet_task_id': task.id,
                 })
+            # Multicompany record rule will restrict create and write for new company project so after creating new project write new company.
+            company.leave_timesheet_project_id.write({'company_id': company.id})
