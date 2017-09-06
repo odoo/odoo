@@ -28,7 +28,7 @@ BasicModel.include({
         var localID = (record._changes && fieldName in record._changes) ?
                         record._changes[fieldName] :
                         record.data[fieldName];
-        var list = this.localData[localID];
+        var list = this._applyX2ManyOperations(this.localData[localID]);
         var invalidPartnerIds = [];
         _.each(list.data, function (id) {
             var record = self.localData[id];

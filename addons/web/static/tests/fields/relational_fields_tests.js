@@ -1474,6 +1474,7 @@ QUnit.module('relational_fields', {
                 assert.strictEqual($('.modal').length, 1,
                     "should have one modal in body");
                 form.destroy();
+                relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
                 done();
             });
         });
@@ -5406,6 +5407,118 @@ QUnit.module('relational_fields', {
     });
 
 
+    QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
+        assert.expect(11);
+
+        this.data.partner.records[0].turtles = [];
+        for (var i = 0; i < 42; i++) {
+            var id = 100 + i;
+            this.data.turtle.records.push({id: id, turtle_foo: 'turtle' + (id-99)});
+            this.data.partner.records[0].turtles.push(id);
+        }
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles[42], [0, false, {turtle_foo: 'rainbow dash'}]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 41,
+            "should have 41 data rows on the current page");
+        assert.ok(form.$('tr.o_data_row').last().hasClass('o_selected_row'),
+            "last row should be selected");
+
+        form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 40,
+        "should have 40 data rows on the current page");
+
+        assert.verifySteps(['read', 'read', 'default_get', 'write', 'read', 'read']);
+        form.destroy();
+    });
+
+    QUnit.test('editing tabbed one2many (editable=top)', function (assert) {
+        assert.expect(14);
+
+        this.data.partner.records[0].turtles = [];
+        this.data.turtle.fields.turtle_foo.default = "default foo";
+        for (var i = 0; i < 42; i++) {
+            var id = 100 + i;
+            this.data.turtle.records.push({id: id, turtle_foo: 'turtle' + (id-99)});
+            this.data.partner.records[0].turtles.push(id);
+        }
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles[0], [0, false, {turtle_foo: 'rainbow dash'}])
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_pager_next').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 2,
+            "should have 2 data rows on the current page");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            "should have 3 data rows on the current page");
+        assert.ok(form.$('tr.o_data_row').first().hasClass('o_selected_row'),
+            "first row should be selected");
+
+        assert.strictEqual(form.$('tr.o_data_row input').val(), 'default foo',
+            "selected input should have correct string");
+
+        form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 40,
+            "should have 40 data rows on the current page");
+
+        assert.verifySteps(['read', 'read', 'read', 'default_get', 'write', 'read', 'read']);
+        form.destroy();
+    });
 
     QUnit.module('FieldMany2Many');
 

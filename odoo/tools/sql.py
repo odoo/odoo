@@ -23,14 +23,18 @@ _CONFDELTYPES = {
 
 def existing_tables(cr, tablenames):
     """ Return the names of existing tables among ``tablenames``. """
-    query = """ SELECT table_name FROM information_schema.tables
-                WHERE table_name IN %s AND table_schema != 'information_schema' """
+    query = """
+        SELECT relname
+          FROM pg_class
+         WHERE relname IN %s
+           AND relkind IN ('r', 'v', 'm')
+    """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
 
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s AND table_schema != 'information_schema'"
+    query = "SELECT 1 FROM pg_class WHERE relkind IN ('r', 'v', 'm') AND relname=%s"
     cr.execute(query, (tablename,))
     return cr.rowcount
 
