@@ -40,9 +40,13 @@ def _convert_nn_fr(val):
     if val < 20:
         return to_19_fr[val]
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens_fr)):
-        if dval + 10 > val:
-            if val % 10:
-                return dcap + '-' + to_19_fr[val % 10]
+        base = 10
+        if dval in [60, 80]:
+            base = 20
+        if dval + base > val:
+            if val % base:
+                bond = (val % base in [1, 11] and dval != 80) and '-et-' or '-'
+                return dcap + bond + to_19_fr[val % base]
             return dcap
 
 def _convert_nnn_fr(val):
@@ -55,7 +59,7 @@ def _convert_nnn_fr(val):
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
-        word = to_19_fr[rem] + ' Cent'
+        word = (rem > 1 and to_19_fr[rem] + ' cents') or 'Cent'
         if mod > 0:
             word += ' '
     if mod > 0:
@@ -110,7 +114,7 @@ def _convert_nn_nl(val):
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens_nl)):
         if dval + 10 > val:
             if val % 10:
-                return dcap + '-' + to_19_nl[val % 10]
+                return to_19_nl[val % 10] + '-en-' +  dcap
             return dcap
 
 def _convert_nnn_nl(val):
@@ -123,7 +127,7 @@ def _convert_nnn_nl(val):
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
-        word = to_19_nl[rem] + ' Honderd'
+        word = (rem > 1 and to_19_nl[rem] + 'honderd') or 'Honderd'
         if mod > 0:
             word += ' '
     if mod > 0:
