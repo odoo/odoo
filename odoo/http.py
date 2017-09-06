@@ -306,7 +306,7 @@ class WebRequest(object):
             odoo.tools.debugger.post_mortem(
                 odoo.tools.config, sys.exc_info())
         # otherwise "no active exception to reraise"
-        raise exception
+        raise pycompat.reraise(type(exception), exception, sys.exc_info()[2])
 
     def _call_function(self, *args, **kwargs):
         request = self
