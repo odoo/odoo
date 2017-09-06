@@ -477,6 +477,13 @@ var PosDB = core.Class.extend({
         }
         return orders;
     },
+    set_cashier: function(cashier) {
+        // Always update if the user is the same as before
+        this.save('cashier', cashier);
+    },
+    get_cashier: function() {
+        return this.load('cashier');
+    }
 });
 
 return PosDB;
