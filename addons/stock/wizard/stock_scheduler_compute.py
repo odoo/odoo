@@ -6,21 +6,17 @@
 #    - Order if the virtual stock of today is bellow the min of the defined order point
 #
 
-from odoo import api, models, tools, fields
+from odoo import api, models, tools
 
 import logging
 import threading
 
 _logger = logging.getLogger(__name__)
 
+
 class StockSchedulerCompute(models.TransientModel):
     _name = 'stock.scheduler.compute'
     _description = 'Run Scheduler Manually'
-
-    orderpoints_only = fields.Boolean('Only Compute Orderpoints', default=False, 
-                                      help="When this is checked, it will only calculate the reordering rules for this company. "
-                                           "When it is not checked, it will try to reserve stock where there is needed, it will try to "
-                                           "solve exception problems (because of routes e.g.) and it will ")
 
     def _procure_calculation_orderpoint(self):
         with api.Environment.manage():
@@ -38,15 +34,10 @@ class StockSchedulerCompute(models.TransientModel):
                 self._cr.close()
                 return {}
 
-            if self.orderpoints_only:
-                self.env['procurement.group']._procure_orderpoint_confirm(
-                    use_new_cursor=new_cr.dbname,
-                    company_id=self.env.user.company_id.id)
-            else:
-                for company in self.env.user.company_ids:
-                    self.env['procurement.group'].run_scheduler(
-                        use_new_cursor=self._cr.dbname, 
-                        company_id=company.id)
+            for company in self.env.user.company_ids:
+                self.env['procurement.group'].run_scheduler(
+                    use_new_cursor=self._cr.dbname,
+                    company_id=company.id)
             new_cr.close()
             return {}
 
