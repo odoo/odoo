@@ -453,7 +453,7 @@ class Import(models.TransientModel):
             :rtype: (None, None) | (list(str), dict(int: list(str)))
         """
         if not options.get('headers'):
-            return None, None
+            return [], {}
 
         headers = next(rows)
         return headers, {
