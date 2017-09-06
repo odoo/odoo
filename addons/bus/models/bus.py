@@ -128,6 +128,11 @@ class ImDispatch(object):
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
             notifications = env['bus.bus'].poll(channels, last, options)
+
+        # immediatly returns in peek mode
+        if options.get('peek'):
+            return dict(notifications=notifications, channels=channels)
+
         # or wait for future ones
         if not notifications:
             if not self.started:
