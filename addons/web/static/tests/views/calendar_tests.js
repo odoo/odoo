@@ -1257,6 +1257,37 @@ QUnit.module('Views', {
         calendar.destroy();
         $view.remove();
     });
+
+    QUnit.test('set event as all day when field is date', function (assert) {
+        assert.expect(1);
+
+        this.data.event.records[0].start_date = "2016-12-14";
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start_date" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+        assert.strictEqual(calendar.$('.fc-day-grid .fc-event-container').length, 1,
+            "should be one event in the all day row");
+        calendar.destroy();
+    });
 });
 
 });
