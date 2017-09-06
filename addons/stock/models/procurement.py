@@ -183,7 +183,7 @@ class ProcurementGroup(models.Model):
         rule = self._get_rule(product_id, location_id, values)
 
         if not rule:
-            raise UserError(_('No procurement rule found.'))
+            raise UserError(_('No procurement rule found. Please verify the configuration of your routes'))
 
         getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
         return True
