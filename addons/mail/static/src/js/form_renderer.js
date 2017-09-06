@@ -53,7 +53,9 @@ FormRenderer.include({
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
             if (this.mode === 'edit' && !this.state.data.id) {
                 // there is no chatter in create mode
-                return $('<div>');
+                var $div = $('<div>');
+                this._handleAttributes($div, node);
+                return $div;
             } else {
                 if (!this.chatter) {
                     this.chatter = new Chatter(this, this.state, this.mailFields, {
