@@ -6,9 +6,8 @@
         <field name="arch" type="xml">
             <form string="Parameters">
                 <p>
-                This will run the schedulers.  Which will try to reserve not available deliveries, 
-                try to see if it can solve any exceptions in the stock flow that might have been solved 
-                and will run the reordering rules. 
+                When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings
+                and verify if some reordering rules should be triggered.
                 </p>
                 <field name="orderpoints_only" groups="base.group_no_one"/>
                 <footer>
