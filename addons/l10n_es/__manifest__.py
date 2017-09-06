@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (c) 2008-2010 Zikzakmedia S.L. (http://zikzakmedia.com) All Rights Reserved.
-#                         Jordi Esteve <jesteve@zikzakmedia.com>
-# Copyright (c) 2012-2013, Grupo OPENTIA (<http://opentia.com>) Registered EU Trademark.
-#                         Dpto. Consultoría <consultoria@opentia.es>
-# Copyright (c) 2013 Serv. Tecnol. Avanzados (http://www.serviciosbaeza.com)
-#                    Pedro Manuel Baeza <pedro.baeza@serviciosbaeza.com>
+# List of contributors:
+# Jordi Esteve <jesteve@zikzakmedia.com>
+# Dpto. Consultoría Grupo Opentia <consultoria@opentia.es>
+# Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
+# Carlos Liébana <carlos.liebana@factorlibre.com>
+# Hugo Santos <hugo.santos@factorlibre.com>
+# Albert Cabedo <albert@gafic.com>
+# Olivier Colson <oco@odoo.com>
 
 {
     "name" : "Spain - Accounting (PGCE 2008)",
@@ -42,5 +44,6 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_data.yml',
+        'views/account_config_settings_views.xml',
     ],
 }

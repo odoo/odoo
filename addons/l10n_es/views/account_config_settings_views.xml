@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_es.account_settings_view_form" model="ir.ui.view">
+            <field name="name">l10n_es.account.config.settings.form</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.account_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='fiscal_localization_settings']" position="attributes">
+                    <attribute name="attrs">{}</attribute> <!-- To be able to switch between the three CoA, unhide the option in account's settings-->
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
