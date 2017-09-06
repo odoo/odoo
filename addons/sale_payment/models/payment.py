@@ -11,13 +11,8 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    # link with the sales order
     # YTI FIXME: The auto_join seems useless
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', auto_join=True)
-
-    # --------------------------------------------------
-    # Sale management
-    # --------------------------------------------------
 
     @api.model
     def form_feedback(self, data, acquirer_name):
@@ -38,29 +33,37 @@ class PaymentTransaction(models.Model):
 
         return res
 
+    # --------------------------------------------------
+    # Sale management
+    # --------------------------------------------------
+
     def _confirm_so(self):
-        for tx in self:
-            # check tx state, confirm the potential SO
-            if not tx.sale_order_id or tx.sale_order_id.state not in ['draft', 'sent']:
-                # _logger.warning('<%s> transaction incorrect sale order %s (ID %s, state %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id, tx.sale_order_id.state)
-                continue
-            if not float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0:
-                _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                continue
+        """ Check tx state, confirm the potential SO """
+        self.ensure_one()
+        if self.sale_order_id.state not in ['draft', 'sent', 'sale']:
+            _logger.warning('<%s> transaction STATE INCORRECT for order %s (ID %s, state %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id, self.sale_order_id.state)
+            return 'pay_sale_invalid_doc_state'
+        if not float_compare(self.amount, self.sale_order_id.amount_total, 2) == 0:
+            _logger.warning('<%s> transaction AMOUNT MISMATCH for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            return 'pay_sale_tx_amount'
 
-            if tx.state == 'authorized' and tx.acquirer_id.capture_manually:
-                _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                tx.sale_order_id.with_context(send_email=True).action_confirm()
+        if self.state == 'authorized' and self.acquirer_id.capture_manually:
+            _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            if self.sale_order_id.state in ('draft', 'sent'):
+                self.sale_order_id.with_context(send_email=True).action_confirm()
 
-            if tx.state == 'done':
-                _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                tx.sale_order_id.with_context(send_email=True).action_confirm()
-                tx._generate_and_pay_invoice()
-            elif tx.state not in ['cancel', 'error'] and tx.sale_order_id.state == 'draft':
-                _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                tx.sale_order_id.force_quotation_send()
-            else:
-                _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
+        if self.state == 'done':
+            _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s) and generating invoice', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            if self.sale_order_id.state in ('draft', 'sent'):
+                self.sale_order_id.with_context(send_email=True).action_confirm()
+            self._generate_and_pay_invoice()
+        elif self.state not in ['cancel', 'error'] and self.sale_order_id.state == 'draft':
+            _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            self.sale_order_id.force_quotation_send()
+        else:
+            _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            return 'pay_sale_tx_state'
+        return True
 
     def _generate_and_pay_invoice(self):
         self.sale_order_id._force_lines_to_invoice_policy_order()
@@ -104,31 +107,37 @@ class PaymentTransaction(models.Model):
             try:
                 s2s_result = self.s2s_do_transaction()
             except Exception as e:
-                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (self.id, str(e)))
-                return _("Payment transaction failed (Contact Administrator)")
+                _logger.warning(
+                    _("<%s> transaction (%s) failed: <%s>") %
+                    (self.acquirer_id.provider, self.id, str(e)))
+                return 'pay_sale_tx_fail'
 
             valid_state = 'authorized' if self.acquirer_id.capture_manually else 'done'
             if not s2s_result or self.state != valid_state:
-                return _("Payment transaction failed (%s)" % self.state_message)
+                _logger.warning(
+                    _("<%s> transaction (%s) invalid state: %s") %
+                    (self.acquirer_id.provider, self.id, self.state_message))
+                return 'pay_sale_tx_state'
+
             try:
-                # Auto-confirm SO if necessary
-                self._confirm_so()
-                return True
+                return self._confirm_so()
             except Exception as e:
-                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (self.id, str(e)))
-                return _("Payment transaction / SO Confirmation failed (Contact Administrator)")
-        return _('Tx missmatch')
+                _logger.warning(
+                    _("<%s> transaction (%s) order confirmation failed: <%s>") %
+                    (self.acquirer_id.provider, self.id, str(e)))
+                return 'pay_sale_tx_confirm'
+        return 'pay_sale_tx_token'
 
     def check_or_create_sale_tx(self, order, acquirer, payment_token=None, tx_type='form', add_tx_values=None, reset_draft=True):
         tx = self
-        # incorrect state or unexisting tx
-        if not self or self.state in ['error', 'cancel']:
+        if not tx:
+            tx = self.search([('reference', '=', order.name)], limit=1)
+
+        if tx.state in ['error', 'cancel']:  # filter incorrect states
             tx = False
-        # unmatching
-        if (self and acquirer and self.acquirer_id != acquirer) or (self and self.sale_order_id != order):
+        if (tx and tx.acquirer_id != acquirer) or (tx and tx.sale_order_id != order):  # filter unmatching
             tx = False
-        # new or distinct token
-        if tx and payment_token and tx.payment_token_id and payment_token != self.payment_token_id:
+        if tx and payment_token and tx.payment_token_id and payment_token != tx.payment_token_id:  # new or distinct token
             tx = False
 
         # still draft tx, no more info -> rewrite on tx or create a new one depending on parameter

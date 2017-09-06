@@ -80,23 +80,16 @@
                                     <span t-esc="invoice.number"/>
                                 </h4>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="action_buttons">
-                                <ul class="list-inline pull-right">
-                                    <li class="o_download_button">
-                                        <a target="_blank" t-att-href="'/my/invoices/pdf/%s' % invoice.id" title="Download">
-                                            <i class="fa fa-download fa-2x" aria-hidden="true"/>
-                                        </a>
-                                    </li>
-                                    <li class="o_print_button">
-                                        <a id="print_iframe" title="Print">
-                                            <i class="fa fa-print fa-2x" aria-hidden="true"/>
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
+                                <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="pull-right" title="Download">
+                                    <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
+                        <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                         <t t-call="account.portal_invoice_report"/>
                     </div>
                 </div>
@@ -107,22 +100,24 @@
 
     <template id="portal_invoice_report" name="Invoice Portal Report">
         <div class="row">
-            <div class="col-xs-5 col-xs-offset-7">
+            <div class="col-xs-7">
+                <h4>
+                <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
+                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
+                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
+                <span t-if="invoice.type == 'out_refund'">Credit Note</span>
+                <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
+                <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="invoice.number"/>
+                </h4>
+            </div>
+            <div class="col-xs-5">
+                <strong>Customer Address</strong>
                 <address t-field="invoice.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                 <div t-if="invoice.partner_id.vat" class="mt16">VAT: <span t-field="invoice.partner_id.vat"/></div>
             </div>
         </div>
-
-        <h2>
-            <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
-            <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
-            <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
-            <span t-if="invoice.type == 'out_refund'">Credit Note</span>
-            <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
-            <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
-            <span t-field="invoice.number"/>
-        </h2>
 
         <div class="row mt32 mb32">
             <div class="col-xs-2" t-if="invoice.name">
@@ -260,5 +255,24 @@
         <p t-if="invoice.fiscal_position_id.note">
             <span t-field="invoice.fiscal_position_id.note"/>
         </p>
+    </template>
+
+    <template id="portal_invoice_error" name="Invoice error/warning display">
+        <div class="row">
+            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_invoice_success" name="Invoice success display">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
     </template>
 </odoo>

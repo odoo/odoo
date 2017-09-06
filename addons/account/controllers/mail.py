@@ -12,9 +12,9 @@ from odoo.tools.misc import consteq
 class MailController(MailController):
 
     def _redirect_to_record(cls, model, res_id, access_token=None):
-        # If the current user doesn't have access to the sales order, but provided
+        # If the current user doesn't have access to the invoice, but provided
         # a valid access token, redirect him to the front-end view.
-        if model == 'sale.order' and res_id and access_token:
+        if model == 'account.invoice' and res_id and access_token:
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
             try:

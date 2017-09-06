@@ -15,7 +15,12 @@ class ResConfigSettings(models.TransientModel):
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
-    module_website_quote = fields.Boolean("Online Quotations & Templates")
+    portal_confirmation = fields.Boolean('Online Signature & Payment')
+    portal_confirmation_options = fields.Selection([
+        ('sign', 'Signature'),
+        ('pay', 'Payment')], string="Online Signature & Payment options")
+    module_sale_payment = fields.Boolean("Online Signature & Payment", help='Technical field implied by user choice of online_confirmation')
+    module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple sales price per product")
     multi_sales_price_method = fields.Selection([
@@ -113,11 +118,22 @@ class ResConfigSettings(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
+    @api.onchange('portal_confirmation')
+    def _onchange_portal_confirmation(self):
+        if not self.portal_confirmation:
+            self.portal_confirmation_options = False
+
+    @api.onchange('portal_confirmation_options')
+    def _onchange_portal_confirmation_options(self):
+        if self.portal_confirmation_options == 'pay':
+            self.module_sale_payment = True
+
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         ICPSudo = self.env['ir.config_parameter'].sudo()
         sale_pricelist_setting = ICPSudo.get_param('sale.sale_pricelist_setting')
+        sale_portal_confirmation_options = ICPSudo.get_param('sale.sale_portal_confirmation_options', default='none')
         res.update(
             auth_signup_uninvited='b2c' if ICPSudo.get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
             use_sale_note=ICPSudo.get_param('sale.use_sale_note', default=False),
@@ -127,6 +143,8 @@ class ResConfigSettings(models.TransientModel):
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
             sale_pricelist_setting=sale_pricelist_setting,
+            portal_confirmation=sale_portal_confirmation_options in ('pay', 'sign'),
+            portal_confirmation_options=sale_portal_confirmation_options if sale_portal_confirmation_options in ('pay', 'sign') else False,
         )
         return res
 
@@ -140,3 +158,4 @@ class ResConfigSettings(models.TransientModel):
         ICPSudo.set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
         ICPSudo.set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
         ICPSudo.set_param('sale.sale_show_tax', self.sale_show_tax)
+        ICPSudo.set_param('sale.sale_portal_confirmation_options', self.portal_confirmation_options if self.portal_confirmation_options in ('pay', 'sign') else 'none')

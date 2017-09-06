@@ -3,7 +3,6 @@
 
   <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Quote frontend assets">
     <xpath expr="." position="inside">
-      <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
       <script type="text/javascript" src="/website_quote/static/src/js/website_quotation.js"></script>
       <link rel='stylesheet' href='/website_quote/static/src/css/website_quotation.css'/>
     </xpath>
@@ -293,23 +292,19 @@
                               <h4 class="modal-title">Validate Order</h4>
                             </div>
                             <div class="modal-body" id="sign-dialog">
-                              <p>
-                                  <span>I agree that by signing this proposal, I
-                                  accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
-                                  <b data-id="total_amount" t-field="quotation.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                                  <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
-                              </p>
-                              <div id="signer" class="form-group">
-                                  <label class="control-label" for="name">Your Name:</label>
-                                  <input type="text" name="signer" id="name" class="form-control"/>
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div t-if="not (pms or s2s_acquirers or form_acquirers)">
-                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button>
-                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                </div>
+                                <p>
+                                    <span>I agree that by signing this proposal, I
+                                    accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                                    <b data-id="total_amount" t-field="quotation.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
+                                    <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
+                                </p>
+                                <t t-call="portal.portal_signature">
+                                    <t t-set="object" t-value="quotation"/>
+                                    <t t-set="partner_name" t-value="quotation.partner_id.name"/>
+                                    <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
+                                    <t t-set="accessToken" t-value="quotation.access_token"/>
+                                </t>
                             </div>
                           </form>
                         </div>
@@ -535,21 +530,6 @@
     </div>
   </template>
 
-  <!-- Options:Quotation Signature -->
-  <template id="opt_quotation_signature" name="Ask Signature" customize_show="True" inherit_id="website_quote.so_quotation">
-      <xpath expr="//div[@id='sign-dialog']" position="inside">
-        <div class="panel panel-default mt16 mb0" id="drawsign">
-            <div class="panel-heading">
-                <div class="pull-right">
-                    <a id="sign_clean" class="btn btn-xs">Clear</a>
-                </div>
-                <strong>Draw your signature</strong>
-            </div>
-            <div id="signature" class="panel-body" style="padding: 0"/>
-        </div>
-      </xpath>
-  </template>
-
   <template id="optional_products">
       <t t-if="any([(not option.line_id) for option in quotation.options])">
         <section>
@@ -676,32 +656,14 @@
       </xpath>
   </template>
 
-  <template id="quotations" inherit_id="sale.portal_my_quotations">
-      <xpath expr="//t[@t-foreach='quotations']" position="replace">
-          <t t-foreach="quotations" t-as="quotation">
-              <tr>
-                  <td>
-                      <t t-if="quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share">
-                          <a t-attf-href="/quote/#{quotation.id}/#{quotation.access_token}?#{keep_query()}"><t t-esc="quotation.name"/></a>
-                      </t>
-                      <t t-if="not (quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share)">
-                          <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
-                      </t>
-                  </td>
-                  <td><span t-field="quotation.date_order"/></td>
-                  <td><span t-field="quotation.validity_date"/></td>
-                      <td>
-                        <t t-if="quotation.state == 'cancel'">
-                          <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
-                        </t>
-                        <t t-if="quotation.validity_date and quotation.validity_date &lt; date">
-                          <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
-                        </t>
-                      </td>
-                      <td><span t-field="quotation.amount_total" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
-                      </td>
-              </tr>
-          </t>
-      </xpath>
-  </template>
+    <template id="portal_my_quotations_inherit_quote" inherit_id="sale.portal_my_quotations">
+        <xpath expr="//t[@t-foreach='quotations']/tr/td/a" position="replace">
+            <t t-if="quotation.template_id and quotation.template_id.active">
+                <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+            </t>
+            <t t-else="">
+                <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+            </t>
+        </xpath>              
+    </template>
 </odoo>

@@ -24,5 +24,6 @@ a dependency towards website edition and customization capabilities.""",
     ],
     'qweb': [
         'static/src/xml/portal_chatter.xml',
+        'static/src/xml/portal_signature.xml',
     ],
 }

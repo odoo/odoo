@@ -190,6 +190,12 @@ class SaleOrder(models.Model):
             return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
         return super(SaleOrder, self).get_mail_url()
 
+    def get_portal_confirmation_action(self):
+        """ Template override default behavior of pay / sign chosen in sales settings """
+        if self.template_id:
+            return 'sign' if self.require_payment == 1 else 'pay'
+        return super(SaleOrder, self).get_portal_confirmation_action()
+
     @api.multi
     def _confirm_online_quote(self, transaction):
         """ Payment callback: validate the order and write transaction details in chatter """
