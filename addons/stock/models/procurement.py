@@ -80,7 +80,7 @@ class ProcurementRule(models.Model):
         # Since action_confirm launch following procurement_group we should activate it.
         move = self.env['stock.move'].sudo().create(data)
         move.assign_picking()
-        move.picking_id.action_confirm()
+        move.action_confirm()
         return True
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
@@ -303,7 +303,6 @@ class ProcurementGroup(models.Model):
             1000 orderpoints.
             This is appropriate for batch jobs only.
         """
-
         OrderPoint = self.env['stock.warehouse.orderpoint']
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,
