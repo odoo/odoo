@@ -254,13 +254,7 @@ class AccountAccount(models.Model):
                               'if some partial reconciliations are still pending.'))
         query = """
             UPDATE account_move_line
-                SET reconciled = CASE
-                    WHEN debit = 0 AND credit = 0 AND amount_currency = 0
-                    THEN true
-                    ELSE false
-                    END,
-                amount_residual = (debit-credit),
-                amount_residual_currency = amount_currency
+                SET amount_residual = 0, amount_residual_currency = 0
             WHERE full_reconcile_id = NULL AND account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
