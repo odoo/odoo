@@ -243,7 +243,7 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.db.set_uuid(self.config.uuid);
-            self.set_cachier(self.get_cashier());
+            self.set_cashier(self.get_cashier());
 
             var orders = self.db.get_orders();
             for (var i = 0; i < orders.length; i++) {
