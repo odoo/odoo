@@ -1073,7 +1073,7 @@ var ManualModel = StatementModel.extend({
                     return self._rpc({
                             model: 'account.move.line',
                             method: 'get_data_for_manual_reconciliation',
-                            args: ['account', self.account_ids],
+                            args: ['account', model.account_ids || self.account_ids],
                             context: context,
                         })
                         .then(function (result) {

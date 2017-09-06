@@ -338,6 +338,7 @@ class MrpProduction(models.Model):
             source_location = self.location_src_id
         original_quantity = self.product_qty - self.qty_produced
         data = {
+            'sequence': bom_line.sequence,
             'name': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,

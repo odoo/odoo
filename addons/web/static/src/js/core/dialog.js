@@ -151,13 +151,12 @@ var Dialog = Widget.extend({
         this.$modal.modal('hide');
         this.$modal.remove();
 
-        setTimeout(function () { // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-            var modals = $('body > .modal').filter(':visible');
-            if(modals.length) {
-                modals.last().focus();
-                $('body').addClass('modal-open');
-            }
-        }, 0);
+        var modals = $('body > .modal').filter(':visible');
+        if (modals.length) {
+            modals.last().focus();
+            // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
+            $('body').addClass('modal-open');
+        }
     }
 });
 

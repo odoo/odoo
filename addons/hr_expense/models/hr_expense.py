@@ -300,6 +300,13 @@ class HrExpense(models.Model):
         return account_move
 
     @api.multi
+    def unlink(self):
+        for expense in self:
+            if expense.state in ['done']:
+                raise UserError(_('You cannot delete a posted expense.'))
+        super(HrExpense, self).unlink()
+
+    @api.multi
     def action_get_attachment_view(self):
         self.ensure_one()
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
@@ -442,8 +449,8 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def unlink(self):
         for expense in self:
-            if expense.state == "post":
-                raise UserError(_("You cannot delete a posted expense."))
+            if expense.state in ['post', 'done']:
+                raise UserError(_('You cannot delete a posted or paid expense.'))
         super(HrExpenseSheet, self).unlink()
 
     @api.multi
