@@ -17,7 +17,7 @@ class ProcurementRule(models.Model):
         ProductionSudo = Production.sudo().with_context(force_company=values['company_id'].id)
         bom = self._get_matching_bom(product_id, values)
         if not bom:
-            msg = _('No Bill of Material found for product %s.') % (product_id.display_name,)
+            msg = _('There is no Bill of Material found for the product %s. Please define a Bill of Material for this product.') % (product_id.display_name,)
             raise UserError(msg)
 
         # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
