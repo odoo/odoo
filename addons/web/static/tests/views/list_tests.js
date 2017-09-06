@@ -773,6 +773,153 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('use default_order on editable tree: sort on save', function (assert) {
+        assert.expect(8);
+
+        this.data.foo.records[0].o2m = [1, 3];
+
+        var form = createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom" default_order="display_name">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 1)').length,
+            "Value 1 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 3)').length,
+            "Value 3 should be second");
+
+        var $o2m = form.$('.o_field_widget[name=o2m]');
+        form.$('.o_field_x2many_list_row_add a').click();
+        $o2m.find('.o_field_widget').val("Value 2").trigger('input');
+        assert.ok(form.$('tbody tr:first td:contains(Value 1)').length,
+            "Value 1 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 3)').length,
+            "Value 3 should be second");
+        assert.ok(form.$('tbody tr:eq(2) td input').val(),
+            "Value 2 should be third (shouldn't be sorted)");
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 1)').length,
+            "Value 1 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 2)').length,
+            "Value 2 should be second (should be sorted after saving)");
+        assert.ok(form.$('tbody tr:eq(2) td:contains(Value 3)').length,
+            "Value 3 should be third");
+
+        form.destroy();
+    });
+
+    QUnit.test('use default_order on editable tree: sort on demand', function (assert) {
+        assert.expect(8);
+
+        this.data.foo.records[0].o2m = [1, 3];
+        this.data.bar.fields = {name: {string: "Name", type: "char", sortable: true}};
+        this.data.bar.records[0].name = "Value 1";
+        this.data.bar.records[2].name = "Value 3";
+
+        var form = createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom" default_order="name">' +
+                                '<field name="name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 1)').length,
+            "Value 1 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 3)').length,
+            "Value 3 should be second");
+
+        var $o2m = form.$('.o_field_widget[name=o2m]');
+        form.$('.o_field_x2many_list_row_add a').click();
+        $o2m.find('.o_field_widget').val("Value 2").trigger('input');
+        assert.ok(form.$('tbody tr:first td:contains(Value 1)').length,
+            "Value 1 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 3)').length,
+            "Value 3 should be second");
+        assert.ok(form.$('tbody tr:eq(2) td input').val(),
+            "Value 2 should be third (shouldn't be sorted)");
+
+        $o2m.find('.o_column_sortable').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
+            "Value 3 should be first");
+        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 2)').length,
+            "Value 2 should be second (should be sorted after saving)");
+        assert.ok(form.$('tbody tr:eq(2) td:contains(Value 1)').length,
+            "Value 1 should be third");
+
+        form.destroy();
+    });
+
+    QUnit.test('use default_order on editable tree: sort on demand in page', function (assert) {
+        assert.expect(4);
+
+        this.data.bar.fields = {name: {string: "Name", type: "char", sortable: true}};
+
+        var ids = [];
+        for (var i=0; i<45; i++) {
+            var id = 4 + i;
+            ids.push(id);
+            this.data.bar.records.push({
+                id: id,
+                name: "Value " + id,
+            });
+        }
+        this.data.foo.records[0].o2m = ids;
+
+        var form = createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="o2m">' +
+                            '<tree editable="bottom" default_order="name">' +
+                                '<field name="name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Change page
+        form.$('.o_pager_next').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 44)').length,
+            "record 44 should be first");
+        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 48)').length,
+            "record 48 should be last");
+
+        form.$('.o_column_sortable').click();
+        assert.ok(form.$('tbody tr:first td:contains(Value 48)').length,
+            "record 48 should be first");
+        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 44)').length,
+            "record 44 should be first");
+
+        form.destroy();
+    });
+
     QUnit.test('can display button in edit mode', function (assert) {
         assert.expect(1);
 

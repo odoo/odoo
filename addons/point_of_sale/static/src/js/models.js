@@ -245,6 +245,7 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.db.set_uuid(self.config.uuid);
+            self.set_cachier(self.get_cashier());
 
             var orders = self.db.get_orders();
             for (var i = 0; i < orders.length; i++) {
@@ -622,11 +623,12 @@ exports.PosModel = Backbone.Model.extend({
 
     // returns the user who is currently the cashier for this point of sale
     get_cashier: function(){
-        return this.get('cashier') || this.user;
+        return this.db.get_cashier() || this.get('cashier') || this.user;
     },
     // changes the current cashier
     set_cashier: function(user){
         this.set('cashier', user);
+        this.db.set_cashier(this.cashier);
     },
     //creates a new empty order and sets it as the current order
     add_new_order: function(){

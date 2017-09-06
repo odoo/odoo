@@ -72,7 +72,10 @@ class StockMoveLine(models.Model):
                 }
                 move_id.write(move_vals)
                 if move_id.product_id.valuation == 'real_time':
-                    move_id.with_context(force_valuation_amount=qty_difference*move_id.price_unit)._account_entry_move()
+                    if move_id.product_id.cost_method == 'standard':
+                        move_id.with_context(force_valuation_amount=qty_difference * move_id.product_id.standard_price)._account_entry_move()
+                    else:
+                        move_id.with_context(force_valuation_amount=qty_difference*move_id.price_unit)._account_entry_move()
         return super(StockMoveLine, self).write(vals)
 
 
