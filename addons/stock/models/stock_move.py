@@ -892,7 +892,7 @@ class StockMove(models.Model):
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id)
                 new_move = move.split(qty_split)
                 for move_line in move.move_line_ids:
-                    if move_line.product_qty:
+                    if move_line.product_qty and move_line.qty_done:
                         # FIXME: there will be an issue if the move was partially available
                         # By decreasing `product_qty`, we free the reservation.
                         # FIXME: if qty_done > product_qty, this could raise if nothing is in stock
