@@ -41,8 +41,8 @@ QUnit.module('ActivityMenu', {
                         res_model: "project.issue",
                         planned_count: 1,
                         today_count: 1,
-                        overdue_count: 0,
-                        total_count: 2,
+                        overdue_count: 1,
+                        total_count: 3,
                     }],
                 },
             };
@@ -67,10 +67,9 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
 });
 
 QUnit.test('activity menu widget: activity menu with 3 records', function (assert) {
-    assert.expect(6);
+    assert.expect(8);
     var self = this;
     var activityMenu = new systray.ActivityMenu();
-
     testUtils.addMockEnvironment(activityMenu, {
         mockRPC: function (route, args) {
             if (args.method === 'activity_user_count') {
@@ -83,11 +82,30 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
-    assert.strictEqual(parseInt(activityMenu.el.innerText), 4, "widget should have 4 notification counter");
+    assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
+    
+    testUtils.intercept(activityMenu, 'do_action', function(event) {
+        if(event.data.action.context.search_default_activities_today && event.data.action.context.search_default_activities_overdue){
+            assert.ok(event.data.action.context.search_default_activities_today && event.data.action.context.search_default_activities_overdue, "channel");
+        }
+        else if(event.data.action.context.search_default_activities_overdue){
+            assert.ok(event.data.action.context.search_default_activities_overdue,'past');
+        }
+        else if(event.data.action.context.search_default_activities_upcoming_all){
+            assert.ok(event.data.action.context.search_default_activities_upcoming_all,'future');
+        }
+        else if(event.data.action.context.search_default_activities_today){
+            assert.ok(event.data.action.context.search_default_activities_today,'today');
+        }
+    });
     activityMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
-    activityMenu.$('.o_mail_channel_preview').click();
-    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div:first").click();
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='overdue']").click();
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='upcoming_all']").click();
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='today']").click();
     activityMenu.destroy();
 });
 });
