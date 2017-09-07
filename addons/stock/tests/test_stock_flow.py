@@ -2,7 +2,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tools import mute_logger, float_round
-
+from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
 
@@ -1794,7 +1794,8 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
 
-        move_mto_alone.action_confirm()
+        with self.assertRaises(UserError):
+            move_mto_alone.action_confirm()
         move_with_ancestors.action_confirm()
         other_move.action_confirm()
 

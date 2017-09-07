@@ -58,7 +58,6 @@ class PurchaseRequisition(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
-    procurement_id = fields.Many2one('procurement.order', string='Procurement', ondelete='set null', copy=False)
     warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     state = fields.Selection([('draft', 'Draft'), ('in_progress', 'Confirmed'),
                                ('open', 'Bid Selection'), ('done', 'Done'),
@@ -121,6 +120,7 @@ class PurchaseRequisitionLine(models.Model):
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env['res.company']._company_default_get('purchase.requisition.line'))
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     schedule_date = fields.Date(string='Scheduled Date')
+    move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
 
     @api.multi
     @api.depends('requisition_id.purchase_ids.state')
@@ -157,8 +157,8 @@ class PurchaseRequisitionLine(models.Model):
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],
             'date_planned': requisition.schedule_date or fields.Date.today(),
-            'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
             'account_analytic_id': self.account_analytic_id.id,
+            'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }
 
 
@@ -242,17 +242,12 @@ class PurchaseOrder(models.Model):
     def button_confirm(self):
         res = super(PurchaseOrder, self).button_confirm()
         for po in self:
+            if not po.requisition_id:
+                continue
             if po.requisition_id.type_id.exclusive == 'exclusive':
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
                 po.requisition_id.action_done()
-
-            for element in po.order_line:
-                if element.product_id == po.requisition_id.procurement_id.product_id:
-                    element.move_ids.write({
-                        'procurement_id': po.requisition_id.procurement_id.id,
-                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
-                    })
         return res
 
     @api.model
@@ -301,41 +296,24 @@ class ProductTemplate(models.Model):
         string='Procurement', default='rfq')
 
 
-class ProcurementOrder(models.Model):
-    _inherit = 'procurement.order'
-
-    requisition_id = fields.Many2one('purchase.requisition', string='Latest Requisition')
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
 
     @api.multi
-    def make_po(self):
-        Requisition = self.env['purchase.requisition']
-        procurements = self.env['procurement.order']
-        Warehouse = self.env['stock.warehouse']
-        res = []
-        for procurement in self:
-            if procurement.product_id.purchase_requisition == 'tenders':
-                warehouse_id = Warehouse.search([('company_id', '=', procurement.company_id.id)], limit=1).id
-                requisition_id = Requisition.create({
-                    'origin': procurement.origin,
-                    'date_end': procurement.date_planned,
-                    'warehouse_id': warehouse_id,
-                    'company_id': procurement.company_id.id,
-                    'procurement_id': procurement.id,
-                    'picking_type_id': procurement.rule_id.picking_type_id.id,
-                    'line_ids': [(0, 0, {
-                        'product_id': procurement.product_id.id,
-                        'product_uom_id': procurement.product_uom.id,
-                        'product_qty': procurement.product_qty
-                    })],
-                })
-                procurement.message_post(body=_("Purchase Requisition created"))
-                requisition_id.message_post_with_view('mail.message_origin_link',
-                    values={'self': requisition_id, 'origin': procurement},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
-                procurement.requisition_id = requisition_id
-                procurements += procurement
-                res += [procurement.id]
-        set_others = self - procurements
-        if set_others:
-            res += super(ProcurementOrder, set_others).make_po()
-        return res
+    def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values, log_activites=False):
+        if product_id.purchase_requisition != 'tenders':
+            return super(ProcurementGroup, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values, log_activites)
+        self.env['purchase.requisition'].create({
+            'origin': origin,
+            'date_end': values['date_planned'],
+            'warehouse_id': values.get('warehouse_id') and values['warehouse_id'].id or False,
+            'company_id': values['company_id'].id,
+            'picking_type_id': self.picking_type_id.id,
+            'line_ids': [(0, 0, {
+                'product_id': product_id.id,
+                'product_uom_id': product_uom.id,
+                'product_qty': product_qty,
+                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False,
+            })],
+        })
+        return True

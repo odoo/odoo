@@ -66,6 +66,7 @@ class SaleOrder(models.Model):
                             order._create_analytic_account(prefix=line.product_id.default_code or None)
                         order.project_id.project_create({'name': order.project_id.name})
                         break
+            order.order_line.filtered(lambda line: line._is_task())._create_task()
         return result
 
     @api.multi
@@ -131,11 +132,14 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    task_id = fields.Many2one('project.task', 'Task')
+
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale' and not line.order_id.project_id and line.product_id.track_service in ['timesheet', 'task']:
             line.order_id._create_analytic_account()
+            line._create_task()
         return line
 
     @api.multi
@@ -146,3 +150,51 @@ class SaleOrderLine(models.Model):
             expense_type_id = expense_type_id and expense_type_id.id
             domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
+
+    def _convert_qty_company_hours(self):
+        company_time_uom_id = self.env.user.company_id.project_time_mode_id
+        if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
+            planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+        else:
+            planned_hours = self.product_uom_qty
+        return planned_hours
+
+    def _get_project(self):
+        Project = self.env['project.project']
+        project = self.product_id.with_context(force_company=self.company_id.id).project_id
+        if not project:
+            # find the project corresponding to the analytic account of the sales order
+            account = self.order_id.project_id
+            if not account:
+                self.order_id._create_analytic_account()
+                account = self.order_id.project_id
+            project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
+            if not project:
+                project_id = account.project_create({'name': account.name, 'use_tasks': True})
+                project = Project.browse(project_id)
+        return project
+
+    def _prepare_service_task_values(self):
+        self.ensure_one()
+        project = self._get_project()
+        planned_hours = self._convert_qty_company_hours()
+        return {
+            'name': '%s:%s' % (self.order_id.name or '', self.product_id.name),
+            'planned_hours': planned_hours,
+            'remaining_hours': planned_hours,
+            'partner_id': self.order_id.partner_id.id,
+            'description': self.name + '<br/>',
+            'project_id': project.id,
+            'sale_line_id': self.id,
+            'company_id': self.company_id.id,
+        }
+
+    def _create_task(self):
+        for line in self:
+            task_values = line._prepare_service_task_values()
+            task = self.env['project.task'].create(task_values)
+            self.write({'task_id': task.id})
+
+    def _is_task(self):
+        self.ensure_one()
+        return self.product_id.type == 'service' and self.product_id.track_service == 'task'

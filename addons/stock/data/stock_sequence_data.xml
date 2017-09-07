@@ -47,5 +47,24 @@
             <field name="padding">7</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <!-- Scheduler -->
+
+        <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
+            <field name="name">Procurement: run MRP scheduler</field>
+            <field name="model_id" ref="model_procurement_group"/>
+            <field name="state">code</field>
+            <field name="code">model.run_scheduler(True)</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+        </record>
+
+
+
+
     </data>
 </odoo>

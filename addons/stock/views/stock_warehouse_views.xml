@@ -119,14 +119,6 @@
             parent="menu_warehouse_config" sequence="1"/>
 
         <!-- Order Point -->
-        <record id="do_view_procurement_op" model="ir.actions.act_window">
-            <field name="name">Procurements</field>
-            <field name="res_model">procurement.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('orderpoint_id','=',active_id)]</field>
-        </record>
-
         <record id="view_stock_warehouse_orderpoint_kanban" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.kanban</field>
             <field name="model">stock.warehouse.orderpoint</field>
@@ -209,7 +201,6 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="%(stock.do_view_procurement_op)d" type="action" string="Procurements" class="oe_stat_button" icon="fa-refresh"/>
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
@@ -229,8 +220,8 @@
                         </group>
                         <group>
                             <group string="Rules">
-                                <field name="product_min_qty" />
-                                <field name="product_max_qty" />
+                                <field name="product_min_qty"/>
+                                <field name="product_max_qty"/>
                                 <field name="qty_multiple" string="Quantity Multiple"/>
                             </group>
                             <group string="Misc">

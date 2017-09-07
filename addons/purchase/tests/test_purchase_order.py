@@ -126,7 +126,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Check quantity received
         received_qty = sum(pol.qty_received for pol in self.po.order_line)
-        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incomming shipment' % received_qty)
+        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incoming shipment' % received_qty)
 
         # Create return picking
         StockReturnPicking = self.env['stock.return.picking']

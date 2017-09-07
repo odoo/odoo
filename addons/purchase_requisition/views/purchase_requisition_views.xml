@@ -86,9 +86,6 @@
                 <field name="requisition_id"
                     domain="[('state', 'in', ('in_progress', 'open')), ('vendor_id', 'in', (partner_id, False))]"/>
             </field>
-            <xpath expr="//field[@name='order_line']/tree" position="inside">
-                <field name="procurement_ids" invisible="1"/>
-            </xpath>
         </field>
     </record>
 
@@ -336,16 +333,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
-        <field name="name">procurement.form.inherit</field>
-        <field name="model">procurement.order</field>
-        <field name="inherit_id" ref="procurement.procurement_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='origin']" position="after">
-                <field name="requisition_id"/>
-            </xpath>
-        </field>
-    </record>
     <act_window
             domain="[('requisition_id', '=', active_id)]"
             context="{'default_requisition_id': active_id}"

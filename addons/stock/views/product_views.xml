@@ -109,7 +109,6 @@
                             <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
                         </group>
                         <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
-                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
                             <field name="property_stock_production" domain="[('usage','=','production')]"/>
                             <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
                         </group>
@@ -167,7 +166,6 @@
                 <sheet position="before">
                     <header>
                         <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                 </sheet>
             </field>
@@ -184,10 +182,6 @@
                         <button string="Update Qty On Hand"
                             type="action"
                             name="%(action_view_change_product_quantity)d"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                        <button string="Procurement Request"
-                            type="action"
-                            name="%(stock.act_make_procurement)d"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <button name="toggle_active" position="before">
@@ -253,7 +247,6 @@
                 <data>
                     <header position="inside" >
                         <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
-                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
                     <button name="toggle_active" position="before">
                         <button type="object"
@@ -311,6 +304,10 @@
                     to restrict the display for templates -->
                     <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
                         <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
+
+                    <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                        <field name="responsible_id"/>
                     </xpath>
                 </data>
             </field>

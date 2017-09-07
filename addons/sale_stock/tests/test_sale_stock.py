@@ -267,6 +267,5 @@ class TestSaleStock(TestSale):
                 (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
             ]
         })
-
         # a single picking should be created for the new delivery
         self.assertEquals(len(self.so.picking_ids), 2)

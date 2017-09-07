@@ -29,14 +29,20 @@ class SaleOrder(models.Model):
         'stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_default_warehouse_id)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
+    picking_ids = fields.One2many('stock.picking', 'sale_id', string='Pickings')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     @api.multi
-    @api.depends('procurement_group_id')
+    def action_confirm(self):
+        result = super(SaleOrder, self).action_confirm()
+        for order in self:
+            order.order_line._action_procurement_create()
+        return result
+
+    @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
             order.delivery_count = len(order.picking_ids)
 
     @api.onchange('warehouse_id')
@@ -52,18 +58,12 @@ class SaleOrder(models.Model):
         view, if there is only one delivery order to show.
         '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
-
-        pickings = self.mapped('picking_ids')
-        if len(pickings) > 1:
-            action['domain'] = [('id', 'in', pickings.ids)]
-        elif pickings:
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            action['res_id'] = pickings.id
+        action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
 
     @api.multi
     def action_cancel(self):
-        self.mapped('order_line').mapped('procurement_ids').cancel()
+        self.picking_ids.action_cancel()
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -71,11 +71,6 @@ class SaleOrder(models.Model):
         invoice_vals = super(SaleOrder, self)._prepare_invoice()
         invoice_vals['incoterms_id'] = self.incoterm.id or False
         return invoice_vals
-
-    def _prepare_procurement_group(self):
-        res = super(SaleOrder, self)._prepare_procurement_group()
-        res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id, 'sale_order_id': self.id})
-        return res
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -88,6 +83,27 @@ class SaleOrderLine(models.Model):
 
     product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
+    move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+
+    @api.model
+    def create(self, values):
+        line = super(SaleOrderLine, self).create(values)
+        if line.state == 'sale':
+            line._action_procurement_create()
+        return line
+
+    @api.multi
+    def write(self, values):
+        lines = False
+        if 'product_uom_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            lines = self.filtered(
+                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        res = super(SaleOrderLine, self).write(values)
+        if lines:
+            lines._action_procurement_create()
+        return res
+    
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -101,8 +117,8 @@ class SaleOrderLine(models.Model):
                     and line.invoice_status == 'no'\
                     and line.product_id.type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
-                    and line.procurement_ids.mapped('move_ids')\
-                    and all(move.state in ['done', 'cancel'] for move in line.procurement_ids.mapped('move_ids')):
+                    and line.move_ids \
+                    and all(move.state in ['done', 'cancel'] for move in line.move_ids):
                 line.invoice_status = 'invoiced'
 
     @api.multi
@@ -171,27 +187,59 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
-        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+        self.ensure_one()
         date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
-        vals.update({
-            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'location_id': self.order_id.partner_shipping_id.property_stock_customer.id,
-            'route_ids': self.route_id and [(4, self.route_id.id)] or [],
-            'warehouse_id': self.order_id.warehouse_id and self.order_id.warehouse_id.id or False,
-            'partner_dest_id': self.order_id.partner_shipping_id.id,
+        return {
+            'name': self.name,
+            'origin': self.order_id.name,
+            'product_id': self.product_id,
+            'product_qty': self.product_uom_qty,
+            'product_uom': self.product_uom,
+            'company_id': self.order_id.company_id,
+            'group_id': group_id,
             'sale_line_id': self.id,
-        })
-        return vals
+            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'location_id': self.order_id.partner_shipping_id.property_stock_customer,
+            'route_ids': self.route_id,
+            'warehouse_id': self.order_id.warehouse_id or False,
+            'partner_dest_id': self.order_id.partner_shipping_id
+        }
+
+    @api.multi
+    def _action_procurement_create(self):
+        """
+        Create procurements based on quantity ordered. If the quantity is increased, new
+        procurements are created. If the quantity is decreased, no automated action is taken.
+        """
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for line in self:
+            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+                continue
+            qty = 0.0
+            for move in line.move_ids:
+                qty += move.product_qty
+            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
+                continue
+
+            if not line.order_id.procurement_group_id:
+                line.order_id.procurement_group_id = self.env["procurement.group"].create({
+                    'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
+                    'sale_id': line.order_id.id
+                })
+            vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id)
+            vals['product_qty'] = line.product_uom_qty - qty
+
+            new_proc = self.env["procurement.group"].run(vals)
+        return True
+
 
     @api.multi
     def _get_delivered_qty(self):
-        """Computes the delivered quantity on sales order lines, based on done stock moves related to its procurements
-        """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
-        for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
+        for move in self.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id:
                     qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
@@ -214,6 +262,7 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
+
 
     def _check_routing(self):
         """ Verify the route of the product based on the warehouse

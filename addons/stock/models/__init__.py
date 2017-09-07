@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import barcode
-from . import product
 from . import procurement
 from . import product_strategy
 from . import res_company
@@ -20,3 +19,4 @@ from . import stock_traceability
 from . import stock_warehouse
 from . import stock_scrap
 from . import web_planner
+from . import product
