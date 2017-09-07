@@ -66,8 +66,8 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
     activityMenu.destroy();
 });
 
-QUnit.test('activity menu widget: activity menu with 3 records', function (assert) {
-    assert.expect(8);
+QUnit.only('activity menu widget: activity menu with 3 records', function (assert) {
+    assert.expect(17);
     var self = this;
     var activityMenu = new systray.ActivityMenu();
     testUtils.addMockEnvironment(activityMenu, {
@@ -83,29 +83,44 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
     assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
-    
+
     testUtils.intercept(activityMenu, 'do_action', function(event) {
-        if(event.data.action.context.search_default_activities_today && event.data.action.context.search_default_activities_overdue){
-            assert.ok(event.data.action.context.search_default_activities_today && event.data.action.context.search_default_activities_overdue, "channel");
+        if(event.data.action.context.search_default_activities_today && event.data.action.context.search_default_activities_overdue) {
+            assert.step('channel');
         }
-        else if(event.data.action.context.search_default_activities_overdue){
-            assert.ok(event.data.action.context.search_default_activities_overdue,'past');
+        else if(event.data.action.context.search_default_activities_overdue) {
+            assert.step('past');
         }
-        else if(event.data.action.context.search_default_activities_upcoming_all){
-            assert.ok(event.data.action.context.search_default_activities_upcoming_all,'future');
+        else if(event.data.action.context.search_default_activities_today) {
+            assert.step('today');
         }
-        else if(event.data.action.context.search_default_activities_today){
-            assert.ok(event.data.action.context.search_default_activities_today,'today');
+        else if(event.data.action.context.search_default_activities_upcoming_all) {
+            assert.step('future');
         }
     });
+
     activityMenu.$('.dropdown-toggle').click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
     activityMenu.$(".o_mail_navbar_dropdown_channels > div:first").click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+
     activityMenu.$('.dropdown-toggle').click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
     activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='overdue']").click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+
     activityMenu.$('.dropdown-toggle').click();
-    activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='upcoming_all']").click();
-    activityMenu.$('.dropdown-toggle').click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
     activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='today']").click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+
+    activityMenu.$('.dropdown-toggle').click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div:eq(2) .o_activity_filter_button[data-filter='upcoming_all']").click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+
+    // verify that proper actions with correct context are called
+    assert.verifySteps(['channel', 'past', 'today', 'future']);
     activityMenu.destroy();
 });
 });
