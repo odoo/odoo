@@ -4,7 +4,7 @@
 # List of contributors:
 # Jordi Esteve <jesteve@zikzakmedia.com>
 # Dpto. Consultoría Grupo Opentia <consultoria@opentia.es>
-# Pedro M. Baeza <pedro.baeza@serviciosbaeza.com>
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Carlos Liébana <carlos.liebana@factorlibre.com>
 # Hugo Santos <hugo.santos@factorlibre.com>
 # Albert Cabedo <albert@gafic.com>
@@ -25,9 +25,10 @@ Spanish charts of accounts (PGCE 2008).
         * Spanish general chart of accounts 2008 for small and medium companies
         * Spanish general chart of accounts 2008 for associations
     * Defines templates for sale and purchase VAT
-    * Defines tax code templates
+    * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
-""", #TODO OCO quand tu auras fini, revoir la description du module
+    * Defines tax reports mod 111, 115 and 303
+""",
     "depends" : [
         "account",
         "base_iban",
@@ -44,6 +45,6 @@ Spanish charts of accounts (PGCE 2008).
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_data.yml',
-        'views/account_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
 }
