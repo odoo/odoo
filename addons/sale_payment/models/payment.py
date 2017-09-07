@@ -128,7 +128,7 @@ class PaymentTransaction(models.Model):
                 return 'pay_sale_tx_confirm'
         return 'pay_sale_tx_token'
 
-    def check_or_create_sale_tx(self, order, acquirer, payment_token=None, tx_type='form', add_tx_values=None, reset_draft=True):
+    def _check_or_create_sale_tx(self, order, acquirer, payment_token=None, tx_type='form', add_tx_values=None, reset_draft=True):
         tx = self
         if not tx:
             tx = self.search([('reference', '=', order.name)], limit=1)
