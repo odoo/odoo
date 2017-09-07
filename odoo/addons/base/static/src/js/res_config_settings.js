@@ -40,7 +40,6 @@ var BaseSettingRenderer = FormRenderer.extend({
                     string: string,
                     settingView: view,
                     imgurl: imgurl,
-                    order: key=== self.activeSettingTab ? 0 : index+1
                 });
                 view.addClass("o_hidden");
                 view.prepend($("<div>").html('<img class="icon" src="'+imgurl+'"><span class="appName">'+string+'</span>').addClass('settingSearchHeader o_hidden'));
@@ -49,7 +48,6 @@ var BaseSettingRenderer = FormRenderer.extend({
             }
         });
 
-        this.modules = _.sortBy(this.modules,function(m){return m.order});
         var tabs = $(QWeb.render('BaseSetting.Tabs',{tabItems : this.modules}));
         tabs.appendTo(this.$(".settings_tab"));
 
@@ -155,6 +153,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         var self = this;
         this.count = 0;
         _.each(this.modules,function(module) {
+            self.inVisibleCount = 0;
             module.settingView.find('.o_setting_box').addClass('o_hidden');
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
@@ -162,11 +161,18 @@ var BaseSettingRenderer = FormRenderer.extend({
             var resultSetting = module.settingView.find("label:contains('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function() {
-                    $(this).closest('.o_setting_box').removeClass('o_hidden');
-                    $(this).html(self._wordHighlighter($(this).html(),self.searchText));
+                    var settingBox = $(this).closest('.o_setting_box');
+                    if (!settingBox.hasClass('o_invisible_modifier')) {
+                        settingBox.removeClass('o_hidden');
+                        $(this).html(self._wordHighlighter($(this).text(), self.searchText));
+                    } else {
+                        self.inVisibleCount++;
+                    }
                 });
-                module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
-                module.settingView.removeClass('o_hidden');
+                if (self.inVisibleCount != resultSetting.length) {
+                    module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
+                    module.settingView.removeClass('o_hidden');
+                }
             } else {
                 ++self.count;
             }
