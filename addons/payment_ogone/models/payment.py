@@ -569,7 +569,7 @@ class PaymentToken(models.Model):
                 error_msg = tree.get(error_code)
                 error = '%s\n\n%s: %s' % (error_str, error_code, error_msg)
                 _logger.error(error)
-                raise Exception(error)
+                raise ValidationError(error)
 
             return {
                 'acquirer_ref': alias,

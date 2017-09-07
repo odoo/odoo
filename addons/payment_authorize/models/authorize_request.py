@@ -64,7 +64,7 @@ class AuthorizeAPI():
         response = strip_ns(r.content, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
             messages = [m.text for m in response.findall('messages/message/text')]
-            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
+            raise ValidationError(_('\n'.join(messages)))
         return response
 
     def _base_tree(self, requestType):
@@ -111,10 +111,15 @@ class AuthorizeAPI():
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
         etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
-        etree.SubElement(billTo, "city").text = partner.city
+        city = partner.city
+        zipCode = partner.zip
+        country = partner.country_id.name
+        if not city or not country or not zipCode:
+            raise ValidationError("Some mandatory fields are missing in your account profile, please configure it <a href='/my/account'> Configure your account</a>")
+        etree.SubElement(billTo, "city").text = city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
-        etree.SubElement(billTo, "zip").text = partner.zip
-        etree.SubElement(billTo, "country").text = partner.country_id.name or None
+        etree.SubElement(billTo, "zip").text = zipCode
+        etree.SubElement(billTo, "country").text = country or None
         payment = etree.SubElement(payment_profile, "payment")
         creditCard = etree.SubElement(payment, "creditCard")
         etree.SubElement(creditCard, "cardNumber").text = cardnumber
