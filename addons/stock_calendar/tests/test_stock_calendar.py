@@ -42,14 +42,16 @@ class TestsStockCalendar(common.TransactionCase):
                 'name': self.res_partner_id.id,
                 'delay': 1
             })],
-            'orderpoint_ids': [(0, 0, {
-                'name': 'Product A Truck',
-                'calendar_id': self.resource_calendar_id.id,
-                'product_min_qty': 0,
-                'product_max_qty': 10,
-                'warehouse_id': self.stock_warehouse0_id
-            })]
         })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A Truck',
+            'product_id': self.calendar_product_id.id,
+            'calendar_id': self.resource_calendar_id.id,
+            'product_min_qty': 0,
+            'product_max_qty': 10,
+            'warehouse_id': self.stock_warehouse0_id
+        })]
 
         # Create delivery order with product A
         self.pick_out_calendar = self._create_stock_picking('Delivery order for procurement', self.calendar_product_id.name, 3.00)

@@ -542,12 +542,6 @@ class ProductProduct(models.Model):
             ('datetime', '<=', date or fields.Datetime.now())], limit=1)
         return history.cost or 0.0
 
-    def _need_procurement(self):
-        # When sale/product is installed alone, there is no need to create procurements. Only
-        # sale_stock and sale_service need procurements
-        return False
-
-
 class ProductPackaging(models.Model):
     _name = "product.packaging"
     _description = "Packaging"

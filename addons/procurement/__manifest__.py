@@ -37,6 +37,6 @@ Procurements in exception should be checked manually and can be re-run.
     ],
     'demo': [],
     'test': [],
-    'installable': True,
-    'auto_install': True,
+    'installable': False,
+    'auto_install': False,
 }

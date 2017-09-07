@@ -250,22 +250,3 @@ class TestResupply(TestStockCommon):
             'product_max_qty': 100,
             'product_uom': self.uom_unit.id,
         })
-
-    def test_resupply_from_wh(self):
-        # TDE NOTE: replaces tests/test_resupply.py, present until saas-10
-        OrderScheduler = self.env['procurement.order']
-        OrderScheduler.run_scheduler()
-        # we generated 2 procurements for product A: one on small wh and the other one on the transit location
-        procs = OrderScheduler.search([('product_id', '=', self.product_1.id)])
-        self.assertEqual(len(procs), 2)
-
-        proc1 = procs.filtered(lambda order: order.warehouse_id == self.warehouse_2)
-        self.assertEqual(proc1.state, 'running')
-
-        proc2 = procs.filtered(lambda order: order.warehouse_id == self.warehouse_1)
-        self.assertEqual(proc2.location_id.usage, 'transit')
-        self.assertNotEqual(proc2.state, 'exception')
-
-        proc2.run()
-        self.assertEqual(proc2.state, 'running')
-        self.assertTrue(proc2.rule_id)

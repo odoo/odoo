@@ -21,13 +21,3 @@ class ProductTemplate(models.Model):
         else:
             self.track_service = 'manual'
 
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    @api.multi
-    def _need_procurement(self):
-        for product in self:
-            if product.type == 'service' and product.track_service == 'task':
-                return True
-        return super(ProductProduct, self)._need_procurement()

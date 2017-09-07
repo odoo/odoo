@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
     use_security_lead = fields.Boolean(
         string="Security Lead Time for Sales",
         oldname='default_new_security_lead',
-        help="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.")
+        help="Margin of error for dates promised to customers. Products will be scheduled for delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.")
     default_picking_policy = fields.Selection([
         ('direct', 'Ship products as soon as available, with back orders'),
         ('one', 'Ship all products at once')

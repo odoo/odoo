@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_procurement_group,procurement.group,model_procurement_group,base.group_user,1,1,1,0
+access_procurement_rule,procurement.rule,model_procurement_rule,base.group_user,1,1,1,0
 access_stock_incoterms_all,stock.incoterms all,model_stock_incoterms,,1,0,0,0
 access_stock_incoterms_manager,stock.incoterms manager,model_stock_incoterms,stock.group_stock_manager,1,1,1,1
 access_stock_warehouse_manager,stock.warehouse.manager,model_stock_warehouse,stock.group_stock_manager,1,1,1,1
@@ -72,7 +74,6 @@ access_barcode_rule_stock_manager,barcode.rule.stock.manager,barcodes.model_barc
 access_stock_forecast_user,report.stock.forecast.user,model_report_stock_forecast,stock.group_stock_user,1,0,0,0
 access_stock_forecast_manager,report.stock.forecast.manager,model_report_stock_forecast,stock.group_stock_manager,1,1,1,1
 access_stock_scrap_user,stock.scrap.user,model_stock_scrap,stock.group_stock_user,1,1,1,0
-access_procurement_order,procurement.order,stock.model_procurement_order,base.group_portal,1,0,0,0
 access_product_attribute_manager,product.attribute manager,product.model_product_attribute,stock.group_stock_manager,1,1,1,1
 access_product_attribute_value_manager,product.attribute manager value,product.model_product_attribute_value,stock.group_stock_manager,1,1,1,1
 access_product_attribute_price_manager,product.attribute manager price,product.model_product_attribute_price,stock.group_stock_manager,1,1,1,1
