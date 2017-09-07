@@ -65,7 +65,7 @@ class MailMail(models.Model):
                 href = match[0]
                 url = match[1]
 
-                parsed = urlparse.urlparse(url, scheme='http')
+                parsed = werkzeug.urls.url_parse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
