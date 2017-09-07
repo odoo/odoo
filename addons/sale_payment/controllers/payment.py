@@ -30,7 +30,7 @@ class PaymentPortal(http.Controller):
             return False
 
         token = request.env['payment.token'].sudo()  # currently no support of payment tokens
-        tx = request.env['payment.transaction']._check_or_create_sale_tx(
+        tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
             order_sudo,
             acquirer,
             payment_token=token,
