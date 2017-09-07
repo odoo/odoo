@@ -6,7 +6,6 @@ addons:
       - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
-      - python-lxml # because pip installation is slow
       - poppler-utils # document index
       - antiword # document index
       - python-ldap # auth_ldap
@@ -31,7 +30,8 @@ before_install:
 install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
-  - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
+  - pip install -Ur ${HOME}/maintainer-quality-tools/requirements.txt
+  - pip install -Ur ${HOME}/build/${ODOO_REPO}/requirements.txt
   - pip install -q QUnitSuite flake8 coveralls pylint
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons)
