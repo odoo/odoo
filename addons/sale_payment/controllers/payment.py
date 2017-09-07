@@ -79,7 +79,7 @@ class PaymentPortal(http.Controller):
             return request.redirect('%s?%s' % (error_url, url_encode(params)))
 
         # find an existing tx or create a new one
-        tx = request.env['payment.transaction'].sudo().check_or_create_sale_tx(
+        tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
             order_sudo,
             token.acquirer_id,
             payment_token=token,
