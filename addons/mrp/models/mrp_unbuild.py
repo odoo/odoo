@@ -106,6 +106,8 @@ class MrpUnbuild(models.Model):
         self.env['stock.quant'].quants_reserve(quants, consume_move)
 
         if consume_move.has_tracking != 'none':
+            if not quants[0][0]:
+                raise UserError(_("You don't have in the stock the lot %s.") % (self.lot_id.name,))
             self.env['stock.move.lots'].create({
                 'move_id': consume_move.id,
                 'lot_id': self.lot_id.id,
@@ -119,6 +121,8 @@ class MrpUnbuild(models.Model):
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
                 original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
+                if not original.lot_id:
+                    raise UserError(_("You don't have in the stock the required lot/serial number for %s .") % (produce_move.product_id.name,))
                 self.env['stock.move.lots'].create({
                     'move_id': produce_move.id,
                     'lot_id': original.lot_id.id,
