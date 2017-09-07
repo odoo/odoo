@@ -106,6 +106,8 @@ QUnit.module('relational_fields', {
                     turtle_qux: {string: "Qux", type: "float", digits: [16,1], required: true, default: 1.5},
                     turtle_description: {string: "Description", type: "text"},
                     turtle_trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
+                    turtle_ref: {string: "Reference", type: 'reference', selection: [
+                        ["product", "Product"], ["partner", "Partner"]]},
                     product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
                     partner_ids: {string: "Partner", type: "many2many", relation: 'partner'},
                 },
@@ -125,11 +127,13 @@ QUnit.module('relational_fields', {
                 }, {
                     id: 3,
                     display_name: "raphael",
+                    product_id: 37,
                     turtle_bar: false,
                     turtle_foo: "kawa",
                     turtle_int: 21,
                     turtle_qux: 9.8,
                     partner_ids: [],
+                    turtle_ref: 'product,37',
                 }],
             },
             user: {
@@ -3411,6 +3415,72 @@ QUnit.module('relational_fields', {
 
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('.o_field_widget[name=display_name]').val('z').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
+    QUnit.test('one2many and onchange only write modified field', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [
+                    [5], // delete all
+                    [1, 3, { // the server returns all fields
+                        display_name: "coucou",
+                        product_id: [37, "xphone"],
+                        turtle_bar: false,
+                        turtle_foo: "has changed",
+                        turtle_int: 42,
+                        turtle_qux: 9.8,
+                        partner_ids: [],
+                        turtle_ref: 'product,37',
+                    }],
+                ];
+            },
+        };
+
+        this.data.partner.records[0].turtles = [3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="product_id"/>' +
+                            '<field name="turtle_bar"/>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="turtle_qux"/>' +
+                            '<field name="turtle_ref"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (method, args) {
+                if (args.method === 'write') {
+                    // debugger;
+                    assert.deepEqual(args.args[1].turtles, [
+                        [1, 3, {display_name: 'coucou', turtle_foo: 'has changed', turtle_int: 42}],
+                    ], "correct commands should be sent (only send changed values)");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "o2m should contain one row");
+
+        form.$('.o_field_one2many .o_list_view tbody tr:first td:first').click();
+        form.$('.o_field_one2many .o_list_view tbody tr:first input:first').val('blurp').trigger('input');
 
         form.$buttons.find('.o_form_button_save').click();
         form.destroy();

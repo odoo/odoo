@@ -1234,6 +1234,7 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
+            var oldValue = record._changes[name] || record.data[name];
             var id;
             if (field.type === 'many2one') {
                 id = false;
@@ -1246,29 +1247,42 @@ var BasicModel = AbstractModel.extend({
                     var data = _.isArray(val) ?
                         {id: val[0], display_name: val[1]} :
                         {id: val};
-                    rec = self._makeDataPoint({
-                        context: record.context,
-                        data: data,
-                        modelName: field.relation,
-                        parentID: record.id,
-                    });
-                    id = rec.id;
+                    if (!oldValue || (self.localData[oldValue].res_id !== data.id)) {
+                        // only register a change if the value has changed
+                        rec = self._makeDataPoint({
+                            context: record.context,
+                            data: data,
+                            modelName: field.relation,
+                            parentID: record.id,
+                        });
+                        id = rec.id;
+                        record._changes[name] = id;
+                    }
+                } else {
+                    record._changes[name] = false;
                 }
-                record._changes[name] = id;
             } else if (field.type === 'reference') {
                 id = false;
                 if (val) {
                     var ref = val.split(',');
-                    rec = self._makeDataPoint({
-                        context: record.context,
-                        data: {id: parseInt(ref[1])},
-                        modelName: ref[0],
-                        parentID: record.id,
-                    });
-                    defs.push(self._fetchNameGet(rec));
-                    id = rec.id;
+                    var modelName = ref[0];
+                    var resID = parseInt(ref[1]);
+                    if (!oldValue || self.localData[oldValue].res_id !== resID ||
+                        self.localData[oldValue].model !== modelName) {
+                        // only register a change if the value has changed
+                        rec = self._makeDataPoint({
+                            context: record.context,
+                            data: {id: parseInt(ref[1])},
+                            modelName: modelName,
+                            parentID: record.id,
+                        });
+                        defs.push(self._fetchNameGet(rec));
+                        id = rec.id;
+                        record._changes[name] = id;
+                    }
+                } else {
+                    record._changes[name] = id;
                 }
-                record._changes[name] = id;
             } else if (field.type === 'one2many' || field.type === 'many2many') {
                 var listId = record._changes[name] || record.data[name];
                 var list;
@@ -1288,25 +1302,39 @@ var BasicModel = AbstractModel.extend({
                         viewType: fieldInfo.viewType,
                     });
                 }
+                // TODO: before registering the changes, verify that the x2many
+                // value has changed
                 record._changes[name] = list.id;
                 var shouldLoad = false;
                 list._changes = list._changes || [];
                 _.each(val, function (command) {
+                    var rec;
                     if (command[0] === 0 || command[0] === 1) {
                         // CREATE or UPDATE
-                        var params = {
-                            context: list.context,
-                            fields: list.fields,
-                            fieldsInfo: list.fieldsInfo,
-                            modelName: list.model,
-                            parentID: list.id,
-                            viewType: list.viewType,
-                        };
-                        if (command[0] === 1) {
-                            params.res_id = command[1];
+                        if (command[0] === 1 && command[1]) {
+                            // updating an existing record
+                            var recID = _.find(list.data, function (childID) {
+                                var child = self.localData[childID];
+                                return child.res_id === command[1];
+                            });
+                            rec = self.localData[recID];
                         }
-                        rec = self._makeDataPoint(params);
-                        list._cache[rec.res_id] = rec.id;
+                        if (!rec) {
+                            var params = {
+                                context: list.context,
+                                fields: list.fields,
+                                fieldsInfo: list.fieldsInfo,
+                                modelName: list.model,
+                                parentID: list.id,
+                                viewType: list.viewType,
+                            };
+                            if (command[0] === 1) {
+                                params.res_id = command[1];
+                            }
+                            rec = self._makeDataPoint(params);
+                            list._cache[rec.res_id] = rec.id;
+                        }
+
                         list._changes.push({operation: 'ADD', id: rec.id});
                         if (command[0] === 1) {
                             list._changes.push({operation: 'UPDATE', id: rec.id});
@@ -1327,7 +1355,10 @@ var BasicModel = AbstractModel.extend({
                     defs.push(self._readUngroupedList(list));
                 }
             } else {
-                record._changes[name] = self._parseServerValue(field, val);
+                var newValue = self._parseServerValue(field, val);
+                if (newValue !== oldValue) {
+                    record._changes[name] = newValue;
+                }
             }
         });
         return $.when.apply($, defs);
