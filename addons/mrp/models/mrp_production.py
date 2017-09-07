@@ -7,6 +7,7 @@ import math
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class MrpProduction(models.Model):
@@ -132,6 +133,9 @@ class MrpProduction(models.Model):
     post_visible = fields.Boolean(
         'Inventory Post Visible', compute='_compute_post_visible',
         help='Technical field to check when we can post')
+    consumed_less_than_planned = fields.Boolean(
+        compute='_compute_consumed_less_than_planned',
+        help='Technical field used to see if we have to display a warning or not when confirming an order.')
 
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self._uid)
     company_id = fields.Many2one(
@@ -208,6 +212,16 @@ class MrpProduction(models.Model):
                     any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
             else:
                 order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
+
+    @api.multi
+    @api.depends('move_raw_ids.quantity_done', 'move_raw_ids.product_uom_qty')
+    def _compute_consumed_less_than_planned(self):
+        for order in self:
+            order.consumed_less_than_planned = any(order.move_raw_ids.filtered(
+                lambda move: float_compare(move.quantity_done,
+                                           move.product_uom_qty,
+                                           precision_rounding=move.product_uom.rounding) == -1)
+            )
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids')
