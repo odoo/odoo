@@ -5539,7 +5539,7 @@ QUnit.module('relational_fields', {
 
 
     QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         this.data.partner.records[0].turtles = [];
         for (var i = 0; i < 42; i++) {
@@ -5565,7 +5565,8 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(args.method);
                 if (args.method === 'write') {
-                    assert.deepEqual(args.args[1].turtles[42], [0, false, {turtle_foo: 'rainbow dash'}]);
+                    assert.strictEqual(args.args[1].turtles[42][0], 0);
+                    assert.deepEqual(args.args[1].turtles[42][2], {turtle_foo: 'rainbow dash'});
                 }
                 return this._super.apply(this, arguments);
             },
@@ -5591,7 +5592,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('editing tabbed one2many (editable=top)', function (assert) {
-        assert.expect(14);
+        assert.expect(15);
 
         this.data.partner.records[0].turtles = [];
         this.data.turtle.fields.turtle_foo.default = "default foo";
@@ -5618,7 +5619,8 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(args.method);
                 if (args.method === 'write') {
-                    assert.deepEqual(args.args[1].turtles[0], [0, false, {turtle_foo: 'rainbow dash'}])
+                    assert.strictEqual(args.args[1].turtles[0][0], 0);
+                    assert.deepEqual(args.args[1].turtles[0][2], {turtle_foo: 'rainbow dash'});
                 }
                 return this._super.apply(this, arguments);
             },
