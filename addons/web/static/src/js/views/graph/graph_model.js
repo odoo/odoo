@@ -67,7 +67,7 @@ return AbstractModel.extend({
             domain: params.domain,
             context: params.context,
         };
-        this.defaultGroupedBy = params.groupedBy;
+        this.defaultGroupedBy = params.groupedBy.length ? params.groupedBy : groupBys;
         return this._loadGraph();
     },
     /**
