@@ -72,6 +72,9 @@
             <input class="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
             <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+            <button t-if="mode == 'manage'" class="btn btn-primary btn-lg mb8 mt8 pull-right o_payment_form_add_pm">
+                <i class="fa fa-plus-circle"/> Add new card
+            </button>
          </template>
     </data>
 </odoo>
