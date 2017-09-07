@@ -71,7 +71,7 @@ class TestUnbuild(TestMrpCommon):
         })
         produce_wizard.do_produce()
 
-        mo.button_mark_done()
+        mo.action_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
         # Check quantity in stock before unbuild.
@@ -144,7 +144,7 @@ class TestUnbuild(TestMrpCommon):
         })
         produce_wizard.do_produce()
 
-        mo.button_mark_done()
+        mo.action_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
         # Check quantity in stock before unbuild.
@@ -228,7 +228,7 @@ class TestUnbuild(TestMrpCommon):
         })
         produce_wizard.do_produce()
 
-        mo.button_mark_done()
+        mo.action_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
         # Check quantity in stock before unbuild.
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 5, 'You should have the 5 final product in stock')
@@ -320,7 +320,7 @@ class TestUnbuild(TestMrpCommon):
         })
         produce_wizard.do_produce()
 
-        mo.button_mark_done()
+        mo.action_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
         # Check quantity in stock before unbuild.
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), 5, 'You should have the 5 final product in stock')
@@ -416,7 +416,7 @@ class TestUnbuild(TestMrpCommon):
             'product_qty': 5.0,
         })
         produce_wizard.do_produce()
-        mo.button_mark_done()
+        mo.action_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
         # Check quantity in stock before unbuild.
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 5, 'You should have the 5 final product in stock')

@@ -74,7 +74,7 @@ class TestProcurement(TestMrpCommon):
         produce_wizard.do_produce()
         produce_product_4.post_inventory()
         # Check procurement and Production state for product 4.
-        produce_product_4.button_mark_done()
+        produce_product_4.action_done()
         self.assertEqual(produce_product_4.state, 'done', 'Production order should be in state done')
         self.assertEqual(procurement.state, 'done', 'Procurement order should be in state done')
 
@@ -102,7 +102,7 @@ class TestProcurement(TestMrpCommon):
 
         production_product_6.post_inventory()
         # Check procurement and Production state for product 6.
-        production_product_6.button_mark_done()
+        production_product_6.action_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
         self.assertEqual(self.product_6.qty_available, 24, 'Wrong quantity available of finished product.')
 

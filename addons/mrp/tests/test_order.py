@@ -148,8 +148,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         produce_wizard.do_produce()
 
-        # man_order.button_mark_done()
-        man_order.button_mark_done()
+        man_order.action_done()
         self.assertEqual(man_order.state, 'done', "Production order should be in done state.")
 
     def test_explode_from_order(self):
@@ -458,3 +457,22 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard.do_produce()
         self.assertEqual(production.move_raw_ids[0].quantity_done, 16, 'Should use half-up rounding when producing')
         self.assertEqual(production.move_raw_ids[1].quantity_done, 34, 'Should use half-up rounding when producing')
+
+    def test_markdone_confirmation(self):
+        """ A confirmation dialog should pop up when confirming an MO without having consumed all materials. """
+        production_id = self.env['mrp.production'].create({
+            'product_id': self.product_4.id,
+            'product_uom_id': self.product_4.uom_id.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 1,
+        })
+
+        mark_done_action = production_id.button_mark_done()
+        self.assertTrue(isinstance(mark_done_action, dict), 'Should have returned a wizard')
+        self.assertEqual(mark_done_action.get('res_model'), 'mrp.markdone.confirmation')
+
+        for move in production_id.move_raw_ids:
+            move.quantity_done = move.product_uom_qty
+
+        self.assertTrue(production_id.button_mark_done(), 'Should not have returned a wizard')
+        self.assertEqual(production_id.state, 'done')

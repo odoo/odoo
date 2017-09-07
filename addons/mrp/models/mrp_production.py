@@ -538,7 +538,7 @@ class MrpProduction(models.Model):
         return True
 
     @api.multi
-    def button_mark_done(self):
+    def action_done(self):
         self.ensure_one()
         for wo in self.workorder_ids:
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
@@ -549,6 +549,30 @@ class MrpProduction(models.Model):
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         self.env["procurement.order"].search([('production_id', 'in', self.ids)]).check()
         return self.write({'state': 'done'})
+
+    @api.multi
+    def button_mark_done(self):
+        self.ensure_one()
+        if self.move_raw_ids.filtered(lambda move: float_compare(move.quantity_done,
+                                                                 move.product_uom_qty,
+                                                                 precision_rounding=move.product_uom.rounding) == -1):
+            confirmation_wizard_id = self.env['mrp.markdone.confirmation'].create({'production_id': self.id})
+            view = self.env.ref('mrp.mrp_markdone_confirmation_view')
+            return {
+                'name': _('Consumed Less Material'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mrp.markdone.confirmation',
+                'views': [(view.id, 'form')],
+                'view_id': view.id,
+                'res_id': confirmation_wizard_id.id,
+                'context': self.env.context,
+                'target': 'new',
+            }
+        else:
+            self.action_done()
+        return True
 
     @api.multi
     def do_unreserve(self):
