@@ -84,7 +84,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
     assert.strictEqual(parseInt(activityMenu.el.innerText), 4, "widget should have 4 notification counter");
-    activityMenu.$('.dropdown-toggle').click()
+    activityMenu.$('.dropdown-toggle').click();
     assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
     activityMenu.$('.o_mail_channel_preview').click();
     assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
