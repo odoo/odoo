@@ -1524,7 +1524,7 @@ class Meeting(models.Model):
         partner_ids = events.mapped('partner_ids').ids
 
         records_to_exclude = self.env['calendar.event']
-        records_to_unlink = self.env['calendar.event']
+        records_to_unlink = self.env['calendar.event'].with_context(recompute=False)
 
         for meeting in self:
             if can_be_deleted and not is_calendar_id(meeting.id):  # if  ID REAL
