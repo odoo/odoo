@@ -2716,3 +2716,36 @@ class StockMove(TransactionCase):
 
         self.assertEqual(self.product1.qty_available, 5.0)
         self.assertEqual(self.product1.with_context(company_owned=True).qty_available, 10.0)
+
+    def test_split_1(self):
+        """ When we split a move line and having one without quantity done, we want to keep reservation
+            on the new one as it has not been unreserved during the copy.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_split_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+
+        move1.action_confirm()
+        move1.action_assign()
+        move_line = move1.move_line_ids
+
+        default = {'product_uom_qty': 3,
+                   'qty_done': 3}
+        move_line.copy(default=default)
+        move_line.with_context(bypass_reservation_update=True).write({'product_uom_qty': 7, 'qty_done': 0})
+        move1.action_done()
+
+        new_move = self.env['stock.move'].search([('name', '=', 'test_split_1'), ('state', '=', 'confirmed')])
+
+        self.assertEqual(move1.move_line_ids.product_uom_qty, 0.0)
+        self.assertEqual(move1.move_line_ids.qty_done, 3.0)
+        self.assertEqual(new_move.move_line_ids.product_uom_qty, 7.0)
+        self.assertEqual(new_move.move_line_ids.qty_done, 0.0)
