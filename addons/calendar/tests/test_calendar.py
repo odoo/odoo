@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
@@ -144,3 +146,70 @@ class TestCalendar(TransactionCase):
         self.assertEqual(list(events), [bar2, foo2, bar1, foo1])
         events = self.CalendarEvent.search(domain, order='start desc, name desc')
         self.assertEqual(list(events), [foo2, bar2, bar1, foo1])
+
+    def test_event_activity(self):
+        # ensure meeting activity type exists
+        meeting_act_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        if not meeting_act_type:
+            meeting_act_type = self.env['mail.activity.type'].create({
+                'name': 'Meeting Test',
+                'category': 'meeting',
+            })
+
+        # have a test model inheriting from activities
+        test_record = self.env['res.partner'].create({
+            'name': 'Test',
+        })
+        now = datetime.now()
+        test_user = self.env.ref('base.user_demo')
+        test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
+
+        # create using default_* keys
+        test_event = self.env['calendar.event'].sudo(test_user).with_context(
+            default_res_model=test_record._name,
+            default_res_id=test_record.id,
+        ).create({
+            'name': test_name,
+            'description': test_description,
+            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'user_id': self.env.user.id,
+        })
+        self.assertEqual(test_event.res_model, test_record._name)
+        self.assertEqual(test_event.res_id, test_record.id)
+        self.assertEqual(len(test_record.activity_ids), 1)
+        self.assertEqual(test_record.activity_ids.summary, test_name)
+        self.assertEqual(test_record.activity_ids.note, test_description)
+        self.assertEqual(test_record.activity_ids.user_id, self.env.user)
+        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-1)).date()))
+
+        # updating event should update activity
+        test_event.write({
+            'name': '%s2' % test_name,
+            'description': test_description2,
+            'start': fields.Datetime.to_string(now + timedelta(days=-2)),
+            'user_id': test_user.id,
+        })
+        self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
+        self.assertEqual(test_record.activity_ids.note, test_description2)
+        self.assertEqual(test_record.activity_ids.user_id, test_user)
+        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-2)).date()))
+
+        # deleting meeting should delete its activity
+        test_record.activity_ids.unlink()
+        self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
+
+        # create using active_model keys
+        test_event = self.env['calendar.event'].sudo(self.env.ref('base.user_demo')).with_context(
+            active_model=test_record._name,
+            active_id=test_record.id,
+        ).create({
+            'name': test_name,
+            'description': test_description,
+            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'user_id': self.env.user.id,
+        })
+        self.assertEqual(test_event.res_model, test_record._name)
+        self.assertEqual(test_event.res_id, test_record.id)
+        self.assertEqual(len(test_record.activity_ids), 1)
