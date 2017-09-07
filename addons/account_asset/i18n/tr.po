@@ -16,6 +16,7 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Levent Karakaş <levent@mektup.at>, 2017
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -56,7 +57,7 @@ msgstr "Amortisman kalemleri sayısı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "Taksitli Hatlar"
+msgstr "Taksit Satır Adedi"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -80,16 +81,15 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
-"Periyodik kayıtlarda kullanılan hesap, varlığın bir kısmını gider olarak "
-"kaydetmektir."
+"Varlığın bir kısmını gider olarak kaydetmek için periyodik kayıtlarda "
+"kullanılan hesaptır."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
-"Varlığın orijinal fiyata satın alınmasını kaydetmek için kullanılan "
-"hesaptır."
+"Varlığın orijinal satın alma fiyatını kaydetmek için kullanılan hesaptır."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -116,7 +116,7 @@ msgstr "Amortisman Satırları Tutarı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr "Taksitlendirme Hattı Miktarı"
+msgstr "Taksitlendirme Satır Tutarı"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -821,7 +821,7 @@ msgstr "Bir dönemdeki ay sayısı"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr "Her Giriş Tek Bir Giriş"
+msgstr "Bir Giriş Her"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -1007,8 +1007,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Bu sihirbaz, seçilen ay için taksitlendirme / amortisman satırları gönderir.<br/>\n"
-"Bu, bu varlık / gelir tanıma döneminde de ilgili tüm taksit hatları için günlük girdileri oluşturacaktır."
+"Bu sihirbaz seçilen ay için taksitlendirme / amortisman satırlarını işler.<br/>\n"
+"Bu varlık / gelir değerleme döneminde ilgili tüm taksit satırları için yevmiye girişleri oluşturacaktır."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1020,7 +1020,7 @@ msgstr "Zaman Yöntemi"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr "Zaman Metodu Açık"
+msgstr "Zaman Metodu"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
@@ -1068,7 +1068,7 @@ msgstr "Yıl"
 #: code:addons/account_asset/models/account_asset.py:107
 #, python-format
 msgid "You cannot delete a document is in %s state."
-msgstr "Bir belgeyi silemeceğinizi%sbelirtmektedir."
+msgstr "%sdurumundaki bir belgeyi silemezsiniz."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:110
@@ -1086,7 +1086,7 @@ msgstr "İşlenmiş amortisman kalemleri içeren bir varlığı silemezsiniz."
 #: code:addons/account_asset/models/account_asset.py:581
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "Gönderilen taksit satırlarını silemezsiniz."
+msgstr "İşlenen taksit satırlarını silemezsiniz."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

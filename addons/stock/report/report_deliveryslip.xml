@@ -111,14 +111,24 @@
                                     <span t-if="pack_operation.package_id">:</span>
                                     <span t-field="pack_operation.package_id"/>
                                     <span t-field="pack_operation.ordered_qty"/>
-                                    <span t-field="pack_operation.product_uom_id"/>
+                                    <t t-if="pack_operation.linked_move_operation_ids">
+                                        <span t-field="pack_operation.linked_move_operation_ids[0].move_id.product_uom"></span>
+                                    </t>
+                                    <t t-else="1">
+                                        <span t-field="pack_operation.product_uom_id"></span>
+                                    </t>
                                 </td>
                                 <td class="text-right" t-if="pack_operation.state == 'done'">
-                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done">
+                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done_uom_ordered">
                                         <t t-set="backorder" t-value="True"/>
                                     </t>
-                                    <span t-field="pack_operation.qty_done"/>
-                                    <span t-field="pack_operation.product_uom_id"/>
+                                    <span t-field="pack_operation.qty_done_uom_ordered"/>
+                                    <t t-if="pack_operation.linked_move_operation_ids">
+                                        <span t-field="pack_operation.linked_move_operation_ids[0].move_id.product_uom"></span>
+                                    </t>
+                                    <t t-else="1">
+                                        <span t-field="pack_operation.product_uom_id"></span>
+                                    </t>
                                 </td>
                             </tr>
                         </tbody>

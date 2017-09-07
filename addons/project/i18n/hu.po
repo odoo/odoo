@@ -6,6 +6,7 @@
 # gezza <geza.nagy@oregional.hu>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
@@ -151,7 +152,7 @@ msgstr "# Napok a hozzárendelésig"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr "# Lezárásig hátralévő napok"
+msgstr "# Napok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -187,8 +188,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
-"Egy projekt aktiválása automatikusan aktiválja a projekt feladatait és "
-"ügyeit is. Folytatja?"
+"Egy projekt (in)aktiválása automatikusan (in)aktiválja a projekt feladatait "
+"és ügyeit. Folytatja?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -224,7 +225,7 @@ msgstr ""
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
 "<b>Kattintson a mentés gombra</b> a feladaton elvégzett változtatások "
-"elmentéséhez."
+"alkalmazásához."
 
 #. module: project
 #. openerp-web
@@ -232,7 +233,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
-"<b>Fogd &amp; vidd</b> módszerrel mozgathatja a feladatokat az oszlopok "
+"<b>Húzd &amp; ejtsd</b> módszerrel mozgathatja a feladatokat az oszlopok "
 "között munkája során."
 
 #. module: project
@@ -242,8 +243,8 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"<b>Hívjon meg munkatársakat</b> e-mailen.<br/><i>Soronként egy e-mail címet "
-"adjon meg.</i>"
+"<b>Hívjon meg munkatársakat</b> e-mailen keresztül.<br/><i>Soronként egy "
+"e-mail címet adjon meg.</i>"
 
 #. module: project
 #. openerp-web
@@ -251,7 +252,8 @@ msgstr ""
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
-"<b>Kedvenc feladatok</b> megjelölésével jelezheti a csapat prioritásait."
+"<b>Jelölje meg csillaggal a feladatokat</b> a csapat prioritásainak "
+"meghatározása érdekében."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -270,8 +272,8 @@ msgid ""
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                         Dokumentumok vannak mellékelve a projekt feladataihoz és ügyeihez.</p><p>\n"
-"                        Küldjön üzenetet vagy naplózzon belső jegyzeteket mellékletekkel, így dokumentumokat\n"
-"                        fűzhet a projekthez.\n"
+"                        Küldjön üzeneteket vagy naplózzon belső jegyzeteket mellékletekkel a dokumentumok\n"
+"                        projekthez való hozzáfűzéséhez.\n"
 "                    </p>"
 
 #. module: project
@@ -279,7 +281,7 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">Kattintson új projekt "
+"<p class=\"oe_view_nocontent_create\">Kattintson egy új projekt "
 "létrehozásához.</p>"
 
 #. module: project
@@ -295,18 +297,18 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Telepítés most"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr "<span class=\"fa fa-comment-o\"/>  Weboldal élő társalgás"
+msgstr "<span class=\"fa fa-comment-o\"/>  Élő csevegés a weboldalon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/>  Weboldal élő társalgás be"
+msgstr "<span class=\"fa fa-comment-o\"/>  Élő csevegés a weboldalon bekapcsolva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
 msgstr ""
-"<span class=\"fa fa-envelope-o\"/> E-mail küldése projekt alkalmazás "
+"<span class=\"fa fa-envelope-o\"/> Küldjön egy e-mailt projektalkalmazás-"
 "szakértőnknek"
 
 #. module: project
@@ -315,7 +317,7 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-down\"/> A projekt alkalmazás <strong>rossz "
+"<span class=\"fa fa-thumbs-o-down\"/> A projektek <strong>helytelen "
 "használata</strong>:"
 
 #. module: project
@@ -324,7 +326,7 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-up\"/> A projekt alkalmazás<strong> jó "
+"<span class=\"fa fa-thumbs-o-up\"/> A projektek <strong> helyes "
 "használata</strong>:"
 
 #. module: project
@@ -342,7 +344,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> Képernyő testreszabás</strong>\n"
+"                                            <strong> Képernyő testreszabása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -355,7 +357,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-mobile\"/>\n"
-"                                            <strong> Mobiltelefonjáról</strong>\n"
+"                                            <strong> A mobiltelefonjáról</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -368,7 +370,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
-"                                            <strong> Egyedi kimutatások létrehozása</strong>\n"
+"                                            <strong> Egyéni riportok létrehozása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -381,7 +383,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-puzzle-piece\"/>\n"
-"                                            <strong> Chrome kiterjesztéssel</strong>\n"
+"                                            <strong> Chrome kiterjesztésen keresztül</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -394,7 +396,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> Munkafolyamat testreszabás</strong>\n"
+"                                            <strong> Munkafolyamat testreszabása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -407,7 +409,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-tasks\"/>\n"
-"                                            <strong> Odoo rendszerből közvetlenül</strong>\n"
+"                                            <strong> Közvetlenül az Odoo rendszerben</strong>\n"
 "                                        </span>"
 
 #. module: project

@@ -240,6 +240,7 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.db.set_uuid(self.config.uuid);
+            self.cashier = self.get_cashier();
 
             var orders = self.db.get_orders();
             for (var i = 0; i < orders.length; i++) {
@@ -572,11 +573,12 @@ exports.PosModel = Backbone.Model.extend({
 
     // returns the user who is currently the cashier for this point of sale
     get_cashier: function(){
-        return this.cashier || this.user;
+        return this.db.get_cashier() || this.cashier || this.user;
     },
     // changes the current cashier
     set_cashier: function(user){
         this.cashier = user;
+        this.db.set_cashier(this.cashier);
     },
     //creates a new empty order and sets it as the current order
     add_new_order: function(){
@@ -1427,6 +1429,9 @@ exports.Orderline = Backbone.Model.extend({
         _(taxes).each(function(tax) {
             if (!no_map_tax){
                 tax = self._map_tax_fiscal_position(tax);
+            }
+            if (!tax){
+                return;
             }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);

@@ -294,6 +294,13 @@ class HrExpense(models.Model):
         return account_move
 
     @api.multi
+    def unlink(self):
+        for expense in self:
+            if expense.state in ['done']:
+                raise UserError(_('You cannot delete a posted expense.'))
+        super(HrExpense, self).unlink()
+
+    @api.multi
     def action_get_attachment_view(self):
         self.ensure_one()
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
@@ -397,7 +404,7 @@ class HrExpenseSheet(models.Model):
     journal_id = fields.Many2one('account.journal', string='Expense Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]},
         default=lambda self: self.env['ir.model.data'].xmlid_to_object('hr_expense.hr_expense_account_journal') or self.env['account.journal'].search([('type', '=', 'purchase')], limit=1),
         help="The journal used when the expense is done.")
-    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['case', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
+    bank_journal_id = fields.Many2one('account.journal', string='Bank Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, default=lambda self: self.env['account.journal'].search([('type', 'in', ['cash', 'bank'])], limit=1), help="The payment method used when the expense is paid by the company.")
     accounting_date = fields.Date(string="Accounting Date")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', copy=False)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
@@ -435,8 +442,8 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def unlink(self):
         for expense in self:
-            if expense.state == "post":
-                raise UserError(_("You cannot delete a posted expense."))
+            if expense.state in ['post', 'done']:
+                raise UserError(_('You cannot delete a posted or paid expense.'))
         super(HrExpenseSheet, self).unlink()
 
     @api.multi
