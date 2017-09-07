@@ -3885,7 +3885,7 @@ QUnit.module('Views', {
 
     QUnit.test('*_view_ref in context are passed correctly', function (assert) {
         var done = assert.async();
-        assert.expect(4);
+        assert.expect(3);
 
         createAsyncView({
             View: FormView,
@@ -3902,8 +3902,6 @@ QUnit.module('Views', {
                     var context = event.data.context.eval();
                     assert.strictEqual(context.tree_view_ref, 'module.tree_view_ref',
                         "context should contain tree_view_ref");
-                    assert.notOk('some_context' in context,
-                        "should not send record's context to load p's fields_view");
                     event.data.on_success();
                 }
             },
@@ -5787,6 +5785,61 @@ QUnit.module('Views', {
             "read", // reload first dialog
         ]);
 
+        form.destroy();
+    });
+
+    QUnit.test('process the context for inline subview', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="foo"/>' +
+                            '<field name="bar" invisible="context.get(\'hide_bar\', False)"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                context: {hide_bar: true},
+            },
+        });
+        assert.strictEqual(form.$('.o_list_view thead tr th').length, 1,
+            "there should be only one column");
+        form.destroy();
+    });
+
+    QUnit.test('process the context for subview not inline', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                "partner,false,list": '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar" invisible="context.get(\'hide_bar\', False)"/>' +
+                '</tree>',
+            },
+            res_id: 1,
+            viewOptions: {
+                context: {hide_bar: true},
+            },
+        });
+        assert.strictEqual(form.$('.o_list_view thead tr th').length, 1,
+            "there should be only one column");
         form.destroy();
     });
 });

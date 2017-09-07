@@ -129,7 +129,7 @@ function createAsyncView(params) {
 
     // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = addMockEnvironment(widget, params);
-    var viewInfo = mockServer.fieldsViewGet(params.arch, params.model, params.toolbar);
+    var viewInfo = mockServer.fieldsViewGet(params);
 
     // create the view
     var viewOptions = {
@@ -321,10 +321,17 @@ function addMockEnvironment(widget, params) {
             var view_type = view_descr[1];
             var key = [model, view_id, view_type].join(',');
             var arch = params.archs[key];
+            var viewParams = {
+                arch: arch,
+                model: model,
+                viewOptions: {
+                    context: event.data.context.eval(),
+                },
+            };
             if (!arch) {
                 throw new Error('No arch found for key ' + key);
             }
-            views[view_type] = mockServer.fieldsViewGet(arch, model);
+            views[view_type] = mockServer.fieldsViewGet(viewParams);
         });
 
         event.data.on_success(views);
