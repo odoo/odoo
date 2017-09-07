@@ -509,3 +509,8 @@ class EventRegistration(models.Model):
             return _('next month')
         else:
             return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
+
+    @api.multi
+    def summary(self):
+        self.ensure_one()
+        return {'information': []}

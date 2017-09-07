@@ -212,3 +212,22 @@ class EventRegistration(models.Model):
                 'sale_order_line_id': line_id.id,
             })
         return att_data
+
+    @api.multi
+    def summary(self):
+        res = super(EventRegistration, self).summary()
+        if self.event_ticket_id.product_id.image_medium:
+            res['image'] = '/web/image/product.product/%s/image_medium' % self.event_ticket_id.product_id.id
+        information = res.setdefault('information', {})
+        information.append((_('Name'), self.name))
+        information.append((_('Ticket'), self.event_ticket_id.name or _('None')))
+        order = self.sale_order_id.sudo()
+        if not order:
+            payment_status = _('Free')
+        elif not order.invoice_ids or any(invoice.state != 'paid' for invoice in order.invoice_ids):
+            payment_status = _('To pay')
+            res['alert'] = _('The registration must be paid')
+        else:
+            payment_status = _('Paid')
+        information.append((_('Payment'), payment_status))
+        return res
