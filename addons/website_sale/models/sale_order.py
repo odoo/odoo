@@ -161,6 +161,7 @@ class SaleOrder(models.Model):
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 order = self.sudo().browse(self.id)
+                order.date_order = fields.Datetime.now()
                 product_context = dict(self.env.context)
                 product_context.setdefault('lang', order.partner_id.lang)
                 product_context.update({
