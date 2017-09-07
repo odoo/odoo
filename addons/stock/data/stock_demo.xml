@@ -132,7 +132,7 @@
         </record>
 
         <function model="stock.inventory" name="action_done">
-            <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
+            <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
 

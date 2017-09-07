@@ -176,12 +176,10 @@ class Inventory(models.Model):
     def action_check(self):
         """ Checks the inventory and computes the stock move to do """
         # tde todo: clean after _generate_moves
-        for inventory in self:
+        for inventory in self.filtered(lambda x: x.state not in ('done','cancel')):
             # first remove the existing stock moves linked to this inventory
             inventory.mapped('move_ids').unlink()
-            for line in inventory.line_ids:
-                # compare the checked quantities on inventory lines to the theorical one
-                stock_move = line._generate_moves()
+            inventory.line_ids._generate_moves()
 
     @api.multi
     def action_cancel_draft(self):
@@ -447,8 +445,8 @@ class InventoryLine(models.Model):
                 continue
             diff = line.theoretical_qty - line.product_qty
             if diff < 0:  # found more than expected
-                vals = self._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False)
+                vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False)
             else:
-                vals = self._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
+                vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
             moves |= self.env['stock.move'].create(vals)
         return moves

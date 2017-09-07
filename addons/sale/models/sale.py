@@ -154,15 +154,14 @@ class SaleOrder(models.Model):
 
     note = fields.Text('Terms and conditions', default=_default_note)
 
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
-    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all', track_visibility='always')
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='onchange')
+    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
@@ -428,9 +427,7 @@ class SaleOrder(models.Model):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
         orders.write({
             'state': 'draft',
-            'procurement_group_id': False,
         })
-        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
@@ -490,19 +487,16 @@ class SaleOrder(models.Model):
     def action_unlock(self):
         self.write({'state': 'sale'})
 
-    def _prepare_procurement_group(self):
-        return {'name': self.name}
-
     @api.multi
     def action_confirm(self):
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
-        for order in self:
-            order.state = 'sale'
-            order.confirmation_date = fields.Datetime.now()
-            if self.env.context.get('send_email'):
-                self.force_quotation_send()
-            order.order_line._action_procurement_create()
+        self.write({
+            'state': 'sale',
+            'confirmation_date': fields.Datetime.now()
+        })
+        if self.env.context.get('send_email'):
+            self.force_quotation_send()
         if self.env['ir.config_parameter'].get_param('sale.auto_done_setting'):
             self.action_done()
         return True
@@ -747,52 +741,6 @@ class SaleOrderLine(models.Model):
             taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
-    @api.multi
-    def _prepare_order_line_procurement(self, group_id=False):
-        self.ensure_one()
-        return {
-            'name': self.name,
-            'origin': self.order_id.name,
-            'date_planned': datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=self.customer_lead),
-            'product_id': self.product_id.id,
-            'product_qty': self.product_uom_qty,
-            'product_uom': self.product_uom.id,
-            'company_id': self.order_id.company_id.id,
-            'group_id': group_id,
-            'sale_line_id': self.id
-        }
-
-    @api.multi
-    def _action_procurement_create(self):
-        """
-        Create procurements based on quantity ordered. If the quantity is increased, new
-        procurements are created. If the quantity is decreased, no automated action is taken.
-        """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        new_procs = self.env['procurement.order']  # Empty recordset
-        for line in self:
-            if line.state != 'sale' or not line.product_id._need_procurement():
-                continue
-            qty = 0.0
-            for proc in line.procurement_ids:
-                qty += proc.product_qty
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                continue
-
-            if not line.order_id.procurement_group_id:
-                vals = line.order_id._prepare_procurement_group()
-                line.order_id.procurement_group_id = self.env["procurement.group"].create(vals)
-
-            vals = line._prepare_order_line_procurement(group_id=line.order_id.procurement_group_id.id)
-            vals['product_qty'] = line.product_uom_qty - qty
-            new_proc = self.env["procurement.order"].with_context(procurement_autorun_defer=True).create(vals)
-            new_proc.message_post_with_view('mail.message_origin_link',
-                values={'self': new_proc, 'origin': line.order_id},
-                subtype_id=self.env.ref('mail.mt_note').id)
-            new_procs += new_proc
-        new_procs.run()
-        return new_procs
-
     @api.model
     def _get_purchase_price(self, pricelist, product, product_uom, date):
         return {}
@@ -815,7 +763,6 @@ class SaleOrderLine(models.Model):
         values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            line._action_procurement_create()
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
 
@@ -850,8 +797,6 @@ class SaleOrderLine(models.Model):
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
         result = super(SaleOrderLine, self).write(values)
-        if lines:
-            lines._action_procurement_create()
         return result
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
@@ -913,7 +858,6 @@ class SaleOrderLine(models.Model):
     customer_lead = fields.Float(
         'Delivery Lead Time', required=True, default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
-    procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
     amt_to_invoice = fields.Monetary(string='Amount To Invoice', compute='_compute_invoice_amount', store=True)
     amt_invoiced = fields.Monetary(string='Amount Invoiced', compute='_compute_invoice_amount', store=True)
 

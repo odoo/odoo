@@ -403,16 +403,11 @@ tour.register('main_flow_tour', {
 }, {
 // Run the schedulers
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Operations')",
-    content: _t("Go to Operations"),
+    trigger: ".o_menu_sections a:contains('Run Schedulers')",
+    content: _t("Go to Run Schedulers"),
     position: "bottom"
-}, {
-    edition: "community",
-    trigger: ".oe_menu_toggler[data-menu-xmlid='stock.procurement_order_compute_all_menu']",
-    content: _t("Click on submenu"),
-    position: "bottom"
-}, {
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_stock_proc_schedulers'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_stock_proc_schedulers']",
+},{
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_procurement_compute']",
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {

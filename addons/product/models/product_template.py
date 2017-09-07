@@ -13,7 +13,7 @@ from odoo.tools import pycompat
 
 class ProductTemplate(models.Model):
     _name = "product.template"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Product Template"
     _order = "name"
 

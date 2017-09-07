@@ -142,7 +142,6 @@
                     <group>
                         <field name="location_id" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
                         <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="exhausted" attrs="{'invisible': [('filter', 'in', ('owner', 'product_owner','lot','pack','partial', 'product'))]}"/>
                     </group>
                     <group>
                         <field name="date"/>
@@ -152,6 +151,7 @@
                         <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')], 'required': [('filter', '=', 'lot')]}" groups="stock.group_production_lot" />
                         <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))], 'required': [('filter', 'in', ('owner', 'product_owner'))]}" groups="stock.group_tracking_owner"/>
                         <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')], 'required': [('filter', '=', 'pack')]}" groups="stock.group_tracking_lot"/>
+                        <field name="exhausted" attrs="{'invisible': [('filter', 'in', ('owner', 'product_owner','lot','pack','partial', 'product'))]}"/>
                     </group>
                 </group>
                 <notebook attrs="{'invisible':[('state','=','draft')]}">

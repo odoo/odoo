@@ -189,7 +189,7 @@ class PushedFlow(models.Model):
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
+        default=lambda self: self.env['res.company']._company_default_get('stock.location.path'), index=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
@@ -243,7 +243,6 @@ class PushedFlow(models.Model):
                 'propagate': self.propagate,
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
-                'procurement_id': False,
             }
 
         return new_move_vals

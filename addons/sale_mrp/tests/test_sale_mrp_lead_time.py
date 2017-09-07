@@ -63,15 +63,9 @@ class TestSaleMrpLeadTime(TestStockCommon):
         # Confirm sale order
         order.action_confirm()
 
-        # Run scheduler
-        self.env['procurement.order'].run_scheduler()
-
         # Check manufacturing order created or not
-        manufacturing_order = self.env['procurement.order'].search([('product_id', '=', self.product_1.id), ('group_id', '=', order.procurement_group_id.id), ('production_id', '!=', False)]).production_id
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id), ('move_dest_ids', 'in', order.picking_ids[0].move_lines.ids)])
         self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
-
-        # Check the picking crated or not
-        self.assertTrue(order.picking_ids, "Picking should be created.")
 
         # Check schedule date of picking
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=company.security_lead)
@@ -112,10 +106,10 @@ class TestSaleMrpLeadTime(TestStockCommon):
         order.action_confirm()
 
         # Run scheduler
-        self.env['procurement.order'].run_scheduler()
+        self.env['procurement.group'].run_scheduler()
 
         # Check manufacturing order created or not
-        manufacturing_order = self.env['procurement.order'].search([('product_id', '=', self.product_1.id), ('group_id', '=', order.procurement_group_id.id), ('production_id', '!=', False)]).production_id
+        manufacturing_order = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)]) 
         self.assertTrue(manufacturing_order, 'Manufacturing order should be created.')
 
         # Check the picking crated or not
