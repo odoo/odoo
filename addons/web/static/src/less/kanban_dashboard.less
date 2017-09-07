@@ -35,6 +35,11 @@
         }
     }
 
+    &.o_kanban_dashboard {
+        // correctly display the no_content_helper in dashboards
+        .o-flex-flow(row, wrap);
+    }
+
     &.o_kanban_dashboard.o_kanban_ungrouped, &.o_kanban_dashboard.o_kanban_grouped {
 
         // If invisible, elem will no take more than its original height
