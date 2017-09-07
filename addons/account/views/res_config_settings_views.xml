@@ -12,11 +12,11 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.account</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="8"/>
+            <field name="priority" eval="40"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Accounting" data-key="account_invoicing" groups="account.group_account_manager">
+                    <div class="app_settings_block" data-string="Invoicing" data-key="account_invoicing" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                             <h2 attrs="{'invisible': [('has_accounting_entries','!=',False)]}">Fiscal Localization</h2>
@@ -95,7 +95,7 @@
                                     <field name="module_account_taxcloud"/>
                                 </div>
                                 <div class="o_setting_right_pane" name="account_taxcloud_right_pane">
-                                    <label for="module_account_taxcloud" string="TaxCloud Connection"/>
+                                    <label for="module_account_taxcloud" string="TaxCloud"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Compute tax rates based on U.S. ZIP codes

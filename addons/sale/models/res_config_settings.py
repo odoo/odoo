@@ -22,10 +22,10 @@ class ResConfigSettings(models.TransientModel):
     module_sale_payment = fields.Boolean("Online Signature & Payment", help='Technical field implied by user choice of online_confirmation')
     module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
-    multi_sales_price = fields.Boolean("Multiple sales price per product")
+    multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
     multi_sales_price_method = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
-        ('formula', 'Price computed from formulas (discounts, margins, roundings)')
+        ('formula', 'Prices computed from formulas (discounts, margins, roundings)')
         ], default='percentage', string="Pricelists")
     sale_pricelist_setting = fields.Selection([
         ('fixed', 'A single sales price per product'),
@@ -66,8 +66,8 @@ class ResConfigSettings(models.TransientModel):
         ('b2c', 'Free sign up (B2C)'),
     ], string='Customer Account')
 
-    module_delivery = fields.Boolean("Manage shipping internally")
-    module_delivery_dhl = fields.Boolean("DHL USA")
+    module_delivery = fields.Boolean("Shipping Costs")
+    module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")

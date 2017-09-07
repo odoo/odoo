@@ -4,7 +4,7 @@
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.sale</field>
         <field name="model">res.config.settings</field>
-        <field name="priority" eval="3"/>
+        <field name="priority" eval="10"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
@@ -95,7 +95,7 @@
                                 <field name="multi_sales_price"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="multi_sales_price" string="Multiple Prices per Product"/>
+                                <label for="multi_sales_price"/>
                                 <div class="text-muted">
                                     Set multiple prices per product, automated discounts, etc.
                                 </div>
@@ -121,7 +121,7 @@
                                     Let your customers log in to see their documents
                                 </div>
                                 <div class="mt8">
-                                    <field name="auth_signup_uninvited" widget="radio" required="True"/>
+                                    <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('portal_confirmation', '=', False)]}">
                                     <div class="mt16">
-                                        <field name="portal_confirmation_options" widget="radio"
+                                        <field name="portal_confirmation_options" class="o_light_label" widget="radio"
                                             attrs="{'required': [('portal_confirmation', '=', True)]}"/>
                                     </div>
                                 <div attrs="{'invisible': [('portal_confirmation_options', '!=', 'pay')]}">
@@ -273,7 +273,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery"/>
                                 <div class="text-muted" id="delivery_carrier">
-                                    Compute shipping costs
+                                    Compute shipping costs on orders
                                 </div>
                             </div>
                         </div>
@@ -283,8 +283,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery_ups"/>
-                                <div class="text-muted" id="delivery_ups">
-                                    Ship with UPS
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with UPS
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_ups"/>
                                 </div>
                             </div>
                         </div>
@@ -294,8 +297,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery_dhl"/>
-                                <div class="text-muted" id="delivery_dhl">
-                                    Ship with DHL USA
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with DHL
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_dhl"></div>
                                 </div>
                             </div>
                         </div>
@@ -305,8 +311,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery_fedex"/>
-                                <div class="text-muted" id="delivery_fedex">
-                                    Ship with FedEx
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with FedEx
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_fedex"/>
                                 </div>
                             </div>
                         </div>
@@ -316,8 +325,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery_usps"/>
-                                <div class="text-muted" id="delivery_usps">
-                                    Ship with USPS
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with USPS
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_usps"/>
                                 </div>
                             </div>
                         </div>
@@ -327,8 +339,11 @@
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_delivery_bpost"/>
-                                <div class="text-muted" id="delivery_bpost">
-                                    Ship with bpost
+                                <div class="text-muted">
+                                    Compute shipping costs and ship with bpost
+                                </div>
+                                <div class="content-group">
+                                    <div id="sale_delivery_bpost"/>
                                 </div>
                             </div>
                         </div>
