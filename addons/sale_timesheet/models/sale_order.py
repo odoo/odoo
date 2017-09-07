@@ -96,20 +96,14 @@ class SaleOrder(models.Model):
     @api.multi
     def action_view_project_project(self):
         self.ensure_one()
-        action = self.env.ref('project.open_view_project_all')
+        action = self.env.ref('project.open_view_project_all').read()[0]
         form_view_id = self.env.ref('project.edit_project').id
 
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [(form_view_id, 'form')],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-            'res_id': self.project_project_id.id,
-        }
-        return result
+        action['views'] = [(form_view_id, 'form')]
+        action['res_id'] = self.project_project_id.id
+        action.pop('target', None)
+
+        return action
 
     @api.multi
     def action_view_timesheet(self):
@@ -146,7 +140,9 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _compute_analytic(self, domain=None):
-        if not domain:
+        if not domain and self.ids:
             # To filter on analyic lines linked to an expense
+            expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
+            expense_type_id = expense_type_id and expense_type_id.id
             domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)

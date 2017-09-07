@@ -22,7 +22,7 @@
 <t t-name="CrashManager.warning">
     <div class="o_dialog_warning">
         <t t-js="d">
-            var message = d.message ? d.message : d.error.data.message;
+            var message = (d.message !== undefined) ? d.message : d.error.data.message;
             d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
         </t>
         <t t-raw="html_error"/>
@@ -40,15 +40,15 @@
         <table class="o_group o_inner_group o_label_nowrap">
             <tr>
                 <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="old_pwd" minlength="1" autofocus="autofocus"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
             </tr>
             <tr>
                 <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="new_password" minlength="1"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">Confirm New Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="confirm_pwd" minlength="1"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
             </tr>
         </table>
 
@@ -625,6 +625,7 @@
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-placeholder="widget.node.attrs.placeholder"
+        t-att-autocomplete="widget.password ? 'new-password' : widget.node.attrs.autocomplete"
         t-att-maxlength="widget.field.size"/>
 </t>
 <t t-name="FormSelection">
@@ -821,7 +822,8 @@
     </div>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url'
+    <img class="img img-responsive"
+        t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"

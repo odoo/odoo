@@ -105,7 +105,7 @@ msgstr "Data des de"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_to
 msgid "Date To"
-msgstr ""
+msgstr "Data fins"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_department_id
@@ -144,7 +144,7 @@ msgstr "Empleats"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Extra features"
-msgstr ""
+msgstr "Característiques extra"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -159,7 +159,7 @@ msgstr "Hores"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Departament de recursos humans"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -211,7 +211,7 @@ msgstr "Mes"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "More Info"
-msgstr ""
+msgstr "Més informació"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
@@ -345,7 +345,7 @@ msgstr "Període de la fulla d'hores"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Aplicació de part d'hores per Chrome/Android/iOS"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
@@ -480,6 +480,14 @@ msgstr "No pot eliminar una fulla d'hores que ja està confirmada."
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "No pot duplicar una fulla d'hores."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60

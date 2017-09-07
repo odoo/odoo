@@ -26,12 +26,14 @@ class Blog(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a blog does it on its posts, too
             post_ids = self.env['blog.post'].with_context(active_test=False).search([
-                ('blog_id', 'in', self)
+                ('blog_id', 'in', self.ids)
             ])
-            post_ids.write({'active': vals['active']})
+            for blog_post in post_ids:
+                blog_post.active = vals['active']
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -79,7 +81,7 @@ class BlogTag(models.Model):
     _inherit = ['website.seo.metadata']
     _order = 'name'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [
@@ -132,7 +134,7 @@ class BlogPost(models.Model):
         default='{"background-image": "none", "background-color": "oe_black", "opacity": "0.2", "resize_class": ""}')
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
-    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize_attributes=False)
+    content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
@@ -224,6 +226,7 @@ class BlogPost(models.Model):
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
             'target': 'self',
+            'target_type': 'public',
             'res_id': self.id,
         }
 

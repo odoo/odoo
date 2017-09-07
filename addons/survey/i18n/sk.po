@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-03-21 21:32+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: survey
@@ -25,9 +28,7 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#a24689; text-align:center; text-decoration:none; color:"
-"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
@@ -39,7 +40,7 @@ msgid "#Questions"
 msgstr "#Otázky"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/models/survey.py:124
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
@@ -143,9 +144,9 @@ msgstr "<span class=\"fa fa-filter\"/> Filtre"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-primary only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-default only_left_radius filter-all\">Všetky "
 "prieskumy</span><span class=\"label label-primary only_right_radius filter-"
@@ -174,9 +175,9 @@ msgstr "<span class=\"label label-default only_left_radius\">Súčet </span>"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-default only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-primary only_left_radius filter-all\">Všetky "
 "prieskumy</span><span class=\"label label-default only_right_radius filter-"
@@ -186,8 +187,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
@@ -195,11 +195,6 @@ msgstr ""
 "<i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "</span>\n"
 "Nik ešte neodpovedal na tento prieskum"
-
-#. module: survey
-#: constraint:survey.label:0
-msgid "A label must be attached to one and only one question"
-msgstr "Štítok musí byť spojený s jednou a iba jednou otázkou"
 
 #. module: survey
 #: sql_constraint:survey.question:0
@@ -217,8 +212,8 @@ msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
 msgstr ""
-"Kladné skóre indikuje správnu voľbu; záporné alebo nulové skóre indikuje zlú "
-"odpoveď"
+"Kladné skóre indikuje správnu voľbu; záporné alebo nulové skóre indikuje zlú"
+" odpoveď"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -231,7 +226,8 @@ msgid "A process is defined for all enterprise flows"
 msgstr "Proces je definovaný pre všetky podnikové toky"
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:808
+#, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "Otázka nemôže byť nezodpovedaná a preskočená"
 
@@ -247,9 +243,8 @@ msgstr "O vašom Odoo používaní"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "Aktívna doména"
+msgstr "Aktívny"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -309,9 +304,15 @@ msgstr "Zodpovedané"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Odpovede"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "Archivovaný"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -322,6 +323,13 @@ msgstr "Používate Odoo na dennej báze?"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Prílohy"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
+msgid ""
+"Attachments are linked to a document through model / res_id and to the "
+"message through this field."
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -349,17 +357,15 @@ msgid "Choose..."
 msgstr "Vyberte..."
 
 #. module: survey
-#: code:addons/survey/survey.py:125
-#: code:addons/survey/wizard/survey_email_compose_message.py:34
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Clean test answers"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey.py:112
 #, python-format
 msgid "Click here to start survey"
 msgstr "Kliknite sem pre spustenie prieskumu"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:92
-#, python-format
-msgid "Click here to take survey"
-msgstr "Kliknite sem pre absolvovanie prieskumu"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -432,7 +438,8 @@ msgstr "Obmedzenia"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
 msgstr ""
 "Skopírujte a vložte HTML kód dole pre pridanie tohto webového odkazu na "
 "akúkoľvek webstránku."
@@ -457,7 +464,7 @@ msgstr "Dátum vytvorenia"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_date
@@ -469,7 +476,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_date_create
@@ -505,11 +512,9 @@ msgstr "Uzávierka"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty,        the invitation is still valid."
 msgstr ""
-"Uzávierka dokedy je výzva na reakciu na tento prieskum platná. Ak je pole "
-"prázdne, výzva je stále platná."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -570,7 +575,7 @@ msgstr "Nesúhlasím"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
@@ -621,7 +626,7 @@ msgstr "Email"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
-msgstr "Emailová šablóna"
+msgstr "Šablóna emailu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -635,7 +640,6 @@ msgstr "Ergonómia a uľahčenie použitia"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Chybová správa"
 
@@ -680,7 +684,7 @@ msgstr "Voľno textová odpoveď"
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
@@ -689,7 +693,6 @@ msgstr "Ako prispievate alebo máte v úmysle prispieť k Odoo?"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
-#, fuzzy
 msgid "Human Resources"
 msgstr "Ľudské zdroje"
 
@@ -767,11 +770,13 @@ msgstr "Ak zaškrtnuté, používatelia sa môžu vrátiť na predchádzajúce s
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
+#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
-msgstr "Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
+msgstr ""
+"Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/models/survey.py:473
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -785,9 +790,9 @@ msgstr "Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto st�
 #: model:survey.question,comments_message:survey.feedback_3_2
 #: model:survey.question,comments_message:survey.feedback_3_3
 #: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
+#, python-format
 msgid "If other, please specify:"
-msgstr "Ak iné, konkrétne:"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -805,6 +810,12 @@ msgid "In progress"
 msgstr "Prebieha"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#, python-format
+msgid "Incorrect Email Address: %s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr "Vstup musí byť email"
@@ -813,6 +824,11 @@ msgstr "Vstup musí byť email"
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
 msgstr "Pozvánky poslané"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "Is closed"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -904,7 +920,7 @@ msgstr "Posledná zobrazená stránka"
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Link"
-msgstr "Link"
+msgstr "Odkaz"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
@@ -916,6 +932,11 @@ msgstr "Zoznam emailov"
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
 msgstr "Prihlásenie vyžadované"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_manager
+msgid "Manager"
+msgstr "Manažér"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -1100,12 +1121,6 @@ msgid "One choice per row"
 msgstr "Jedna možnosť za rad"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:78
-#, python-format
-msgid "One email at least is incorrect: %s"
-msgstr "Aspoň jeden email je nesprávny: %s"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
@@ -1152,7 +1167,6 @@ msgstr "Partner"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
-#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
 msgstr "Partneský prieskumový mail"
 
@@ -1162,16 +1176,10 @@ msgid "Permanent"
 msgstr "Permanentné"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:199
+#: code:addons/survey/wizard/survey_email_compose_message.py:164
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "Prosím zadajte aspoň jedného platného príjmateľa."
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#, python-format
-msgid "Please select a survey"
-msgstr "Prosím zvoľte prieskum"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1235,12 +1243,16 @@ msgstr "Nákupný manažment"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "Otázka"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1269,8 +1281,8 @@ msgstr "Oázky pre vývojárov"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quiz mode"
-msgstr "Režim kvízu"
+msgid "Quizz Mode"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1383,6 +1395,11 @@ msgid "Send"
 msgstr "Poslať"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Send Invitation Again"
+msgstr ""
+
+#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
 msgstr "Pošlite emailom verejný webový odkaz vášmu publiku."
@@ -1397,15 +1414,10 @@ msgstr ""
 "pozvánku)"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Sent Invitation Again"
-msgstr "Poslať pozvánku opäť"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
 #: model:ir.model.fields,field_description:survey.field_survey_stage_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: survey
 #: sql_constraint:survey.stage:0
@@ -1455,8 +1467,8 @@ msgid ""
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
-"Niečo sa pokazilo pri kontaktovaní prieskumového servera. <strong class="
-"\"text-danger\">Vaše odpovede pravdepodobne neboli zaznamenané</strong> "
+"Niečo sa pokazilo pri kontaktovaní prieskumového servera. <strong class"
+"=\"text-danger\">Vaše odpovede pravdepodobne neboli zaznamenané</strong> "
 "Skúste obnoviť."
 
 #. module: survey
@@ -1521,6 +1533,7 @@ msgstr "Návrh"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1626,14 +1639,14 @@ msgid "Text answer"
 msgstr "Textová odpoveď"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thank you message"
-msgstr "Ďakovná správa"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr "Ďakujeme Vám!"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
+msgid "Thanks Message"
+msgstr "Ďakovná správa"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1648,12 +1661,13 @@ msgstr ""
 "Skupina '\"Použiteľnosť/Rozšírené zobrazenie' skrýva iba voliteľné polia"
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:821
+#, python-format
 msgid "The answer must be in the right type"
 msgstr "Odpoveď musí byť správneho typu"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/models/survey.py:487
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1672,11 +1686,11 @@ msgid "The answer you entered has an invalid format."
 msgstr "Odpoveď ktorú ste zadal má neplatný formát."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:174
+#: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
 "Obsah textu neobsahujúci '__URL__'. __URL__ je automaticky prekonvertovaný "
 "na špeciálne url prieskumu."
@@ -1727,12 +1741,10 @@ msgstr "Príliš veľa menu ponúk, je to komplexné na pochopenie"
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
-"Tieto otázky sa týkajú ergonómie a jednoduchosti používania Odoo. Skúste si "
-"spomenúť na svoje prvé dni na Odoo a\n"
+"Tieto otázky sa týkajú ergonómie a jednoduchosti používania Odoo. Skúste si spomenúť na svoje prvé dni na Odoo a\n"
 "čo vám robilo problémy."
 
 #. module: survey
@@ -1751,19 +1763,22 @@ msgid "They help new users to understand Odoo"
 msgstr "Pomáhajú novým používateľom pochopiť Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/models/survey.py:546
+#: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Táto odpoveď musí byť emailová adresa"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/models/survey.py:590
+#: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date/time"
 msgstr "Toto nie je dátum/čas"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/models/survey.py:567
+#: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
 msgstr "Toto nie je číslo"
@@ -1771,11 +1786,9 @@ msgstr "Toto nie je číslo"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not converted in contacts. Emails "
-"separated by commas, semicolons or newline."
+"This list of emails of recipients will not be converted in contacts.        "
+"Emails must be separated by commas, semicolons or newline."
 msgstr ""
-"Tento zoznam príjemcov emailu nebude prevedený na kontakty. Emaily oddelené "
-"čiarkami, bodkočiarkami alebo nový riadok."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1783,7 +1796,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Táto správa bude zobrazená keď bude prieskum dokončený"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/models/survey.py:491
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1832,6 +1845,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
 msgstr "Titul"
 
@@ -1879,9 +1893,13 @@ msgstr "Použiť šablónu"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your question"
+"Use this field to add         additional explanations about your question"
 msgstr ""
-"Použite toto pole pre pridanie dodatočných vysvetlení ohľadom vašej otázky"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_user
+msgid "User"
+msgstr "Používateľ"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -1939,6 +1957,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
 msgid "Validate entry"
 msgstr "Overiť vstup"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2003,8 +2026,7 @@ msgstr "RRRR-MM-DD hh:mm:ss"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 "RRRR-MM-DD hh:mm:ss\n"
 "<i class=\"fa fa-calendar fa-2x\"/>"
@@ -2031,32 +2053,26 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
-"Môžete vytvárať prieskumy pre rôzne ciele: názor zákazníka, spätná väzba na "
-"služby,\n"
-"prijímacie pohovory, periodické vyhodnocovania zamestnancov, marketingové "
-"kampane, atď."
+"Môžete vytvárať prieskumy pre rôzne ciele: názor zákazníka, spätná väzba na služby,\n"
+"prijímacie pohovory, periodické vyhodnocovania zamestnancov, marketingové kampane, atď."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Login Required\" setting "
+"must be disabled)."
 msgstr ""
-"Môžete zdieľať verejný webový odkaz vášho prieskumu a/alebo posielať "
-"súkromné pozvanie svojmu publiku. Ľudia môžu odpovedať jeden krát za jedno "
-"pozvanie, a kedykoľvek budú chcieť s verejným odkazom na internetovú stránku "
-"(v tomto prípade musí byť zapnuté nastavenie \"Verejné na webovej stránke\")."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/models/survey.py:318
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Nemôžete poslať pozvánku pre prieskum ktorý nemá žiadne otázky."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/models/survey.py:321
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Nemôžete poslať pozvánky pre zavreté prieskumy."
@@ -2072,6 +2088,11 @@ msgid "ans"
 msgstr "a"
 
 #. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "log in"
 msgstr "prihlásiť sa"
@@ -2079,7 +2100,7 @@ msgstr "prihlásiť sa"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "z"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -2090,238 +2111,3 @@ msgstr "body."
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
 msgstr "skontrolovať vaše odpovede"
-
-#. module: survey
-#. openerp-web
-#: code:addons/survey/static/src/js/tour_test_survey.js:10
-#, python-format
-msgid "try to create and fill survey"
-msgstr "pokúsiť sa vytvoriť a vyplniť prieskum"
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "<p>Dobrý deň,</p>\n"
-#~ "<p>Vykonávame prieskum, a ocenili by sme Vašu odpoveď.</p>\n"
-#~ "<p><a href=\"__URL__\">Prosím, clickliknite tu pre začatie prieskumu</a></"
-#~ "p>\n"
-#~ "<p>Ďakujeme za Vašu účasť!</p>\n"
-#~ "</div>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid ""
-#~ "Answers do not go in the original document discussion thread. This has an "
-#~ "impact on the generated message-id."
-#~ msgstr ""
-#~ "Odpovede neputujú do originálneho vlákna diskusie dokumentu. Toto má "
-#~ "dopad na generované ID správy."
-
-#~ msgid "Author"
-#~ msgstr "Autor"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "Autor správy. Pokiaľ nie je uvedený, email_from môže obsahovať emailovú "
-#~ "adresu ktorá nemusí zodpovedať žiadnemu partnerovi."
-
-#~ msgid "Author's avatar"
-#~ msgstr "Avatar autora"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automaticky vylepšený HTML obsah"
-
-#~ msgid "Channels"
-#~ msgstr "Kanály"
-
-#~ msgid "Child Messages"
-#~ msgstr "Podriadené správy"
-
-#~ msgid "Composition mode"
-#~ msgstr "Kompozičný režim"
-
-#~ msgid "Contents"
-#~ msgstr "Obsahy"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr ""
-#~ "Aktuálny užívateľ má aktivovanú notifikáciu nalinkovanú na túto správu"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#~ msgid ""
-#~ "Email address of the sender. This field is set when no matching partner "
-#~ "is found and replaces the author_id field in the chatter."
-#~ msgstr ""
-#~ "Emailová adresa odosielateľa. Toto pole je nastavené keď sa nenájde "
-#~ "žiaden vyhovujúci partner a zamení pole author_id v chate."
-
-#~ msgid "Favorited By"
-#~ msgstr "Má v obľúbených"
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid "From"
-#~ msgstr "Od"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Initial thread message."
-#~ msgstr "Pôvodná správa vlákna"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "Pridať internú poznámku"
-
-#~ msgid "Message Record Name"
-#~ msgstr "Názov záznamu správy"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "Typ správy: email pre zaslanie emailu, notifikácia ako systémová správa, "
-#~ "koment pre ostatné správy ako napr. odpovede od užívateľov"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "Unikátny identifikátor správy"
-
-#~ msgid "Message-Id"
-#~ msgstr "ID správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "Získať názov súvisiaceho dokumentu."
-
-#~ msgid "Need Action"
-#~ msgstr "Vyžaduje akciu"
-
-#~ msgid "No threading for answers"
-#~ msgstr "Žiadne vlákna v odpovediach"
-
-#~ msgid "Notify followers"
-#~ msgstr "Notifikovať sledujúcich"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "Notifikovať sledujúcich dokumentu (len pri hromadých správach)"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Open Survey Menu"
-#~ msgstr "Otvoriť menu prieskumu"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "Server odchádzajúcej pošty"
-
-#~ msgid "Parent Message"
-#~ msgstr "Nadradená správa"
-
-#~ msgid "Related Document ID"
-#~ msgstr "Súvisiace ID dokumentu"
-
-#~ msgid "Related Document Model"
-#~ msgstr "Súvisiaci model dokumentu"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr ""
-#~ "Emailová adresa pre odpoveď. Nastavením reply_to vypnete automatické "
-#~ "vytváranie vlákien."
-
-#~ msgid "Reply-To"
-#~ msgstr "Odpoveď-pre"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "Malý obrázok tohto kontaktu. Veľkosť je automaticky zmenená na 64x64px "
-#~ "obrázok, so zachovaním pomeru strán. Použite toto pole vždy keď je "
-#~ "potrebný malý obrázok."
-
-#~ msgid "Starred"
-#~ msgstr "Obľúbené"
-
-#~ msgid "Subject"
-#~ msgstr "Predmet"
-
-#~ msgid "Subtype"
-#~ msgstr "Podtyp"
-
-#~ msgid "System notification"
-#~ msgstr "Systémové upozornenia"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Sledované hodnoty sú uložené v oddelenom modeli. Toto pole povoľuje "
-#~ "prestavať sledovanie a generovať štatistiky modelu."
-
-#~ msgid "Tracking values"
-#~ msgstr "Hodnoty sledovania"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprečítané správy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Use active domain"
-#~ msgstr "Použite aktívnu doménu"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr "Či je správa interná poznámka (iba v móde komentu)"
-
-#~ msgid "on"
-#~ msgstr "na"

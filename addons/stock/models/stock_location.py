@@ -25,7 +25,6 @@ class Location(models.Model):
         return res
 
     name = fields.Char('Location Name', required=True, translate=True)
-    # TDE CLEAME: unnecessary field, use name_get instead
     complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
@@ -70,19 +69,27 @@ class Location(models.Model):
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id')
+    @api.depends('name', 'location_id.name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
         name = self.name
         current = self
-        while current.location_id and current.usage != 'view':
+        while current.location_id:
             current = current.location_id
             name = '%s/%s' % (current.name, name)
         self.complete_name = name
 
     @api.multi
     def name_get(self):
-        return [(location.id, location.complete_name) for location in self]
+        ret_list = []
+        for location in self:
+            orig_location = location
+            name = location.name
+            while location.location_id and location.usage != 'view':
+                location = location.location_id
+                name = location.name + "/" + name
+            ret_list.append((orig_location.id, name))
+        return ret_list
 
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
@@ -202,9 +209,15 @@ class PushedFlow(models.Model):
                 # TDE FIXME: should probably be done in the move model IMO
                 move._push_apply()
         else:
-            new_move = move.copy({
-                'origin': move.origin or move.picking_id.name or "/",
-                'location_id': move.location_dest_id.id,
+            new_move_vals = self._prepare_move_copy_values(move, new_date)
+            new_move = move.copy(new_move_vals)
+            move.write({'move_dest_id': new_move.id})
+            new_move.action_confirm()
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = {
+                'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+                'location_id': move_to_copy.location_dest_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'date': new_date,
                 'date_expected': new_date,
@@ -215,6 +228,6 @@ class PushedFlow(models.Model):
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
                 'procurement_id': False,
-            })
-            move.write({'move_dest_id': new_move.id})
-            new_move.action_confirm()
+            }
+
+        return new_move_vals

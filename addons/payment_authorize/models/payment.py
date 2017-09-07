@@ -8,7 +8,7 @@ import logging
 import time
 import urlparse
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare
@@ -148,12 +148,23 @@ class TxAuthorize(models.Model):
     # --------------------------------------------------
 
     @api.model
+    def create(self, vals):
+        # The reference is used in the Authorize form to fill a field (invoiceNumber) which is
+        # limited to 20 characters. We truncate the reference now, since it will be reused at
+        # payment validation to find back the transaction.
+        if 'reference' in vals and 'acquirer_id' in vals:
+            acquier = self.env['payment.acquirer'].browse(vals['acquirer_id'])
+            if acquier.provider == 'authorize':
+                vals['reference'] = vals.get('reference', '')[:20]
+        return super(TxAuthorize, self).create(vals)
+
+    @api.model
     def _authorize_form_get_tx_from_data(self, data):
         """ Given a data dict coming from authorize, verify it and find the related
         transaction record. """
         reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
-            error_msg = 'Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)' % (reference, trans_id, fingerprint)
+            error_msg = _('Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)') % (reference, trans_id, fingerprint)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
@@ -245,14 +256,14 @@ class TxAuthorize(models.Model):
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.capture(self.acquirer_reference, self.amount)
+        tree = transaction.capture(self.acquirer_reference or '', self.amount)
         return self._authorize_s2s_validate_tree(tree)
 
     @api.multi
     def authorize_s2s_void_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.void(self.acquirer_reference)
+        tree = transaction.void(self.acquirer_reference or '')
         return self._authorize_s2s_validate_tree(tree)
 
     @api.multi
@@ -268,20 +279,21 @@ class TxAuthorize(models.Model):
         status_code = int(tree.get('x_response_code', '0'))
         if status_code == self._authorize_valid_tx_status:
             if tree.get('x_type').lower() in ['auth_capture', 'prior_auth_capture']:
-                if self.callback_eval and self.state != 'authorized':
-                    safe_eval(self.callback_eval, {'self': self})
+                init_state = self.state
                 self.write({
                     'state': 'done',
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date_validate': fields.Datetime.now(),
                 })
+                if self.sudo().callback_eval and init_state != 'authorized':
+                    safe_eval(self.sudo().callback_eval, {'self': self})
             if tree.get('x_type').lower() == 'auth_only':
-                if self.callback_eval:
-                    safe_eval(self.callback_eval, {'self': self})
                 self.write({
                     'state': 'authorized',
                     'acquirer_reference': tree.get('x_trans_id'),
                 })
+                if self.sudo().callback_eval:
+                    safe_eval(self.sudo().callback_eval, {'self': self})
             if tree.get('x_type').lower() == 'void':
                 self.write({
                     'state': 'cancel',
@@ -332,6 +344,6 @@ class PaymentToken(models.Model):
                     'acquirer_ref': res.get('payment_profile_id'),
                 }
             else:
-                raise ValidationError('The Customer Profile creation in Authorize.NET failed.')
+                raise ValidationError(_('The Customer Profile creation in Authorize.NET failed.'))
         else:
             return values

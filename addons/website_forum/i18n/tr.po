@@ -8,12 +8,13 @@
 # Saban Yildiz <sabany@projetgrup.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Esin Kandemir <esaykandemir@gmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2016
+# selim kartal <kartalselim37@gmail.com>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -363,7 +364,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>Tarafından </span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -654,6 +655,7 @@ msgid "Bad Request"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
 #: model:ir.ui.view,arch_db:website_forum.badge
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -790,7 +792,7 @@ msgstr "Baş Yorumcu"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "City"
-msgstr "Mahalle"
+msgstr "Semt/İlçe"
 
 #. module: website_forum
 #. openerp-web
@@ -843,9 +845,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
 msgstr "Kapat"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
@@ -855,6 +863,11 @@ msgstr "Bütün Mesajları kapat"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
 msgstr ""
 
 #. module: website_forum
@@ -948,6 +961,16 @@ msgid "Convert all answers to comments and vice versa"
 msgstr "Görüş ve tersi tüm yanıtları dönüştürmek"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
 msgid "Convert comment to answer"
 msgstr ""
@@ -985,7 +1008,7 @@ msgstr "Oluşturma Tarihi"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
 msgid "Create new tags"
-msgstr ""
+msgstr "Yeni etiketler oluştur"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
@@ -1030,6 +1053,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_post_type
 msgid "Default Post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
 msgstr ""
 
 #. module: website_forum
@@ -1101,6 +1130,8 @@ msgstr "Downvote"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "Düzenle"
 
@@ -1112,37 +1143,37 @@ msgstr "Profili Düzenle"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr "Biyografiniz"
+msgstr "Biyografinizi Düzenleyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr "Önceki Cevabunuzu düzenleyin"
+msgstr "Önceki Cevabınızı Düzenleyin"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
 msgid "Edit all posts"
-msgstr "Bütün Mesajları düzenlemek"
+msgstr "Tüm gönderileri düzenle"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
 msgid "Edit own posts"
-msgstr ""
+msgstr "Kendi gönderilerinizi düzenleyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit reply"
-msgstr ""
+msgstr "Cevabı düzenle"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Edit your Link"
-msgstr ""
+msgstr "Bağlantınızı Düzenleyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit your Post"
-msgstr ""
+msgstr "Gönderinizi Düzenleyin"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
@@ -1240,11 +1271,17 @@ msgstr ""
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_7
 msgid "First edit"
-msgstr ""
+msgstr "İlk düzenleme"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_31
 msgid "First upvote"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
 msgstr ""
 
 #. module: website_forum
@@ -1256,6 +1293,8 @@ msgstr "Saldırgan olarak işaretle"
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr ""
 
@@ -1447,6 +1486,14 @@ msgid "Help"
 msgstr "Yardım"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"How to create a physical inventory at an anterior date?, How is the "
+"'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
@@ -1499,6 +1546,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Inventory Date Problem, Task remaining hours, Can you help solve solve my "
+"tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
@@ -1621,6 +1675,11 @@ msgstr "Bağlantı"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_link
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
 msgstr ""
 
 #. module: website_forum
@@ -1791,6 +1850,11 @@ msgid "Offensive"
 msgstr "Saldırgan"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
 msgstr "Açık"
@@ -1885,7 +1949,7 @@ msgstr "Popüler Soru (500)"
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "İşe"
+msgstr "Gönder"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -2014,7 +2078,7 @@ msgstr "Soru downvoted"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "Sorunun kabul edilmiş cevabı var"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
@@ -2076,6 +2140,11 @@ msgid "Re: %s"
 msgstr "Yanıt: %s"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Read Guidelines"
 msgstr "Yönergeleri okuyun"
@@ -2108,7 +2177,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Harici bağlantıya yönlendir"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2125,6 +2194,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
 msgstr ""
 
 #. module: website_forum
@@ -2461,6 +2535,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:75
 #, python-format
 msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 
 #. module: website_forum

@@ -14,10 +14,10 @@
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -257,7 +257,7 @@ msgstr "Costo"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Created By"
-msgstr ""
+msgstr "Creato Da"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_create_uid
@@ -291,6 +291,23 @@ msgstr "Bacheca"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
 msgid "Date of the next preventive maintenance"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
+msgid "Date requested for the maintenance to happen"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
+msgid ""
+"Date the maintenance team plans the maintenance.  It should not differ much "
+"from the Request Date. "
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
+msgid "Date the maintenance was finished. "
 msgstr ""
 
 #. module: maintenance
@@ -572,7 +589,7 @@ msgstr ""
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_created
 msgid "Maintenance Request created"
-msgstr ""
+msgstr "Richiesta di Manutenzione creata"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action
@@ -583,12 +600,12 @@ msgstr ""
 #: model:ir.model,name:maintenance.model_maintenance_request
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
 msgid "Maintenance Requests"
-msgstr ""
+msgstr "Richieste di Manutenzione"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
 msgid "Maintenance Stage"
-msgstr ""
+msgstr "Stadio Manutenzione"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_stage_configuration
@@ -828,7 +845,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Requested By"
-msgstr ""
+msgstr "Richiesto Da"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id
@@ -862,7 +879,7 @@ msgstr "Scarto"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_scrap_date
 msgid "Scrap Date"
-msgstr ""
+msgstr "Data Scarto"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search

@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Clemilton Clementino <clemylton@hotmail.com>, 2016
-# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # Adriel Kotviski <kotviski@gmail.com>, 2016
 # Peter Leaf <pablleaf@gmail.com>, 2016
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
@@ -39,6 +39,14 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"<p>Olá,</p>\n"
+"<p>Estamos conduzindo uma pesquisa, e sua resposta será apreciada.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Por favor, clique aqui para iniciar a pesquisa</a></p>\n"
+"<p>Obrigado pela sua participação!</p>\n"
+"                \n"
+"            "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -336,6 +344,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Anexos estão ligados a um documento através de modelo / res_id e à mensagem "
+"através deste campo."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -365,7 +375,7 @@ msgstr "Escolha ..."
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Clean test answers"
-msgstr ""
+msgstr "Limpar as respostas do teste"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:112
@@ -520,6 +530,8 @@ msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
 " field is empty,        the invitation is still valid."
 msgstr ""
+"Prazo para que o convite para responder para esta pesquisa é válido. Se o "
+"campo estiver vazio, o convite ainda é válido."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -798,7 +810,7 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, please specify:"
-msgstr ""
+msgstr "Se outro(a), por favor especifique:"
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -819,7 +831,7 @@ msgstr "Em andamento"
 #: code:addons/survey/wizard/survey_email_compose_message.py:66
 #, python-format
 msgid "Incorrect Email Address: %s"
-msgstr ""
+msgstr "Endereço de E-mail Incorreto: %s"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
@@ -834,7 +846,7 @@ msgstr "Convites enviados"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
 msgid "Is closed"
-msgstr ""
+msgstr "Está fechado"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -1258,7 +1270,7 @@ msgstr "Pergunta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 msgid "Question 2"
-msgstr ""
+msgstr "Questão 2"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1288,7 +1300,7 @@ msgstr "Perguntas para desenvolvedores"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
 msgid "Quizz Mode"
-msgstr ""
+msgstr "Modo de teste"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1404,7 +1416,7 @@ msgstr "Enviar"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "Send Invitation Again"
-msgstr ""
+msgstr "Convite enviado Novamente"
 
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
@@ -1797,6 +1809,8 @@ msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
+"Esta lista de e-mails de destinatários não convertido em contatos. Os "
+"e-mails separados por vírgulas, ponto e vírgula ou nova linha."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1903,6 +1917,8 @@ msgstr "Usar modelo"
 msgid ""
 "Use this field to add         additional explanations about your question"
 msgstr ""
+"Utilize este campo para adicionar explicações adicionais sobre a sua "
+"pergunta"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
@@ -1969,7 +1985,7 @@ msgstr "Validar entrada"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Validation Error message"
-msgstr ""
+msgstr "Mensagem de validação de Erro"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2073,6 +2089,10 @@ msgid ""
 "want with the public web link (in this case, the \"Login Required\" setting "
 "must be disabled)."
 msgstr ""
+"Você pode compartilhar seu link público levantamento web e / ou enviar "
+"convites para seu público-privadas. As pessoas podem responder a uma vez por"
+" convite, e sempre que quiserem com o link web público (neste caso, a "
+"definição de \"público em site\" deve ser ativado)."
 
 #. module: survey
 #: code:addons/survey/models/survey.py:318

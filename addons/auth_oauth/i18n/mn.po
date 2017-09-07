@@ -1,38 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-15 12:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Create a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized "
-"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:98
+#: code:addons/auth_oauth/controllers/main.py:99
 #, python-format
 msgid "Access Denied"
 msgstr "Хандалтыг татгалзав"
@@ -49,8 +38,9 @@ msgstr "Авлагын данс"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
-msgstr ""
+msgstr "Хэрэглэгчдийг Google -р нэвтрэхийг зөвшөөрөх"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
@@ -58,9 +48,14 @@ msgid "Allowed"
 msgstr "Зөвшөөрсөн"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "Баталгаажуулалт"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
-msgstr ""
+msgstr "Баталгаажуулах URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
@@ -75,18 +70,46 @@ msgstr "Бие"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
+msgstr "CSS класс"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
+"<b>Вэб Аппликэшн</b> дээр аппликэшний төрлийг тохируулсан эсэхийг шалгана уу. \n"
+"                                        Одоо хандахыг зөвшөөрсөн хуудсуудыг тохируулаарай."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+"<b>Төсөл үүсгэх</b> дээр дарж төслийн нэр болон бусад \n"
+"                                         мэдээллийг оруулна уу."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr "<b>Google API ашиглах</b> дээр дарна уу"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
-msgstr ""
+msgstr "Харилцагчийн ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Харилцагчаас компани хамаарах"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr "Google бүртгэл рүүгээ ороод ийшээ орно уу"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -107,27 +130,36 @@ msgstr "Үүсгэсэн"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Валют"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Захаиалагчийн Төлбөрийн нөхцөл"
+msgid "Customer Payment Terms"
+msgstr "Захаиалагчийн Төлбөрийн нөхцлүүд"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
-msgstr ""
+msgstr "Өгөгдлийн URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Энэ зээлдэгчид итгэх итгэлийн хэмжээ"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
+"Өөрийн хаяг, имэйл, бүтээгдэхүүний нэр (жишээ нь odoo) -г оруулаад \n"
+"                                       хадгална уу."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -136,18 +168,23 @@ msgstr "Санхүүгийн харгалзаа"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr ""
+msgid "Google Client ID:"
+msgstr "Google Харилцагчийн ID:"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "Тулгагдаагүй бичилттэй"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -182,51 +219,78 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"Энэ харилцагчид зориулж нэхэмжлэл, төлбөрийг тулгасан хамгийн сүүлийн "
+"хугацаа. Энэ нь тулгагдаагүй дебит, кредит үлдээгүй эсвэл \"Хийгдсэн\" "
+"товчийг дарсан хугацаа юм."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Хамгийн сүүлийн Нэхэмжлэл, Төлбөрийг тулгасан огноо"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "Нэхэмжлэлийн мессеж"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
-msgstr ""
+msgstr "OAuth Хандалтын Тасалбар"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr ""
+msgstr "OAuth нийлүүлэгч"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr ""
+msgstr "OAuth нийлүүлэгчүүд"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "OAuth UID нь нийлүүлэгч бүрт давтагдашгүй байх ёстой"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
 msgid "OAuth User ID"
-msgstr ""
+msgstr "OAuth Хэрэглэгчийн ID"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr ""
+msgstr "OAuth2 нийлүүлэгч"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "Oauth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
+msgstr "Oauth Нийлүүлэгчийн user_id"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
 msgstr ""
+"Зүүн талын цэс дээрх (<b>API Менежер</b> -с) дэд цэс <b>Итгэмжлэл</b> -г "
+"сонгоод дараа нь <b>OAuth зөвшөөрлийн дэлгэц</b> -г сонгоно уу."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+"Үүнийг дуусмагц танд хоёр мэдээлэл ирнэ (таны <b>Харилцагчийн ID</b> ба \n"
+"<b>Нууц Харилцагч</b>). Та дараах талбарт өөрийн <b>Харилцагчийн ID</b> -г оруулна уу."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -241,18 +305,54 @@ msgstr "Нийлүүлэгчийн нэр"
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr ""
+msgstr "Нийлүүлэгчид"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr "Дээш буцах"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
-msgstr ""
+msgstr "Хамрах хүрээ"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:96
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
+"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
+"Мессеж нь дараагийн талбарт бичигдэх ёстой."
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr "Серверийн uri"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "Заавар харуулах"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr "Заавар харуулах"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr ""
+msgstr "Энэ өгөгдлийн бааз дээр бүртгэлийг зөвшөөрөөгүй."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
@@ -267,6 +367,22 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
+"Хамгийн сүүлд нэхэмжлэл, төлбөрийг тулгаснаас хойш тулгагдаагүй дебит, "
+"кредит харилцаа харилцагч дээр байна."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+"Дараа нь <b>Итгэмжлэл нэмэх</b> дээр дараад хоёр дахь сонголтыг \n"
+"сонгоно уу (OAuth 2.0 Client ID)."
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr "Дараа нь <b>Үүсгэх</b> дээр дарна уу."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -288,6 +404,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
+"Энэ төлбөрийн нөхцөл нь худалдан авалтын захиалга болон нийлүүлэгчийн "
+"тооцооний анхны нөхцлийн оронд хэрэглэнэ. "
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -301,11 +419,20 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the "
-"following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the box"
 msgstr ""
+"Үүнд хүрэхийн тулд <b>Зөвшөөрсөн хандах URI -ууд</b> талбарыг бөглөнө үү.\n"
+"Талбарт дараах холбоосыг хуулж тавиарай"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
+"Google - ээр нэвтрэхийн тулд та эхлээд дараах алхамуудыг \n"
+"                                   гүйцэтгэх хэрэгтэй"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -330,7 +457,7 @@ msgstr "Энэ захиалагчийн авах нийт авлагын дүн.
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Энэ нийлүүлэгчид өгөх нийт өглөгийн дүн."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -340,42 +467,34 @@ msgstr "Хэрэглэгчид"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Дүнгийн валютийг илэрхийлэх туслах талбар"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
 msgid "Validation URL"
-msgstr ""
+msgstr "Баталгаажуулах URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr ""
+msgid "Vendor Payment Terms"
+msgstr "Нийлүүлэгчийн Төлбөрийн Нөхцлүүд"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:100
+#: code:addons/auth_oauth/controllers/main.py:101
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
+"Танд энэ өгөгдлийн бааз руу хандах эрх алга эсвэл таны урилгын хугацаа "
+"дууссан байна. Урилгын хүсэлт илгээж урилга имэйл доторх холбоосоор ороорой."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr ""
+msgstr "arch"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
@@ -385,14 +504,14 @@ msgstr "base.config.settings"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
+msgstr "ж.нь. 1234-xyz.apps.googleusercontent.com"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "тодорхой бус"

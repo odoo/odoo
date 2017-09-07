@@ -35,6 +35,9 @@ class Start(Command):
 
         args, unknown = parser.parse_known_args(args=cmdargs)
 
+        # When in a virtualenv, by default use it's path rather than the cwd
+        if args.path == '.' and os.environ.get('VIRTUAL_ENV'):
+            args.path = os.environ.get('VIRTUAL_ENV')
         project_path = os.path.abspath(os.path.expanduser(os.path.expandvars(args.path)))
         module_root = get_module_root(project_path)
         db_name = None

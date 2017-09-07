@@ -5,15 +5,15 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -159,6 +159,11 @@ msgid "Accounting Date"
 msgstr "Könyvelés dátuma"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Accounting Entries"
+msgstr "Könyvelési tételek"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
 msgstr "Aktuális költség, ráfordítás táblázatok, nem az elutasítottak"
@@ -193,6 +198,11 @@ msgid "Analytic Account"
 msgstr "Gyűjtő/elemző könyvelés"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "Alkalmaz"
@@ -224,6 +234,7 @@ msgid "Bill Reference"
 msgstr "Számla hivatkozás"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr "Költségként elszámolható"
@@ -264,7 +275,7 @@ msgid "Click here to create new expenses."
 msgstr "Kattintson új kiadások létrehozásához."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:287
+#: code:addons/hr_expense/models/hr_expense.py:304
 #, python-format
 msgid "Click to add a new expense,"
 msgstr "Kattintson egy új költség hozzáadásához,"
@@ -588,13 +599,13 @@ msgid "Expenses by Month"
 msgstr "Kiadások havi lebontásban"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:381
+#: code:addons/hr_expense/models/hr_expense.py:399
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Költség kiadásoknak ugyanahhoz az alkalmazotthoz kell tartozzon"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:486
+#: code:addons/hr_expense/models/hr_expense.py:511
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -604,7 +615,7 @@ msgstr ""
 "főkönyvi számla tételeket hozzon létre."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:385
+#: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -704,7 +715,7 @@ msgstr "Költség kiadás emberi erőforrás általi elutasításának ok varáz
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8892
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
 msgid "ID"
 msgstr "Azonosító ID"
 
@@ -808,7 +819,7 @@ msgid "New Mail"
 msgstr "Új e-mail"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:235
+#: code:addons/hr_expense/models/hr_expense.py:251
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -818,7 +829,7 @@ msgstr ""
 "kategóriájára), kérem hozzon létre egyet."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:204
+#: code:addons/hr_expense/models/hr_expense.py:218
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
@@ -826,7 +837,7 @@ msgstr ""
 " egyet."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:200
+#: code:addons/hr_expense/models/hr_expense.py:197
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -939,7 +950,7 @@ msgid "Planner"
 msgstr "Tervező"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:239
+#: code:addons/hr_expense/models/hr_expense.py:255
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -1115,6 +1126,7 @@ msgid "Setup your domain alias"
 msgstr "Állítsa be a domén álneveket"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr ""
@@ -1217,6 +1229,12 @@ msgstr "A könyvelő jóváhagyja a napló tételeket és visszatérít."
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
 msgid "The journal used when the expense is done."
 msgstr "A napló amit a kiadás elvégzése után használ."
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -1347,7 +1365,7 @@ msgid "We hope this feature helped you manage your expenses efficiently."
 msgstr "Reméljük ez a jellemző segít a költség kiadásai hatékony kezelésében."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:483
+#: code:addons/hr_expense/models/hr_expense.py:508
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Csak jóváhagyott költsége(k) tudnak főkönyvi bejegyzést generálni."
@@ -1380,6 +1398,25 @@ msgstr ""
 "                                    az e-mail tárgyába a költség kiadáshoz történő hozzáadáshoz."
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
+#, python-format
+msgid "You cannot delete a posted expense."
+msgstr "Nem törölhet könyvelésre feladott kiadásokat."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:559
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
@@ -1410,7 +1447,7 @@ msgid "Your Email Address"
 msgstr "E-mail címe"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:465
+#: code:addons/hr_expense/models/hr_expense.py:490
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -1447,7 +1484,7 @@ msgid "or"
 msgstr "vagy"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:288
+#: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr "vagy küldje a bizonylatokat e-maillel ide: %s."

@@ -130,7 +130,7 @@ var MentionManager = Widget.extend({
     get_listener_selection: function (delimiter) {
         var listener = _.findWhere(this.listeners, {delimiter: delimiter});
         if (listener) {
-            var input_mentions = this.composer.$input.val().match(new RegExp(delimiter+'[^ ]+', 'g'));
+            var input_mentions = this.composer.$input.val().match(new RegExp(delimiter+'[^ ]+(?= |&nbsp;)', 'g'));
             return this._validate_selection(listener.selection, input_mentions);
         }
         return [];
@@ -270,7 +270,7 @@ var MentionManager = Widget.extend({
         // create the regex of all mention's names
         var names = _.pluck(listener.selection, 'name');
         var escaped_names = _.map(names, function (str) {
-            return "("+_.str.escapeRegExp(listener.delimiter+str)+")";
+            return "("+_.str.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;)";
         });
         var regex_str = escaped_names.join('|');
         // extract matches
@@ -474,6 +474,8 @@ var BasicComposer = Widget.extend({
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
         var value = _.escape(this.$input.val()).replace(/\n|\r/g, '<br/>');
+        // prevent html space collapsing
+        value = value.replace(/ /g, '&nbsp;').replace(/([^>])&nbsp;([^<])/g, '$1 $2');
         var commands = this.options.commands_enabled ? this.mention_manager.get_listener_selection('/') : [];
         return $.when({
             content: this.mention_manager.generate_links(value),

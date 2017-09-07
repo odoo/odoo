@@ -60,6 +60,8 @@ class MailMail(models.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
+        if not values.get('mail_message_id'):
+            self = self.with_context(message_create_from_mail_mail=True)
         return super(MailMail, self).create(values)
 
     @api.multi
@@ -206,8 +208,9 @@ class MailMail(models.Model):
         """
         IrMailServer = self.env['ir.mail_server']
 
-        for mail in self:
+        for mail_id in self.ids:
             try:
+                mail = self.browse(mail_id)
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
                     model = self.env['ir.model'].sudo().search([('model', '=', mail.model)])[0]

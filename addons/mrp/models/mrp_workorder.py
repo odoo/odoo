@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
 
@@ -275,13 +275,14 @@ class MrpWorkorder(models.Model):
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
             if move.unit_factor:
-                move.quantity_done += self.qty_producing * move.unit_factor
+                rounding = move.product_uom.rounding
+                move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_lot in self.active_move_lot_ids:
             # Check if move_lot already exists
             if move_lot.quantity_done <= 0:  # rounding...
-                move_lot.unlink()
+                move_lot.sudo().unlink()
                 continue
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
@@ -290,7 +291,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
-                move_lot.unlink()
+                move_lot.sudo().unlink()
             else:
                 move_lot.lot_produced_id = self.final_lot_id.id
                 move_lot.done_wo = True
@@ -301,9 +302,12 @@ class MrpWorkorder(models.Model):
         if self.next_work_order_id and self.final_lot_id and not self.next_work_order_id.final_lot_id:
             self.next_work_order_id.final_lot_id = self.final_lot_id.id
 
-        # TODO: add filter for those that have not been done yet --> need to check as it can have different filters
-        self.move_lot_ids.filtered(lambda x: not x.done_move and not x.lot_produced_id).write({'lot_produced_id': self.final_lot_id.id,
-                                          'lot_produced_qty': self.qty_producing,})
+        self.move_lot_ids.filtered(
+            lambda move_lot: not move_lot.done_move and not move_lot.lot_produced_id and move_lot.quantity_done > 0
+        ).write({
+            'lot_produced_id': self.final_lot_id.id,
+            'lot_produced_qty': self.qty_producing
+        })
 
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
@@ -338,6 +342,7 @@ class MrpWorkorder(models.Model):
         self.final_lot_id = False
         if self.qty_produced >= self.production_id.product_qty:
             self.button_finish()
+        return True
 
     @api.multi
     def button_start(self):
@@ -353,7 +358,10 @@ class MrpWorkorder(models.Model):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         for workorder in self:
             if workorder.production_id.state != 'progress':
-                workorder.production_id.state = 'progress'
+                workorder.production_id.write({
+                    'state': 'progress',
+                    'date_start': datetime.now(),
+                })
             timeline.create({
                 'workorder_id': workorder.id,
                 'workcenter_id': workorder.workcenter_id.id,
@@ -362,7 +370,7 @@ class MrpWorkorder(models.Model):
                 'date_start': datetime.now(),
                 'user_id': self.env.user.id
             })
-        self.write({'state': 'progress',
+        return self.write({'state': 'progress',
                     'date_start': datetime.now(),
         })
 
@@ -370,9 +378,7 @@ class MrpWorkorder(models.Model):
     def button_finish(self):
         self.ensure_one()
         self.end_all()
-        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
-        if not self.production_id.workorder_ids.filtered(lambda x: x.state not in ('done','cancel')):
-            self.production_id.post_inventory() # User should put it to done manually
+        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
 
     @api.multi
     def end_previous(self, doall=False):
@@ -385,9 +391,12 @@ class MrpWorkorder(models.Model):
         domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
         if not doall:
             domain.append(('user_id', '=', self.env.user.id))
+        not_productive_timelines = timeline_obj.browse()
         for timeline in timeline_obj.search(domain, limit=None if doall else 1):
             wo = timeline.workorder_id
-            if timeline.loss_type != 'productive':
+            if wo.duration_expected <= wo.duration:
+                if timeline.loss_type == 'productive':
+                    not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
                 maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wo.duration_expected - wo.duration)
@@ -396,10 +405,13 @@ class MrpWorkorder(models.Model):
                     timeline.write({'date_end': enddate})
                 else:
                     timeline.write({'date_end': maxdate})
-                    loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
-                    if not len(loss_id):
-                        raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-                    timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
+                    not_productive_timelines += timeline.copy({'date_start': maxdate, 'date_end': enddate})
+        if not_productive_timelines:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            not_productive_timelines.write({'loss_id': loss_id.id})
+        return True
 
     @api.multi
     def end_all(self):
@@ -408,22 +420,24 @@ class MrpWorkorder(models.Model):
     @api.multi
     def button_pending(self):
         self.end_previous()
+        return True
 
     @api.multi
     def button_unblock(self):
         for order in self:
             order.workcenter_id.unblock()
+        return True
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
             raise UserError(_('A Manufacturing Order is already done or cancelled!'))
         self.end_all()
-        self.write({'state': 'done',
+        return self.write({'state': 'done',
                     'date_finished': datetime.now()})
 
     @api.multi

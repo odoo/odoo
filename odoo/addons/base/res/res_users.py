@@ -183,7 +183,7 @@ class Users(models.Model):
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return (default_user or self.env['res.users']).groups_id
+        return (default_user or self.env['res.users']).sudo().groups_id
 
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
@@ -270,10 +270,6 @@ class Users(models.Model):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
 
-    @api.onchange('state_id')
-    def onchange_state(self):
-        return self.mapped('partner_id').onchange_state()
-
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         return self.mapped('partner_id').onchange_parent_id()
@@ -356,7 +352,7 @@ class Users(models.Model):
         if 'company_id' in values:
             for user in self:
                 # if partner is global we keep it that way
-                if user.partner_id.company_id.id != values['company_id']:
+                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
             self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
@@ -739,7 +735,7 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.with_context(lang=None).write({'arch': xml_content})
+            view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
@@ -877,8 +873,6 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        if not self.env.user._is_admin():
-            return res
         for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # selection group field

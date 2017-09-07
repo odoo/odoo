@@ -121,10 +121,14 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         "click .o_mail_request_permission": function (event) {
             event.preventDefault();
             this.$(".o_mail_annoying_notification_bar").slideUp();
-            var def = window.Notification.requestPermission();
+            var def = window.Notification && window.Notification.requestPermission();
             if (def) {
-                def.then(function () {
-                    utils.send_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                def.then(function (value) {
+                    if (value === 'denied') {
+                        utils.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
+                    } else {
+                        utils.send_notification(_t('Permission granted'), _t('Odoo has now the permission to send you native notifications on this device.'));
+                    }
                 });
             }
         },
@@ -568,7 +572,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var self = this;
         var options = this.selected_message ? {} : {channel_id: this.channel.id};
         if (this.selected_message) {
-            message.subtype = 'mail.mt_comment';
+            message.subtype = this.selected_message.is_note ? 'mail.mt_note': 'mail.mt_comment';
             message.subtype_id = false;
             message.message_type = 'comment';
             message.content_subtype = 'html';

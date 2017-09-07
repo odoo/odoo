@@ -57,6 +57,7 @@ var PivotView = View.extend({
         this.headers = {};
         this.cells = {};
         this.has_data = false;
+        this.$buttons = $();
 
         this.last_header_selected = null;
         this.sorted_column = {};
@@ -186,9 +187,9 @@ var PivotView = View.extend({
             this.initial_row_groupby = context.pivot_row_groupby || this.initial_row_groupby;
             this.initial_col_groupby = context.pivot_col_groupby || this.initial_col_groupby;
         }
-        this.main_row.groupbys = group_by.length ? group_by : this.initial_row_groupby.slice(0);
-        this.main_col.groupbys = context.pivot_column_groupby || this.initial_col_groupby.slice(0);
-        this.active_measures = context.pivot_measures || this.active_measures;
+        this.main_row.groupbys = group_by.length ? group_by : (context.pivot_row_groupby || this.initial_row_groupby.slice(0));
+        this.main_col.groupbys = context.col_group_by || context.pivot_column_groupby || this.initial_col_groupby.slice(0);
+        this.active_measures = context.measures || context.pivot_measures || this.active_measures;
 
         this.domain = domain;
         this.context = context;
@@ -206,6 +207,10 @@ var PivotView = View.extend({
         this.do_push_state({});
         return this.data_loaded.done(function () {
             self.display_table(); 
+            self.$buttons.find('.o_pivot_measures_list li').removeClass('selected');
+            self.active_measures.forEach(function (measure) {
+                self.$buttons.find('li[data-field="' + measure + '"]').addClass('selected');
+            });
             _super();
         });
     },
@@ -275,9 +280,10 @@ var PivotView = View.extend({
             col_domain = this.headers[col_id].domain,
             context = _.omit(_.clone(this.context), 'group_by');
 
-        var views = _.filter(this.options.action.views, function (view) {
-            return view[1] === 'form' || view[1] === 'list';
-        });
+        var views = [
+            _find_view_info.call(this, "list"),
+            _find_view_info.call(this, "form"),
+        ];
 
         return this.do_action({
             type: 'ir.actions.act_window',
@@ -290,6 +296,12 @@ var PivotView = View.extend({
             context: context,
             domain: this.domain.concat(row_domain, col_domain),
         });
+
+        function _find_view_info(view_type) {
+            return _.find(this.options.action.views, function (view) {
+                return view[1] === view_type;
+            }) || [false, view_type];
+        }
     },
     on_measure_row_click: function (event) {
         var $target = $(event.target),

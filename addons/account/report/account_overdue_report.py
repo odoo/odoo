@@ -25,7 +25,7 @@ class ReportOverdue(models.AbstractModel):
             "FROM account_move_line l "
             "JOIN account_account_type at ON (l.user_type_id = at.id) "
             "JOIN account_move m ON (l.move_id = m.id) "
-            "WHERE l.partner_id IN %s AND at.type IN ('receivable', 'payable') GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),))))
+            "WHERE l.partner_id IN %s AND at.type IN ('receivable', 'payable') AND NOT l.reconciled GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),))))
         for row in self.env.cr.dictfetchall():
             res[row.pop('partner_id')].append(row)
         return res
@@ -33,10 +33,10 @@ class ReportOverdue(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         totals = {}
-        lines = self._get_account_move_lines(self.ids)
+        lines = self._get_account_move_lines(docids)
         lines_to_display = {}
         company_currency = self.env.user.company_id.currency_id
-        for partner_id in self.ids:
+        for partner_id in docids:
             lines_to_display[partner_id] = {}
             totals[partner_id] = {}
             for line_tmp in lines[partner_id]:
@@ -58,9 +58,9 @@ class ReportOverdue(models.AbstractModel):
                     totals[partner_id][currency]['mat'] += line['mat']
                     totals[partner_id][currency]['total'] += line['debit'] - line['credit']
         docargs = {
-            'doc_ids': self.ids,
+            'doc_ids': docids,
             'doc_model': 'res.partner',
-            'docs': self.env['res.partner'].browse(self.ids),
+            'docs': self.env['res.partner'].browse(docids),
             'time': time,
             'Lines': lines_to_display,
             'Totals': totals,

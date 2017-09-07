@@ -187,4 +187,4 @@ class PaypalForm(PaypalCommon):
         # check
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(tx.date_validate, '2013-11-18 03:21:19', 'paypal: wrong validation date')
+        self.assertEqual(tx.date_validate, '2013-11-18 11:21:19', 'paypal: wrong validation date')

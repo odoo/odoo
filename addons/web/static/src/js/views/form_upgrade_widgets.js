@@ -18,16 +18,15 @@ var AbstractFieldUpgrade = {
     events: {
         'click input': 'on_click_input',
     },
-    
+
     start: function() {
         this._super.apply(this, arguments);
-        
         this.get_enterprise_label().after($("<span>", {
             text: "Enterprise",
             'class': "label label-primary oe_inline"
         }));
     },
-    
+
     open_dialog: function() {
         var message = $(QWeb.render('EnterpriseUpgrade'));
 
@@ -43,7 +42,7 @@ var AbstractFieldUpgrade = {
                 close: true,
             },
         ];
-        
+
         return new Dialog(this, {
             size: 'medium',
             buttons: buttons,
@@ -53,20 +52,20 @@ var AbstractFieldUpgrade = {
             title: _t("Odoo Enterprise"),
         }).open();
     },
-  
+
     confirm_upgrade: function() {
         new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
             framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
         });
     },
-    
+
     get_enterprise_label: function() {},
     on_click_input: function() {},
 };
 
 var UpgradeBoolean = form_widgets.FieldBoolean.extend(AbstractFieldUpgrade, {
     template: "FieldUpgradeBoolean",
-    
+
     get_enterprise_label: function() {
         return this.$label;
     },
@@ -82,11 +81,12 @@ var UpgradeBoolean = form_widgets.FieldBoolean.extend(AbstractFieldUpgrade, {
 
 var UpgradeRadio = form_widgets.FieldRadio.extend(AbstractFieldUpgrade, {
     get_enterprise_label: function() {
+        // override the margin:0px
+        this.$('label').addClass('mr4');
         return this.$('label').last();
     },
-    
     on_click_input: function(event) {
-        if($(event.target).val() === 1) {
+        if($(event.target).val() === "1") {
             this.open_dialog().on('closed', this, function() {
                 this.$('input').first().prop("checked", true);
             });

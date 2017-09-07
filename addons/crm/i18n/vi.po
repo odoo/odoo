@@ -12,13 +12,16 @@
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 # sao sang <saosangmo@yahoo.com>, 2016
 # PHAM QUOC MY <mypham2802@gmail.com>, 2016
+# Tuan Tran <tmtuan.projects@gmail.com>, 2017
+# Su Pham Nghiep Vu <nghiepvusupham58@gmail.com>, 2017
+# Thang Duong Bao <nothingctrl@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: PHAM QUOC MY <mypham2802@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Thang Duong Bao <nothingctrl@gmail.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,11 +112,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover\n"
-"                                how to get the best out of Odoo CRM with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -910,7 +912,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr ""
+msgstr "Lưu trữ"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1183,6 +1185,15 @@ msgid "Close Date"
 msgstr "Ngày đóng"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:30
+#, python-format
+msgid ""
+"Close opportunity if: \"pre-sales days * $500\" < \"expected revenue\" * "
+"probability"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_date_closed
 msgid "Closed Date"
 msgstr ""
@@ -1245,6 +1256,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Congratulations, you're done!"
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Tư vấn"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1360,6 +1376,13 @@ msgstr "Tạo Cơ hội"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create Vendors"
+msgstr "Tạo Nhà cung cấp"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:31
+#, python-format
+msgid "Create a Proof of Concept with consultants"
 msgstr ""
 
 #. module: crm
@@ -1477,7 +1500,7 @@ msgid "Current Line"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1073
+#: code:addons/crm/models/crm_lead.py:1069
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1571,6 +1594,13 @@ msgid "Delete"
 msgstr "Xóa"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#, python-format
+msgid "Demonstration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Depending on how complex your business is, it may take between 6 months and 18 months for a new\n"
@@ -1598,6 +1628,11 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Thiết kế"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1848,6 +1883,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:32
+#, python-format
+msgid "Final Proposal sent"
+msgstr ""
+
+#. module: crm
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Finished"
 msgstr ""
@@ -1903,6 +1945,13 @@ msgstr ""
 #, python-format
 msgid "From %s : %s"
 msgstr "Từ %s : %s"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:31
+#, python-format
+msgid "GAP analysis with customer"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2123,6 +2172,18 @@ msgid "Incoming Emails"
 msgstr ""
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Thông tin"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:23
+#, python-format
+msgid "Initial Contact"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_module_crm_voip
 msgid "Integration with Asterisk"
 msgstr ""
@@ -2227,7 +2288,7 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:841
+#: code:addons/crm/models/crm_lead.py:837
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
@@ -2446,7 +2507,9 @@ msgid "Log an Activity"
 msgstr ""
 
 #. module: crm
+#. openerp-web
 #: code:addons/crm/models/crm_lead.py:1044
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2525,6 +2588,13 @@ msgstr "Trung bình"
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
 "Cuộc họp được đặt lịch tại '%s'<br> Chủ đề: %s <br> Trong khoảng: %s hour(s)"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:25
+#, python-format
+msgid "Meeting with a demo. Set Fields: expected revenue, closing date"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2720,13 +2790,40 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#, python-format
+msgid "Needs assessment"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:16
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
+#, python-format
+msgid "Negotiation"
+msgstr "Đàm phán"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:23
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
 #: model:crm.stage,name:crm.stage_lead1
+#, python-format
 msgid "New"
 msgstr "Mới"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:17
+#, python-format
+msgid "New propspect assigned to the right salesperson"
 msgstr ""
 
 #. module: crm
@@ -3054,8 +3151,18 @@ msgid "Options"
 msgstr "Tùy chọn"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Khác"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Overdue Opportunities"
 msgstr ""
 
 #. module: crm
@@ -3067,6 +3174,20 @@ msgstr "Vượt quá thời hạn"
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_user_id
 msgid "Owner"
 msgstr "Chủ sở hữu"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#, python-format
+msgid "POC Sold"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:32
+#, python-format
+msgid "POC demonstration to the customer"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_parent_id
@@ -3135,6 +3256,13 @@ msgstr "Đối tác"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_phone
 msgid "Phone"
 msgstr "Điện thoại"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:24
+#, python-format
+msgid "Phone call with following questions: ..."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3249,17 +3377,37 @@ msgid "Probable Turnover"
 msgstr ""
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:23
+#, python-format
+msgid "Product Demonstration"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Products"
 msgstr "Sản phẩm"
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:16
+#: code:addons/crm/static/src/js/web_planner_crm.js:23
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
 #: model:ir.ui.view,arch_db:crm.crm_planner
+#, python-format
 msgid "Proposal"
 msgstr ""
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
 #: model:crm.stage,name:crm.stage_lead3
+#, python-format
 msgid "Proposition"
 msgstr "Đề xuất"
 
@@ -3269,8 +3417,41 @@ msgid "Qualification form (you can use the survey app for this)"
 msgstr ""
 
 #. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:15
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
 #: model:crm.stage,name:crm.stage_lead2
+#, python-format
 msgid "Qualified"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:15
+#, python-format
+msgid "Qualified Sponsor"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:26
+#, python-format
+msgid "Quotation sent"
+msgstr "Báo giá đã gửi"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:20
+#, python-format
+msgid "Quotation sent to customer"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:21
+#, python-format
+msgid "Quotation signed by the customer"
 msgstr ""
 
 #. module: crm
@@ -3511,6 +3692,19 @@ msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Các dịch vụ"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:18
+#: code:addons/crm/static/src/js/web_planner_crm.js:29
+#, python-format
+msgid "Set fields: Expected Revenue, Expected Closing Date, Next Action"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
 msgstr ""
@@ -3559,6 +3753,13 @@ msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid ""
+"Show all opportunities with a deadline for which the next action date is "
+"before today"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
@@ -3578,6 +3779,11 @@ msgstr "Bỏ qua các liên hệ này"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Slides"
+msgstr ""
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
 msgstr ""
 
 #. module: crm
@@ -3720,7 +3926,7 @@ msgstr "Từ khóa"
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Nội dung này đã có rồi!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
@@ -3751,6 +3957,20 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Templates of quotations (use Odoo Online Proposals for this)"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:15
+#, python-format
+msgid "Territory"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:20
+#, python-format
+msgid "The customer came back to you to discuss your quotation"
 msgstr ""
 
 #. module: crm
@@ -3901,9 +4121,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
-msgid ""
-"This report analyses the source of your leads\n"
-"(including those converted into opportunities)."
+msgid "This report analyses the source of your leads."
 msgstr ""
 
 #. module: crm
@@ -3965,6 +4183,11 @@ msgid "Tracking"
 msgstr "Tracking"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Đào tạo"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_type
@@ -3986,7 +4209,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Unarchive"
-msgstr ""
+msgstr "Không lưu trữ"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4133,7 +4356,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "Rất cao"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_module_crm_voip
@@ -4244,7 +4467,12 @@ msgid "Wizard"
 msgstr "Wizard"
 
 #. module: crm
+#. openerp-web
 #: code:addons/crm/models/crm_lead.py:1043
+#: code:addons/crm/static/src/js/web_planner_crm.js:16
+#: code:addons/crm/static/src/js/web_planner_crm.js:23
+#: code:addons/crm/static/src/js/web_planner_crm.js:28
+#: code:addons/crm/static/src/js/web_planner_crm.js:34
 #: model:crm.stage,name:crm.stage_lead4
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -4269,6 +4497,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
 msgid "Working Time"
 msgstr "Giờ làm việc"
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/web_planner_crm.js:19
+#, python-format
+msgid ""
+"You are in discussion with the decision maker and HE agreed on his pain "
+"points"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:306

@@ -7,6 +7,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
 # alisan alacam <alisanalacam@gmail.com>, 2016
 # Yigit Aga <yagabey@gmail.com>, 2016
@@ -16,7 +17,6 @@
 # Saban Yildiz <sabany@projetgrup.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Azar Huseynli <azerbay1984@gmail.com>, 2016
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
@@ -81,6 +81,8 @@ msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
 msgstr ""
+"<span class=\"o_unfollow\">İzlemekten Vazgeç</span>\n"
+"<span class=\"o_following\">Takip Etme</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -90,12 +92,12 @@ msgstr "<span>Raporlar</span>"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr ""
+msgstr "<span>Onaylama</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr ""
+msgstr "<span>Yapılacak</span>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -192,12 +194,12 @@ msgstr "Doğum"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr ""
+msgstr "İcra Kurulu Başkanı"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr ""
+msgstr "Baş Teknik Sorumlusu"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
@@ -207,28 +209,28 @@ msgstr "Alt Departmenler"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr ""
+msgstr "Vatandaşlık & Diğer Bilgiler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
 msgid "City"
-msgstr "Mahalle"
+msgstr "Semt/İlçe"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "Yeni bir personel eklemek için tıklayın."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
+msgstr "Bir departman oluşturmak için tıklayın."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr ""
+msgstr "Yeni bir iş pozisyonu tanımlamak için tıklayın."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -239,7 +241,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Close to the perfection ..."
-msgstr ""
+msgstr "Mükemmele yakın ..."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
@@ -281,7 +283,7 @@ msgstr "Yapılandırma"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "Danışman"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -293,7 +295,7 @@ msgstr "İletişim Bilgisi"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Contributions to open source projects"
-msgstr ""
+msgstr "Açık kaynak projelere katkılar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
@@ -326,7 +328,7 @@ msgstr "Doğum Tarihi"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Define a clear communication strategy"
-msgstr ""
+msgstr "Açık bir iletişim stratejisi tanımlayın"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
@@ -336,7 +338,7 @@ msgstr "Kaynağın planlamasını tanımla"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Deliver generic Odoo functional training sessions"
-msgstr ""
+msgstr "Genel Odoo işlevsel eğitim oturum sununları"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
@@ -438,7 +440,7 @@ msgstr "Personel Adı"
 #: model:ir.ui.view,arch_db:hr.view_employee_tree
 #: model:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
-msgstr "Personeler"
+msgstr "Personeller"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -448,7 +450,7 @@ msgstr "Personel Yapısı"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
-msgstr ""
+msgstr "Personel Etiketleri"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:254
@@ -481,7 +483,7 @@ msgstr "Yeni işe alım sonra bu iş pozisyonu için beklenen pesonel sayısı."
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr ""
+msgstr "Deneyimli Geliştirici"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -496,7 +498,7 @@ msgstr "Takip Et"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Follow and check the development part"
-msgstr ""
+msgstr "Geliştirme bölümünü izleyin ve kontrol edin"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -612,7 +614,7 @@ msgstr "İK"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr ""
+msgstr "İnsan Kaynakları Yönetimi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -839,7 +841,7 @@ msgstr "Mesajlar"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Daha fazla <i class=\"fa fa-caret-down\"/>"
+msgstr "Daha <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -860,7 +862,7 @@ msgstr "Adı"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
 msgid "Nationality (Country)"
-msgstr ""
+msgstr "Uyruk (Ülke)"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -876,7 +878,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "İşe Alım Sonlandı"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -1034,7 +1036,7 @@ msgstr "Raporlar"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
-msgstr "İşe Alım"
+msgstr "Gereksinimler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
@@ -1104,7 +1106,7 @@ msgstr "Bekar"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Skills"
-msgstr ""
+msgstr "Yetenekler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
@@ -1177,7 +1179,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_mail_test
 msgid "Test Mail Model"
-msgstr ""
+msgstr "Test Posta Model"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1350,7 +1352,7 @@ msgstr "İş E-postası"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
-msgstr ""
+msgstr "İş Yeri"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
@@ -1551,7 +1553,7 @@ msgstr ""
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "Belge oluşturulamadı"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -1586,7 +1588,7 @@ msgstr "ör. Satış Müdürü"
 #: code:addons/hr/models/mail_thread.py:41
 #, python-format
 msgid "skipping"
-msgstr ""
+msgstr "atlama"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user

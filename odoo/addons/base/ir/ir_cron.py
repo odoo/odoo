@@ -89,8 +89,6 @@ class ir_cron(models.Model):
 
         """
         self._cr.rollback()
-        _logger.exception("Call of self.env[%r].%s(*%r) failed in Job %s",
-                          model_name, method_name, args, job_id)
 
     @api.model
     def _callback(self, model_name, method_name, args, job_id):
@@ -114,10 +112,11 @@ class ir_cron(models.Model):
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
                     odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
+                    start_time = False
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
                     getattr(model, method_name)(*args)
-                    if _logger.isEnabledFor(logging.DEBUG):
+                    if start_time and _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
                     self.pool.signal_caches_change()
@@ -126,6 +125,8 @@ class ir_cron(models.Model):
             else:
                 _logger.warning("Model %r does not exist.", model_name)
         except Exception, e:
+            _logger.exception("Call of self.env[%r].%s(*%r) failed in Job #%s",
+                              model_name, method_name, args, job_id)
             self._handle_callback_exception(model_name, method_name, args, job_id, e)
 
     @classmethod
@@ -182,20 +183,20 @@ class ir_cron(models.Model):
         """
         db = odoo.sql_db.db_connect(db_name)
         threading.current_thread().dbname = db_name
-        cr = db.cursor()
         jobs = []
         try:
-            # Make sure the database we poll has the same version as the code of base
-            cr.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
-            if cr.fetchone():
-                # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
-                cr.execute("""SELECT * FROM ir_cron
-                              WHERE numbercall != 0
-                                  AND active AND nextcall <= (now() at time zone 'UTC')
-                              ORDER BY priority""")
-                jobs = cr.dictfetchall()
-            else:
-                _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
+            with db.cursor() as cr:
+                # Make sure the database we poll has the same version as the code of base
+                cr.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
+                if cr.fetchone():
+                    # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
+                    cr.execute("""SELECT * FROM ir_cron
+                                  WHERE numbercall != 0
+                                      AND active AND nextcall <= (now() at time zone 'UTC')
+                                  ORDER BY priority""")
+                    jobs = cr.dictfetchall()
+                else:
+                    _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except psycopg2.ProgrammingError, e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
@@ -205,8 +206,6 @@ class ir_cron(models.Model):
                 raise
         except Exception:
             _logger.warning('Exception in cron:', exc_info=True)
-        finally:
-            cr.close()
 
         for job in jobs:
             lock_cr = db.cursor()

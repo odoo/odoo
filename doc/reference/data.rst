@@ -58,7 +58,7 @@ following attributes:
     Requires an :term:`external id`, defaults to ``True``.
 
 ``field``
-'''''''''
+----------
 
 Each record can be composed of ``field`` tags, defining values to set when
 creating the record. A ``record`` with no ``field`` will use all default

@@ -20,7 +20,7 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        return category and category.id or False
+        return category and category.type == 'normal' and category.id or False
 
     def _get_default_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
@@ -151,7 +151,7 @@ class ProductTemplate(models.Model):
         except ValueError:
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
         for template in self:
-            template.currency_id = template.company_id.currency_id.id or main_company.currency_id.id
+            template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
     @api.multi
     def _compute_template_price(self):
@@ -160,11 +160,13 @@ class ProductTemplate(models.Model):
         if pricelist_id_or_name:
             pricelist = None
             partner = self._context.get('partner')
-            quantity = self._context.get('quantity')
+            quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, basestring):
-                pricelist = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+                pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+                if pricelist_data:
+                    pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
             elif isinstance(pricelist_id_or_name, (int, long)):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
@@ -264,7 +266,7 @@ class ProductTemplate(models.Model):
         tools.image_resize_images(vals)
         template = super(ProductTemplate, self).create(vals)
         if "create_product_product" not in self._context:
-            template.create_variant_ids()
+            template.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         related_vals = {}
@@ -322,7 +324,7 @@ class ProductTemplate(models.Model):
             products_ns = Product.name_search(name, args+domain, operator=operator)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (len(templates) > limit):
+            if (not products) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
@@ -377,7 +379,7 @@ class ProductTemplate(models.Model):
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
 
             # list of values combination
-            existing_variants = [set(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids]
+            existing_variants = [set(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids]
             variant_matrix = itertools.product(*(line.value_ids for line in tmpl_id.attribute_line_ids if line.value_ids and line.value_ids[0].attribute_id.create_variant))
             variant_matrix = map(lambda record_list: reduce(lambda x, y: x+y, record_list, self.env['product.attribute.value']), variant_matrix)
             to_create_variants = filter(lambda rec_set: set(rec_set.ids) not in existing_variants, variant_matrix)
@@ -386,9 +388,9 @@ class ProductTemplate(models.Model):
             variants_to_activate = self.env['product.product']
             variants_to_unlink = self.env['product.product']
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids in variant_matrix:
+                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
                     variants_to_activate |= product_id
-                elif product_id.attribute_value_ids not in variant_matrix:
+                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
                     variants_to_unlink |= product_id
             if variants_to_activate:
                 variants_to_activate.write({'active': True})

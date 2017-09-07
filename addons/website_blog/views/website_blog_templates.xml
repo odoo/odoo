@@ -557,7 +557,7 @@
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
         <id t-esc="'%s%s' % (base_url, post.website_url)"/>
         <author><name t-esc="post.sudo().author_id.name"/></author>
-        <summary t-esc="post.subtitle"/>
+        <summary t-esc="html2plaintext(post.teaser)"/>
         <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>
     </entry>
 </feed>

@@ -304,8 +304,8 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            if self.sudo().callback_eval:
+                safe_eval(self.sudo().callback_eval, {'self': self})
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({
@@ -410,8 +410,8 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            if self.sudo().callback_eval:
+                safe_eval(self.sudo().callback_eval, {'self': self})
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({
@@ -427,8 +427,8 @@ class PaymentTxOgone(models.Model):
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
             self.write({'acquirer_reference': tree.get('PAYID')})
-            tree = self._ogone_s2s_get_tx_status(self)
-            return self._ogone_s2s_validate_tree(self, tree, tries - 1)
+            tree = self._ogone_s2s_get_tx_status()
+            return self._ogone_s2s_validate_tree(tree, tries - 1)
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
                 'error_str': tree.get('NCERRORPLUS'),

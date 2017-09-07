@@ -14,13 +14,14 @@
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Davide Corio <enlightx@gmail.com>, 2016
 # Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016
+# Giovanni Perteghella <giovanni@perteghella.org>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Alberto Vincenzi <alberto.vincenzi@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +44,7 @@ msgstr "contratto/i %s necessita/no di essere rinnovato/i e/o chiuso/i!"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>g/km</span>"
-msgstr ""
+msgstr "<span>g/km</span>"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -63,12 +64,12 @@ msgstr "Sostituzione condensatore condizionatore"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr ""
+msgstr "Diagnostica A/C"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
 msgid "A/C Evaporator Replacement"
-msgstr ""
+msgstr "Sostituzione radiatore A/C"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
@@ -190,6 +191,11 @@ msgid "Brand model of the vehicle"
 msgstr "Marca modello del veicolo"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
 msgid "CO2 Emissions"
 msgstr "Emissioni di CO2"
@@ -212,7 +218,7 @@ msgstr "Lavaggio macchina"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Car value"
-msgstr ""
+msgstr "Valore auto"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -235,7 +241,7 @@ msgstr "Categoria di costo"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_16
 msgid "Charging System Diagnosis"
-msgstr ""
+msgstr "Diagnostica sistema di carica"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_vin_sn
@@ -323,6 +329,11 @@ msgid "Color of the vehicle"
 msgstr "Colore del veicolo"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
 msgid "Company"
 msgstr "Azienda"
@@ -397,6 +408,11 @@ msgstr "Contraente"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
 msgstr "Abbonamenti"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -622,6 +638,11 @@ msgid "Emissions"
 msgstr "Emissioni"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr ""
+
+#. module: fleet
 #: code:addons/fleet/models/fleet.py:37
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -669,7 +690,7 @@ msgstr "Flotta"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_type
 msgid "For internal purpose only"
-msgstr ""
+msgstr "Solo per scopi interni"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_frequency
@@ -757,7 +778,7 @@ msgstr "Ha avviso(i)"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr ""
+msgstr "Ha il contratto scaduto"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_due_soon
@@ -900,6 +921,11 @@ msgid "Invoice Reference"
 msgstr "Riferimento fattura"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Chilometri"
@@ -968,7 +994,7 @@ msgstr "Targa: da '%s' a '%s'"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
 msgid "License plate"
-msgstr ""
+msgstr "Targa"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
@@ -1353,6 +1379,11 @@ msgstr "Prezzo"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price per liter"
+msgstr "Prezzo per litro"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
 msgstr ""
 
 #. module: fleet
@@ -1448,6 +1479,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
 msgid "Seats Number"
 msgstr "Numero di posti"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1919,7 +1960,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Write here any other information"
-msgstr ""
+msgstr "Scrivi qui ogni altra informazione"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form

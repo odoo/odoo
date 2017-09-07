@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -184,6 +184,11 @@ msgid "Brand model of the vehicle"
 msgstr "Model van het merk voertuig"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "Einde"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
 msgid "CO2 Emissions"
 msgstr "CO2 Emissie"
@@ -318,9 +323,14 @@ msgid "Color of the vehicle"
 msgstr "Kleur van het voertuig"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "Compact"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -392,6 +402,11 @@ msgstr "Aannemer"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
 msgstr "Contracten"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "Cabriolet"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -626,6 +641,11 @@ msgid "Emissions"
 msgstr "Emissies"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "Werknemers auto"
+
+#. module: fleet
 #: code:addons/fleet/models/fleet.py:37
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -656,7 +676,7 @@ msgstr "Motor/aandrijfriem vervangen"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr "Ingave in service belastingen"
+msgstr "Ingave in service BTW"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -912,6 +932,11 @@ msgid "Invoice Reference"
 msgstr "Factuurreferentie"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr "Junior"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Kilometers"
@@ -1042,7 +1067,7 @@ msgid ""
 msgstr ""
 "Beheer al uw contracten (leasing, verzekeringen, enz.) met hun\n"
 "bijbehorende diensten en kosten. Odoo zal u automatisch\n"
-"verwittigen wanneer uw contracten vernieuwd moeten worden."
+"waarschuwen wanneer uw contracten vernieuwd moeten worden."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1052,7 +1077,7 @@ msgstr "Management Fee"
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: fleet
 #: selection:fleet.vehicle,transmission:0
@@ -1287,7 +1312,7 @@ msgid ""
 "Odoo will warn you when services or contract have to be\n"
 "                renewed."
 msgstr ""
-"Odoo zal u verwittigen wanneer diensten of contracten\n"
+"Odoo zal u waarschuwen wanneer diensten of contracten\n"
 "vernieuwd moeten worden."
 
 #. module: fleet
@@ -1379,6 +1404,11 @@ msgstr "Prijs"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price per liter"
 msgstr "Prijs per liter"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "Ingekocht"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
@@ -1473,6 +1503,16 @@ msgstr "Rotor vervangen"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
 msgid "Seats Number"
 msgstr "Aantal zitplaatsen"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "Sedan"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "Senior"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1612,7 +1652,7 @@ msgstr "Labels"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr "Belasting regel"
+msgstr "BTW regel"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

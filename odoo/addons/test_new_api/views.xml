@@ -152,6 +152,41 @@
         </record>
         <menuitem id="menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
 
+        <!-- Discussion form view with embedded list -->
+        <record id="discussion_form_3" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_new_api.discussion</field>
+            <field name="priority" eval="11"/>
+            <field name="arch" type="xml">
+                <form string="Discussion" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name" context="{'generate_dummy_message': True}"/>
+                        </group>
+                        <group>
+                            <field name="messages" />
+                            <field name="important_messages">
+                                <tree string="Important messages">
+                                    <field name="name"/>
+                                    <field name="author"/>
+                                    <field name="size"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_discussions_3" model="ir.actions.act_window">
+            <field name="name">Discussions 3</field>
+            <field name="res_model">test_new_api.discussion</field>
+            <field name="view_ids" eval="[(5,0,0),
+                          (0,0,{'view_mode':'tree'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_3')})]"/>
+        </record>
+        <menuitem id="menu_discussions_3" action="action_discussions_3" parent="menu_sub" sequence="11"/>
+
 
         <!-- Message tree view -->
         <record id="message_tree" model="ir.ui.view">
@@ -159,7 +194,10 @@
             <field name="model">test_new_api.message</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
-                    <field name="display_name"/>
+                    <field name="name"/>
+                    <field name="author"/>
+                    <field name="size"/>
+                    <field name="important"/>
                 </tree>
             </field>
         </record>

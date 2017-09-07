@@ -57,10 +57,15 @@ def check(f):
             elif isinstance(kwargs, dict):
                 if 'context' in kwargs:
                     ctx = kwargs['context']
-                elif 'kwargs' in kwargs:
+                elif 'kwargs' in kwargs and kwargs['kwargs'].get('context'):
                     # http entry points such as call_kw()
                     ctx = kwargs['kwargs'].get('context')
-
+                else:
+                    try:
+                        from odoo.http import request
+                        ctx = request.env.context
+                    except Exception:
+                        pass
 
             uid = 1
             if args and isinstance(args[0], (long, int)):
@@ -73,29 +78,6 @@ def check(f):
             # We open a *new* cursor here, one reason is that failed SQL
             # queries (as in IntegrityError) will invalidate the current one.
             cr = False
-
-            if hasattr(src, '__call__'):
-                # callable. We need to find the right parameters to call
-                # the  orm._sql_message(self, cr, uid, ids, context) function,
-                # or we skip..
-                # our signature is f(registry, dbname [,uid, obj, method, args])
-                try:
-                    if args and len(args) > 1:
-                        # TODO self doesn't exist, but was already wrong before (it was not a registry but just the object_service.
-                        obj = self.get(args[1])
-                        if len(args) > 3 and isinstance(args[3], (long, int, list)):
-                            ids = args[3]
-                        else:
-                            ids = []
-                    cr = odoo.sql_db.db_connect(dbname).cursor()
-                    return src(obj, cr, uid, ids, context=(ctx or {}))
-                except Exception:
-                    pass
-                finally:
-                    if cr: cr.close()
-
-                return False # so that the original SQL error will
-                             # be returned, it is the best we have.
 
             try:
                 cr = odoo.sql_db.db_connect(dbname).cursor()

@@ -34,20 +34,16 @@ class WebsiteSaleDigital(website_account):
             return response
         order = response.qcontext['order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
+        products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
 
         purchased_products_attachments = {}
-        for il in invoiced_lines:
-            product = il.product_id
-            # Ignore products that do not have digital content
-            if not product.product_tmpl_id.type == 'digital':
-                continue
-
+        for product in products:
             # Search for product attachments
             Attachment = request.env['ir.attachment']
             product_id = product.id
             template = product.product_tmpl_id
             att = Attachment.search_read(
-                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id)],
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), '&', ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )
@@ -89,7 +85,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product']
+            P = request.env['product.product'].sudo()
             template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
             if res_id not in template_ids:
                 return redirect(self.orders_page)
@@ -105,6 +101,6 @@ class WebsiteSaleDigital(website_account):
                 return request.not_found()
         elif attachment["datas"]:
             data = StringIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
         else:
             return request.not_found()

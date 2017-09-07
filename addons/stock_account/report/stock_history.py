@@ -41,7 +41,7 @@ class StockHistory(models.Model):
                 self._cr.execute("""SELECT DISTINCT ON (product_id, company_id) product_id, company_id, cost
                     FROM product_price_history
                     WHERE product_id in %s AND datetime <= %s
-                    ORDER BY product_id, company_id, datetime DESC""", (tuple(not_real_cost_method_products.ids), date))
+                    ORDER BY product_id, company_id, datetime DESC, id DESC""", (tuple(not_real_cost_method_products.ids), date))
                 for history in self._cr.dictfetchall():
                     histories_dict[(history['product_id'], history['company_id'])] = history['cost']
 
@@ -79,7 +79,7 @@ class StockHistory(models.Model):
                 product_template_id,
                 SUM(quantity) as quantity,
                 date,
-                SUM(price_unit_on_quant * quantity) / SUM(quantity) as price_unit_on_quant,
+                COALESCE(SUM(price_unit_on_quant * quantity) / NULLIF(SUM(quantity), 0), 0) as price_unit_on_quant,
                 source,
                 string_agg(DISTINCT serial_number, ', ' ORDER BY serial_number) AS serial_number
                 FROM

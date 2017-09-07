@@ -31,6 +31,7 @@ class User(models.Model):
         return self.env['hr.employee'].with_context(ctx).search([('user_id', '=', self.id)])
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         """ Redirect the posting of message on res.users to the related employees.
             This is done because when giving the context of Chatter on the

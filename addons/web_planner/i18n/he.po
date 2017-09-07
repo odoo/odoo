@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_planner
-#
+# 
 # Translators:
-# fishfurbanter <fishfurbanter@gmail.com>, 2016
+# ExcaliberX <excaliberx@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# fishfurbanter <fishfurbanter@gmail.com>, 2017
+# Yihya Hugirat <hugirat@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-23 18:00+0000\n"
-"Last-Translator: fishfurbanter <fishfurbanter@gmail.com>\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
-"Language: he\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: web_planner
@@ -23,6 +26,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 msgid "Active"
 msgstr "פעיל"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:436
+#, python-format
+msgid "Cancel"
+msgstr "בטל"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_uid
@@ -58,9 +68,8 @@ msgstr ""
 
 #. module: web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
-#, fuzzy
 msgid "Inactive"
-msgstr "פעיל"
+msgstr "לא פעיל"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner___last_update
@@ -102,11 +111,18 @@ msgid "Next step"
 msgstr "צעד הבא"
 
 #. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:446
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "Odoo אנטרפרייז"
+
+#. module: web_planner
 #: model:ir.model,name:web_planner.model_web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_tree
 msgid "Planner"
-msgstr ""
+msgstr "מתכנן"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_planner_application
@@ -133,3 +149,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_view_id
 msgid "Template"
 msgstr "תבנית"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:430
+#, python-format
+msgid "Upgrade now"
+msgstr "שדרג עכשיו"

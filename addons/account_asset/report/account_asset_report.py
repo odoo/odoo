@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-
+from odoo import api, fields, models, tools
 
 class AssetAssetReport(models.Model):
     _name = "asset.asset.report"
@@ -28,6 +27,7 @@ class AssetAssetReport(models.Model):
 
     @api.model_cr
     def init(self):
+        tools.drop_view_if_exists(self._cr, 'asset_asset_report')
         self._cr.execute("""
             create or replace view asset_asset_report as (
                 select

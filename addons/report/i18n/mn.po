@@ -1,32 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-15 12:31+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
+msgstr "&lt;!DOCTYPE html&gt;"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -144,7 +146,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 мм"
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: code:addons/report/models/report.py:273
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Буруу Тайлангийн Код"
@@ -197,6 +199,13 @@ msgid "Default paper format ?"
 msgstr "Цаасны үндсэн формат ?"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:12
+#, python-format
+msgid "Discard"
+msgstr "Хэрэгсэхгүй"
+
+#. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
@@ -210,19 +219,26 @@ msgid "Display a header line"
 msgstr "Харуулах толгой мөр"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:8
+#, python-format
+msgid "Edit"
+msgstr "Засах"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
-msgstr ""
+msgstr "Гадаад хөлийг засварлах"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
-msgstr ""
+msgstr "Гадаад толгойг засварлах"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
-msgstr ""
+msgstr "Дотоод толгойг засварлах"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -230,12 +246,11 @@ msgid "Email:"
 msgstr "Э-Мэйл:"
 
 #. module: report
-#: constraint:report.paperformat:0
-#, fuzzy
+#: code:addons/report/models/report_paperformat.py:68
+#, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
-"Алдаа ! Цаасны формат сонгохын зэрэгцээ тусгайлсан өргөн/өндөрийг зэрэг "
-"сонгож болохгүй."
+"Алдаа ! Формат БА тухуулсан хуудасны өргөн/өндөрийг зэрэг сонгож болохгүй."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -256,6 +271,11 @@ msgstr "Факс :"
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 мм"
+
+#. module: report
+#: model:ir.model,name:report.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP шилжүүлэг"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
@@ -362,6 +382,11 @@ msgid "Paper format"
 msgstr "Цаасны формат"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+msgid "Paper format *"
+msgstr "Цаасны формат *"
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
@@ -384,21 +409,36 @@ msgstr "Босоо"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Гадаад тайланг урьдчилан харах"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Дотоод тайланг урьдчилан харах"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/xml/report.xml:5
+#, python-format
+msgid "Print"
+msgstr "Хэвлэх"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
+msgid "Printed Report Name"
+msgstr "Хэвлэгдсэн Тайлангийн Нэр"
+
+#. module: report
+#: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
+msgid "QWeb views"
+msgstr "QWeb харагдац"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:95
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -417,9 +457,11 @@ msgid "Right Margin (mm)"
 msgstr "Баруун захалбар (мм)"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
-msgid "Search associated QWeb views"
-msgstr "Холбогдох QWeb харагдацыг хайх"
+#. openerp-web
+#: code:addons/report/static/src/xml/report.xml:11
+#, python-format
+msgid "Save"
+msgstr "Хадгалах"
 
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
@@ -429,7 +471,7 @@ msgstr "Зөв цаасны хэмжээг сонго"
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "TIN:"
-msgstr ""
+msgstr "TIN:"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -439,15 +481,26 @@ msgstr "Tabloid 29 279.4 x 431.8 мм"
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Энэ нь гадаад тайлангийн жишээ."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Энэ нь дотоод тайлангийн жишээ."
 
 #. module: report
-#: code:addons/report/models/report.py:288
+#: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
+msgid ""
+"This is the filename of the report going to download. Keep empty to not "
+"change the report filename. You can use a python expression with the object "
+"and time variables."
+msgstr ""
+"Энэ нь татаж авах гэж байгаа тайлангийн файлын нэр. Тайлангийн файлын нэрийг"
+" өөрчлөхгүй бол хоосон үлдээ. Обьект болон хугацааны хувьсагчтай Python "
+"илэрхийллэг хэрэглэх боломжтой."
+
+#. module: report
+#: code:addons/report/models/report.py:273
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Дараах өгөгдлийн баазад энэ тайлан ачаалагдаагүй байна: %s."
@@ -459,18 +512,22 @@ msgstr "Дээд захалбар (мм)"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:76
+#: code:addons/report/static/src/js/qwebactionmanager.js:18
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 msgstr ""
 "Энэ систем дээр Wkhtmltopdf-г олсонгүй. \n"
-"Тайлан html байдлаар харагдана.<br><br><a href=\"http://wkhtmltopdf.org/\" "
-"target=\"_blank\">\n"
+"Тайлан html байдлаар харагдана.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
+
+#. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Wkhtmltopdf-г сервер дээр олсонгүй. PDF-г үүсгэж чадахгүй."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -478,14 +535,24 @@ msgid "Website:"
 msgstr "Вэбсайт:"
 
 #. module: report
-#: code:addons/report/models/report.py:459
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+"Wkhtmltopdf бүтэлгүйтлээ (алдааны код: %s). Санах ойн хязгаарлалт хэт бага "
+"эсвэл дэд процессын дээд тоо тулсан. Зурвас : %s"
+
+#. module: report
+#: code:addons/report/models/report.py:452
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf амжилтгүй боллоо (алдааны код: %s). Зурвас: %s"
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:84
+#: code:addons/report/static/src/js/qwebactionmanager.js:19
 #, python-format
 msgid ""
 "You need to start OpenERP with at least two \n"
@@ -496,16 +563,37 @@ msgstr ""
 
 #. module: report
 #. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:20
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
-"and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://"
-"wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Сервер дээрх\n"
+"Wkhtmltopdf-н хувилбарыг хамгийн багадаа 0.12.0 болгож хувилбар ахиулж байж толгой хөл\n"
+"зөв харагдаж хүснэгт хуудас дамжих бололцоотой болно.\n"
+"<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Сервер дээрх Wkhtmltopdf суулгац эвдэрсэн бололтой. Тайлан html-р харагдана."
+" <br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_actions_report_xml
@@ -515,9 +603,9 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report
 msgid "report.abstract_report"
-msgstr ""
+msgstr "report.abstract_report"

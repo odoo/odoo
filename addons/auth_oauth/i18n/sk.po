@@ -1,47 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-05 19:20+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-#, fuzzy
-msgid ""
-"<br/>\n"
-"                                    - Create a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized "
-"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
-msgstr ""
-"<br/>\n"
-"- Vytvorte nový projekt<br/>\n"
-"- Choďte na Api prístup<br/>\n"
-"- Vytvorte oauth client_id<br/>\n"
-"- Upravte nastavenia a nastavte oboje Autorizované presmerované URI a "
-"Autorizované JavaScript Origins na vaše hostname.<br/>\n"
-"<br/>\n"
-"Teraz prekopírujte client_id tu:"
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:98
+#: code:addons/auth_oauth/controllers/main.py:99
 #, python-format
 msgid "Access Denied"
 msgstr "Prístup zamietnutý"
@@ -58,6 +38,7 @@ msgstr "Účet pohľadávky"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Povoliť používateľom prihlásiť sa cez Google"
 
@@ -67,6 +48,11 @@ msgid "Allowed"
 msgstr "Povolené"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Authentication"
+msgstr "Autentifikácia"
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
 msgstr "Autentifikácia URL"
@@ -74,7 +60,7 @@ msgstr "Autentifikácia URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
 msgid "Bank"
-msgstr "Banka"
+msgstr "Bank"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
@@ -85,6 +71,25 @@ msgstr "Telo"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
 msgstr "CSS trieda"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Check that the application type is set on <b>Web Application</b>. \n"
+"                                        Now configure the allowed pages on which you will be redirected."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Click on <b>Create Project</b> and enter the project name and \n"
+"                                        other details."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Click on <b>Use Google APIs</b>"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -98,6 +103,11 @@ msgid "Companies that refers to partner"
 msgstr "Spoločnosti ktoré odkazujú k partnerovi"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Connect to your Google account and go to"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contracts_count
 msgid "Contracts"
@@ -106,23 +116,22 @@ msgstr "Zmluvy"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr "Menové id"
+msgstr "Mena"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Termín platby zákazníka"
+msgid "Customer Payment Terms"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -132,12 +141,19 @@ msgstr "URL dát"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Stupeň dôvery ktorú máte v tohto dlžníka"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Fill in your address, email and the product name (for example odoo) \n"
+"                                        and then save."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -146,8 +162,8 @@ msgstr "Fiškálna pozícia"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Google APIs konzola"
+msgid "Google Client ID:"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -158,6 +174,11 @@ msgstr "Má nezladené vstupy"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr "Faktúra"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -192,14 +213,19 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"Naposledy keď sa vykonalo spárovanie faktúr a platieb pre tohto partnera. To "
-"sa nastavuje v prípade, že to nie je aspoň nezsoúladený debet a nezsoúladený "
-"kredit, alebo ak kliknete na tlačidlo \"Hotovo\"."
+"Naposledy keď sa vykonalo spárovanie faktúr a platieb pre tohto partnera. To"
+" sa nastavuje v prípade, že to nie je aspoň nezsoúladený debet a "
+"nezsoúladený kredit, alebo ak kliknete na tlačidlo \"Hotovo\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
 msgstr "Posledný dátum párovania faktúr & platieb"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr "Správa pre faktúru"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -242,9 +268,24 @@ msgid "Oauth Provider user_id"
 msgstr "Oauth user_id poskytovateľa"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"On the left side menu, select the sub menu <b>Credentials</b> \n"
+"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
-msgstr "Splatný limit"
+msgstr "Limit pohľadávok"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
@@ -257,12 +298,48 @@ msgid "Providers"
 msgstr "Poskytovatelia"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Return to Top"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Rozsah"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:96
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Zvolenie možnosti \"Varovanie\" notifikuje používateľa správou, Zvolenie "
+"\"Blokovanie správy\" hodí výnimku so správou a zablokuje tok. Správa musí "
+"byť napísaná v ďalšom poli."
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "Sekvencia"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Show Tutorial"
+msgstr "Ukázať inštruktáž"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
+msgid "Show tutorial"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "Registrácia nie je povolená v tejto databáze."
@@ -283,13 +360,25 @@ msgstr ""
 "faktúr & platieb."
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"Then click on <b>Add Credentials</b> and select the second option \n"
+"                                        (OAuth 2.0 Client ID)."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "Then click on <b>Create</b>."
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Tento účet bude použitý namiesto predvoleného ako splatný účet pre aktuálny "
-"partnera"
+"Tento účet bude použitý namiesto predvoleného ako splatný účet pre "
+"aktuálneho partnera"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
@@ -321,15 +410,16 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To setup the signin process with Google, first you have to perform the "
-"following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
+"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
+"                                        Copy paste the following link in the box"
 msgstr ""
-"Pre nastavenie prihlasovacieho procesu cez Google, musíte najskôr vykonať "
-"nasledujúce kroky:<br/>\n"
-"<br/>\n"
-"- Prejdite na"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"To setup the sign in process with Google, you have to perform \n"
+"                                    the following steps first."
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -373,21 +463,11 @@ msgstr "Overovacia URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Termín platby predajcu"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
-msgid "Website Messages"
+msgid "Vendor Payment Terms"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:100
+#: code:addons/auth_oauth/controllers/main.py:101
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
@@ -400,7 +480,7 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr "arch"
 
@@ -415,11 +495,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "napr. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid "https://console.developers.google.com/"
+msgstr "https://console.developers.google.com/"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "neznámy"

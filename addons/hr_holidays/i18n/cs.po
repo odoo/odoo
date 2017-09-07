@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
+# Chris <krystof.reklamy13@gmail.com>, 2016
 # xlu <xlu@seznam.cz>, 2016
 # Ladislav Tomm <tomm@helemik.cz>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Ladislav Tomm <tomm@helemik.cz>, 2016\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -45,6 +46,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:125
+#, python-format
+msgid "%g remaining out of %g"
+msgstr "%g zbývajících z %g"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:331
@@ -221,7 +228,9 @@ msgid "Appraisal Analysis"
 msgstr "Odhad analýzy"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:561
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Approve"
 msgstr "Potvrdit"
 
@@ -652,7 +661,7 @@ msgstr "Uvolnění na jednání"
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_new_calendar
 msgid "Leave Request"
-msgstr "Požavek na uvolnění"
+msgstr "Požadavek na uvolnění"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_action_request_from_department
@@ -831,7 +840,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2016"
+msgid "Legal Leaves 2017"
 msgstr ""
 
 #. module: hr_holidays
@@ -1032,7 +1041,9 @@ msgid "Red"
 msgstr "Červená"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:564
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Refuse"
 msgstr "Odmítnout"
 

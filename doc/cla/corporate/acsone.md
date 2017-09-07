@@ -24,3 +24,4 @@ Olivier Laurent olivier.laurent@acsone.eu https://github.com/Olivier-LAURENT
 Philippe Schmidt philippe.schmidt@acsone.eu https://github.com/phschmidt
 Stéphane Bidoul stephane.bidoul@acsone.eu https://github.com/sbidoul
 Thomas Binsfeld thomas.binsfeld@acsone.eu https://github.com/ThomasBinsfeld
+Benjamin Willig benjamin.willig@acsone.eu https://github.com/benwillig

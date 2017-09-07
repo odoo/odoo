@@ -70,6 +70,13 @@ class SaleOrder(models.Model):
         (2, 'Immediate after website order validation and save a token'),
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
 
+    @api.multi
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
+
     @api.one
     def _compute_amount_undiscounted(self):
         total = 0.0
@@ -77,15 +84,22 @@ class SaleOrder(models.Model):
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
 
+    @api.onchange('partner_id')
+    def onchange_update_description_lang(self):
+        if not self.template_id:
+            return
+        else:
+            template = self.template_id.with_context(lang=self.partner_id.lang)
+            self.website_description = template.website_description
+
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
             return
-        if self.partner_id:
-            self = self.with_context(lang=self.partner_id.lang)
+        template = self.template_id.with_context(lang=self.partner_id.lang)
 
         order_lines = [(5, 0, 0)]
-        for line in self.template_id.quote_line:
+        for line in template.quote_line:
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
             else:
@@ -103,13 +117,15 @@ class SaleOrder(models.Model):
                 'state': 'draft',
                 'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
             }
+            if self.pricelist_id:
+                data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
         self.order_line._compute_tax_id()
 
         option_lines = []
-        for option in self.template_id.options:
+        for option in template.options:
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
             else:
@@ -127,14 +143,14 @@ class SaleOrder(models.Model):
             option_lines.append((0, 0, data))
         self.options = option_lines
 
-        if self.template_id.number_of_days > 0:
-            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        if template.number_of_days > 0:
+            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
 
-        self.website_description = self.template_id.website_description
-        self.require_payment = self.template_id.require_payment
+        self.website_description = template.website_description
+        self.require_payment = template.require_payment
 
-        if self.template_id.note:
-            self.note = self.template_id.note
+        if template.note:
+            self.note = template.note
 
     @api.multi
     def open_quotation(self):
@@ -164,8 +180,7 @@ class SaleOrder(models.Model):
         """ Payment callback: validate the order and write transaction details in chatter """
         # create draft invoice if transaction is ok
         if transaction and transaction.state == 'done':
-            if self.state in ['draft', 'sent']:
-                self.sudo().action_confirm()
+            transaction._confirm_so()
             message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
             self.message_post(body=message)
             return True

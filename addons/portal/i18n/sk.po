@@ -1,88 +1,53 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-08 06:50+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid ""
 "\n"
 "<p>\n"
 "    Dear ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    You have been given access to ${user.company_id.name}'s ${object."
-"wizard_id.portal_id.name}.\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Your login account data is:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Username: ${object.user_id.login or ''}</li>\n"
-"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
-"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
 "\tYou can set or change your password via the following url:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
-"</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
-"\n"
-"⇥<p>\n"
-"Vážený ${object.user_id.name or ''},\n"
-"</p>\n"
-"<p>\n"
-"Bol Vám udelený prístup k ${user.company_id.name}'s ${object.wizard_id."
-"portal_id.name}.\n"
-"</p>\n"
-"<p>Vaše prihlasovacie dáta účtu:\n"
-"</p>\n"
-"<ul>\n"
-"<li>Používateľské meno: ${object.user_id.login or ''}</li>\n"
-"</ul>\n"
-"<ul>\n"
-"<li>Portál: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">"
-"${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"</ul>\n"
-"<ul>\n"
-"⇥<li>Databáza: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
-"</ul>\n"
-"<p>\n"
-"⇥Môžete nastaviť alebo zmeniť Vaše heslo cez nasledovné url:\n"
-"</p>\n"
-"<ul>\n"
-"<li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</"
-"a></li>\n"
-"</ul>\n"
-"<p>\n"
-"⇥${object.wizard_id.welcome_message or ''}\n"
-"</p>\n"
-"<p>---<br />\n"
-"Odoo - Open Source Business Applications<br />\n"
-"http://www.odoo.com<br />\n"
-"</p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -90,19 +55,9 @@ msgid "Access Groups"
 msgstr "Skupiny prístupov"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Popredajové služby"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr "Použiť"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Účtovanie"
+msgstr "Mám záujem"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -123,24 +78,30 @@ msgstr "Kontakty"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
 msgstr "Email"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -194,7 +155,6 @@ msgstr "Neportálové skupiny"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Portál"
 
@@ -216,41 +176,34 @@ msgid "Portal User Config"
 msgstr "Konfigurácia používateľa portálu"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projekty"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be "
-"valid and unique.\n"
-"                        If necessary, you can fix any contact's email "
-"address directly in the list."
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Zvoľte kontakty, ktoré by mali patriť k portálu, v nižšie uvedenom zozname.\n"
 "Emailová adresa každého vybraného kontaktu musí byť platná a jedinečná.\n"
-"Ak je to nutné, môžete opraviť emailovú adresu ktoréhokoľvek kontaktu priamo "
-"v zozname."
+"Ak je to nutné, môžete opraviť emailovú adresu ktoréhokoľvek kontaktu priamo v zozname."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Niekoľko kontaktov má rovnaký email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Niektoré kontakty nemajú platný email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "Niekoľko kontaktov má rovnaký email ako existujúci používateľ portálu:"
+msgstr ""
+"Niekoľko kontaktov má rovnaký email ako existujúci používateľ portálu:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -261,7 +214,8 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr "Tento text je pridaný v emaili poslanom novým portálovým používateľom."
+msgstr ""
+"Tento text je pridaný v emaili poslanom novým portálovým používateľom."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
@@ -269,7 +223,7 @@ msgid "This text is included in the email sent to new users of the portal."
 msgstr "Tento text je pridaný v emaili poslanom novým používateľom portálu."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -291,15 +245,15 @@ msgid "Wizard"
 msgstr "Sprievodca"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:179
 #, python-format
-msgid "You must have an email address in your User Preferences to send emails."
+msgid ""
+"You must have an email address in your User Preferences to send emails."
 msgstr ""
 "Musíte mať emailovú adresu vo svojich používateľských preferenciách pre "
 "posielanie emailov."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr "Váš Odoo účet v ${user.company_id.name|safe}"
+msgstr ""

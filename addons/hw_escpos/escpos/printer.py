@@ -13,7 +13,7 @@ from time import sleep
 class Usb(Escpos):
     """ Define USB printer """
 
-    def __init__(self, idVendor, idProduct, interface=0, in_ep=0x82, out_ep=0x01):
+    def __init__(self, idVendor, idProduct, interface=0, in_ep=None, out_ep=None):
         """
         @param idVendor  : Vendor ID
         @param idProduct : Product ID
@@ -42,6 +42,23 @@ class Usb(Escpos):
                 self.device.detach_kernel_driver(self.interface) 
             self.device.set_configuration()
             usb.util.claim_interface(self.device, self.interface)
+
+            cfg = self.device.get_active_configuration()
+            intf = cfg[(0,0)] # first interface
+            if self.in_ep is None:
+                # Attempt to detect IN/OUT endpoint addresses
+                try:
+                    is_IN = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_IN
+                    is_OUT = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_OUT
+                    endpoint_in = usb.util.find_descriptor(intf, custom_match=is_IN)
+                    endpoint_out = usb.util.find_descriptor(intf, custom_match=is_OUT)
+                    self.in_ep = endpoint_in.bEndpointAddress
+                    self.out_ep = endpoint_out.bEndpointAddress
+                except usb.core.USBError:
+                    # default values for officially supported printers
+                    self.in_ep = 0x82
+                    self.out_ep = 0x01
+
         except usb.core.USBError as e:
             raise HandleDeviceError(e)
 
@@ -65,7 +82,7 @@ class Usb(Escpos):
 
     def _raw(self, msg):
         """ Print any command sent in raw format """
-        if len(msg) != self.device.write(self.out_ep, msg, self.interface):
+        if len(msg) != self.device.write(self.out_ep, msg, self.interface, timeout=5000):
             self.device.write(self.out_ep, self.errorText, self.interface)
             raise TicketNotPrinted()
     

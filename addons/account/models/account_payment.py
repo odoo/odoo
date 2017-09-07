@@ -21,7 +21,7 @@ class account_payment_method(models.Model):
     _name = "account.payment.method"
     _description = "Payment Methods"
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
 
@@ -52,7 +52,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.constrains('amount')
     def _check_amount(self):
         if not self.amount > 0.0:
-            raise ValidationError('The payment amount must be strictly positive.')
+            raise ValidationError(_('The payment amount must be strictly positive.'))
 
     @api.one
     @api.depends('payment_type', 'journal_id')
@@ -81,7 +81,7 @@ class account_abstract_payment(models.AbstractModel):
 
     def _compute_total_invoices_amount(self):
         """ Compute the sum of the residual of invoices, expressed in the payment currency """
-        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
+        payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or self.env.user.company_id.currency_id
         invoices = self._get_invoices()
 
         if all(inv.currency_id == payment_currency for inv in invoices):
@@ -134,12 +134,15 @@ class account_register_payments(models.TransientModel):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
         total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
+        communication = ' '.join([ref for ref in invoices.mapped('reference') if ref])
+
         rec.update({
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': communication,
         })
         return rec
 
@@ -389,7 +392,26 @@ class account_payment(models.Model):
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile' and self.payment_difference:
             writeoff_line = self._get_shared_move_line_vals(0, 0, 0, move.id, False)
-            debit_wo, credit_wo, amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)
+            amount_currency_wo, currency_id = aml_obj.with_context(date=self.payment_date).compute_amount_fields(self.payment_difference, self.currency_id, self.company_id.currency_id, invoice_currency)[2:]
+            # the writeoff debit and credit must be computed from the invoice residual in company currency
+            # minus the payment amount in company currency, and not from the payment difference in the payment currency
+            # to avoid loss of precision during the currency rate computations. See revision 20935462a0cabeb45480ce70114ff2f4e91eaf79 for a detailed example.
+            total_residual_company_signed = sum(invoice.residual_company_signed for invoice in self.invoice_ids)
+            total_payment_company_signed = self.currency_id.with_context(date=self.payment_date).compute(self.amount, self.company_id.currency_id)
+            if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
+                amount_wo = total_payment_company_signed - total_residual_company_signed
+            else:
+                amount_wo = total_residual_company_signed - total_payment_company_signed
+            # Align the sign of the secondary currency writeoff amount with the sign of the writeoff
+            # amount in the company currency
+            if amount_wo > 0:
+                debit_wo = amount_wo
+                credit_wo = 0.0
+                amount_currency_wo = abs(amount_currency_wo)
+            else:
+                debit_wo = 0.0
+                credit_wo = -amount_wo
+                amount_currency_wo = -abs(amount_currency_wo)
             writeoff_line['name'] = _('Counterpart')
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo

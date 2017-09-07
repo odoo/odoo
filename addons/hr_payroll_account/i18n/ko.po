@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-09-07 21:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -29,8 +29,8 @@ msgid "Accounting Entry"
 msgstr "회계 항목"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:154
-#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr "조정 항목"
@@ -60,12 +60,6 @@ msgid "Debit Account"
 msgstr "직불 계정"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-#, fuzzy
-msgid "Employee Contract"
-msgstr "계약"
-
-#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
 msgstr "선택한 모든 임직원의 급여 명세서 생성"
@@ -86,13 +80,7 @@ msgid "Payslip Line"
 msgstr "급여 명세"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-#, fuzzy
-msgid "Payslip Run"
-msgstr "급여 명세"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:105
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
 msgstr "%s의 급여명세서"
@@ -111,14 +99,14 @@ msgid "Tax"
 msgstr "세금"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr "\"%s\" 비용 일지의 신용 계정이 제대로 구성되지 않았습니다!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Debit Account!"
@@ -128,6 +116,3 @@ msgstr "\"%s\" 비용 일지의 직불 계정이 제대로 구성되지 않았�
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr ""
-
-#~ msgid "Payslip Batches"
-#~ msgstr "급여명세서 일괄 처리"

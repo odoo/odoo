@@ -86,6 +86,10 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         // NB : for presets to work correctly, a field id must be the same string as a preset field
         this.presets = {};
         // Description of the fields to initialize in the "create new line" form
+        var domain_account_id = [['deprecated', '=', false]];
+        if (context && context.context && context.context.company_ids) {
+            domain_account_id.push(['company_id', 'in', context.context.company_ids]);
+        }
         this.create_form_fields = {
             account_id: {
                 id: "account_id",
@@ -98,7 +102,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                     relation: "account.account",
                     string: _t("Account"),
                     type: "many2one",
-                    domain: [['deprecated', '=', false]],
+                    domain: domain_account_id,
                 },
             },
             label: {
@@ -449,6 +453,8 @@ var abstractReconciliationLine = Widget.extend({
 
     start: function() {
         var self = this;
+        // fail silently if reconciliation widget is removed (eg. mode is changed)
+        var parent = this.getParent();
         return self._super().then(function() {
 
             // no animation while loading
@@ -464,8 +470,8 @@ var abstractReconciliationLine = Widget.extend({
                 return $.when(self.render()).then(function(){
                     self.is_consistent = true;
                     // Make an entrance
-                    self.animation_speed = self.getParent().animation_speed;
-                    self.aestetic_animation_speed = self.getParent().aestetic_animation_speed;
+                    self.animation_speed = parent.animation_speed;
+                    self.aestetic_animation_speed = parent.aestetic_animation_speed;
                     if (self.context.animate_entrance) {
                         return self.$el.stop(true, true).fadeIn({ duration: self.aestetic_animation_speed, queue: false }).css('display', 'none').slideDown(self.aestetic_animation_speed);
                     }
@@ -757,7 +763,9 @@ var abstractReconciliationLine = Widget.extend({
             else if (preset_line.amount_type === "percentage") {
                 self.amount_field.set_value(0);
                 self.updateBalance();
-                self.amount_field.set_value(-1 * self.get("balance") * preset_line.amount / 100);
+                var currency_dict = session.get_currency(self.get("currency_id"));
+                var preset_amount = utils.round_currency(currency_dict, -1 * self.get("balance") * preset_line.amount / 100);
+                self.amount_field.set_value(preset_amount);
             }
         }
     },
@@ -1061,7 +1069,7 @@ var abstractReconciliationLine = Widget.extend({
             var amount = line.tax_id ? line.amount_before_tax: line.amount;
             dict['credit'] = (amount > 0 ? amount : 0);
             dict['debit'] = (amount < 0 ? -1 * amount : 0);
-            if (line.tax_id) dict['tax_ids'] = [line.tax_id];
+            if (line.tax_id) dict['tax_ids'] = [[4, line.tax_id, null]];
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
             return dict;
         });
@@ -2289,13 +2297,19 @@ var manualReconciliation = abstractReconciliation.extend({
         animate_entrance = defaultIfUndef(animate_entrance, true);
         var self = this;
         var displayed_collections = self.getDisplayedCollections();
+        var plural = { 'customer': 'customers', 'supplier': 'suppliers', 'account': 'others' };
 
         self.updateProgressbar();
+
+        // number of reconciliation items already displayed
+        var num_child_displayed = self.getChildren().length;
 
         // Remove children that should not be displayed
         if (self.mode !== 'all') {
             _.each(self.getChildren(), function(child) {
-                if (child.data.reconciliation_type !== self.mode) {
+                var type = plural[child.data.reconciliation_type];
+                if (type !== self.mode) {
+                    num_child_displayed--;
                     child.$el.slideUp(self.aestetic_animation_speed, function(){ child.destroy() });
                     child.data.displayed = false;
                 }
@@ -2308,7 +2322,7 @@ var manualReconciliation = abstractReconciliation.extend({
         var items_to_display = _.foldl(displayed_collections, function(prev, current){ return prev.concat(current.items) }, []);
         // Filter out those which are already displayed
         items_to_display = _.filter(items_to_display, function(item) { return item.displayed === false; })
-            .slice(0, self.num_reconciliations_fetched_in_batch - self.getChildren().length);
+            .slice(0, self.num_reconciliations_fetched_in_batch - num_child_displayed);
         _.each(items_to_display, function(item){
             children_promises.push(self.displayReconciliation(item, animate_entrance));
         });

@@ -37,7 +37,8 @@ class SaleOrder(models.Model):
                 dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
-                order.commitment_date = fields.Datetime.to_string(min(dates_list))
+                commit_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
+                order.commitment_date = fields.Datetime.to_string(commit_date)
 
     def _compute_picking_ids(self):
         super(SaleOrder, self)._compute_picking_ids()
@@ -46,7 +47,7 @@ class SaleOrder(models.Model):
             for pick in order.picking_ids:
                 dates_list.append(fields.Datetime.from_string(pick.date))
             if dates_list:
-                order.write({'effective_date': fields.Datetime.to_string(min(dates_list))})
+                order.effective_date = fields.Datetime.to_string(min(dates_list))
 
     @api.onchange('requested_date')
     def onchange_requested_date(self):

@@ -9,10 +9,10 @@
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2016-11-22 14:03+0000\n"
+"PO-Revision-Date: 2016-11-22 14:03+0000\n"
 "Last-Translator: Stefanos Nikou <stefanos.nikou@gmail.com>, 2016\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -1026,18 +1026,38 @@ msgstr ""
 "όρο  χωρίς να τον διαγράψετε."
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Προβολή Ημερολογίου"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Δεν μπορεί να βρεθεί καμία τοποθεσία πελάτη ή προμηθευτή."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Δεν μπορεί να βρεθεί καμία γενική διαδρομή Παραγωγή κατά Παραγγελία."
@@ -1290,7 +1310,7 @@ msgstr "Επιβεβαιωμένες κινήσεις"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Congratulations!"
-msgstr ""
+msgstr "Συγχαρητήρια!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -1456,7 +1476,7 @@ msgstr "Δημιουργούνται Προμήθειες"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_create_uid
 msgid "Created by"
-msgstr "Δημιουργήθηκε στις"
+msgstr "Δημιουργήθηκε από"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_create_date
@@ -1486,12 +1506,12 @@ msgstr "Δημιουργήθηκε στις"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_create_date
 msgid "Created on"
-msgstr "Δημιουργήθηκε από"
+msgstr "Δημιουργήθηκε στις"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
 msgid "Creates"
-msgstr ""
+msgstr "Δημιουργεί"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -1581,6 +1601,41 @@ msgstr "Τοποθεσίες Πελάτη"
 #: selection:stock.picking.type,code:0
 msgid "Customers"
 msgstr "Πελάτες"
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -2057,6 +2112,11 @@ msgid "Dropshipping"
 msgstr ""
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr ""
@@ -2129,6 +2189,21 @@ msgstr "Επιπλέον Κίνηση:"
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2826,6 +2901,24 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
 msgid "Inventoried Category"
 msgstr ""
@@ -3221,7 +3314,7 @@ msgstr "Συνδεδεμένη Quant"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
-msgstr "Εντοπισμός"
+msgstr "Τοπική Προσαρμογή"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -4002,6 +4095,7 @@ msgstr "Όνομα Λειτουργίας"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model:ir.ui.view,arch_db:stock.view_picking_type_list
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
+#: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr ""
 
@@ -7178,7 +7272,13 @@ msgstr ""
 "'Ολοκληρωμένη'."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7210,6 +7310,12 @@ msgid ""
 msgstr ""
 "Δεν μπορείτε να ορίσετε μια αρνητική ποσότητα προϊόντος σε μια γραμμή απογραφής:\n"
 "⇥%s - qty: %s"
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919
@@ -7292,6 +7398,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock

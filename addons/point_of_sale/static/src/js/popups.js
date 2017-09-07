@@ -105,7 +105,9 @@ var ErrorTracebackPopupWidget = ErrorPopupWidget.extend({
         this._super(opts);
 
         this.$('.download').off('click').click(function(){
-            self.gui.download_file(self.options.body,'traceback.txt');
+            self.gui.prepare_download_link(self.options.body,
+                _t('error') + ' ' + moment().format('YYYY-MM-DD-HH-mm-ss') + '.txt',
+                '.download', '.download_error_file');
         });
 
         this.$('.email').off('click').click(function(){
@@ -304,6 +306,11 @@ var PasswordPopupWidget = NumberPopupWidget.extend({
     renderElement: function(){
         this._super();
         this.$('.popup').addClass('popup-password');
+    },
+    click_numpad: function(event){
+        this._super.apply(this, arguments);
+        var $value = this.$('.value');
+        $value.text($value.text().replace(/./g, '•'));
     },
 });
 gui.define_popup({name:'password', widget: PasswordPopupWidget});

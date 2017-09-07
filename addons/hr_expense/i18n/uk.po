@@ -6,13 +6,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +138,11 @@ msgid "Accounting Date"
 msgstr "Дата обліку"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Accounting Entries"
+msgstr "Бухгалтерські записи"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
 msgstr ""
@@ -171,6 +177,11 @@ msgid "Analytic Account"
 msgstr "Аналітичний рахунок"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "Застосувати"
@@ -202,6 +213,7 @@ msgid "Bill Reference"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr ""
@@ -241,7 +253,7 @@ msgid "Click here to create new expenses."
 msgstr "Натисніть тут, щоб створити нові витрати."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:287
+#: code:addons/hr_expense/models/hr_expense.py:304
 #, python-format
 msgid "Click to add a new expense,"
 msgstr ""
@@ -563,13 +575,13 @@ msgid "Expenses by Month"
 msgstr "Витрати по місяцях"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:381
+#: code:addons/hr_expense/models/hr_expense.py:399
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Витрати повинні належати одному і тому самому користувачу."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:486
+#: code:addons/hr_expense/models/hr_expense.py:511
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -579,7 +591,7 @@ msgstr ""
 "проведень."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:385
+#: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -677,7 +689,7 @@ msgstr "Майстер створення причини відхилення в
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8892
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
 msgid "ID"
 msgstr "ІД"
 
@@ -779,7 +791,7 @@ msgid "New Mail"
 msgstr "Новий лист"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:235
+#: code:addons/hr_expense/models/hr_expense.py:251
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -789,14 +801,14 @@ msgstr ""
 "вкажіть його."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:204
+#: code:addons/hr_expense/models/hr_expense.py:218
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 "Не вказано домашню адресу для співробітника %s, будь ласка, вкажіть її."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:200
+#: code:addons/hr_expense/models/hr_expense.py:197
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -821,7 +833,7 @@ msgstr "Кількість долучень"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "Officer"
-msgstr ""
+msgstr "Начальник"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_refused_expenses
@@ -907,7 +919,7 @@ msgid "Planner"
 msgstr "Планувальник"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:239
+#: code:addons/hr_expense/models/hr_expense.py:255
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -1080,6 +1092,7 @@ msgid "Setup your domain alias"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr "Вкажіть, чи можна вказувати товар у витратах співробітників."
@@ -1139,6 +1152,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Технічне поле, яке використовується для приховування способу оплати, якщо у "
+"вибраному журналі є лише один доступний, який є \"ручним\""
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1172,6 +1187,12 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_journal_id
 msgid "The journal used when the expense is done."
 msgstr "Журнал для бухгалтерських проведень обліку витрат."
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
+msgstr "Сума платежу повинна бути строго позитивною."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -1294,7 +1315,7 @@ msgid "We hope this feature helped you manage your expenses efficiently."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:483
+#: code:addons/hr_expense/models/hr_expense.py:508
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "Ви можете робити проведення тільки для затверджених звітів(у). "
@@ -1315,6 +1336,25 @@ msgid ""
 "                                    subject contains the product's internal reference between brackets,\n"
 "                                    the product will be set automatically. Type the expense amount\n"
 "                                    in the mail subject to set it on the expense too."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
+#, python-format
+msgid "You cannot delete a posted expense."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:559
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
 msgstr ""
 
 #. module: hr_expense
@@ -1346,7 +1386,7 @@ msgid "Your Email Address"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:465
+#: code:addons/hr_expense/models/hr_expense.py:490
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -1383,7 +1423,7 @@ msgid "or"
 msgstr "або"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:288
+#: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""

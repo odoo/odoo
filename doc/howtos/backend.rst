@@ -50,7 +50,7 @@ Composition of a module
 An Odoo module can contain a number of elements:
 
 Business objects
-    declared as Python classes, these resources are automatically persisted
+    Declared as Python classes, these resources are automatically persisted
     by Odoo based on their configuration
 
 Data files
@@ -77,8 +77,7 @@ option.
     file <reference/cmdline/config>`
 
 An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
-See the :ref:`manifest documentation <reference/module/manifest>` information
-about it.
+See the :ref:`manifest documentation <reference/module/manifest>` about it.
 
 A module is also a
 `Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
@@ -167,7 +166,7 @@ Some attributes are available on all fields, here are the most common ones:
 :attr:`~odoo.fields.Field.help` (``unicode``, default: ``''``)
     Long-form, provides a help tooltip to users in the UI.
 :attr:`~odoo.fields.Field.index` (``bool``, default: ``False``)
-    Requests that Odoo create a `database index`_ on the column
+    Requests that Odoo create a `database index`_ on the column.
 
 Simple fields
 #############
@@ -187,15 +186,15 @@ managed by the system and shouldn't be written to. They can be read if
 useful or necessary:
 
 :attr:`~odoo.fields.Model.id` (:class:`~odoo.fields.Id`)
-    the unique identifier for a record in its model
+    The unique identifier for a record in its model.
 :attr:`~odoo.fields.Model.create_date` (:class:`~odoo.fields.Datetime`)
-    creation date of the record
+    Creation date of the record.
 :attr:`~odoo.fields.Model.create_uid` (:class:`~odoo.fields.Many2one`)
-    user who created the record
+    User who created the record.
 :attr:`~odoo.fields.Model.write_date` (:class:`~odoo.fields.Datetime`)
-    last modification date of the record
+    Last modification date of the record.
 :attr:`~odoo.fields.Model.write_uid` (:class:`~odoo.fields.Many2one`)
-    user who last modified the record
+    user who last modified the record.
 
 Special fields
 ##############
@@ -238,9 +237,9 @@ record.
         </data>
     </odoo>
 
-* ``model`` is the name of the Odoo model for the record
+* ``model`` is the name of the Odoo model for the record.
 * ``id`` is an :term:`external identifier`, it allows referring to the record
-  (without having to know its in-database identifier)
+  (without having to know its in-database identifier).
 * ``<field>`` elements have a ``name`` which is the name of the field in the
   model (e.g. ``description``). Their body is the field's value.
 
@@ -294,7 +293,7 @@ action more easily.
 .. exercise:: Define new menu entries
 
     Define new menu entries to access courses under the
-    OpenAcademy menu entry. A user should be able to
+    OpenAcademy menu entry. A user should be able to :
 
     - display a list of all the courses
     - create/modify courses
@@ -365,7 +364,7 @@ Form views
 Forms are used to create and edit single records.
 
 
-Their root element is ``<form>``. They composed of high-level structure
+Their root element is ``<form>``. They are composed of high-level structure
 elements (groups, notebooks) and interactive elements (buttons and fields):
 
 .. code-block:: xml
@@ -643,7 +642,7 @@ instead of a single view its ``arch`` field is composed of any number of
     ``inside``
         appends ``xpath``'s body at the end of the matched element
     ``replace``
-        replaces the matched element with the ``xpath``'s body, replacing any `$0` node occurrence
+        replaces the matched element with the ``xpath``'s body, replacing any ``$0`` node occurrence
         in the new body with the original element
     ``before``
         inserts the ``xpath``'s body as a sibling before the matched element
@@ -1121,6 +1120,11 @@ default and behave as booleans (they can only be enabled by default).
 Gantt
 -----
 
+.. warning::
+
+    The gantt view requires the web_gantt module which is present in
+    :ref:`the enterprise edition <setup/install/editions>` version.
+
 Horizontal bar charts typically used to show project planning and advancement,
 their root element is ``<gantt>``.
 
@@ -1345,7 +1349,7 @@ rights are usually created by a CSV file named after its model:
     access_idea_idea,idea.idea,model_idea_idea,base.group_user,1,1,1,0
     access_idea_vote,idea.vote,model_idea_vote,base.group_user,1,1,1,0
 
-.. exercise:: Add access control through the OpenERP interface
+.. exercise:: Add access control through the Odoo interface
 
     Create a new user "John Smith". Then create a group
     "OpenAcademy / Session Read" with read access to the *Session* model.
@@ -1852,9 +1856,9 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
 
     * https://github.com/akretion/ooor
     * https://github.com/syleam/openobject-library
-    * https://github.com/nicolas-van/odoo-client-lib
-    * https://pypi.python.org/pypi/oersted/
-    * https://github.com/abhishek-jaiswal/php-odoo-lib
+    * https://github.com/nicolas-van/openerp-client-lib
+    * http://pythonhosted.org/OdooRPC
+    * https://github.com/abhishek-jaiswal/php-openerp-lib
 
 .. [#autofields] it is possible to :attr:`disable the automatic creation of some
                  fields <odoo.models.Model._log_access>`

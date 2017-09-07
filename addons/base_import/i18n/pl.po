@@ -8,30 +8,31 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
+# zieloo <zieloo@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: zieloo <zieloo@gmail.com>, 2016\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:595
+#: code:addons/base_import/static/src/js/base_import.js:598
 #, python-format
 msgid "(%d more)"
 msgstr "(%d więcej)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:373
+#: code:addons/base_import/static/src/js/base_import.js:375
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -48,24 +49,23 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:608
-#, python-format
-msgid ""
-"Column %s contains incorrect values (value: %s does not match date format"
-msgstr ""
-
-#. module: base_import
-#: code:addons/base_import/models/base_import.py:590
+#: code:addons/base_import/models/base_import.py:599
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr ""
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:619
+#, python-format
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr ""
+
+#. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:244
-#: code:addons/base_import/static/src/js/base_import.js:255
-#: code:addons/base_import/static/src/js/base_import.js:262
-#: code:addons/base_import/static/src/js/base_import.js:274
+#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:256
+#: code:addons/base_import/static/src/js/base_import.js:263
+#: code:addons/base_import/static/src/js/base_import.js:275
 #, python-format
 msgid "Comma"
 msgstr "Przecinek"
@@ -107,8 +107,8 @@ msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:151
-#: code:addons/base_import/models/base_import.py:156
+#: code:addons/base_import/models/base_import.py:152
+#: code:addons/base_import/models/base_import.py:157
 #, python-format
 msgid "Database ID"
 msgstr "ID bazy danych"
@@ -122,7 +122,14 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#: code:addons/base_import/static/src/js/base_import.js:126
+#, python-format
+msgid "Datetime Format:"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:128
 #, python-format
 msgid "Decimal Separator:"
 msgstr ""
@@ -147,15 +154,15 @@ msgstr "Nazwa wyświetlana"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:416
+#: code:addons/base_import/static/src/js/base_import.js:419
 #, python-format
 msgid "Don't import"
 msgstr "Nie importuj"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:281
+#: code:addons/base_import/static/src/js/base_import.js:264
+#: code:addons/base_import/static/src/js/base_import.js:282
 #, python-format
 msgid "Dot"
 msgstr ""
@@ -168,21 +175,27 @@ msgid "Encoding:"
 msgstr "Kodowanie:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:233
+#: code:addons/base_import/models/base_import.py:621
+#, python-format
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:234
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:572
+#: code:addons/base_import/static/src/js/base_import.js:575
 #, python-format
 msgid "Everything seems valid."
 msgstr "Wszystko wygląda poprawnie."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:116
-#: code:addons/base_import/models/base_import.py:150
+#: code:addons/base_import/models/base_import.py:117
+#: code:addons/base_import/models/base_import.py:151
 #, python-format
 msgid "External ID"
 msgstr "Identyfikator zewnętrzny"
@@ -216,7 +229,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:619
+#: code:addons/base_import/static/src/js/base_import.js:622
 #, python-format
 msgid "Get all possible values"
 msgstr "Pobierz wszystkie możliwe wartości"
@@ -230,7 +243,7 @@ msgstr "pomoc"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:606
+#: code:addons/base_import/static/src/js/base_import.js:609
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Oto możliwe wartości:"
@@ -291,7 +304,7 @@ msgstr "Importuj"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:181
+#: code:addons/base_import/static/src/js/base_import.js:182
 #, python-format
 msgid "Import a File"
 msgstr "Importuj plik"
@@ -362,7 +375,7 @@ msgstr "Data ostatniej aktualizacji"
 #: code:addons/base_import/static/src/xml/base_import.xml:19
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Wczytaj plik"
 
 #. module: base_import
 #. openerp-web
@@ -390,7 +403,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:482
+#: code:addons/base_import/static/src/js/base_import.js:485
 #, python-format
 msgid "Normal Fields"
 msgstr "Normalne pola"
@@ -414,14 +427,7 @@ msgstr "Nadrzędne id"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
-#, python-format
-msgid "Quoting:"
-msgstr "Znak cudzysłowu:"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:483
+#: code:addons/base_import/static/src/js/base_import.js:486
 #, python-format
 msgid "Relation Fields"
 msgstr "Pola relacyjne"
@@ -442,7 +448,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:246
 #, python-format
 msgid "Semicolon"
 msgstr "Średnik"
@@ -458,7 +464,7 @@ msgstr "Separator:"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
-msgid "Show all fields for completion (advanced)"
+msgid "Show fields of relation fields (advanced)"
 msgstr ""
 
 #. module: base_import
@@ -468,17 +474,24 @@ msgstr "Jakaś wartość"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#: code:addons/base_import/static/src/js/base_import.js:248
 #, python-format
 msgid "Space"
 msgstr "Odstęp"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#: code:addons/base_import/static/src/js/base_import.js:247
 #, python-format
 msgid "Tab"
 msgstr "Zakładka"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:122
+#, python-format
+msgid "Text Delimiter:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -491,9 +504,9 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
-msgid "Thousand Separator:"
+msgid "Thousands Separator:"
 msgstr ""
 
 #. module: base_import
@@ -504,13 +517,13 @@ msgid "Track history during import"
 msgstr "Śledź historię podczas importu"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:198
+#: code:addons/base_import/models/base_import.py:199
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#: code:addons/base_import/models/base_import.py:200
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -542,14 +555,14 @@ msgid "Value"
 msgstr "Wartość"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:528
+#: code:addons/base_import/models/base_import.py:537
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Musisz skonfigurować co najmniej jedno pole do importu"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:589
+#: code:addons/base_import/static/src/js/base_import.js:592
 #, python-format
 msgid "at row %d"
 msgstr "w wierszu %d"
@@ -626,7 +639,7 @@ msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:591
+#: code:addons/base_import/static/src/js/base_import.js:594
 #, python-format
 msgid "between rows %d and %d"
 msgstr "pomiędzy wierszami %d a %d"

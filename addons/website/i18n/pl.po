@@ -15,19 +15,20 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2016
 # Tadeusz Karpiński <tadeusz.karpinski@openglobe.pl>, 2016
+# Michał <michal.gorecki@esnc.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@openglobe.pl>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Michał <michal.gorecki@esnc.pl>, 2016\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -126,11 +127,6 @@ msgid "2s"
 msgstr "2s"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "3. Configure a Google Analytics account"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:62
 #, python-format
@@ -174,7 +170,7 @@ msgstr "<b>mały podtytuł</b>"
 #: code:addons/website/static/src/js/website.tour.banner.js:15
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
-msgstr ""
+msgstr "<b>Kliknij Edytuj</b>, aby zaprojektować swoją stronę domową."
 
 #. module: website
 #. openerp-web
@@ -246,13 +242,6 @@ msgstr "<b>zaloguj się</b>"
 msgid ""
 "<br/>\n"
 "                                    Make sure the Advanced Options are set to your country and language."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<br/>\n"
-"                                This is necessary in order to record the statistics of your test."
 msgstr ""
 
 #. module: website
@@ -399,7 +388,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<i>\n"
-"                    This Planner will help you think about your website and provide tips and ideas to inspire you. There are examp;les and explanations to guide you through the process of creating a top-notch, high quality website that meets all your needs.</i>"
+"                    This Planner will help you think about your website and provide tips and ideas to inspire you. There are examples and explanations to guide you through the process of creating a top-notch, high quality website that meets all your needs.</i>"
 msgstr ""
 
 #. module: website
@@ -470,20 +459,10 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-thumbs-o-down\"/> <strong> Bad practices</strong>"
-msgstr "<span class=\"fa fa-thumbs-o-down\"/> <strong> Złe praktyki</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-thumbs-o-up\"/> <strong> Good practices</strong>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-cogs\"/>\n"
-"                                        <strong>Machine translation</strong><br/>Free, but quality may vary\n"
+"                                        <span class=\"fa fa-pencil\"/>\n"
+"                                        <strong>On your own</strong><br/>\n"
 "                                    </span>"
 msgstr ""
 
@@ -492,7 +471,7 @@ msgstr ""
 msgid ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa fa-user\"/>\n"
-"                                        <strong>Human translation</strong><br/>Pay for professionnal quality\n"
+"                                        <strong>External services</strong><br/>\n"
 "                                    </span>"
 msgstr ""
 
@@ -535,6 +514,18 @@ msgid "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
 msgstr "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_button
+msgid ""
+"<span>Contact Us Now</span>\n"
+"                        <i class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_share
+msgid "<span>Share</span>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<strong>... and your location too!</strong><br/>\n"
@@ -545,20 +536,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"<strong>1. Define what to test</strong><br/>\n"
-"                                The main goal is increasing your ROI. Figure out the best page(s) to\n"
-"                                test. Here are a few examples of good testing variables:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
 "<strong>1. Your main menu items</strong> and 2. Your secondary menu items"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>2. Create the page variation</strong><br/>"
 msgstr ""
 
 #. module: website
@@ -567,23 +545,10 @@ msgid "<strong>3. Your footer titles</strong> and 4. Your footer links"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>4. Create your campaign in Google Analytics</strong><br/>\n"
-"                                Simply follow the wizard by creating a new experiment in the <strong>Behavior &gt;\n"
-"                                Experiments</strong> menu of"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_button
 msgid "<strong>50,000+ companies run Odoo to grow their businesses.</strong>"
 msgstr ""
 "<strong>50,000+ firmowego obrotu Odoo dla wzrostu ich biznesu.</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Activate now</strong> the apps you need:"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -633,18 +598,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Community Builder</strong>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "<strong>Contact Form</strong>"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Create an online Q&amp;A</strong>"
-msgstr "<strong>Utwórz online Q&amp;A</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -661,32 +616,13 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Do many A/B tests</strong><br/>\n"
-"                                Don't despair if your first A/B test turns out to be a lemon. The key in optimizing conversion rates is to do a ton of A/B in order to put together all the most effective configurations."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Don't test versions at different time periods</strong><br/>If you\n"
-"                                test one version one week and the second the next one, your results won't be\n"
-"                                accurate, or worse, wrong!"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Don’t surprise regular visitors</strong><br/>\n"
-"                                If you are testing a core part of your website, include only new visitors in\n"
-"                                the test. You want to avoid shocking regular visitors, especially because the\n"
-"                                variations may not ultimately be implemented."
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "<strong>Error message:</strong>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "<strong>Event Tickets</strong>"
 msgstr ""
 
 #. module: website
@@ -701,7 +637,7 @@ msgstr ""
 msgid ""
 "<strong>Find a catchy headline</strong><br/>\n"
 "                                Make sure anyone who visits your site understands what it’s about without too much reading.<br/>\n"
-"                                To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For examp;le, use pictures of your work, screenshots of your app, a short and catchy hook."
+"                                To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For example, use pictures of your work, screenshots of your app, a short and catchy hook."
 msgstr ""
 
 #. module: website
@@ -720,16 +656,17 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
+msgid "<strong>Install</strong> what you need:"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
 msgid "<strong>Jobs</strong>"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Know how long to run a test before giving up</strong><br/>\n"
-"                                Don't give up too early! Wait for your test results to be significant. Take a look at the statistical\n"
-"                                confidence in Google Analytics; It should be at least 95%.<br/>\n"
-"                                Don't give up too late neither because poorly performing variations could cost you revenues."
+msgid "<strong>Launch a forum</strong>"
 msgstr ""
 
 #. module: website
@@ -744,7 +681,12 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Organize physical events</strong>"
+msgid "<strong>Publish documentation</strong>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "<strong>Publish events</strong>"
 msgstr ""
 
 #. module: website
@@ -771,11 +713,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Test only one variable</strong><br/>Try only one variable at a time,"
-" otherwise you won't be able to clearly interpret the results of your "
-"modifications."
-msgstr ""
+msgid "<strong>Subscriptions</strong>"
+msgstr "<strong>Subskrypcje</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -868,15 +807,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_version
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "A/B Testing"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"A/B testing is the process of testing two versions of a page to see which "
-"one performs better in reaching your business objectives."
 msgstr ""
 
 #. module: website
@@ -1013,11 +944,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Amount of text on the page (short vs. long)."
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "An error occured while rendering the template"
 msgstr "Wystąpił błąd podczas renderowania szablonu"
@@ -1040,13 +966,18 @@ msgid "Apply"
 msgstr "Zastosuj"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Apply it to your website from your database admin page"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
 msgid "Attachment URL"
 msgstr "Adres załącznika"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Attract more leads with a winning content marketing strategy."
+msgid "Attract more visitors with a content marketing strategy."
 msgstr ""
 
 #. module: website
@@ -1098,13 +1029,6 @@ msgid "Be mobile"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Before starting to work on your website, make sure you have all the right applications installed.\n"
-"                        It will be much easier for you to organize and create your content if you have all the options activated from the beginning."
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Beginner"
 msgstr "Początkujący"
@@ -1114,6 +1038,11 @@ msgstr "Początkujący"
 msgid ""
 "Being clear on why you're creating your site is an essential first step to "
 "ensure your content and structure meet business objectives."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Best if you have language skills"
 msgstr ""
 
 #. module: website
@@ -1128,18 +1057,17 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Build and engage with communities with forums, Q&amp;;A, mailing lists."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Build awareness and credibility"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Building Profile"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Buy it at a provider:"
 msgstr ""
 
 #. module: website
@@ -1153,11 +1081,6 @@ msgstr "CDN Base URL"
 #: model:ir.model.fields,field_description:website.field_website_config_settings_cdn_filters
 msgid "CDN Filters"
 msgstr "CDN Filters"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Call-to-action’s (i.e. button’s) wording, size, color and placement,"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1224,6 +1147,16 @@ msgstr "Kółko"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "City"
 msgstr "Miasto"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Click here to unfold a Good Footer"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Click here to unfold a Good Homepage"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1293,9 +1226,8 @@ msgstr "kompresuj HTML"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_compress_html
-msgid "Compress rendered HTML for a better Google PageSpeed result"
+msgid "Compress rendered HTML"
 msgstr ""
-"Kompresuj wyrenderowany HTML dla lepszego efektu prędkości strony Google"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -1333,18 +1265,6 @@ msgstr "Skontaktuj się z nami"
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 msgid "Contact Us"
 msgstr "Skontaktuj się z nami"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_button
-msgid ""
-"Contact Us Now\n"
-"                        <i class=\"fa fa-chevron-right\"/>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Contact a Domain Manager in your country to buy it"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1414,7 +1334,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:138
+#: code:addons/website/static/src/js/website.editor.js:137
 #, python-format
 msgid "Create page '%s'"
 msgstr "Utwórz stronę '%s'"
@@ -1543,11 +1463,6 @@ msgstr "Odrzuć"
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Discuss and Comments"
 msgstr "Dyskusja i komentarze"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Discuss with propects for a face-to-face sales pitch"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_display_name
@@ -1720,18 +1635,8 @@ msgstr "Błąd"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Examp;le of Good Footer"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Examp;les"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Example of Good Homepage"
-msgstr ""
+msgid "Examples"
+msgstr "Przykłady"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1845,7 +1750,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"For examp;le, use pictures to help break up large areas of text by altering\n"
+"For example, use pictures to help break up large areas of text by altering\n"
 "                                    Text-Image and Image-Text blocks. If you prefer icons, use the Features or Feature Grid blocks."
 msgstr ""
 
@@ -1865,8 +1770,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Form’s length and types of fields,"
-msgstr ""
+msgid "Free"
+msgstr "Wolny"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1908,9 +1813,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Get your opportunities filled up automatically in our integrated CRM "
-"application"
+msgid "Get your opportunities filled up in our integrated CRM application"
 msgstr ""
 
 #. module: website
@@ -1931,6 +1834,11 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:45
 #, python-format
 msgid "Go to our"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "GoDaddy"
 msgstr ""
 
 #. module: website
@@ -1962,11 +1870,6 @@ msgstr "Przycisk Google Analytics"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google Analytics."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Google Business"
 msgstr ""
 
@@ -1974,7 +1877,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.company_description
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 msgid "Google Maps"
-msgstr ""
+msgstr "Mapy Google"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_google_maps_api_key
@@ -2033,21 +1936,11 @@ msgid "Headline"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Headline or product description,"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.translator.xml:21
 #, python-format
 msgid "Here are the visuals used to help you translate efficiently:"
 msgstr "Te obrazki pomogą ci w wydajnym tłumaczeniu:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Here is a basic guide for your first A/B testing:"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2110,11 +2003,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Images on landing and product pages,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Improve your conversion from visitors to customers"
 msgstr ""
 
@@ -2143,15 +2031,19 @@ msgid "Information about the"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "Install Apps"
+msgstr "Instaluj aplikacje"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Install A/B Testing"
+msgid "Install Features"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Install Apps"
-msgstr "Instaluj aplikacje"
+msgid "Install Gengo Translator app"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2177,12 +2069,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Modules"
 msgstr "Zainstalowane moduły"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Integrate a contact form that automatically creates leads in your CRM app."
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2283,15 +2169,13 @@ msgstr "Uruchom"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Learn what your visitors are thinking, what question they have, what "
-"problems they encounter"
+msgid "Learn what question your customers have, what problems they encounter"
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Left"
-msgstr ""
+msgstr "Lewy"
 
 #. module: website
 #. openerp-web
@@ -2341,6 +2225,11 @@ msgid "Main Menu"
 msgstr "Menu główne"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Manage channels to structure your content"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Masonry"
 msgstr ""
@@ -2354,11 +2243,6 @@ msgstr "Być może szukałeś którejś z tych popularnych stron?"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
 msgstr "Średni"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Meet your existing customers and maintain your relationship"
-msgstr ""
 
 #. module: website
 #: code:addons/website/models/website.py:322
@@ -2427,9 +2311,14 @@ msgid "My Website"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Namecheap"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 msgid "New Language"
-msgstr ""
+msgstr "Nowy język"
 
 #. module: website
 #. openerp-web
@@ -2446,7 +2335,7 @@ msgstr "Nowe okno"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:123
+#: code:addons/website/static/src/js/website.editor.js:122
 #, python-format
 msgid "New or existing page"
 msgstr "Nowa lub istniejąca strona"
@@ -2483,6 +2372,11 @@ msgid "Note: To hide this page, uncheck it from the top Customize menu."
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "OVH"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Odoo"
 msgstr "Odoo"
@@ -2515,7 +2409,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
-msgstr ""
+msgstr "Wersja Odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -2559,14 +2453,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "One way is by optimizing your indexing on search engines like Google "
-"naturally. The earliest you show up in the search, the more visitors you "
-"get. This strategy called SEO involves several actions."
+"naturally, without paying anything. The earliest you show up in the search, "
+"the more visitors you get. This strategy called <strong>SEO</strong> "
+"involves several actions."
 msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Online users: Apply it to your website from your database admin page (see"
+msgid "Online users:"
 msgstr ""
 
 #. module: website
@@ -2596,7 +2490,12 @@ msgstr "Zamów teraz"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Organize your job board and promote your job announces easily."
+msgid "Organize and publish events to meet your prospects and customers"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Organize events and sell tickets online."
 msgstr ""
 
 #. module: website
@@ -2713,6 +2612,11 @@ msgid "Partners"
 msgstr "partnerzy"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Pay services like"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Peak"
 msgstr ""
@@ -2780,11 +2684,6 @@ msgid "Prev"
 msgstr "Poprzedni"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Product pricing and promotional offers,"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Professional"
 msgstr "Profesjonalnie"
@@ -2820,6 +2719,11 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
+msgid "Promote your job announces and attract new talents."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Provide fast, professional and accurate information to your visitors"
 msgstr ""
 
@@ -2832,6 +2736,16 @@ msgstr "Partner publiczny"
 #: model:ir.model.fields,field_description:website.field_website_user_id
 msgid "Public User"
 msgstr "Użytkownik publiczny"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Publish a contact form to fill in your CRM pipeline."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Publish multimedias to document your products/services"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2864,8 +2778,7 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Qualify your visitors better in order to reach them later with marketing "
-"campaigns"
+"Qualify your visitors in order to reach them out with marketing campaigns"
 msgstr ""
 
 #. module: website
@@ -2875,17 +2788,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
-msgid "Read the documentation about A/B Testing"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Ready For Launch!"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Real professional translators will translate all your contents."
 msgstr ""
 
 #. module: website
@@ -2913,7 +2816,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Rename Page"
-msgstr ""
+msgstr "Zmień nazwę strony"
 
 #. module: website
 #. openerp-web
@@ -3003,6 +2906,11 @@ msgid "See and buy your products"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "See how to translate on your own"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:184
 #, python-format
@@ -3022,6 +2930,11 @@ msgstr "Łatwa sprzedaż internetowa."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Sell subscriptions and manage recurring payments."
 msgstr ""
 
 #. module: website
@@ -3057,12 +2970,7 @@ msgstr "Ustawienia"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Shadows"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_share
-msgid "Share"
-msgstr "Udostępnij"
+msgstr "Cienie"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3114,11 +3022,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Square"
 msgstr "Kwadratowy "
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Start translating your website on your own"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -3231,7 +3134,6 @@ msgstr "W kontrolerze strony został rozpoznany następujący błąd"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_blog_post_website_url
-#: model:ir.model.fields,help:website.field_delivery_carrier_website_url
 #: model:ir.model.fields,help:website.field_event_event_website_url
 #: model:ir.model.fields,help:website.field_event_track_website_url
 #: model:ir.model.fields,help:website.field_hr_employee_website_url
@@ -3307,6 +3209,14 @@ msgid "Theme Selection"
 msgstr "Wybór skórki"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"There are so many ways to communicate with your customers, visitors and\n"
+"                        prospects that it's sometimes difficult to know what to put your energy into. Here are\n"
+"                        some advices on what to focus on next."
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:28
 #, python-format
@@ -3352,6 +3262,11 @@ msgid "Thumbnails"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid "Time-consuming"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:48
 #, python-format
@@ -3374,11 +3289,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "To learn more, take a look at their"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:179
 #: model:website.menu,name:website.main_menu
@@ -3394,7 +3304,7 @@ msgstr "Prześledź"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:465
+#: code:addons/website/static/src/js/website.snippets.editor.js:472
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3513,13 +3423,6 @@ msgid "Use a Content Delivery Network (CDN)"
 msgstr "Użyj Content Delivery Network (CDN)"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Use a free, automatic machine translation (quality will vary depending on "
-"languages)"
-msgstr ""
-
-#. module: website
 #: selection:website.config.settings,module_website_form_editor:0
 msgid "Use standard forms"
 msgstr ""
@@ -3541,7 +3444,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:45
 #, python-format
 msgid "User Documentation"
-msgstr ""
+msgstr "Dokumentacja"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3728,7 +3631,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_post_website_url
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_url
 #: model:ir.model.fields,field_description:website.field_event_event_website_url
 #: model:ir.model.fields,field_description:website.field_event_track_website_url
 #: model:ir.model.fields,field_description:website.field_hr_employee_website_url
@@ -3959,7 +3861,7 @@ msgstr "Wchodzisz do trybu tłumaczeniowego."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "You can also pay for a sponsored indexing and place advertisements on web pages that show results from search\n"
-"                        engine queries. This is called SEA."
+"                        engine queries. This is called <strong>SEA</strong>."
 msgstr ""
 
 #. module: website
@@ -4020,7 +3922,7 @@ msgstr "Twoja nazwa domeny"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Your Footer"
-msgstr ""
+msgstr "Twoja stopka"
 
 #. module: website
 #. openerp-web
@@ -4074,17 +3976,9 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
-"Your visitors won't see the footer immediately. Use it for links you don't want in your main menu (e.g. social media, terms and conditions, privacy\n"
-"                        terms, etc.)."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Your website is an important part of your online business strategy, but it shouldn't be\n"
-"                        the only one. There are so many ways to communicate with your customers, visitors and\n"
-"                        prospects that it's sometimes difficult to know what to put your energy into. Here are\n"
-"                        some advice on what to focus on next."
+"Your visitors won't see the footer immediately. Use it for links you don't "
+"want in your main menu (e.g. social media, terms and conditions, privacy "
+"terms, etc.)."
 msgstr ""
 
 #. module: website
@@ -4136,6 +4030,11 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
+msgid "etc."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: About us"
 msgstr "ex: o nas"
 
@@ -4164,11 +4063,6 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:70
 #, python-format
 msgid "found(s)"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "guidelines"
 msgstr ""
 
 #. module: website
@@ -4229,13 +4123,6 @@ msgid "instance of Odoo, the"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"invoices from $0.05 to $0.15 per word, depending on the translator's level "
-"of expertise."
-msgstr ""
-
-#. module: website
 #: model:ir.model,name:website.model_ir_actions_server
 msgid "ir.actions.server"
 msgstr "ir.actions.server"
@@ -4258,7 +4145,7 @@ msgstr "ir.ui.view"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "learn how people find your website,"
-msgstr ""
+msgstr "Dowiedz się jak ludzie znajdują twoją stronę."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4271,22 +4158,12 @@ msgid "name"
 msgstr "nazwa"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "online help"
-msgstr "pomoc online"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.translator.xml:5
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "or Edit Master"
 msgstr "lub Edit Master"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "or see who currently owns it"
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4350,6 +4227,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "to get started."
 msgstr "Rozpocznij"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_planner
+msgid ""
+"to get your content translated by real professional translators. Quality may"
+" vary."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner

@@ -13,6 +13,19 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
+    @api.multi
+    def copy(self, default=None):
+        """
+        Duplicating a company without specifying a partner duplicate the partner
+        """
+        self.ensure_one()
+        default = dict(default or {})
+        if not default.get('name') and not default.get('partner_id'):
+            copy_partner = self.partner_id.copy()
+            default['partner_id'] = copy_partner.id
+            default['name'] = copy_partner.name
+        return super(Company, self).copy(default)
+
     _header = """
 <header>
 <pageTemplate>
@@ -164,7 +177,7 @@ class Company(models.Model):
         for company in self.filtered(lambda company: company.partner_id):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
             if address_data['contact']:
-                partner = company.partner_id.browse(address_data['contact'])
+                partner = company.partner_id.browse(address_data['contact']).sudo()
                 company.street = partner.street
                 company.street2 = partner.street2
                 company.city = partner.city

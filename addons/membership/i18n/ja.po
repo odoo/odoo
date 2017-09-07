@@ -8,13 +8,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # どりる <drill.dev@outlook.jp>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "待機数"
 msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "メンバーシップを関連付けるメンバー。 関連するメンバーのメンバーシップ状態を検討します。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -94,7 +95,7 @@ msgstr "取消"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "会員のキャンセル日"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -116,7 +117,7 @@ msgstr "カテゴリ"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "製品が会員資格の対象かどうかを確認します。"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -324,6 +325,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"メンバーシップの状態を示します。\n"
+"- 非会員：いかなる会員資格も申請していないパートナー。\n"
+"- キャンセル済会員：メンバーシップをキャンセルした会員。\n"
+"- 古い会員：会員期限が切れた会員。\n"
+"- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
+"- 請求済会員：請求書が作成された会員。\n"
+"- 支払い会員：会費を支払った会員。"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -628,4 +636,4 @@ msgstr "待機会員"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
-msgstr ""
+msgstr "membership.membership_line"

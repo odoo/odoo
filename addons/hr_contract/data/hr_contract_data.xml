@@ -54,7 +54,7 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">object.set_as_pending()</field>
+            <field name="code">record.set_as_pending()</field>
         </record>
         <record id="rule_contract_1_set_as_pending" model="base.action.rule">
             <field name="name">HR Contract: check for pending</field>
@@ -85,7 +85,7 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">object.set_as_close()</field>
+            <field name="code">record.set_as_close()</field>
         </record>
         <record id="rule_contract_3_set_as_close" model="base.action.rule">
             <field name="name">HR Contract: check for close</field>

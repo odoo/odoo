@@ -6,17 +6,20 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <karisatu@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2016
 # Jussi Lehto <jussi@gulfeo.com>, 2016
+# Tommi Rintala <tommi.rintala@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Jussi Lehto <jussi@gulfeo.com>, 2016\n"
+"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +35,7 @@ msgstr "Tilin valuutta"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
 msgid "Active"
-msgstr "Active"
+msgstr "Aktiivinen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -59,14 +62,14 @@ msgstr "Analyyttinen kirjanpito"
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
-msgstr "Analyyttiset tilit"
+msgstr "Kustannuspaikat"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Accounts Tags"
-msgstr ""
+msgstr "Kustannuspaikkojen tunnisteet"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -114,22 +117,22 @@ msgstr "Yhteistyökumppani"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
-msgstr "Balance"
+msgstr "Saldo"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
-msgstr "Analyyttiset tilikartat"
+msgstr "Kustannuspaikat"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klikkaa lisätäksesi uusi tunniste."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Click to add an analytic account."
-msgstr "Klikkaa lisätäksesi analyyttinen tili."
+msgstr "Klikkaa lisätäksesi kustannuspaikan."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
@@ -189,7 +192,7 @@ msgstr "Valuutta"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
 msgid "Customer"
-msgstr "Partner"
+msgstr "Asiakas"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
@@ -232,6 +235,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Jos Aktiivinen-kentän arvo on epätosi, sallii se tilin piilottamisen ilman "
+"sen poistamista."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -241,9 +246,8 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"Odoossa myyntitilaukset ja projektit on implementoitu käyttäen \n"
-"analyyttisiä tilejä. Voit seurata menoja ja tuloja analysoidaksesi \n"
-"marginaleeja vaivattomasti."
+"Odoossa myyntitilaukset ja projektit toteutetaan käyttäen kustannuspaikkoja."
+" Voit seurata menoja ja tuloja analysoidaksesi katteita vaivattomasti."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -290,7 +294,7 @@ msgstr "Määrä"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
 msgid "Reference"
-msgstr "Referencia"
+msgstr "Viite"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -340,4 +344,4 @@ msgstr "Käyttäjä"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "esim. Projekti XYZ"

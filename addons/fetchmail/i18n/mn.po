@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-#
+# 
 # Translators:
-# Otgonbayar Agvaan <gobi.mn@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-15 12:15+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fetchmail
@@ -61,7 +61,7 @@ msgid "Confirmed"
 msgstr "Баталсан"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Холболтын тест амжилтгүй боллоо: %s"
@@ -72,8 +72,8 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
-"Холболт нь SSL/TLS-р шифрлэгдсэн. Тусгайлсан порттой (анхны утга: IMAPS=993, "
-"POP3S=995)"
+"Холболт нь SSL/TLS-р шифрлэгдсэн. Тусгайлсан порттой (анхны утга: IMAPS=993,"
+" POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -81,13 +81,11 @@ msgid "Create a New Record"
 msgstr "Шинэ бичлэг үүсгэх"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Үүсгэгч"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Үүсгэсэн"
@@ -96,10 +94,10 @@ msgstr "Үүсгэсэн"
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Боловсруулах эрэмбийг тодорхойлдог, бага утга нь өндөр урьтамжийг илэрхийлнэ."
+"Боловсруулах эрэмбийг тодорхойлдог, бага утга нь өндөр урьтамжийг "
+"илэрхийлнэ."
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
@@ -115,7 +113,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "Мэйл серверийн нэр эсвэл IP"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -168,19 +165,16 @@ msgid "Last Fetch Date"
 msgstr "Сүүлийн Татсан Огноо"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Сүүлийн засвар хийсэн"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Сүүлийн засвар хийсэн огноо"
@@ -263,8 +257,8 @@ msgid ""
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
 "Ирж байгаа имэйл бүрийг энэ баримтын төрөлийн ярилцлага байдлаар "
-"боловсруулна. Энэ нь  шинэ ярилцлагын хувьд шинэ баримт үүсгэнэ эсвэл байгаа "
-"ярилцлагын үргэлжлэл байвал түүнд хавсаргана."
+"боловсруулна. Энэ нь  шинэ ярилцлагын хувьд шинэ баримт үүсгэнэ эсвэл байгаа"
+" ярилцлагын үргэлжлэл байвал түүнд хавсаргана."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -348,20 +342,13 @@ msgstr "Хэрэглэгчийн нэр"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
-#, fuzzy
 msgid ""
 "Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Имэйлийг боловсруулсан процесс бүрт оригиналь имэйл нь сурвалж зорилгоор "
-"хадгалагдаж үлдэх нь зохимжтой. Энэ нь зурвасуудын хэмжээг хоёр дахин том "
-"болгодог.\r\n"
-"\r\n"
-"\r\n"
-"Whether a full original copy of each email should be kept for referenceand "
-"attached to each processed message. This will usually double the size of "
-"your message database."
+"Боловсруулагдсан зурвас бүрт сурвалж болгох зорилгоор эх имэйлийн бүтэн "
+"хуулбарыг хадгална. Энэ нь зурвасуудын хэмжээг хоёр дахин ихэсгэдэг."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
@@ -371,8 +358,3 @@ msgid ""
 msgstr ""
 "Хавсралтууд нь татагдах эсэх. Хэрэв зөвшөөрөгдсөн бол имэйл нь "
 "боловсруулагдахаасаа өмнө бүх хавсралтыг татаж авна."
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"

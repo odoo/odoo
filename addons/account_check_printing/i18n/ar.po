@@ -8,15 +8,17 @@
 # Sadig Adam <sadig41@gmail.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
+# SaFi J. <safi2266@gmail.com>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
+# Islam Eldeeb <islameldeb@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: amrnegm <amrnegm.01@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +49,17 @@ msgstr "لا يمكن أن تزيد ملاحظات الشيك عن 60 رمزاً
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_amount_in_words
 msgid "Amount in Words"
-msgstr "المبلغ بالحروف"
+msgstr "المبلغ بالكلمات"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
 msgstr "إلغاء"
+
+#. module: account_check_printing
+#: model:account.payment.method,name:account_check_printing.account_payment_method_check
+msgid "Check"
+msgstr "الشيك"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
@@ -85,7 +92,7 @@ msgstr "حدد هذا الاختيار إذا كان دفتر شيكاتك غي�
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr "شيكات للطباعة"
+msgstr "شيك للطباعة"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
@@ -184,7 +191,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "مدفوعات"
+msgstr "المدفوعات"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:100
@@ -193,6 +200,8 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
+"المدفوعات لطباعتها كشيك يجب ان يكون خيار الشيك محدد كطريقه دفع ولم يتم "
+"تسويته."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -222,7 +231,7 @@ msgstr "طباعة الشيكات"
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "طباعة شيكات مُسلسلة"
+msgstr "طباعة شيكات مرقمة مسبقاً"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
@@ -240,6 +249,7 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
+"الحقل التقنى يستخدم لمعرفه ما اذا كان تم تمكين طباعه الشيكات كطريقه دفع."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -248,6 +258,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"اخر رقم شيك هو %s. من أجل تجنب رفض الشيك من قبل البنك، يمكنك فقط استخدام عدد"
+" أكبر."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -256,6 +268,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"ان قيد اليومية المحدد تم ضبطته لطباعة أرقام الشيك. إذا كنت تعيد طباعة ورقه "
+"شيك لديه رقم أو إذا كان الترقيم الحالي خاطئا، فيمكنك تغييره في صفحة تهيئة "
+"قيد اليومية."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:137
@@ -264,17 +279,19 @@ msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
+"لم يتم تهيئة تصميم الشيك .\n"
+"تأكد من تثبيت وحدة طباعة الشيكات الصحيحة وان تهيئتها (في إعدادات الشركة> علامة التبويب \"التهيئة\") صحيحة."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "هذا سيسمح لحفظ رقم الشيك المطابق على امر الدفع"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr ""
+msgstr "الغاء تحديد الارسال"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view

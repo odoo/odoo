@@ -33,7 +33,14 @@ class PurchaseRequisition(models.Model):
     _order = "id desc"
 
     def _get_picking_in(self):
-        return self.env.ref('stock.picking_type_in')
+        pick_in = self.env.ref('stock.picking_type_in')
+        if not pick_in:
+            company = self.env['res.company']._company_default_get('purchase.requisition')
+            pick_in = self.env['stock.picking.type'].search(
+                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
+                limit=1,
+            )
+        return pick_in
 
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
@@ -189,7 +196,7 @@ class PurchaseOrder(models.Model):
 
             # Compute taxes
             if fpos:
-                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id))
+                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
             else:
                 taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id).ids
 
@@ -268,8 +275,8 @@ class PurchaseOrderLine(models.Model):
             for line in self.order_id.requisition_id.line_ids:
                 if line.product_id == self.product_id:
                     if line.product_uom_id != self.product_uom:
-                        self.price_unit = self.env['product.uom']._compute_price(
-                            line.product_uom_id.id, line.price_unit, to_uom_id=self.product_uom.id)
+                        self.price_unit = line.product_uom_id._compute_price(
+                            line.price_unit, self.product_uom)
                     else:
                         self.price_unit = line.price_unit
                     break

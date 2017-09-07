@@ -12,7 +12,7 @@ import urlparse
 from email.utils import formataddr
 from lxml import etree
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -350,6 +350,13 @@ class Partner(models.Model, FormatAddress):
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id:
+            return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
+        else:
+            return {'domain': {'state_id': []}}
+
     @api.onchange('email')
     def onchange_email(self):
         if not self.image and not self._context.get('yaml_onchange') and self.email:
@@ -422,6 +429,7 @@ class Partner(models.Model, FormatAddress):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_children()
+        sync_children._compute_commercial_partner()
         return sync_children.write(sync_vals)
 
     @api.multi
@@ -445,6 +453,10 @@ class Partner(models.Model, FormatAddress):
                 commercial_fields = self._commercial_fields()
                 if any(field in values for field in commercial_fields):
                     self._commercial_sync_to_children()
+            for child in self.child_ids.filtered(lambda c: not c.is_company):
+                if child.commercial_partner_id != self.commercial_partner_id :
+                    self._commercial_sync_to_children()
+                    break
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields()
             if any(field in values for field in address_fields):
@@ -490,7 +502,12 @@ class Partner(models.Model, FormatAddress):
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
         tools.image_resize_images(vals)
 
-        result = super(Partner, self).write(vals)
+        result = True
+        # To write in SUPERUSER on field is_company and avoid access rights problems.
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+            result = super(Partner, self).sudo().write({'is_company': vals.get('is_company')})
+            del vals['is_company']
+        result = result and super(Partner, self).write(vals)
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
@@ -601,7 +618,7 @@ class Partner(models.Model, FormatAddress):
             raise UserError(_("Couldn't create contact without email address!"))
         if not name and email:
             name = email
-        partner = self.create({self._rec_name: name or email, 'email': email or False})
+        partner = self.create({self._rec_name: name or email, 'email': email or self.env.context.get('default_email', False)})
         return partner.name_get()[0]
 
     @api.model

@@ -41,7 +41,7 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">object.write({'team_id': env.ref('sales_team.team_sales_department').id})</field>
+            <field name="code">record.write({'team_id': env.ref('sales_team.team_sales_department').id})</field>
         </record>
         <record id="rule_set_followers_lead" model="base.action.rule">
             <field name="name">Set Auto Followers on leads which are urgent and come from USA.</field>

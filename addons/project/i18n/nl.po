@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -109,11 +109,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -130,6 +129,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                Uw Odoo Project applicatie is geinstalleerd</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Wat nu?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Probeer een taak aan te maken door te e-mailen naar </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Nodig nieuwe gebruikers uit</span></a></span>\n"
+"                                        <span>om samen te werken</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Ontdek de </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
+"                                <span> om extra functies te activeren</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Volg uren via urenstaten,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Plan taken en werknemers met forecasts,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Krijg slimme rapportages en accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Factureer tijd op taken en issues,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>En veel meer...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Hulp nodig?</span>\n"
+"                                <span style=\"font-style:italic;\">U bent niet alleen</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Wij willen u graag helpen, neem contact op via het\n"
+"                                <a href=\"https://www.odoo.com/help\">support formalier</a> wanneer u vragen heeft.\n"
+"                                U kunt ook ontdekken hoe het meeste uit uw Odoo installatie te halen via de </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Gebruikers Documentatie</span></a>\n"
+"                                </span><span> of met onze </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentatie</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Geniet van uw Odoo ervaring,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- Het Odoo Team<br/>PS: Mensen houden van Odoo, zie </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">wat ze er over zeggen.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -140,6 +240,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Bedankt voor uw aanvraag.<br /></p>\n"
+"<p>Indien u vragen heeft kan u ons steeds contacteren.</p>\n"
+"<p>Met vriendelijke groeten,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -158,6 +263,7 @@ msgstr "# Dagen tot deadline"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr "# Taken"
 
@@ -239,7 +345,7 @@ msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
 "<b>Nodig collega's uit</b> via email.<br/><i>Voeg één e-mail toe per "
-"lijn.</i>"
+"regel.</i>"
 
 #. module: project
 #. openerp-web
@@ -727,6 +833,8 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
 msgstr ""
+"<strong>Volg alleen wat u nodig heeft</strong><br/>\n"
+"De gemakkelijkste weg om notificaties te gebruiken is door een heel project te volgen: u ontvangt dan al de geselecteerde notificaties voor alle bestaande en nieuwe taken/issues van een project."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -761,7 +869,7 @@ msgid ""
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
 "<strong>Heb heldere verantwoordelijkheden</strong><br/>\n"
-"De persoon toegewezen aan de taken is verantwoordelijk voor de vooruitgang en hun avatar wordt getoond in de Kanban weergave voor een snelle referentie. Natuurlijk kan de verantwoordelijkheid voor een taak veranderen afhankelijk van de fase."
+"De persoon toegewezen aan de taken is verantwoordelijk voor de vooruitgang en hun avatar wordt getoond in de Kanban weergave voor een snelle referentie. Natuurlijk kan de verantwoordelijkheid voor een taak wijzigen afhankelijk van de fase."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -825,8 +933,8 @@ msgstr ""
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
-"<strong>Hulp nodig bij het definiëren van uw projecten? Contacteer ons "
-"nu:</strong><br/>"
+"<strong>Hulp nodig bij het definiëren van uw projecten? Neem nu contact "
+"op:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1203,6 +1311,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"In elke fase kunnen werknemers taken/issues klaarmaken voor de volgende fase of blokkeren.\n"
+"U kan hier labels definiëren die worden getoond voor de staat in plaats van\n"
+"de standaard labels."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1335,7 +1446,7 @@ msgstr "Geannuleerd"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Change their Stages in the Project Stages tab"
-msgstr "Verander de fase in de project fase tab"
+msgstr "Wijzig de fase in de project fase tab"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
@@ -1436,7 +1547,7 @@ msgstr "Bedrijven"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
@@ -1542,7 +1653,7 @@ msgstr "Maak tenminste 3 taken aan"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr "Maak automatisch rekeningen aan gebaseerd op Tijd &amp; Materiaal."
+msgstr "Maak automatisch facturen aan gebaseerd op Tijd &amp; Materiaal."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -2091,6 +2202,9 @@ msgid ""
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
 msgstr ""
+"Goed gedaan! U heeft de projectbeheer rondleiding voltooid. U kan verder "
+"gaan met de <b>implementatie handleiding</b> om u te helpen bij het opzetten"
+" bij het projectbeheer in uw bedrijf."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2102,7 +2216,7 @@ msgstr "Veel succes!"
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
-"Groen: de taak is klaar voor de volgende fase (de job voor deze fase is "
+"Groen: de taak is klaar voor de volgende fase (de taak voor deze fase is "
 "voltooid)"
 
 #. module: project
@@ -2144,12 +2258,17 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"Geeft de zichtbaarheid aan van taken en issues welke behoren tot het huidige project:\n"
+"- Alleen op uitnodiging: Werknemers kunnen alleen de gevolgde projecten, taken of issues zien\n"
+"- Zichtbaar voor alle werknemers: Werknemers kunnen alle projecten, taken of issues zien\n"
+"- Zichtbaar voor volgende klanten: de werknemers kunnen alles zien;\n"
+"Als de website is geactiveerd, kunnen gebruikers van de portal projecten, taken of issues zien, als deze gevolgd worden door iemand van hun onderneming\n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr "Ik neem het"
+msgstr "Ik neem hem"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2207,7 +2326,7 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
-"Wanneer ingesteld wordt een e-mail verstuurt naar de klant als de taak of "
+"Wanneer ingesteld wordt een e-mail verstuurd naar de klant als de taak of "
 "issue deze fase behaalt."
 
 #. module: project
@@ -2536,7 +2655,7 @@ msgstr "Laag"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2738,7 +2857,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr "Enkel via uitnodiging"
+msgstr "Alleen op uitnodiging"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2961,7 +3080,7 @@ msgstr "Projectbeheer"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Projectbeheerder"
+msgstr "Project leider"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3134,7 +3253,7 @@ msgstr "Reparatie is gereed"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapportages"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -3301,7 +3420,7 @@ msgstr "Fase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Fase veranderd"
+msgstr "Fase gewijzigd"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3316,7 +3435,7 @@ msgstr "Naam fase"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Fase veranderd"
+msgstr "Fase gewijzigd"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -3392,7 +3511,7 @@ msgstr "Taak pijplijn"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr "Taak klaar"
+msgstr "Taak gereed"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3404,7 +3523,7 @@ msgstr "Taak fase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Taak fase veranderd"
+msgstr "Taak fase gewijzigd"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3465,6 +3584,7 @@ msgstr "Taak is klaar voor volgende fase"
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3608,7 +3728,7 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
-"Er is geen afbeelding beschikbaar om als omslag in te stellen. Verzend een "
+"Er is geen afbeelding beschikbaar om als cover in te stellen. Verzend een "
 "bericht op de taak met een afbeelding als bijlage."
 
 #. module: project

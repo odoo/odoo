@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 from datetime import timedelta
 
 
@@ -56,10 +57,16 @@ Best Regards,''')
         if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
             date = date.replace(month=last_month, day=last_day)
         else:
-            date = date.replace(month=last_month, day=last_day, year=date.year + 1)
+            if last_month == 2 and last_day == 29 and (date.year + 1) % 4 != 0:
+                date = date.replace(month=last_month, day=28, year=date.year + 1)
+            else:
+                date = date.replace(month=last_month, day=last_day, year=date.year + 1)
         date_to = date
         date_from = date + timedelta(days=1)
-        date_from = date_from.replace(year=date_from.year - 1)
+        if date_from.month == 2 and date_from.day == 29:
+            date_from = date_from.replace(day=28, year=date_from.year - 1)
+        else:
+            date_from = date_from.replace(year=date_from.year - 1)
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
@@ -78,7 +85,20 @@ Best Regards,''')
             account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
 
     @api.multi
+    def _validate_fiscalyear_lock(self, values):
+        if values.get('fiscalyear_lock_date'):
+            nb_draft_entries = self.env['account.move'].search([
+                ('company_id', 'in', [c.id for c in self]),
+                ('state', '=', 'draft'),
+                ('date', '<=', values['fiscalyear_lock_date'])])
+            if nb_draft_entries:
+                raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+    @api.multi
     def write(self, values):
+        #restrict the closing of FY if there are still unposted entries
+        self._validate_fiscalyear_lock(values)
+
         # Reflect the change on accounts
         for company in self:
             digits = values.get('accounts_code_digits') or company.accounts_code_digits

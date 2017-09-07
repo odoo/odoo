@@ -7,18 +7,19 @@
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Haojun Zou <apollo_zhj@msn.com>, 2016
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
 # Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
 # Leif Persson <leifpz54@gmail.com>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
+# Kim Asplund <kim.asplund@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Jonathan S <jonathan.c.strom@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,11 @@ msgstr "Aktiv"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
 msgid "Add Followers"
 msgstr "Lägg till följare"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -143,6 +149,11 @@ msgstr "Skapad den"
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Days"
 msgstr "Dagar"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_deadline
+msgid "Deadline"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -251,7 +262,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "Är Kund"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -355,6 +366,11 @@ msgid "Pending"
 msgstr "Vilande"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_priority
+msgid "Priority"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
 msgid "Related Document Model"
 msgstr "Modell för relaterade dokument"
@@ -411,6 +427,16 @@ msgstr "Status"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
 msgid "Subject"
 msgstr "Ämne"
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action
+msgid "Test Server Action"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action_context
+msgid "Test Server Action Context"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done

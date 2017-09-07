@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-05-12 12:36+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -18,42 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle "
-"of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Здраво, драго ни е да ве известиме дека влеговте во избраниот круг на наши "
-"Златни партнери"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</"
-"p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"Здраво, драго ни е од денес да ви посакаме добредојде помеѓу нашите Сребрени "
-"партнери."
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-#, fuzzy
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr "Здраво, ќе го добиете вашиот пакет за добредојде преку е-маил наскоро."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -99,7 +63,7 @@ msgid "Activity"
 msgstr "Активност"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "После %(interval_nbr)d %(interval_type)s"
@@ -137,7 +101,7 @@ msgid "Automatic"
 msgstr "Автоматски"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
 msgstr "Автоматски премин"
@@ -240,7 +204,10 @@ msgid "Cancelled"
 msgstr "Откажано"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "Изберете го ресурсот на кој што сакате да тече оваа кампања"
 
@@ -270,7 +237,7 @@ msgid "Congratulations! You are now one of our Gold Partners!"
 msgstr "Четитки! Сега сте еден од нашите златни партнери!"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -306,7 +273,7 @@ msgid "Created on"
 msgstr "Креирано на"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "Изборна акција"
 
@@ -383,18 +350,18 @@ msgid "Draft"
 msgstr "Нацрт"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr ""
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
 msgstr "Емаил"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
 msgstr "Преглед на емаил"
@@ -402,12 +369,6 @@ msgstr "Преглед на емаил"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "Урнек за е-пошта"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
-msgid "Email Template Preview"
 msgstr "Урнек за е-пошта"
 
 #. module: marketing_campaign
@@ -712,9 +673,10 @@ msgid "Mode"
 msgstr "Мод"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
-msgstr "Модел на филтер мора да биде исти со ресурсен модел на кампања "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -865,7 +827,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "Извештај"
 
@@ -1029,11 +991,12 @@ msgstr "Синхронизирај рачно"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
 "Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
+"for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but "
 "does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has "
+"to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
@@ -1054,9 +1017,10 @@ msgid "Test in Realtime"
 msgstr "Тестирање во реално време"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "Активноста До/Од на преминот мора да биде од иста кампања "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1064,7 +1028,7 @@ msgid "The action to perform when this activity is activated"
 msgstr "Акција која ќе се изведе кога оваа активност е активирана"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
@@ -1072,7 +1036,7 @@ msgstr ""
 "бидат затворени."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1083,13 +1047,13 @@ msgstr ""
 "точка."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr "Кампањата не може да биде започната. Нема активности во неа."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "Следниот чекор за оваа точка нема email или извештај за прегледување."
@@ -1119,24 +1083,15 @@ msgid "The report to generate when this activity is activated"
 msgstr "Извештај што ќе се генерира кога оваа активност ќе се активира"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
-"  "
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it "
+"into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of "
+"the resource record"
 msgstr ""
-"Тип на акција што треба да се изврши кога елемент ќе влезе во оваа "
-"активност, како:\n"
-"   - Е-маил: испрати е-маил користејќи предефиниран урнек за е-маил\n"
-"   - Извештај: прикажи постоечки извештај дефиниран на ресурсниот елемент и "
-"снимете го во одреден директориум\n"
-"   - Персонализирана акција: изврши предефинирана акција, пр. да се "
-"модифицираат полињата на записот за ресурсот\n"
-"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1162,7 +1117,7 @@ msgid "Trigger"
 msgstr "Активатор"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
 msgstr "Тип"
 
@@ -1205,6 +1160,3 @@ msgstr "Година(и)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Отвори мени Маркетинг"

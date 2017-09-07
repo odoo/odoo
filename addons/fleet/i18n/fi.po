@@ -8,14 +8,16 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
+# Tommi Rintala <tommi.rintala@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Timo Koukkari <timo.koukkari@seamk.fi>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +87,7 @@ msgstr "Aktivoinnin hinta"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
 msgid "Active"
-msgstr "Active"
+msgstr "Aktiivinen"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -185,6 +187,11 @@ msgid "Brand model of the vehicle"
 msgstr "Ajoneuvomerkin malli"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
 msgid "CO2 Emissions"
 msgstr "CO2-päästöt"
@@ -217,7 +224,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type_category
 msgid "Category"
-msgstr "Categoría"
+msgstr "Kategoria"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_type
@@ -250,7 +257,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klikkaa lisätäksesi uusi tunniste."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -316,6 +323,11 @@ msgstr "Väri-indeksi"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_color
 msgid "Color of the vehicle"
 msgstr "Ajoneuvon väri"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
@@ -392,6 +404,11 @@ msgstr "Sopimuksen tekijä"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
 msgstr "Sopimukset"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
@@ -618,6 +635,11 @@ msgid "Emissions"
 msgstr "Päästöt"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr ""
+
+#. module: fleet
 #: code:addons/fleet/models/fleet.py:37
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
@@ -657,7 +679,7 @@ msgstr ""
 #: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
-msgstr ""
+msgstr "Kuljetuskalusto"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -894,6 +916,11 @@ msgstr "Laskun päiväys"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_inv_ref
 msgid "Invoice Reference"
 msgstr "Laskuviite"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1348,6 +1375,11 @@ msgid "Price per liter"
 msgstr ""
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_purchaser_id
 msgid "Purchaser"
@@ -1394,7 +1426,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_8
 msgid "Repair and maintenance"
-msgstr ""
+msgstr "Korjaus ja huolto"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_repairing
@@ -1440,6 +1472,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
 msgid "Seats Number"
 msgstr "Istuinten paikka"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1975,7 +2017,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
 msgid "fleet.vehicle.state"
-msgstr ""
+msgstr "fleet.vehicle.state"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_tag

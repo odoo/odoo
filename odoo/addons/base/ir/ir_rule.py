@@ -101,9 +101,8 @@ class IrRule(models.Model):
         group_domains = defaultdict(list)       # {group: list of domains}
         for rule in rules.sudo():
             dom = expression.normalize_domain(rule_domain[rule.id])
-            for group in rule.groups:
-                if group in user.groups_id:
-                    group_domains[group].append(dom)
+            if rule.groups & user.groups_id:
+                group_domains[rule.groups[0]].append(dom)
             if not rule.groups:
                 global_domains.append(dom)
 

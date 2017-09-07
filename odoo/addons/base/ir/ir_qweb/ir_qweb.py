@@ -62,7 +62,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_get_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
 
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(
@@ -77,18 +77,26 @@ class IrQWeb(models.AbstractModel, QWeb):
         env = self.env
         if lang != env.context.get('lang'):
             env = env(context=dict(env.context, lang=lang))
+
         template = env['ir.ui.view'].read_template(name)
 
-        res_id = isinstance(name, (int, long)) and name or None
-        if res_id:
+        # QWeb's `read_template` will check if one of the first children of
+        # what we send to it has a "t-name" attribute having `name` as value
+        # to consider it has found it. As it'll never be the case when working
+        # with view ids or children view or children primary views, force it here.
+        def is_child_view(view_name):
+            view_id = self.env['ir.ui.view'].get_view_id(view_name)
+            view = self.env['ir.ui.view'].browse(view_id)
+            return view.inherit_id is not None
+
+        if isinstance(name, (int, long)) or is_child_view(name):
             for node in etree.fromstring(template):
                 if node.get('t-name'):
-                    return node
-                elif res_id and node.tag == "t":
-                    node.set('t-name', str(res_id))
-                    return node
-
-        return template
+                    node.set('t-name', str(name))
+                    return node.getparent()
+            return None  # trigger "template not found" in QWeb
+        else:
+            return template
 
     # order
 
@@ -178,14 +186,14 @@ class IrQWeb(models.AbstractModel, QWeb):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async'),
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', keys=("website_id",)),
     )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
         asset = AssetsBundle(xmlid, files, remains, env=self.env)
         return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
 
-    @tools.ormcache('xmlid', 'options.get("lang", "en_US")')
+    @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
     def _get_asset_content(self, xmlid, options):
         options = dict(options,
             inherit_branding=False, inherit_branding_auto=False,

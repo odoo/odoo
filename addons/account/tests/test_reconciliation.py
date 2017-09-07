@@ -402,3 +402,219 @@ class TestReconciliation(AccountingTestCase):
             self.assertTrue(aml.reconciled, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual, 0, 'The journal item should be totally reconciled')
             self.assertEquals(aml.amount_residual_currency, 0, 'The journal item should be totally reconciled')
+
+    def test_reconcile_bank_statement_with_payment_and_writeoff(self):
+        # Use case:
+        # Company is in EUR, create a bill for 80 USD and register payment of 80 USD.
+        # create a bank statement in USD bank journal with a bank statement line of 85 USD
+        # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
+
+        invoice = self.create_invoice(type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
+        # register payment on invoice
+        payment = self.env['account.payment'].create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 80,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_usd.id,
+            })
+        payment.post()
+        payment_move_line = False
+        bank_move_line = False
+        for l in payment.move_line_ids:
+            if l.account_id.id == self.account_rcv.id:
+                payment_move_line = l
+            else:
+                bank_move_line = l
+        invoice.register_payment(payment_move_line)
+
+        # create bank statement
+        bank_stmt = self.acc_bank_stmt_model.create({
+            'journal_id': self.bank_journal_usd.id,
+            'date': time.strftime('%Y') + '-07-15',
+        })
+
+        bank_stmt_line = self.acc_bank_stmt_line_model.create({'name': 'payment',
+            'statement_id': bank_stmt.id,
+            'partner_id': self.partner_agrolait_id,
+            'amount': 85,
+            'date': time.strftime('%Y') + '-07-15',})
+
+        #reconcile the statement with invoice and put remaining in another account
+        bank_stmt_line.process_reconciliation(payment_aml_rec= bank_move_line, new_aml_dicts=[{
+            'account_id': self.diff_income_account.id,
+            'debit': 0,
+            'credit': 5,
+            'name': 'bank fees',
+            }])
+
+        # Check that move lines associated to bank_statement are correct
+        bank_stmt_aml = self.env['account.move.line'].search([('statement_id', '=', bank_stmt.id)])
+        bank_stmt_aml |= bank_stmt_aml.mapped('move_id').mapped('line_ids')
+        self.assertEquals(len(bank_stmt_aml), 4, "The bank statement should have 4 moves lines")
+        lines = {
+            self.account_usd.id: [
+                {'debit': 3.27, 'credit': 0.0, 'amount_currency': 5, 'currency_id': self.currency_usd_id},
+                {'debit': 52.33, 'credit': 0, 'amount_currency': 80, 'currency_id': self.currency_usd_id}
+                ],
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 3.27, 'amount_currency': -5, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 52.33, 'amount_currency': -80, 'currency_id': self.currency_usd_id},
+        }
+        for aml in bank_stmt_aml:
+            line = lines[aml.account_id.id]
+            if type(line) == list:
+                # find correct line inside the list
+                if line[0]['debit'] == round(aml.debit, 2):
+                    line = line[0]
+                else:
+                    line = line[1]
+            self.assertEquals(round(aml.debit, 2), line['debit'])
+            self.assertEquals(round(aml.credit, 2), line['credit'])
+            self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
+            self.assertEquals(aml.currency_id.id, line['currency_id'])
+
+    def test_partial_reconcile_currencies(self):
+        #                client Account (payable, rsa)
+        #        Debit                      Credit
+        # --------------------------------------------------------
+        # Pay a : 25/0.5 = 50       |   Inv a : 50/0.5 = 100
+        # Pay b: 50/0.75 = 66.66    |   Inv b : 50/0.75 = 66.66
+        # Pay c: 25/0.8 = 31.25     |
+        #
+        # Debit_currency = 100      | Credit currency = 100
+        # Debit = 147.91            | Credit = 166.66
+        # Balance Debit = 18.75
+        # Counterpart Credit goes in Exchange diff
+
+        dest_journal_id = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', self.env.ref('base.main_company').id)], limit=1)
+        account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
+
+        self.bank_journal_euro.write({'default_debit_account_id': self.account_rsa.id,
+                                      'default_credit_account_id': self.account_rsa.id})
+        dest_journal_id.write({'default_debit_account_id': self.account_rsa.id,
+                               'default_credit_account_id': self.account_rsa.id})
+        # Setting up rates for USD (main_company is in EUR)
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '07' + '-01',
+            'rate': 0.5,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id})
+
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '08' + '-01', 
+            'rate': 0.75,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id})
+
+        self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '09' + '-01', 
+            'rate': 0.80,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id})
+
+        # Preparing Invoices (from vendor)
+        invoice_a = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
+            'reference_type': 'none',
+            'currency_id': self.currency_usd_id,
+            'name': 'invoice to vendor',
+            'account_id': self.account_rsa.id,
+            'type': 'in_invoice',
+            'date_invoice': time.strftime('%Y') + '-' + '07' + '-01',
+            })
+        self.account_invoice_line_model.create({'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 50,
+            'invoice_id': invoice_a.id,
+            'name': 'product that cost ' + str(50),
+            'account_id': account_expenses.id,
+        })
+
+        invoice_b = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
+            'reference_type': 'none',
+            'currency_id': self.currency_usd_id,
+            'name': 'invoice to vendor',
+            'account_id': self.account_rsa.id,
+            'type': 'in_invoice',
+            'date_invoice': time.strftime('%Y') + '-' + '08' + '-01',
+            })
+        self.account_invoice_line_model.create({'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 50,
+            'invoice_id': invoice_b.id,
+            'name': 'product that cost ' + str(50),
+            'account_id': account_expenses.id,
+        })
+
+        invoice_a.action_invoice_open()
+        invoice_b.action_invoice_open()
+
+        # Preparing Payments
+        # One partial for invoice_a (fully assigned to it)
+        payment_a = self.env['account.payment'].create({'payment_type': 'outbound',
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_euro.id,
+            'company_id': self.env.ref('base.main_company').id,
+            'payment_date': time.strftime('%Y') + '-' + '07' + '-01',
+            'partner_id': self.partner_agrolait_id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'destination_journal_id': dest_journal_id.id,
+            'partner_type': 'supplier'})
+
+        # One that will complete the payment of a, the rest goes to b
+        payment_b = self.env['account.payment'].create({'payment_type': 'outbound',
+            'amount': 50,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_euro.id,
+            'company_id': self.env.ref('base.main_company').id,
+            'payment_date': time.strftime('%Y') + '-' + '08' + '-01',
+            'partner_id': self.partner_agrolait_id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'destination_journal_id': dest_journal_id.id,
+            'partner_type': 'supplier'})
+
+        # The last one will complete the payment of b
+        payment_c = self.env['account.payment'].create({'payment_type': 'outbound',
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_euro.id,
+            'company_id': self.env.ref('base.main_company').id,
+            'payment_date': time.strftime('%Y') + '-' + '09' + '-01',
+            'partner_id': self.partner_agrolait_id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'destination_journal_id': dest_journal_id.id,
+            'partner_type': 'supplier'})
+
+        payment_a.post()
+        payment_b.post()
+        payment_c.post()
+
+        # Assigning payments to invoices
+        debit_line_a = payment_a.move_line_ids.filtered(lambda l: l.debit and l.account_id == dest_journal_id.default_debit_account_id)
+        debit_line_b = payment_b.move_line_ids.filtered(lambda l: l.debit and l.account_id == dest_journal_id.default_debit_account_id)
+        debit_line_c = payment_c.move_line_ids.filtered(lambda l: l.debit and l.account_id == dest_journal_id.default_debit_account_id)
+
+        invoice_a.assign_outstanding_credit(debit_line_a.id)
+        invoice_a.assign_outstanding_credit(debit_line_b.id)
+        invoice_b.assign_outstanding_credit(debit_line_b.id)
+        invoice_b.assign_outstanding_credit(debit_line_c.id)
+
+        # Asserting correctness (only in the payable account)
+        full_reconcile = False
+        for inv in (invoice_a + invoice_b):
+            self.assertTrue(inv.reconciled)
+            for aml in (inv.payment_move_line_ids + inv.move_id.line_ids).filtered(lambda l: l.account_id == self.account_rsa):
+                self.assertEqual(aml.amount_residual, 0.0)
+                self.assertEqual(aml.amount_residual_currency, 0.0)
+                self.assertTrue(aml.reconciled)
+                if not full_reconcile:
+                    full_reconcile = aml.full_reconcile_id
+                else:
+                    self.assertTrue(aml.full_reconcile_id == full_reconcile)
+
+        full_rec_move = full_reconcile.exchange_move_id
+        # Globally check whether the amount is correct
+        self.assertEqual(full_rec_move.amount, 18.75)
+
+        # Checking if the direction of the move is correct
+        full_rec_payable = full_rec_move.line_ids.filtered(lambda l: l.account_id == self.account_rsa)
+        self.assertEqual(full_rec_payable.balance, 18.75)

@@ -80,7 +80,7 @@ class Graph(dict):
             info = odoo.modules.module.load_information_from_description_file(module)
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
-            else:
+            elif module != 'studio_customization':
                 _logger.warning('module %s: not installable, skipped', module)
 
         dependencies = dict([(p, info['depends']) for p, info in packages])
@@ -112,10 +112,7 @@ class Graph(dict):
             unmet_deps = filter(lambda p: p not in self, dependencies[package])
             _logger.error('module %s: Unmet dependencies: %s', package, ', '.join(unmet_deps))
 
-        result = len(self) - len_graph
-        if result != len(module_list):
-            _logger.warning('Some modules were not loaded.')
-        return result
+        return len(self) - len_graph
 
 
     def __iter__(self):

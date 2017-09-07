@@ -245,8 +245,10 @@ class Picking(models.Model):
     picking_type_code = fields.Selection([
         ('incoming', 'Vendors'),
         ('outgoing', 'Customers'),
-        ('internal', 'Internal')], related='picking_type_id.code')
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
+        ('internal', 'Internal')], related='picking_type_id.code',
+        readonly=True)
+    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
+        readonly=True)
 
     quant_reserved_exist = fields.Boolean(
         'Has quants already reserved', compute='_compute_quant_reserved_exist',
@@ -316,22 +318,18 @@ class Picking(models.Model):
             self.state = 'cancel'
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
-        elif self.move_type == 'one':
-            ordered_moves = self.move_lines.filtered(
-                lambda move: move.state not in ['cancel', 'done']
-            ).sorted(
-                key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=False
-            )
-            self.state = ordered_moves[0].state
         else:
-            filtered_moves = self.move_lines.filtered(lambda move: move.state not in ['cancel', 'done'])
-            if not all(move.state == 'assigned' for move in filtered_moves) and any(move.state == 'assigned' for move in filtered_moves):
-                self.state = 'partially_available'
-            elif any(move.partially_available for move in filtered_moves):
+            # We sort our moves by importance of state: "confirmed" should be first, then we'll have
+            # "waiting" and finally "assigned" at the end.
+            moves_todo = self.move_lines\
+                .filtered(lambda move: move.state not in ['cancel', 'done'])\
+                .sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
+            if self.move_type == 'one':
+                self.state = moves_todo[0].state or 'draft'
+            elif moves_todo[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in moves_todo):
                 self.state = 'partially_available'
             else:
-                ordered_moves = filtered_moves.sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=True)
-                self.state = ordered_moves[0].state
+                self.state = moves_todo[-1].state or 'draft'
 
     @api.one
     @api.depends('move_lines.priority')
@@ -381,7 +379,7 @@ class Picking(models.Model):
             elif self.partner_id:
                 location_dest_id = self.partner_id.property_stock_customer.id
             else:
-                customerloc, location_dest_id = self.env['stock.warehouse']._get_partner_locations()
+                location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
 
             self.location_id = location_id
             self.location_dest_id = location_dest_id
@@ -389,7 +387,7 @@ class Picking(models.Model):
         if self.partner_id:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
                 partner = self.partner_id.parent_id
-            elif self.partner_id.picking_warn not in ('no-message', 'block') and partner.parent_id.picking_warn == 'block':
+            elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
                 partner = self.partner_id.parent_id
             else:
                 partner = self.partner_id
@@ -602,7 +600,10 @@ class Picking(models.Model):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
-                forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
+                forced_qty = 0.0
+                if move.state == 'assigned':
+                    qty = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, round=False)
+                    forced_qty = qty - sum([x.qty for x in move_quants])
                 # if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
                 if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                     if forced_qties.get(move.product_id):
@@ -611,9 +612,13 @@ class Picking(models.Model):
                         forced_qties[move.product_id] = forced_qty
             for vals in picking._prepare_pack_ops(picking_quants, forced_qties):
                 vals['fresh_record'] = False
-                PackOperation.create(vals)
+                PackOperation |= PackOperation.create(vals)
         # recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities()
+        for pack in PackOperation:
+            pack.ordered_qty = sum(
+                pack.mapped('linked_move_operation_ids').mapped('move_id').filtered(lambda r: r.state != 'cancel').mapped('ordered_qty')
+            )
         self.write({'recompute_pack_op': False})
 
     @api.multi
@@ -725,7 +730,7 @@ class Picking(models.Model):
 
                         # check if the quant is matching the operation details
                         if ops.package_id:
-                            flag = quant.package_id and bool(QuantPackage.search([('id', 'child_of', [ops.package_id.id])])) or False
+                            flag = quant.package_id == ops.package_id
                         else:
                             flag = not quant.package_id.id
                         flag = flag and (ops.owner_id.id == quant.owner_id.id)
@@ -783,6 +788,8 @@ class Picking(models.Model):
     @api.multi
     def do_new_transfer(self):
         for pick in self:
+            if pick.state == 'done':
+                raise UserError(_('The pick is already validated'))
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
                 raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))
@@ -869,7 +876,7 @@ class Picking(models.Model):
                 moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
                 if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
                     # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
-                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=todo_moves.ids)
+                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=picking.move_lines.ids)
                 picking.do_recompute_remaining_quantities()
 
             # split move lines if needed
@@ -924,7 +931,7 @@ class Picking(models.Model):
                     vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
                     moves |= moves.create(vals)
         if moves:
-            moves.action_confirm()
+            moves.with_context(skip_check=True).action_confirm()
         return moves
 
     @api.model
@@ -967,6 +974,7 @@ class Picking(models.Model):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
         # TDE note: o2o conversion, todo multi
+        backorders = self.env['stock.picking']
         for picking in self:
             backorder_moves = backorder_moves or picking.move_lines
             if self._context.get('do_only_split'):
@@ -987,7 +995,8 @@ class Picking(models.Model):
                 picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
             backorder_picking.action_confirm()
             backorder_picking.action_assign()
-        return True
+            backorders |= backorder_picking
+        return backorders
 
     @api.multi
     def put_in_pack(self):

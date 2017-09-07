@@ -8,21 +8,23 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # salmemik <salmemik@gmail.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Sanna Edelman <direct@generare.com>, 2016
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Jussi Lehto <jussi@gulfeo.com>, 2016
+# Tommi Rintala <tommi.rintala@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Jussi Lehto <jussi@gulfeo.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +105,7 @@ msgstr "# Ostot"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Toimittajien laskut"
 
@@ -118,6 +121,7 @@ msgstr "Rivien lukumäärä"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
 msgstr "Ostotilauksen numero"
 
@@ -133,6 +137,7 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Tämä määrittely koskee yritystä johon olet kirjautuneena.</span>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -205,7 +210,7 @@ msgstr "<strong>Tilausviitteenne</strong>"
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr ""
+msgstr "Varoitus voidaan asettaa tuotteelle tai asiakkaalle (ostot)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
@@ -268,6 +273,8 @@ msgstr ""
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
 msgstr ""
+"Informatiivinen tai estävä varoitus voidaan asettaa tuotteelle tai "
+"asiakkaalle"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -330,7 +337,7 @@ msgstr "Keskimääräinen hinta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr ""
+msgstr "Laskurivit"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
@@ -338,20 +345,26 @@ msgid "Billed Qty"
 msgstr "Laskutettu määrä"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:581
+#, python-format
+msgid "Billed Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
-msgstr ""
+msgstr "Laskun tila"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
 msgid "Bills"
-msgstr ""
+msgstr "Laskut"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Bills Received"
-msgstr ""
+msgstr "Laskut vastaanotettu"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -407,7 +420,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Peru"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -587,7 +600,7 @@ msgstr "Kuvaus"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Description for Vendors"
-msgstr "Tuotekuvaus toimittajille"
+msgstr "Kuvaus toimittajille"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
@@ -638,11 +651,6 @@ msgid "Email composition wizard"
 msgstr "Sähköpostin ohjattu koostaminen"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Sähköpostin ohjattu koostaminen kyselytutkimukselle"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
@@ -658,6 +666,12 @@ msgstr "Oletettu päivämäärä"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Laajennetut suodattimet"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:559
+#, python-format
+msgid "Extra line with %s "
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -729,7 +743,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
 msgid "Invoice"
-msgstr "Invoice"
+msgstr "Lasku"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
@@ -771,7 +785,7 @@ msgstr "Viimeksi päivitetty"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
 msgid "Levels of Approvals"
-msgstr ""
+msgstr "Hyväksyntätasot"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation
@@ -786,12 +800,12 @@ msgstr "Paikka ja Varasto"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Lukitse"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Lukittu"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -829,6 +843,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Viesti ostotilaukselle"
 
@@ -857,11 +872,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "New Mail"
-msgstr "Uusi viesti"
-
-#. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
@@ -887,7 +897,7 @@ msgstr "Lisätiedot"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
-msgstr ""
+msgstr "Ei laskutettavaa"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -943,7 +953,13 @@ msgid "Order of Day"
 msgstr "Päivän tilaus"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:769
+#: code:addons/purchase/models/purchase.py:578
+#, python-format
+msgid "Ordered Quantity"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:816
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Tilattu määrä väheni!"
@@ -952,11 +968,6 @@ msgstr "Tilattu määrä väheni!"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Tilaukset"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_mail_mail
-msgid "Outgoing Mails"
-msgstr "Lähtevät sähköpostit"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1040,7 +1051,7 @@ msgstr "Tuoteryhmät"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
-msgstr "Tuote kategoria"
+msgstr "Tuotekategoria"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
@@ -1101,7 +1112,7 @@ msgstr "Käyttöönota kaksivaiheinen hankintojen hyväksyminen"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_normal_action_puchased
 msgid "Purchasable Products"
-msgstr ""
+msgstr "Ostettavat tuotteet"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1137,6 +1148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1324,6 +1336,12 @@ msgid "Received Qty"
 msgstr "Vastaanotettu määrä"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:580
+#, python-format
+msgid "Received Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1334,7 +1352,7 @@ msgstr "Vastaanotot"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Reference"
-msgstr "Referencia"
+msgstr "Viite"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
@@ -1407,6 +1425,7 @@ msgstr "Etsi ostotilaus"
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:purchase.field_res_users_purchase_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -1445,7 +1464,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "Poner en borrador"
+msgstr "Aseta luonnokseksi"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
@@ -1493,6 +1512,7 @@ msgstr "Välisumma"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users_property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Toimittajan valuutta"
 
@@ -1523,6 +1543,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
 msgid "Terms and Conditions"
 msgstr "Toimitusehdot"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:574
+#, python-format
+msgid ""
+"The ordered quantity has been decreased. Do not forget to take it into "
+"account on your bills and receipts."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1580,6 +1608,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
@@ -1700,6 +1729,11 @@ msgid "Unlock"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Unread Messages"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Untaxed"
 msgstr "Veroton"
@@ -1812,7 +1846,7 @@ msgstr "Tilavuus"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Odottaa laskuja"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1890,17 +1924,10 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:385
+#: code:addons/purchase/models/purchase.py:389
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Sinun on asetettava toimittajan fyysinen paikka tälle kumppanille %s"
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:315
-#, python-format
-msgid ""
-"You need purchase manager access rights to validate an order above %.2f %s."
-msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

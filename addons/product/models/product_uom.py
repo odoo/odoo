@@ -61,6 +61,13 @@ class ProductUoM(models.Model):
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(ProductUoM, self).create(values)
 
+    @api.multi
+    def write(self, values):
+        if 'factor_inv' in values:
+            factor_inv = values.pop('factor_inv')
+            values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
+        return super(ProductUoM, self).write(values)
+
     @api.model
     def name_create(self, name):
         """ The UoM category and factor are required, so we'll have to add temporary values
@@ -77,12 +84,14 @@ class ProductUoM(models.Model):
             if misc_category:
                 values['category_id'] = misc_category.id
             else:
-                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units').id
+                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units')[0]
         new_uom = self.create(values)
         return new_uom.name_get()[0]
 
     @api.multi
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP'):
+        if not self:
+            return qty
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
             if self._context.get('raise-exception', True):

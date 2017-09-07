@@ -1,8 +1,8 @@
 .o_web_client .o_export {
-
-    .o-flex(0, 1, 1000px);
+    .o-flex(1, 1, auto);
     .o-flex-display();
     .o-flex-flow(column, nowrap);
+    min-height: 0;
 
     > p, > .row {
         .o-flex(0, 0, auto);
@@ -28,8 +28,9 @@
     }
 
     .o_export_panel {
-        .o-flex(1, 0, 0);
+        .o-flex(1, 1, auto);
         position: relative;
+        min-height: 0;
 
         > div {
             height: 100%;
@@ -59,9 +60,10 @@
             .o_left_field_panel, .o_fields_list {
                 border: 1px solid @odoo-brand-lightsecondary;
                 overflow: auto;
-                .o-flex(1, 0, 0);
+                .o-flex(1, 1, auto);
+                min-height: 0;
             }
-            
+
             .o_export_tree_item {
                 cursor: pointer;
                 position: relative;
@@ -72,7 +74,7 @@
                     background-color: @odoo-brand-primary;
                     color: white;
                 }
-           
+
                 .o_expand_parent {
                     .o-position-absolute(@top: 4px, @left: 5px);
                 }

@@ -8,13 +8,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,7 +118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_amount
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
 msgid "Amount"
-msgstr "時間数"
+msgstr "金額"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -181,6 +182,11 @@ msgstr ""
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand model of the vehicle"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
 msgstr ""
 
 #. module: fleet
@@ -249,7 +255,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "クリックで新しいタグを追加。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -274,7 +280,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Click to create a new model."
-msgstr ""
+msgstr "クリックしてモデルを新規作成してください。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
@@ -315,6 +321,11 @@ msgstr "カラーインデクス"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_color
 msgid "Color of the vehicle"
 msgstr "車両の色"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
@@ -393,6 +404,11 @@ msgid "Contracts"
 msgstr "契約"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_id
@@ -407,7 +423,7 @@ msgstr "費用詳細"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Cost Subtype"
-msgstr ""
+msgstr "費用サブタイプ"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -614,6 +630,11 @@ msgstr ""
 #: model:fleet.service.type,name:fleet.type_service_service_17
 msgid "Emissions"
 msgstr "排出量"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr ""
 
 #. module: fleet
 #: code:addons/fleet/models/fleet.py:37
@@ -875,7 +896,7 @@ msgstr "合計コスト"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle
 msgid "Information on a vehicle"
-msgstr ""
+msgstr "車両に関する情報"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_30
@@ -892,6 +913,11 @@ msgstr "請求日"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_inv_ref
 msgid "Invoice Reference"
 msgstr "請求書参照"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -1258,7 +1284,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
 msgid "Oil Change"
-msgstr ""
+msgstr "オイル交換"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_32
@@ -1343,6 +1369,11 @@ msgstr "価格"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price per liter"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
 msgstr ""
 
 #. module: fleet
@@ -1440,6 +1471,16 @@ msgid "Seats Number"
 msgstr "座席数"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
 msgid "Sequence"
 msgstr "付番"
@@ -1454,13 +1495,13 @@ msgstr "サービス"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Service Type"
-msgstr ""
+msgstr "サービスタイプ"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
 msgid "Service Types"
-msgstr ""
+msgstr "サービスタイプ"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_service_types_view_tree
@@ -1727,7 +1768,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "ノートステージの注文に使用されます"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
@@ -1844,7 +1885,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicles costs"
-msgstr ""
+msgstr "車両費用"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
@@ -1958,7 +1999,7 @@ msgstr "と"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
-msgstr "例 ： Sモデル"
+msgstr "例: モデルS"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1968,7 +2009,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "e.g. Tesla"
-msgstr "例 ： トヨタ"
+msgstr "例: テスラ"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state

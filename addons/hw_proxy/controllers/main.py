@@ -4,6 +4,9 @@
 import commands
 import logging
 import time
+import subprocess
+from threading import Lock
+
 
 from odoo import http
 from odoo.http import request
@@ -20,9 +23,14 @@ BANNED_DEVICES = set([
 ])
 
 
-# drivers modules must add to drivers an object with a get_status() method 
+# drivers modules must add to drivers an object with a get_status() method
 # so that 'status' can return the status of all active drivers
 drivers = {}
+
+# keep a list of RS-232 devices that have been recognized by a driver,
+# so other drivers can skip them during probes
+rs232_devices = {}  # {'/path/to/device': 'driver'}
+rs232_lock = Lock() # must be held to update `rs232_devices`
 
 class Proxy(http.Controller):
 
@@ -41,7 +49,7 @@ class Proxy(http.Controller):
         return True
 
     @http.route('/hw_proxy/status', type='http', auth='none', cors='*')
-    def status_http(self):
+    def status_http(self, debug=None, **kwargs):
         resp = """
 <!DOCTYPE HTML>
 <html>
@@ -89,6 +97,8 @@ class Proxy(http.Controller):
             <h2>Connected Devices</h2>
             <p>The list of connected USB devices as seen by the posbox</p>
         """
+        if debug is None:
+            resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
         devices = commands.getoutput("lsusb").split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
@@ -98,14 +108,25 @@ class Proxy(http.Controller):
             if not (device_id in BANNED_DEVICES):
             	resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
-        
+
         if count == 0:
             resp += "<div class='device'>No USB Device Found</div>"
 
         resp += "</div>\n</body>\n</html>\n\n"
 
+        if debug is not None:
+            resp += """
+
+                <h3>Debug version</h3>
+                <p><tt>lsusb -v</tt> output:</p>
+                <pre>
+                %s
+                </pre>
+
+            """ % subprocess.check_output('lsusb -v', shell=True)
+
         return request.make_response(resp,{
-            'Cache-Control': 'no-cache', 
+            'Cache-Control': 'no-cache',
             'Content-Type': 'text/html; charset=utf-8',
             'Access-Control-Allow-Origin':  '*',
             'Access-Control-Allow-Methods': 'GET',
@@ -146,7 +167,7 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/payment_request', type='json', auth='none', cors='*')
     def payment_request(self, price):
         """
-        The PoS will activate the method payment 
+        The PoS will activate the method payment
         """
         print "payment_request: price:"+str(price)
         return 'ok'
@@ -154,7 +175,7 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/payment_status', type='json', auth='none', cors='*')
     def payment_status(self):
         print "payment_status"
-        return { 'status':'waiting' } 
+        return { 'status':'waiting' }
 
     @http.route('/hw_proxy/payment_cancel', type='json', auth='none', cors='*')
     def payment_cancel(self):
@@ -186,12 +207,12 @@ class Proxy(http.Controller):
 
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
     def is_scanner_connected(self, receipt):
-        print 'is_scanner_connected?' 
+        print 'is_scanner_connected?'
         return False
 
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def scanner(self, receipt):
-        print 'scanner' 
+        print 'scanner'
         time.sleep(10)
         return ''
 

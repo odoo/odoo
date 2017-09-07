@@ -74,7 +74,7 @@ class HrEmployee(models.Model):
     @api.multi
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
-        if self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attendance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
+        if not (entered_pin is None) or self.env['res.users'].browse(SUPERUSER_ID).has_group('hr_attendance.group_hr_attendance_use_pin') and (self.user_id and self.user_id.id != self._uid or not self.user_id):
             if entered_pin != self.pin:
                 return {'warning': _('Wrong PIN')}
         return self.attendance_action(next_action)
@@ -88,9 +88,6 @@ class HrEmployee(models.Model):
         self.ensure_one()
         action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
         action_message['previous_attendance_change_date'] = self.last_attendance_id and (self.last_attendance_id.check_out or self.last_attendance_id.check_in) or False
-        if action_message['previous_attendance_change_date']:
-            action_message['previous_attendance_change_date'] = \
-                fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.from_string(action_message['previous_attendance_change_date'])))
         action_message['employee_name'] = self.name
         action_message['next_action'] = next_action
 

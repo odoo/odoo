@@ -20,12 +20,17 @@ class PosSession(models.Model):
             orders = session.order_ids.filtered(lambda order: order.state == 'paid')
             journal_id = self.env['ir.config_parameter'].sudo().get_param(
                 'pos.closing.journal_id_%s' % company_id, default=session.config_id.journal_id.id)
+            if not journal_id:
+                raise UserError(_("You have to set a Sale Journal for the POS:%s") % (session.config_id.name,))
+
             move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, int(journal_id), company_id)
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
-            for order in session.order_ids.filtered(lambda o: o.state != 'done'):
-                if order.state not in ('paid', 'invoiced'):
+            for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
+                if order.state not in ('paid'):
                     raise UserError(_("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 order.action_pos_order_done()
+            orders = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'])
+            orders.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
@@ -109,7 +114,7 @@ class PosSession(models.Model):
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
-    @api.depends('config_id.cash_control')
+    @api.depends('config_id', 'statement_ids')
     def _compute_cash_all(self):
         for session in self:
             session.cash_journal_id = session.cash_register_id = session.cash_control = False
@@ -119,18 +124,26 @@ class PosSession(models.Model):
                         session.cash_control = True
                         session.cash_journal_id = statement.journal_id.id
                         session.cash_register_id = statement.id
-                if not session.cash_control:
+                if not session.cash_control and session.state != 'closed':
                     raise UserError(_("Cash control can only be applied to cash journals."))
 
     @api.constrains('user_id', 'state')
     def _check_unicity(self):
         # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
-        if self.search_count([('state', 'not in', ('closed', 'closing_control')), ('user_id', '=', self.user_id.id)]) > 1:
+        if self.search_count([
+                ('state', 'not in', ('closed', 'closing_control')),
+                ('user_id', '=', self.user_id.id),
+                ('name', 'not like', 'RESCUE FOR'),
+            ]) > 1:
             raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
-        if self.search_count([('state', '!=', 'closed'), ('config_id', '=', self.config_id.id)]) > 1:
+        if self.search_count([
+                ('state', '!=', 'closed'),
+                ('config_id', '=', self.config_id.id),
+                ('name', 'not like', 'RESCUE FOR'),
+            ]) > 1:
             raise ValidationError(_("You cannot create two active sessions related to the same point of sale!"))
 
     @api.model
@@ -165,6 +178,8 @@ class PosSession(models.Model):
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
 
         pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+        if values.get('name'):
+            pos_name += ' ' + values['name']
 
         statements = []
         ABS = self.env['account.bank.statement']
@@ -223,13 +238,13 @@ class PosSession(models.Model):
     @api.multi
     def action_pos_session_closing_control(self):
         for session in self:
+            for statement in session.statement_ids:
+                if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
+                    statement.write({'balance_end_real': statement.balance_end})
             #DO NOT FORWARD-PORT
             if session.state == 'closing_control':
                 session.action_pos_session_close()
                 continue
-            for statement in session.statement_ids:
-                if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
-                    statement.write({'balance_end_real': statement.balance_end})
             session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
             if not session.config_id.cash_control:
                 session.action_pos_session_close()
@@ -269,3 +284,33 @@ class PosSession(models.Model):
             'target': 'self',
             'url':   '/pos/web/',
         }
+
+    @api.multi
+    def open_cashbox(self):
+        self.ensure_one()
+        context = dict(self._context)
+        balance_type = context.get('balance') or 'start'
+        context['bank_statement_id'] = self.cash_register_id.id
+        context['balance'] = balance_type
+        context['default_pos_id'] = self.config_id.id
+
+        action = {
+            'name': _('Cash Control'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.bank.statement.cashbox',
+            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new'
+        }
+
+        cashbox_id = None
+        if balance_type == 'start':
+            cashbox_id = self.cash_register_id.cashbox_start_id.id
+        else:
+            cashbox_id = self.cash_register_id.cashbox_end_id.id
+        if cashbox_id:
+            action['res_id'] = cashbox_id
+
+        return action

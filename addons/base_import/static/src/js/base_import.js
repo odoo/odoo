@@ -366,6 +366,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', false);
         this.$el.addClass('oe_import_preview');
+        this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
         if (result.headers.length === 1) {

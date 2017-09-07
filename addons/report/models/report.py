@@ -59,16 +59,21 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out or "0").group(0)
-    if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-        wkhtmltopdf_state = 'upgrade'
-    else:
-        wkhtmltopdf_state = 'ok'
+    match = re.search('([0-9.]+)', out)
+    if match:
+        version = match.group(0)
+        if LooseVersion(version) < LooseVersion('0.12.0'):
+            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
+            wkhtmltopdf_state = 'upgrade'
+        else:
+            wkhtmltopdf_state = 'ok'
 
-    if config['workers'] == 1:
-        _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-        wkhtmltopdf_state = 'workers'
+        if config['workers'] == 1:
+            _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
+            wkhtmltopdf_state = 'workers'
+    else:
+        _logger.info('Wkhtmltopdf seems to be broken.')
+        wkhtmltopdf_state = 'broken'
 
 
 class Report(models.Model):
@@ -94,7 +99,6 @@ class Report(models.Model):
 
         context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
 
-        view_obj = self.env['ir.ui.view']
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
         website = None
@@ -103,6 +107,7 @@ class Report(models.Model):
                 website = request.website
                 context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
 
+        view_obj = self.env['ir.ui.view'].with_context(context)
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
@@ -141,6 +146,14 @@ class Report(models.Model):
     def get_pdf(self, docids, report_name, html=None, data=None):
         """This method generates and returns pdf version of a report.
         """
+
+        if self._check_wkhtmltopdf() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
@@ -249,7 +262,7 @@ class Report(models.Model):
         return self._run_wkhtmltopdf(
             headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
-            context.get('set_viewport_size')
+            context.get('set_viewport_size'),
         )
 
     @api.noguess
@@ -269,7 +282,7 @@ class Report(models.Model):
                 active_ids = docids
             context = dict(self.env.context, active_ids=active_ids)
 
-        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
+        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)], limit=1)
         if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
@@ -433,8 +446,11 @@ class Report(models.Model):
                 out, err = process.communicate()
 
                 if process.returncode not in [0, 1]:
-                    raise UserError(_('Wkhtmltopdf failed (error code: %s). '
-                                      'Message: %s') % (str(process.returncode), err))
+                    if process.returncode == -11:
+                        message = _('Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                    else:
+                        message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
+                    raise UserError(message  % (str(process.returncode), err[-1000:]))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -540,19 +556,23 @@ class Report(models.Model):
         """
         writer = PdfFileWriter()
         streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
-        for document in documents:
-            pdfreport = file(document, 'rb')
-            streams.append(pdfreport)
-            reader = PdfFileReader(pdfreport)
-            for page in range(0, reader.getNumPages()):
-                writer.addPage(reader.getPage(page))
+        try:
+            for document in documents:
+                pdfreport = file(document, 'rb')
+                streams.append(pdfreport)
+                reader = PdfFileReader(pdfreport)
+                for page in range(0, reader.getNumPages()):
+                    writer.addPage(reader.getPage(page))
 
-        merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
-        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
-            writer.write(merged_file)
-
-        for stream in streams:
-            stream.close()
+            merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.pdf', prefix='report.merged.tmp.')
+            with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
+                writer.write(merged_file)
+        finally:
+            for stream in streams:
+                try:
+                    stream.close()
+                except Exception:
+                    pass
 
         return merged_file_path
 

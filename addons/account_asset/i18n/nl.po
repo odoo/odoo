@@ -143,7 +143,7 @@ msgid "Asset Durations to Modify"
 msgstr "Activa duur aan te passen"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Einddatum activa"
 
@@ -158,7 +158,7 @@ msgid "Asset Name"
 msgstr "Activa naam"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Startdatum activa"
 
@@ -198,7 +198,8 @@ msgstr "Activa afschrijvingssregel"
 #: code:addons/account_asset/models/account_asset.py:296
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
-msgstr "Activa verkocht of afgesloten. Financiële boeking wacht op validatie."
+msgstr ""
+"Activa verkocht of afgesloten. Financiële boeking wacht op bevestiging."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -340,7 +341,7 @@ msgstr "Afgesloten"
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_company_id
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method
@@ -373,7 +374,7 @@ msgstr "Maak activa mutaties"
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "Aangemaakte inkomsten mutaties"
+msgstr "Aangemaakte inkomsten boekingen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -487,6 +488,7 @@ msgstr "Afschrijvingsdatum"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
 msgstr "Afschrijvingsboekingen: activarekening"
 
@@ -541,7 +543,7 @@ msgstr "Afgeschreven bord gewijzigd"
 #: code:addons/account_asset/models/account_asset.py:571
 #, python-format
 msgid "Depreciation line posted."
-msgstr "Afgeschreven lijn geboekt."
+msgstr "Afschrijfregel geboekt."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -643,7 +645,7 @@ msgstr "Groepeer op..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr "Groepeer Boekingen"
+msgstr "Groepeer boekingen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -899,7 +901,7 @@ msgstr "Reden"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr "Inkomsten grootboek"
+msgstr "Omzetherkenning rekening"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -996,7 +998,7 @@ msgid ""
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 "Deze wizard boekt termijnen/afschrijvingsregels voor de geselecteerde maand.<br/>\n"
-"Dit genereert ook dagboekmutaties voor alle gerelateerde installatieregels op deze periode van activa/inkomsten afschrijvingen."
+"Dit genereert ook de boekingen voor alle gerelateerde installatieregels op deze periode van activa/inkomsten afschrijvingen."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time

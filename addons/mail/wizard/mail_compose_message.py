@@ -12,18 +12,17 @@ from odoo.tools.safe_eval import safe_eval
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
 
-def _reopen(self, res_id, model):
+def _reopen(self, res_id, model, context=None):
+    # save original model in context, because selecting the list of available
+    # templates requires a model in context
+    context = dict(context or {}, default_model=model)
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
             'target': 'new',
-            # save original model in context, because selecting the list of available
-            # templates requires a model in context
-            'context': {
-                'default_model': model,
-            },
+            'context': context,
             }
 
 
@@ -295,8 +294,11 @@ class MailComposer(models.TransientModel):
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
             }
+
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
+                if self.model in self.env and hasattr(self.env[self.model], 'message_get_email_values'):
+                    mail_values.update(self.env[self.model].browse(res_id).message_get_email_values())
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
@@ -409,7 +411,7 @@ class MailComposer(models.TransientModel):
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model)
+            return _reopen(self, record.id, record.model, context=self._context)
 
     #------------------------------------------------------
     # Template rendering

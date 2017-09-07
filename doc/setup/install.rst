@@ -131,7 +131,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\odoo.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 10.0-{id}\\server\\odoo.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -145,13 +145,13 @@ Deb
 Community
 '''''''''
 
-To install Odoo 9.0 Community on Debian-based distribution, execute the following
+To install Odoo 10.0 Community on Debian-based distribution, execute the following
 commands as root:
 
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/9.0/nightly/deb/ ./" >> /etc/apt/sources.list
+    # echo "deb http://nightly.odoo.com/10.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
 You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
@@ -159,7 +159,7 @@ You can then use the usual ``apt-get upgrade`` command to keep your installation
 Enterprise
 ''''''''''
 
-For Odoo 9.0 Enterprise, get the package from the Download_ page. You can then
+For Odoo 10.0 Enterprise, get the package from the Download_ page. You can then
 use ``gdebi``:
 
 .. code-block:: console
@@ -207,9 +207,9 @@ RPM
 
 .. warning::
 
-    with RHEL-based distributions (RHEL, CenOS, Scientific Linux), EPEL_ must
+    with RHEL-based distributions (RHEL, CentOS, Scientific Linux), EPEL_ must
     be added to the distribution's repositories for all of Odoo's
-    dependencies to be available. For CenOS:
+    dependencies to be available. For CentOS:
 
     .. code-block:: console
 
@@ -220,7 +220,7 @@ RPM
 Community
 '''''''''
 
-Execute the following commands to install Odoo 9.0 Community on your server:
+Execute the following commands to install Odoo 10.0 Community on your server:
 
 .. code-block:: console
 
@@ -228,7 +228,8 @@ Execute the following commands to install Odoo 9.0 Community on your server:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/9.0/nightly/rpm/odoo.repo
+    $ sudo yum install yum-utils
+    $ sudo yum-config-manager --add-repo=https://nightly.odoo.com/10.0/nightly/rpm/odoo.repo
     $ sudo yum install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
@@ -236,7 +237,7 @@ Execute the following commands to install Odoo 9.0 Community on your server:
 Enterprise
 ''''''''''
 
-For Odoo 9.0 Enterprise, get the package from the Download_ page. Then run:
+For Odoo 10.0 Enterprise, get the package from the Download_ page. Then run:
 
 .. code-block:: console
 
@@ -244,7 +245,7 @@ For Odoo 9.0 Enterprise, get the package from the Download_ page. Then run:
     $ sudo postgresql-setup initdb
     $ sudo systemctl enable postgresql
     $ sudo systemctl start postgresql
-    $ sudo yum localinstall odoo_9.0.latest.noarch.rpm
+    $ sudo yum localinstall odoo_10.0.latest.noarch.rpm
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
 
@@ -334,9 +335,15 @@ For example:
   $ odoo-bin --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
 
 .. warning:: The Enterprise git repository **does not contain the full Odoo
-    source code**. You need to clone both the Community and Enterprise repository to
-    have a working Odoo installation. The Download_ page contains the entire
-    source code but is not updateable as easily.
+    source code**. It is only a collection of extra add-ons. The main server
+    code is in the Community version.  Running the Enterprise version actually
+    means running the server from the Community version with the addons-path option
+    set to the folder with the Enterprise version.
+    
+    You need to clone both the Community and Enterprise repository to have a working
+    Odoo installation. The Download_ page contains the entire source code but is not
+    updateable as easily.
+
 
 
 Installing dependencies
@@ -539,7 +546,7 @@ default db to serve on localhost:8069
     http://www.enterprisedb.com/products-services-training/pgdownload
 .. _Quilt: http://en.wikipedia.org/wiki/Quilt_(software)
 .. _saas: https://www.odoo.com/page/start
-.. _the wkhtmltopdf download page: http://wkhtmltopdf.org/downloads.html
+.. _the wkhtmltopdf download page: https://github.com/wkhtmltopdf/wkhtmltopdf/releases/tag/0.12.1
 .. _UAC: http://en.wikipedia.org/wiki/User_Account_Control
 .. _wkhtmltopdf: http://wkhtmltopdf.org
 .. _pip: https://pip.pypa.io
@@ -553,5 +560,5 @@ default db to serve on localhost:8069
 .. _the repository: https://github.com/odoo/odoo
 .. _git: http://git-scm.com
 .. _Editions: https://www.odoo.com/pricing#pricing_table_features
-.. _nightly: https://nightly.odoo.com/9.0/nightly/
+.. _nightly: https://nightly.odoo.com/10.0/nightly/
 .. _extra: https://nightly.odoo.com/extra/

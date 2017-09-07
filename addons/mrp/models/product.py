@@ -37,7 +37,19 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
+
+    def _compute_bom_count(self):
+        read_group_res = self.env['mrp.bom'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])
+        mapped_data = dict([(data['product_id'][0], data['product_id_count']) for data in read_group_res])
+        for product in self:
+            if product.product_tmpl_id.product_variant_count == 1:
+                bom_count = mapped_data.get(product.id, product.product_tmpl_id.bom_count)
+            else:
+                bom_count = mapped_data.get(product.id, 0)
+            product.bom_count = bom_count
+
 
     def _compute_mo_count(self):
         read_group_res = self.env['mrp.production'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])

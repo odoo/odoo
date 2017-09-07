@@ -130,6 +130,26 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_computed_access(self):
+        """ test computed fields with access right errors """
+        User = self.env['res.users']
+        user1 = User.create({'name': 'Aaaah', 'login': 'a'})
+        user2 = User.create({'name': 'Boooh', 'login': 'b'})
+        user3 = User.create({'name': 'Crrrr', 'login': 'c'})
+        # add a rule to not give access to user2
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
+            'domain_force': "[('id', '!=', %d)]" % user2.id,
+        })
+        # group users as a recordset, and read them as user demo
+        users = (user1 + user2 + user3).sudo(self.env.ref('base.user_demo'))
+        user1, user2, user3 = users
+        # regression test: a bug invalidated the field's value from cache
+        user1.company_type
+        with self.assertRaises(AccessError):
+            user2.company_type
+        user3.company_type
+
     def test_12_recursive(self):
         """ test recursively dependent fields """
         Category = self.env['test_new_api.category']
@@ -158,6 +178,29 @@ class TestFields(common.TransactionCase):
 
         cath.parent = finn
         self.assertEqual(ewan.display_name, "Gabriel / Finnley / Catherine / Ewan")
+
+    def test_12_recursive_recompute(self):
+        """ test recomputation on recursively dependent field """
+        a = self.env['test_new_api.recursive'].create({'name': 'A'})
+        b = self.env['test_new_api.recursive'].create({'name': 'B', 'parent': a.id})
+        c = self.env['test_new_api.recursive'].create({'name': 'C', 'parent': b.id})
+        d = self.env['test_new_api.recursive'].create({'name': 'D', 'parent': c.id})
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'A / B')
+        self.assertEqual(c.display_name, 'A / B / C')
+        self.assertEqual(d.display_name, 'A / B / C / D')
+
+        b.parent = False
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'B')
+        self.assertEqual(c.display_name, 'B / C')
+        self.assertEqual(d.display_name, 'B / C / D')
+
+        b.name = 'X'
+        self.assertEqual(a.display_name, 'A')
+        self.assertEqual(b.display_name, 'X')
+        self.assertEqual(c.display_name, 'X / C')
+        self.assertEqual(d.display_name, 'X / C / D')
 
     def test_12_cascade(self):
         """ test computed field depending on computed field """
@@ -478,6 +521,25 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
 
+        # create company record and attribute
+        company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
+        attribute_record = self.env['test_new_api.company.attr'].create({
+            'company': company_record.id,
+            'quantity': 1,
+        })
+        self.assertEqual(attribute_record.bar, 'ABC')
+
+        # change quantity, 'bar' should recompute to 'ABCABC'
+        attribute_record.quantity = 2
+        self.assertEqual(attribute_record.bar, 'ABCABC')
+        self.assertFalse(self.env.has_todo())
+
+        # change company field 'foo', 'bar' should recompute to 'DEFDEF'
+        company_record.foo = 'DEF'
+        self.assertEqual(attribute_record.company.foo, 'DEF')
+        self.assertEqual(attribute_record.bar, 'DEFDEF')
+        self.assertFalse(self.env.has_todo())
+
     def test_28_sparse(self):
         """ test sparse fields. """
         record = self.env['test_new_api.sparse'].create({})
@@ -503,6 +565,14 @@ class TestFields(common.TransactionCase):
         for n, (key, val) in enumerate(values):
             record.write({key: False})
             self.assertEqual(record.data, dict(values[n+1:]))
+
+        # check reflection of sparse fields in 'ir.model.fields'
+        names = [name for name, _ in values]
+        domain = [('model', '=', 'test_new_api.sparse'), ('name', 'in', names)]
+        fields = self.env['ir.model.fields'].search(domain)
+        self.assertEqual(len(fields), len(names))
+        for field in fields:
+            self.assertEqual(field.serialization_field_id.name, 'data')
 
     def test_30_read(self):
         """ test computed fields as returned by read(). """

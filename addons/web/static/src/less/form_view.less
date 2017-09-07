@@ -136,6 +136,11 @@
         }
     }
 
+    // ace editor RO
+    .oe_form_field_text .oe_form_text_content {
+        white-space: pre-wrap;
+    }
+
     // Tags
     .o_form_field_many2manytags {
         .badge {
@@ -174,7 +179,7 @@
 
     .o_form_invalid {
         &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
-            border-color: @brand-danger;
+            border-color: @brand-danger!important; // enterprise o_form_required rule overrides this without !important
         }
     }
 

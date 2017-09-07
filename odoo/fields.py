@@ -456,13 +456,13 @@ class Field(object):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_sparse
 
+        self.set_all_attrs(attrs)
+
         # check for renamed attributes (conversion errors)
         for key1, key2 in RENAMED_ATTRS:
             if key1 in attrs:
                 _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
                                 self, key1, key2)
-
-        self.set_all_attrs(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
@@ -565,7 +565,7 @@ class Field(object):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related[:-1]:
-            record = record[name][:1]
+            record = record[name][:1].with_prefetch(record._prefetch)
         return record, self.related_field
 
     def _compute_related(self, records):
@@ -705,6 +705,7 @@ class Field(object):
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
+                model._field_triggers.add(field, (self, '.'.join(path)))
 
     ############################################################################
     #
@@ -922,15 +923,15 @@ class Field(object):
         for field in fields:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-        with records.env.protecting(fields, records):
-            if isinstance(self.compute, basestring):
-                getattr(records, self.compute)()
-            else:
-                self.compute(records)
+        if isinstance(self.compute, basestring):
+            getattr(records, self.compute)()
+        else:
+            self.compute(records)
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
-        with records.env.do_in_draft():
+        fields = records._field_computed[self]
+        with records.env.do_in_draft(), records.env.protecting(fields, records):
             try:
                 self._compute_value(records)
             except (AccessError, MissingError):
@@ -977,6 +978,7 @@ class Field(object):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
@@ -986,7 +988,9 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            fields = record._field_computed[self]
+            with record.env.protecting(fields, record):
+                self._compute_value(record)
         else:
             null = self.convert_to_cache(False, record, validate=False)
             record._cache[self] = SpecialValue(null)
@@ -1217,13 +1221,14 @@ class Monetary(Field):
     _description_currency_field = property(attrgetter('currency_field'))
     _description_group_operator = property(attrgetter('group_operator'))
 
-    def _setup_regular_base(self, model):
-        super(Monetary, self)._setup_regular_base(model)
-        if not self.currency_field:
-            self.currency_field = 'currency_id'
-
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
+        if not self.currency_field:
+            # pick a default, trying in order: 'currency_id', 'x_currency_id'
+            if 'currency_id' in model._fields:
+                self.currency_field = 'currency_id'
+            elif 'x_currency_id' in model._fields:
+                self.currency_field = 'x_currency_id'
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
@@ -1573,6 +1578,7 @@ class Datetime(Field):
 class Binary(Field):
     type = 'binary'
     _slots = {
+        'prefetch': False,              # not prefetched by default
         'attachment': False,            # whether value is stored in attachment
     }
 
@@ -1742,6 +1748,14 @@ class Selection(Field):
                 return item[1]
         return False
 
+    def convert_to_column(self, value, record):
+        """ Convert ``value`` from the ``write`` format to the SQL format. """
+        if value is None or value is False:
+            return None
+        if isinstance(value, unicode):
+            return value.encode('utf8')
+        return str(value)
+
 
 class Reference(Selection):
     type = 'reference'
@@ -1889,7 +1903,8 @@ class Many2one(_Relational):
                 return process(value._ids)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return process((value[0],))
+            # value is either a pair (id, name), or a tuple of ids
+            return process(value[:1])
         elif isinstance(value, dict):
             return process(record.env[self.comodel_name].new(value)._ids)
         else:
@@ -1963,8 +1978,8 @@ class _RelationalMulti(_Relational):
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name):
                 return process(value._ids)
-        elif isinstance(value, list):
-            # value is a list of record ids or commands
+        elif isinstance(value, (list, tuple)):
+            # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
             # determine the value ids; by convention empty on new records
             ids = OrderedSet(record[self.name].ids if record.id else ())
@@ -2120,9 +2135,8 @@ class One2many(_RelationalMulti):
     _description_relation_field = property(attrgetter('inverse_name'))
 
     def convert_to_onchange(self, value, record, fnames=()):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or ())
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
     def check_schema(self, model):
@@ -2392,6 +2406,9 @@ class Many2many(_RelationalMulti):
 class Serialized(Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
+    _slots = {
+        'prefetch': False,              # not prefetched by default
+    }
     column_type = ('text', 'text')
 
     def convert_to_column(self, value, record):

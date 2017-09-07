@@ -19,7 +19,7 @@ class ProductPricelist(models.Model):
         return self.env['website'].search([], limit=1)
 
     website_id = fields.Many2one('website', string="website", default=_default_website)
-    code = fields.Char(string='E-commerce Promotional Code')
+    code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
@@ -141,11 +141,13 @@ class ProductTemplate(models.Model):
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
 
     def _website_price(self):
-        self.mapped('product_variant_id')
-
-        for p in self:
-            p.website_price = p.product_variant_id.website_price
-            p.website_public_price = p.product_variant_id.website_public_price
+        # First filter out the ones that have no variant:
+        # This makes sure that every template below has a corresponding product in the zipped result.
+        self = self.filtered('product_variant_id')
+        # use mapped who returns a recordset with only itself to prefetch (and don't prefetch every product_variant_ids)
+        for template, product in zip(self, self.mapped('product_variant_id')):
+            template.website_price = product.website_price
+            template.website_public_price = product.website_public_price
 
     def _default_website_sequence(self):
         self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)

@@ -6,17 +6,18 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Reza Royaei <mr.royaei@gmail.com>, 2016
 # Hamid Darabi <hamid.darabi@gmail.com>, 2016
-# Faraz Sadri <ifarazir@gmail.com>, 2016
-# aryasadeghy <aryasadeghy@gmail.com>, 2016
+# ifaraz ir <ifarazir@gmail.com>, 2016
+# arya sadeghy <aryasadeghy@gmail.com>, 2016
 # Zahed Alfak <tamass4116@gmail.com>, 2016
 # amirnano <amir.oskuy@gmail.com>, 2016
+# Maziar Niaki <maziarmn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: amirnano <amir.oskuy@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Maziar Niaki <maziarmn@gmail.com>, 2017\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -290,6 +291,23 @@ msgid "Date of the next preventive maintenance"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
+msgid "Date requested for the maintenance to happen"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
+msgid ""
+"Date the maintenance team plans the maintenance.  It should not differ much "
+"from the Request Date. "
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
+msgid "Date the maintenance was finished. "
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
 msgid "Days between each preventive maintenance"
 msgstr ""
@@ -474,7 +492,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_kanban_state
 msgid "Kanban State"
-msgstr ""
+msgstr "وضعیت کانبان"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment___last_update
@@ -766,7 +784,7 @@ msgstr "اطلاعات محصول"
 #. module: maintenance
 #: selection:maintenance.request,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "آماده برای مرحله بعد"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id

@@ -40,6 +40,8 @@ var KanbanRecord = Widget.extend({
         this.sub_widgets = [];
 
         this.init_content(record);
+        // avoid quick multiple clicks
+        this.on_kanban_action_clicked = _.debounce(this.on_kanban_action_clicked, 300, true);
     },
 
     init_content: function (record) {

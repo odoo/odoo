@@ -16,5 +16,4 @@
         'views/payment_payumoney_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'license': 'OEEL-1',
 }

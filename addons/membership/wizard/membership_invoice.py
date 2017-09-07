@@ -30,12 +30,13 @@ class MembershipInvoice(models.TransientModel):
 
         search_view_ref = self.env.ref('account.view_account_invoice_filter', False)
         form_view_ref = self.env.ref('account.invoice_form', False)
+        tree_view_ref = self.env.ref('account.invoice_tree', False)
 
         return  {
             'domain': [('id', 'in', invoice_list)],
             'name': 'Membership Invoices',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
-            'views': [(False, 'tree'), (form_view_ref and form_view_ref.id, 'form')],
+            'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
             'search_view_id': search_view_ref and search_view_ref.id,
         }

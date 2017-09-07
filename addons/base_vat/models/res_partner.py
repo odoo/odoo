@@ -120,7 +120,7 @@ class ResPartner(models.Model):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
             #  has more than 3 characters
-            return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
+            return len(cn) == 2 and cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
 
         vat_country, vat_number = self._split_vat(self.vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
@@ -228,10 +228,14 @@ class ResPartner(models.Model):
         return True
 
     # Norway VAT validation, contributed by Rolv Råen (adEgo) <rora@adego.no>
+    # Support for MVA suffix contributed by Bringsvor Consulting AS (bringsvor@bringsvor.com)
     def check_vat_no(self, vat):
-        '''
+        """
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
-        '''
+        """
+        if len(vat) == 12 and vat.upper().endswith('MVA'):
+            vat = vat[:-3] # Strictly speaking we should enforce the suffix MVA but...
+
         if len(vat) != 9:
             return False
         try:

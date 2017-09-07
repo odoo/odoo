@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import locale
 import logging
 import re
@@ -69,7 +70,7 @@ class Lang(models.Model):
                     'Provided as the thousand separator in each case.')
         for lang in self:
             try:
-                if not all(isinstance(x, int) for x in safe_eval(lang.grouping)):
+                if not all(isinstance(x, int) for x in json.loads(lang.grouping)):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)
@@ -215,8 +216,16 @@ class Lang(models.Model):
         lang_codes = self.mapped('code')
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
             raise UserError(_("Language code cannot be modified."))
-        if vals.get('active') == False and self.env['res.users'].search([('lang', 'in', lang_codes)]):
-            raise UserError(_("Cannot unactivate a language that is currently used by users."))
+        if vals.get('active') == False:
+            if self.env['res.users'].search([('lang', 'in', lang_codes)]):
+                raise UserError(_("Cannot unactivate a language that is currently used by users."))
+            # delete linked ir.value specifying default partner's language
+            default_lang = self.env['ir.values'].search([
+                ('key', '=', 'default'),
+                ('name', '=', 'lang'),
+                ('model', '=', 'res.partner')])
+            if default_lang and default_lang.value_unpickle in lang_codes:
+                default_lang.unlink()
         self.clear_caches()
         return super(Lang, self).write(vals)
 
@@ -250,7 +259,7 @@ class Lang(models.Model):
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')
-                parts[0], _ = intersperse(parts[0], eval_lang_grouping, thousands_sep)
+                parts[0] = intersperse(parts[0], eval_lang_grouping, thousands_sep)[0]
 
                 formatted = decimal_point.join(parts)
 

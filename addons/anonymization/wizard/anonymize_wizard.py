@@ -4,16 +4,14 @@
 import base64
 import os
 import random
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+
 from lxml import etree
 from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version_info
+from odoo.tools import pickle
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons.anonymization.models.anonymization import group
 
@@ -164,7 +162,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
             table_name = self.env[model_name]._table
 
             # get the current value
-            self.env.cr.execute("select id, %s from %s" % (field_name, table_name))
+            self.env.cr.execute('select id, "%s" from "%s"' % (field_name, table_name))
             for record in self.env.cr.dictfetchall():
                 data.append({"model_id": model_name, "field_id": field_name, "id": record['id'], "value": record[field_name]})
 
@@ -196,7 +194,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 if anonymized_value is None:
                     raise UserError('%s: %s' % (error_type, _("Anonymized value can not be empty.")))
 
-                sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
+                sql = 'update "%(table)s" set "%(field)s" = %%(anonymized_value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': field_name,
                 }
@@ -207,7 +205,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         # save pickle:
         fn = open(abs_filepath, 'w')
-        pickle.dump(data, fn, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(data, fn, protocol=-1)
 
         # update the anonymization fields:
         ano_fields.write({'state': 'anonymized'})
@@ -285,7 +283,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 custom_updates.sort(key=itemgetter('sequence'))
                 queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
             elif table_name:
-                queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                queries = [('update "%(table)s" set "%(field)s" = %%(value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': line['field_id'],
                 }, 'sql')]
@@ -301,30 +299,30 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 else:
                     raise Exception("Unknown query type '%s'. Valid types are: sql, python." % (query['query_type'], ))
 
-            # update the anonymization fields:
-            ano_fields = IrModelFieldsAnonymization.search([('state', '!=', 'not_existing')])
-            ano_fields.write({'state': 'clear'})
+        # update the anonymization fields:
+        ano_fields = IrModelFieldsAnonymization.search([('state', '!=', 'not_existing')])
+        ano_fields.write({'state': 'clear'})
 
-            # add a result message in the wizard:
-            self.msg = '\n'.join(["Successfully reversed the anonymization.", ""])
+        # add a result message in the wizard:
+        self.msg = '\n'.join(["Successfully reversed the anonymization.", ""])
 
-            # create a new history record:
-            history = self.env['ir.model.fields.anonymization.history'].create({
-                'date': fields.Datetime.now(),
-                'field_ids': [[6, 0, ano_fields.ids]],
-                'msg': self.msg,
-                'filepath': False,
-                'direction': 'anonymized -> clear',
-                'state': 'done'
-            })
+        # create a new history record:
+        history = self.env['ir.model.fields.anonymization.history'].create({
+            'date': fields.Datetime.now(),
+            'field_ids': [[6, 0, ano_fields.ids]],
+            'msg': self.msg,
+            'filepath': False,
+            'direction': 'anonymized -> clear',
+            'state': 'done'
+        })
 
-            return {
-                'res_id': self.id,
-                'view_id': self.env.ref('anonymization.view_ir_model_fields_anonymize_wizard_form').ids,
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.model.fields.anonymize.wizard',
-                'type': 'ir.actions.act_window',
-                'context': {'step': 'just_desanonymized'},
-                'target': 'new'
-            }
+        return {
+            'res_id': self.id,
+            'view_id': self.env.ref('anonymization.view_ir_model_fields_anonymize_wizard_form').ids,
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.model.fields.anonymize.wizard',
+            'type': 'ir.actions.act_window',
+            'context': {'step': 'just_desanonymized'},
+            'target': 'new'
+        }

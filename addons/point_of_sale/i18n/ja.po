@@ -12,13 +12,14 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2016
 # Katsumi ISHIDA <isis331@gmail.com>, 2016
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:679
 #, python-format
 msgid " REFUND"
-msgstr ""
+msgstr "返金"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
@@ -39,15 +40,15 @@ msgstr "行数"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1423
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1428
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% 値引"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1550
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1590
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1555
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1595
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
@@ -126,7 +127,7 @@ msgstr "<span>ビュー</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Company</strong>:<br/>"
-msgstr ""
+msgstr "<strong>会社</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -161,7 +162,7 @@ msgstr "<strong>合計</strong>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>User</strong>:<br/>"
-msgstr ""
+msgstr "<strong>ユーザ</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -186,36 +187,36 @@ msgstr "顧客名が必要です。"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr ""
+msgstr "POSの繊細なな機能を保護するために使用されるセキュリティPIN"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "A custom receipt footer message"
-msgstr ""
+msgstr "カスタムレポートフッタ メッセージ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "A custom receipt header message"
-msgstr ""
+msgstr "カスタムレシートヘッダメッセージ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_uuid
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data"
-msgstr ""
+msgstr "クライアントが生成したデータの、競合を防ぐために使用される、このpos設定のためのグローバルに一意な識別子"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr ""
+msgstr "ユーザがPOSセッションを再開するたびに増分されるシーケンス番号"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr ""
+msgstr "注文ごとに増分されるシーケンス番号"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -229,24 +230,24 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
 msgid "A session-unique sequence number for the order"
-msgstr ""
+msgstr "注文のセッション固有のシーケンス番号"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
 msgid "A short text that will be inserted as a footer in the printed receipt"
-msgstr ""
+msgstr "印刷されたレシートにフッターとして挿入される短いテキスト"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt"
-msgstr ""
+msgstr "印刷されたレシートにヘッダーとして挿入される短いテキスト"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1589
 #, python-format
 msgid "ABC"
-msgstr ""
+msgstr "ABC"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
@@ -261,7 +262,7 @@ msgstr "会計情報"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr ""
+msgstr "請求作成に使用する会計仕訳帳。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
@@ -273,12 +274,7 @@ msgstr "売上高の記帳に使われる会計仕訳"
 #: model:product.product,name:point_of_sale.partner_product_5
 #: model:product.template,name:point_of_sale.partner_product_5_product_template
 msgid "Acsone.eu"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_activation
-msgid "Activation"
-msgstr ""
+msgstr "Acsone.eu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
@@ -295,7 +291,7 @@ msgstr "POSで使用"
 #: code:addons/point_of_sale/static/src/js/screens.js:1753
 #, python-format
 msgid "Add Tip"
-msgstr ""
+msgstr "チップ追加"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
@@ -373,7 +369,7 @@ msgstr "POSの内部識別"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Apply"
-msgstr "申し込む"
+msgstr "適用"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -408,9 +404,10 @@ msgstr "利用可能な支払方法"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr ""
+msgstr "POS内で利用可能"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in the Point of Sale"
 msgstr "POSで利用可能"
@@ -458,7 +455,7 @@ msgstr "バーコード表現規則"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #, python-format
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "バーコードスキャナ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -474,7 +471,7 @@ msgstr "飲物"
 #: model:product.product,name:point_of_sale.raisins_noir
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
+msgstr "黒ブドウ"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.boni_orange
@@ -492,7 +489,7 @@ msgstr "ボタン"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy"
-msgstr ""
+msgstr "ブラウザの印刷をバイパスし、ハードウェアプロキシ経由で印刷する"
 
 #. module: point_of_sale
 #. openerp-web
@@ -529,7 +526,7 @@ msgstr "取消済"
 #: code:addons/point_of_sale/static/src/js/screens.js:1890
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr ""
+msgstr "現金支払い方法なしで変更を戻すことはできません"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.carotte
@@ -538,8 +535,10 @@ msgid "Carrots"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:285
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+#, python-format
 msgid "Cash Control"
 msgstr "現金管理"
 
@@ -557,7 +556,7 @@ msgstr "キャッシュレジスタ"
 #: code:addons/point_of_sale/models/pos_session.py:121
 #, python-format
 msgid "Cash control can only be applied to cash journals."
-msgstr ""
+msgstr "Cash control can only be applied to cash journals."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cashbox_line
@@ -567,7 +566,7 @@ msgstr "現金箱行"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Cashbox"
-msgstr ""
+msgstr "現金箱"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -578,7 +577,7 @@ msgstr "現金箱"
 #: code:addons/point_of_sale/models/barcode_rule.py:16
 #, python-format
 msgid "Cashier"
-msgstr ""
+msgstr "キャッシャー"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -618,18 +617,20 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:667
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1479
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1484
 #, python-format
 msgid "Change:"
 msgstr "お釣り:"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_to_weight
 #: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
+msgstr "ハードウェア計量器統合機能を使用して製品を計量する必要があるかどうかを確認する"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
 msgstr "この製品をPOSで表示する場合はチェックします。"
@@ -696,7 +697,7 @@ msgstr "クリックしてオーダを作成してください。"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid "Click to define a new category."
-msgstr ""
+msgstr "クリックしてカテゴリを新規作成してください。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -716,7 +717,7 @@ msgstr "顧客"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
-msgstr "処理済"
+msgstr "閉じる"
 
 #. module: point_of_sale
 #: selection:pos.session,state:0
@@ -762,7 +763,7 @@ msgstr "設定"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_configuration
 msgid "Configure Point of Sale"
-msgstr ""
+msgstr "POSを設定"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -914,7 +915,7 @@ msgstr "デフォルト借方勘定"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "デフォルト会計ポジション"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -1073,6 +1074,20 @@ msgstr "キャッシュレジスタを開きますか？"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
 msgstr "完了"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1314
+#, python-format
+msgid "Download Paid Orders"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1316
+#, python-format
+msgid "Download Unpaid Orders"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -1243,7 +1258,7 @@ msgstr "会計ポジション"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Footer"
-msgstr ""
+msgstr "フッタ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
@@ -1259,13 +1274,6 @@ msgstr "果物・野菜"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
 msgstr "一般情報"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr "リードをこのパートナに割当てる確率を指定します（0 は割当て無しを意味します）"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
@@ -1312,7 +1320,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Hardware Proxy / PosBox"
-msgstr ""
+msgstr "ハードウェアプロキシ / PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1329,7 +1337,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Header"
-msgstr ""
+msgstr "ヘッダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -1375,16 +1383,6 @@ msgid "Image"
 msgstr "画像"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1312
 #, python-format
@@ -1394,12 +1392,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_data_drinks
 msgid "Import common drinks data"
-msgstr ""
+msgstr "一般的な飲物データをインポート"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Importable Point of Sale Data"
-msgstr ""
+msgstr "インポート可能なPOSデータ"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
@@ -1453,7 +1451,7 @@ msgstr "請求書"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
 msgid "Invoice Journal"
-msgstr ""
+msgstr "請求仕訳帳"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_invoiced
@@ -1559,11 +1557,6 @@ msgid "Last session closing date"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.product,name:point_of_sale.poireaux_poireaux
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
@@ -1573,16 +1566,6 @@ msgstr ""
 #: model:product.product,name:point_of_sale.citron
 #: model:product.template,name:point_of_sale.citron_product_template
 msgid "Lemon"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_grade_id
-msgid "Level"
-msgstr "レベル"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_weight
-msgid "Level Weight"
 msgstr ""
 
 #. module: point_of_sale
@@ -1676,6 +1659,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"このカテゴリー用の中サイズのイメージ。それは自動的に保存され、アスペクト比は保存され、128x128pxのイメージにリサイズされます "
+"。フォームビューやかんばんビューのいくつかでこのフィールドを使用しています。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1703,7 +1688,7 @@ msgstr "さらに <i class=\"fa fa-caret-down\"/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "More Info"
-msgstr "その他"
+msgstr "詳しくはこちらへ"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -1758,12 +1743,7 @@ msgid "Next Order"
 msgstr "次のオーダー"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:136
+#: code:addons/point_of_sale/models/pos_order.py:129
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -1826,7 +1806,7 @@ msgstr "印刷数"
 #: code:addons/point_of_sale/static/src/js/chrome.js:388
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "オフライン"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1861,7 +1841,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.Onions
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
-msgstr ""
+msgstr "たまねぎ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1990,7 +1970,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:430
 #, python-format
 msgid "Order is not paid."
-msgstr ""
+msgstr "オーダーが未払です。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2087,11 +2067,6 @@ msgstr "取引先"
 #: model:pos.category,name:point_of_sale.partner_services
 msgid "Partner Services"
 msgstr "パートナーサービス"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2261,7 +2236,6 @@ msgstr "POSオーダ"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_kanban
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
-#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_config_id
@@ -2284,6 +2258,7 @@ msgid "Point of Sale Analysis"
 msgstr "POS分析"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_pos_categ_id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_pos_categ_id
 msgid "Point of Sale Category"
 msgstr "POSカテゴリ"
@@ -2310,6 +2285,7 @@ msgid "Point of Sale Name"
 msgstr "POS名"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -2492,7 +2468,7 @@ msgstr "製品テンプレート"
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
-msgstr "メニュー"
+msgstr "製品"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
@@ -2555,7 +2531,7 @@ msgstr "レシートヘッダ"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Receipt Printer"
-msgstr ""
+msgstr "レシートプリンタ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
@@ -2609,7 +2585,7 @@ msgstr "レストラン用: テーブル会計機能を有効化"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "レジュメ"
+msgstr "再開"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:690
@@ -2767,7 +2743,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1055
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "シリアル/ロット番号"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2864,6 +2840,7 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"カテゴリー用の縮小されたイメージ。それは自動的に保存され、アスペクト比で、64x64px画像とサイズを変更します。小さな画像を必要とするどこでも、このフィールドを使用しています。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3089,7 +3066,7 @@ msgstr ""
 msgid ""
 "The default fiscal position must be included in the available fiscal "
 "positions of the point of sale"
-msgstr ""
+msgstr "デフォルト会計ポジションはPOSで利用可能な会計ポジションに含まれている必要があります。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_tax_included
@@ -3110,7 +3087,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The invoice journal and the point of sale must belong to the same company"
-msgstr ""
+msgstr "請求仕訳帳とPOSは同じ会社に属していなければなりません。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:93
@@ -3354,7 +3331,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:566
+#: code:addons/point_of_sale/models/pos_order.py:603
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
@@ -3362,9 +3339,10 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr ""
+msgstr "これらのカテゴリは、同様の製品を販売時点管理のためにグループ化するために使用されます。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3379,12 +3357,13 @@ msgid "Tip Product"
 msgstr "チップ製品"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_to_weight
 msgid "To Weigh With Scale"
 msgstr "はかりで計量"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:675
+#: code:addons/point_of_sale/models/pos_order.py:768
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3530,7 +3509,7 @@ msgstr "ユーザ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
 msgid "Uuid"
-msgstr ""
+msgstr "UUID"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3555,7 +3534,7 @@ msgstr "終了確認・記帳"
 #: model:product.product,name:point_of_sale.partner_product_6
 #: model:product.template,name:point_of_sale.partner_product_6_product_template
 msgid "Vauxoo.com"
-msgstr ""
+msgstr "Vauxoo.com"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_vkeyboard
@@ -3695,6 +3674,12 @@ msgstr ""
 "商品を選択する前にそれをセットして下さい。"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:24
+#, python-format
+msgid "You have to set a Sale Journal for the POS:%s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid ""
 "You must define a product for everything you sell through\n"
@@ -3726,7 +3711,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1215
 #, python-format
 msgid "Your Internet connection is probably down."
-msgstr ""
+msgstr "あなたのインターネット接続はおそらくダウンしています。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:241
@@ -3755,14 +3740,14 @@ msgstr "郵便番号"
 #: model:product.product,name:point_of_sale.courgette
 #: model:product.template,name:point_of_sale.courgette_product_template
 msgid "Zucchini"
-msgstr ""
+msgstr "ズッキーニ"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1238
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "於"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
@@ -3801,43 +3786,51 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1552
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1594
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1557
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1599
 #, python-format
 msgid "close"
 msgstr "閉じる"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1510
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1587
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1515
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1592
 #, python-format
 msgid "delete"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1248
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1251
 #, python-format
 msgid "discount"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1905
+#: code:addons/point_of_sale/static/src/js/popups.js:109
+#, python-format
+msgid "error"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1923
 #, python-format
 msgid "for an order of"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:203
+#: code:addons/point_of_sale/models/pos_config.py:207
 #, python-format
 msgid "not used"
 msgstr "未使用"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1172
+#: code:addons/point_of_sale/static/src/js/chrome.js:292
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1175
 #, python-format
 msgid "paid orders"
 msgstr ""
@@ -3855,22 +3848,22 @@ msgstr "pos.config"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_settings
 msgid "pos.config.settings"
-msgstr ""
+msgstr "pos.config.settings"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
 msgid "pos.session"
-msgstr ""
+msgstr "pos.session"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_invoice
 msgid "report.point_of_sale.report_invoice"
-msgstr ""
+msgstr "report.point_of_sale.report_invoice"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web

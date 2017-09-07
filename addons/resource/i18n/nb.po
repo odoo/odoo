@@ -8,13 +8,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Joachim Flottorp <joachimflottorp@gmail.com>, 2016
 # Roy Edvard Ellingsen <roy@royedvard.com>, 2016
+# Hugo Fossen <hf@optice.no>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Roy Edvard Ellingsen <roy@royedvard.com>, 2016\n"
+"Last-Translator: Hugo Fossen <hf@optice.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,7 +248,7 @@ msgstr "Ressurs"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Ressurskalender"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -334,6 +335,12 @@ msgstr ""
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Søndag"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:714
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency

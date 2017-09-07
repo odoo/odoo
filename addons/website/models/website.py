@@ -164,7 +164,7 @@ class Website(models.Model):
     domain = fields.Char('Website Domain')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
-    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language)
+    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
 
     social_twitter = fields.Char('Twitter Account')
@@ -176,7 +176,7 @@ class Website(models.Model):
     google_analytics_key = fields.Char('Google Analytics Key')
 
     user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
-    compress_html = fields.Boolean('Compress HTML')
+    compress_html = fields.Boolean('Compress HTML') # TODO: REMOVE ME IN SAAS-14
     cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
@@ -392,9 +392,10 @@ class Website(models.Model):
 
     @api.model
     def get_current_website(self):
-        domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
         website_id = self._get_current_website_id(domain_name)
-        request.context = dict(request.context, website_id=website_id)
+        if request:
+            request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name')
@@ -526,6 +527,7 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
+        request.context = dict(request.context, **self.env.context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
@@ -569,12 +571,12 @@ class Website(models.Model):
     @api.multi
     def search_pages(self, needle=None, limit=None):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(query_string=name):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     @api.model

@@ -167,7 +167,7 @@ class AccountAccount(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        default.update(code=_("%s (copy)") % (self.code or ''))
+        default.setdefault('code', _("%s (copy)") % (self.code or ''))
         return super(AccountAccount, self).copy(default)
 
     @api.multi
@@ -370,6 +370,15 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+        # create the relevant refund sequence
+        if vals.get('refund_sequence'):
+            for journal in self.filtered(lambda j: j.type in ('sale', 'purchase') and not j.refund_sequence_id):
+                journal_vals = {
+                    'name': journal.name,
+                    'company_id': journal.company_id.id,
+                    'code': journal.code
+                }
+                journal.refund_sequence_id = self.sudo()._create_sequence(journal_vals, refund=True).id
 
         return result
 
@@ -385,7 +394,7 @@ class AccountJournal(models.Model):
         """ Create new no_gap entry sequence for every new Journal"""
         prefix = self._get_sequence_prefix(vals['code'], refund)
         seq = {
-            'name': vals['name'],
+            'name': refund and vals['name'] + _(': Refund') or vals['name'],
             'implementation': 'no_gap',
             'prefix': prefix,
             'padding': 4,
@@ -498,6 +507,15 @@ class AccountJournal(models.Model):
             res += [(journal.id, name)]
         return res
 
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        connector = '|'
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            connector = '&'
+        recs = self.search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit)
+        return recs.name_get()
+
     @api.multi
     @api.depends('company_id')
     def _belong_to_company(self):
@@ -588,11 +606,11 @@ class AccountTax(models.Model):
     def unlink(self):
         company_id = self.env.user.company_id.id
         ir_values = self.env['ir.values']
-        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id))
+        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id) or [])
         deleted_sup_tax = self.filtered(lambda tax: tax.id in supplier_taxes_id)
         if deleted_sup_tax:
             ir_values.sudo().set_default('product.template', "supplier_taxes_id", list(supplier_taxes_id - set(deleted_sup_tax.ids)), for_all_users=True, company_id=company_id)
-        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id))
+        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id) or [])
         deleted_tax = self.filtered(lambda tax: tax.id in taxes_id)
         if deleted_tax:
             ir_values.sudo().set_default('product.template', "taxes_id", list(taxes_id - set(deleted_tax.ids)), for_all_users=True, company_id=company_id)

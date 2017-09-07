@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-04-12 07:31+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -71,7 +71,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "¿Se encuentra seguro de anular este recibo?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Fecha Emisión"
 
@@ -101,7 +103,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:159
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "No se puede borrar voucher(s) que han sido abiertos o pagados."
@@ -126,7 +128,7 @@ msgstr "Compañía"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Compañía relacionada con este diario contable"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -154,9 +156,7 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Fecha"
 
@@ -192,7 +192,7 @@ msgid "Due Date"
 msgstr "Fecha de Vencimiento"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr "Fecha de vigencia de asientos contables"
 
@@ -312,13 +312,13 @@ msgid "Payment Reference"
 msgstr "Referencia de Pagos"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:195
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "¡Por favor, active la secuencia del Diario seleccionado!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/models/account_voucher.py:198
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Por favor, defina una secuencia del Diario."
@@ -506,7 +506,7 @@ msgid "Vendor Voucher"
 msgstr "Voucher del Vendedor"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:97
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -561,64 +561,7 @@ msgstr ""
 "del cliente relacionado con este recibo."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/models/account_voucher.py:361
 #, python-format
 msgid "You must first select a partner!"
 msgstr "¡Usted debe seleccionar primero una Empresa!"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha de el último mensaje publicado en el registro"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Terceros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisado"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si esta habilitado, los nuevos mensajes deben ser revisados"
-
-#~ msgid "Is Follower"
-#~ msgstr "Es seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha de último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de Comunicación y Mensajes"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leídos"
-
-#~ msgid "Open Invoicing Menu"
-#~ msgstr "Menú Facturas Abiertas"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes no leídos"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Portal Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia de comunicación en Portal Web"

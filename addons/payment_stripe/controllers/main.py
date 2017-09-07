@@ -29,25 +29,10 @@ class StripeController(http.Controller):
         """ Create a payment transaction
 
         Expects the result from the user input from checkout.js popup"""
-        acquirer = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
-
-        sale_order_id = int(request.session.get('sale_order_id') or post.get('sale_order_id'))
-
-        order = request.env['sale.order'].sudo().browse(sale_order_id)
-        tx = request.env['payment.transaction'].sudo().create({
-            'acquirer_id': acquirer.id,
-            'reference': 'STRIPE-%s' % order.id,
-            'amount': float(post.get('amount')),
-            'currency_id': request.env['res.currency'].search([('name', '=', post.get('currency'))], limit=1).id,
-            'partner_id': request.env.user.partner_id.id,
-            'sale_order_id': order.id
-        })
-        order.write({
-            'payment_acquirer_id': acquirer.id,
-            'payment_tx_id': tx.id
-        })
-        request.session['sale_transaction_id'] = tx.id
-        response = tx._create_stripe_charge(tokenid=post['tokenid'])
+        tx = request.env['payment.transaction'].sudo().browse(
+            int(request.session.get('sale_transaction_id') or request.session.get('website_payment_tx_id', False))
+        )
+        response = tx._create_stripe_charge(tokenid=post['tokenid'], email=post['email'])
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
         if response:
             request.env['payment.transaction'].sudo().form_feedback(response, 'stripe')

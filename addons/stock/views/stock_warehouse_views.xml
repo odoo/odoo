@@ -45,7 +45,7 @@
                                         <field name="wh_pack_stock_loc_id" readonly="1"/>
                                         <field name="wh_output_stock_loc_id" readonly="1"/>
                                     </group>
-                                    <group strinsg="Operation Types">
+                                    <group string="Operation Types">
                                         <field name="in_type_id" readonly="1"/>
                                         <field name="int_type_id" readonly="1"/>
                                         <field name="pick_type_id" readonly="1"/>
@@ -76,6 +76,7 @@
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
                 <search string="Warehouse">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>

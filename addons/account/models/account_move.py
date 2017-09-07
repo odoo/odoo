@@ -8,6 +8,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
+import odoo.addons.decimal_precision as dp
 from lxml import etree
 
 #----------------------------------------------------------
@@ -55,7 +56,7 @@ class AccountMove(models.Model):
                     total_amount += amount
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                         total_reconciled += partial_line.amount
-            if total_amount == 0.0:
+            if float_is_zero(total_amount, precision_rounding=move.currency_id.rounding):
                 move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
@@ -69,6 +70,13 @@ class AccountMove(models.Model):
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
             return self.env['account.journal'].search([('type', '=', self.env.context['default_journal_type'])], limit=1).id
+
+    @api.multi
+    @api.depends('line_ids.partner_id')
+    def _compute_partner_id(self):
+        for move in self:
+            partner = move.line_ids.mapped('partner_id')
+            move.partner_id = partner.id if len(partner) == 1 else False
 
     name = fields.Char(string='Number', required=True, copy=False, default='/')
     ref = fields.Char(string='Reference', copy=False)
@@ -84,7 +92,7 @@ class AccountMove(models.Model):
            'in \'Posted\' status.')
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items',
         states={'posted': [('readonly', True)]}, copy=True)
-    partner_id = fields.Many2one('res.partner', related='line_ids.partner_id', string="Partner", store=True, readonly=True)
+    partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', string="Partner", store=True, readonly=True)
     amount = fields.Monetary(compute='_amount_compute', store=True)
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
@@ -121,7 +129,6 @@ class AccountMove(models.Model):
     def post(self):
         invoice = self._context.get('invoice', False)
         self._post_validate()
-
         for move in self:
             move.line_ids.create_analytic_lines()
             if move.name == '/':
@@ -135,7 +142,10 @@ class AccountMove(models.Model):
                         # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
                         sequence = journal.sequence_id
                         if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                            if not journal.refund_sequence_id:
+                                raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
+                                                            
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -150,6 +160,7 @@ class AccountMove(models.Model):
             if not move.journal_id.update_posted:
                 raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
         if self.ids:
+            self._check_lock_date()
             self._cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(self.ids),))
@@ -206,19 +217,27 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
+    def _reverse_move(self, date=None, journal_id=None):
+        self.ensure_one()
+        reversed_move = self.copy(default={
+            'date': date,
+            'journal_id': journal_id.id if journal_id else self.journal_id.id,
+            'ref': _('reversal of: ') + self.name})
+        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+            acm_line.write({
+                'debit': acm_line.credit,
+                'credit': acm_line.debit,
+                'amount_currency': -acm_line.amount_currency
+            })
+        return reversed_move
+
+    @api.multi
     def reverse_moves(self, date=None, journal_id=None):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
-            reversed_move = ac_move.copy(default={'date': date,
-                'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
-                'ref': _('reversal of: ') + ac_move.name})
-            for acm_line in reversed_move.line_ids:
-                acm_line.with_context(check_move_validity=False).write({
-                    'debit': acm_line.credit,
-                    'credit': acm_line.debit,
-                    'amount_currency': -acm_line.amount_currency
-                    })
+            reversed_move = ac_move._reverse_move(date=date,
+                                                  journal_id=journal_id)
             reversed_moves |= reversed_move
         if reversed_moves:
             reversed_moves._post_validate()
@@ -339,7 +358,7 @@ class AccountMoveLine(models.Model):
         self.counterpart = ",".join(counterpart)
 
     name = fields.Char(required=True, string="Label")
-    quantity = fields.Float(digits=(16, 2),
+    quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
@@ -370,7 +389,7 @@ class AccountMoveLine(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False)
     matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
@@ -479,6 +498,7 @@ class AccountMoveLine(models.Model):
                         {2}
                     WHERE
                         a.reconcile IS TRUE
+                        AND l.full_reconcile_id is NULL
                         {3}
                         {4}
                         {5}
@@ -632,11 +652,15 @@ class AccountMoveLine(models.Model):
     def prepare_move_lines_for_reconciliation_widget(self, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
-            :param target_currency: curreny you want the move line debit/credit converted into
+            :param target_currency: currency (browse_record or ID) you want the move line debit/credit converted into
             :param target_date: date to use for the monetary conversion
         """
         context = dict(self._context or {})
         ret = []
+
+        if target_currency:
+            # re-browse in case we were passed a currency ID via RPC call
+            target_currency = self.env['res.currency'].browse(int(target_currency))
 
         for line in self:
             company_currency = line.account_id.company_id.currency_id
@@ -673,22 +697,37 @@ class AccountMoveLine(models.Model):
             line_currency = (line.currency_id and line.amount_currency) and line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
-            if line_currency != company_currency and target_currency != company_currency:
+            if line_currency != company_currency and target_currency == line_currency:
+                # The payment currency is the invoice currency, but they are different than the company currency
+                # We use the `amount_currency` computed during the invoice validation, at the invoice date
+                # to avoid exchange gain/loss
+                # e.g. an invoice of 100€ must be paid with 100€, whatever the company currency and the exchange rates
                 total_amount = line.amount_currency
                 actual_debit = debit > 0 and amount_currency or 0.0
                 actual_credit = credit > 0 and -amount_currency or 0.0
+                currency = line_currency
             else:
+                # Either:
+                #  - the invoice, payment, company currencies are all the same,
+                #  - the payment currency is the company currency, but the invoice currency is different,
+                #  - the invoice currency is the company currency, but the payment currency is different,
+                #  - the invoice, payment and company currencies are all different.
+                # For the two first cases, we can simply use the debit/credit of the invoice move line, which are always in the company currency,
+                # and this is what the target need.
+                # For the two last cases, we can use the debit/credit which are in the company currency, and then change them to the target currency
                 total_amount = abs(debit - credit)
                 actual_debit = debit > 0 and amount or 0.0
                 actual_credit = credit > 0 and -amount or 0.0
-            if line_currency != target_currency and target_currency != company_currency:
+                currency = company_currency
+            if line_currency != target_currency:
                 amount_currency_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=line_currency)
                 total_amount_currency_str = formatLang(self.env, total_amount, currency_obj=line_currency)
+            if currency != target_currency:
                 ctx = context.copy()
                 ctx.update({'date': target_date or line.date})
-                total_amount = line_currency.with_context(ctx).compute(total_amount, target_currency)
-                actual_debit = line_currency.with_context(ctx).compute(actual_debit, target_currency)
-                actual_credit = line_currency.with_context(ctx).compute(actual_credit, target_currency)
+                total_amount = currency.with_context(ctx).compute(total_amount, target_currency)
+                actual_debit = currency.with_context(ctx).compute(actual_debit, target_currency)
+                actual_credit = currency.with_context(ctx).compute(actual_credit, target_currency)
             amount_str = formatLang(self.env, abs(actual_debit or actual_credit), currency_obj=target_currency)
             total_amount_str = formatLang(self.env, total_amount, currency_obj=target_currency)
 
@@ -712,7 +751,7 @@ class AccountMoveLine(models.Model):
         """
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self.process_reconciliation(datum['mv_line_ids'], datum['new_mv_line_dicts'])
+                self.env['account.move.line'].browse(datum['mv_line_ids']).process_reconciliation(datum['new_mv_line_dicts'])
 
             if datum['type'] == 'partner':
                 partners = self.env['res.partner'].browse(datum['id'])
@@ -832,6 +871,11 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+        if not self:
+            return True
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
@@ -902,21 +946,13 @@ class AccountMoveLine(models.Model):
             vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))
 
         # Writeoff line in the account of self
-        first_line_dict = vals.copy()
-        first_line_dict['account_id'] = self[0].account_id.id
-        if 'analytic_account_id' in first_line_dict:
-            del first_line_dict['analytic_account_id']
-        if 'tax_ids' in first_line_dict:
-            del first_line_dict['tax_ids']
+        first_line_dict = self._prepare_writeoff_first_line_values(vals)
 
         # Writeoff line in specified writeoff account
-        second_line_dict = vals.copy()
-        second_line_dict['debit'], second_line_dict['credit'] = second_line_dict['credit'], second_line_dict['debit']
-        if 'amount_currency' in vals:
-            second_line_dict['amount_currency'] = -second_line_dict['amount_currency']
+        second_line_dict = self._prepare_writeoff_second_line_values(vals)
 
         # Create the move
-        writeoff_move = self.env['account.move'].create({
+        writeoff_move = self.env['account.move'].with_context(apply_taxes=True).create({
             'journal_id': vals['journal_id'],
             'date': vals['date'],
             'state': 'draft',
@@ -926,6 +962,32 @@ class AccountMoveLine(models.Model):
 
         # Return the writeoff move.line which is to be reconciled
         return writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
+
+    @api.multi
+    def _prepare_writeoff_first_line_values(self, values):
+        line_values = values.copy()
+        line_values['account_id'] = self[0].account_id.id
+        if 'analytic_account_id' in line_values:
+            del line_values['analytic_account_id']
+        if 'tax_ids' in line_values:
+            tax_ids = []
+            # vals['tax_ids'] is a list of commands [[4, tax_id, None], ...]
+            for tax_id in values['tax_ids']:
+                tax_ids.append(tax_id[1])
+            amount = line_values['credit'] - line_values['debit']
+            amount_tax = self.env['account.tax'].browse(tax_ids).compute_all(amount)['total_included']
+            line_values['credit'] = amount_tax > 0 and amount_tax or 0.0
+            line_values['debit'] = amount_tax < 0 and abs(amount_tax) or 0.0
+            del line_values['tax_ids']
+        return line_values
+
+    @api.multi
+    def _prepare_writeoff_second_line_values(self, values):
+        line_values = values.copy()
+        line_values['debit'], line_values['credit'] = line_values['credit'], line_values['debit']
+        if 'amount_currency' in values:
+            line_values['amount_currency'] = -line_values['amount_currency']
+        return line_values
 
     @api.model
     def compute_full_after_batch_reconcile(self):
@@ -984,7 +1046,7 @@ class AccountMoveLine(models.Model):
         rec_move_ids = self.env['account.partial.reconcile']
         for account_move_line in self:
             for invoice in account_move_line.payment_id.invoice_ids:
-                if account_move_line in invoice.payment_move_line_ids:
+                if invoice.id == self.env.context.get('invoice_id') and account_move_line in invoice.payment_move_line_ids:
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
@@ -1074,6 +1136,7 @@ class AccountMoveLine(models.Model):
             # Create tax lines
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
+                    tax = self.env['account.tax'].browse([tax_vals['id']])
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
                     temp = {
@@ -1085,6 +1148,7 @@ class AccountMoveLine(models.Model):
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                        'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
                     if bank.currency_id != bank.company_id.currency_id:
@@ -1198,9 +1262,8 @@ class AccountMoveLine(models.Model):
         """ Create analytic items upon validation of an account.move.line having an analytic account. This
             method first remove any existing analytic item related to the line before creating any new one.
         """
+        self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
-            if obj_line.analytic_line_ids:
-                obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
@@ -1210,7 +1273,7 @@ class AccountMoveLine(models.Model):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             an analytic account. This method is intended to be extended in other modules.
         """
-        amount = (self.debit or 0.0) - (self.credit or 0.0)
+        amount = (self.credit or 0.0) - (self.debit or 0.0)
         return {
             'name': self.name,
             'date': self.date,
@@ -1301,7 +1364,7 @@ class AccountPartialReconcile(models.Model):
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
 
     def create_exchange_rate_entry(self, aml_to_fix, amount_diff, diff_in_currency, currency, move_date):
         """ Automatically create a journal entry to book the exchange rate difference.
@@ -1311,9 +1374,9 @@ class AccountPartialReconcile(models.Model):
         for rec in self:
             if not rec.company_id.currency_exchange_journal_id:
                 raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.income_currency_exchange_account_id.id:
+            if not rec.company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.expense_currency_exchange_account_id.id:
+            if not rec.company_id.expense_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
             move_vals = {'journal_id': rec.company_id.currency_exchange_journal_id.id}
 
@@ -1356,17 +1419,60 @@ class AccountPartialReconcile(models.Model):
             move.post()
         return line_to_reconcile, partial_rec
 
-    @api.model
-    def create(self, vals):
-        res = super(AccountPartialReconcile, self).create(vals)
+    # Do not forwardport in master as of 2017-07-20
+    def _fix_multiple_exchange_rates_diff(self, amls_to_fix, amount_diff, diff_in_currency, currency, move):
+        self.ensure_one()
+        move_lines = self.env['account.move.line'].with_context(check_move_validity=False)
+        partial_reconciles = self.with_context(skip_full_reconcile_check=True)
+        amount_diff = self.company_id.currency_id.round(amount_diff)
+        diff_in_currency = currency.round(diff_in_currency)
+
+        for aml in amls_to_fix:
+            account_payable_line = move_lines.create({
+                'name': _('Currency exchange rate difference'),
+                'debit': amount_diff < 0 and -aml.amount_residual or 0.0,
+                'credit': amount_diff > 0 and aml.amount_residual or 0.0,
+                'account_id': self.debit_move_id.account_id.id,
+                'move_id': move.id,
+                'currency_id': currency.id,
+                'amount_currency': -aml.amount_residual_currency,
+                'partner_id': self.debit_move_id.partner_id.id,
+            })
+
+            move_lines.create({
+                'name': _('Currency exchange rate difference'),
+                'debit': amount_diff > 0 and aml.amount_residual or 0.0,
+                'credit': amount_diff < 0 and -aml.amount_residual or 0.0,
+                'account_id': amount_diff > 0 and self.company_id.currency_exchange_journal_id.default_debit_account_id.id or self.company_id.currency_exchange_journal_id.default_credit_account_id.id,
+                'move_id': move.id,
+                'currency_id': currency.id,
+                'amount_currency': aml.amount_residual_currency,
+                'partner_id': self.debit_move_id.partner_id.id})
+
+            partial_rec = super(AccountPartialReconcile, partial_reconciles).create({
+                    'debit_move_id': aml.credit and account_payable_line.id or aml.id,
+                    'credit_move_id': aml.debit and account_payable_line.id or aml.id,
+                    'amount': abs(aml.amount_residual),
+                    'amount_currency': abs(aml.amount_residual_currency),
+                    'currency_id': currency.id,
+            })
+
+            move_lines |= account_payable_line
+            partial_reconciles |= partial_rec
+
+        partial_reconciles._compute_partial_lines()
+        return move_lines, partial_reconciles
+
+    # Do not forwardport in master as of 2017-07-20
+    def _compute_partial_lines(self):
         if self._context.get('skip_full_reconcile_check'):
             #when running the manual reconciliation wizard, don't check the partials separately for full
             #reconciliation or exchange rate because it is handled manually after the whole processing
-            return res
+            return self
         #check if the reconcilation is full
         #first, gather all journal items involved in the reconciliation just created
-        partial_rec_set = OrderedDict.fromkeys([x for x in res])
-        aml_set = self.env['account.move.line']
+        partial_rec_set = OrderedDict.fromkeys([x for x in self])
+        aml_set = aml_to_balance = self.env['account.move.line']
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
@@ -1374,7 +1480,7 @@ class AccountPartialReconcile(models.Model):
         #possible to compute the exchange difference entry and it has to be done manually.
         currency = list(partial_rec_set)[0].currency_id
         maxdate = None
-        aml_to_balance = None
+
         for partial_rec in partial_rec_set:
             if partial_rec.currency_id != currency:
                 #no exchange rate entry will be created
@@ -1382,7 +1488,7 @@ class AccountPartialReconcile(models.Model):
             for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
                 if aml not in aml_set:
                     if aml.amount_residual or aml.amount_residual_currency:
-                        aml_to_balance = aml
+                        aml_to_balance |= aml
                     maxdate = max(aml.date, maxdate)
                     total_debit += aml.debit
                     total_credit += aml.credit
@@ -1400,16 +1506,21 @@ class AccountPartialReconcile(models.Model):
         aml_ids = aml_set.ids
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding
+
         if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0:
             exchange_move_id = False
             exchange_partial_rec_id = False
             if currency and aml_to_balance:
+                exchange_move = (self.env['account.move']
+                                 .create(self.env['account.full.reconcile']
+                                         ._prepare_exchange_diff_move(move_date=maxdate, company=aml_to_balance[0].company_id)))
                 #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-                rate_diff_aml, rate_diff_partial_rec = partial_rec.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, currency, maxdate)
-                aml_ids.append(rate_diff_aml.id)
-                partial_rec_ids.append(rate_diff_partial_rec.id)
-                exchange_move_id = rate_diff_aml.move_id.id
-                exchange_partial_rec_id = rate_diff_partial_rec.id
+                rate_diff_amls, rate_diff_partial_recs = partial_rec._fix_multiple_exchange_rates_diff(aml_to_balance, total_debit - total_credit, total_amount_currency, currency, exchange_move)
+                aml_ids += rate_diff_amls.ids
+                partial_rec_ids += rate_diff_partial_recs.ids
+                exchange_move.post()
+                exchange_move_id = exchange_move.id
+                exchange_partial_rec_id = rate_diff_partial_recs[-1:].id
             #mark the reference of the full reconciliation on the partial ones and on the entries
             self.env['account.full.reconcile'].with_context(check_move_validity=False).create({
                 'partial_reconcile_ids': [(4, p_id) for p_id in partial_rec_ids],
@@ -1417,6 +1528,12 @@ class AccountPartialReconcile(models.Model):
                 'exchange_move_id': exchange_move_id,
                 'exchange_partial_rec_id': exchange_partial_rec_id,
             })
+
+    # Do not forwardport in master as of 2017-07-20
+    @api.model
+    def create(self, vals):
+        res = super(AccountPartialReconcile, self).create(vals)
+        res._compute_partial_lines()
         return res
 
     @api.multi
@@ -1478,3 +1595,20 @@ class AccountFullReconcile(models.Model):
                 #reconcile together the original exchange rate line and its reversal
                 pair_to_rec.reconcile()
         return super(AccountFullReconcile, self).unlink()
+
+    # Do not forwardport in master as of 2017-07-20
+    @api.model
+    def _prepare_exchange_diff_move(self, move_date, company):
+        if not company.currency_exchange_journal_id:
+            raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+        if not company.income_currency_exchange_account_id.id:
+            raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+        if not company.expense_currency_exchange_account_id.id:
+            raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+        res = {'journal_id': company.currency_exchange_journal_id.id}
+        # The move date should be the maximum date between payment and invoice
+        # (in case of payment in advance). However, we should make sure the
+        # move date is not recorded after the end of year closing.
+        if move_date > company.fiscalyear_lock_date:
+            res['date'] = move_date
+        return res

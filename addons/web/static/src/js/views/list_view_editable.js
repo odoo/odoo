@@ -448,7 +448,7 @@ ListView.include(/** @lends instance.web.ListView# */{
     /**
      * @return {jQuery.Deferred}
      */
-    save_edition: function () {
+    save_edition: function (cancel_onfail) {
         var self = this;
         return self.saving_mutex.exec(function() {
             if (!self.editor.is_editing()) {
@@ -483,7 +483,9 @@ ListView.include(/** @lends instance.web.ListView# */{
                             return {created: created, record: record};
                         });
                 }, function() {
-                    return self.cancel_edition();
+                    if (cancel_onfail) {
+                        return self.cancel_edition();
+                    }
                 });
             });
         });
@@ -632,6 +634,7 @@ ListView.include(/** @lends instance.web.ListView# */{
      * @return {*}
      */
     _next: function (next_record, options) {
+        options = options || {};
         next_record = next_record || 'succ';
         var self = this;
         return this.save_edition().then(function (saveInfo) {
@@ -639,7 +642,11 @@ ListView.include(/** @lends instance.web.ListView# */{
             if (saveInfo.created) {
                 return self.start_edition();
             }
-            var record = self.records[next_record](saveInfo.record);
+            if (!options) {
+                options = {};
+            }
+            options.wraparound = !self.is_action_enabled('create');
+            var record = self.records[next_record](saveInfo.record, options);
             if (record === undefined) {
                 return self.start_edition();
             }
@@ -822,6 +829,10 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
         if (!this.view.editable() || !this.view.is_action_enabled('edit')) {
             return this._super.apply(this, arguments);
         }
+        if (this.__is_starting_edition) {
+            return;
+        }
+        this.__is_starting_edition = true;
 
         var self = this;
         var args = arguments;
@@ -833,6 +844,8 @@ ListView.List.include(/** @lends instance.web.ListView.List# */{
             focus_field: $(event.target).not(".o_readonly").data('field'),
         }).fail(function() {
             return _super.apply(self, args); // The record can't be edited so open it in a modal (use-case: readonly mode)
+        }).always(function () {
+            self.__is_starting_edition = false;
         });
     },
     /**

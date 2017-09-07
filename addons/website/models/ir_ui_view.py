@@ -70,6 +70,11 @@ class View(models.Model):
         return view_id
 
     @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
+        return ['|', ('website_id', '=', False), ('website_id', '=', self.env.context.get('website_id'))] + domain
+
+    @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         if 'website_id' in self._context and not isinstance(xml_id, (int, long)):
@@ -146,3 +151,12 @@ class View(models.Model):
         if full:
             return views
         return views.filtered(lambda v: v.customize_show)
+
+    @api.model
+    def get_default_lang_code(self):
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            lang_code = self.env['website'].browse(website_id).default_lang_code
+            return lang_code
+        else:
+            return super(View, self).get_default_lang_code()

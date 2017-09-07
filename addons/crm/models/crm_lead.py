@@ -32,7 +32,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'contact_name',
     'description',
-    'email',
     'fax',
     'mobile',
     'partner_name',
@@ -101,7 +100,7 @@ class Lead(FormatAddress, models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
-    date_open = fields.Datetime('Assigned', readonly=True)
+    date_open = fields.Datetime('Assigned', readonly=True, default=lambda self: fields.Datetime.now())
     day_open = fields.Float(compute='_compute_day_open', string='Days to Assign', store=True)
     day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
@@ -167,13 +166,13 @@ class Lead(FormatAddress, models.Model):
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
-            kanban_state = 'red'
+            kanban_state = 'grey'
             if lead.date_action:
                 lead_date = fields.Date.from_string(lead.date_action)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
-                    kanban_state = 'grey'
+                    kanban_state = 'red'
             lead.kanban_state = kanban_state
 
     @api.depends('date_open')
@@ -295,6 +294,11 @@ class Lead(FormatAddress, models.Model):
 
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
+
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner = self.env['res.partner'].browse(context['default_partner_id'])
+            vals['email_from'] = partner.email
+
         # context: no_log, because subtype already handle this
         return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
 
@@ -310,7 +314,7 @@ class Lead(FormatAddress, models.Model):
             vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif vals.get('probability') < 100:
+        elif 'probability' in vals and vals['probability'] < 100:
             vals['date_closed'] = False
         return super(Lead, self).write(vals)
 
@@ -485,24 +489,21 @@ class Lead(FormatAddress, models.Model):
         """
         title = "%s : %s\n" % (_('Merged opportunity') if self.type == 'opportunity' else _('Merged lead'), self.name)
         body = [title]
-        for field_name in fields:
-            field = self._fields.get(field_name)
-            if field is None:
-                continue
-
-            value = self[field_name]
-            if field.type == 'selection':
+        fields = self.env['ir.model.fields'].search([('name', 'in', fields or []), ('model_id.model', '=', self._name)])
+        for field in fields:
+            value = getattr(self, field.name, False)
+            if field.ttype == 'selection':
                 value = dict(field.get_values(self.env)).get(value, value)
-            elif field.type == 'many2one':
+            elif field.ttype == 'many2one':
                 if value:
                     value = value.sudo().name_get()[0][1]
-            elif field.type == 'many2many':
+            elif field.ttype == 'many2many':
                 if value:
                     value = ','.join(
                         val.name_get()[0][1]
                         for val in value.sudo()
                     )
-            body.append("%s: %s" % (field.string, value or ''))
+            body.append("%s: %s" % (field.field_description, value or ''))
         return "<br/>".join(body + ['<br/>'])
 
     @api.multi
@@ -520,7 +521,7 @@ class Lead(FormatAddress, models.Model):
         merge_message = _('Merged leads') if result_type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._mail_body(CRM_LEAD_FIELDS_TO_MERGE)
+        message_bodies = opportunities._mail_body(list(CRM_LEAD_FIELDS_TO_MERGE))
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
@@ -607,7 +608,7 @@ class Lead(FormatAddress, models.Model):
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
-        merged_data = opportunities._merge_data(CRM_LEAD_FIELDS_TO_MERGE)
+        merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
         # force value for saleperson and sales team
         if user_id:
@@ -711,7 +712,7 @@ class Lead(FormatAddress, models.Model):
         email_split = tools.email_split(self.email_from)
         values = {
             'name': name,
-            'user_id': self.user_id.id,
+            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
             'team_id': self.team_id.id,
             'parent_id': parent_id,
@@ -926,7 +927,7 @@ class Lead(FormatAddress, models.Model):
                     result['closing']['today'] += 1
                 if date.today() <= date_deadline <= date.today() + timedelta(days=7):
                     result['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
+                if date_deadline < date.today() and not opp.date_closed:
                     result['closing']['overdue'] += 1
             # Next activities
             if opp.next_activity_id and opp.date_action:
@@ -935,7 +936,7 @@ class Lead(FormatAddress, models.Model):
                     result['activity']['today'] += 1
                 if date.today() <= date_action <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date.today() and not opp.date_closed:
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:
@@ -1144,7 +1145,7 @@ class Tag(models.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [

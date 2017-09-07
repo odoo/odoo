@@ -295,7 +295,9 @@ var ImageDialog = Widget.extend({
             self.display_attachments();
         });
         this.fetch_existing().then(function () {
-            self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            if (o.url) {
+                self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            }
         });
         return res;
     },
@@ -562,6 +564,7 @@ var getCssSelectors = function (filter) {
                             if (!data) {
                                 data = [match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, ''), clean, [clean]];
                             } else {
+                                data[0] += (", " + match[1]);
                                 data[3].push(clean);
                             }
                         }
@@ -634,8 +637,11 @@ var fontIconsDialog = Widget.extend({
     },
     renderElement: function () { // extract list of font (like awesome) from the cheatsheet.
         this.iconsParser = fontIcons;
-        this.icons = _.flatten(_.map(fontIcons, function (data) {
+        this.icons = _.flatten(_.map(fontIcons, function (data) { // TODO maybe useless now
             return data.icons;
+        }));
+        this.alias = _.flatten(_.map(fontIcons, function (data) {
+            return data.alias;
         }));
         this._super.apply(this, arguments);
     },
@@ -738,11 +744,8 @@ var fontIconsDialog = Widget.extend({
                 case '': continue;
                 default:
                     $(".font-icons-icon").removeClass("o_selected").filter("[data-alias*=',"+cls+",']").addClass("o_selected");
-                    for (var k=0; k<this.icons.length; k++) {
-                        if (this.icons.indexOf(cls) !== -1) {
-                            this.$('#fa-icon').val(cls);
-                            break;
-                        }
+                    if (this.alias.indexOf(cls) !== -1) {
+                        this.$('#fa-icon').val(cls);
                     }
             }
         }
@@ -812,7 +815,7 @@ function createVideoNode(url, options) {
             class: 'vine-embed'
         });
     } else if (vimMatch && vimMatch[3].length) {
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             src: '//player.vimeo.com/video/' + vimMatch[3],
             width: '640',
             height: '360'
@@ -824,14 +827,14 @@ function createVideoNode(url, options) {
             height: '360'
         });
     } else if (youkuMatch && youkuMatch[1].length) {
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             height: '498',
             width: '510',
             src: '//player.youku.com/embed/' + youkuMatch[1]
         });
     } else {
         // this is not a known video link. Now what, Cat? Now what?
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             width: '640',
             height: '360',
             src: url
@@ -912,7 +915,7 @@ var VideoDialog = Widget.extend({
             video_id = this.$("#video_id").val();
         }
         var $iframe = $(
-            '<div class="media_iframe_video" data-src="'+this.$iframe.attr("src")+'">'+
+            '<div class="media_iframe_video" data-oe-expression="'+this.$iframe.attr("src")+'">'+
                 '<div class="css_editable_mode_display">&nbsp;</div>'+
                 '<div class="media_iframe_video_size" contentEditable="false">&nbsp;</div>'+
                 '<iframe src="'+this.$iframe.attr("src")+'" frameborder="0" allowfullscreen="allowfullscreen" contentEditable="false"></iframe>'+
