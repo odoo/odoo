@@ -109,7 +109,6 @@ var KanbanColumn = Widget.extend({
                     var record = ui.item.data('record');
                     var index = self.records.indexOf(record);
                     record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
-                    ui.item.addClass('o_updating');
                     if (index >= 0) {
                         if ($.contains(self.$el[0], record.$el[0])) {
                             // resequencing records
@@ -117,6 +116,7 @@ var KanbanColumn = Widget.extend({
                         }
                     } else {
                         // adding record to this column
+                        ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record, ids: self._getIDs()});
                     }
                 }
