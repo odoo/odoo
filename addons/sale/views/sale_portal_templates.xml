@@ -169,6 +169,9 @@
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
               </div>
+              <div class="mb8">
+                  <strong>Expiration Date:</strong> <span t-field="order.validity_date" t-options='{"widget": "date"}'/>
+              </div>
               <div class='row'>
                 <div class="col-md-6">
                   <div>
@@ -199,7 +202,7 @@
                     </div>
                   </t>
                 </div>
-                <div id="shipping_address" class="col-md-6">
+                <div id="shipping_address" class="col-md-6" groups="sale.group_delivery_invoice_address">
                   <div>
                     <strong>Shipping Address</strong>
                   </div>
@@ -261,25 +264,40 @@
                   <br/>
                 </div>
                 <div class="col-md-6">
-                  <div class="row">
-                    <div class="col-md-9 col-xs-8 text-right">
-                      Untaxed Amount:
-                    </div>
-                    <div class="col-md-3 col-xs-4 text-right">
-                      <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
-                    </div>
+                  <div class="row mb4">
+                    <strong>
+                      <div class="col-md-9 col-xs-8 text-right">
+                        Subtotal
+                      </div>
+                      <div class="col-md-3 col-xs-4 text-right">
+                        <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                      </div>
+                    </strong>
+                  </div>
+                  <div class="row mb4">
+                    <t t-set="tax_groups_length" t-value="len(order._get_tax_amount_by_group())"/>
+                    <t t-foreach="order._get_tax_amount_by_group()" t-as="amount_by_group">
+                      <t t-if="amount_by_group[3] == 1 and order.amount_untaxed == amount_by_group[2]">
+                        <div class="col-md-9 col-xs-8 text-right"><span t-esc="amount_by_group[0]"/></div>
+                        <div class="col-md-3 col-xs-4 text-right">
+                          <span t-esc="amount_by_group[1]"
+                              t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                        </div>
+                      </t>
+                      <t t-else ="">
+                        <div class="col-md-9 col-xs-8 text-right">
+                          <span t-esc="amount_by_group[0]"/><span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></span>
+                        </div>
+                        <div class="col-md-3 col-xs-4 text-right">
+                          <span t-esc="amount_by_group[1]"
+                          t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                        </div>
+                      </t>
+                    </t>
                   </div>
                   <div class="row">
                     <div class="col-md-9 col-xs-8 text-right">
-                      Taxes:
-                    </div>
-                    <div class="col-md-3 col-xs-4 text-right">
-                      <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-9 col-xs-8 text-right">
-                      <strong>Total:</strong>
+                      <strong>Total</strong>
                     </div>
                     <div class="col-md-3 col-xs-4 text-right">
                       <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
