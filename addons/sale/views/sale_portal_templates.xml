@@ -32,7 +32,7 @@
 
     <template id="portal_my_quotations" name="My Quotations">
       <t t-call="portal.portal_layout">
-        <h3>Quotations
+        <h3 class="page-header">Quotations
             <t t-call="portal.portal_searchbar"/>
         </h3>
         <t t-if="not quotations">
@@ -78,7 +78,7 @@
 
     <template id="portal_my_orders" name="My Sales Orders">
       <t t-call="portal.portal_layout">
-        <h3>Sales Orders
+        <h3 class="page-header">Sales Orders
             <t t-call="portal.portal_searchbar"/>
         </h3>
         <t t-if="not orders">
