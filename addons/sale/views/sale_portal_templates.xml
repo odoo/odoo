@@ -156,7 +156,7 @@
                         </a>
                     </t>
                     <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
-                        <a class="btn btn-success ml8 pull-right" disabled="disabled">
+                        <a class="btn btn-success ml8 pull-right" disabled="disabled" t-attf-title="Order signed on date #{order.confirmation_date} by #{order.partner_id.name}">
                             <i class="fa fa-check-circle"/> Signed
                         </a>
                     </t>
