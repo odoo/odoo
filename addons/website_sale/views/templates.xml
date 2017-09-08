@@ -1029,7 +1029,6 @@
     <template id="checkout">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Checkout</t>
-            <t t-set="no_footer">1</t>
             <div id="wrap">
                 <div class="container oe_website_sale">
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
@@ -1260,7 +1259,6 @@
     <template id="payment" name="Payment">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Select Payment Acquirer</t>
-            <t t-set="no_footer">1</t>
 
             <div id="wrap">
                 <div class="container oe_website_sale">
