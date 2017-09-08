@@ -296,7 +296,7 @@ class StockMoveLine(models.Model):
                         continue
 
                     if not ml.lot_id:
-                        raise UserError(_('You need to supply a lot/serial number.'))
+                        raise UserError(_('You need to supply a lot/serial number for %s.') % ml.product_id.name)
             elif qty_done_float_compared < 0:
                 raise UserError(_('No negative quantities allowed'))
             else:
