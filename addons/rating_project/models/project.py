@@ -85,7 +85,7 @@ class Project(models.Model):
     percentage_satisfaction_project = fields.Integer(
         compute="_compute_percentage_satisfaction_project", string="Happy % on Project", store=True, default=-1)
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get the customer's feedbacks?\n"
+    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical rating'), ('no','No rating')], 'Ratings', help="How to get the customer's feedbacks?\n"
                     "- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
                     "- Periodical Rating: Email will be sent periodically\n\n"
                     "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)

@@ -22,27 +22,26 @@ class Rating(models.Model):
         ('rating_range', 'check(rating >= 0 and rating <= 10)', 'Rating should be between 0 to 10'),
     ]
 
-    @api.one
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
-        name = self.env[self.res_model].sudo().browse(self.res_id).name_get()
-        self.res_name = name and name[0][1] or ('%s/%s') % (self.res_model, self.res_id)
+        for res in self:
+            res.res_name = "%s,%s" % (res.res_model, res.res_id or False)
 
     @api.model
     def new_access_token(self):
         return uuid.uuid4().hex
 
-    res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
+    res_name = fields.Char(string='Resource', compute='_compute_res_name', store=True, help="The name of the rated resource.")
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document', required=True, help="Identifier of the rated object", index=True)
-    parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
+    parent_res_name = fields.Char('Parent Resource', compute='_compute_parent_res_name', store=True)
     parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True)
     parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True)
     parent_res_id = fields.Integer('Parent Document', index=True)
-    rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
-    partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
+    rated_partner_id = fields.Many2one('res.partner', string="Rated User", help="Owner of the rated resource")
+    partner_id = fields.Many2one('res.partner', string='Author', help="Author of the rating")
+    rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
         ('satisfied', 'Satisfied'),
@@ -57,11 +56,7 @@ class Rating(models.Model):
     @api.depends('parent_res_model', 'parent_res_id')
     def _compute_parent_res_name(self):
         for rating in self:
-            name = False
-            if rating.parent_res_model and rating.parent_res_id:
-                name = self.env[rating.parent_res_model].sudo().browse(rating.parent_res_id).name_get()
-                name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
-            rating.parent_res_name = name
+            rating.parent_res_name = "%s,%s" % (rating.parent_res_model, rating.parent_res_id or False)
 
     @api.multi
     @api.depends('rating')
@@ -69,7 +64,7 @@ class Rating(models.Model):
         for rating in self:
             try:
                 image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
-                rating.rating_image = base64.b64decode(open(image_path, 'rb').read())
+                rating.rating_image = base64.b64encode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
 

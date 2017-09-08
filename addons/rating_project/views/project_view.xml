@@ -8,10 +8,6 @@
             <field name="inherit_id" ref="rating.rating_rating_view_search"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='rating_unhappy']" position="after">
-                    <separator />
-                    <filter string="Rating for tasks" name="rating_tasks" domain="[('res_model', '=', 'project.task')]" />
-                </xpath>
                 <xpath expr="//filter[@name='resource']" position="after">
                     <field name="parent_res_name"/>
                     <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
@@ -50,7 +46,7 @@
         </record>
 
         <record id="rating_rating_action_task" model="ir.actions.act_window">
-            <field name="name">Customer Ratings from task</field>
+            <field name="name">Task Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
@@ -115,7 +111,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button name="%(rating_rating_action_view_project_rating_task)d"
                         attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}"
                         class="oe_stat_button oe_percent"
@@ -123,8 +119,8 @@
                         icon="fa-smile-o">
                         <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                     </button>
-                </div>
-                <xpath expr="//field[@name='partner_id']" position="after">
+                </button>
+                <xpath expr="//field[@name='privacy_visibility']" position="after">
                     <label for="rating_status"/>
                     <div>
                         <field name="rating_status" widget="radio"/>
@@ -165,7 +161,7 @@
                 <xpath expr="//div[hasclass('o_kanban_card_manage_section')]" position="inside">
                     <div t-if="record.rating_status.raw_value != 'no'">
                         <a name="action_view_all_rating" type="object">
-                            Customer Ratings
+                            Ratings
                         </a>
                     </div>
                 </xpath>
@@ -187,7 +183,7 @@
         </record>
 
         <record id="rating_rating_action_project_report" model="ir.actions.act_window">
-            <field name="name">Customer Ratings</field>
+            <field name="name">Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>

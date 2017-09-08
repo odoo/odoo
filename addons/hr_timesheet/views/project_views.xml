@@ -44,7 +44,7 @@
                 </button>
                 <xpath expr="//div[@name='options_active']" position="inside">
                     <div>
-                        <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
+                        <field name="allow_timesheets" class="oe_inline" string="Timesheets"/>
                         <label for="allow_timesheets"/>
                     </div>
                 </xpath>
@@ -57,11 +57,12 @@
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <field name="tag_ids" position="after">
-                    <field name="progress" widget="progressbar"/>
-                </field>
-                <field name="user_id" position="after">
-                    <field name="planned_hours" widget="float_time"/>
+                <field name="date_deadline" position="after">
+                    <label for="planned_hours"/>
+                    <div>
+                        <field name="planned_hours" class="oe_inline mr8" widget="float_time"/>
+                        <field name="progress" class="oe_inline" widget="progressbar" attrs="{'invisible': [('progress', '=', 0.0)]}"/>
+                    </div>
                 </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}"  groups="hr_timesheet.group_hr_timesheet_user">

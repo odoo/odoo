@@ -17,11 +17,11 @@ class ReportProjectTaskUser(models.Model):
     date_deadline = fields.Date(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
-    working_days_close = fields.Float(string='# Working Days to Close',
-        digits=(16,2), readonly=True, group_operator="avg",
+    working_days_close = fields.Integer(string='# Working Days to Close',
+        readonly=True, group_operator="avg",
         help="Number of Working Days to close the task")
-    working_days_open = fields.Float(string='# Working Days to Assign',
-        digits=(16,2), readonly=True, group_operator="avg",
+    working_days_open = fields.Integer(string='# Working Days to Assign',
+        readonly=True, group_operator="avg",
         help="Number of Working Days to Open the task")
     delay_endings_days = fields.Float(string='# Days to Deadline', digits=(16,2), readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
