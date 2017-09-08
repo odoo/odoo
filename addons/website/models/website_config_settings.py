@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied
 
@@ -101,3 +103,10 @@ class WebsiteConfigSettings(models.TransientModel):
         set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
         set_param('website.has_google_maps', self.has_google_maps)
         set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
+
+    @api.multi
+    def open_template_user(self):
+        action = self.env.ref('base.action_res_users').read()[0]
+        action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('auth_signup.template_user_id', 'False'))
+        action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
+        return action
