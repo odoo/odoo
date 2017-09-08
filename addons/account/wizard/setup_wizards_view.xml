@@ -129,6 +129,7 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Journal Items" decoration-info="is_unaffected_earnings_line == True">
                     <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                    <field name="partner_id"/>
                     <field name="name"/>
                     <field name="amount_currency" groups="base.group_multi_currency"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
