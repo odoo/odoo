@@ -11,7 +11,7 @@ class CalendarEvent(models.Model):
     def default_get(self, fields):
         if self.env.context.get('default_opportunity_id'):
             self = self.with_context(
-                default_res_model_id=self.env.ref('model_crm_lead').id,
+                default_res_model_id=self.env.ref('crm.model_crm_lead').id,
                 default_res_id=self.env.context['default_opportunity_id']
             )
         defaults = super(CalendarEvent, self).default_get(fields)
