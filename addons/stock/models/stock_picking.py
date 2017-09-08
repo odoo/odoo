@@ -591,14 +591,25 @@ class Picking(models.Model):
         self.ensure_one()
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some lines to move'))
+
+        # If no lots when needed, raise error
+        picking_type = self.picking_type_id
+        no_quantities_done = all(line.qty_done == 0.0 for line in self.move_line_ids)
+        if picking_type.use_create_lots or picking_type.use_existing_lots:
+            lines_to_check = self.move_line_ids
+            if not no_quantities_done:
+                lines_to_check = lines_to_check.filtered(
+                    lambda line: float_compare(line.qty_done, 0,
+                                               precision_rounding=line.product_uom_id.rounding)
+                )
+
+            for line in lines_to_check:
+                product = line.product_id
+                if product and product.tracking != 'none' and (line.qty_done == 0 or (not line.lot_name and not line.lot_id)):
+                    raise UserError(_('You need to supply a lot/serial number for %s.') % product.name)
+
         # In draft or with no pack operations edited yet, ask if we can just do everything
-        if self.state == 'draft' or all([x.qty_done == 0.0 for x in self.move_line_ids]):
-            # If no lots when needed, raise error
-            picking_type = self.picking_type_id
-            if (picking_type.use_create_lots or picking_type.use_existing_lots):
-                for pack in self.move_line_ids:
-                    if pack.product_id and pack.product_id.tracking != 'none':
-                        raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
+        if self.state == 'draft' or no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({'pick_id': self.id})
             return {
