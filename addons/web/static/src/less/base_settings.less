@@ -1,192 +1,235 @@
-@o-mobile-tabs-height: 40px;
+// VARIABLES
+@o-base-settings-mobile-tabs-height: 40px;
+@o-base-settings-mobile-tabs-overflow-gap: 3%;
 
+// MIXINS
+.o-base-settings-horizontal-padding(@padding-base: @padding-small-vertical) {
+    padding: @padding-base @odoo-horizontal-padding;
+
+    @media (min-width: @screen-lg-min) {
+        padding-left: @odoo-horizontal-padding*2;;
+    }
+}
+
+// Use a very specif selector to overwrite generic form-view rules
+.o_form_view.o_form_nosheet.o_base_settings {
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+    padding: 0px;
+}
+
+// BASE SETTINGS LAYOUT
 .o_base_settings {
-    padding: 0px !important;
-    overflow: auto;
-    display: flex !important;
-    flex-flow: column nowrap;
     height: 100%;
+
     @media (max-width: @screen-xs-max) {
-        flex-direction: column;
+        .o-flex-flow(column, nowrap);
     }
+
     .o_control_panel {
-        flex: 0 0 auto;
         .o_panel {
-            display: flex;
-            flex: 1 0 100%;
-            .title {
-                width: 50%;
-                font-size: 18px;
-                color: #8f8f8f;
+            .o-flex-display();
+            .o-flex-flow(row, wrap);
+            margin-bottom: @odoo-sheet-vpadding*0.5;
+            width: 100%;
+
+            .title, .o_setting_search {
+                .o-flex(1, 0, auto);
+                width: @screen-xs-min*0.5;
             }
+
             .o_setting_search {
-                width: 50%;
                 position: relative;
+
                 .searchInput {
-                    border: 0px;
+                    height: 28px;
                     padding: 0px;
-                }
-                .searchInput , .searchInput:focus {
-                    border-bottom: 1px solid #8f8f8f;
+                    border: 0px;
+                    border-bottom: 1px solid @gray-lighter-darker;
+                    border-color: @gray;
                     box-shadow: none;
-                    height: 26px;
+                    font-weight: 500;
                 }
+
                 .searchIcon {
-                    position: absolute;
-                    top: 4px;
-                    left: auto;
-                    bottom: auto;
-                    right: 0;
+                    .o-position-absolute(4px, 0);
+                    color: @gray;
                 }
             }
         }
+
         .o_form_statusbar {
-            padding: 0px !important;
-            margin: 0px !important;
-            border: 0px;
+            padding: 0;
+            margin: 0;
+            border: 0;
+
+            .oe_highlight, .oe_link  {
+                padding: @padding-small-vertical @padding-small-horizontal;
+            }
+
+            .oe_link {
+                .o-hover-text-color(@link-color, @link-hover-color);
+            }
         }
     }
+
     .o_setting_container {
-        height: 100%;
+        .o-flex-display();
+        .o-flex(1, 0, auto);
+
         overflow: auto;
-        display: flex;
+
         @media (max-width: @screen-xs-max) {
-            .o-flex-flow(column, wrap);
+            .o-flex-flow(column, nowrap);
         }
+
         .settings_tab {
-            .o-flex(1, 1, 17%);
-            background: #f3f3f3;
+            .o-flex-display();
+            .o-flex(0, 0, auto);
+            .o-flex-flow(column, nowrap);
+            background: @gray-dark;
             overflow: auto;
+            padding-top: @odoo-horizontal-padding*0.5;
+
             @media (max-width: @screen-xs-max) {
-                .o-flex(0, 0, @o-mobile-tabs-height);
-                display: inline-flex;
-                overflow: auto;
+                .o-flex(0, 0, @o-base-settings-mobile-tabs-height);
+                .o-inline-flex-display();
                 position: relative;
                 overflow: hidden;
-                .selected {
-                    background-color: #f3f3f3 !important;
+                padding: 0;
+            }
+
+            .selected {
+                background-color: @gray-darker;
+                box-shadow: inset 3px 0 0 @odoo-brand-optional;
+
+                .app_name {
+                    color: white;
                 }
             }
-            .selected {
-                background-color: #fff;
-                .icon {
-                    filter: grayscale(0%) !important;
-                }
-             }
+
             .tab {
-                font-size: 15px;
-                padding-left: 16px;
+                .o-flex-display();
+                padding: 0 @odoo-horizontal-padding*2 0 @odoo-horizontal-padding;
                 height: 40px;
-                width: 100%;
+                color: @gray-lighter-darker;
+                font-size: 13px;
                 line-height: 40px;
                 cursor: pointer;
-                display: inline-flex;
+
                 .icon {
                     width: 23px;
-                    filter: grayscale(100%);
+                    margin-right: 10px;
                 }
-                .app_name {
-                    padding-left: 10px;
-                    padding-right: 10px;
-                    white-space: nowrap;
-                }
+
+                // Mobile Tabs
                 @media (max-width: @screen-xs-max) {
-                    .o_mobile_tab();
+                    display: block;
+                    .o-position-absolute(@left:100%);
+                    .size(auto, @o-base-settings-mobile-tabs-height);
+                    padding: @o-base-settings-mobile-tabs-height*0.25 @o-base-settings-mobile-tabs-height*0.4;
+                    text-align: center;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: inherit;
+                    .o-transition(0.2s, all);
+                    .o-transform(translate3d(0,0,0));
+
+                    .app_name {
+                        display: block;
+                        white-space: nowrap;
+                    }
+
+                    &:after {
+                        content: '';
+                        background: @odoo-brand-optional;
+                        opacity: 0;
+                        .o-position-absolute(auto, 0, 0, 0);
+                        .size(100%, 3px);
+                        .o-transition(0.2s, all);
+                    }
+
+                    &.previous, &.before {
+                        left: 0% - @o-base-settings-mobile-tabs-overflow-gap;
+                    }
+
+                    &.current {
+                        left: 50%;
+                        color: white;
+
+                        // Reset default style for 'selected' tabs
+                        box-shadow: none;
+                        background: none;
+
+                        &:after {
+                            opacity: 1;
+                        }
+                    }
+
+                    &.next, &.after {
+                        left: 100% + @o-base-settings-mobile-tabs-overflow-gap;
+                    }
                 }
             }
         }
+
         .settings {
             position: relative;
-            .o-flex(1, 1, 83%);
+            .o-flex(1, 1, 100%);
+            background-color: @odoo-view-background-color;
             overflow: auto;
-            padding: 0 16px 0 16px;
-            @media (max-width: @screen-xs-max) {
-                .o-flex(none, none, none);
-                display: inline-flex;
-                overflow-x: hidden;
-                overflow-y: auto;
-                .app_settings_block, .notFound {
-                    flex: 0 0 100vw;
+
+            > .app_settings_block {
+                h2 {
+                    margin-bottom: 0;
+                    .o-base-settings-horizontal-padding();
+                    background-color: @gray-lighter;
+                    font-size: 15px;
+                    font-weight: bold;
+
+                    &:first-of-type {
+                        // Necessary to overwrite mt32 class
+                        margin-top: 10px!important;
+                    }
+                }
+
+                .o_settings_container {
+                    max-width: @screen-md-min; // Provide a maximum container size to ensure readability
+                    .o-base-settings-horizontal-padding(0);
                 }
             }
+
             .settingSearchHeader {
-                display: flex;
-                margin-top: 30px;
-                margin-bottom: 15px;
+                .o-flex-display();
+                margin: 30px 0 10px;
+                .o-base-settings-horizontal-padding();
+                background-color: @gray-lighter;
+
                 .icon {
-                    width: 25px;
-                    height: 25px;
+                    .square(25px);
+                    margin-right: 10px;
                 }
+
                 .appName {
-                    font-size: 20px;
-                    padding-left: 10px;
+                    color: @headings-color;
+                    font-size: 17px;
                 }
             }
+
             .notFound {
-                color : #d4d1d1;
+                color : @text-muted;
                 text-align: center;
                 font-size: 25px;
                 padding-top: 50px;
             }
+
             .highlighter {
                 background: yellow;
             }
         }
+
         .d-block {
-            display: block !important;
+            display: block!important;
         }
-    }
-}
-
-.o_mobile_tab() {
-    display: block;
-    position: absolute;
-    font-size: 14px;
-    font-weight: 500;
-    width: auto;
-    left: 100%;
-    padding: 10px;
-    text-align: center;
-    height: @o-mobile-tabs-height;
-    transition: 0.2s all;
-    transform: translate3d(0,0,0);
-    line-height: inherit;
-
-    .app_name {
-        display: block;
-        white-space: nowrap;
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-
-    &:after {
-        content: ' ';
-        position: absolute;
-        bottom: 0px;
-        left: 0;
-        background: @odoo-brand-primary;
-        width: 100%;
-        height: 3px;
-        opacity: 0;
-        transition: 0.2s all;
-        transform: translate3d(0,3px,0);
-    }
-
-    &.previous, &.before {
-        left: 0px;
-    }
-
-    &.current {
-        left: 50%;
-        font-weight: 600;
-
-        &:after {
-            opacity: 1;
-            transform: translate3d(0,0,0);
-        }
-    }
-
-    &.next, &.after {
-        left: 100%;
     }
 }
