@@ -1,17 +1,17 @@
 <odoo>
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_layout" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'quote' or sales_order and sales_order.state == 'sent'">
+            <li t-if="page_name == 'quote' or sales_order and sales_order.state in ('sent', 'cancel')">
                 <a t-if="sales_order" t-attf-href="/my/quotes?{{ keep_query() }}">Quotations</a>
                 <t t-else="">Quotations</t>
             </li>
-            <li t-if="page_name == 'order' or sales_order and sales_order.state != 'sent'">
+            <li t-if="page_name == 'order' or sales_order and sales_order.state not in ('sent', 'cancel')">
                 <a t-if="sales_order" t-attf-href="/my/orders?{{ keep_query() }}">Sales Orders</a>
                 <t t-else="">Sales Orders</t>
             </li>
             <li t-if="sales_order">
-                <t t-if="sales_order.state == 'sent'">Quotation</t>
-                <t t-if="sales_order.state != 'sent'">Order</t>
+                <t t-if="sales_order.state in ('sent', 'cancel')">Quotation</t>
+                <t t-else="">Order</t>
                 <t t-esc="sales_order.name"/>
             </li>
         </xpath>
@@ -138,26 +138,33 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xs-9 col-sm-9">
                     <h4>
                         <t t-call='portal.record_pager'/>
-                        <t t-if="order.state == 'sent'">Quotation</t>
-                        <t t-if="order.state != 'sent'">Order</t>
+                        <t t-if="order.state in ('sent', 'cancel')">Quotation</t>
+                        <t t-else="">Order</t>
                         <span t-esc="order.name"/>
+                        <t t-if="order.state == 'cancel'">
+                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                        </t>
+                        <t t-if="order.state == 'done'">
+                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Done</span>
+                        </t>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_order_actions">
+                <div class="col-md-6 col-sm-3 col-xs-3 hidden-print" id="o_portal_order_actions">
                     <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
                         <a class="btn btn-primary ml8 pull-right" href="#portal_sign">
                             <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
                         </a>
                     </t>
                     <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
-                        <a class="btn btn-success ml8 pull-right" disabled="disabled">
+                        <a class="btn btn-success ml8 pull-right" disabled="disabled"
+                            t-attf-title="Order signed on #{order.confirmation_date} by #{order.partner_id.name}">
                             <i class="fa fa-check-circle"/> Signed
                         </a>
                     </t>
-                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right" title="Download">
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
                         <i class="fa fa-download fa-2x" aria-hidden="true"/>
                     </a>
                 </div>
@@ -168,6 +175,9 @@
               <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
+              </div>
+              <div class="mb8" t-if="order.validity_date">
+                  <strong>Expiration Date:</strong> <span t-field="order.validity_date" t-options='{"widget": "date"}'/>
               </div>
               <div class='row'>
                 <div class="col-md-6">
@@ -199,7 +209,7 @@
                     </div>
                   </t>
                 </div>
-                <div id="shipping_address" class="col-md-6">
+                <div id="shipping_address" class="col-md-6" groups="sale.group_delivery_invoice_address">
                   <div>
                     <strong>Shipping Address</strong>
                   </div>
@@ -230,7 +240,7 @@
                     <div class="visible-lg col-lg-1 text-center">
                       <span t-field="ol.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                     </div>
-                    <div id='product_name' class="col-lg-4 col-sm-6 col-xs-4">
+                    <div id='product_name' class="col-lg-4 col-sm-6 col-xs-3">
                       <span t-esc="ol.product_id.name"/>
                     </div>
                   <div class="col-xs-3 text-right">
@@ -244,7 +254,7 @@
                       <span t-esc="ol.quantity"/>
                     </t>
                   </div>
-                  <div class="col-sm-2 col-xs-3 text-right">
+                  <div class="col-sm-2 col-xs-4 text-right">
                     <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                   </div>
                 </div>
