@@ -495,7 +495,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 });
 
 QUnit.test('chatter: Attachment viewer', function (assert) {
-    assert.expect(5);
+    assert.expect(6);
     this.data.partner.records[0].message_ids = [1];
     var messages = [{
         attachment_ids: [{
@@ -516,6 +516,12 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
             mimetype: 'image/jpeg',
             name: 'Test Image 3',
             url: '/web/content/3?download=true'
+        },{
+            filename: 'pdf1.pdf',
+            id:4,
+            mimetype: 'application/pdf',
+            name: 'Test PDF 1',
+            url: '/web/content/4?download=true'
         }],
         author_id: ["1", "John Doe"],
         body: "Attachement viewer test",
@@ -541,7 +547,8 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route) {
-            if(_.str.contains(route, '/mail/attachment/preview/')){
+            if(_.str.contains(route, '/mail/attachment/preview/') ||
+                _.str.contains(route, '/web/static/lib/pdfjs/web/viewer.html')){
                 var canvas = document.createElement('canvas');
                 return $.when(canvas.toDataURL());
             }
@@ -561,7 +568,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
             },
         },
     });
-    assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 3,
+    assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 4,
         "there should be three attachment on message");
     assert.strictEqual(form.$('.o_thread_message .o_attachment .caption a').first().attr('href'), '/web/content/1?download=true',
         "image caption should have correct download link");
@@ -575,6 +582,12 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
+    // close attachment popup
+    $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
+    // click on pdf attachement
+    form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').eq(3).click();
+    assert.strictEqual($('.o_modal_fullscreen iframe[src*="/web/content/4"]').length, 1,
+        "Modal popup should open with the pdf preview");
     // close attachment popup
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
     form.destroy();
