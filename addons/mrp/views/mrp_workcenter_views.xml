@@ -158,12 +158,12 @@
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
                                                 <button class="btn btn-primary" name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_pending': 1}">
-                                                    <span>Work Orders</span>
+                                                    <span>WORK ORDERS</span>
                                                 </button>
                                             </t>
                                             <t  t-if="record.workorder_count.raw_value &lt;= 0">
                                                 <button class="btn btn-warning" name="%(act_product_mrp_production_workcenter)d" type="action">
-                                                    <span>Plan Orders</span>
+                                                    <span>PLAN ORDERS</span>
                                                 </button>
                                             </t>
                                             </div>
