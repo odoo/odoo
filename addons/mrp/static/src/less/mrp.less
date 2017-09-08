@@ -6,3 +6,18 @@
         margin-top: 10px;
     }
 }
+
+.o_kanban_record.o_workcenter_kanban_item {
+    min-width: 400px;
+    @media (max-width: @screen-xs-max) {
+        min-width: auto;
+    }
+
+    .o_kanban_card_content {
+        margin-left: initial;
+
+        .o_kanban_primary_right .label {
+            padding: initial;
+        }
+    }
+}
