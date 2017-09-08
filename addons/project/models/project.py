@@ -387,7 +387,6 @@ class Task(models.Model):
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'Normal'),
-        ('2', 'High')
         ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
