@@ -51,6 +51,8 @@ class CustomerPortal(CustomerPortal):
 
         # content according to pager and archive selected
         projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        shared_doc = self._check_shared_document(projects)
+
         request.session['my_projects_history'] = projects.ids[:100]
 
         values.update({
@@ -62,7 +64,8 @@ class CustomerPortal(CustomerPortal):
             'default_url': '/my/projects',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby
+            'sortby': sortby,
+            'shared_doc': shared_doc
         })
         return request.render("project.portal_my_projects", values)
 
@@ -141,6 +144,9 @@ class CustomerPortal(CustomerPortal):
         )
         # content according to pager and archive selected
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+
+        shared_doc = self._check_shared_document(tasks)
+
         request.session['my_tasks_history'] = tasks.ids[:100]
 
         values.update({
@@ -158,6 +164,7 @@ class CustomerPortal(CustomerPortal):
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
+            'shared_doc': shared_doc
         })
         return request.render("project.portal_my_tasks", values)
 

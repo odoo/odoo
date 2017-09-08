@@ -54,6 +54,7 @@
                         <tr t-foreach="projects" t-as="project">
                             <td>
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
+                                <t t-if="shared_doc[project.id]"><span class="label label-info">Shared</span></t>
                             </td>
                             <td>
                                 <a t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
@@ -148,6 +149,7 @@
                             <tr>
                                 <td>
                                     <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                    <t t-if="shared_doc[task.id]"><span class="label label-info">Shared</span></t>
                                 </td>
                                 <td>
                                     <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />

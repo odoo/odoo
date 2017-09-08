@@ -160,6 +160,8 @@ class CustomerPortal(CustomerPortal):
         )
         # content according to pager and archive selected
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+
+        shared_doc = self._check_shared_document(orders)
         request.session['my_orders_history'] = orders.ids[:100]
 
         values.update({
@@ -171,6 +173,7 @@ class CustomerPortal(CustomerPortal):
             'default_url': '/my/orders',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
+            'shared_doc': shared_doc
         })
         return request.render("sale.portal_my_orders", values)
 
@@ -180,8 +183,10 @@ class CustomerPortal(CustomerPortal):
             order_sudo = self._order_check_access(order, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
-
+        order_record = request.env['sale.order'].browse(order)
+        shared_doc = self._check_shared_document(order_record)
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
+        values.update({'shared_doc': shared_doc})
         return request.render("sale.portal_order_page", values)
 
     @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)

@@ -95,6 +95,8 @@ class PortalAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         invoices = AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+
+        shared_doc = self._check_shared_document(invoices)
         values.update({
             'date': date_begin,
             'invoices': invoices,
@@ -104,6 +106,7 @@ class PortalAccount(CustomerPortal):
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
+            'shared_doc': shared_doc
         })
         return request.render("account.portal_my_invoices", values)
 
@@ -114,7 +117,10 @@ class PortalAccount(CustomerPortal):
         except AccessError:
             return request.redirect('/my')
 
+        invoice = request.env['account.invoice'].browse(invoice_id)
+        shared_doc = self._check_shared_document(invoice)
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
+        values.update({'shared_doc': shared_doc})
         return request.render("account.portal_invoice_page", values)
 
     @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="public", website=True)
