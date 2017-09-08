@@ -2291,6 +2291,61 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
 
+    def test_immediate_validate_5(self):
+        """ Create a picking and simulates validate button effect.
+            This tests two cases:
+            - if a user has processed no quantities and at least one product is tracked,
+              he should specify lots
+            - if a user has processed some quantities then it's ok because a backorder
+              will be created for the ones not filled in
+        """
+        picking_type = self.env.ref('stock.picking_type_in')
+        picking_type.use_create_lots = True
+        picking_type.use_existing_lots = False
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product3.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.product3, self.stock_location, 1, lot_id=lot1)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': picking_type.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'product1_move',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+        })
+        product3_move = self.env['stock.move'].create({
+            'name': 'product3_move',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        with self.assertRaises(UserError):
+            picking.button_validate()
+
+        product3_move.move_line_ids[0].qty_done = 1
+        # should still complain about lots because no lot_{name,id} was set
+        with self.assertRaises(UserError):
+            picking.button_validate()
+
+        product3_move.move_line_ids[0].lot_name = '271828'
+        action = picking.button_validate()  # should open backorder wizard
+        self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
+        self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_done_1',
