@@ -42,6 +42,7 @@
                         <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"/>
                     </div>
                     <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1"/>
+                    <iframe class="mb48 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
@@ -72,12 +73,15 @@
     <t t-name="DocumentViewer">
         <div class="modal o_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
             <t t-call="DocumentViewer.Content"/>
-            <a class="arrow arrow-left move_previous" href="#">
-                <span class="fa fa-3x fa-chevron-left"/>
-            </a>
-            <a class="arrow arrow-right move_next" href="#">
-                <span class="fa fa-3x fa-chevron-right"/>
-            </a>
+
+            <t t-if="widget.attachment.length != 1">
+                <a class="arrow arrow-left move_previous" href="#">
+                    <span class="fa fa-3x fa-chevron-left"/>
+                </a>
+                <a class="arrow arrow-right move_next" href="#">
+                    <span class="fa fa-3x fa-chevron-right"/>
+                </a>
+            </t>
         </div>
     </t>
     <t t-name="PrintImage">
@@ -278,6 +282,18 @@
                         <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
                             <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
                         </a>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="attachment.mimetype == 'application/pdf'">
+                <div class="o_image_box">
+                    <div class="o_image_box">
+                        <img src="/web/static/src/img/mimetypes/pdf.png"/>
+                        <div class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                            <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
+                                <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this PDF" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </t>
