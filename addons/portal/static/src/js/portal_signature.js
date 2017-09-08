@@ -87,6 +87,8 @@ odoo.define('portal.signature_form', function (require){
                     $confirm_btn.remove();
                     var $prout = qweb.render("portal.portal_signature_success", {widget: data});
                     self.$('#o_portal_sign_draw').parent().replaceWith($prout);
+                    // no more show 'Accept & Sing' button after success full sign the document
+                    $('.o_portal_sign_button').remove();
                 }
             });
         },

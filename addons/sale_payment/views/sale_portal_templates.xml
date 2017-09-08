@@ -1,7 +1,7 @@
 <odoo>
     <template id="portal_my_orders_payment" name="Payment on my orders" inherit_id="sale.portal_order_page">
         <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
-            <t t-if="not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay'" name="portal_confirmation_pay">
+            <t t-if="not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and order.payment_tx_id.state != 'done'" name="portal_confirmation_pay">
                 <a class="btn btn-primary ml8 pull-right" href="#portal_pay">
                     <i class="fa fa-arrow-circle-right"/> Pay Now
                 </a>
