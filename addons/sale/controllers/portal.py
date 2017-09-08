@@ -85,6 +85,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
         # default sortby order
@@ -136,6 +137,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
         # default sortby order
         if not sortby:
