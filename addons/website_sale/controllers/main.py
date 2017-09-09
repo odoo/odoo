@@ -688,10 +688,10 @@ class WebsiteSale(http.Controller):
         values = {
             'website_sale_order': order,
             'post': post,
-            'escape': lambda x: x.replace("'", r"\'")
+            'escape': lambda x: x.replace("'", r"\'"),
+            'partner': order.partner_id.id,
+            'order': order,
         }
-
-        values.update(request.env['sale.order']._get_website_data(order))
 
         return request.render("website_sale.extra_info", values)
 
