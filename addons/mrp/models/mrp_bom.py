@@ -172,7 +172,7 @@ class MrpBom(models.Model):
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
-    _order = "sequence"
+    _order = "sequence, id"
     _rec_name = "product_id"
 
     def _get_default_product_uom_id(self):
