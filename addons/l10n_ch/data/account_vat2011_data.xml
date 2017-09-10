@@ -86,6 +86,14 @@
             <field name="applicability">taxes</field>
         </record>
 
+        <record id="vat_tag_900" model="account.account.tag">
+            <field name="name">Switzerland VAT Form: grid 900 tax</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="vat_tag_910" model="account.account.tag">
+            <field name="name">Switzerland VAT Form: grid 910 tax</field>
+            <field name="applicability">taxes</field>
+        </record>
 
         <!--
         #  TVA - Taxe sur la Valeur Ajoutée
@@ -323,6 +331,28 @@
             <field name="refund_account_id" ref="ch_coa_2200"/>
             <field name="account_id" ref="ch_coa_2200"/>
             <field name="tag_ids" eval="[(6,0,[ref('vat_tag_230')])]"/>
+        </record>
+        <record model="account.tax.template" id="vat_0_other">
+            <field name="name">autres mouvements de fonds, taxes touristiques</field>
+            <field name="description">pas touché par la tva</field>
+            <field name="amount" eval="0.00"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_900')])]"/>
+        </record>
+        <record model="account.tax.template" id="vat_O_don">
+            <field name="name">dons et dividendes,etc...</field>
+            <field name="description">pas touché par la tva</field>
+            <field name="amount" eval="0.00"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_910')])]"/>
         </record>
         <record model="account.tax.template" id="vat_O_import">
             <field name="name">TVA 0% Importations de biens et services</field>
