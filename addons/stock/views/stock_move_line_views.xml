@@ -29,7 +29,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="date" groups="base.group_no_one"/>
+                            <field name="date"/>
                             <field name="picking_id" string="Reference"/>
                             <field name="product_id"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations"/>
@@ -44,7 +44,6 @@
                             <label for="qty_done" string="Quantity Done"/>
                             <div class="o_row">
                                 <field name="qty_done"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                             </div>
                         </group>
                     </group>
@@ -62,7 +61,15 @@
                 <field name="product_id"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                <separator/>
+                <filter string="To Do" name="todo" domain="[('state','not in ',['done', 'draft'])]"/>
                 <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <filter string="Receptions" name="incoming" domain="[('picking_id.picking_type_id.code','=','incoming')]"/>
+                <filter string="Deliveries" name="outgoing" domain="[('picking_id.picking_type_id.code','=','outgoing')]"/>
+                <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code','=','internal')]"/>
+                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code','=','mrp_operation')]"/>
+
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by':'state'}"/>
