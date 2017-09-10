@@ -5,9 +5,9 @@
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Eric Geens <eric.geens@vitabiz.be>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # Volluta <volluta@tutanota.com>, 2016
@@ -1751,8 +1751,8 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
-"Alle facturen en betalingen zijn gematched, uw rekeningsaldo's zijn "
-"opgeschoond."
+"Alle facturen en betalingen zijn afgeletterd. Uw rekeningsaldo's zijn "
+"bijgewerkt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1806,7 +1806,7 @@ msgstr "Maak het annuleren van boekingen mogelijk"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr "Sta factuur & betaling matching toe"
+msgstr "Sta factuur & betaling afletteren toe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
@@ -1905,8 +1905,7 @@ msgstr "Bedrag getekend"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
-msgstr ""
-"Bedrag betrokken bij deze matching. Verondersteld altijd positief te zijn"
+msgstr "Het bedrag bij deze aflettering dient positief te zijn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
@@ -2808,8 +2807,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Vink deze optie aan als u deze rekening wilt toestaan op facturen & "
-"betalingen te matchen."
+"Vink deze optie aan als u deze rekening wilt toestaan bij het afletteren van"
+" facturen & betalingen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
@@ -5817,7 +5816,7 @@ msgstr "Facturen met een periode in het huidige jaar"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Boekingen waar het matchende nummer niet is ingesteld. "
+msgstr "Boekingen waar de aflettercode niet is ingesteld. "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -9928,7 +9927,9 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr "Tip: Druk op CTRL-Enter om alle regels die matchen af te letteren."
+msgstr ""
+"Tip: Druk op CTRL-Enter om alle regels die correct gekoppeld zijn af te "
+"letteren."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
