@@ -21,6 +21,7 @@
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
 % set access_url = object.get_mail_url()
+% set is_account_payment = object.is_installed_account_payment()
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
@@ -42,7 +43,13 @@ from ${object.company_id.name}.
 % if is_online:
     <br/><br/>
     <center>
-      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">View Invoice</a>
+      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">
+        % if is_account_payment and object.state!='paid':
+            Pay Invoice
+        % else:
+            View Invoice
+        % endif
+        </a>
     </center>
 % endif
     <br/><br/>
