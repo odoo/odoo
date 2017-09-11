@@ -56,13 +56,13 @@ odoo.define('payment.payment_form', function (require) {
                         console.warn('payment_form: unset partner_id when adding new token; things could go wrong');
                     }
                     var form_data = this.getFormData(inputs_form);
-                    var empty_inputs = false;
+                    var empty_inputs = [];
 
                     inputs_form.toArray().forEach(function (element) {
                         if (element.dataset.isRequired) {
                             if (element.value.length === 0) {
                                 $(element).closest('div.form-group').addClass('has-error');
-                                empty_inputs = true;
+                                empty_inputs.push(element.placeholder);
                             }
                             else {
                                 $(element).closest('div.form-group').removeClass('has-error');
@@ -70,10 +70,11 @@ odoo.define('payment.payment_form', function (require) {
                         }
                     });
 
-                    if (empty_inputs) {
+                    if (empty_inputs.length) {
+                        var error_msg = '<p>The following fields '+ ((empty_inputs.length > 1) ? 'are ' : 'is') + ' invalid or missing:</br>' + empty_inputs.join('<br/>') + '</p>'
                         this.displayError(
                             _t('Missing values'),
-                            _t('<p>Please fill all the inputs required.</p>')
+                            _t(error_msg)
                         );
                         return;
                     }
@@ -199,24 +200,27 @@ odoo.define('payment.payment_form', function (require) {
                 var inputs_form = $('input', acquirer_form);
                 var form_data = this.getFormData(inputs_form);
                 var ds = $('input[name="data_set"]', acquirer_form)[0];
-                var empty_inputs = false;
+                var empty_inputs = [];
+
 
                 inputs_form.toArray().forEach(function (element) {
                     if (element.dataset.isRequired) {
+                        debugger;
                         if (element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('has-error');
+                            empty_inputs.push(element.placeholder);
                         }
                         else {
                             $(element).closest('div.form-group').removeClass('has-error');
                         }
-                        empty_inputs = true;
                     }
                 });
 
-                if (empty_inputs) {
+                if (empty_inputs.length) {
+                    var error_msg = '<p>The following fields '+ ((empty_inputs.length > 1) ? 'are ' : 'is') + ' invalid or missing:</br>' + empty_inputs.join('<br/>') + '</p>'
                     this.displayError(
                         _t('Missing values'),
-                        _t('<p>Please fill all the inputs required.</p>')
+                        _t(error_msg)
                     );
                     return;
                 }
