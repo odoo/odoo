@@ -2,7 +2,8 @@
 	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'invoice'" class="active">
-                Invoices
+                <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
+                <t t-else="">Invoices</t>
             </li>
             <li t-if="invoice">
                 <t t-esc="invoice.number"/>
@@ -76,8 +77,13 @@
                             <div class="col-md-6">
                                 <h4>
                                     <t t-call='portal.record_pager'/>
-                                    Invoice
-                                    <span t-esc="invoice.number"/>
+                                    <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
+                                    <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
+                                    <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
+                                    <span t-if="invoice.type == 'out_refund'">Credit Note</span>
+                                    <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
+                                    <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
+                                    <span t-field="invoice.number"/>
                                 </h4>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
@@ -100,17 +106,6 @@
 
     <template id="portal_invoice_report" name="Invoice Portal Report">
         <div class="row">
-            <div class="col-xs-7">
-                <h4>
-                <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
-                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
-                <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
-                <span t-if="invoice.type == 'out_refund'">Credit Note</span>
-                <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
-                <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
-                <span t-field="invoice.number"/>
-                </h4>
-            </div>
             <div class="col-xs-5">
                 <strong>Customer Address</strong>
                 <address t-field="invoice.partner_id"
