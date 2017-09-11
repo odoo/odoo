@@ -56,6 +56,9 @@
                 <div t-att-class="'form-group col-md-4' if bootstrap_formatting else 'form-group'">
                     <input type="text" name="cc_cvc" id="cc_cvc" class="form-control" maxlength="4" placeholder="CVC" data-is-required="true"/>
                 </div>
+                <button t-if="mode == 'manage'" class="btn btn-primary btn-lg mb8 mt8 pull-right o_payment_form_add_pm">
+                    <i class="fa fa-plus-circle"/> Add new card
+                </button>
             </div>
         </template>
     </data>
