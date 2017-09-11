@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+import functools
 import logging
 
 from odoo.tests.common import TransactionCase
@@ -9,14 +10,39 @@ from odoo.tests.common import TransactionCase
 sql_logger = logging.getLogger('odoo.sql_db')
 
 
+def queryCount(count):
+    """ Decorate a method to check the number of queries it makes. """
+    def decorate(func):
+        @functools.wraps(func)
+        def wrapper(self):
+            # warm up the caches
+            self._round = False
+            func(self)
+            self.env.cache.invalidate()
+            # test for real, and check query count
+            self._round = True
+            self.resetQueryCount()
+            func(self)
+            self.assertLessEqual(self.cr.sql_log_count - self._count, count)
+
+        return wrapper
+
+    return decorate
+
+
 class TestPerformance(TransactionCase):
-    @contextmanager
-    def assertMaxQueries(self, message, count):
-        """ Check the number of queries made in this scope. """
-        count0 = self.cr.sql_log_count
-        yield
-        count1 = self.cr.sql_log_count
-        self.assertLessEqual(count1 - count0, count, message)
+
+    def resetQueryCount(self):
+        """ Reset the query counter. """
+        self._count = self.cr.sql_log_count
+
+    def str(self, value):
+        """ Return a value different from run to run. """
+        return value + 'z' if self._round else value
+
+    def int(self, value):
+        """ Return a value different from run to run. """
+        return value + 1 if self._round else value
 
     @contextmanager
     def logQueries(self):
@@ -30,132 +56,112 @@ class TestPerformance(TransactionCase):
             self.cr.sql_log = sql_log
             sql_logger.setLevel(level)
 
+    @queryCount(3)
     def test_read_base(self):
-        """ Check reading records. """
+        """ Read records. """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
         # without cache
-        with self.assertMaxQueries("Prefetch records", 3):
-            for record in records:
-                record.partner_id.country_id.name
+        for record in records:
+            record.partner_id.country_id.name
 
         # with cache
-        with self.assertMaxQueries("Read prefetched records", 0):
-            for record in records:
-                record.partner_id.country_id.name
+        for record in records:
+            record.partner_id.country_id.name
 
         # value_pc must have been prefetched, too
-        with self.assertMaxQueries("Read another field on prefetched records", 0):
-            for record in records:
-                record.value_pc
+        for record in records:
+            record.value_pc
 
+    @queryCount(3)
     def test_read_mail(self):
-        """ Check reading records inheriting from 'mail.thread'. """
+        """ Read records inheriting from 'mail.thread'. """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
         # without cache
-        with self.assertMaxQueries("Prefetch records", 3):
-            for record in records:
-                record.partner_id.country_id.name
+        for record in records:
+            record.partner_id.country_id.name
 
         # with cache
-        with self.assertMaxQueries("Read prefetched records", 0):
-            for record in records:
-                record.partner_id.country_id.name
+        for record in records:
+            record.partner_id.country_id.name
 
         # value_pc must have been prefetched, too
-        with self.assertMaxQueries("Read another field on prefetched records", 0):
-            for record in records:
-                record.value_pc
+        for record in records:
+            record.value_pc
 
+    @queryCount(1)
     def test_write_base(self):
-        """ Check writing records. """
+        """ Write records (no recomputation). """
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
-        # warm up the caches
-        records.write({'name': 'Start', 'value': 10})
+        records.write({'name': self.str('X')})
 
-        # write in batch, without recomputation
-        with self.assertMaxQueries("Write in batch, no recomputation", 1):
-            records.write({'name': 'X'})
+    @queryCount(3)
+    def test_write_base_with_recomputation(self):
+        """ Write records (with recomputation). """
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
-        # write one by one, without recomputation
-        with self.assertMaxQueries("Write one by one, no recomputation", 5):
-            for record in records:
-                record.name = 'Y'
+        records.write({'value': self.int(20)})
 
-        # write in batch, with recomputation
-        with self.assertMaxQueries("Write in batch, with recomputation", 3):
-            records.write({'value': 20})
-
-        # write one by one, with recomputation
-        with self.assertMaxQueries("Write one by one, with recomputation", 15):
-            for record in records:
-                record.value = 30
-
+    @queryCount(7)
     def test_write_mail(self):
-        """ Check writing records inheriting from 'mail.thread'. """
+        """ Write records inheriting from 'mail.thread' (no recomputation). """
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
-        # warm up the caches
-        records.write({'value': 0})
-        records.write({'name': '0'})
+        records.write({'name': self.str('X')})
 
-        # write in batch, without recomputation
-        with self.assertMaxQueries("Write in batch, no recomputation", 3):
-            records.write({'name': 'X'})
+    @queryCount(9)
+    def test_write_mail_with_recomputation(self):
+        """ Write records inheriting from 'mail.thread' (with recomputation). """
+        records = self.env['test_performance.mail'].search([])
+        self.assertEqual(len(records), 5)
+        self.resetQueryCount()
 
-        # write one by one, without recomputation
-        with self.assertMaxQueries("Write one by one, no recomputation", 15):
-            for record in records:
-                record.name = 'Y'
+        records.write({'value': self.int(20)})
 
-        # write in batch, with recomputation
-        with self.assertMaxQueries("Write in batch, with recomputation", 5):
-            records.write({'value': 20})
+    @queryCount(45)
+    def test_write_mail_with_tracking(self):
+        """ Write records inheriting from 'mail.thread' (with field tracking). """
+        record = self.env['test_performance.mail'].search([], limit=1)
+        self.assertEqual(len(record), 1)
+        self.resetQueryCount()
 
-        # write one by one, with recomputation
-        with self.assertMaxQueries("Write one by one, with recomputation", 25):
-            for record in records:
-                record.value = 30
+        record.track = self.str('X')
 
-        # write on a tracked field
-        with self.assertMaxQueries("Write on a tracked field", 48):
-            records[0].track = 'X'
-
+    @queryCount(6)
     def test_create_base(self):
-        """ Check creating records. """
+        """ Create records. """
         model = self.env['test_performance.base']
+        model.create({'name': self.str('X')})
 
-        # warm up caches
-        model.create({'name': 'X'})
+    @queryCount(38)
+    def test_create_base_with_lines(self):
+        """ Create records with lines. """
+        model = self.env['test_performance.base']
+        model.create({
+            'name': self.str('Y'),
+            'line_ids': [(0, 0, {'value': val}) for val in range(10)],
+        })
 
-        # create record without lines
-        with self.assertMaxQueries("Create record without lines", 6):
-            model.create({'name': 'X'})
-
-        # create record with lines
-        with self.assertMaxQueries("Create record with lines", 39):
-            model.create({
-                'name': 'X',
-                'line_ids': [(0, 0, {'value': val}) for val in range(10)],
-            })
-
+    @queryCount(3)
     def test_create_mail(self):
-        """ Check creating records inheriting from 'mail.thread'. """
+        """ Create records inheriting from 'mail.thread' (without field tracking). """
         model = self.env['test_performance.mail']
+        model.with_context(tracking_disable=True).create({'name': self.str('X')})
 
-        # warm up caches
-        model.create({'name': 'X'})
-
-        # create without tracking changes
-        with self.assertMaxQueries("Create record without tracking fields", 3):
-            model.with_context(tracking_disable=True).create({'name': 'X'})
-
-        # create with tracking changes
-        with self.assertMaxQueries("Create record with tracking fields", 87):
-            model.create({'name': 'X'})
+    @queryCount(87)
+    def test_create_mail_with_tracking(self):
+        """ Create records inheriting from 'mail.thread' (with field tracking). """
+        model = self.env['test_performance.mail']
+        model.create({'name': self.str('Y')})
