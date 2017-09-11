@@ -684,6 +684,7 @@ var FieldX2Many = AbstractField.extend({
             if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
+                this._reset(record, ev);
                 this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
                 return $.when();
             }
@@ -871,7 +872,8 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.renderer.setRowMode(ev.data.recordID, 'edit')
+        var editedRecord = this.value.data[ev.data.index];
+        this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
     },
     /**

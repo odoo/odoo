@@ -437,11 +437,11 @@ ListRenderer.include({
         var self = this;
         var movedRecordID = ui.item.data('id');
         var rowIDs = _.pluck(this.state.data, 'id');
-        rowIDs = _.without(rowIDs, movedRecordID)
+        rowIDs = _.without(rowIDs, movedRecordID);
         rowIDs.splice(ui.item.index(), 0, movedRecordID);
         var sequences = _.map(this.state.data, function(record) {
             return record.data[self.handleField];
-        })
+        });
         this.trigger_up('resequence', {
             rowIDs: rowIDs,
             offset: _.min(sequences),
@@ -516,10 +516,9 @@ ListRenderer.include({
         var self = this;
         return this.unselectRow().then(function () {
             // Notify the controller we want to make a record editable
-            var record = self.state.data[rowIndex];
             var def = $.Deferred();
             self.trigger_up('edit_line', {
-                recordID: record.id,
+                index: rowIndex,
                 onSuccess: def.resolve.bind(def),
             });
             return def;
