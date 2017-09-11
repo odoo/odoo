@@ -12,6 +12,11 @@
             <script type="text/javascript" src="/portal/static/src/js/portal_tour.js"></script>
             <script type="text/javascript" src="/portal/static/src/js/portal_chatter.js"></script>
             <script type="text/javascript" src="/portal/static/src/js/portal_signature.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_common" inherit_id="web.assets_common" name="Portal Common Assets">
+        <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
         </xpath>
     </template>
