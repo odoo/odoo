@@ -1697,7 +1697,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.only('resequence a record twice', function (assert) {
+    QUnit.test('resequence a record twice', function (assert) {
         assert.expect(10);
 
         this.data.partner.records = [];
