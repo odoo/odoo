@@ -1,5 +1,5 @@
-@o-kanban-record-margin: 10px;
-@o-kanban-group-padding: 10px;
+@o-kanban-record-margin: @odoo-horizontal-padding/2;
+@o-kanban-group-padding: @odoo-horizontal-padding; // Cannot be higher than this
 
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
@@ -50,7 +50,6 @@
 .o-kanban-header() {
     .o-flex-display();
     height: 50px;
-    margin: 0 @o-kanban-record-margin;
     line-height: 2.2;
     color: @headings-color;
 }
@@ -174,7 +173,7 @@
         display: inline-block; // Force the creation of a block formatting context to clear float items
         border-color: @gray-lighter-darker;
         min-width: 150px;
-        margin: 0 @o-kanban-record-margin -1px;
+        margin: 0 0 -1px;
 
         // ------- Kanban Record, v11 Layout -------
         // Records colours
@@ -458,16 +457,18 @@
     // Kanban Grouped Layout
     &.o_kanban_grouped {
         min-height: 100%;
-        padding: 0 @odoo-horizontal-padding - @o-kanban-group-padding - @o-kanban-record-margin;
+        padding: 0;
         background-color: @gray-lighter;
 
         .o_kanban_record, .o_kanban_quick_create {
-            width: @o-kanban-default-record-width;
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         &.o_kanban_small_column .o_kanban_group {
             &:not(.o_column_folded) {
-                width: @o-kanban-small-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
+                width: @o-kanban-small-record-width + 2*@o-kanban-group-padding;
                 .o_kanban_record, .o_kanban_quick_create {
                     width: @o-kanban-small-record-width;
                 }
@@ -531,7 +532,7 @@
         }
 
         &:not(.o_column_folded) {
-            width: @o-kanban-default-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
+            width: @o-kanban-default-record-width + 2*@o-kanban-group-padding;
         }
 
         &.o_kanban_dragged {
