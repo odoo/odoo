@@ -73,6 +73,7 @@
         </record>
 
         <!-- Holidays: Allocation Request -->
+
         <record id="edit_holiday_new" model="ir.ui.view">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
@@ -414,7 +415,6 @@
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="act_window_id" ref="request_approve_holidays"/>
         </record>
-
         <record id="open_allocation_holidays" model="ir.actions.act_window">
             <field name="name">Allocation Request</field>
             <field name="res_model">hr.holidays</field>
@@ -433,7 +433,7 @@
                     Click here to create a new leave allocation request.
                 </p>
             </field>
-            <field name="domain">[('type','=','add')]</field>
+            <field name="domain">[('type','=','add'), "|", ('holiday_type', '=', 'employee'), "&amp;", ('holiday_type', '=', 'category'), ('state', '=', 'draft')]</field>
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -562,7 +562,6 @@
             groups="hr_holidays.group_hr_holidays_user"
             action="open_department_holidays_approve"
             sequence="2"/>
-
          <record id="open_department_holidays_allocation_approve" model="ir.actions.act_window">
             <field name="name">Leaves Allocation</field>
             <field name="res_model">hr.holidays</field>
@@ -574,7 +573,7 @@
                     Click here to create a new leave allocation.
                 </p>
             </field>
-            <field name="domain">[('type','=','add'),('holiday_type', '=', 'employee')]</field>
+            <field name="domain">[('type','=','add'), "|", ('holiday_type', '=', 'employee'), "&amp;", ('holiday_type', '=', 'category'), ('state', '=', 'draft')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
@@ -907,7 +906,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('state','not in',('draft', 'cancel', 'refuse')),('holiday_type', '=', 'employee')]</field>
+            <field name="domain">[('state','not in',('draft', 'cancel', 'refuse'))]</field>
             <field name="context">{'default_type':'add', 'search_default_approve':1, 'search_default_department':1, 'search_default_allocations':1}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="view_id" ref="hr_holiday_view_tree_allocation_to_approve"/>
