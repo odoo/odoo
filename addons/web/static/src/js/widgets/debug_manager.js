@@ -390,7 +390,7 @@ DebugManager.include({
                 // or m2m
                 if (!value || invisibleOrReadOnly || fieldInfo.type === 'one2many' ||
                     fieldInfo.type === 'many2many' || fieldInfo.type === 'binary' ||
-                    fieldsInfo[fieldName].options.isPassword) {
+                    fieldsInfo[fieldName].options.isPassword || !_.isEmpty(fieldInfo.depends)) {
                     return false;
                 }
                 return {
