@@ -50,7 +50,7 @@
     </template>
 
     <template id="portal_invoice_report" name="Invoice portal page inherit payment" inherit_id="account.portal_invoice_report">
-        <xpath expr="//h4" position="after">
+        <xpath expr="//div[@name='customer_address']" position="after">
             <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-if="tx_ids">
                 <div>
