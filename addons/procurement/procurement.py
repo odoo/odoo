@@ -212,6 +212,9 @@ class procurement_order(osv.osv):
                             else:
                                 self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
                         except (openerp.exceptions.Warning, osv.except_osv):
+                            # only interfere in batch mode
+                            if not autocommit:
+                                raise
                             cr.rollback()
                             type, value, traceback = exc_info()
                             self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
