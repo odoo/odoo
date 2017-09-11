@@ -201,9 +201,9 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and contact.state_id not in self.state_ids:
             return False
-        if self.zip_from and (contact.zip or '') < self.zip_from:
+        if self.zip_from and (contact.zip or '').upper() < self.zip_from.upper():
             return False
-        if self.zip_to and (contact.zip or '') > self.zip_to:
+        if self.zip_to and (contact.zip or '').upper() > self.zip_to.upper():
             return False
         return self
 
