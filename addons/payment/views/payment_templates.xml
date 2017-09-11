@@ -138,7 +138,7 @@
                 </t>
             </div>
             <div class="pull-right">
-                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
+                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb16'">
                     <t t-if="submit_txt">
                         <i t-if="icon_class" t-attf-class="fa {{icon_class}}"/>
                         <t t-esc="submit_txt"/>
