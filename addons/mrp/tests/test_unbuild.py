@@ -113,7 +113,7 @@ class TestUnbuild(TestMrpCommon):
         }).action_unbuild()
 
         # Check quantity in stock after last unbuild.
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), -5, 'You should have negative quantity for final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 10, 'You should have consumed all the 5 product in stock')
 
@@ -194,7 +194,7 @@ class TestUnbuild(TestMrpCommon):
             'product_uom_id': self.uom_unit.id,
         }).action_unbuild()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot), -5, 'You should have negative quantity for final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 10, 'You should have consumed all the 5 product in stock')
 
@@ -279,7 +279,7 @@ class TestUnbuild(TestMrpCommon):
             'product_uom_id': self.uom_unit.id,
         }).action_unbuild()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), -5, 'You should have negative quantity for final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 10, 'You should have consumed all the 5 product in stock')
 
@@ -378,7 +378,7 @@ class TestUnbuild(TestMrpCommon):
             'product_uom_id': self.uom_unit.id,
         }).action_unbuild()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final), -5, 'You should have negative quantity for final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, lot_id=lot_final, allow_negative=True), -5, 'You should have negative quantity for final product in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location, lot_id=lot_1), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location, lot_id=lot_2), 10, 'You should have consumed all the 5 product in stock')
 
