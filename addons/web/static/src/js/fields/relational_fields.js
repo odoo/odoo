@@ -1678,6 +1678,7 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         _.each(this.value.data, function (m2m) {
             var $tag = $('<span>')
                     .text(m2m.data.display_name)
+                    .data('res_id', m2m.res_id)
                     .prepend('<span>')
                     .appendTo(self.$el);
             if (self.colorField in m2m.data) {
@@ -1686,7 +1687,6 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
                     $tag.hide();
                 } else {
                     $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
-                    $tag.data('res_id', m2m.res_id);
                 }
             } else {
                 // display tags in grey by default
