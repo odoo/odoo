@@ -204,18 +204,16 @@ class CustomerPortal(CustomerPortal):
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
         if request.env['ir.config_parameter'].sudo().get_param(
                 'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
-            return False
+            return {'error': _('Operation not allowed')}
+        if not signature:
+            return {'error': _('Signature is missing.')}
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)
         except AccessError:
-            return {
-                'error': _('Invalid order')
-            }
-
+            return {'error': _('Invalid order')}
         if order_sudo.state != 'sent':
-            return {
-                'error': _('Order is not in a state requiring customer validation.')
-            }
+            return {'error': _('Order is not in a state requiring customer validation.')}
+
         order_sudo.action_confirm()
 
         _message_post_helper(
