@@ -15,7 +15,7 @@ class Repair(models.Model):
 
     @api.model
     def _default_stock_location(self):
-        warehouse = self.env.ref('stock.warehouse0', raise_if_not_found=False)
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
         return False
