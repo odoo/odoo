@@ -317,11 +317,12 @@
             <div class="panel-body">
                 <div class="row" t-if="order.state == 'sent' and portal_confirmation == 'sign'" id="portal_sign">
                     <div class="col-md-offset-3 col-md-6">
-                        <h4>Accept order</h4>
+                        <h4>Accept &amp; Sign</h4>
                         <t t-call="portal.portal_signature">
                             <t t-set="object" t-value="order"/>
                             <t t-set="partner_name" t-value="order.partner_id.name"/>
                             <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
+                            <t t-set="signLabel" t-value="'Accept Order'"/>
                             <t t-set="accessToken" t-value="order.access_token"/>
                         </t>
                     </div>
