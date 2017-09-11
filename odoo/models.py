@@ -4678,7 +4678,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        recs = self.browse(self._prefetch[self._name]) - self.env.cache.get_records(self, field)
+        ids0 = self._prefetch[self._name]
+        ids1 = set(self.env.cache.get_records(self, field)._ids)
+        recs = self.browse([it for it in ids0 if it and it not in ids1])
         if limit and len(recs) > limit:
             recs = self + (recs - self)[:(limit - len(self))]
         return recs
