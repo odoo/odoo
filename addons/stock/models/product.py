@@ -365,7 +365,7 @@ class Product(models.Model):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {}
+        action['context'] = {'default_product_id': self.id}
         return action
 
     @api.multi
