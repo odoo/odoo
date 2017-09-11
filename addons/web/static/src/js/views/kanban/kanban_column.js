@@ -86,7 +86,7 @@ var KanbanColumn = Widget.extend({
         for (var i = 0; i < this.data_records.length; i++) {
             this.addRecord(this.data_records[i], {no_update: true});
         }
-        this.$header.tooltip();
+        this.$header.find('.o_kanban_header_title').tooltip();
 
         if (config.device.size_class > config.device.SIZES.XS && this.draggable !== false) {
             // deactivate sortable in mobile mode.  It does not work anyway,
@@ -215,7 +215,7 @@ var KanbanColumn = Widget.extend({
         this.$el.toggleClass('o_column_folded', this.folded);
         var tooltip = this.size + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
+        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {

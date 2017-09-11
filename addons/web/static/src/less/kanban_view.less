@@ -47,7 +47,7 @@
     padding: 0 @o-kanban-group-padding * 0.5;
     cursor: pointer;
 }
-.o-kanban-header() {
+.o-kanban-header-title() {
     .o-flex-display();
     height: 50px;
     line-height: 2.2;
@@ -485,8 +485,8 @@
         border-width: 0 1px;
         margin-left: -1px;
 
-        .o_kanban_header {
-            .o-kanban-header();
+        .o_kanban_header > .o_kanban_header_title {
+            .o-kanban-header-title();
 
             .o_column_title {
                 .o-flex(1, 1, auto);
@@ -544,7 +544,7 @@
         }
     }
 
-    &.ui-sortable .o_kanban_header {
+    &.ui-sortable .o_kanban_header_title {
         cursor: move;
     }
 
@@ -557,7 +557,7 @@
             margin-left: 1px;
         }
 
-        .o_kanban_header {
+        .o_kanban_header_title {
             position: relative;
             opacity: 0.5;
 
@@ -583,7 +583,7 @@
         .o-kanban-slim-col();
 
         .o_column_header {
-            .o-kanban-header();
+            .o-kanban-header-title();
             position: relative;
             opacity: 0.5;
 
