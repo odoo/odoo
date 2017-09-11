@@ -104,9 +104,8 @@ odoo.define('payment.payment_form', function (require) {
                         }
                         // if the server has returned false, we display an error
                         else {
-                            self.displayError(
-                                _t('Server Error'),
-                                _t("<p>We are not able to add your payment method at the moment.</p>"));
+                            self.$('#o_payment_add_token_acq_' + acquirer_id)
+                                .append('<div class="text-danger ml16">' + _t('e.g. Your credit card details are wrong. Please verify.') + '</div>');
                         }
                         // here we remove the 'processing' icon from the 'add a new payment' button
                         $(button).attr('disabled', false);
@@ -205,7 +204,6 @@ odoo.define('payment.payment_form', function (require) {
 
                 inputs_form.toArray().forEach(function (element) {
                     if (element.dataset.isRequired) {
-                        debugger;
                         if (element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('has-error');
                             empty_inputs.push(element.placeholder);
@@ -253,10 +251,8 @@ odoo.define('payment.payment_form', function (require) {
                     }
                     // if the server has returned false, we display an error
                     else {
-                        self.displayError(
-                            _t('Server Error'),
-                            _t("<p>We are not able to add your payment method at the moment.</p>")
-                        );
+                        self.$('#o_payment_add_token_acq_' + acquirer_id)
+                            .append('<div class="text-danger ml16">' + _t('e.g. Your credit card details are wrong. Please verify.') + '</div>');
                     }
                     // here we remove the 'processing' icon from the 'add a new payment' button
                     $(button).attr('disabled', false);
