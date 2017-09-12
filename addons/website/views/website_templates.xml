@@ -883,7 +883,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">
-                      <tr class="pages_management_main_object" t-att-data-main-object="page">
+                      <tr>
                           <td><i t-if="page.is_homepage" class="fa fa-home"></i> <t t-esc="page.name"/></td>
                           <td><a t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
                           <td style="text-align:center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>

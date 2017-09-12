@@ -67,7 +67,7 @@ tour.register('rte_translator', {
     content: "close modal",
     trigger: '.modal-footer .btn-default',
 }, {
-    content: "check if tr anslation is activate",
+    content: "check if translation is activate",
     trigger: '[data-oe-translation-id]',
 }, {
     content: "translate text",

@@ -93,15 +93,6 @@ class Website(models.Model):
         return self.browse(website_id).homepage_id.url
 
     @api.model
-    def new_link(self, name, redirect_to):
-        return self.env['website.menu'].create({
-            'name': name,
-            'url': redirect_to,
-            'website_id': self.get_current_website().id,
-            'parent_id': self.get_current_website().menu_id.id,
-        }).id
-
-    @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page

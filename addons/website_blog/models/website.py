@@ -13,10 +13,9 @@ class Website(models.Model):
 
         page = self.env['website.page'].browse(int(page_id))
         path = page.url
-        fullpath = "/website.%s" % path[1:]
 
         dom = [
-            '|', ('content', 'ilike', path), ('content', 'ilike', fullpath)
+            ('content', 'ilike', path)
         ]
         posts = self.env['blog.post'].search(dom)
         if posts:
