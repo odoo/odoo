@@ -76,7 +76,7 @@ var PortalChatter = Widget.extend({
      * Fetch the messages and the message count from the server for the
      * current page and current domain.
      *
-     * @param {Array}
+     * @param {Array} domain
      * @returns {Deferred}
      */
     messageFetch: function(domain){

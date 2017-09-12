@@ -89,7 +89,7 @@ var ChatterComposer = composer.BasicComposer.extend({
 
     /**
      * Get the list of selected suggested partners
-     * @returns Array() : list of 'recipient' selected partners (may not be created in db)
+     * @returns {Array} list of 'recipient' selected partners (may not be created in db)
      **/
     get_checked_suggested_partners: function () {
         var self = this;
@@ -106,8 +106,8 @@ var ChatterComposer = composer.BasicComposer.extend({
     /**
      * Check the additional partners (not necessary registered partners), and open a popup form view
      * for the ones who informations is missing.
-     * @param Array : list of 'recipient' partners to complete informations or validate
-     * @returns Deferred resolved with the list of checked suggested partners (real partner)
+     * @param {Array} checked_suggested_partners list of 'recipient' partners to complete informations or validate
+     * @returns {Deferred} resolved with the list of checked suggested partners (real partner)
      **/
     check_suggested_partners: function (checked_suggested_partners) {
         var self = this;

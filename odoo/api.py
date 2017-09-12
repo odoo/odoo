@@ -692,9 +692,9 @@ def call_kw(model, name, args, kwargs):
 class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
-         - :attr:`cr`, the current database cursor;
-         - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary.
+        - :attr:`cr`, the current database cursor;
+        - :attr:`uid`, the current user id;
+        - :attr:`context`, the current context dictionary.
 
         It provides access to the registry by implementing a mapping from model
         names to new api models. It also holds a cache for records, and a data

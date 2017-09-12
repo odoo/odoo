@@ -1741,10 +1741,9 @@ var FieldPercentPie = AbstractField.extend({
 });
 
 /**
- * FieldProgressBar
- * parameters
- * - title: title of the bar, displayed on top of the bar
- * options
+ * Node options:
+ *
+ * - title: title of the bar, displayed on top of the bar options
  * - editable: boolean if value is editable
  * - current_value: get the current_value from the field that must be present in the view
  * - max_value: get the max_value from the field that must be present in the view

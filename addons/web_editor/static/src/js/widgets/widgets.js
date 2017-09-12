@@ -391,11 +391,15 @@ var ImageDialog = Widget.extend({
     },
 });
 
-/* list of font icons to load by editor. The icons are displayed in the media editor and
+/**
+ *  list of font icons to load by editor. The icons are displayed in the media editor and
  * identified like font and image (can be colored, spinned, resized with fa classes).
  * To add font, push a new object {base, parser}
+ *
  * - base: class who appear on all fonts (eg: fa fa-refresh)
  * - parser: regular expression used to select all font in css style sheets
+ *
+ * @type Array
  */
 var fontIcons = [{'base': 'fa', 'parser': /(?=^|\s)(\.fa-[0-9a-z_-]+::?before)/i}];
 
