@@ -406,6 +406,22 @@ class MrpProduction(models.Model):
         return True
 
     @api.multi
+    def button_update_date(self):
+        """ Propagates the updated deadline to the underlying raw moves and finished moves. """
+        self.ensure_one()
+        assert self.state == 'confirmed'
+
+        (self.move_raw_ids | self.move_finished_ids).write({
+            'date': self.date_planned_start,
+            'date_expected': self.date_planned_start,
+        })
+
+        for move in self.move_raw_ids | self.move_finished_ids:
+            move.action_confirm()
+
+        return True
+
+    @api.multi
     def open_produce_product(self):
         self.ensure_one()
         action = self.env.ref('mrp.act_mrp_product_produce').read()[0]

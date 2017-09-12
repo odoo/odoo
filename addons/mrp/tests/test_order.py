@@ -459,3 +459,32 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard.do_produce()
         self.assertEqual(production.move_raw_ids[0].quantity_done, 16, 'Should use half-up rounding when producing')
         self.assertEqual(production.move_raw_ids[1].quantity_done, 34, 'Should use half-up rounding when producing')
+
+    def test_date_update(self):
+        """
+        Test the update of the deadline
+        """
+        start = datetime.now()
+
+        man_order = self.env['mrp.production'].sudo(self.user_mrp_manager).create({
+            'date_planned_start': start,
+            'name': 'Build_product_6',
+            'product_id': self.product_6.id,
+            'product_uom_id': self.product_6.uom_id.id,
+            'product_qty': 3.0,
+            'bom_id': self.bom_3.id,
+            'location_src_id': self.location_1.id,
+            'location_dest_id': self.warehouse_1.wh_output_stock_loc_id.id,
+        })
+        for move in man_order.move_raw_ids | man_order.move_finished_ids:
+            self.assertEqual(move.date, Dt.to_string(start))
+            self.assertEqual(move.date_expected, Dt.to_string(start))
+
+        start = datetime.now() + timedelta(days=3)
+        man_order.date_planned_start = start
+        man_order.button_update_date()
+
+        for move in man_order.move_raw_ids | man_order.move_finished_ids:
+            self.assertEqual(move.date, Dt.to_string(start))
+            self.assertEqual(move.date_expected, Dt.to_string(start))
+
