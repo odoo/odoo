@@ -337,8 +337,9 @@ odoo.define('payment.payment_form', function (require) {
         // event handler when clicking on a radio button
         radioClickEvent: function (ev) {
             ev.preventDefault();
-            var $action = $(ev.currentTarget);
-            $action.find('input[type="radio"]').attr('checked','checked')
+            // radio button checked when we click on entire zone(body) of the payment acquirer
+            this.$('input[type="radio"]:checked').prop("checked", false);
+            $(ev.currentTarget).find('input[type="radio"]').prop("checked", true);
             this.updateNewPaymentDisplayStatus();
         },
         updateNewPaymentDisplayStatus: function ()
