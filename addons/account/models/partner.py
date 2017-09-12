@@ -365,7 +365,12 @@ class ResPartner(models.Model):
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        if self.ids:
+            self.env.cr.execute(
+                'UPDATE res_partner SET last_time_entries_checked = %s WHERE id IN %s',
+                (time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), tuple(self.ids),)
+            )
+        return True
 
     @api.one
     def _get_company_currency(self):
