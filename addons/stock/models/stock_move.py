@@ -462,6 +462,38 @@ class StockMove(models.Model):
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
 
+    def _get_relevant_state_among_moves(self):
+        # We sort our moves by importance of state:
+        #     ------------- 0
+        #     | Assigned  |
+        #     -------------
+        #     |  Waiting  |
+        #     -------------
+        #     |  Partial  |
+        #     -------------
+        #     |  Confirm  |
+        #     ------------- len-1
+        sort_map = {
+            'assigned': 4,
+            'waiting': 3,
+            'partially_available': 2,
+            'confirmed': 1,
+        }
+        moves_todo = self\
+            .filtered(lambda move: move.state not in ['cancel', 'done'])\
+            .sorted(key=lambda move: sort_map.get(move.state, 0))
+        # The picking should be the same for all moves.
+        if moves_todo[0].picking_id.move_type == 'one':
+            if moves_todo[0].state in ('partially_available', 'confirmed'):
+                return 'confirmed'
+            else:
+                return moves_todo[0].state or 'draft'
+        elif moves_todo[0].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
+            return 'partially_available'
+        else:
+            # take the less important state among all move_lines.
+            return moves_todo[-1].state or 'draft'
+
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
         if not self.product_id or self.product_qty < 0.0:
