@@ -14,7 +14,7 @@ odoo.define('payment.payment_form', function (require) {
             'click #o_payment_form_pay': 'payEvent',
             'click #o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
-            'click input[type="radio"]': 'radioClickEvent'
+            'click input[type="radio"], .o_payment_acquirer': 'radioClickEvent'
         },
 
         init: function(parent, options) {
@@ -336,6 +336,9 @@ odoo.define('payment.payment_form', function (require) {
         },
         // event handler when clicking on a radio button
         radioClickEvent: function (ev) {
+            ev.preventDefault();
+            var $action = $(ev.currentTarget);
+            $action.find('input[type="radio"]').attr('checked','checked')
             this.updateNewPaymentDisplayStatus();
         },
         updateNewPaymentDisplayStatus: function ()
