@@ -386,7 +386,7 @@ class Website(models.Model):
                     newval = []
                     for val in values:
                         query = i == len(convitems)-1 and query_string
-                        for value_dict in converter.generate(uid=self.env.uid, query=query, args=val):
+                        for value_dict in converter.generate(uid=self.env.uid, args=val):
                             newval.append(val.copy())
                             value_dict[name] = value_dict['loc']
                             del value_dict['loc']
@@ -395,17 +395,18 @@ class Website(models.Model):
 
                 for value in values:
                     domain_part, url = rule.build(value, append_unknown=False)
-                    page = {'loc': url}
-                    for key, val in value.items():
-                        if key.startswith('__'):
-                            page[key[2:]] = val
-                    if url in ('/sitemap.xml',):
-                        continue
-                    if url in url_set:
-                        continue
-                    url_set.add(url)
+                    if query_string in url:
+                        page = {'loc': url}
+                        for key, val in value.items():
+                            if key.startswith('__'):
+                                page[key[2:]] = val
+                        if url in ('/sitemap.xml',):
+                            continue
+                        if url in url_set:
+                            continue
+                        url_set.add(url)
 
-                    yield page
+                        yield page
 
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
         domain = [('url', '!=', '/')]
