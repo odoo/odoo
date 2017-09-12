@@ -109,7 +109,7 @@ class AccountInvoiceLine(models.Model):
         'sale.order.line',
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
-        string='Sales Order Lines', readonly=True, copy=False)
+        string='Sales Order Lines', readonly=True, copy=True)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
     # TODO: remove layout_category_sequence in master or make it work properly
