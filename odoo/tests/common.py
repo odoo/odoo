@@ -172,6 +172,7 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
+        super(TransactionCase, self).setUp()
         self.registry = odoo.registry(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
@@ -209,6 +210,7 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
+        super(SingleTransactionCase, cls).setUpClass()
         cls.registry = odoo.registry(get_db_name())
         cls.cr = cls.registry.cursor()
         cls.uid = odoo.SUPERUSER_ID
@@ -221,6 +223,7 @@ class SingleTransactionCase(BaseCase):
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+        super(SingleTransactionCase, cls).tearDownClass()
 
 
 savepoint_seq = itertools.count()
@@ -236,12 +239,15 @@ class SavepointCase(SingleTransactionCase):
     the test data either.
     """
     def setUp(self):
+        super(SavepointCase, self).setUp()
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+
     def tearDown(self):
         self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
         self.env.clear()
         self.registry.clear_caches()
+        super(SavepointCase, self).tearDown()
 
 
 class HttpCase(TransactionCase):
