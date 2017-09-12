@@ -533,7 +533,7 @@ class AccountTaxTemplate(models.Model):
         help='Account used as counterpart for the journal entry, for taxes exigible based on payments.')
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
     ]
 
     @api.multi
