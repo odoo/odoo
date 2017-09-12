@@ -23,9 +23,9 @@
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="col-md-12 row" id="delivery_carrier">
+            <div t-if="deliveries" class="col-md-12 row o_rightfit" id="delivery_carrier">
                 <div class="col-lg-7 col-sm-8">
-                <h4>Choose a delivery method <i class="fa fa-question text-muted" title="Delivery price will be updated after choosing a new delivery method" aria-hidden="true"></i></h4>
+                <h3 title="Delivery price will be updated after choosing a new delivery method">Choose a delivery method</h3>
                 <ul class="list-unstyled">
                     <li t-foreach="deliveries" t-as="delivery">
                             <div id="delivery_method">
@@ -38,10 +38,10 @@
                             </div>
                     </li>
                 </ul>
-                <a class="btn btn-default btn-block"
+                <a class="btn-link"
                         groups="base.group_system"
                         t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
-                    <i class="fa fa-plus-square" aria-hidden="true"></i> Configure delivery methods
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i> Add delivery methods
                 </a>
                 </div>
             </div>
