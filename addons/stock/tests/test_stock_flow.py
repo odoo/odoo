@@ -22,7 +22,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         move_a = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -161,7 +162,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         move_cust_a = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -447,7 +449,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -546,7 +549,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         move_in_a = self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -739,7 +743,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.kgB.name,
             'product_id': self.kgB.id,
@@ -781,7 +786,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.DozA.name,
             'product_id': self.DozA.id,
@@ -902,7 +908,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': productKG.name,
             'product_id': productKG.id,
@@ -951,7 +958,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': productKG.name,
             'product_id': productKG.id,
@@ -1256,7 +1264,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -1284,7 +1293,8 @@ class TestStockFlow(TestStockCommon):
             'name': 'testpicking',
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         move_out = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -1314,7 +1324,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.pack_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         move_out = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -1327,7 +1338,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.pack_location})
+            'location_dest_id': self.pack_location,
+            'origin': 'don\'t autoconfirm'})
         move_pack = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -1341,7 +1353,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         move_in = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
@@ -1435,7 +1448,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.productE.name,
             'product_id': self.productE.id,
@@ -1463,7 +1477,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.productE.name,
             'product_id': self.productE.id,
@@ -1494,7 +1509,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location})
+            'location_dest_id': self.stock_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.productE.name,
             'product_id': self.productE.id,
@@ -1523,7 +1539,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         self.MoveObj.create({
             'name': self.productE.name,
             'product_id': self.productE.id,
@@ -1586,7 +1603,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         picking_out.move_type = 'one'
 
         self.MoveObj.create({
@@ -1634,7 +1652,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
@@ -1682,7 +1701,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
@@ -1729,7 +1749,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         picking_out.move_type = 'direct'
 
         self.MoveObj.create({
@@ -1758,7 +1779,8 @@ class TestStockFlow(TestStockCommon):
             'partner_id': self.partner_agrolite_id,
             'picking_type_id': self.picking_type_out,
             'location_id': self.stock_location,
-            'location_dest_id': self.customer_location})
+            'location_dest_id': self.customer_location,
+            'origin': 'don\'t autoconfirm'})
         move_mto_alone = self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,

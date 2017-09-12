@@ -285,6 +285,9 @@ class Picking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(related='picking_type_id.show_operations')
+    hide_action_confirm = fields.Boolean(
+        compute='_compute_hide_action_confirm',
+        help="Technical field used to know when to show the 'Mark as Todo' button.")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -381,6 +384,15 @@ class Picking(models.Model):
                 break
         self.has_packages = has_packages
 
+    @api.multi
+    @api.depends('state', 'move_lines')
+    def _compute_hide_action_confirm(self):
+        for picking in self:
+            if not picking.id or picking.state != 'draft' or not picking.move_lines:
+                picking.hide_action_confirm = True
+            else:
+                picking.hide_action_confirm = False
+
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:
@@ -431,7 +443,10 @@ class Picking(models.Model):
                 if len(move) == 3:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
-        return super(Picking, self).create(vals)
+
+        res = super(Picking, self).create(vals)
+        res._auto_confirm_if_manual()
+        return res
 
     @api.multi
     def write(self, vals):
@@ -444,6 +459,7 @@ class Picking(models.Model):
             after_vals['location_dest_id'] = vals['location_dest_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
+        self._auto_confirm_if_manual()
         return res
 
     @api.multi
@@ -806,3 +822,10 @@ class Picking(models.Model):
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
         return action
+
+    @api.multi
+    def _auto_confirm_if_manual(self):
+        for picking in self:
+            if not picking.origin:
+                picking.action_confirm()
+                picking.force_assign()
