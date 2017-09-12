@@ -22,6 +22,9 @@ def _auto_install_l10n(cr, registry):
             module_list.append('l10n_syscohada')
         elif country_code == 'GB':
             module_list.append('l10n_uk')
+        elif country_code == 'DE':
+            module_list.append('l10n_de_skr03')
+            module_list.append('l10n_de_skr04')
         else:
             if env['ir.module.module'].search([('name', '=', 'l10n_' + country_code.lower())]):
                 module_list.append('l10n_' + country_code.lower())
