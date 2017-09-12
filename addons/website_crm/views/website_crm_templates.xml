@@ -3,7 +3,7 @@
         <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
             <xpath expr="//div[@name='mail_button']" position="replace">
                 <div>
-                    <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/website_crm-contactus_thanks" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
+                    <form action="/website_form/" method="post" data-model_name="crm.lead" data-success_page="/contactus-thank-you" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
                             <div class="col-md-7 col-sm-8">
@@ -91,7 +91,7 @@
     </record>
     <record id="contactus_thanks_page" model="website.page">
         <field name="name">Thanks (Contact us)</field>
-        <field name="url">/website_crm-contactus_thanks</field>
+        <field name="url">/contactus-thank-you</field>
         <field name="website_published">True</field>
         <field name="ir_ui_view_id" ref="contactus_thanks" />
     </record>

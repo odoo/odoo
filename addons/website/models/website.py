@@ -102,12 +102,17 @@ class Website(models.Model):
         }).id
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, redirect_to=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
             :param namespace : module part of the xml_id if none, the template module name is used
         """
+
+        if namespace:
+            template_module = namespace
+        else:
+            template_module, _ = template.split('.')
         # completely arbitrary max_length
         url_parts = name.split('/')
         page_url = '/' + ('/').join([slugify(url_part) for url_part in url_parts])
@@ -119,12 +124,11 @@ class Website(models.Model):
 
         template_record = self.env.ref(template)
         website_id = self._context.get('website_id')
-        key = 'website.' + page_key
+        key = '%s.%s' % (template_module, page_key)
         view = template_record.copy({'website_id': website_id, 'key': key})
 
         view.with_context(lang=None).write({
-            'page': ispage,
-            'arch': template_record.arch.replace(template, page_key),
+            'arch': template_record.arch.replace(template, key),
             'name': name,
         })
         if ispage:
@@ -683,6 +687,17 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_left = fields.Integer('Parent Left', index=True)
     parent_right = fields.Integer('Parent Rigth', index=True)
+
+    @api.model
+    def clean_url(self):
+        # clean the url with heuristic
+        url = self.url
+        if not self.url.startswith('/'):
+            if '@' in self.url and not self.url.startswith('mailto'):
+                url = 'mailto:%s' % self.url
+            elif not self.url.startswith('http'):
+                url = '/%s' % self.url
+        return self.url
 
     @api.model
     def create_with_page(self, website_id, name, page_id):

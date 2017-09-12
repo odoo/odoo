@@ -77,8 +77,8 @@ class Website(Home):
         else:
             top_menu = request.website.sudo().menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id[0]
-            if first_menu and (not (first_menu.url.startswith(('/', '/?', '/#')))):
-                    return request.redirect(first_menu.url)
+            if first_menu and first_menu.url != '/' and (not (first_menu.url.startswith(('/?', '/#')))):
+                return request.redirect(first_menu.url)
 
         raise request.not_found()
 

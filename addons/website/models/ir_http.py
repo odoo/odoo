@@ -123,7 +123,7 @@ class Http(models.AbstractModel):
         # serve attachment before
         res = super(Http, cls)._handle_exception_serve(exception)
 
-        if not res:
+        if not res: # if no attachment
             website_page = cls._serve_page()
             if website_page:
                 res = website_page
@@ -131,7 +131,6 @@ class Http(models.AbstractModel):
             redirect = cls._serve_redirect()
             if redirect:
                 res = request.redirect(redirect.url_to, code=redirect.type)
-
         return res
 
     @classmethod

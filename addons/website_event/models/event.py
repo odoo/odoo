@@ -86,7 +86,7 @@ class Event(models.Model):
                     if name not in existing_page_names:
                         if not url:
                             newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)
-                            url = "/event/" + slug(self) + "/page/website." + newpath[1:]
+                            url = "/event/" + slug(self) + "/page/" + newpath[1:]
                         self.env['website.menu'].create({
                             'name': name,
                             'url': url,
