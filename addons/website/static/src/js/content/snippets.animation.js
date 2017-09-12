@@ -588,7 +588,8 @@ registry.mediaVideo = Animation.extend({
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
             this.$target.html(editor+size);
         }
-        this.$target.html(this.$target.html()+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+        // rebuilding the iframe, from https://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/
+        this.$target.html(this.$target.html()+'<iframe sandbox="allow-scripts allow-same-origin" src="'+_.escape(this.$target.data("oe-expression"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
         return this._super.apply(this, arguments);
     },
 });

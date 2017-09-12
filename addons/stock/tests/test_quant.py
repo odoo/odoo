@@ -131,7 +131,8 @@ class StockQuant(TransactionCase):
             'quantity': 5.0,
             'reserved_quantity': 0.0,
         })
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), -5.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, allow_negative=True), -5.0)
 
     def test_get_available_quantity_7(self):
         """ Quantity availability with only one tracked quant in a location.
@@ -153,7 +154,8 @@ class StockQuant(TransactionCase):
             'reserved_quantity': 20.0,
             'lot_id': lot1.id,
         })
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1), -10.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1, allow_negative=True), -10.0)
 
     def test_get_available_quantity_8(self):
         """ Quantity availability with a consumable product.
@@ -282,7 +284,8 @@ class StockQuant(TransactionCase):
             'type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, allow_negative=True), -1.0)
 
     def test_decrease_available_quantity_2(self):
         """ Decrease the available quantity when multiple quants are already in a location.

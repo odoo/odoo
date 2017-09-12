@@ -622,7 +622,8 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         delivery_order.with_context(debug=True).do_transfer()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -1.0)
 
         extra_move = delivery_order.move_lines - move1
         extra_move_line = extra_move.move_line_ids[0]
@@ -677,7 +678,8 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 3
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         delivery_order.do_transfer()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), -2.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -2.0)
 
         extra_move = delivery_order.move_lines - move1
         extra_move_line = extra_move.move_line_ids[0]

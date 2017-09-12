@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models
 
 
@@ -22,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             auth_signup_reset_password=get_param('auth_signup.reset_password', 'False').lower() == 'true',
             auth_signup_uninvited='b2c' if get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
-            auth_signup_template_user_id=get_param('auth_signup.template_user_id', 'False').lower() == 'true',
+            auth_signup_template_user_id=literal_eval(get_param('auth_signup.template_user_id', 'False')),
         )
         return res
 
@@ -38,6 +40,6 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def open_template_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
-        action['res_id'] = self.env.ref('auth_signup.default_template_user').id
+        action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('auth_signup.template_user_id', 'False'))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action

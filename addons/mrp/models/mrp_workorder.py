@@ -109,7 +109,7 @@ class MrpWorkorder(models.Model):
         'stock.move.line', 'workorder_id',
         domain=[('done_wo', '=', False)])
     final_lot_id = fields.Many2one(
-        'stock.production.lot', 'Current Lot', domain="[('product_id', '=', product_id)]",
+        'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')

@@ -9,6 +9,8 @@ from PIL import ImageEnhance
 from random import randrange
 
 # Preload PIL with the minimal subset of image formats we need
+from odoo.tools import pycompat
+
 Image.preinit()
 Image._initialized = 2
 
@@ -253,6 +255,8 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
             previous parameters.
     """
     return_dict = dict()
+    if isinstance(base64_source, pycompat.text_type):
+        base64_source = base64_source.encode('ascii')
     if return_big:
         return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big)
     if return_medium:
