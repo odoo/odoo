@@ -136,7 +136,6 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
             'This installs the module account_bank_statement_import_ofx.')
-    module_l10n_fr_certification = fields.Boolean('Activate the compliance of Odoo towards the French requirements of inalterability of data. Do not uninstall')
 
     @api.model
     def _default_has_default_company(self):

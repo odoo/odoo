@@ -29,7 +29,7 @@ class AccountMove(models.Model):
                                  ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_move and len(prev_move) != 1:
             raise UserError(
-               _('Error occured when computing the hash. Impossible to get the unique previous posted move'))
+               _('Error occured when computing the inalterability. Impossible to get the unique previous posted move'))
 
         #build and return the hash
         return self._compute_hash(prev_move.l10n_fr_hash if prev_move else '')
@@ -90,6 +90,7 @@ class AccountMove(models.Model):
                 res |= super(AccountMove, move).write(vals_hashing)
         return res
 
+    @api.multi
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
@@ -142,7 +143,7 @@ class AccountMoveLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    l10n_fr_b2c = fields.Boolean('This journal is used to record business to customer sales')
+    l10n_fr_b2c = fields.Boolean('Data Inalterability')
 
     @api.onchange('type')
     def _compute_b2c(self):
