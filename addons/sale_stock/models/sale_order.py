@@ -227,7 +227,8 @@ class SaleOrderLine(models.Model):
             if not line.order_id.procurement_group_id:
                 line.order_id.procurement_group_id = self.env['procurement.group'].create({
                     'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
-                    'sale_id': line.order_id.id
+                    'sale_id': line.order_id.id,
+                    'partner_id': line.order_id.partner_shipping_id.id,
                 })
             values = line._prepare_procurement_values(group_id=line.order_id.procurement_group_id)
             product_qty = line.product_uom_qty - qty
