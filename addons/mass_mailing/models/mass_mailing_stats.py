@@ -38,7 +38,10 @@ class MailMailStats(models.Model):
     opened = fields.Datetime(help='Date when the email has been opened the first time')
     replied = fields.Datetime(help='Date when this email has been replied for the first time.')
     bounced = fields.Datetime(help='Date when this email has bounced.')
+    # Link tracking
     links_click_ids = fields.One2many('link.tracker.click', 'mail_stat_id', string='Links click')
+    clicked = fields.Datetime(help='Date when customer clicked on at least one tracked link')
+    # Status
     state = fields.Selection(compute="_compute_state",
                              selection=[('outgoing', 'Outgoing'),
                                         ('exception', 'Exception'),
@@ -51,7 +54,7 @@ class MailMailStats(models.Model):
                                     store=True)
     recipient = fields.Char(compute="_compute_recipient")
 
-    @api.depends('sent', 'opened', 'replied', 'bounced', 'exception')
+    @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception')
     def _compute_state(self):
         self.update({'state_update': fields.Datetime.now()})
         for stat in self:
@@ -59,7 +62,7 @@ class MailMailStats(models.Model):
                 stat.state = 'exception'
             elif stat.sent:
                 stat.state = 'sent'
-            elif stat.opened:
+            elif stat.opened or stat.clicked:
                 stat.state = 'opened'
             elif stat.replied:
                 stat.state = 'replied'
@@ -103,6 +106,11 @@ class MailMailStats(models.Model):
     def set_opened(self, mail_mail_ids=None, mail_message_ids=None):
         statistics = self._get_records(mail_mail_ids, mail_message_ids, [('opened', '=', False)])
         statistics.write({'opened': fields.Datetime.now()})
+        return statistics
+
+    def set_clicked(self, mail_mail_ids=None, mail_message_ids=None):
+        statistics = self._get_records(mail_mail_ids, mail_message_ids, [('clicked', '=', False)])
+        statistics.write({'clicked': fields.Datetime.now()})
         return statistics
 
     def set_replied(self, mail_mail_ids=None, mail_message_ids=None):

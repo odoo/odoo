@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class LinkTracker(models.Model):
@@ -17,6 +17,15 @@ class LinkTrackerClick(models.Model):
     mail_stat_id = fields.Many2one('mail.mail.statistics', string='Mail Statistics')
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
+
+    @api.model
+    def add_click(self, code, ip, country_code, stat_id=False):
+        res = super(LinkTrackerClick, self).add_click(code, ip, country_code, stat_id=stat_id)
+        if stat_id:
+            stat_sudo = self.env['mail.mail.statistics'].sudo().browse(stat_id)
+            stat_sudo.set_opened()
+            stat_sudo.set_clicked()
+        return res
 
     def _get_click_values_from_route(self, route_values):
         click_values = super(LinkTrackerClick, self)._get_click_values_from_route(route_values)
