@@ -6,19 +6,19 @@ from itertools import islice
 import json
 from xml.etree import ElementTree as ET
 import logging
-import re
 
 import requests
 import werkzeug.utils
 import werkzeug.wrappers
 
 import odoo
-from odoo import http, models
+from odoo import http, models, _
 from odoo import fields
 from odoo.http import request
 
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
+from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
 
 from odoo.tools import pycompat, OrderedSet
 
@@ -63,19 +63,24 @@ class QueryURL(object):
 
 
 class Website(Home):
+    _items_per_page = CustomerPortal._items_per_page
 
     @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
-        page = 'homepage'
-        main_menu = request.env.ref('website.main_menu', raise_if_not_found=False)
-        if main_menu:
-            first_menu = main_menu.child_id and main_menu.child_id[0]
-            if first_menu:
-                if first_menu.url and (not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url == '/'))):
+        homepage = request.website.homepage_id
+        if homepage and homepage.url != '/':
+            return request.env['ir.http'].reroute(homepage.url)
+
+        website_page = request.env['ir.http']._serve_page()
+        if website_page:
+            return website_page
+        else:
+            top_menu = request.website.sudo().menu_id
+            first_menu = top_menu and top_menu.child_id and top_menu.child_id[0]
+            if first_menu and (not (first_menu.url.startswith(('/', '/?', '/#')))):
                     return request.redirect(first_menu.url)
-                if first_menu.url and first_menu.url.startswith('/page/'):
-                    return request.env['ir.http'].reroute(first_menu.url)
-        return self.page(page)
+
+        raise request.not_found()
 
     #------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
@@ -106,30 +111,6 @@ class Website(Home):
         redirect.set_cookie('frontend_lang', lang)
         return redirect
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True, cache=300)
-    def page(self, page, **opt):
-        values = {
-            'path': page,
-            'deletable': True,  # used to add 'delete this page' in content menu
-        }
-        # /page/website.XXX --> /page/XXX
-        if page.startswith('website.'):
-            return request.redirect(b'/page/%s?%s' % (page[8:].encode('utf-8'), request.httprequest.query_string), code=301)
-        elif '.' not in page:
-            page = 'website.%s' % page
-
-        try:
-            request.website.get_template(page)
-        except ValueError as e:
-            # page not found
-            if request.website.is_publisher():
-                values.pop('deletable')
-                page = 'website.page_404'
-            else:
-                return request.env['ir.http']._handle_exception(e, 404)
-
-        return request.render(page, values)
-
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, **kw):
         fields = country.get_address_fields()
@@ -140,7 +121,7 @@ class Website(Home):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
-    def sitemap_xml_index(self):
+    def sitemap_xml_index(self, **kwargs):
         current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
         View = request.env['ir.ui.view'].sudo()
@@ -155,7 +136,7 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
-        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        dom = [('url', '=', '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
@@ -166,13 +147,13 @@ class Website(Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            dom = [('type', '=', 'binary'), '|', ('url', '=like' , '/sitemap-%d-%%.xml' % current_website.id),
-                   ('url', '=' , '/sitemap-%d.xml' % current_website.id)]
+            dom = [('type', '=', 'binary'), '|', ('url', '=like', '/sitemap-%d-%%.xml' % current_website.id),
+                   ('url', '=', '/sitemap-%d.xml' % current_website.id)]
             sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
+            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages(hide_unindexed_pages=True)
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -227,22 +208,44 @@ class Website(Home):
     # Edit
     #------------------------------------------------------
 
-    @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False, add_menu=None, template=False):
-        if template:
-            xml_id = request.env['website'].new_page(path, template=template)
-        else:
-            xml_id = request.env['website'].new_page(path)
-        if add_menu:
-            request.env['website.menu'].create({
-                'name': path,
-                'url': "/page/" + xml_id[8:],
-                'parent_id': request.website.menu_id.id,
-                'website_id': request.website.id,
-            })
-        # Reverse action in order to allow shortcut for /page/<website_xml_id>
-        url = "/page/" + re.sub(r"^website\.", '', xml_id)
+    @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
+    def pages_management(self, page=1, sortby='name', search='', **kw):
+        Page = request.env['website.page']
+        searchbar_sortings = {
+            'url': {'label': _('Sort by Url'), 'order': 'url'},
+            'name': {'label': _('Sort by Name'), 'order': 'name'},
+        }
+        # default sortby order
+        sort_order = searchbar_sortings.get(sortby, 'name')['order']
 
+        domain = ['|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+        if search:
+            domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
+
+        pages_count = Page.search_count(domain)
+
+        pager = portal_pager(
+            url="/website/pages",
+            url_args={'sortby': sortby},
+            total=pages_count,
+            page=page,
+            step=self._items_per_page
+        )
+        pages = Page.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+
+        values = {
+            'pager': pager,
+            'pages': pages,
+            'search': search,
+            'sortby': sortby,
+            'searchbar_sortings': searchbar_sortings,
+        }
+        return request.render("website.edit_website_pages", values)
+
+    @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
+    def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
+        template = template and dict(template=template) or {}
+        url = request.env['website'].new_page(path, add_menu=add_menu, **template)
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
@@ -380,7 +383,7 @@ class Website(Home):
     @http.route([
         '/website/action/<path_or_xml_id_or_id>',
         '/website/action/<path_or_xml_id_or_id>/<path:path>',
-        ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         ServerActions = request.env['ir.actions.server']
         action = action_id = None

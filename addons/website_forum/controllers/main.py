@@ -87,12 +87,7 @@ class WebsiteForum(http.Controller):
     def forum_create(self, forum_name="New Forum", add_menu=False):
         forum_id = request.env['forum.forum'].create({'name': forum_name})
         if add_menu:
-            request.env['website.menu'].create({
-                'name': forum_name,
-                'url': "/forum/%s" % slug(forum_id),
-                'parent_id': request.website.menu_id.id,
-                'website_id': request.website.id,
-            })
+            request.env['website'].new_link(forum_name, "/forum/%s" % slug(forum_id))
         return "/forum/%s" % slug(forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)

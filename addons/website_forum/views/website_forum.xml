@@ -1382,10 +1382,6 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="user"/>
-                <t t-set="publish_edit" t-value="True"/>
-            </t>
         </h1>
         <div class="row">
             <div class="col-sm-2">

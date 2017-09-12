@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 import traceback
+import datetime
 
 import werkzeug
 import werkzeug.routing
@@ -90,6 +90,51 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
+    def _serve_page(cls, req_page=False):
+        req_page = req_page or request.httprequest.path
+
+        domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+
+        if not request.website.is_publisher:
+            domain += [('is_visible', '=', True)]
+
+        mypage = request.env['website.page'].search(domain, limit=1)
+
+        if mypage:
+            return mypage.ir_ui_view_id.render({
+                'path': req_page[1:],
+                'deletable': True,
+                'main_object': mypage,
+            })
+
+        return request.website.is_publisher() and request.render('website.page_404', {'path': req_page[1:]}) or False
+
+    @classmethod
+    def _serve_redirect(cls):
+        req_page = request.httprequest.path
+        domain = [
+            '|', ('website_id', '=', request.website.id), ('website_id', '=', False),
+            ('url_from', '=', req_page), ('active', '=', True)
+        ]
+        return request.env['website.redirect'].search(domain, limit=1)
+
+    @classmethod
+    def _handle_exception_serve(cls, exception):
+        # serve attachment before
+        res = super(Http, cls)._handle_exception_serve(exception)
+
+        if not res:
+            website_page = cls._serve_page()
+            if website_page:
+                res = website_page
+
+            redirect = cls._serve_redirect()
+            if redirect:
+                res = request.redirect(redirect.url_to, code=redirect.type)
+
+        return res
+
+    @classmethod
     def _handle_exception(cls, exception):
         code = 500  # default code
         is_website_request = bool(getattr(request, 'is_frontend', False) and getattr(request, 'website', False))
@@ -99,6 +144,7 @@ class Http(models.AbstractModel):
         else:
             try:
                 response = super(Http, cls)._handle_exception(exception)
+
                 if isinstance(response, Exception):
                     exception = response
                 else:

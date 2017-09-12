@@ -10,7 +10,6 @@ import mimetypes
 import os
 import re
 import sys
-import unicodedata
 
 import werkzeug
 import werkzeug.exceptions
@@ -158,15 +157,23 @@ class IrHttp(models.AbstractModel):
             return response
 
     @classmethod
+    def _handle_exception_serve(cls, exception):
+        # serve attachment
+        attach = cls._serve_attachment()
+        if attach:
+            return attach
+        return False
+
+    @classmethod
     def _handle_exception(cls, exception):
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
         # not match any HTTP controller
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
-            attach = cls._serve_attachment()
-            if attach:
-                return attach
+            serve = cls._handle_exception_serve(exception)
+            if serve:
+                return serve
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
         if 'werkzeug' in tools.config['dev_mode']:
@@ -178,6 +185,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
+        #print request.httprequest.path
         # locate the controller method
         try:
             rule, arguments = cls._find_handler(return_rule=True)
@@ -193,6 +201,7 @@ class IrHttp(models.AbstractModel):
 
         processing = cls._postprocess_args(arguments, rule)
         if processing:
+            #rde 403 forbidden (blog post unpublished for instance)
             return processing
 
         # set and execute handler

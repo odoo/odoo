@@ -55,7 +55,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Once you click on <b>Save</b>, your product is updated."),
         position: "bottom",
     }, {
-        trigger: ".js_publish_management button.js_publish_btn.btn-danger",
+        trigger: ".js_publish_management .js_publish_btn .css_publish",
         extra_trigger: "body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
         position: "top",

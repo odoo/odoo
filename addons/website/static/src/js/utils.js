@@ -7,12 +7,13 @@ var weContext = require('web_editor.context');
 var qweb = core.qweb;
 
 /**
- * Allows the given input to propose existing website pages.
+ * Allows the given input to propose existing website URLs.
  *
  * @param {ServicesMixin|Widget} self - an element capable to trigger an RPC
  * @param {jQuery} $input
+ * @param {bool} show_only_website_page_model - will return only search on website.page 
  */
-function autocompleteWithPages(self, $input) {
+function autocompleteWithPages(self, $input, show_only_website_page_model) {
     $input.autocomplete({
         source: function (request, response) {
             return self._rpc({
@@ -21,11 +22,17 @@ function autocompleteWithPages(self, $input) {
                 args: [null, request.term],
                 kwargs: {
                     limit: 15,
+                    show_only_website_page_model: show_only_website_page_model,
                     context: weContext.get(),
                 },
             }).then(function (exists) {
                 var rs = _.map(exists, function (r) {
-                    return r.loc;
+                    if (show_only_website_page_model) {
+                        return r.loc + ' (' + r.name + ')';
+                    }
+                    else {
+                        return r.loc;
+                    }    
                 });
                 response(rs);
             });

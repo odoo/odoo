@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 class View(models.Model):
 
     _name = "ir.ui.view"
-    _inherit = ["ir.ui.view", "website.seo.metadata"]
+    _inherit = "ir.ui.view"
 
     page = fields.Boolean("Whether this view is a web page template (complete)", default=False)
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)

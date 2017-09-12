@@ -65,9 +65,9 @@ tour.register('rte_translator', {
     trigger: 'html:not(:has(#wrap p span)) .o_menu_systray a[data-action="translate"]',
 }, {
     content: "close modal",
-    trigger: '.modal-footer .btn-primary',
+    trigger: '.modal-footer .btn-default',
 }, {
-    content: "check if translation is activate",
+    content: "check if tr anslation is activate",
     trigger: '[data-oe-translation-id]',
 }, {
     content: "translate text",
@@ -85,7 +85,7 @@ tour.register('rte_translator', {
     },
 }, {
     content: "click on input",
-    trigger: 'input:first',
+    trigger: '#wrap input:first',
     extra_trigger: '#wrap .o_dirty font:first:contains(translated french text)',
     run: 'click',
 }, {
