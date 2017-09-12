@@ -462,6 +462,59 @@ class StockMove(models.Model):
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
 
+    def _merge_moves_fields(self):
+        """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
+        state = self._get_relevant_state_among_moves()
+        origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
+        return {
+            'product_uom_qty': sum(self.mapped('product_uom_qty')),
+            'date': min(self.mapped('date')),
+            'date_expected': min(self.mapped('date_expected')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date_expected')),
+            'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
+            'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
+            'state': state,
+            'origin': origin,
+        }
+
+    def _merge_moves(self):
+        """ This method will, for each move in `self`, go up in their linked picking and try to
+        find in their existing moves a candidate into which we can merge the move.
+        :return: Recordset of moves passed to this method. If some of the passed moves were merged
+        into another existing one, return this one and not the (now unlinked) original.
+        """
+        distinct_fields = ['price_unit', 'product_id', 'product_packaging',
+                           'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id']
+
+        def _keys_sorted(move):
+            return tuple([getattr(move, attr) for attr in distinct_fields])
+
+        # Move removed after merge
+        moves_to_unlink = self.env['stock.move']
+        moves_to_merge = []
+        for picking in self.mapped('picking_id'):
+            # First step find move to merge.
+            for k, g in groupby(sorted(picking.move_lines, key=_keys_sorted), key=itemgetter(*distinct_fields)):
+                moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
+                # If we have multiple records we will merge then in a single one.
+                if len(moves) > 1:
+                    moves_to_merge.append(moves)
+
+        # second step merge its move lines, initial demand, ...
+        for moves in moves_to_merge:
+            # link all move lines to record 0 (the one we will keep).
+            moves.mapped('move_line_ids').write({'move_id': moves[0].id})
+            # merge move data
+            moves[0].write(moves._merge_moves_fields())
+            # update merged moves dicts
+            moves_to_unlink |= moves[1:]
+
+        if moves_to_unlink:
+            # We are using propagate to False in order to not cancel destination moves merged in moves[0]
+            moves_to_unlink.write({'propagate': False})
+            moves_to_unlink._action_cancel()
+            moves_to_unlink.unlink()
+        return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
+
     def _get_relevant_state_among_moves(self):
         # We sort our moves by importance of state:
         #     ------------- 0
@@ -570,8 +623,11 @@ class StockMove(models.Model):
             'location_dest_id': self.location_dest_id.id,
         }
 
-    def _action_confirm(self):
-        """ Confirms stock move or put it in waiting if it's linked to another move. """
+    def _action_confirm(self, merge=True):
+        """ Confirms stock move or put it in waiting if it's linked to another move.
+        :param: merge: According to this boolean, a newly confirmed move will be merged
+        in another move of the same picking sharing its characteristics.
+        """
         move_create_proc = self.env['stock.move']
         move_to_confirm = self.env['stock.move']
         move_waiting = self.env['stock.move']
@@ -606,6 +662,8 @@ class StockMove(models.Model):
         for moves in to_assign.values():
             moves._assign_picking()
         self._push_apply()
+        if merge:
+            return self._merge_moves()
         return self
 
     def _prepare_procurement_values(self):
@@ -694,7 +752,7 @@ class StockMove(models.Model):
         return taken_quantity
 
     def _action_assign(self):
-        """ Reserve stock moves by creating their stock move lines. A stock move is 
+        """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `product_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
@@ -838,24 +896,6 @@ class StockMove(models.Model):
                 rounding_method ='UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals)._action_confirm()
-
-            # link it to some move lines
-            for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
-                if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
-                    # move this move line to our extra move
-                    move_line.move_id = extra_move.id
-                    extra_move_quantity -= move_line.qty_done
-                else:
-                    # split this move line and assign the new part to our extra move
-                    quantity_split = float_round(
-                        move_line.qty_done - extra_move_quantity,
-                        precision_rounding=self.product_uom.rounding,
-                        rounding_method='UP')
-                    move_line.qty_done = quantity_split
-                    move_line.copy(default={'move_id': extra_move.id, 'qty_done': extra_move_quantity, 'product_uom_qty': 0})
-                    extra_move_quantity -= extra_move_quantity
-                if extra_move_quantity == 0.0:
-                    break
         return extra_move
 
     def _action_done(self):
@@ -969,7 +1009,8 @@ class StockMove(models.Model):
         #     new_move.write({'move_dest_id': new_move_prop})
         # returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         # thus the result of action_confirm should always be a list of 1 element length)
-        new_move._action_confirm()
+        # In this case we don't merge move since the new move with 0 quantity done will be used for the backorder.
+        new_move = new_move._action_confirm(merge=False)
         # TDE FIXME: due to action confirm change
         return new_move.id
 

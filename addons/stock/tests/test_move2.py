@@ -625,22 +625,12 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -1.0)
 
-        extra_move = delivery_order.move_lines - move1
-        extra_move_line = extra_move.move_line_ids[0]
-
-        # self.assertEqual(move1.product_qty, 1.0)
-        # self.assertEqual(move1.quantity_done, 1.0)
+        self.assertEqual(move1.product_qty, 2.0)
+        self.assertEqual(move1.quantity_done, 2.0)
         self.assertEqual(move1.reserved_availability, 0.0)
         self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
-        self.assertEqual(move1.move_line_ids.qty_done, 1.0)
+        self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
-
-        self.assertEqual(extra_move.product_qty, 1.0)
-        self.assertEqual(extra_move.quantity_done, 1.0)
-        self.assertEqual(extra_move.reserved_availability, 0.0)
-        self.assertEqual(extra_move_line.product_qty, 0.0)  # should not be able to reserve
-        self.assertEqual(extra_move_line.qty_done, 1.0)
-        self.assertEqual(extra_move.state, 'done')
 
     def test_extra_move_2(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
@@ -681,22 +671,12 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -2.0)
 
-        extra_move = delivery_order.move_lines - move1
-        extra_move_line = extra_move.move_line_ids[0]
-
-        self.assertEqual(move1.product_qty, 1.0)
-        self.assertEqual(move1.quantity_done, 1.0)
+        self.assertEqual(move1.product_qty, 3.0)
+        self.assertEqual(move1.quantity_done, 3.0)
         self.assertEqual(move1.reserved_availability, 0.0)
         self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
-        self.assertEqual(move1.move_line_ids.qty_done, 1.0)
+        self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 3.0)
         self.assertEqual(move1.state, 'done')
-
-        self.assertEqual(extra_move.product_qty, 2.0)
-        self.assertEqual(extra_move.quantity_done, 2.0)
-        self.assertEqual(extra_move.reserved_availability, 0.0)
-        self.assertEqual(extra_move_line.product_qty, 0.0)  # should not be able to reserve
-        self.assertEqual(extra_move_line.qty_done, 2.0)
-        self.assertEqual(extra_move.state, 'done')
 
     def test_extra_move_3(self):
         """ Check the good behavior of creating an extra move in a receipt. This usecase simulates
@@ -729,22 +709,12 @@ class TestSinglePicking(TestStockCommon):
         receipt.with_context(debug=True).do_transfer()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 2.0)
 
-        extra_move = receipt.move_lines - move1
-        extra_move_line = extra_move.move_line_ids[0]
-
-        self.assertEqual(move1.product_qty, 1.0)
-        self.assertEqual(move1.quantity_done, 1.0)
+        self.assertEqual(move1.product_qty, 2.0)
+        self.assertEqual(move1.quantity_done, 2.0)
         self.assertEqual(move1.reserved_availability, 0.0)
         self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
-        self.assertEqual(move1.move_line_ids.qty_done, 1.0)
+        self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
-
-        self.assertEqual(extra_move.product_qty, 1.0)
-        self.assertEqual(extra_move.quantity_done, 1.0)
-        self.assertEqual(extra_move.reserved_availability, 0.0)
-        self.assertEqual(extra_move_line.product_qty, 0.0)  # should not be able to reserve
-        self.assertEqual(extra_move_line.qty_done, 1.0)
-        self.assertEqual(extra_move.state, 'done')
 
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with
@@ -1207,6 +1177,159 @@ class TestSinglePicking(TestStockCommon):
         })
         move_line.lot_id = lot1
         delivery_order.action_done()
+
+    def test_merge_moves_1(self):
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        receipt.action_confirm()
+        self.assertEqual(len(receipt.move_lines), 2, 'Moves were not merged')
+        self.assertEqual(receipt.move_lines.filtered(lambda m: m.product_id == self.productA).product_uom_qty, 9, 'Merged quantity is not correct')
+        self.assertEqual(receipt.move_lines.filtered(lambda m: m.product_id == self.productB).product_uom_qty, 5, 'Merge should not impact product B reserved quantity')
+
+    def test_merge_moves_2(self):
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'origin': 'MPS'
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'origin': 'PO0001'
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'origin': 'MPS'
+        })
+        receipt.action_confirm()
+        self.assertEqual(len(receipt.move_lines), 1, 'Moves were not merged')
+        self.assertEqual(receipt.move_lines.origin.count('MPS'), 1, 'Origin not merged together or duplicated')
+        self.assertEqual(receipt.move_lines.origin.count('PO0001'), 1, 'Origin not merged together or duplicated')
+
+    def test_merge_chained_moves(self):
+        """ Imagine multiple step delivery. Two different receipt picking for the same product should only generate
+        1 picking from input to QC and another from QC to stock. The link at the end should follow this scheme.
+        Move receipt 1 \
+                        Move Input-> QC - Move QC -> Stock
+        Move receipt 2 /
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'TEST WAREHOUSE',
+            'code': 'TEST1',
+            'reception_steps': 'three_steps',
+        })
+        receipt1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        move_receipt_1 = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        receipt2 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        move_receipt_2 = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt2.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        receipt1.action_confirm()
+        receipt2.action_confirm()
+
+        # Check following move has been created and grouped in one picking.
+        self.assertTrue(move_receipt_1.move_dest_ids, 'No move created from push rules')
+        self.assertTrue(move_receipt_2.move_dest_ids, 'No move created from push rules')
+        self.assertEqual(move_receipt_1.move_dest_ids.picking_id, move_receipt_2.move_dest_ids.picking_id, 'Destination moves should be in the same picking')
+
+        # Check link for input move are correct.
+        input_move = move_receipt_2.move_dest_ids
+        self.assertEqual(len(input_move.move_dest_ids), 1)
+        self.assertEqual(set(input_move.move_orig_ids.ids), set((move_receipt_2 | move_receipt_1).ids),
+                         'Move from input to QC should be merged and have the two receipt moves as origin.')
+        self.assertEqual(move_receipt_1.move_dest_ids, input_move)
+        self.assertEqual(move_receipt_2.move_dest_ids, input_move)
+
+        # Check link for quality check move are also correct.
+        qc_move = input_move.move_dest_ids
+        self.assertEqual(len(qc_move), 1)
+        self.assertTrue(qc_move.move_orig_ids == input_move, 'Move between QC and stock should only have the input move as origin')
 
 
 class TestStockUOM(TestStockCommon):
