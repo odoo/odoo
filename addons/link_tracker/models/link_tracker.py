@@ -244,23 +244,21 @@ class link_tracker_click(models.Model):
         again = self.search_count([('link_id', '=', code_rec.link_id.id), ('ip', '=', ip)])
 
         if not again:
-            country_record = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+            self.create(
+                self._get_click_values(dict(
+                    code=code,
+                    ip=ip,
+                    country_code=country_code,
+                    stat_id=stat_id,
+                )))
 
-            vals = {
-                'link_id': code_rec.link_id.id,
-                'create_date': datetime.date.today(),
-                'ip': ip,
-                'country_id': country_record.id,
-                'mail_stat_id': stat_id
-            }
+    def _get_click_values_from_route(self, route_values):
+        code = self.env['link.tracker.code'].search([('code', '=', route_values['code'])], limit=1)
+        country = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1)
 
-            if stat_id:
-                mail_stat = self.env['mail.mail.statistics'].search([('id', '=', stat_id)])
-
-                if mail_stat.mass_mailing_campaign_id:
-                    vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
-
-                if mail_stat.mass_mailing_id:
-                    vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
-
-            self.create(vals)
+        return {
+            'link_id': code.link_id.id,
+            'create_date': datetime.date.today(),
+            'ip': route_values['ip'],
+            'country_id': country.id,
+        }
