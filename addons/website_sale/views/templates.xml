@@ -1264,7 +1264,7 @@
             <div id="wrap">
                 <div class="container oe_website_sale">
                     <div class="row">
-                        <div class="col-md-offset-2 col-lg-8 col-sm-9">
+                        <div class="col-md-offset-2 col-lg-8 col-sm-9" t-if="errors">
                             <t t-foreach="errors" t-as="error">
                                 <div class="alert alert-danger" t-if="error">
                                     <h4>
@@ -1279,10 +1279,10 @@
                             <t t-call="website_sale.wizard_checkout">
                                 <t t-set="step" t-value="40" />
                             </t>
-                            <h2 class="mb32 ml16">Confirm Order</h2>
                          </div>
                          <div class="row">
-                            <div class='col-md-12'>
+                            <div class='col-md-12 o_rightfit'>
+                                <h2 class="mb8 mt8">Confirm Order</h2>
                                 <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                                     <thead>
                                         <tr>
@@ -1338,7 +1338,7 @@
                             <div class="clearfix" />
                             <div class="oe_structure" />
 
-                            <div id="payment_method" class="mb64 col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                            <div id="payment_method" class="col-md-12 o_rightfit" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
                                 <h3 class="mb24">Pay with </h3>
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
@@ -1352,10 +1352,10 @@
                             </div>
 
                             <div t-if="not (form_acquirers or s2s_acquirers)">
-                                <a class="btn btn-default btn-block"
+                                <a class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Configure payment acquirers
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i> Add payment acquirers
                                 </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
@@ -1537,8 +1537,9 @@
                 </span>
             </div>
             <div class="row" id="order_total">
-                <span class="col-xs-6 text-right h4">Total:</span>
-                <span class="col-xs-6 text-right-not-xs text-left-xs h4" style="white-space: nowrap;">
+                <hr class="mt8 mb0"/>
+                <span class="col-xs-6 text-right h4 mt0">Total:</span>
+                <span class="col-xs-6 text-right-not-xs text-left-xs h4 mt0" style="white-space: nowrap;">
                     <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
