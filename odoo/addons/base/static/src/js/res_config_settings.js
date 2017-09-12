@@ -26,7 +26,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         this._super.apply(this, arguments);
         if (config.isMobile) {
             core.bus.on("DOM_updated", this, function () {
-                this._moveToTab(this.currentIndex);
+                this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
         }
     },
@@ -65,7 +65,6 @@ var BaseSettingRenderer = FormRenderer.extend({
                     key: data.key,
                     string: data.string,
                     imgurl: self._getAppIconUrl(data.key),
-                    order: data.key=== self.activeSettingTab ? 0 : index+1
                 });
             } else {
                 $(settingView).remove();
@@ -129,6 +128,17 @@ var BaseSettingRenderer = FormRenderer.extend({
                 view.addClass("after");
             }
         });
+    },
+    /**
+     * find current app index in modules
+     *
+     */
+    _currentAppIndex: function () {
+        var self = this;
+        var index = _.findIndex(this.modules, function (module) {
+            return module.key === self.activeSettingTab;
+        });
+        return index;
     },
     /**
      *
@@ -256,13 +266,10 @@ var BaseSettingRenderer = FormRenderer.extend({
             module.settingView.prepend(self._getSearchHeader(module.imgurl, module.string));
         });
         this._renderTabs();
-        this._moveToTab(this.currentIndex);
+        this._moveToTab(this.currentIndex || this._currentAppIndex());
     },
 
     _renderTabs: function () {
-        this.modules = _.sortBy(this.modules, function (module) {
-            return module.order;
-        });
         var tabs = $(QWeb.render('BaseSetting.Tabs', {tabItems : this.modules}));
         tabs.appendTo(this.$(".settings_tab"));
     },
@@ -275,6 +282,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         var self = this;
         this.count = 0;
         _.each(this.modules, function (module) {
+            self.inVisibleCount = 0;
             module.settingView.find('.o_setting_box').addClass('o_hidden');
             module.settingView.find('h2').addClass('o_hidden');
             module.settingView.find('.settingSearchHeader').addClass('o_hidden');
@@ -282,11 +290,18 @@ var BaseSettingRenderer = FormRenderer.extend({
             var resultSetting = module.settingView.find("label:contains('" + self.searchText + "')");
             if (resultSetting.length > 0) {
                 resultSetting.each(function () {
-                    $(this).closest('.o_setting_box').removeClass('o_hidden');
-                    $(this).html(self._wordHighlighter($(this).html(), self.searchText));
+                    var settingBox = $(this).closest('.o_setting_box');
+                    if (!settingBox.hasClass('o_invisible_modifier')) {
+                        settingBox.removeClass('o_hidden');
+                        $(this).html(self._wordHighlighter($(this).text(), self.searchText));
+                    } else {
+                        self.inVisibleCount++;
+                    }
                 });
-                module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
-                module.settingView.removeClass('o_hidden');
+                if (self.inVisibleCount !== resultSetting.length) {
+                    module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
+                    module.settingView.removeClass('o_hidden');
+                }
             } else {
                 ++self.count;
             }
