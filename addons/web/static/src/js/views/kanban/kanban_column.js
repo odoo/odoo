@@ -8,6 +8,8 @@ var kanban_quick_create = require('web.kanban_quick_create');
 var KanbanRecord = require('web.KanbanRecord');
 var view_dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
+var ProgressBar = require('kanban.progressBar');
+var session = require('web.session');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,6 +21,7 @@ var KanbanColumn = Widget.extend({
         cancel_quick_create: '_onCancelQuickCreate',
         kanban_record_delete: '_onDeleteRecord',
         quick_create_add_record: '_onQuickCreateAddRecord',
+        updateProgressBar: '_updateProgressBar',
     },
     events: {
         'click .o_column_edit': '_onEditColumn',
@@ -57,6 +60,14 @@ var KanbanColumn = Widget.extend({
         this.relation = options.relation;
         this.offset = 0;
         this.remaining = this.size - this.data_records.length;
+
+        if (options.progressbar) {
+            this.barOptions = _.extend({}, options.progressbar, {
+                columnId: this.db_id,
+                dataRecords: this.data_records.length > 0 ? this.data_records : false,
+                counterModel: options.counterModel
+            });
+        }
 
         this.record_options = _.clone(recordOptions);
 
@@ -128,6 +139,10 @@ var KanbanColumn = Widget.extend({
                 self._onToggleFold(event);
             }
         });
+        if (this.barOptions) {
+            this.progressBar = new ProgressBar(this, this.barOptions, this.data.fieldsInfo.kanban, this.$header);
+            this.progressBar.insertAfter(this.$header);
+        }
         this._update();
 
         return this._super.apply(this, arguments);
@@ -147,13 +162,11 @@ var KanbanColumn = Widget.extend({
         var self = this;
         var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
         this.quickCreateWidget = new RecordQuickCreate(this, width);
-        this.quickCreateWidget.insertAfter(this.$header);
-        this.quickCreateWidget.$el.focusout(function () {
-            var taskName = self.quickCreateWidget.$('[type=text]')[0].value;
-            if (!taskName && self.quickCreateWidget) {
-                self._cancelQuickCreate();
-            }
-        });
+        if (this.barOptions) {
+            this.quickCreateWidget.insertAfter(this.progressBar.$el);
+        } else {
+            this.quickCreateWidget.insertAfter(this.$header);
+        }
     },
     /**
      * Adds a record in the column.
@@ -165,7 +178,7 @@ var KanbanColumn = Widget.extend({
      * @params {Boolean} options.no_update set to true not to update the column
      */
     addRecord: function (recordState, options) {
-        var record = new KanbanRecord(this, recordState, this.record_options);
+        var record = this.createKanbanRecord(recordState, this.record_options);
         this.records.push(record);
         if (options.position === 'before') {
             record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);
@@ -180,6 +193,9 @@ var KanbanColumn = Widget.extend({
         if (!options.no_update) {
             this._update();
         }
+    },
+    createKanbanRecord: function(record, recordOptions){
+        return new KanbanRecord(this, record, recordOptions);
     },
     /**
      * @returns {Boolean} true iff the column is empty
@@ -227,6 +243,9 @@ var KanbanColumn = Widget.extend({
             this.$('.o_kanban_load_more').remove();
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
+        }
+        if (!this.folded && this.progressBar) {
+            this._updateProgressBar();
         }
     },
 
@@ -333,6 +352,14 @@ var KanbanColumn = Widget.extend({
     _onUnarchiveRecords: function (event) {
         event.preventDefault();
         this.trigger_up('kanban_column_archive_records', {archive: false});
+    },
+    /**
+     * Update Kanban ProgressBar.
+     *
+     * @private
+     */
+    _updateProgressBar: function () {
+        this.progressBar._update(this.records, this.remaining);
     },
 });
 

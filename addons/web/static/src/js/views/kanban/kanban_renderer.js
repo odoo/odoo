@@ -92,14 +92,63 @@ var KanbanRenderer = BasicRenderer.extend({
         this.widgets = [];
         this.qweb = new QWeb(session.debug, {_s: session.origin});
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
+        var progressbar = findInNode(this.arch, function (n) { return n.tag === 'progressbar'; });
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
+        this.progressBarCounter = function () {
+            var globalCounter = {
+                activeCurrencyId: 0,
+                animationVal: [],
+                progressVal: {},
+                activeFilter: {},                
+            };
+            var setCounter = function (counter) {
+                var activeColumn = counter.columnId;
+                if (counter.value >= 0) {
+                    globalCounter[activeColumn] = counter.value;
+                }
+                else {
+                    globalCounter[activeColumn] = globalCounter[activeColumn] || 0;
+                }
+                if (counter.dataRecords && counter.dataRecords[0].data.company_currency) {
+                    globalCounter.activeCurrencyId = counter.dataRecords[0].data.company_currency.res_id;
+                }
+                if (counter.animationVal) {
+                    globalCounter.animationVal.push(counter.animationVal);
+                }
+                if (counter.progressVal) {
+                    globalCounter.progressVal[activeColumn] = {};
+                    globalCounter.progressVal[activeColumn] = counter.progressVal[activeColumn];
+                }
+                if (counter.activeFilter != undefined) {
+                    globalCounter.activeFilter[activeColumn] = counter.activeFilter;
+                }
+            };
+            var getCounter = function (counter) {
+                return {
+                    counter: globalCounter[counter.columnId] || 0,
+                    activeCurrencyId: globalCounter.activeCurrencyId || 0,
+                    animationVal: globalCounter.animationVal || false,
+                    progressVal: globalCounter.progressVal[counter.columnId],
+                    activeFilter: globalCounter.activeFilter[counter.columnId]            
+                };
+            };
+            return {
+                setCounter: setCounter,
+                getCounter: getCounter
+            };
+        }();
 
         this.recordOptions = _.extend({}, params.record_options, {
             qweb: this.qweb,
             viewType: 'kanban',
+            progressbar: progressbar,
         });
-        this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
+        this.columnOptions = _.extend({}, params.column_options, { 
+            qweb: this.qweb,
+            progressbar: progressbar,
+            counterModel: this.progressBarCounter
+        });
 
         this._setState(state);
     },
@@ -140,7 +189,7 @@ var KanbanRenderer = BasicRenderer.extend({
     updateColumn: function (localID, columnState) {
         var column = _.findWhere(this.widgets, {db_id: localID});
         this.widgets.splice(_.indexOf(this.widgets, column), 1); // remove column from widgets' list
-        var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
+        var newColumn = this.createKanbanColumn(columnState, this.columnOptions, this.recordOptions);
         this.widgets.push(newColumn);
         return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
     },
@@ -175,6 +224,14 @@ var KanbanRenderer = BasicRenderer.extend({
     updateState: function (state) {
         this._setState(state);
         return this._super.apply(this, arguments);
+    },
+
+    createKanbanColumn: function(state, columnOptions, recordOptions){
+        return new KanbanColumn(this, state, columnOptions, recordOptions);
+    },
+
+    createKanbanRecord: function(record, recordOptions){
+        return new KanbanRecord(this, record, recordOptions);
     },
 
     //--------------------------------------------------------------------------
@@ -218,7 +275,7 @@ var KanbanRenderer = BasicRenderer.extend({
 
         // Render columns
         _.each(this.state.data, function (group) {
-            var column = new KanbanColumn(self, group, self.columnOptions, self.recordOptions);
+            var column = self.createKanbanColumn(group, self.columnOptions, self.recordOptions);
             if (!group.value) {
                 column.prependTo(fragment); // display the 'Undefined' group first
                 self.widgets.unshift(column);
@@ -265,7 +322,7 @@ var KanbanRenderer = BasicRenderer.extend({
     _renderUngrouped: function (fragment) {
         var self = this;
         _.each(this.state.data, function (record) {
-            var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
+            var kanbanRecord = self.createKanbanRecord(record, self.recordOptions);
             self.widgets.push(kanbanRecord);
             kanbanRecord.appendTo(fragment);
         });

@@ -298,6 +298,7 @@
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
+                    <progressbar field="activity_state" sum="planned_revenue" colors='{"planned": "crm_planned", "overdue": "danger", "today": "crm_today"}' />
                     <templates>
                         <field name="date_deadline"/>
                         <t t-name="kanban-box">
