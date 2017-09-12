@@ -49,7 +49,7 @@
                                 <td><span t-esc="aml.move_id.name &lt;&gt; '/' and aml.move_id.name or ('*'+str(aml.move_id.id))"/></td>
                                 <td><span t-field="aml.date"/></td>
                                 <td><span t-field="aml.account_id.code"/></td>
-                                <td><span t-esc="aml.sudo().partner_id and aml.sudo().partner_id.name[:23] or ''"/></td>
+                                <td><span t-esc="aml.sudo().partner_id and aml.sudo().partner_id.name and aml.sudo().partner_id.name[:23] or ''"/></td>
                                 <td><span t-esc="aml.name[:35]"/></td>
                                 <td><span t-esc="aml.debit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                                 <td><span t-esc="aml.credit" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
