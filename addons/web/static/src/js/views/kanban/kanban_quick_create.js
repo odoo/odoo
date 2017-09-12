@@ -216,6 +216,7 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
         'click': 'toggleFold',
         'click input': '_onInputClicked',
         'focusout': '_onFocusout',
+        'keydown input': '_onColumnEscape',
     }),
     /**
      * @override
@@ -280,13 +281,23 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
 
     /**
      * @private
+     * @param {KeyEvent} ev
+     */
+    _onColumnEscape: function (ev) {
+        if (ev.keyCode === 27) { // escape
+            this.$input.val('');
+            this.$input.blur();
+        }
+    },
+    /**
+     * @private
      */
     _onFocusout: function () {
         var hasFocus = this.$(':focus').length > 0;
         if (hasFocus) {
             return;
         }
-        this.folded = true;
+        this.$input.val().trim() ? this.trigger_up('quick_create_add_column', {value: this.$input.val()}) : this.folded = true;
         this.$input.val('');
         this._update();
     },

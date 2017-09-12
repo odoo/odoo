@@ -29,6 +29,8 @@ var KanbanController = BasicController.extend({
         kanban_column_archive_records: '_onArchiveRecords',
         kanban_load_more: '_onLoadMore',
         column_toggle_fold: '_onToggleColumn',
+        kanban_column_edit: '_onColumnEdit',
+        create_undefined_column: '_onUndefinedCreate',
     }),
     /**
      * @override
@@ -187,6 +189,23 @@ var KanbanController = BasicController.extend({
                     self._updateEnv();
                 });
         }
+    },
+    /**
+     * When double click on column this handler will called.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onColumnEdit: function (ev) {
+        var self = this;
+        var target = ev.target;
+        this._rpc({
+            model: target.relation,
+            method: 'write',
+            args: [target.id, {name: ev.data.name}],
+        }).done(function () {
+            self.reload();
+        });
     },
     /**
      * @param {OdooEvent} event
@@ -350,6 +369,30 @@ var KanbanController = BasicController.extend({
             var data = self.model.get(db_id);
             self.renderer.updateColumn(db_id, data);
             self._updateEnv();
+        });
+    },
+    /**
+     * When undefined column has to be renamed.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onUndefinedCreate: function (ev) {
+        var self = this;
+        var undefinedColumn = _.findWhere(this.renderer.widgets, {id: false});
+        this.model.createGroup(ev.data.value, this.handle).then(function (newGroupID) {
+            var def = $.Deferred();
+            _.each(undefinedColumn.records, function (record, index) {
+                self.model.moveRecord(record.db_id, newGroupID, self.handle).then(function () {
+                    if(index+1 === undefinedColumn.records.length) {
+                        def.resolve();
+                    }
+                });
+            });
+            def.then(function () {
+                self.renderer.updateColumn(undefinedColumn.db_id, self.model.get(newGroupID));
+                self.reload();
+            });
         });
     },
     /**
