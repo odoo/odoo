@@ -124,12 +124,12 @@ class StockMove(models.Model):
         }
         return result
 
-    def _action_confirm(self):
+    def _action_confirm(self, merge=True):
         moves = self
         for move in self.filtered(lambda m: m.production_id):
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm()
+        return super(StockMove, moves)._action_confirm(merge=merge)
 
     def action_explode(self):
         """ Explodes pickings """
