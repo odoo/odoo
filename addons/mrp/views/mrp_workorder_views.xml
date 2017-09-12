@@ -363,6 +363,7 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
+        <field name="context">{'search_default_work_center': True}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
            Work Orders are operations to be processed at a Work Center to realize a
@@ -379,7 +380,9 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
+        <field name="context">{'search_default_production': True}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to start a new work order.
