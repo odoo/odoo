@@ -434,8 +434,7 @@ class Website(models.Model):
 
     @api.multi
     def search_pages(self, needle=None, limit=None, show_only_website_page_model=False):
-        name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
-        name = slugify(name, max_length=50)
+        name = slugify(needle, max_length=50, allow_slash=True)
         res = []
         for page in self.enumerate_pages(query_string=name, hide_unpublished_pages=False, show_only_website_page_model=show_only_website_page_model):
             res.append(page)

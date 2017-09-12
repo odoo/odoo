@@ -29,29 +29,35 @@ odoo._geoip_resolver = None
 # Slug API
 # ------------------------------------------------------------
 
-def slugify(s, max_length=None):
-    """ Transform a string to a slug that can be used in a url path.
-        This method will first try to do the job with python-slugify if present.
-        Otherwise it will process string by stripping leading and ending spaces,
-        converting unicode chars to ascii, lowering all chars and replacing spaces
-        and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
-        :rtype: str
-    """
-    s = ustr(s)
-    if slugify_lib:
-        # There are 2 different libraries only python-slugify is supported
-        try:
-            return slugify_lib.slugify(s, max_length=max_length)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    slug_str = re.sub('[\W_]', ' ', uni).strip().lower()
-    slug_str = re.sub('[-\s]+', '-', slug_str)
+def slugify(s, max_length=None, allow_slash=False):
+    def slugify_one(s, max_length=None):
+        """ Transform a string to a slug that can be used in a url path.
+            This method will first try to do the job with python-slugify if present.
+            Otherwise it will process string by stripping leading and ending spaces,
+            converting unicode chars to ascii, lowering all chars and replacing spaces
+            and underscore with hyphen "-".
+            :param s: str
+            :param max_length: int
+            :rtype: str
+        """
+        s = ustr(s)
+        if slugify_lib:
+            # There are 2 different libraries only python-slugify is supported
+            try:
+                return slugify_lib.slugify(s, max_length=max_length)
+            except TypeError:
+                pass
+        uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+        slug_str = re.sub('[\W_]', ' ', uni).strip().lower()
+        slug_str = re.sub('[-\s]+', '-', slug_str)
 
-    return slug_str[:max_length]
+        return slug_str[:max_length]
 
+    if not allow_slash:
+        return slugify_one(s, max_length=max_length)
+    else:
+        return '/'.join([slugify_one(u, max_length=max_length) for u in s.split('/')]) 
+        
 
 def slug(value):
     if isinstance(value, models.BaseModel):

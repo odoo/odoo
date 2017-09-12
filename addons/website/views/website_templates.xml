@@ -887,7 +887,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           <td><i t-if="page.is_homepage" class="fa fa-home"></i> <t t-esc="page.name"/></td>
                           <td><a t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
                           <td style="text-align:center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
-                          <td style="text-align:center"><i t-att-title="'Your page will be published at ' + page.date_publish if not page.is_visible and page.website_published else ''" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td style="text-align:center"><i t-att-title="'Your page will be visible at ' + page.date_publish if not page.is_visible and page.website_published else ''" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td style="text-align:center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td>
                               <a class="fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>

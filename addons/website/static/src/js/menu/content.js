@@ -38,14 +38,18 @@ var PagePropertiesDialog = widget.Dialog.extend({
         this.serverUrlTrunc = serverUrlTrunc;
         this.current_page_url = window.location.pathname;
         this.page_id = page_id;
+        
+        var buttons = [
+            {text: _t("Save"), classes: "btn-primary o_save_button", click: self.save},
+            {text: _t("Discard"), close: true},
+        ];
+        if (options.fromPageManagement) {
+            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = self.page.url;}});
+        }
         this._super(parent, _.extend({}, {
             title: _t("Page Properties"),
             size: 'medium',
-            buttons: [
-                {text: _t("Save"), classes: "btn-primary o_save_button", click: self.save},
-                {text: _t("Discard"), close: true},
-                {text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = self.page.url;}}
-            ],
+            buttons: buttons,
         }, options || {}));
         
         
@@ -85,6 +89,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
     start: function() {
         var self = this;
         var context = weContext.get();
+        
         this.$(".ask_for_redirect").hide();
         this.$(".redirect_type").hide();
         
@@ -215,7 +220,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
     //--------------------------------------------------------------------------
     
     _onUrlChanged: function () {
-        var url = this.$('input#page_url]').val();
+        var url = this.$('input#page_url').val();
         if (url != this.page.url) {
             this.$(".ask_for_redirect").show();
         }
@@ -224,7 +229,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
         }
     },
     _onCreateRedirectChanged: function () {
-      var createRedirect = this.$('input#create_redirect]').prop('checked');
+      var createRedirect = this.$('input#create_redirect').prop('checked');
       if (createRedirect) {
           this.$(".redirect_type").show();
       }
@@ -661,7 +666,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _pageProperties: function () {
         var self = this;
         var moID = self._getMainObject().id;
-        var dialog = new PagePropertiesDialog(self,moID).open();
+        var dialog = new PagePropertiesDialog(self,moID,{}).open();
         return dialog;
     },
 });
@@ -701,7 +706,7 @@ var PageManagement = Widget.extend({
     
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
-        var dialog = new PagePropertiesDialog(this,moID).open();
+        var dialog = new PagePropertiesDialog(this,moID, {'fromPageManagement': true}).open();
         return dialog;
     },
     _onClonePageButtonClick: function (ev) {
