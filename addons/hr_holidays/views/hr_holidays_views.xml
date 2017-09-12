@@ -906,7 +906,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('state','not in',('draft', 'cancel', 'refuse'))]</field>
+            <field name="domain">[('state','not in',('draft', 'cancel', 'refuse')),('holiday_type', '=', 'employee')]</field>
             <field name="context">{'default_type':'add', 'search_default_approve':1, 'search_default_department':1, 'search_default_allocations':1}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="view_id" ref="hr_holiday_view_tree_allocation_to_approve"/>
