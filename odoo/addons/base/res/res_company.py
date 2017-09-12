@@ -244,15 +244,3 @@ class Company(models.Model):
     def open_company_edit_report(self):
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
-
-    @api.multi
-    def set_report_template(self):
-        self.ensure_one()
-        if self.env.context.get('report_template', False):
-            self.external_report_layout = self.env.context['report_template']
-        if self.env.context.get('default_report_name'):
-            document = self.env.get(self.env.context['active_model']).browse(self.env.context['active_id'])
-            report_name = self.env.context['default_report_name']
-            report_action = self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
-            return report_action.report_action(document, config=False)
-        return False
