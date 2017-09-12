@@ -24,16 +24,11 @@ var BaseSettingRenderer = FormRenderer.extend({
 
     start: function () {
         this._super.apply(this, arguments);
-        this._initModules();
-        this._renderTabs();
-        this._activeCaseInsensitiveSearch();
-        this._initSearch();
-        core.bus.on("DOM_updated", this, function () {
-            if (!this.activeTab)
-                this._moveToTab(_.findIndex(this.modules, function (m) {
-                    return m.key === self.activeSettingTab;
-                }));
-        });
+        if (config.isMobile) {
+            core.bus.on("DOM_updated", this, function () {
+                this._moveToTab(this.currentIndex);
+            });
+        }
     },
 
     /**
@@ -65,19 +60,13 @@ var BaseSettingRenderer = FormRenderer.extend({
         _.each(this.$('.app_settings_block'), function (settingView, index) {
             var group = !$(settingView).hasClass('o_invisible_modifier');
             if (group) {
-                var string = $(settingView).attr('data-string');
-                var key = $(settingView).attr('data-key');
-                var imgurl = self._getAppIconUrl(key);
-                var view = $(settingView);
+                var data = $(settingView).data();
                 self.modules.push({
-                    key: key,
-                    string: string,
-                    settingView: view,
-                    imgurl: imgurl,
-                    order: key=== self.activeSettingTab ? 0 : index+1
+                    key: data.key,
+                    string: data.string,
+                    imgurl: self._getAppIconUrl(data.key),
+                    order: data.key=== self.activeSettingTab ? 0 : index+1
                 });
-                view.addClass("o_hidden");
-                view.prepend($("<div>").html(self._getSearchHeader(imgurl,string)));
             } else {
                 $(settingView).remove();
             }
@@ -90,8 +79,13 @@ var BaseSettingRenderer = FormRenderer.extend({
      * @private
      */
     _initSearch: function () {
-        this.searchText = "";
         this.searchInput = this.$('.searchInput');
+        if (this.searchText) {
+            this.searchInput.val(this.searchText);
+            this._onKeyUpSearch();
+        } else {
+            this.searchText = "";
+        }
     },
     /**
      * In mobile view behaviour is like swipe content left / right and apps tab will be shown on the top.
@@ -178,7 +172,7 @@ var BaseSettingRenderer = FormRenderer.extend({
      * @param {int} index
      */
     _moveToTab: function (index) {
-        this.currentIndex = index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
+        this.currentIndex = !index || index === -1 ? 0 : (index === this.modules.length ? index - 1 : index);
         if (this.currentIndex !== -1) {
             if (this.activeView) {
                 this.activeView.addClass("o_hidden");
@@ -241,6 +235,28 @@ var BaseSettingRenderer = FormRenderer.extend({
             this.$('.settings_tab').removeClass('o_hidden');
             this.$('.settings').removeClass('d-block');
         }
+    },
+
+    _render: function () {
+        var res = this._super.apply(this, arguments);
+        if (!this.modules) {
+            this._initModules();
+            this._activeCaseInsensitiveSearch();
+        }
+        this._renderLeftPenal();
+        this._initSearch();
+        return res;
+    },
+
+    _renderLeftPenal: function () {
+        var self = this;
+        _.each(this.modules, function (module) {
+            module.settingView = self.$('.app_settings_block[data-key="' + module.key + '"]');
+            module.settingView.addClass("o_hidden");
+            module.settingView.prepend(self._getSearchHeader(module.imgurl, module.string));
+        });
+        this._renderTabs();
+        this._moveToTab(this.currentIndex);
     },
 
     _renderTabs: function () {
