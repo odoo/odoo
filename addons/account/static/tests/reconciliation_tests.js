@@ -22,6 +22,9 @@ var db = {
             {id: 4, display_name: "partner 4", image: 'DDD', customer: true},
             {id: 8, display_name: "Agrolait", image: 'EEE', customer: true},
             {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true, property_account_receivable_id: 287, property_account_payable_id: 287},
+            // add more to have 'Search More' option
+            {id: 98, display_name: "partner 98", image: 'YYY', customer: true},
+            {id: 99, display_name: "partner 99", image: 'ZZZ', customer: true},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -738,12 +741,18 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation change partner', function (assert) {
-        assert.expect(10);
+        assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
+            archs: {
+                'res.partner,false,list': '<tree string="Partners"><field name="display_name"/></tree>',
+                'res.partner,false,search': '<search string="Partners">' +
+                                            '<field name="display_name" string="Name"/>' +
+                                        '</search>',
+            },
         });
 
         clientAction.appendTo($('#qunit-fixture'));
@@ -757,6 +766,15 @@ QUnit.module('account', {
         clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         assert.strictEqual(widget.$('.match table tr.mv_line').length, 3, "camptocamp should have 3 propositions for reconciliation");
+
+        // Simulate changing partner with SelectCreateDialog
+        widget = clientAction.widgets[1];
+        assert.strictEqual($('.modal').length, 0, "shouldn't have any opened modal");
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
+        assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
+        $('.modal table.o_list_view td:contains(Camptocamp)').click();
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
 
         widget = clientAction.widgets[2];
         widget.$('.accounting_view thead td:first').trigger('click');
