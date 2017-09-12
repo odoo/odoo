@@ -17,17 +17,51 @@ var BaseSettingRenderer = FormRenderer.extend({
     }),
 
     init: function () {
+        this._super.apply(this, arguments);
         this.activeView = false;
         this.activeTab = false;
-        this._super.apply(this, arguments);
     },
 
     start: function () {
         this._super.apply(this, arguments);
+        this._initModules();
+        this._renderTabs();
+        this._activeCaseInsensitiveSearch();
+        this._initSearch();
+        core.bus.on("DOM_updated", this, function () {
+            if (!this.activeTab)
+                this._moveToTab(_.findIndex(this.modules, function (m) {
+                    return m.key === self.activeSettingTab;
+                }));
+        });
+    },
 
+    /**
+     * enable case insensitive search in jQuery contains function
+     *
+     * @private
+     */
+    _activeCaseInsensitiveSearch: function () {
+        $.expr[':'].contains = function (a, i, m) {
+            return $(a).text().toUpperCase()
+                .indexOf(m[3].toUpperCase()) >= 0;
+        };
+    },
+    /**
+     * initialize modules list.
+     * remove module that restricted in groups
+     * data contains
+     *  {
+     *     key: moduel key
+     *     string: moduel string
+     *     imgurl: icon url
+     *  }
+     *
+     * @private
+     */
+    _initModules: function () {
         var self = this;
         this.modules = [];
-
         _.each(this.$('.app_settings_block'), function (settingView, index) {
             var group = !$(settingView).hasClass('o_invisible_modifier');
             if (group) {
@@ -43,59 +77,29 @@ var BaseSettingRenderer = FormRenderer.extend({
                     order: key=== self.activeSettingTab ? 0 : index+1
                 });
                 view.addClass("o_hidden");
-                view.prepend($("<div>").html('<img class="icon" src="'+imgurl+'"><span class="appName">'+string+'</span>').addClass('settingSearchHeader o_hidden'));
+                view.prepend($("<div>").html(self._getSearchHeader(imgurl,string)));
             } else {
                 $(settingView).remove();
             }
         });
-
-        this.modules = _.sortBy(this.modules, function (m) {
-            return m.order;
-        });
-        var tabs = $(QWeb.render('BaseSetting.Tabs', {tabItems : this.modules}));
-        tabs.appendTo(this.$(".settings_tab"));
-
-        $.expr[':'].contains = function (a, i, m) {
-            return $(a).text().toUpperCase()
-                .indexOf(m[3].toUpperCase()) >= 0;
-        };
-
+    },
+    /**
+     * initialize searchtext variable
+     * initialize jQuery search input element
+     *
+     * @private
+     */
+    _initSearch: function () {
         this.searchText = "";
         this.searchInput = this.$('.searchInput');
-        core.bus.on("DOM_updated", this, function () {
-            if (!this.activeTab)
-                this._moveToTab(_.findIndex(this.modules, function (m) {
-                    return m.key === self.activeSettingTab;
-                }));
-        });
     },
-
-    _getAppIconUrl: function (module) {
-        return module === "general_settings" ? "/base/static/description/settings.png" : "/"+module+"/static/description/icon.png";
-    },
-
-    _moveToTab: function (index) {
-        this.currentIndex = index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
-        if (this.currentIndex !== -1) {
-            if (this.activeView) {
-                this.activeView.addClass("o_hidden");
-            }
-            if (this.activeTab) {
-                this.activeTab.removeClass("selected");
-            }
-            var view = this.modules[this.currentIndex].settingView;
-            var tab = this.$(".tab[data-key='" + this.modules[this.currentIndex].key + "']");
-            view.removeClass("o_hidden");
-            this.activeView = view;
-            this.activeTab = tab;
-
-            if (config.isMobile) {
-                this._activateSettingMobileTab(this.currentIndex);
-            } else {
-                tab.addClass("selected");
-            }
-        }
-    },
+    /**
+     * In mobile view behaviour is like swipe content left / right and apps tab will be shown on the top.
+     * This method will set the required properties (styling and css).
+     *
+     * @private
+     * @param {int} currentTab
+     */
     _activateSettingMobileTab: function (currentTab) {
         var self = this;
         var moveTo = currentTab;
@@ -132,6 +136,69 @@ var BaseSettingRenderer = FormRenderer.extend({
             }
         });
     },
+    /**
+     *
+     * @private
+     * @param {string} module
+     * @returns {string} icon url
+     */
+    _getAppIconUrl: function (module) {
+        return module === "general_settings" ? "/base/static/description/settings.png" : "/"+module+"/static/description/icon.png";
+    },
+    /**
+     *
+     * @private
+     * @param {string} imgurl
+     * @param {string} string(moduel name)
+     * @returns {object}
+     */
+    _getSearchHeader: function (imgurl, string) {
+        return $(QWeb.render('BaseSetting.SearchHeader', {
+            imgurl: imgurl,
+            string: string
+        }));
+    },
+    /**
+     * add placeholder attr in input element
+     * @override
+     * @private
+     * @param {jQueryElement} $el
+     * @param {Object} node
+     */
+    _handleAttributes: function ($el, node) {
+        this._super.apply(this, arguments);
+        if (node.attrs.placeholder) {
+            $el.attr('placeholder', node.attrs.placeholder);
+        }
+    },
+    /**
+     * move to selected setting
+     *
+     * @private
+     * @param {int} index
+     */
+    _moveToTab: function (index) {
+        this.currentIndex = index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
+        if (this.currentIndex !== -1) {
+            if (this.activeView) {
+                this.activeView.addClass("o_hidden");
+            }
+            if (this.activeTab) {
+                this.activeTab.removeClass("selected");
+            }
+            var view = this.modules[this.currentIndex].settingView;
+            var tab = this.$(".tab[data-key='" + this.modules[this.currentIndex].key + "']");
+            view.removeClass("o_hidden");
+            this.activeView = view;
+            this.activeTab = tab;
+
+            if (config.isMobile) {
+                this._activateSettingMobileTab(this.currentIndex);
+            } else {
+                tab.addClass("selected");
+            }
+        }
+    },
 
     _onSettingTabClick: function (event) {
         if (this.searchText.length > 0) {
@@ -154,7 +221,40 @@ var BaseSettingRenderer = FormRenderer.extend({
         }
         this._searchSetting();
     },
+    /**
+     * reset setting view
+     *
+     * @private
+     */
+    _resetSearch: function () {
+        this.searchInput.val("");
+        _.each(this.modules, function (module) {
+            module.settingView.addClass('o_hidden');
+            module.settingView.find('.o_setting_box').removeClass('o_hidden');
+            module.settingView.find('h2').removeClass('o_hidden');
+            module.settingView.find('.settingSearchHeader').addClass('o_hidden');
+            module.settingView.find('.o_settings_container').addClass('mt16');
+        });
+        this.activeTab.removeClass('o_hidden').addClass('selected');
+        this.activeView.removeClass('o_hidden');
+        if (config.isMobile) {
+            this.$('.settings_tab').removeClass('o_hidden');
+            this.$('.settings').removeClass('d-block');
+        }
+    },
 
+    _renderTabs: function () {
+        this.modules = _.sortBy(this.modules, function (module) {
+            return module.order;
+        });
+        var tabs = $(QWeb.render('BaseSetting.Tabs', {tabItems : this.modules}));
+        tabs.appendTo(this.$(".settings_tab"));
+    },
+    /**
+     * search setting in DOM
+     *
+     * @private
+     */
     _searchSetting: function () {
         var self = this;
         this.count = 0;
@@ -180,7 +280,13 @@ var BaseSettingRenderer = FormRenderer.extend({
             this._resetSearch();
         }
     },
-
+    /**
+     * highlight search word
+     *
+     * @private
+     * @param {string} text
+     * @param {string} word
+     */
     _wordHighlighter: function (text, word) {
         if (text.indexOf('highlighter') !== -1) {
             text = text.replace('<span class="highlighter">', "");
@@ -190,30 +296,6 @@ var BaseSettingRenderer = FormRenderer.extend({
         word = text.substring(match, match + word.length);
         var hilitedWord = "<span class='highlighter'>" + word + '</span>';
         return text.replace(word, hilitedWord);
-    },
-
-    _resetSearch: function () {
-        this.searchInput.val("");
-        _.each(this.modules, function (module) {
-            module.settingView.addClass('o_hidden');
-            module.settingView.find('.o_setting_box').removeClass('o_hidden');
-            module.settingView.find('h2').removeClass('o_hidden');
-            module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').addClass('mt16');
-        });
-        this.activeTab.removeClass('o_hidden').addClass('selected');
-        this.activeView.removeClass('o_hidden');
-        if (config.isMobile) {
-            this.$('.settings_tab').removeClass('o_hidden');
-            this.$('.settings').removeClass('d-block');
-        }
-    },
-
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
-        }
     },
 });
 
