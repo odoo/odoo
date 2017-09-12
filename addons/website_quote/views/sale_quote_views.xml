@@ -94,7 +94,12 @@
                         </page>
                         <page string="Confirmation">
                             <group>
-                                <field name="require_payment" widget="radio"/>
+                                <label for="require_payment"/>
+                                <div>
+                                    <field name="require_payment" widget="radio"/>
+                                    <div class="oe_clear"/>
+                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn btn-sm btn-link o_button_action_acquirer" attrs="{'invisible': [('require_payment', '!=', 1)]}"/>
+                                </div>
                                 <field name="mail_template_id"/>
                             </group>
                         </page>
