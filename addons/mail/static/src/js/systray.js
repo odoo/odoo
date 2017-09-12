@@ -162,7 +162,7 @@ var ActivityMenu = Widget.extend({
     template:'mail.chat.ActivityMenu',
     events: {
         "click": "_onActivityMenuClick",
-        "click .o_activity_filter_button, .o_mail_channel_preview": "_onActivityFilterClick",
+        "click .o_mail_channel_preview": "_onActivityFilterClick",
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
@@ -252,19 +252,19 @@ var ActivityMenu = Widget.extend({
      * @param {MouseEvent} event
      */
     _onActivityFilterClick: function (event) {
-        event.stopPropagation();
-        var $target = $(event.currentTarget);
+        // fetch the data from the button otherwise fetch the ones from the parent (.o_mail_channel_preview).
+        var data = _.extend({}, $(event.currentTarget).data(), $(event.target).data());
         var context = {};
-        if ($target.data('filter')=='my') {
+        if (data.filter === 'my') {
             context['search_default_activities_overdue'] = 1;
             context['search_default_activities_today'] = 1;
         } else {
-            context['search_default_activities_' + $target.data('filter')] = 1;
+            context['search_default_activities_' + data.filter] = 1;
         }
         this.do_action({
             type: 'ir.actions.act_window',
-            name: $target.data('model_name'),
-            res_model:  $target.data('res_model'),
+            name: data.model_name,
+            res_model:  data.res_model,
             views: [[false, 'kanban'], [false, 'form']],
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],

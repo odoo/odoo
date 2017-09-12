@@ -75,6 +75,19 @@ class ProductTemplate(models.Model):
         return accounts
 
     @api.multi
+    def action_open_product_moves(self):
+        self.ensure_one()
+        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
+        action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
+        action['context'] = {
+            'search_default_outgoing': True,
+            'search_default_incoming': True,
+            'search_default_done': True,
+            'is_avg': self.cost_method == 'average',
+        }
+        return action
+
+    @api.multi
     def get_product_accounts(self, fiscal_pos=None):
         """ Add the stock journal related to product to the result of super()
         @return: dictionary which contains all needed information regarding stock accounts and journal and super (income+expense accounts)
@@ -155,6 +168,19 @@ class ProductProduct(models.Model):
                 domain = [('product_id', '=', product.id)] + StockMove._get_all_base_domain()
                 moves = StockMove.search(domain)
                 product.stock_value = sum(moves.mapped('value'))
+
+    @api.multi
+    def action_open_product_moves(self):
+        self.ensure_one()
+        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {
+            'search_default_outgoing': True,
+            'search_default_incoming': True,
+            'search_default_done': True,
+            'is_avg': self.cost_method == 'average',
+        }
+        return action
 
 
 class ProductCategory(models.Model):

@@ -24,19 +24,19 @@ _CONFDELTYPES = {
 def existing_tables(cr, tablenames):
     """ Return the names of existing tables among ``tablenames``. """
     query = """
-        SELECT relname
-          FROM pg_class
-         WHERE relname IN %s
-           AND relkind IN ('r', 'v', 'm')
+        SELECT c.relname
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname IN %s
+           AND c.relkind IN ('r', 'v', 'm')
+           AND n.nspname = 'public'
     """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
 
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM pg_class WHERE relkind IN ('r', 'v', 'm') AND relname=%s"
-    cr.execute(query, (tablename,))
-    return cr.rowcount
+    return len(existing_tables(cr, {tablename})) == 1
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),

@@ -74,7 +74,8 @@ class StockMove(TransactionCase):
         move1.action_done()
         self.assertEqual(move1.state, 'done')
         # no quants are created in the supplier location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location), -100.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location, allow_negative=True), -100.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 100.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.supplier_location)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
@@ -114,8 +115,10 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
-        # no quants are created in the supplier location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.supplier_location), -5.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.supplier_location), 0.0)
+        supplier_quants = self.env['stock.quant']._gather(self.product3, self.supplier_location)
+        self.assertEqual(sum(supplier_quants.mapped('quantity')), -5.0)
+
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 5.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product3, self.supplier_location)), 1.0)
         quants = self.env['stock.quant']._gather(self.product3, self.stock_location)
@@ -165,7 +168,9 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'done')
 
         # Quant balance should result with 5 quant in supplier and stock
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.supplier_location), -5.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.supplier_location), 0.0)
+        supplier_quants = self.env['stock.quant']._gather(self.product2, self.supplier_location)
+        self.assertEqual(sum(supplier_quants.mapped('quantity')), -5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 5.0)
 
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.supplier_location)), 5.0)
@@ -299,7 +304,7 @@ class StockMove(TransactionCase):
         self.assertEqual(len(move1.move_line_ids), 2)
 
     def test_mixed_tracking_reservation_2(self):
-        """ Send products tracked by lot to a customer. In your stock, there two tracked and
+        """ Send products tracked by lot to a customer. In your stock, there are two tracked and
         mulitple untracked quants. There should be as many move lines as there are quants
         reserved. Edit the reserve move lines to set them to new serial numbers, the reservation
         should stay. Validate and the final quantity in stock should be 0, not negative.
@@ -315,7 +320,6 @@ class StockMove(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 2)
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot2)
-
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 4.0)
         # creation
         move1 = self.env['stock.move'].create({
@@ -684,6 +688,30 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 50.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
         self.assertEqual(move1.availability, 50.0)
+
+    def test_availability_3(self):
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product2.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, -1.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1.0, lot_id=lot2)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_availability_3',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(move1.reserved_availability, 1.0)
 
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
@@ -1932,7 +1960,8 @@ class StockMove(TransactionCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location, allow_negative=True), -1.0)
 
     def test_edit_done_move_line_7(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
@@ -2027,8 +2056,10 @@ class StockMove(TransactionCase):
         # edit once done, we actually moved 2 products
         move1.move_line_ids.qty_done = 2
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), -1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location, allow_negative=True), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, allow_negative=True), -1.0)
         self.assertEqual(move1.product_uom_qty, 2.0)
 
     def test_edit_done_move_line_9(self):
@@ -2243,7 +2274,8 @@ class StockMove(TransactionCase):
         self.assertEqual(picking.move_lines.move_line_ids.qty_done, 10.0)
         self.assertEqual(picking.move_lines.move_line_ids.product_qty, 0.0)
         # Check quants data
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), -10.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, allow_negative=True), -10.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
 
     def test_immediate_validate_4(self):
@@ -2290,6 +2322,50 @@ class StockMove(TransactionCase):
         # Check quants data
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
+
+    def _create_picking_test_immediate_validate_5(self, picking_type_id, product_id):
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': picking_type_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': 'move1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_id': picking.id,
+            'picking_type_id': picking_type_id.id,
+            'product_id': product_id.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        picking.action_confirm()
+
+        for line in picking.move_line_ids:
+            line.qty_done = line.product_uom_qty
+
+        return picking
+
+    def test_immediate_validate_575487534895(self):
+        """ Create a picking and simulates validate button effect.
+            Test that tracked products can be received without specifying a serial
+            number when the picking type is configured that way.
+        """
+        picking_type_id = self.env.ref('stock.picking_type_in')
+        product_id = self.product2
+        self.assertTrue(picking_type_id.use_create_lots or picking_type_id.use_existing_lots)
+        self.assertEqual(product_id.tracking, 'serial')
+
+        picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
+        # should raise because no serial numbers were specified
+        self.assertRaises(UserError, picking.do_new_transfer)
+
+        picking_type_id.use_create_lots = False
+        picking_type_id.use_existing_lots = False
+        picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
+        picking.do_new_transfer()
+        self.assertEqual(picking.state, 'done')
 
     def test_immediate_validate_5(self):
         """ Create a picking and simulates validate button effect.
@@ -2727,3 +2803,36 @@ class StockMove(TransactionCase):
 
         self.assertEqual(self.product1.qty_available, 5.0)
         self.assertEqual(self.product1.with_context(company_owned=True).qty_available, 10.0)
+
+    def test_split_1(self):
+        """ When we split a move line and having one without quantity done, we want to keep reservation
+            on the new one as it has not been unreserved during the copy.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_split_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+
+        move1.action_confirm()
+        move1.action_assign()
+        move_line = move1.move_line_ids
+
+        default = {'product_uom_qty': 3,
+                   'qty_done': 3}
+        move_line.copy(default=default)
+        move_line.with_context(bypass_reservation_update=True).write({'product_uom_qty': 7, 'qty_done': 0})
+        move1.action_done()
+
+        new_move = self.env['stock.move'].search([('name', '=', 'test_split_1'), ('state', '=', 'confirmed')])
+
+        self.assertEqual(move1.move_line_ids.product_uom_qty, 0.0)
+        self.assertEqual(move1.move_line_ids.qty_done, 3.0)
+        self.assertEqual(new_move.move_line_ids.product_uom_qty, 7.0)
+        self.assertEqual(new_move.move_line_ids.qty_done, 0.0)

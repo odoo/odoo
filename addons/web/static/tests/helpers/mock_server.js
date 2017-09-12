@@ -57,16 +57,22 @@ var MockServer = Class.extend({
      * 'field_view_get' call to the server. Calls processViews() of data_manager
      * to mimick the real behavior of a call to loadViews().
      *
-     * @param {string|Object} arch a string OR a parsed xml document
-     * @param {string} model a model name (that should be in this.data)
+     * @param {Object} params
+     * @param {string|Object} params.arch a string OR a parsed xml document
+     * @param {string} params.model a model name (that should be in this.data)
+     * @param {Object} params.toolbar the actions possible in the toolbar
+     * @param {Object} [params.viewOptions] the view options set in the test (optional)
      * @returns {Object} an object with 2 keys: arch and fields
      */
-    fieldsViewGet: function (arch, model, toolbar) {
+    fieldsViewGet: function (params) {
+        var model = params.model;
+        var toolbar = params.toolbar;
+        var viewOptions = params.viewOptions || {};
         if (!(model in this.data)) {
             throw new Error('Model ' + model + ' was not defined in mock server data');
         }
         var fields = $.extend(true, {}, this.data[model].fields);
-        var fvg = this._fieldsViewGet(arch, model, fields);
+        var fvg = this._fieldsViewGet(params.arch, model, fields, viewOptions.context);
         var fields_views = {};
         fields_views[fvg.type] = fvg;
         data_manager.processViews(fields_views, fields);
@@ -155,10 +161,11 @@ var MockServer = Class.extend({
      * @param {string|Object} arch a string OR a parsed xml document
      * @param {string} model a model name (that should be in this.data)
      * @param {Object} fields
+     * @param {Object} context
      * @returns {Object} an object with 2 keys: arch and fields (the fields
      *   appearing in the views)
      */
-    _fieldsViewGet: function (arch, model, fields) {
+    _fieldsViewGet: function (arch, model, fields, context) {
         var self = this;
         var modifiersNames = ['invisible', 'readonly', 'required'];
         var onchanges = this.data[model].onchanges || {};
@@ -224,7 +231,8 @@ var MockServer = Class.extend({
             }
             _.each(modifiersNames, function (a) {
                 if (node.attrs[a]) {
-                    var v = pyeval.py_eval(node.attrs[a]) ? true: false;
+                    var pyevalContext = window.py.dict.fromJSON(context || {});
+                    var v = pyeval.py_eval(node.attrs[a], {context: pyevalContext}) ? true: false;
                     if (inTreeView && a === 'invisible') {
                         modifiers['tree_invisible'] = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
@@ -252,7 +260,8 @@ var MockServer = Class.extend({
                 _.each(node.children, function (children) {
                     relModel = field.relation;
                     relFields = $.extend(true, {}, self.data[relModel].fields);
-                    field.views[children.tag] = self._fieldsViewGet(children, relModel, relFields);
+                    field.views[children.tag] = self._fieldsViewGet(children, relModel,
+                        relFields, context);
                 });
             }
 

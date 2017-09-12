@@ -28,6 +28,9 @@
 }
 
 .o_kanban_view.o_kanban_dashboard {
+    // correctly display the no_content_helper in dashboards
+    .o-flex-flow(row, wrap);
+
     .o_kanban_record {
         position: relative;
         .o-flex-display();

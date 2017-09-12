@@ -205,7 +205,7 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                       <button string="Inventory Moves"
+                       <button string="Product Moves"
                             type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
@@ -233,6 +233,10 @@
                             name="action_view_routes"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs" groups="base.group_no_one"/>
+                        <button string="Lot/Serial Number" type="object"
+                            name="action_open_product_lot"
+                            attrs="{'invisible': [('tracking', '=', 'none')]}"
+                            class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
                     </button>
                 </data>
             </field>
@@ -268,7 +272,7 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                        <button string="Inventory Moves" type="object"
+                        <button string="Product Moves" type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-arrows-v"
@@ -298,6 +302,10 @@
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs"
                             groups="base.group_no_one"/>
+                        <button string="Lot/Serial Number" type="object"
+                            name="action_open_product_lot"
+                            attrs="{'invisible': [('tracking', '=', 'none')]}"
+                            class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
                     </button>
 
                     <!-- change attrs of fields added in view_template_property_form

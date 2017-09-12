@@ -713,7 +713,7 @@ class StockMove(models.Model):
             if move.location_id.usage in ('supplier', 'inventory', 'production', 'customer')\
                     or move.product_id.type == 'consu':
                 # create the move line(s) but do not impact quants
-                if move.product_id.tracking == 'serial':
+                if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
                     for i in range(0, int(move.product_qty)):
                         self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
                 else:
@@ -886,7 +886,7 @@ class StockMove(models.Model):
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id)
                 new_move = move.split(qty_split)
                 for move_line in move.move_line_ids:
-                    if move_line.product_qty:
+                    if move_line.product_qty and move_line.qty_done:
                         # FIXME: there will be an issue if the move was partially available
                         # By decreasing `product_qty`, we free the reservation.
                         # FIXME: if qty_done > product_qty, this could raise if nothing is in stock

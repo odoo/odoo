@@ -179,41 +179,6 @@ var KanbanModel = BasicModel.extend({
         }
         return this._super(id, options);
     },
-    /**
-     * Resequences records.
-     *
-     * @param {string} modelName
-     * @param {Array[integer]} resIDs the new sequence of ids
-     * @param {string]} parentID the localID of the parent
-     * @returns {Deferred<string>} resolves to the local id of the parent
-     */
-    resequence: function (modelName, resIDs, parentID) {
-        if ((resIDs.length <= 1)) {
-            return $.when(parentID); // there is nothing to sort
-        }
-        var self = this;
-        var data = this.localData[parentID];
-        return this._rpc({
-                route: '/web/dataset/resequence',
-                params: {model: modelName, ids: resIDs},
-            })
-            .then(function () {
-                data.data = _.sortBy(data.data, function (d) {
-                    return _.indexOf(resIDs, self.localData[d].res_id);
-                });
-                data.res_ids = [];
-                _.each(data.data, function (d) {
-                    var dataPoint = self.localData[d];
-                    if (dataPoint.type === 'record') {
-                        data.res_ids.push(dataPoint.res_id);
-                    } else {
-                        data.res_ids = data.res_ids.concat(dataPoint.res_ids);
-                    }
-                });
-                self._updateParentResIDs(data);
-                return parentID;
-            });
-    },
 
     //--------------------------------------------------------------------------
     // Private

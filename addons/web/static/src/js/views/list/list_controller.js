@@ -372,9 +372,16 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onEditLine: function (ev) {
+        var self = this;
         ev.stopPropagation();
-        this._setMode('edit', ev.data.recordID)
-            .done(ev.data.onSuccess);
+        this.trigger_up('mutexify', {
+            action: function () {
+                var record = self.model.get(self.handle);
+                var editedRecord = record.data[ev.data.index];
+                self._setMode('edit', editedRecord.id)
+                    .done(ev.data.onSuccess);
+            },
+        });
     },
     /**
      * Opens the Export Dialog
@@ -404,23 +411,24 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onResequence: function (event) {
-        var data = this.model.get(this.handle);
-        var resIDs = _.map(event.data.rowIDs, function(rowID) {
-            return _.findWhere(data.data, {id: rowID}).res_id;
-        })
-        return this._rpc({
-            route: '/web/dataset/resequence',
-            params: {
-                model: this.modelName,
-                ids: resIDs,
-                offset: event.data.offset,
-                field: event.data.handleField,
+        var self = this;
+
+        this.trigger_up('mutexify', {
+            action: function () {
+                var state = self.model.get(self.handle);
+                var resIDs = _.map(event.data.rowIDs, function(rowID) {
+                    return _.findWhere(state.data, {id: rowID}).res_id;
+                });
+                var options = {
+                    offset: event.data.offset,
+                    field: event.data.handleField,
+                };
+                return self.model.resequence(self.modelName, resIDs, self.handle, options).then(function () {
+                    self._updateEnv();
+                    state = self.model.get(self.handle);
+                    return self.renderer.updateState(state, {noRender: true});
+                });
             },
-        }).then(function () {
-            data.data = _.sortBy(data.data, function (d) {
-                return _.indexOf(resIDs, d.res_id);
-            });
-            return this.handle;
         });
     },
     /**

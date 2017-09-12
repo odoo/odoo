@@ -229,12 +229,11 @@ class TestWorkOrderProcess(common.TransactionCase):
         # -----------------
 
         # Produce 6 Unit of custom laptop will consume ( 12 Unit of keybord and 12 Unit of charger)
-
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
         product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 6.00})
         laptop_lot_001 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         product_consume.lot_id = laptop_lot_001.id
-        product_consume.consume_line_ids.write({'qty_done': 12})
+        product_consume.produce_line_ids.write({'qty_done': 12})
         product_consume.do_produce()
 
         # Check consumed move after produce 6 quantity of customized laptop.
@@ -259,8 +258,8 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 4.00})
         laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         product_consume.lot_id = laptop_lot_002.id
-        self.assertEquals(len(product_consume.consume_line_ids), 2)
-        product_consume.consume_line_ids.write({'qty_done': 8})
+        self.assertEquals(len(product_consume.produce_line_ids), 2)
+        product_consume.produce_line_ids.write({'qty_done': 8})
         product_consume.do_produce()
         charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state != 'done')
         keybord_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state !='done')
@@ -394,9 +393,9 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 10})
         # laptop_lot_002 = self.env['stock.production.lot'].create({'product_id': custom_laptop.id})
         product_consume.lot_id = lot_a.id
-        self.assertEquals(len(product_consume.consume_line_ids), 2)
-        product_consume.consume_line_ids.filtered(lambda x : x.product_id == product_C).write({'qty_done': 3000})
-        product_consume.consume_line_ids.filtered(lambda x : x.product_id == product_B).write({'qty_done': 20})
+        self.assertEquals(len(product_consume.produce_line_ids), 2)
+        product_consume.produce_line_ids.filtered(lambda x : x.product_id == product_C).write({'qty_done': 3000})
+        product_consume.produce_line_ids.filtered(lambda x : x.product_id == product_B).write({'qty_done': 20})
         product_consume.do_produce()
         mo_custom_product.post_inventory()
 

@@ -497,7 +497,7 @@ class SaleOrder(models.Model):
         })
         if self.env.context.get('send_email'):
             self.force_quotation_send()
-        if self.env['ir.config_parameter'].get_param('sale.auto_done_setting'):
+        if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
         return True
 
