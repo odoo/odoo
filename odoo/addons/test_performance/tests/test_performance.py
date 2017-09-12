@@ -10,20 +10,26 @@ from odoo.tests.common import TransactionCase
 sql_logger = logging.getLogger('odoo.sql_db')
 
 
-def queryCount(count):
+def queryCount(**counters):
     """ Decorate a method to check the number of queries it makes. """
     def decorate(func):
         @functools.wraps(func)
         def wrapper(self):
-            # warm up the caches
-            self._round = False
-            func(self)
-            self.env.cache.invalidate()
-            # test for real, and check query count
-            self._round = True
-            self.resetQueryCount()
-            func(self)
-            self.assertLessEqual(self.cr.sql_log_count - self._count, count)
+            for user in self.env.user + self.env.ref('base.user_demo'):
+                # switch user
+                self.uid = user.id
+                self.env = self.env(user=self.uid)
+                # warm up the caches
+                self._round = False
+                func(self)
+                self.env.cache.invalidate()
+                # test for real, and check query count
+                self._round = True
+                self.resetQueryCount()
+                func(self)
+                self.assertLessEqual(self.cr.sql_log_count - self._count,
+                                     counters[user.login],
+                                     "as user %s" % user.login)
 
         return wrapper
 
@@ -56,7 +62,7 @@ class TestPerformance(TransactionCase):
             self.cr.sql_log = sql_log
             sql_logger.setLevel(level)
 
-    @queryCount(3)
+    @queryCount(admin=3, demo=3)
     def test_read_base(self):
         """ Read records. """
         records = self.env['test_performance.base'].search([])
@@ -75,7 +81,7 @@ class TestPerformance(TransactionCase):
         for record in records:
             record.value_pc
 
-    @queryCount(3)
+    @queryCount(admin=3, demo=3)
     def test_read_mail(self):
         """ Read records inheriting from 'mail.thread'. """
         records = self.env['test_performance.mail'].search([])
@@ -94,7 +100,7 @@ class TestPerformance(TransactionCase):
         for record in records:
             record.value_pc
 
-    @queryCount(1)
+    @queryCount(admin=1, demo=1)
     def test_write_base(self):
         """ Write records (no recomputation). """
         records = self.env['test_performance.base'].search([])
@@ -103,7 +109,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'name': self.str('X')})
 
-    @queryCount(3)
+    @queryCount(admin=3, demo=3)
     def test_write_base_with_recomputation(self):
         """ Write records (with recomputation). """
         records = self.env['test_performance.base'].search([])
@@ -112,7 +118,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'value': self.int(20)})
 
-    @queryCount(7)
+    @queryCount(admin=7, demo=7)
     def test_write_mail(self):
         """ Write records inheriting from 'mail.thread' (no recomputation). """
         records = self.env['test_performance.mail'].search([])
@@ -121,7 +127,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'name': self.str('X')})
 
-    @queryCount(9)
+    @queryCount(admin=9, demo=9)
     def test_write_mail_with_recomputation(self):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
         records = self.env['test_performance.mail'].search([])
@@ -130,7 +136,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'value': self.int(20)})
 
-    @queryCount(45)
+    @queryCount(admin=45, demo=62)
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
         record = self.env['test_performance.mail'].search([], limit=1)
@@ -139,13 +145,13 @@ class TestPerformance(TransactionCase):
 
         record.track = self.str('X')
 
-    @queryCount(6)
+    @queryCount(admin=6, demo=6)
     def test_create_base(self):
         """ Create records. """
         model = self.env['test_performance.base']
         model.create({'name': self.str('X')})
 
-    @queryCount(38)
+    @queryCount(admin=38, demo=38)
     def test_create_base_with_lines(self):
         """ Create records with lines. """
         model = self.env['test_performance.base']
@@ -154,13 +160,13 @@ class TestPerformance(TransactionCase):
             'line_ids': [(0, 0, {'value': val}) for val in range(10)],
         })
 
-    @queryCount(3)
+    @queryCount(admin=3, demo=3)
     def test_create_mail(self):
         """ Create records inheriting from 'mail.thread' (without field tracking). """
         model = self.env['test_performance.mail']
         model.with_context(tracking_disable=True).create({'name': self.str('X')})
 
-    @queryCount(87)
+    @queryCount(admin=87, demo=114)
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
         model = self.env['test_performance.mail']
