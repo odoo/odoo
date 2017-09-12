@@ -666,6 +666,7 @@ class Picking(models.Model):
         }
 
     def action_toggle_is_locked(self):
+        self.ensure_one()
         self.is_locked = not self.is_locked
         return True
 
