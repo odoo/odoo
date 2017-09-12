@@ -295,7 +295,7 @@ class MassMailing(models.Model):
         for model_name in self.env:
             model = self.env[model_name]
             if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
-                if getattr(model, 'message_mass_mailing_enabled'):
+                if hasattr(model, 'message_mass_mailing_enabled'):
                     res.append((model._name, model.message_mass_mailing_enabled()))
                 else:
                     res.append((model._name, model._mail_mass_mailing))
