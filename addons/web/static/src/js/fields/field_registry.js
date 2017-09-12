@@ -37,6 +37,7 @@ registry
     .add('monetary', basic_fields.FieldMonetary)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
+    .add('image_selection', basic_fields.ImageSelection)
     .add('label_selection', basic_fields.LabelSelection)
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
