@@ -5,7 +5,7 @@ from datetime import datetime
 from dateutil import relativedelta
 import time
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
@@ -261,7 +261,7 @@ class StockMove(models.Model):
         Picking = self.env['stock.picking']
         # Check that we do not modify a stock.move which is done
         frozen_fields = ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id']
-        if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self) and self.env.user.id != SUPERUSER_ID:
+        if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self) and self.env.user._is_superuser():
             raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
