@@ -44,7 +44,7 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
-        super(BaseConfigSettings, self).set_values()
+        super(ResConfigSettings, self).set_values()
         configParameter = self.env['ir.config_parameter'].sudo()
         configParameter.set_param("mail.catchall.domain", self.alias_domain or '')
         configParameter.set_param("email_template_layout", self.email_template_layout.id or False)
