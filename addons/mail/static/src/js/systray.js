@@ -162,7 +162,8 @@ var ActivityMenu = Widget.extend({
     template:'mail.chat.ActivityMenu',
     events: {
         "click": "_onActivityMenuClick",
-        "click .o_activity_filter_button, .o_mail_channel_preview": "_onActivityFilterClick",
+        "click .o_mail_channel_preview": "_onChannelClick",
+        "click .o_activity_filter_button": "_onActivityFilterClick"
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
@@ -242,8 +243,6 @@ var ActivityMenu = Widget.extend({
             this.$el.toggleClass('o_no_notification', !this.activityCounter);
         }
     },
-
-
     // Handlers
 
     /**
@@ -252,15 +251,35 @@ var ActivityMenu = Widget.extend({
      * @param {MouseEvent} event
      */
     _onActivityFilterClick: function (event) {
-        event.stopPropagation();
+        // Fix to prevent method being executed again on clicking of a button.
+        // We can't use event.stopPropagation() here otherwise drop-down
+        // will not be closed after performing the action.
+        
         var $target = $(event.currentTarget);
-        var context = {};
-        if ($target.data('filter')=='my') {
-            context['search_default_activities_overdue'] = 1;
-            context['search_default_activities_today'] = 1;
-        } else {
-            context['search_default_activities_' + $target.data('filter')] = 1;
+        if($(event.target).is('button') && !$target.is('button')) {
+            return;
         }
+        var context = {}
+        context['search_default_activities_' + $target.data('filter')] = 1;
+        this._doAction($target, context);
+    },
+
+    _onChannelClick: function (event) {
+        // Fix to prevent method being executed again on clicking of a button.
+        // We can't use event.stopPropagation() here otherwise drop-down
+        // will not be closed after performing the action.
+        
+        var $target = $(event.currentTarget);
+        if($(event.target).is('button') && !$target.is('button')) {
+            return;
+        }
+        var context = {};
+        context['search_default_activities_overdue'] = 1;
+        context['search_default_activities_today'] = 1;
+        this._doAction($target, context);
+    },
+
+    _doAction: function ($target, context) {
         this.do_action({
             type: 'ir.actions.act_window',
             name: $target.data('model_name'),
@@ -268,9 +287,10 @@ var ActivityMenu = Widget.extend({
             views: [[false, 'kanban'], [false, 'form']],
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],
-            context:context,
+            context: context,
         });
     },
+
     /**
      * When menu clicked update activity preview if counter updated
      * @private
