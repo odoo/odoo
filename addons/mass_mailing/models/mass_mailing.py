@@ -659,11 +659,12 @@ class MassMailing(models.Model):
         already_mailed_res_ids = [record['res_id'] for record in already_mailed]
         return list(set(res_ids) - set(already_mailed_res_ids))
 
-    def send_mail(self):
+    def send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
+
         for mailing in self:
-            # instantiate an email composer + send emails
-            res_ids = mailing.get_remaining_recipients()
+            if not res_ids:
+                res_ids = mailing.get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('Please select recipients.'))
 
