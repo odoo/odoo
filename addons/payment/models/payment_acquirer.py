@@ -52,7 +52,7 @@ class PaymentAcquirer(models.Model):
     _order = 'website_published desc, sequence, name'
 
     name = fields.Char('Name', required=True, translate=True)
-    description = fields.Html('Description')
+    description = fields.Html('Description', readonly=True)
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
         selection=[('manual', 'Manual Configuration')], string='Provider',
@@ -79,7 +79,8 @@ class PaymentAcquirer(models.Model):
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', '=', 'bank')],
         default=lambda self: self.env['account.journal'].search([('type', '=', 'bank')], limit=1),
-        help="""Payments will be registered into this journal. If you get paid straight on your bank account,
+        help="""Payments will be registered into this accounting journal in case of automatic invoicing (option available in Subscription & eCommerce apps).
+                If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
                 the amount in a temporary transfer account of your books (created automatically when you create
