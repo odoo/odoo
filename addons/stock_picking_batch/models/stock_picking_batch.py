@@ -12,7 +12,7 @@ class StockPickingBatch(models.Model):
     _order = "name desc"
 
     name = fields.Char(
-        string='Batch Picking Name', default='/',
+        string='Batch Picking Name', default='New',
         copy=False, required=True,
         help='Name of the batch picking')
     user_id = fields.Many2one(
@@ -31,7 +31,7 @@ class StockPickingBatch(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.env['ir.sequence'].next_by_code('batch.picking') or '/'
+            vals['name'] = self.env['ir.sequence'].next_by_code('picking.batch') or '/'
         return super(StockPickingBatch, self).create(vals)
 
     @api.multi
