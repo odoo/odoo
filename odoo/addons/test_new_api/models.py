@@ -212,6 +212,13 @@ class MultiLine(models.Model):
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
     partner = fields.Many2one('res.partner')
+    tags = fields.Many2many('test_new_api.multi.tag')
+
+
+class MultiTag(models.Model):
+    _name = 'test_new_api.multi.tag'
+
+    name = fields.Char()
 
 
 class Edition(models.Model):

@@ -204,9 +204,9 @@ class TestOnChange(common.TransactionCase):
 
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
-        partner = self.env.ref('base.res_partner_1')
-        multi = self.env['test_new_api.multi'].create({'partner': partner.id})
-        line = multi.lines.create({'multi': multi.id})
+        partner1 = self.env.ref('base.res_partner_1')
+        multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
+        line1 = multi.lines.create({'multi': multi.id})
 
         field_onchange = multi._onchange_spec()
         self.assertEqual(field_onchange, {
@@ -215,30 +215,66 @@ class TestOnChange(common.TransactionCase):
             'lines': None,
             'lines.name': None,
             'lines.partner': None,
+            'lines.tags': None,
+            'lines.tags.name': None,
         })
 
         values = multi._convert_to_write({key: multi[key] for key in ('name', 'partner', 'lines')})
         self.assertEqual(values, {
-            'name': partner.name,
-            'partner': partner.id,
-            'lines': [(6, 0, [line.id])],
+            'name': partner1.name,
+            'partner': partner1.id,
+            'lines': [(6, 0, [line1.id])],
         })
 
         # modify 'partner'
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
         #       -> set 'name' on all lines
-        partner = self.env.ref('base.res_partner_2')
-        values['partner'] = partner.id
-        values['lines'].append((0, 0, {'name': False, 'partner': False}))
+        partner2 = self.env.ref('base.res_partner_2')
+        values = {
+            'name': partner1.name,
+            'partner': partner2.id,             # this one just changed
+            'lines': [(6, 0, [line1.id]),
+                      (0, 0, {'name': False, 'partner': False, 'tags': [(5,)]})],
+        }
         self.env.cache.invalidate()
+
         result = multi.onchange(values, 'partner', field_onchange)
         self.assertEqual(result['value'], {
-            'name': partner.name,
+            'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line.id, {'name': partner.name, 'partner': (partner.id, partner.name)}),
-                (0, 0, {'name': partner.name, 'partner': (partner.id, partner.name)}),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,)]}),
+            ],
+        })
+
+        # do it again, but this time with a new tag on the second line
+        values = {
+            'name': partner1.name,
+            'partner': partner2.id,             # this one just changed
+            'lines': [(6, 0, [line1.id]),
+                      (0, 0, {'name': False,
+                              'partner': False,
+                              'tags': [(5,), (0, 0, {'name': 'Tag'})]})],
+        }
+        self.env.cache.invalidate()
+
+        result = multi.onchange(values, 'partner', field_onchange)
+        self.assertEqual(result['value'], {
+            'name': partner2.name,
+            'lines': [
+                (5,),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
             ],
         })
 
