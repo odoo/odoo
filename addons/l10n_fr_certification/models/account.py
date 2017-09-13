@@ -95,7 +95,7 @@ class AccountMove(models.Model):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
         if self.company_id.country_id.code == 'FR' and self.journal_id.l10n_fr_b2c:
-            raise UserError(_('You cannot modify a posted entry of a business to customer journal.'))
+            raise UserError(_('You cannot modify a posted journal entry of a business to customer journal which are unalterable.'))
         super(AccountMove, self).button_cancel()
 
     @api.model
@@ -109,7 +109,7 @@ class AccountMove(models.Model):
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
-            raise UserError(_('Warning: impossible to find any move with a hash.'))
+            raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet. This mechanism only runs for journal entries generated after the installation of the module l10n_fr_certification'))
         previous_hash = ''
         start_move_info = []
         for move in moves:
@@ -120,12 +120,17 @@ class AccountMove(models.Model):
                 start_move_info = [move.date, move.l10n_fr_secure_sequence_number]
             previous_hash = move.l10n_fr_hash
         end_move_info = [move.date, move.l10n_fr_secure_sequence_number]
-        raise UserError(_('''Successfully checked the integrity of account moves.
+        raise UserError(_('''Successful test !
 
-                         The account moves are guaranteed to be in their original and inalterable state
-                          - since:   %s     (Sequence Number: %s)
-                          - to:      %s     (Sequence Number: %s)'''
-                         ) % (start_move_info[0], start_move_info[1], end_move_info[0], end_move_info[1]))
+                         The journal entries are guaranteed to be in their original and inalterable state
+                          - since:   %s
+                          - to:      %s
+
+                         Number of contiguous journal entries controlled: %s
+
+                         For this report to be legally meaningfull, dowload your certification at
+                         https://accounts.odoo.com/my/contract/certification-comptabilite-francaise/'''
+                         ) % (start_move_info[0], end_move_info[0], end_move_info[1]))
 
 
 class AccountMoveLine(models.Model):
@@ -163,7 +168,7 @@ class AccountJournal(models.Model):
                     critical_domain = [('journal_id', '=', self.id),
                                        '|', ('l10n_fr_hash', '!=', False), ('l10n_fr_secure_sequence_number', '!=', False)]
                     if self.env['account.move'].search(critical_domain):
-                        raise UserError(ERR_MSG % (self._name, 'l10n_fr_b2c'))
+                        raise UserError('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected' % (self.name, ))
         return super(AccountJournal, self).write(vals)
 
     @api.model
