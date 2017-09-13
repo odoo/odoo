@@ -402,8 +402,8 @@ var FieldMany2One = AbstractField.extend({
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,
             disable_multiple_selection: true,
-            on_selected: function (element_ids) {
-                self.reinitialize({id: element_ids[0]});
+            on_selected: function (records) {
+                self.reinitialize(records[0]);
                 self.activate();
             }
         })).open();
@@ -1177,15 +1177,16 @@ var FieldMany2Many = FieldX2Many.extend({
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
             fields_view: this.attrs.views.form,
-            on_selected: function (res_ids) {
-                var new_ids = _.difference(res_ids, self.value.res_ids);
-                if (new_ids.length) {
-                    var values = _.map(new_ids, function (id) {
+            on_selected: function (records) {
+                var resIDs = _.pluck(records, 'id');
+                var newIDs = _.difference(resIDs, self.value.res_ids);
+                if (newIDs.length) {
+                    var values = _.map(newIDs, function (id) {
                         return {id: id};
                     });
                     self._setValue({
                         operation: 'ADD_M2M',
-                        ids: values
+                        ids: values,
                     });
                 }
             }

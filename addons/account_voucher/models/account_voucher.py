@@ -82,7 +82,7 @@ class AccountVoucher(models.Model):
 
     @api.model
     def _get_currency(self):
-        journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
+        journal = self.env['account.journal'].browse(self.env.context.get('default_journal_id', False))
         if journal.currency_id:
             return journal.currency_id.id
         return self.env.user.company_id.currency_id.id

@@ -87,9 +87,20 @@ var ListController = BasicController.extend({
      * @returns {number[]} list of res_ids
      */
     getSelectedIds: function () {
+        return _.map(this.getSelectedRecords(), function (record) {
+            return record.res_id;
+        });
+    },
+    /**
+     * Returns the list of currently selected records (with the check boxes on
+     * the left)
+     *
+     * @returns {Object[]} list of records
+     */
+    getSelectedRecords: function () {
         var self = this;
         return _.map(this.selectedRecords, function (db_id) {
-            return self.model.get(db_id, {raw: true}).res_id;
+            return self.model.get(db_id, {raw: true});
         });
     },
     /**
