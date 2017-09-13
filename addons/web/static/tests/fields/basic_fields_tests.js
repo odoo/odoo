@@ -38,6 +38,8 @@ QUnit.module('basic_fields', {
                     selection: {string: "Selection", type: "selection", searchable:true,
                         selection: [['normal', 'Normal'],['blocked', 'Blocked'],['done', 'Done']]},
                     document: {string: "Binary", type: "binary"},
+                    image_selection: {string: "Image Selection", type: "selection", searchable:true,
+                        selection: [['background', 'Background'],['boxed', 'Boxed'],['clean', 'Clean'],['standard', 'Standard']]},
                 },
                 records: [{
                     id: 1,
@@ -3993,6 +3995,29 @@ QUnit.module('basic_fields', {
         // if it tries to, it will crash as we don't define an arch in this test
         $('.modal .o_list_view .o_data_row:first .o_data_cell').click();
 
+        form.destroy();
+    });
+
+    QUnit.module('FieldImageSelection');
+
+    QUnit.test('use image selection widget in form view', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="image_selection" widget="image_selection"' +
+                    ' options="{ \'background\': { \'image_link\': \'/base/static/img/preview_background.png\', \'preview_link\': \'/base/static/pdf/preview_background.pdf\'}, ' +
+                    ' \'boxed\': { \'image_link\': \'/base/static/img/preview_boxed.png\', \'preview_link\': \'/base/static/pdf/preview_boxed.pdf\' }}" /> '+
+                  '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$(".img.img-responsive").length, 2, "Two image should be added in imageselection widget");
+        form.$(".img.img-responsive:first").click();
+        assert.ok(form.$(".img.img-responsive:first").hasClass('btn-info'), 'On click of first image it should be selected.');
         form.destroy();
     });
 });
