@@ -238,8 +238,11 @@ var SelectCreateListController = ListController.extend({
     // row of the list) such that it triggers up 'select_record' with its res_id.
     custom_events: _.extend({}, ListController.prototype.custom_events, {
         open_record: function (event) {
-            var selected_record = this.model.get(event.data.id);
-            this.trigger_up('select_record', {id: selected_record.res_id});
+            var selectedRecord = this.model.get(event.data.id);
+            this.trigger_up('select_record', {
+                id: selectedRecord.res_id,
+                display_name: selectedRecord.data.display_name,
+            });
         },
     }),
 });
@@ -251,7 +254,7 @@ var SelectCreateDialog = ViewDialog.extend({
     custom_events: _.extend({}, ViewDialog.prototype.custom_events, {
         select_record: function (event) {
             if (!this.options.readonly) {
-                this.on_selected([event.data.id]);
+                this.on_selected([event.data]);
                 this.close();
             }
         },
@@ -369,7 +372,14 @@ var SelectCreateDialog = ViewDialog.extend({
                     disabled: true,
                     close: true,
                     click: function () {
-                        self.on_selected(self.list_controller.getSelectedIds());
+                        var records = self.list_controller.getSelectedRecords();
+                        var values = _.map(records, function (record) {
+                            return {
+                                id: record.res_id,
+                                display_name: record.data.display_name,
+                            };
+                        });
+                        self.on_selected(values);
                     },
                 });
             }
@@ -399,7 +409,11 @@ var SelectCreateDialog = ViewDialog.extend({
         var self = this;
         var dialog = new FormViewDialog(this, _.extend({}, this.options, {
             on_saved: function (record) {
-                self.on_selected([record.res_id]);
+                var values = [{
+                    id: record.res_id,
+                    display_name: record.data.display_name,
+                }];
+                self.on_selected(values);
             },
         })).open();
         dialog.on('closed', this, this.close.bind(this));
