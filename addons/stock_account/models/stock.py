@@ -176,7 +176,7 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)",
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)", copy=False,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
     def _set_default_price_moves(self):
