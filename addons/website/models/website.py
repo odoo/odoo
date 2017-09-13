@@ -644,7 +644,7 @@ class Page(models.Model):
         if 'website_published' in vals and 'date_publish' not in vals:
             if (self.date_publish or '') <= fields.Datetime.now():
                 vals['date_publish'] = vals['website_published'] and fields.Datetime.now()
-        if not vals['url'].startswith('/'):
+        if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
         result = super(Page, self).write(vals)
         return result
