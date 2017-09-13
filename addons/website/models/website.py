@@ -105,7 +105,7 @@ class Website(models.Model):
         else:
             template_module, _ = template.split('.')
         # completely arbitrary max_length
-        page_url = slugify(name, max_length=200, allow_slash=True)
+        page_url = '/' + slugify(name, max_length=200, allow_slash=True)
         page_key = self.get_unique_path(slugify(name, 50))
         
         if not name:

@@ -262,6 +262,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
      */
     start: function () {
         var self = this;
+        self.$('#o_link_dialog_url_input').closest('.form-group').hide();
         this.$('.o_link_dialog_preview').remove();
         this.$('.window-new, .link-style').closest('.form-group').remove();
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
