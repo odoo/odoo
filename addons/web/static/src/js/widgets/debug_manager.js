@@ -169,11 +169,11 @@ var DebugManager = Widget.extend({
             title: _t('Select a view'),
             disable_multiple_selection: true,
             domain: [['type', '!=', 'qweb'], ['type', '!=', 'search']],
-            on_selected: function (element_ids) {
+            on_selected: function (records) {
                 self._rpc({
                         model: 'ir.ui.view',
                         method: 'search_read',
-                        domain: [['id', '=', element_ids[0]]],
+                        domain: [['id', '=', records[0].id]],
                         fields: ['name', 'model', 'type'],
                         limit: 1,
                     })
