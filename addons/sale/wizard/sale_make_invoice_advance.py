@@ -107,7 +107,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_id': self.product_id.id,
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'invoice_line_tax_ids': [(6, 0, tax_ids)],
-                'account_analytic_id': order.project_id.id or False,
+                'account_analytic_id': order.analytic_account_id.id or False,
             })],
             'currency_id': order.pricelist_id.currency_id.id,
             'payment_term_id': order.payment_term_id.id,

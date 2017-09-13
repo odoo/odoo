@@ -59,7 +59,7 @@ class AccountInvoice(models.Model):
                     ('project_id', '!=', False),
                     ('timesheet_invoice_id', '=', False),
                     ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
-                ]).with_context(create=True)  # context key required to avoid loop
+                ])
 
                 # NOTE JEM : changing quantity (or unit price) of invoice line does not impact the revenue calculation. (FP specs)
                 if uninvoiced_timesheet_lines:

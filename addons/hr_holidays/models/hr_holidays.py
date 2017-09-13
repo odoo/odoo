@@ -61,7 +61,7 @@ class HolidaysType(models.Model):
 
     double_validation = fields.Boolean(string='Apply Double Validation',
         help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved.")
-    company_id = fields.Many2one('res.company', string='Company')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
 
     @api.multi
     def get_days(self, employee_id):

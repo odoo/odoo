@@ -33,8 +33,9 @@ class TestSaleTimesheet(TestSale):
             'uom_id': self.env.ref('product.product_uom_hour').id,
             'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'default_code': 'SERV-DELI',
-            'track_service': 'task',
-            'project_id': self.project.id
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
         })
 
         self.product_order = self.env['product.product'].create({
@@ -46,8 +47,9 @@ class TestSaleTimesheet(TestSale):
             'uom_id': self.env.ref('product.product_uom_hour').id,
             'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'default_code': 'SERV-ORDER',
-            'track_service': 'task',
-            'project_id': self.project.id
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
         })
 
         # pricelists
@@ -63,7 +65,6 @@ class TestSaleTimesheet(TestSale):
             'currency_id': self.env.ref('base.EUR').id,
             'company_id': self.env.user.company_id.id,
         })
-
         # partners
         self.partner_usd = self.env['res.partner'].create({
             'name': 'Cool Partner in USD',

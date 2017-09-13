@@ -42,7 +42,7 @@ class PosSaleReport(models.Model):
                     rp.country_id AS country_id,
                     sol.price_subtotal / COALESCE (cr.rate, 1.0) AS price_subtotal,
                     (sol.product_uom_qty / u.factor * u2.factor) as product_qty,
-                    so.project_id AS analytic_account_id,
+                    so.analytic_account_id AS analytic_account_id,
                     so.team_id AS team_id
 
             FROM sale_order_line sol

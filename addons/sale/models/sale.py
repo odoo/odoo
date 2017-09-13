@@ -110,9 +110,6 @@ class SaleOrder(models.Model):
         for order in self:
             order.order_line._compute_tax_id()
 
-    def _inverse_project_id(self):
-        self.project_id = self.related_project_id
-
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
@@ -138,8 +135,7 @@ class SaleOrder(models.Model):
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
-    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
-    related_project_id = fields.Many2one('account.analytic.account', inverse='_inverse_project_id', related='project_id', string='Analytic Account', help="The analytic account related to a sales order.")
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False, oldname='project_id')
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
@@ -513,7 +509,7 @@ class SaleOrder(models.Model):
                 'company_id': order.company_id.id,
                 'partner_id': order.partner_id.id
             })
-            order.project_id = analytic
+            order.analytic_account_id = analytic
 
     @api.multi
     def order_lines_layouted(self):
@@ -663,7 +659,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id.invoice_policy', 'order_id.state')
     def _compute_qty_delivered_updateable(self):
         for line in self:
-            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.track_service == 'manual') and (line.product_id.expense_policy == 'no')
+            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
 
     @api.depends('invoice_lines',
                  'invoice_lines.price_total',
@@ -895,7 +891,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
-            'account_analytic_id': self.order_id.project_id.id,
+            'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
         return res
@@ -1087,3 +1083,51 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
+
+    ###########################
+    # Analytic Methods
+    ###########################
+
+    @api.multi
+    def _analytic_compute_delivered_quantity_domain(self):
+        """ Return the domain of the analytic lines to use to recompute the delivered quantity
+            on SO lines. This method is a hook: since analytic line are used for timesheet,
+            expense, ...  each use case should provide its part of the domain.
+        """
+        return [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
+
+    @api.multi
+    def _analytic_compute_delivered_quantity(self):
+        """ Compute and write the delivered quantity of current SO lines, based on their related
+            analytic lines.
+        """
+        # avoid recomputation if no SO lines concerned
+        if not self:
+            return False
+
+        # group anaytic lines by product uom and so line
+        domain = self._analytic_compute_delivered_quantity_domain()
+        data = self.env['account.analytic.line'].read_group(
+            domain,
+            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+        )
+
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        value_to_write = {}
+        for item in data:
+            if not item['product_uom_id']:
+                continue
+            so_line = self.browse(item['so_line'][0])
+            value_to_write.setdefault(so_line, 0.0)
+            uom = self.env['product.uom'].browse(item['product_uom_id'][0])
+            if so_line.product_uom.category_id == uom.category_id:
+                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom)
+            else:
+                qty = item['unit_amount']
+            value_to_write[so_line] += qty
+
+        # write the delivered quantity
+        for so_line, qty in value_to_write.items():
+            so_line.write({'qty_delivered': qty})
+
+        return True
