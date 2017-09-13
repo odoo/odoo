@@ -403,7 +403,7 @@ tour.register('main_flow_tour', {
 }, {
 // Run the schedulers
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Run Schedulers')",
+    trigger: ".o_menu_sections a:contains('Operations')",
     content: _t("Go to Run Schedulers"),
     position: "bottom"
 },{
