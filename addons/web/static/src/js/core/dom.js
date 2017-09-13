@@ -162,7 +162,7 @@ return {
         node = $(node)[0];
         var offset = 0;
         var length = 0;
-        if ('selectionStart' in node) {
+        if ('selectionStart' in node && node.type != "checkbox") {
             offset = node.selectionStart;
             length = node.selectionEnd - offset;
         } else if ('selection' in document) {
@@ -290,7 +290,7 @@ return {
             textRange.moveEnd(pos);
             textRange.moveStart(pos);
             textRange.select();
-        } else if ('setSelectionRange' in node) {
+        } else if ('setSelectionRange' in node && node.type != "checkbox") {
             node.setSelectionRange(pos, pos);
         }
     },
