@@ -67,7 +67,7 @@ class ResConfigSettings(models.TransientModel):
     ], string='Customer Account')
 
     module_delivery = fields.Boolean("Manage shipping internally")
-    module_delivery_dhl = fields.Boolean("DHL")
+    module_delivery_dhl = fields.Boolean("DHL USA")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
