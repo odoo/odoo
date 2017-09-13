@@ -255,15 +255,4 @@ class Company(models.Model):
             report_name = self.env.context['default_report_name']
             report_action = self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
             return report_action.report_action(document, config=False)
-        template = self.env.ref('base.view_company_report_form')
-        return {
-            'name': _('Choose Your Document Layout'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_id': self.env.user.company_id.id,
-            'res_model': 'res.company',
-            'views': [(template.id, 'form')],
-            'view_id': template.id,
-            'target': 'new',
-        }
+        return False
