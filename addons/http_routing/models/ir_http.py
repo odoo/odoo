@@ -102,27 +102,27 @@ def url_for(path_or_uri, lang=None):
     force_lang = lang is not None
     url = werkzeug.urls.url_parse(location)
 
-    if request and not url.netloc and not url.scheme and (url.path or force_lang):
+    if not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(current_path, location)
 
-        lang = lang or request.context.get('lang')
+        lang = pycompat.to_text(lang or request.context.get('lang') or 'en_US')
         langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
 
         if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
-            ps = location.split('/')
+            ps = location.split(u'/')
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang.encode('utf-8')
+                    ps[1] = lang
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.env['ir.http']._get_default_lang().code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.env['ir.http']._get_default_lang().code or force_lang:
-                ps.insert(1, lang.encode('utf-8'))
-            location = '/'.join(ps)
+                ps.insert(1, lang)
+            location = u'/'.join(ps)
 
-    return location.decode('utf-8')
+    return location
 
 
 def is_multilang_url(local_url, langs=None):
