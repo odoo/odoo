@@ -4937,15 +4937,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not all(name in self._fields for name in names):
             return {}
 
-        # determine subfields for field.convert_to_onchange() below
-        secondary = []
-        subfields = defaultdict(set)
-        for dotname in field_onchange:
-            if '.' in dotname:
-                secondary.append(dotname)
-                name, subname = dotname.split('.')
-                subfields[name].add(subname)
-
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
@@ -4955,8 +4946,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # load fields on secondary records, to avoid false changes
         with env.do_in_onchange():
-            for field_seq in secondary:
-                record.mapped(field_seq)
+            for dotname in field_onchange:
+                record.mapped(dotname)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
@@ -4989,8 +4980,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     record._onchange_eval(name, field_onchange[name], result)
 
                 # force re-evaluation of function fields on secondary records
-                for field_seq in secondary:
-                    record.mapped(field_seq)
+                for dotname in field_onchange:
+                    record.mapped(dotname)
 
                 # determine which fields have been modified
                 for name, oldval in values.items():
@@ -5002,9 +4993,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         todo.append(name)
                         dirty.add(name)
 
+        # determine subfields for field.convert_to_onchange() below
+        Tree = lambda: defaultdict(Tree)
+        subnames = Tree()
+        for dotname in field_onchange:
+            subtree = subnames
+            for name in dotname.split('.'):
+                subtree = subtree[name]
+
         # collect values from dirty fields
         result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], record, subfields[name])
+            name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
             for name in dirty
         }
 

@@ -775,12 +775,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         return self.convert_to_read(value, record)
 
-    def convert_to_onchange(self, value, record, fnames=()):
+    def convert_to_onchange(self, value, record, names):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.onchange`.
 
-        :param fnames: an optional collection of field names to convert
-            (for relational fields only)
+        :param names: a tree of field names (for relational fields only)
         """
         return self.convert_to_read(value, record)
 
@@ -1974,10 +1973,11 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record):
         return ustr(value.display_name)
 
-    def convert_to_onchange(self, value, record, fnames=()):
+    def convert_to_onchange(self, value, record, names):
         if not value.id:
             return False
-        return super(Many2one, self).convert_to_onchange(value, record, fnames)
+        return super(Many2one, self).convert_to_onchange(value, record, names)
+
 
 
 class _RelationalMulti(_Relational):
@@ -2070,15 +2070,17 @@ class _RelationalMulti(_Relational):
                 result[0][2].append(record.id)
         return result
 
-    def convert_to_onchange(self, value, record, fnames=()):
+    def convert_to_onchange(self, value, record, names):
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
-        converters = [(name, value._fields[name].convert_to_onchange)
-                      for name in fnames if name != 'id']
         result = [(5,)]
         for record in value:
-            vals = {name: convert(record[name], record) for name, convert in converters}
+            vals = {
+                name: value._fields[name].convert_to_onchange(record[name], record, subnames)
+                for name, subnames in names.items()
+                if name != 'id'
+            }
             if not record.id:
                 result.append((0, record.id.ref or 0, vals))
             elif vals:
@@ -2170,10 +2172,10 @@ class One2many(_RelationalMulti):
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
-    def convert_to_onchange(self, value, record, fnames=()):
-        fnames = set(fnames or ())
-        fnames.discard(self.inverse_name)
-        return super(One2many, self).convert_to_onchange(value, record, fnames)
+    def convert_to_onchange(self, value, record, names):
+        names = names.copy()
+        names.pop(self.inverse_name, None)
+        return super(One2many, self).convert_to_onchange(value, record, names)
 
     def update_db(self, model, columns):
         if self.comodel_name in model.env:

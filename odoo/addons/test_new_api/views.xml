@@ -275,10 +275,21 @@
                         </group>
                         <label for="lines"/>
                         <field name="lines">
-                            <tree string="Lines" editable="1">
+                            <tree string="Lines">
                                 <field name="name"/>
                                 <field name="partner"/>
                             </tree>
+                            <form string="Lines">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="partner"/>
+                                </group>
+                                <field name="tags">
+                                    <tree string="Tags" editable="1">
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </form>
                         </field>
                     </sheet>
                 </form>
