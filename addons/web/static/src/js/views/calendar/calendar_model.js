@@ -2,6 +2,7 @@ odoo.define('web.CalendarModel', function (require) {
 "use strict";
 
 var AbstractModel = require('web.AbstractModel');
+var Context = require('web.Context');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
@@ -298,11 +299,12 @@ return AbstractModel.extend({
                 data[k] = dateToServer(data[k]);
             }
         }
+        var context = new Context(this.data.context, {from_ui: true});
         return this._rpc({
             model: this.modelName,
             method: 'write',
             args: [[record.id], data],
-            context: this.data.context
+            context: context
         });
     },
 

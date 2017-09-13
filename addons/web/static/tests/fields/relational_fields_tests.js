@@ -3464,7 +3464,6 @@ QUnit.module('relational_fields', {
                 '</form>',
             mockRPC: function (method, args) {
                 if (args.method === 'write') {
-                    // debugger;
                     assert.deepEqual(args.args[1].turtles, [
                         [1, 3, {display_name: 'coucou', turtle_foo: 'has changed', turtle_int: 42}],
                     ], "correct commands should be sent (only send changed values)");
