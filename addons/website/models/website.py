@@ -105,8 +105,7 @@ class Website(models.Model):
         else:
             template_module, _ = template.split('.')
         # completely arbitrary max_length
-        url_parts = name.split('/')
-        page_url = '/' + ('/').join([slugify(url_part) for url_part in url_parts])
+        page_url = slugify(name, max_length=200, allow_slash=True)
         page_key = self.get_unique_path(slugify(name, 50))
         
         if not name:
@@ -548,8 +547,7 @@ class Page(models.Model):
         original_url = page.url
         url = data['url']
         if page.url != url:
-            url_parts = url.split('/')
-            url = ('/').join([slugify(url_part) for url_part in url_parts])
+            url = slugify(url, max_length=200, allow_slash=True)
 
         menu = self.env['website.menu'].search([('page_id', '=', int(data['id']))])
         if not data['is_menu']:
@@ -651,6 +649,8 @@ class Page(models.Model):
         if 'website_published' in vals and 'date_publish' not in vals:
             if (self.date_publish or '') <= fields.Datetime.now():
                 vals['date_publish'] = vals['website_published'] and fields.Datetime.now()
+        if not vals['url'].startswith('/'):
+            vals['url'] = '/' + vals['url']
         result = super(Page, self).write(vals)
         return result
 
@@ -682,27 +682,16 @@ class Menu(models.Model):
     @api.model
     def clean_url(self):
         # clean the url with heuristic
-        url = self.url
-        if not self.url.startswith('/'):
-            if '@' in self.url and not self.url.startswith('mailto'):
-                url = 'mailto:%s' % self.url
-            elif not self.url.startswith('http'):
-                url = '/%s' % self.url
-        return self.url
-
-    @api.model
-    def create_with_page(self, website_id, name, page_id):
-        page = self.env['website.page'].search([('id', '=', page_id)], limit=1)
-        if page:
-            self.create({
-                'name': name,
-                'url': page.url,
-                'page_id': page.id,
-                'parent_id': self.env['website'].browse(website_id).menu_id.id,
-                'website_id': website_id,
-            })
-            return page.url
-        return False
+        if self.page_id:
+            url = self.page_id.url
+        else:
+            url = self.url
+            if not self.url.startswith('/'):
+                if '@' in self.url and not self.url.startswith('mailto'):
+                    url = 'mailto:%s' % self.url
+                elif not self.url.startswith('http'):
+                    url = '/%s' % self.url
+        return url
 
     # would be better to take a menu_id as argument
     @api.model
@@ -713,13 +702,12 @@ class Menu(models.Model):
             menu_node = dict(
                 id=node.id,
                 name=node.name,
-                url=node.url,
+                url=node.page_id.url if page_id else node.url,
                 new_window=node.new_window,
                 sequence=node.sequence,
                 parent_id=node.parent_id.id,
                 children=[],
                 is_homepage=is_homepage,
-                page_id=page_id,
             )
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
@@ -748,14 +736,10 @@ class Menu(models.Model):
                 new_menu = self.create({'name': menu['name']})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
-            # if it is a menu with a m2o page
-            if menu['page_id']:
-                menu_record = self.browse(menu['id'])
-                # and the m2o relation should be changed
-                if menu_record['page_id'] != menu['page_id']:
-                    # Sync menu url with page url -> what about name sync ?
-                    page = self.env['website.page'].browse(int(menu['page_id']))
-                    menu['url'] = page.url
+            # if the url match a website.page, set the m2o relation
+            page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
+            if page:
+                menu['page_id'] = page.id
             self.browse(menu['id']).write(menu)
 
         return True

@@ -29,7 +29,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
      */
     init: function (parent, page_id, options) {
         var self = this;
-        var serverUrl = window.location.origin;
+        var serverUrl = window.location.origin + "/";
         var length_url = serverUrl.length;
         var serverUrlTrunc = serverUrl;
         if(length_url > 30)
@@ -260,102 +260,36 @@ var MenuEntryDialog = widget.LinkDialog.extend({
     /**
      * @override
      */
-    willStart: function () {
-        var defs = [this._super.apply(this, arguments)];
-        var self = this;
-        var context = weContext.get();
-        defs.push(self._rpc({
-            model: 'website',
-            method: 'search_pages',
-            args: [null, ''],//request.term],
-            kwargs: {
-                //limit: 15,
-                show_only_website_page_model: true,
-                context: context,
-            },
-        }).then(function (pages) {
-            self.data.pages = pages;
-        }));
-        return $.when.apply($, defs);
-    },
-    /**
-     * @override
-     */
     start: function () {
         var self = this;
         this.$('.o_link_dialog_preview').remove();
         this.$('.window-new, .link-style').closest('.form-group').remove();
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
-        
         if (this.menu_link_options) { // add menu link option only when adding new menu
-            this.$('#o_link_dialog_label_input').closest('.form-group').after(
-                qweb.render('website.contentMenu.dialog.edit.link_menu_options',  {pages: self.data.pages})
-            );
-            
-            self._hideOptions(self, "");
+            this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
             this.$('input[name=link_menu_options]').on('change', function () {
-                self._hideOptions(self, this.value);                
+                self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
             });
-        }
-        if (this.data.page_id) { // show page m2o widget when editing a menu having a m2o to a page
-            this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.m2o_page', {pages: self.data.pages}));
-            this.$('#o_link_dialog_url_input').parents('.form-group').hide();
-        }
-        
-        this.$modal.find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
-
-        self.$("#o_link_dialog_existing_page_input").select2({
-            placeholder: "Select a page",
-        });
-        if (self.data.page_id) { // init m2o widget when editing a menu having a m2o to a page
-            self.$("#o_link_dialog_existing_page_input").val(self.data.page_id).trigger("change");
-        }       
-                   
+        }        
+        this.$modal.find('.modal-lg').removeClass('modal-lg')
+                   .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
         return this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     save: function () {
-        this.data.page_id = $("#o_link_dialog_existing_page_input").val();
-        var linkMenuOptions = this.$('input[name=link_menu_options]:checked').val();
-        this.linkMenuOptions = linkMenuOptions;
-        if (linkMenuOptions === 'new_page') {
-            var $e = this.$('#o_link_dialog_label_input');
-            if (!$e.val() || !$e[0].checkValidity()) {
-                $e.closest('.form-group').addClass('has-error');
-                $e.focus();
-                return;
-            }
+        var $e = this.$('#o_link_dialog_label_input');
+        if (!$e.val() || !$e[0].checkValidity()) {
+            $e.closest('.form-group').addClass('has-error');
+            $e.focus();
+            return;
+        }
+        if (this.$('input[name=link_menu_options]:checked').val() === 'new_page') {
             window.location = '/website/add/' + encodeURIComponent($e.val()) + '?add_menu=1';
             return;
         }
-        
-        if (linkMenuOptions === 'existing_page') {
-            var $f = this.$('#o_link_dialog_existing_page_input');
-            if (!$f.val() || !$f[0].checkValidity()) {
-                $f.closest('.form-group').addClass('has-error');
-                $f.focus();
-                return;
-            }
-        }
-        
         return this._super.apply(this, arguments);
-    },
-    
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-    
-    _hideOptions: function(_this,to_show) {
-        _this.$('#o_link_dialog_existing_page_input').prop('required',false).parents('.form-group').hide();
-        _this.$('#o_link_dialog_url_input').prop('required',false).parents('.form-group').hide();
-        if (to_show == 'url') {
-            _this.$('#o_link_dialog_url_input').prop('required',true).parents('.form-group').show();
-        }
-        else if (to_show == 'existing_page') {
-            _this.$('#o_link_dialog_existing_page_input').prop('required',true).parents('.form-group').show();
-        }
     },
 });
 
@@ -524,13 +458,10 @@ var EditMenuDialog = widget.Dialog.extend({
         var self = this;
         var dialog = new MenuEntryDialog(this, {menu_link_options: true}, undefined, {});
         dialog.on('save', this, function (link) {
-          
-            var link_type = $("input[name=link_menu_options]:checked").val();
             var new_menu = {
                 id: _.uniqueId('new-'),
                 name: link.text,
                 url: link.url,
-                page_id: link_type == 'existing_page' ? link.page_id : null,
                 new_window: link.isNewWindow,
                 parent_id: false,
                 sequence: 0,
@@ -574,7 +505,6 @@ var EditMenuDialog = widget.Dialog.extend({
                     'name': link.text,
                     'url': link.url,
                     'new_window': link.isNewWindow,
-                    'page_id': link.page_id,
                 });
                 var $menu = self.$('[data-menu-id="' + id + '"]');
                 $menu.find('.js_menu_label').first().text(menu_obj.name);

@@ -842,26 +842,24 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="edit_website_pages">
-          <div class="row">
-              <div class="col-md-7"><h3 class="mt16">Pages Management</h3></div>
-              <form class="col-md-3 mt8" role="search" t-attf-action="/website/pages_management" method="get">
-                  <t t-call="website.website_search_box"/>
-              </form>
-              <div t-if="searchbar_sortings" class="dropdown col-md-2 mt8">
-                  <button class="btn btn-default" type="button" data-toggle="dropdown">
-                      <span class="fa fa-sort fa-lg" />
-                      <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                      <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
-                      <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                          <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
-                              <span t-esc="searchbar_sortings[option].get('label')"/>
-                          </a>
-                      </li>
-                  </ul>
-              </div>
+          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages_management" method="get">
+              <t t-call="website.website_search_box"/>
+          </form>
+          <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
+              <button class="btn btn-default" type="button" data-toggle="dropdown">
+                  <span class="fa fa-sort fa-lg" />
+                  <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                  <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                      <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                          <span t-esc="searchbar_sortings[option].get('label')"/>
+                      </a>
+                  </li>
+              </ul>
           </div>
+          <h3 class="mt16">Pages Management</h3>
           <t t-if="not pages">
               <div t-if="search" class="alert alert-warning mt8" role="alert">
                   Your search '<t t-esc="search" />' did not match any pages.
@@ -870,24 +868,25 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                   There are currently no pages for your website.
               </div>
           </t>
-          <div t-if="pages" class="panel panel-default">
-              <div class="table-responsive"><table class="table table-hover o_my_status_table">
+          <div t-if="pages" class="table-responsive">
+              <table class="table table-hover o_my_status_table">
                   <thead>
                     <tr class="active">
-                      <th class="col-md-3"><span>Name</span></th>
-                      <th class="col-md-5"><span>Url</span></th>
-                      <th class="col-md-1 text-center"><span><i title="Is your page in menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></span></th>
-                      <th class="col-md-1 text-center"><span><i title="Is your page published on website?" class="fa fa-eye" aria-hidden="true"></i></span></th>
-                      <th class="col-md-1 text-center"><span><i title="Is your page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></span></th>
+                      <th>Name</th>
+                      <th>Url</th>
+                      <th class="col-md-1 text-center"><i title="Is your page in menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is your page published on website?" class="fa fa-eye" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is your page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
                       <th class="col-md-1"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">
                       <tr>
-                          <td><i t-if="page.is_homepage" class="fa fa-home"></i> <t t-esc="page.name"/></td>
-                          <td><a t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
+                          <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
+                          <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
                           <td style="text-align:center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
-                          <td style="text-align:center"><i t-att-title="'Your page will be visible at ' + page.date_publish if not page.is_visible and page.website_published else ''" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+                          <td style="text-align:center"><i t-att-title="not page.is_visible and page.website_published and 'Your page will be visible at ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td style="text-align:center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td>
                               <a class="fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
@@ -896,10 +895,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           </td>   
                       </tr>
                   </t>
-              </table></div>
-              <div t-if="pager" class="o_portal_pager text-center">
-                  <t t-call="website.pager"/>
-              </div>
+              </table>
+          </div>
+          <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
           </div>
       </div>
     </div>

@@ -58,22 +58,8 @@
                 <label class="checkbox-inline" for="new_page"><input type="radio" name="link_menu_options" id="new_page" value="new_page" checked="checked"/>New Page</label>
             </div>
             <div class="radio">
-                <label class="checkbox-inline" for="existing_page"><input type="radio" name="link_menu_options" id="existing_page" value="existing_page"/>Existing page</label>
-            </div>
-            <div class="radio">
                 <label class="checkbox-inline" for="url"><input type="radio" name="link_menu_options" id="url" value="url" />URL or Email</label>
             </div>
-        </div>
-    </div>
-    <t t-call="website.contentMenu.dialog.edit.m2o_page" />
-</t>
-<t t-name="website.contentMenu.dialog.edit.m2o_page">
-    <div class="form-group">
-        <label class="control-label col-sm-3" for="o_link_dialog_existing_page_input">Existing page</label>
-        <div class="col-sm-9">
-            <select id="o_link_dialog_existing_page_input" style="width:99%" class="mt4" required="required">
-                <option t-foreach="pages" t-as="page" t-att-value="page.id"><t t-esc="page.loc" /> (<t t-esc="page.name" />)</option>
-            </select>
         </div>
     </div>
 </t>

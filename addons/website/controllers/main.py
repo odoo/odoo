@@ -2,25 +2,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import datetime
-from itertools import islice
 import json
-from xml.etree import ElementTree as ET
 import logging
-
 import requests
 import werkzeug.utils
 import werkzeug.wrappers
 
-import odoo
-from odoo import http, models, _
-from odoo import fields
-from odoo.http import request
+from itertools import islice
+from xml.etree import ElementTree as ET
 
+
+import odoo
+
+from odoo import http, models, fields, _
+from odoo.http import request
+from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
-
-from odoo.tools import pycompat, OrderedSet
 
 logger = logging.getLogger(__name__)
 

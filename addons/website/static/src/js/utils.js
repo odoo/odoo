@@ -11,7 +11,7 @@ var qweb = core.qweb;
  *
  * @param {ServicesMixin|Widget} self - an element capable to trigger an RPC
  * @param {jQuery} $input
- * @param {bool} show_only_website_page_model - will return only search on website.page 
+ * @param {bool} show_only_website_page_model - will return only search on website.page
  */
 function autocompleteWithPages(self, $input, show_only_website_page_model) {
     $input.autocomplete({

@@ -56,7 +56,7 @@ def slugify(s, max_length=None, allow_slash=False):
     if not allow_slash:
         return slugify_one(s, max_length=max_length)
     else:
-        return '/'.join([slugify_one(u, max_length=max_length) for u in s.split('/')]) 
+        return '/'.join([slugify_one(u, max_length=max_length) for u in s.split('/') if slugify_one(u, max_length=max_length) != ''])
         
 
 def slug(value):
