@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_overprocessed_transfer" model="ir.ui.view">
+        <field name="name">stock.overprocessed.transfer.view.form</field>
+        <field name="model">stock.overprocessed.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Processed more than initial demand">
+                <p>
+                    You have processed more than what was initially
+                    planned for the product <field name="overprocessed_product_name" class="oe_inline"/>.
+                </p>
+                <p>
+                    Are you sure you want to validate this picking?
+                </p>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
