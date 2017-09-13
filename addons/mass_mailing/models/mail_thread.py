@@ -37,6 +37,7 @@ class MailThread(models.AbstractModel):
         matching message_id in mail.mail.statistics. """
         if message.get('References'):
             message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
+            self.env['mail.mail.statistics'].set_opened(mail_message_ids=message_ids)
             self.env['mail.mail.statistics'].set_replied(mail_message_ids=message_ids)
         return super(MailThread, self).message_route_process(message, message_dict, routes)
 
