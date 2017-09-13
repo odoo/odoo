@@ -79,7 +79,6 @@ class MailThread(models.AbstractModel):
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussino history
     _mail_post_access = 'write'  # access required on the document to post on it
-    _mail_mass_mailing = False  # enable mass mailing on this model
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
@@ -2201,13 +2200,3 @@ class MailThread(models.AbstractModel):
         msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
         msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
         return True
-
-    # ------------------------------------------------------
-    # Mass mailing
-    # ------------------------------------------------------
-
-    def message_mass_mailing_enabled(self):
-        if self._mail_mass_mailing:
-            # TODO master properly translate
-            # the _mail_mass_mailing is evaluted at code start so not translated
-            return _(self._mail_mass_mailing)
