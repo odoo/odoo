@@ -227,19 +227,6 @@ var FormRenderer = BasicRenderer.extend({
     },
     /**
      * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _handleAttributes: function ($el, node) {
-        if (node.attrs.class) {
-            $el.addClass(node.attrs.class);
-        }
-        if (node.attrs.style) {
-            $el.attr('style', node.attrs.style);
-        }
-    },
-    /**
-     * @private
      * @param {Object} node
      * @returns {jQueryElement}
      */
@@ -757,6 +744,16 @@ var FormRenderer = BasicRenderer.extend({
         var $sheet = $('<div>').addClass('o_form_sheet');
         $sheet.append(_.map(node.children, this._renderNode.bind(this)));
         return $sheet;
+    },
+    /**
+     * Instantiate custom widgets
+     *
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderTagWidget: function (node) {
+        return this._renderWidget(this.state, node);
     },
     /**
      * Main entry point for the rendering.  From here, we call _renderNode on
