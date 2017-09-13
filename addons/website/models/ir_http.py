@@ -114,7 +114,7 @@ class Http(models.AbstractModel):
         req_page = request.httprequest.path
         domain = [
             '|', ('website_id', '=', request.website.id), ('website_id', '=', False),
-            ('url_from', '=', req_page), ('active', '=', True)
+            ('url_from', '=', req_page)
         ]
         return request.env['website.redirect'].search(domain, limit=1)
 

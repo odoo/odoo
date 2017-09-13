@@ -89,10 +89,6 @@ class Website(models.Model):
     # Page Management
     #----------------------------------------------------------
     @api.model
-    def get_homepage(self, website_id):
-        return self.browse(website_id).homepage_id.url
-
-    @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
