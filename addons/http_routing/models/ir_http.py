@@ -287,6 +287,7 @@ class IrHttp(models.AbstractModel):
         request.routing_iteration = getattr(request, 'routing_iteration', 0) + 1
 
         func = None
+        routing_error = None
         # locate the controller method
         try:
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
@@ -299,7 +300,7 @@ class IrHttp(models.AbstractModel):
             # either we have a language prefixed route, either a real 404
             # in all cases, website processes them
             request.is_frontend = True
-            request.routing_failed = True
+            routing_error = e
 
         request.is_frontend_multilang = (
             request.is_frontend and
@@ -344,14 +345,14 @@ class IrHttp(models.AbstractModel):
                     if request.lang != cls._get_default_lang().code:
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
-                    request.routing_failed = False
+                    routing_error = None
                     redirect = request.redirect(path + '?' + request.httprequest.query_string)
                     redirect.set_cookie('frontend_lang', request.lang)
                     return redirect
                 elif url_lang:
                     request.uid = None
                     path.pop(1)
-                    request.routing_failed = False
+                    routing_error = None
                     return cls.reroute('/'.join(path) or '/')
 
             context = dict(request.context)
@@ -359,8 +360,8 @@ class IrHttp(models.AbstractModel):
                 context['edit_translations'] = False
             request.context = context
 
-        if getattr(request, 'routing_failed', False):
-            return cls._handle_exception(e)
+        if routing_error:
+            return cls._handle_exception(routing_error)
 
         # removed cache for auth public
         request.cache_save = False
