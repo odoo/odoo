@@ -520,6 +520,12 @@ class SaleOrder(models.Model):
             self.force_quotation_send()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
+
+        # create an analytic account if at least an expense product
+        if any([expense_policy != 'no' for expense_policy in self.order_line.mapped('product_id.expense_policy')]):
+            if not self.analytic_account_id:
+                self._create_analytic_account()
+
         return True
 
     @api.multi
@@ -786,7 +792,9 @@ class SaleOrderLine(models.Model):
         if line.state == 'sale':
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
-
+            # create an analytic account if at least an expense product
+            if line.product_id.expense_policy != 'no' and not self.order_id.analytic_account_id:
+                self.order_id._create_analytic_account()
         return line
 
     def _update_line_quantity(self, values):
