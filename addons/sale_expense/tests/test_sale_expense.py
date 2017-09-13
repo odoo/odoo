@@ -40,7 +40,7 @@ class TestSaleExpense(TestSale):
         exp = self.env['hr.expense'].create({
             'name': 'Air Travel',
             'product_id': prod_exp_1.id,
-            'analytic_account_id': so.project_id.id,
+            'analytic_account_id': so.analytic_account_id.id,
             'unit_amount': 621.54,
             'employee_id': employee.id,
             'sheet_id': sheet.id
@@ -67,7 +67,7 @@ class TestSaleExpense(TestSale):
         exp = self.env['hr.expense'].create({
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
-            'analytic_account_id': so.project_id.id,
+            'analytic_account_id': so.analytic_account_id.id,
             'product_uom_id': self.env.ref('product.product_uom_km').id,
             'unit_amount': 0.15,
             'quantity': 100,

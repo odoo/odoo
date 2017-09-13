@@ -15,25 +15,40 @@
                     <div class="o_timesheet_plan_sale_timesheet">
                         <div class="o_timesheet_plan_sale_timesheet_dashboard">
 
-                            <h3>Overview</h3>
+                            <div class="o_timesheet_plan_stat_buttons oe_button_box">
+                                <t t-foreach="stat_buttons" t-as="stat_button">
+                                    <button class="btn btn-sm oe_stat_button" t-att-data-domain="stat_button['domain']" t-att-data-res-model="stat_button['res_model']">
+                                        <div t-attf-class="fa fa-fw o_button_icon #{stat_button['icon']}"></div>
+                                        <div name="task_count" class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
+                                            <span class="o_stat_value" t-if="stat_button.get('count')">
+                                                <t t-esc="stat_button['count']"/>
+                                            </span>
+                                            <span class="o_stat_text">
+                                                <t t-esc="stat_button['name']"/>
+                                            </span>
+                                        </div>
+                                    </button>
+                                </t>
+                            </div>
+
                             <table class="table">
                                 <tbody>
                                     <tr>
-                                        <th rowspan="4">
+                                        <th rowspan="5">
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['date:month'],'pivot_column_groupby': ['timesheet_invoice_type'], 'pivot_measures': ['unit_amount']}">Hours</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-esc="dashboard['hours']['billable_time']"/> h
+                                            <t t-esc="float_to_time(dashboard['hours']['billable_time'])"/>
                                         </td>
                                         <td>Time and material</td>
-                                        <th rowspan="4">
+                                        <th rowspan="5">
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['rates']['billable_time']"/> %
                                         </td>
                                         <td>Time and material</td>
-                                        <th rowspan="4">
+                                        <th rowspan="5">
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
@@ -45,7 +60,7 @@
                                     </tr>
                                     <tr>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-esc="dashboard['hours']['billable_fixed']"/> h
+                                            <t t-esc="float_to_time(dashboard['hours']['billable_fixed'])"/>
                                         </td>
                                         <td>Fixed</td>
                                         <td class="o_timesheet_plan_dashboard_cell">
@@ -61,13 +76,13 @@
                                     </tr>
                                     <tr>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-esc="dashboard['hours']['non_billable']"/> h
+                                            <t t-esc="float_to_time(dashboard['hours']['non_billable_project'])"/>
                                         </td>
-                                        <td>Non Billable</td>
+                                        <td>No task found</td>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-esc="dashboard['rates']['non_billable']"/> %
+                                            <t t-esc="dashboard['rates']['non_billable_project']"/> %
                                         </td>
-                                        <td>Non Billable</td>
+                                        <td>No task found</td>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                             <t t-esc="dashboard['money_amount']['cost']"/>
@@ -76,8 +91,20 @@
                                         <td>Cost</td>
                                     </tr>
                                     <tr>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="float_to_time(dashboard['hours']['non_billable'])"/>
+                                        </td>
+                                        <td>Non Billable</td>
+                                        <td class="o_timesheet_plan_dashboard_cell">
+                                            <t t-esc="dashboard['rates']['non_billable']"/> %
+                                        </td>
+                                        <td>Non Billable</td>
+                                        <td class="o_timesheet_plan_dashboard_cell"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
                                         <td class="o_timesheet_plan_dashboard_total">
-                                            <t t-esc="dashboard['hours']['total']"/> h
+                                            <t t-esc="float_to_time(dashboard['hours']['total'])"/>
                                         </td>
                                         <td><b>Total</b></td>
                                         <td class="o_timesheet_plan_dashboard_total">
@@ -102,11 +129,20 @@
                             </t>
                             <t t-if="repartition_employee">
                                 <div class="pull-right o_timesheet_plan_badge">
-                                    <span class="badge o_progress_billable_fixed">Billable fixed</span>
-                                    <span class="badge o_progress_billable_time">Billable time</span>
-                                    <span class="badge o_progress_non_billable">Non billable</span>
+                                    <span class="badge o_progress_billable_fixed">
+                                        <a type="action" t-att-domain="json.dumps(domain + [('timesheet_invoice_type','=','billable_fixed')])">Billable fixed</a>
+                                    </span>
+                                    <span class="badge o_progress_billable_time">
+                                        <a type="action" t-att-domain="json.dumps(domain + [('timesheet_invoice_type','=','billable_time')])">Billable time</a>
+                                    </span>
+                                    <span class="badge o_progress_non_billable_project">
+                                        <a type="action" t-att-domain="json.dumps(domain + [('timesheet_invoice_type','=','non_billable_project')])">No task found</a>
+                                    </span>
+                                    <span class="badge o_progress_non_billable">
+                                        <a type="action" t-att-domain="json.dumps(domain + [('timesheet_invoice_type','=','non_billable')])">Non billable</a>
+                                    </span>
                                 </div>
-                                <table class="table ">
+                                <table class="table">
                                     <tbody>
                                         <t t-foreach="repartition_employee" t-as="employee_id">
                                             <tr>
@@ -116,15 +152,17 @@
                                                     </a>
                                                 </td>
                                                 <td style="width: 10%">
-                                                    <t t-esc="repartition_employee[employee_id]['total']"/> hours
+                                                    <t t-esc="float_to_time(repartition_employee[employee_id]['total'])"/>
                                                 </td>
                                                 <td>
                                                     <div class="progress" t-att-style="'width: ' + str(repartition_employee[employee_id]['total'] / repartition_employee_max * 100) +'%'">
-                                                        <div t-if="repartition_employee[employee_id]['billable_fixed']" class="progress-bar o_progress_billable_fixed" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_fixed'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['billable_fixed']) + ' hours'">
+                                                        <div t-if="repartition_employee[employee_id]['billable_fixed']" class="progress-bar o_progress_billable_fixed" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_fixed'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="float_to_time(repartition_employee[employee_id]['billable_fixed'])" t-att-data-domain="repartition_employee[employee_id]['__domain_billable_fixed']">
                                                         </div>
-                                                        <div t-if="repartition_employee[employee_id]['billable_time']" class="progress-bar o_progress_billable_time" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_time'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['billable_time']) + ' hours'">
+                                                        <div t-if="repartition_employee[employee_id]['billable_time']" class="progress-bar o_progress_billable_time" t-att-style="'width: ' + str(repartition_employee[employee_id]['billable_time'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="float_to_time(repartition_employee[employee_id]['billable_time'])" t-att-data-domain="repartition_employee[employee_id]['__domain_billable_time']">
                                                         </div>
-                                                        <div t-if="repartition_employee[employee_id]['non_billable']" class="progress-bar o_progress_non_billable" t-att-style="'width: ' + str(repartition_employee[employee_id]['non_billable'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="str(repartition_employee[employee_id]['non_billable']) + ' hours'">
+                                                        <div t-if="repartition_employee[employee_id]['non_billable_project']" class="progress-bar o_progress_non_billable_project" t-att-style="'width: ' + str(repartition_employee[employee_id]['non_billable_project'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="float_to_time(repartition_employee[employee_id]['non_billable_project'])" t-att-data-domain="repartition_employee[employee_id]['__domain_non_billable_project']">
+                                                        </div>
+                                                        <div t-if="repartition_employee[employee_id]['non_billable']" class="progress-bar o_progress_non_billable" t-att-style="'width: ' + str(repartition_employee[employee_id]['non_billable'] / repartition_employee[employee_id]['total'] * 100) + '%'" t-att-title="float_to_time(repartition_employee[employee_id]['non_billable'])" t-att-data-domain="json.dumps(repartition_employee[employee_id]['__domain_non_billable'])">
                                                         </div>
                                                     </div>
                                                 </td>
