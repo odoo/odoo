@@ -14,7 +14,7 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     to_refund_so = fields.Boolean(
-        "To Refund in SO", default=False,
+        "To Refund in SO", copy=False, default=False,
         help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
     @api.multi
