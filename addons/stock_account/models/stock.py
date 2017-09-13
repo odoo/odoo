@@ -35,19 +35,23 @@ class StockLocation(models.Model):
     _inherit = "stock.location"
 
     valuation_in_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account (Incoming)',
+        'account.account', 'Stock Valuation Account IN',
         domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
         help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
              "this account will be used to hold the value of products being moved from an internal location "
              "into this location, instead of the generic Stock Output Account set on the product. "
              "This has no effect for internal locations.")
     valuation_out_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account (Outgoing)',
+        'account.account', 'Stock Valuation Account OUT',
         domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)],
         help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
              "this account will be used to hold the value of products being moved out of this location "
              "and into an internal location, instead of the generic Stock Output Account set on the product. "
              "This has no effect for internal locations.")
+    valuation_analytic_account_id = fields.Many2one(
+        'account.analytic.account', 'Stock Analytic Account',
+        help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
+             "this analytic account will be used.")
 
     def _should_be_valued(self):
         """ This method returns a boolean reflecting whether the products stored in `self` should
@@ -443,6 +447,9 @@ class StockMove(models.Model):
         else:
             acc_dest = accounts_data['stock_output'].id
 
+        analytic_acc_src = self.location_id.valuation_analytic_account_id.id
+        analytic_acc_dest = self.location_dest_id.valuation_analytic_account_id.id
+
         acc_valuation = accounts_data.get('stock_valuation', False)
         if acc_valuation:
             acc_valuation = acc_valuation.id
@@ -455,9 +462,9 @@ class StockMove(models.Model):
         if not acc_valuation:
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
-        return journal_id, acc_src, acc_dest, acc_valuation
-    
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
+        return journal_id, acc_src, acc_dest, acc_valuation, analytic_acc_src, analytic_acc_dest
+
+    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, credit_analytic_acc, debit_analytic_acc):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -500,6 +507,7 @@ class StockMove(models.Model):
             'debit': debit_value if debit_value > 0 else 0,
             'credit': -debit_value if debit_value < 0 else 0,
             'account_id': debit_account_id,
+            'analytic_account_id': debit_analytic_acc,
         }
         credit_line_vals = {
             'name': self.name,
@@ -511,6 +519,7 @@ class StockMove(models.Model):
             'credit': credit_value if credit_value > 0 else 0,
             'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
+            'analytic_account_id': credit_analytic_acc,
         }
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         if credit_value != debit_value:
@@ -535,10 +544,10 @@ class StockMove(models.Model):
             res.append((0, 0, price_diff_line))
         return res
 
-    def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
+    def _create_account_move_line(self, credit_account_id, debit_account_id, credit_analytic_acc, debit_analytic_acc, journal_id):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id)
+        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id, credit_analytic_acc, debit_analytic_acc)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.create({
@@ -568,24 +577,24 @@ class StockMove(models.Model):
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         if self._is_in():
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            journal_id, acc_src, acc_dest, acc_valuation, analytic_acc_src, analytic_acc_dest = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, analytic_acc_dest, False, journal_id)
             else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
+                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, analytic_acc_src, False, journal_id)
 
         # Create Journal Entry for products leaving the company
         if self._is_out():
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            journal_id, acc_src, acc_dest, acc_valuation, analytic_acc_src, analytic_acc_dest = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, False, analytic_acc_src, journal_id)
             else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
+                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, False, analytic_acc_dest, journal_id)
 
         if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+            journal_id, acc_src, acc_dest, acc_valuation, analytic_acc_src, analytic_acc_dest = self._get_accounting_data_for_valuation()
+            self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, False, False, journal_id)
 
 
 class StockReturnPicking(models.TransientModel):

@@ -33,6 +33,7 @@
                     <group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
                         <field name="valuation_in_account_id"/>
                         <field name="valuation_out_account_id"/>
+                        <field name="valuation_analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </group>
                 </xpath>
             </field>
