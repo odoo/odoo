@@ -303,7 +303,7 @@
         <field name="domain">[('category_id.type', '=', 'purchase')]</field>
     </record>
 
-    <menuitem parent="account.menu_finance_entries" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
+    <menuitem parent="account.menu_finance_entries_management" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
 
 
     <!-- Configuration -->
@@ -319,6 +319,6 @@
         <field name="context">{'default_type': 'purchase'}</field>
     </record>
 
-    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="4"/>
+    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="6"/>
 
 </odoo>
