@@ -310,9 +310,10 @@ class InventoryLine(models.Model):
         'product.product', 'Product',
         index=True, required=True)
     product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True)
+        'Product Name', related='product_id.name', store=True, readonly=True)
     product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
+        'Product Code', related='product_id.default_code', store=True,
+        readonly=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True,
@@ -325,7 +326,8 @@ class InventoryLine(models.Model):
         index=True, required=True)
     # TDE FIXME: necessary ? only in order -> replace by location_id
     location_name = fields.Char(
-        'Location Name', related='location_id.complete_name', store=True)
+        'Location Name', related='location_id.complete_name', store=True,
+        readonly=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(
@@ -334,7 +336,7 @@ class InventoryLine(models.Model):
     # TDE FIXME: necessary ? -> replace by location_id
     prodlot_name = fields.Char(
         'Serial Number Name',
-        related='prod_lot_id.name', store=True)
+        related='prod_lot_id.name', store=True, readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
