@@ -33,7 +33,7 @@ class ResConfigSettings(models.TransientModel):
     module_stock_calendar = fields.Boolean("Vendor Calendar for Reordering",
         help='Scheduled dates of requests for quotation generated from reordering rules are based on vendor lead times (defined on products).\nBy default, such a scheduling is made on calendar days. This option allow to adapt the scheduling with vendor calendars to set on reordering rules.')
     module_stock_barcode = fields.Boolean("Barcode Scanner")
-    module_delivery_dhl = fields.Boolean("DHL")
+    module_delivery_dhl = fields.Boolean("DHL USA")
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
