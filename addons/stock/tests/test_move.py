@@ -2369,11 +2369,12 @@ class StockMove(TransactionCase):
 
     def test_immediate_validate_6(self):
         """ Create a picking and simulates validate button effect.
-            This tests two cases:
+            This tests three cases:
             - if a user has processed no quantities and at least one product is tracked,
               he should specify lots
             - if a user has processed some quantities then it's ok because a backorder
               will be created for the ones not filled in
+            - if a user overprocesses a move he will be asked to confirm if this is ok
         """
         picking_type = self.env.ref('stock.picking_type_in')
         picking_type.use_create_lots = True
@@ -2421,6 +2422,11 @@ class StockMove(TransactionCase):
         action = picking.button_validate()  # should open backorder wizard
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+
+        product3_move.move_line_ids[0].qty_done = 2
+        action = picking.button_validate()  # should request confirmation
+        self.assertTrue(isinstance(action, dict), 'Should open overprocessing wizard')
+        self.assertEqual(action.get('res_model'), 'stock.overprocessed.transfer')
 
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
