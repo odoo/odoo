@@ -439,6 +439,7 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
+        contract_ids = []
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         locale = self.env.context.get('lang', 'en_US')
