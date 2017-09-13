@@ -290,22 +290,6 @@ class MassMailing(models.Model):
                 res['reply_to_mode'] = 'thread'
         return res
 
-    def _get_mailing_model(self):
-        res = []
-        for model_name in self.env:
-            model = self.env[model_name]
-            if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
-                if hasattr(model, 'message_mass_mailing_enabled'):
-                    res.append((model._name, model.message_mass_mailing_enabled()))
-                else:
-                    res.append((model._name, model._mail_mass_mailing))
-        res.append(('mail.mass_mailing.contact', _('Mail Contacts')))
-        res.append(('mail.mass_mailing.list', _('Mailing List')))
-        return res
-
-    # indirections for inheritance
-    _mailing_model = lambda self: self._get_mailing_model()
-
     active = fields.Boolean(default=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
@@ -335,7 +319,9 @@ class MassMailing(models.Model):
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
-    mailing_model = fields.Selection(selection=_mailing_model, string='Recipients Model', default='mail.mass_mailing.list')
+    mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain="[('is_mail_thread', '=', True)]",
+        default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
+    mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name')
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
     contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
@@ -376,10 +362,10 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             mass_mailing.clicks_ratio = mapped_data.get(mass_mailing.id, 0)
 
-    @api.depends('mailing_model')
+    @api.depends('mailing_model_id')
     def _compute_model(self):
         for record in self:
-            record.mailing_model_real = (record.mailing_model != 'mail.mass_mailing.list') and record.mailing_model or 'mail.mass_mailing.contact'
+            record.mailing_model_real = (record.mailing_model_name != 'mail.mass_mailing.list') and record.mailing_model_name or 'mail.mass_mailing.contact'
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
@@ -451,14 +437,14 @@ class MassMailing(models.Model):
                    'medium_id': self.mass_mailing_campaign_id.medium_id}
             self.update(dic)
 
-    @api.onchange('mailing_model', 'contact_list_ids')
+    @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
-        if self.mailing_model == 'mail.mass_mailing.list':
+        if self.mailing_model_name == 'mail.mass_mailing.list':
             if self.contact_list_ids:
                 self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
             else:
                 self.mailing_domain = "[(0, '=', 1)]"
-        elif 'opt_out' in self.env[self.mailing_model]._fields and not self.mailing_domain:
+        elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
             self.mailing_domain = "[('opt_out', '=', False)]"
         self.body_html = "on_change_model_and_list"
 
