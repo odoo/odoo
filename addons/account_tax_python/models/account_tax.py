@@ -39,7 +39,7 @@ class AccountTaxPython(models.Model):
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         taxes = self.env['account.tax']
         company = self.env.user.company_id
-        for tax in self:
+        for tax in self.filtered(lambda r: r.amount_type == 'code'):
             localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
