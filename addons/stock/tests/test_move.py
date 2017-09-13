@@ -2347,7 +2347,7 @@ class StockMove(TransactionCase):
 
         return picking
 
-    def test_immediate_validate_575487534895(self):
+    def test_immediate_validate_5(self):
         """ Create a picking and simulates validate button effect.
             Test that tracked products can be received without specifying a serial
             number when the picking type is configured that way.
@@ -2367,7 +2367,7 @@ class StockMove(TransactionCase):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
 
-    def test_immediate_validate_5(self):
+    def test_immediate_validate_6(self):
         """ Create a picking and simulates validate button effect.
             This tests two cases:
             - if a user has processed no quantities and at least one product is tracked,
