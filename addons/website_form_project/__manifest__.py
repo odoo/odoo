@@ -14,6 +14,7 @@ Odoo Contact Form
     'depends': ['website_form', 'project'],
     'data': [
         'data/website_form_project_data.xml',
+        'views/website_form_project_templates.xml',
     ],
     'installable': True,
     'auto_install': True,

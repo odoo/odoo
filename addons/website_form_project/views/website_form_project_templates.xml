@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="default_project_task_form">
+        <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-model_name="project.task" data-success_page="" data-editable-form="false">
+            <div class="form-group form-field o_website_form_required">
+                <div class="col-md-3 col-sm-4 text-right">
+                    <label class="control-label" for="name">Task Title</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <input type="text" class="form-control o_website_form_input" name="name" required="1"/>
+                </div>
+            </div>
+            <div class="form-group form-field o_website_form_required">
+                <div class="col-md-3 col-sm-4 text-right">
+                    <label class="control-label" for="Email">Email</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <input type='email' class='form-control o_website_form_input' name="Email" required="1"/>
+                </div>
+            </div>
+            <div class="form-group form-field">
+                <div class="col-md-3 col-sm-4 text-right">
+                    <label class="control-label" for="description">Description</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <textarea class="form-control o_website_form_input" name="description"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                    <button type="submit" class="btn btn-primary btn-lg o_website_form_send o_default_snippet_text">Send</button>
+                    <span id="o_website_form_result"></span>
+                </div>
+            </div>
+        </form>
+    </template>
+</odoo>
