@@ -222,7 +222,7 @@ var ListRenderer = BasicRenderer.extend({
         var tdClassName = 'o_data_cell';
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
-        } else {
+        } else if (node.tag === 'field') {
             var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
             if (typeClass) {
                 tdClassName += (' ' + typeClass);
@@ -245,6 +245,8 @@ var ListRenderer = BasicRenderer.extend({
 
         if (node.tag === 'button') {
             return $td.append(this._renderButton(record, node));
+        } else if (node.tag === 'widget') {
+            return $td.append(this._renderWidget(record, node));
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));

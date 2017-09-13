@@ -11,6 +11,7 @@ var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var widgetRegistry = require('web.widget_registry');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -262,6 +263,21 @@ var KanbanRecord = Widget.extend({
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
     },
+    _processWidgets: function () {
+        var self = this;
+        this.$("widget").each(function () {
+            var $field = $(this);
+            var Widget = widgetRegistry.get($field.attr('name'));
+            var widget = new Widget(self, self.state);
+
+            var def = widget.__widgetRenderAndInsert(function () {});
+            if (def.state() === 'pending') {
+                self.defs.push(def);
+            }
+            widget.$el.addClass('o_widget');
+            $field.replaceWith(widget.$el);
+        });
+    },
     /**
      * Renders the record
      */
@@ -274,6 +290,7 @@ var KanbanRecord = Widget.extend({
             this.$el.on('click', this._onGlobalClick.bind(this));
         }
         this._processFields();
+        this._processWidgets();
         this._setupColor();
         this._setupColorPicker();
         this._attachTooltip();

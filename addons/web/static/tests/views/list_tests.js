@@ -5,6 +5,8 @@ var config = require('web.config');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
+var widgetRegistry = require('web.widget_registry');
+var Widget = require('web.Widget');
 
 var createView = testUtils.createView;
 
@@ -2935,6 +2937,34 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
             "The first element of the row name should be a span");
         list.destroy();
+    });
+
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(JSON.stringify(this.data));
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="int_field"/><widget name="test"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_widget').first().text(), '{"foo":"yop","int_field":10,"id":1}',
+            "widget should have been instantiated");
+
+        list.destroy();
+        delete widgetRegistry.map.test;
     });
 });
 

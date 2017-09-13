@@ -3,6 +3,8 @@ odoo.define('web.kanban_tests', function (require) {
 
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
+var widgetRegistry = require('web.widget_registry');
+var Widget = require('web.Widget');
 
 var createView = testUtils.createView;
 
@@ -1898,6 +1900,40 @@ QUnit.module('Views', {
             "the add button should still be visible");
         kanban.destroy();
     });
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(JSON.stringify(this.data));
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<t t-esc="record.foo.value"/>' +
+                    '<field name="foo" blip="1"/>' +
+                    '<widget name="test"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+        });
+
+        assert.strictEqual(kanban.$('.o_widget:eq(2)').text(), '{"foo":"gnap","id":3}',
+            "widget should have been instantiated");
+
+        kanban.destroy();
+        delete widgetRegistry.map.test;
+    });
+
 });
 
 });

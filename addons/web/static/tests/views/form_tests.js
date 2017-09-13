@@ -8,6 +8,8 @@ var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
 var RainbowMan = require('web.rainbow_man');
 var testUtils = require('web.test_utils');
+var widgetRegistry = require('web.widget_registry');
+var Widget = require('web.Widget');
 
 var _t = core._t;
 var createView = testUtils.createView;
@@ -5865,6 +5867,37 @@ QUnit.module('Views', {
 
         form.$('.o_form_statusbar .btn-default').click();
         form.destroy();
+    });
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(JSON.stringify(this.data));
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<widget name="test"/>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$el.text(), '{"foo":"My little Foo Value","bar":false}',
+            "widget should have been instantiated");
+
+        form.destroy();
+        delete widgetRegistry.map.test;
     });
 
 });

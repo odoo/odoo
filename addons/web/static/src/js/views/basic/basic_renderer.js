@@ -11,6 +11,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+var widgetRegistry = require('web.widget_registry');
 
 var qweb = core.qweb;
 
@@ -332,6 +333,19 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
+     * @private
+     * @param {jQueryElement} $el
+     * @param {Object} node
+     */
+    _handleAttributes: function ($el, node) {
+        if (node.attrs.class) {
+            $el.addClass(node.attrs.class);
+        }
+        if (node.attrs.style) {
+            $el.attr('style', node.attrs.style);
+        }
+    },
+    /**
      * Used by list and kanban renderers to determine whether or not to display
      * the no content helper (if there is no data in the state to display)
      *
@@ -540,6 +554,31 @@ var BasicRenderer = AbstractRenderer.extend({
     _renderView: function () {
         return $.when();
     },
+    /**
+     * Instantiate custom widgets
+     *
+     * @private
+     * @param {Object} record
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderWidget: function (record, node) {
+        var Widget = widgetRegistry.get(node.attrs.name);
+        var widget = new Widget(this, record);
+
+        // Prepare widget rendering and save the related deferred
+        var def = widget.__widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
+        }
+
+        // handle other attributes/modifiers
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, record, widget);
+        widget.$el.addClass('o_widget');
+        return widget.$el;
+    },
+
     /**
      * Rerenders a given widget and make sure the associated data which
      * referenced the old one is updated.
