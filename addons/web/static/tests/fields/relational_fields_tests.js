@@ -4468,6 +4468,85 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list with onchange and domain widget (widget using SpecialData)', function (assert) {
+        assert.expect(3);
+
+        this.data.turtle.fields.model_name = {string: "Domain Condition Model", type: "char"};
+        this.data.turtle.fields.condition = {string: "Domain Condition", type: "char"};
+        _.each(this.data.turtle.records, function (record) {
+            record.model_name = 'partner';
+            record.condition = '[]';
+        });
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                var virtualID = obj.turtles[1][1];
+                obj.turtles = [
+                    [5], // delete all
+                    [0, virtualID, {
+                        display_name: "coucou",
+                        product_id: [37, "xphone"],
+                        turtle_bar: false,
+                        turtle_foo: "has changed",
+                        turtle_int: 42,
+                        turtle_qux: 9.8,
+                        partner_ids: [],
+                        turtle_ref: 'product,37',
+                        model_name: 'partner',
+                        condition: '[]',
+                    }],
+                ];
+            },
+        };
+        var nbFetchSpecialDomain = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles" mode="tree">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                                '<field name="turtle_foo"/>' +
+                                // field without Widget in the list
+                                '<field name="condition"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="model_name"/>' +
+                                // field with Widget requiring specialData in the form
+                                '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/partner/search_count') {
+                    nbFetchSpecialDomain++;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$('.o_field_one2many .o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 1, "form view dialog should be opened");
+        $('.modal-body input[name="model_name"]').val('partner').trigger('input');
+        $('.modal-footer button:first').click();
+
+        assert.strictEqual(form.$('.o_field_one2many tbody tr:first').text(), "coucouhas changed[]",
+            "the onchange should create one new record and remove the existing");
+
+        form.$('.o_field_one2many .o_list_view tbody tr:eq(0) td:first').click();
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(nbFetchSpecialDomain, 1,
+            "should only fetch special domain once");
+        form.destroy();
+    });
+
     QUnit.test('one2many without inline tree arch', function (assert) {
         assert.expect(2);
 
