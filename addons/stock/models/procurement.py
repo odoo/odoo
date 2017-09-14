@@ -224,7 +224,7 @@ class ProcurementGroup(models.Model):
             ('location_dest_id', '=', values['location_id'].id),
             ('picking_type_id', '=', rule.picking_type_id.id),
             ('picking_id.printed', '=', False),
-            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned']),
+            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'assigned']),
             ('picking_id.backorder_id', '=', False),
             ('product_id', '=', values['product_id'].id)]
 

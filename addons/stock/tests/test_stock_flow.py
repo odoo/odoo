@@ -1559,7 +1559,7 @@ class TestStockFlow(TestStockCommon):
         to the state of its move lines and its move type.
         """
         # move_type: direct == partial, one == all at once
-        # picking: confirmed == waiting availability, partially_available = partially available
+        # picking: confirmed == waiting availability
 
         # -----------------------------------------------------------
         # "all at once" and "reserve" scenario
@@ -1692,7 +1692,7 @@ class TestStockFlow(TestStockCommon):
 
         # validate this delivery order, it should be in partially available
         picking_out.action_assign()
-        self.assertEquals(picking_out.state, "partially_available")
+        self.assertEquals(picking_out.state, "assigned")
 
         # receive one product in stock
         inventory = self.env['stock.inventory'].create({
