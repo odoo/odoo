@@ -26,7 +26,7 @@ class StockMove(models.Model):
         if 'product_uom_qty' in vals:
             for move in self:
                 if move.state == 'done':
-                    sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
+                    sale_order_lines = self.filtered(lambda move: move.sale_line_id and move.product_id.expense_policy == 'no').mapped('sale_line_id')
                     for line in sale_order_lines:
                         line.qty_delivered = line._get_delivered_qty()
         return res
