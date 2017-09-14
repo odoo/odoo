@@ -1,17 +1,66 @@
+odoo.define('website_sale_delivery.website_sale_delivery', function (require) {
 'use strict';
-$(document).ready(function () {
 
-    var $pay_button = $('.oe_sale_acquirer_button button');
-    $pay_button.prop('disabled', false);
+    require('web.dom_ready');
+    var ajax = require('web.ajax');
 
-    // When choosing an delivery carrier, update the quotation and the acquirers. Disable the 'Pay
-    // Now' button to avoid being redirected to payment acquier if the delivery carrier update is
-    // not over.
+    if (!$('.oe_website_sale').length) {
+        return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
+    }
+
+    // When choosing an delivery carrier, update the quotation and the acquirers.
     var $carrier = $("#delivery_carrier");
     $carrier.find("input[name='delivery_type']").click(function (ev) {
-        $pay_button.prop('disabled', true);
-        var carrier_id = $(ev.currentTarget).val();
-        window.location.href = '/shop/payment?carrier_id=' + carrier_id;
+        $(ev.currentTarget).prop('checked', false);
+        $(ev.currentTarget).closest('.o_website_sale_delivery_method_panel').click();
+    });
+
+    $carrier.find(".o_website_sale_delivery_method_panel").click(function (ev) {
+        var $elem = $(ev.currentTarget);
+        var $radio = $elem.find("input:radio")
+        if (!$radio.is(':checked')) {
+            $carrier.find('input:radio').prop('checked', false);
+            $radio.prop('checked', true);
+            $radio.next().append("<i class='fa fa-spinner fa-spin ml4 o_website_sale_apply_carrier'></i>");
+            var carrier_id = $elem.data('delivery-id');
+            ajax.jsonRpc("/shop/" + carrier_id + "/delivery_carrier", 'call')
+            .done(function (data) {
+                $('.o_website_sale_amount_tax .oe_currency_value').text(data.amount_tax.toFixed(2));
+                $('.o_website_sale_amount_untaxed .oe_currency_value').text(data.amount_untaxed.toFixed(2));
+                $('.o_website_sale_amount_total .oe_currency_value').text(data.amount_total.toFixed(2));
+                $('.o_website_sale_delivery_error_message').remove();
+                if (data && data.delivery_rating_success) {
+                    $('.o_website_sale_order_delivery').removeClass('hidden');
+                    $('.o_website_sale_amount_delivery .oe_currency_value').text(data.delivery_price.toFixed(2));
+                    $elem.find('.o_website_sale_compute_delivery_price').addClass('hidden').prev('.o_website_sale_delivery_price').removeClass('hidden').find('.oe_currency_value').text(data.delivery_price.toFixed(2));
+                } else {
+                    data.delivery_message[0] = "<h4>" + data.delivery_message[0] + "</h4>";
+                    $('.oe_cart').prepend("<div class='alert alert-danger o_website_sale_delivery_error_message'>" + data.delivery_message.join(' ') + "</div>");
+                    $('.o_website_sale_order_delivery').addClass('hidden');
+                    $('body').scrollTop(0);
+                }
+                $elem.find('.o_website_sale_apply_carrier').remove();
+            });
+            return false;
+        }
+    });
+
+    $carrier.find(".o_website_sale_compute_delivery_price").click(function (ev) {
+        ev.stopPropagation();
+        var $computeButton = $(ev.currentTarget);
+        $computeButton.prepend("<i class='fa fa-spinner fa-spin mr4'/>");
+        var carrier_id = $computeButton.data('delivery-id');
+        ajax.jsonRpc("/shop/" + carrier_id + "/delivery_price", 'call')
+        .done(function (data) {
+            if ('price' in data) {
+                $computeButton.prev('.o_website_sale_delivery_price').removeClass('hidden').find('.oe_currency_value').text(data.price.toFixed(2));
+                $computeButton.remove();
+            } else {
+                $computeButton.parent().html('<div class="alert alert-danger alert-dismissible text-left" role="alert" onclick="event.stopPropagation()">' +
+                    '<a class="close" data-dismiss="alert" aria-label="close" onclick="event.target.parentNode.remove()">x</a>' +
+                    data.error_message + '</div>');
+            }
+        });
     });
 
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {

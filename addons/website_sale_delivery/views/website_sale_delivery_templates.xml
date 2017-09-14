@@ -3,14 +3,12 @@
 
     <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
         <xpath expr="//div[@id='order_total_untaxed']" position="before">
-            <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
-                  <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
-                  <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
-                      <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
-                              "widget": "monetary",
-                              "display_currency": website_sale_order.currency_id,
-                          }'/>
-                  </span>
+            <div id="order_delivery" t-attf-class="row o_website_sale_order_delivery {{'' if website_sale_order and website_sale_order.has_delivery else 'hidden'}}">
+                <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
+                <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                    <span t-if="website_sale_order and website_sale_order.has_delivery" class="o_website_sale_amount_delivery text-nowrap" t-field="website_sale_order.amount_delivery" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                    <span t-else="" class="o_website_sale_amount_delivery text-nowrap" t-esc="0.00" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                </span>
             </div>
         </xpath>
     </template>
@@ -18,32 +16,42 @@
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
       <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
+        <link rel="stylesheet" href="/website_sale_delivery/static/src/less/website_sale_delivery.less"/>
       </xpath>
     </template>
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="col-md-12 row" id="delivery_carrier">
-                <div class="col-lg-7 col-sm-8">
-                <h4>Choose a delivery method <i class="fa fa-question text-muted" title="Delivery price will be updated after choosing a new delivery method" aria-hidden="true"></i></h4>
-                <ul class="list-unstyled">
-                    <li t-foreach="deliveries" t-as="delivery">
-                            <div id="delivery_method">
-                                <label>
-                                    <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+            <div t-if="deliveries" class="o_website_sale_carrier_options col-md-12" id="delivery_carrier">
+                <h3 title="Delivery price will be updated after choosing a new delivery method">Choose a delivery method</h3>
+                <div class="panel panel-default">
+                    <t t-foreach="deliveries" t-as="delivery">
+                         <div class="panel-body o_website_sale_delivery_method_panel" t-att-data-delivery-id="delivery.id">
+                            <div id="delivery_method" class="row">
+                                <label class="col-xs-6 font-weight-normal">
+                                    <input type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
                                     <abbr t-att-title="delivery.website_description"><span t-field="delivery.name"/></abbr>
-                                    <div t-field="delivery.website_description" class="text-muted"/>
                                 </label>
+                                <span t-if="delivery.delivery_type == 'fixed' or order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" class="col-xs-6 pull-right text-right">
+                                    <t t-if="delivery.delivery_type == 'fixed'">
+                                        <strong t-esc="delivery.fixed_price" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}"/>
+                                    </t>
+                                    <t t-else="">
+                                        <strong t-esc="order.amount_delivery" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}"/>
+                                    </t>
+                                </span>
+                                <span t-else="" class="col-xs-6 pull-right text-right">
+                                    <strong class="o_website_sale_delivery_price hidden" t-esc="0.00" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}"/>
+                                    <a class="o_website_sale_compute_delivery_price" t-att-data-delivery-id="delivery.id">Click to compute</a>
+                                </span>
                             </div>
-                    </li>
-                </ul>
-                <a class="btn btn-default btn-block"
-                        groups="base.group_system"
-                        t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
+                            <div t-field="delivery.website_description" class="text-muted ml16"/>
+                        </div>
+                    </t>
+                </div>
+                <a groups="base.group_system" t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
                     <i class="fa fa-plus-square" aria-hidden="true"></i> Configure delivery methods
                 </a>
-                </div>
             </div>
         </xpath>
     </template>
