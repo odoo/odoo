@@ -17,6 +17,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
         this.last_processed_value = [];
 
         this.on("change:value", this, this.on_change_value_check);
+        this.on_change_value_check();
         this._super.apply(this, arguments);
     },
 
