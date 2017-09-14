@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_tax">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h3> Tax Report</h3>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <t t-if="data['date_from']"><strong>From</strong> <span t-esc="data['date_from']"/><br/></t>
+                            <t t-if="data['date_to']"><strong>to </strong><span t-esc="data['date_to']"/></t>
+                        </div>
+                    </div>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Sale</th>
+                                <th>Net</th>
+                                <th>Tax</th>
+                            </tr>
+                        </thead>
+                        <tr t-foreach="lines['sale']" t-as="line">
+                            <td><span t-esc="line.get('name')"/></td>
+                            <td><span t-att-style="style" t-esc="line.get('net')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
+                            <td><span t-att-style="style" t-esc="line.get('tax')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
+                        </tr>
+                        <tr><td colspan="3"><strong>Purchase</strong></td>
+                        </tr>
+                        <tr t-foreach="lines['purchase']" t-as="line">
+                            <td><span t-esc="line.get('name')"/></td>
+                            <td><span t-att-style="style" t-esc="line.get('net')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
+                            <td><span t-att-style="style" t-esc="line.get('tax')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
