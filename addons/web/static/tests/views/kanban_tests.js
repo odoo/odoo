@@ -1824,6 +1824,45 @@ QUnit.module('Views', {
             "the add button should still be visible");
         kanban.destroy();
     });
+
+    QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban on_create="quick_create">' +
+                    '<field name="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['int_field'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $quickCreateGroup;
+        var $groups;
+        _quickCreateAndTest();
+        testUtils.dragAndDrop($groups.first().find('.o_kanban_record:first'), $groups.eq(1));
+        _quickCreateAndTest();
+        kanban.destroy();
+
+        function _quickCreateAndTest() {
+            kanban.$buttons.find('.o-kanban-button-new').click();
+            $quickCreateGroup = kanban.$('.o_kanban_quick_create').closest('.o_kanban_group');
+            $groups = kanban.$('.o_kanban_group');
+            assert.strictEqual($quickCreateGroup[0], $groups[0],
+                "quick create should have been added in the first column");
+        }
+    });
 });
 
 });
