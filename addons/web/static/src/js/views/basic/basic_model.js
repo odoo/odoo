@@ -3406,24 +3406,28 @@ var BasicModel = AbstractModel.extend({
                         type: 'list',
                         viewType: list.viewType,
                     });
-                    list.data.push(newGroup.id);
-                    list.count += newGroup.count;
                     var oldGroup = _.find(previousGroups, function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
                         // restore the internal state of the group
-                        _.extend(newGroup, _.pick(oldGroup, 'limit', 'isOpen', 'offset'));
-                        // if the group is open and contains subgroups, also
-                        // restore its data to keep internal state of sub-groups
-                        if (newGroup.isOpen && newGroup.groupedBy.length) {
-                            newGroup.data = oldGroup.data;
+                        delete self.localData[newGroup.id];
+                        var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
+                        if (oldGroup.isOpen && newGroup.groupedBy.length) {
+                            // If the group is opened and contains subgroups,
+                            // also keep its data to keep internal state of
+                            // sub-groups
+                            delete updatedProps.data;
                         }
+                        _.extend(oldGroup, updatedProps);
+                        newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {
                         newGroup.isOpen = false;
                     } else {
                         newGroup.isOpen = '__fold' in group ? !group.__fold : true;
                     }
+                    list.data.push(newGroup.id);
+                    list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
                         defs.push(self._load(newGroup));
                     }
