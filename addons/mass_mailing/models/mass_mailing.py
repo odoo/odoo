@@ -6,6 +6,7 @@ import hmac
 from datetime import datetime
 import logging
 import random
+import threading
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -676,7 +677,9 @@ class MassMailing(models.Model):
             composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
             extra_context = self._get_mass_mailing_context()
             composer = composer.with_context(active_ids=res_ids, **extra_context)
-            composer.send_mail(auto_commit=True)
+            # auto-commit except in testing mode
+            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            composer.send_mail(auto_commit=auto_commit)
             mailing.state = 'done'
         return True
 
