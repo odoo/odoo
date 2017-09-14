@@ -247,9 +247,10 @@ odoo.define('website_form_editor', function (require) {
         toggle_email_to: function () {
             // Display or remove the magic email_to field for model mail.mail
             var selected_model_name = this.$modal.find("[name='model_selection']").val();
+            var $current = this.$modal.find(".form-field:has(input[name='email_to'])");
             if (selected_model_name !== 'mail.mail') {
-                this.$modal.find(".form-field:has(input[name='email_to'])").remove();
-            } else {
+                $current.remove();
+            } else if (!$current.length) { // only add field if it's not already here
                 this.$modal.find("form").append(
                     // Email To input
                     $(qweb.render("website_form_editor.field_char", {
