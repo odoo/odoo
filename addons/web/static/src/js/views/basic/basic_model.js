@@ -2903,14 +2903,20 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} dataPoint some local resource
      * @param {Object} [options]
      * @param {string[]} [options.fieldNames] the fields to fetch for a record
+     * @param {boolean} [options.onlyGroups=false]
      * @returns {Deferred}
      */
     _load: function (dataPoint, options) {
+        if (options && options.onlyGroups &&
+          !(dataPoint.type === 'list' && dataPoint.groupedBy.length)) {
+            return $.when(dataPoint);
+        }
+
         if (dataPoint.type === 'record') {
             return this._fetchRecord(dataPoint, options);
         }
         if (dataPoint.type === 'list' && dataPoint.groupedBy.length) {
-            return this._readGroup(dataPoint);
+            return this._readGroup(dataPoint, options);
         }
         if (dataPoint.type === 'list' && !dataPoint.groupedBy.length) {
             return this._fetchUngroupedList(dataPoint);
@@ -3349,9 +3355,10 @@ var BasicModel = AbstractModel.extend({
      * were open before.
      *
      * @param {Object} list valid resource object
+     * @param {Object} [options] @see _load
      * @returns {Deferred<Object>} resolves to the fetched group object
      */
-    _readGroup: function (list) {
+    _readGroup: function (list, options) {
         var self = this;
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
@@ -3413,10 +3420,11 @@ var BasicModel = AbstractModel.extend({
                         // restore the internal state of the group
                         delete self.localData[newGroup.id];
                         var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
-                        if (oldGroup.isOpen && newGroup.groupedBy.length) {
+                        if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
                             // sub-groups
+                            // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
                         _.extend(oldGroup, updatedProps);
@@ -3429,7 +3437,7 @@ var BasicModel = AbstractModel.extend({
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
-                        defs.push(self._load(newGroup));
+                        defs.push(self._load(newGroup, options));
                     }
                 });
                 return $.when.apply($, defs).then(function () {
