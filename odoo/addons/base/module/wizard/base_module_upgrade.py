@@ -32,7 +32,7 @@ class BaseModuleUpgrade(models.TransientModel):
             return res
 
         if not self.get_module_list():
-            res['arch'] = '''<form string="Upgrade Completed" version="7.0">
+            res['arch'] = '''<form string="Upgrade Completed">
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
                                     <button name="config" string="Start Configuration" type="object" class="btn-primary"/>
