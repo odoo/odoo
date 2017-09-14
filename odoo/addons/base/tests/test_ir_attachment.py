@@ -69,3 +69,21 @@ class TestIrAttachment(TransactionCase):
 
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
+
+    def test_06_write_multiple(self):
+        a2 = self.Attachment.create({'name': 'a2', 'datas': self.blob1_b64})
+        a3 = self.Attachment.create({'name': 'a3', 'datas': self.blob1_b64})
+        a4 = self.Attachment.create({'name': 'a4', 'datas': self.blob1_b64})
+
+        for i in [a2, a3, a4]:
+            self.assertEqual(i.store_fname, self.blob1_fname)
+
+        newdata = 'newblob42'.encode('base64')
+
+        self.Attachment.browse([a2.id, a3.id, a4.id]).write({
+            'datas': newdata,
+            })
+
+        for i in [a2, a3, a4]:
+            self.assertEqual(i.datas, newdata)
+            self.assertNotEqual(i.store_fname, self.blob1_fname)

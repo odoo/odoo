@@ -192,9 +192,13 @@ class IrAttachment(models.Model):
 
     def _inverse_datas(self):
         location = self._storage()
-        for attach in self:
+
+        # Retain potentially updated data as reading a single record in the set
+        # will update all others
+        datas = [i.datas for i in self]
+
+        for attach, value in zip(self, datas):
             # compute the fields that depend on datas
-            value = attach.datas
             bin_data = value and value.decode('base64') or ''
             vals = {
                 'file_size': len(bin_data),
