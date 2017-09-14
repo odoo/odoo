@@ -1994,7 +1994,7 @@ QUnit.module('basic_fields', {
 
     QUnit.test('datetime field with date/datetime widget (with day change)', function (assert) {
         assert.expect(2);
-        
+
         this.data.partner.records[0].p = [2];
         this.data.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
 

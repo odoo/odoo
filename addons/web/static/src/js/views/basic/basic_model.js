@@ -1576,7 +1576,7 @@ var BasicModel = AbstractModel.extend({
             if (change.id) {
                 relRecord = self.localData[change.id];
             }
-            switch(change.operation) {
+            switch (change.operation) {
                 case 'ADD':
                     list.count++;
                     var resID = relRecord ? relRecord.res_id : change.resID;
@@ -1666,7 +1666,7 @@ var BasicModel = AbstractModel.extend({
         var result = {};
         var self = this;
         var evalContext;
-        function evalModifier (mod) {
+        function evalModifier(mod) {
             if (mod === undefined || mod === false || mod === true) {
                 return !!mod;
             }
@@ -2775,7 +2775,7 @@ var BasicModel = AbstractModel.extend({
         var context = _.extend({}, record.data, record._changes);
 
         // calls _generateX2ManyCommands for a given field, and returns the array of commands
-        function _generateX2ManyCommands (fieldName) {
+        function _generateX2ManyCommands(fieldName) {
             var commands = self._generateX2ManyCommands(record, {fieldNames: [fieldName]});
             return commands[fieldName];
         }
