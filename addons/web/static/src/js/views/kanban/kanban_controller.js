@@ -353,17 +353,13 @@ var KanbanController = BasicController.extend({
         });
     },
     /**
-     * @param {OdooEvent} event
+     * @todo should simply use field_changed event...
+     * @param {OdooEvent} ev
      */
-    _onUpdateRecord: function (event) {
-        var self = this;
-        var record = event.target;
-        this.model.notifyChanges(record.db_id, event.data).then(function () {
-            self.model.save(record.db_id).then(function () {
-                var state = self.model.get(record.db_id);
-                record.update(state);
-            });
-        });
+    _onUpdateRecord: function (ev) {
+        var changes = _.clone(ev.data);
+        ev.data.force_save = true;
+        this._applyChanges(ev.target.db_id, changes, ev);
     },
 });
 
