@@ -174,7 +174,4 @@ class OgonePayment(PaymentAcquirerCommon):
             'number': '4000000000000002',
             'brand': 'VISA'})
 
-        # check an alias is set, containing at least OPENERP
-        self.assertIn('OPENERP', tx.partner_reference, 'ogone: wrong partner reference after creating an alias')
-
         res = tx.ogone_s2s_execute({})
