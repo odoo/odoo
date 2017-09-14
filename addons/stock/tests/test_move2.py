@@ -203,11 +203,11 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_pick_backorder.state, 'assigned')
         self.assertEqual(picking_pick_backorder.move_line_ids.product_qty, 5.0)
 
-        self.assertEqual(picking_client.state, 'partially_available')
+        self.assertEqual(picking_client.state, 'assigned')
 
         # cancel the backorder
         picking_pick_backorder.action_cancel()
-        self.assertEqual(picking_client.state, 'partially_available')
+        self.assertEqual(picking_client.state, 'assigned')
 
     def test_edit_done_chained_move(self):
         """ Let’s say two moves are chained: the first is done and the second is assigned.
@@ -230,7 +230,7 @@ class TestPickShip(TestStockCommon):
 
         picking_pick.move_lines[0].move_line_ids[0].qty_done = 5.0
         self.assertEqual(picking_pick.state, 'done', 'The state of the pick should be done')
-        self.assertEqual(picking_client.state, 'partially_available', 'The state of the client should be partially available')
+        self.assertEqual(picking_client.state, 'assigned', 'The state of the client should be partially available')
         self.assertEqual(picking_pick.move_lines.quantity_done, 5.0, 'Wrong quantity_done for pick move')
         self.assertEqual(picking_client.move_lines.product_qty, 10.0, 'Wrong initial demand for client move')
         self.assertEqual(picking_client.move_lines.reserved_availability, 5.0, 'Wrong quantity already reserved for client move')
@@ -574,7 +574,7 @@ class TestSinglePicking(TestStockCommon):
         # assign to partially available
         delivery_order.action_confirm()
         delivery_order.action_assign()
-        self.assertEqual(delivery_order.state, 'partially_available')
+        self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
         # valid with backorder creation
@@ -741,7 +741,7 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.action_confirm()
         delivery_order.action_assign()
         # Check State
-        self.assertEqual(delivery_order.state, 'partially_available')
+        self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'partially_available')
 
         # Check reserved quantity
@@ -798,7 +798,7 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.action_confirm()
         delivery_order.action_assign()
         # Check State
-        self.assertEqual(delivery_order.state, 'partially_available')
+        self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'partially_available')
 
         # Check reserved quantity
@@ -858,7 +858,7 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.action_confirm()
         delivery_order.action_assign()
         # Check State
-        self.assertEqual(delivery_order.state, 'partially_available')
+        self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'partially_available')
 
         # Check reserved quantity
@@ -925,7 +925,7 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.action_confirm()
         delivery_order.action_assign()
         # Check State
-        self.assertEqual(delivery_order.state, 'partially_available')
+        self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'partially_available')
 
         # Check reserved quantity
