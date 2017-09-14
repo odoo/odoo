@@ -101,6 +101,7 @@ class SaleOrder(models.Model):
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
+            self.website_description = False
             return
         template = self.template_id.with_context(lang=self.partner_id.lang)
 
