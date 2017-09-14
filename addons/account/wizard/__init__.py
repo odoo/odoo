@@ -21,3 +21,4 @@ from . import account_financial_report
 from . import account_report_aged_partner_balance
 from . import setup_wizards
 from . import wizard_tax_adjustments
+from . import account_report_tax

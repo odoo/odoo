@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="accounting_tax_report_view" model="ir.ui.view">
+        <field name="name">Tax Reports</field>
+        <field name="model">account.tax.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="journal_ids" position="replace"/>
+                <field name="target_move" position="replace"/>
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_account_tax_report" model="ir.actions.act_window">
+        <field name="name">Tax Reports</field>
+        <field name="res_model">account.tax.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="accounting_tax_report_view"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_account_report" name="Tax Report" action="action_account_tax_report" parent="account.menu_finance_legal_statement" groups="account.group_account_manager,account.group_account_user"/>
+
+</odoo>
