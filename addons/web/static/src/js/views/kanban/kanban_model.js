@@ -144,27 +144,32 @@ var KanbanModel = BasicModel.extend({
         } else {
             changes[groupedFieldName] = new_group.value;
         }
+
+        // Manually updates groups data. Note: this is done before the actual
+        // save as it might need to perform a read group in some cases so those
+        // updated data might be overriden again.
+        var resID = self.localData[recordID].res_id;
+        // Remove record from its current group
+        var old_group;
+        for (var i = 0; i < parent.data.length; i++) {
+            old_group = self.localData[parent.data[i]];
+            var index = _.indexOf(old_group.data, recordID);
+            if (index >= 0) {
+                old_group.data.splice(index, 1);
+                old_group.count--;
+                old_group.res_ids = _.without(old_group.res_ids, resID);
+                self._updateParentResIDs(old_group);
+                break;
+            }
+        }
+        // Add record to its new group
+        new_group.data.push(recordID);
+        new_group.res_ids.push(resID);
+        new_group.count++;
+
         return this.notifyChanges(recordID, changes).then(function () {
             return self.save(recordID);
         }).then(function () {
-            var resID = self.localData[recordID].res_id;
-            // Remove record from its current group
-            var old_group;
-            for (var i = 0; i < parent.data.length; i++) {
-                old_group = self.localData[parent.data[i]];
-                var index = _.indexOf(old_group.data, recordID);
-                if (index >= 0) {
-                    old_group.data.splice(index, 1);
-                    old_group.count--;
-                    old_group.res_ids = _.without(old_group.res_ids, resID);
-                    self._updateParentResIDs(old_group);
-                    break;
-                }
-            }
-            // Add record to its new group
-            new_group.data.push(recordID);
-            new_group.res_ids.push(resID);
-            new_group.count++;
             return [old_group.id, new_group.id];
         });
     },
