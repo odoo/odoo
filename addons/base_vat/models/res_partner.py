@@ -200,11 +200,11 @@ class ResPartner(models.Model):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                   r"[ \-_]?" \
-                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                   r"[ \-_]?" \
-                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(br"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
+                                   br"[ \-_]?" \
+                                   br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
+                                   br"[ \-_]?" \
+                                   br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification
