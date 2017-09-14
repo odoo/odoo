@@ -1158,7 +1158,7 @@ Update your business card, phone book, social media,... Send an email right now 
                     res['activity']['today'] += 1
                 if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
                     res['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date.today() and not opp['date_closed']:
                     res['activity']['overdue'] += 1
 
             # Won in Opportunities
