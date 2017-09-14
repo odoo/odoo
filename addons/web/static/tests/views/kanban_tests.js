@@ -5,10 +5,18 @@ var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
+var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
+    before: function () {
+        this._initialKanbanProgressBarAnimate = KanbanColumnProgressBar.prototype.ANIMATE;
+        KanbanColumnProgressBar.prototype.ANIMATE = false;
+    },
+    after: function () {
+        KanbanColumnProgressBar.prototype.ANIMATE = this._initialKanbanProgressBarAnimate;
+    },
     beforeEach: function () {
         this.data = {
             partner: {
@@ -51,7 +59,7 @@ QUnit.module('Views', {
                 ]
             },
         };
-    }
+    },
 }, function () {
 
     QUnit.module('KanbanView');
@@ -1934,6 +1942,34 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('column progressbars properly work', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_counter').length, this.data.product.records.length,
+            "kanban counters should have been created");
+
+        assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side').last().text()), 36,
+            "counter should display the sum of int_field values");
+        kanban.destroy();
+    });
 });
 
 });

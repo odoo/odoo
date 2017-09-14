@@ -91,4 +91,19 @@
         </tbody>
     </table>
 </t>
+
+<t t-name="KanbanView.ColumnProgressBar">
+    <div class="o_kanban_counter">
+        <div class="o_kanban_counter_progress progress">
+            <t t-foreach="widget.colors" t-as="color">
+                <t t-set="count" t-value="widget.subgroupCounts[color] || 0"/>
+                <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' active progress-bar-striped' : ''}"
+                    t-att-data-filter="color"
+                    t-attf-data-original-title="#{count} #{color}"
+                    t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
+            </t>
+        </div>
+        <div class="o_kanban_counter_side"><t t-esc="widget.totalCounterValue"/></div>
+    </div>
+</t>
 </template>

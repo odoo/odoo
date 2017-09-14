@@ -8,6 +8,7 @@ var kanban_quick_create = require('web.kanban_quick_create');
 var KanbanRecord = require('web.KanbanRecord');
 var view_dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
+var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,6 +20,8 @@ var KanbanColumn = Widget.extend({
         cancel_quick_create: '_onCancelQuickCreate',
         kanban_record_delete: '_onDeleteRecord',
         quick_create_add_record: '_onQuickCreateAddRecord',
+        tweak_column: '_onTweakColumn',
+        tweak_column_records: '_onTweakColumnRecords',
     },
     events: {
         'click .o_column_edit': '_onEditColumn',
@@ -58,6 +61,13 @@ var KanbanColumn = Widget.extend({
         this.offset = 0;
         this.remaining = this.size - this.data_records.length;
 
+        if (options.hasProgressBar) {
+            this.barOptions = {
+                columnID: this.db_id,
+                progressBarStates: options.progressBarStates,
+            };
+        }
+
         this.record_options = _.clone(recordOptions);
 
         if (options.grouped_by_m2o) {
@@ -81,6 +91,7 @@ var KanbanColumn = Widget.extend({
      */
     start: function () {
         var self = this;
+        var defs = [this._super.apply(this, arguments)];
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
@@ -128,9 +139,12 @@ var KanbanColumn = Widget.extend({
                 self._onToggleFold(event);
             }
         });
-        this._update();
+        if (this.barOptions) {
+            this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
+            defs.push(this.progressBar.appendTo(this.$header));
+        }
 
-        return this._super.apply(this, arguments);
+        return $.when.apply($, defs).then(this._update.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -180,6 +194,18 @@ var KanbanColumn = Widget.extend({
     isEmpty: function () {
         return !this.records.length;
     },
+    /**
+     * Updates the column progressBar and sets the new data. New data are
+     * supposed to already match column rendering (except for the progressBar).
+     *
+     * @param {Object} data
+     */
+    updateProgressBar: function (data) {
+        this.data = data;
+        if (!this.folded && this.progressBar) {
+            this.progressBar.update(this.data);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -221,6 +247,7 @@ var KanbanColumn = Widget.extend({
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
         }
+        this.updateProgressBar(this.data);
     },
 
     //--------------------------------------------------------------------------
@@ -318,6 +345,22 @@ var KanbanColumn = Widget.extend({
     _onToggleFold: function (event) {
         event.preventDefault();
         this.trigger_up('column_toggle_fold');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onTweakColumn: function (ev) {
+        ev.data.callback(this.$el);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onTweakColumnRecords: function (ev) {
+        _.each(this.records, function (record) {
+            ev.data.callback(record.$el, record.state.data);
+        });
     },
     /**
      * @private
