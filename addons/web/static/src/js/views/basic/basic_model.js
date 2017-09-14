@@ -1294,8 +1294,11 @@ var BasicModel = AbstractModel.extend({
                     if (!fieldInfo) {
                         return; //ignore changes of x2many not in view
                     }
+                    var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
+                    var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
                     list = self._makeDataPoint({
                         fieldsInfo: fieldInfo.fieldsInfo,
+                        fields: view ? view.fields : fieldInfo.relatedFields,
                         modelName: field.relation,
                         parentID: record.id,
                         static: true,
