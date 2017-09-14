@@ -155,6 +155,32 @@
         }
     }
 
+    .o_image_card {
+        display: inline-block;
+        border: 1px solid @odoo-brand-lightsecondary;
+        margin: 0 @odoo-form-spacing-unit @odoo-form-spacing-unit 0;
+        padding: @odoo-form-spacing-unit;
+        > .o_display_name {
+            width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            position: relative;
+            > .o_card_delete {
+                cursor: pointer;
+                right: 0px;
+                position: absolute;
+            }
+        }
+        > .o_card_image {
+            background-size: cover;
+            height: 60px;
+            width: 80px;
+            background-position: center;
+            display: inline-block;
+        }
+    }
+
     // Stars
     &.o_priority {
         display: inline-block;

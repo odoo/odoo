@@ -25,6 +25,7 @@ var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
+var session = require('web.session');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -1664,6 +1665,50 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     },
 });
 
+var FieldMany2ManyTagsCards = FieldMany2ManyTags.extend({
+    tag_template: "FieldMany2ManyCards",
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.imageField = this.nodeOptions.image_field;
+     },
+
+    /**
+     * Get the QWeb rendering context used by the tag template; this computation
+     * is placed in a separate function for other tags to override it.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getRenderTagsContext: function () {
+        var self = this;
+        if (this.imageField) {
+            _.each(this.value.data, function (record) {
+                record['data'].image_field = session.url('/web/image', {
+                    model: record.model,
+                    id: JSON.stringify(record.res_id),
+                    field: self.imageField || self.name,
+                    // unique forces a reload of the image when the record has been updated
+                    unique: (self.recordData.__last_update || '').replace(/[^0-9]/g, ''),
+                });
+            });
+        }
+        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
+        return {
+            elements: elements,
+            readonly: this.mode === "readonly",
+        };
+    },
+});
+
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .o_tag': '_onTagClicked',
@@ -2226,6 +2271,7 @@ return {
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
+    FieldMany2ManyTagsCards: FieldMany2ManyTagsCards,
     KanbanFieldMany2ManyTags: KanbanFieldMany2ManyTags,
 
     FieldRadio: FieldRadio,
