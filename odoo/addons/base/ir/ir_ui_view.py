@@ -160,9 +160,6 @@ class View(models.Model):
     _name = 'ir.ui.view'
     _order = "priority,name,id"
 
-    # Holds the RNG schema
-    _relaxng_validator = None
-
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
     key = fields.Char()
@@ -283,16 +280,6 @@ actual arch.
         for view in self:
             view.xml_id = xml_ids.get(view.id, [''])[0]
 
-    def _relaxng(self):
-        if not self._relaxng_validator:
-            with tools.file_open(os.path.join('base', 'rng', 'view.rng')) as frng:
-                try:
-                    relaxng_doc = etree.parse(frng)
-                    self._relaxng_validator = etree.RelaxNG(relaxng_doc)
-                except Exception:
-                    _logger.exception('Failed to load RelaxNG XML schema for views validation')
-        return self._relaxng_validator
-
     def _valid_inheritance(self, arch):
         """ Check whether view inheritance is based on translated attribute. """
         for node in arch.xpath('//*[@position]'):
@@ -333,13 +320,7 @@ actual arch.
                 if view_docs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
-                validator = self._relaxng()
                 for view_arch in view_docs:
-                    version = view_arch.get('version', '7.0')
-                    if parse_version(version) < parse_version('7.0') and validator and not validator.validate(view_arch):
-                        for error in validator.error_log:
-                            _logger.error(tools.ustr(error))
-                        raise ValidationError(_('Invalid view definition'))
                     if not valid_view(view_arch):
                         raise ValidationError(_('Invalid view definition'))
         return True
