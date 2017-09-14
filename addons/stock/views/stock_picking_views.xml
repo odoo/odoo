@@ -270,7 +270,7 @@
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="product_uom_qty" attrs="{'readonly': [('is_initial_demand_editable', '=', False)], 'required': [('product_id', '!=', False)]}"/>
                                     <field name="is_locked" invisible="1"/>
-                                    <field name="qty_done" attrs="{'readonly': ['|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"/>
+                                    <field name="qty_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}"/>
                                 </tree>
                             </field>
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
@@ -297,7 +297,7 @@
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False)]}"/>
                                     <field name="reserved_availability" string="Reserved" invisible="context.get('picking_type_code') == 'incoming'"/>
-                                    <field name="quantity_done" string="Done" attrs="{'readonly': ['|', '|', ('show_details_visible', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)], 'invisible': [('show_operations', '=', True)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                 </tree>
@@ -718,7 +718,10 @@
                                                     <span>New</span>
                                                 </div>
                                                 <div>
-                                                    <a name="%(action_picking_form)d" type="action" >Transfer</a>
+                                                    <a name="%(action_picking_form)d" type="action">Immediate Transfer</a>
+                                                </div>
+                                                <div>
+                                                    <a name="%(action_picking_form)d" type="action" context="{'planned_picking': True}">Planned Transfer</a>
                                                 </div>
                                             </div>
                                         </div>
