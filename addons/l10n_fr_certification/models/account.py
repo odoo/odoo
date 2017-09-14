@@ -152,7 +152,7 @@ class AccountJournal(models.Model):
     l10n_fr_b2c = fields.Boolean('Data Inalterability', help="If this checkbox is ticked, the inalterability, securisation and archiving of the data will be insured, as required by the French Law (CGI art. 286, I. 3°bis)")
 
     @api.onchange('l10n_fr_b2c')
-    def _onchange_cancel_inalterability(self, **kwargs):
+    def _onchange_cancel_inalterability(self):
         inalterability = self.l10n_fr_b2c
         cancel_allowed = self.update_posted
         if self.l10n_fr_b2c:
@@ -162,7 +162,7 @@ class AccountJournal(models.Model):
             active_id = self._origin.id
             if active_id and self._is_journal_alterable(active_id):
                 inalterability = False
-        self.write({'update_posted': cancel_allowed, 'l10n_fr_b2c': inalterability})
+        self.update({'update_posted': cancel_allowed, 'l10n_fr_b2c': inalterability})
 
     @api.onchange('type')
     def _compute_b2c(self):

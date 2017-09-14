@@ -7,9 +7,6 @@
                 <xpath expr="//field[@name='show_on_dashboard']" position="after">
                     <field name="l10n_fr_b2c"/>
                 </xpath>
-                <xpath expr="//field[@name='update_posted']" position="replace">
-                    <field name="update_posted" attrs="{'readonly': [('l10n_fr_b2c', '=', True)]}"/>
-                </xpath>
             </field>
         </record>
 
