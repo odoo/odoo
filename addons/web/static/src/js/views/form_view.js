@@ -370,7 +370,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
-        return $.when.apply(null, set_values).then(function() {
+        return $.async_when(set_values).then(function() {
             if (!record.id) {
                 // trigger onchange for new record after x2many with non-embedded views are loaded
                 var fields_loaded = _.pluck(self.fields, 'is_loaded');
