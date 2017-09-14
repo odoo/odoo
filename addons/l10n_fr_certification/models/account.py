@@ -6,7 +6,8 @@ from openerp import models, api, fields
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
-ERR_MSG = _("According to the french law, you cannot modify a %s in order for its posted data to be updated or deleted. Unauthorized field: %s")
+
+ERR_MSG = _("According to the french law, you cannot modify a %s in order for its posted data to be updated or deleted. Unauthorized field: %s.")
 
 #forbidden fields
 MOVE_FIELDS = ['date', 'journal_id', 'company_id']
@@ -30,7 +31,7 @@ class AccountMove(models.Model):
                                  ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_move and len(prev_move) != 1:
             raise UserError(
-               _('Error occured when computing the inalterability. Impossible to get the unique previous posted journal entry'))
+               _('An error occured when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
 
         #build and return the hash
         return self._compute_hash(prev_move.l10n_fr_hash if prev_move else '')
@@ -68,7 +69,7 @@ class AccountMove(models.Model):
     def write(self, vals):
         has_been_posted = False
         for move in self:
-            if move.company_id.country_id.code == 'FR' and move.journal_id.l10n_fr_b2c:
+            if move.company_id._is_accounting_unalterable() and move.journal_id.type == 'sale':
                 # write the hash and the secure_sequence_number when posting an account.move
                 if vals.get('state') == 'posted':
                     has_been_posted = True
@@ -82,8 +83,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).write(vals)
         # write the hash and the secure_sequence_number when posting an account.move
         if has_been_posted:
-            for move in self.filtered(lambda m: m.company_id.country_id.code == 'FR' and
-                                                m.journal_id.l10n_fr_b2c and
+            for move in self.filtered(lambda m: m.company_id._is_accounting_unalterable() and
                                                 not (m.l10n_fr_secure_sequence_number or m.l10n_fr_hash)):
                 new_number = move.company_id.l10n_fr_secure_sequence_id.next_by_id()
                 vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
@@ -95,7 +95,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
-        if self.company_id.country_id.code == 'FR' and self.journal_id.l10n_fr_b2c:
+        if self.company_id._is_accounting_unalterable() and self.journal_id.type == 'sale':
             raise UserError(_('You cannot modify a posted journal entry of a business to customer journal which are unalterable.'))
         super(AccountMove, self).button_cancel()
 
@@ -104,13 +104,16 @@ class AccountMove(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
+        def build_move_info(move):
+            return [move.date, move.l10n_fr_secure_sequence_number, move.name, move.ref]
+
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id),
                              ('l10n_fr_secure_sequence_number', '!=', 0)],
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
-            raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet. This mechanism only runs for journal entries generated after the installation of the module l10n_fr_certification'))
+            raise UserError(_('There isn\'t any sales entry flagged for data inalterability yet. This mechanism only runs for sales entries generated after the installation of the module France - Certification CGI 286 I-3 bis.'))
         previous_hash = ''
         start_move_info = []
         for move in moves:
@@ -118,20 +121,29 @@ class AccountMove(models.Model):
                 raise UserError(_('Corrupted Data on move %s.') % move.id)
             if not previous_hash:
                 #save the date and sequence number of the first move hashed
-                start_move_info = [move.date, move.l10n_fr_secure_sequence_number]
+                start_move_info = build_move_info(move)
             previous_hash = move.l10n_fr_hash
-        end_move_info = [move.date, move.l10n_fr_secure_sequence_number]
+        end_move_info = build_move_info(move)
         raise UserError(_('''Successful test !
 
                          The journal entries are guaranteed to be in their original and inalterable state
                           - since:   %s
+                                Entry name: %s. Entry reference %s.
+
                           - to:      %s
+                                Entry name: %s. Entry reference %s.
 
                          Number of contiguous journal entries controlled: %s
 
                          For this report to be legally meaningfull, dowload your certification at
-                         https://accounts.odoo.com/my/contract/certification-comptabilite-francaise/'''
-                         ) % (start_move_info[0], end_move_info[0], end_move_info[1]))
+                         https://accounts.odoo.com/my/contract/certification-french-accounting/'''
+                         ) % (start_move_info[0],
+                              start_move_info[2],
+                              start_move_info[3],
+                              end_move_info[0],
+                              end_move_info[2],
+                              end_move_info[3],
+                              end_move_info[1]))
 
 
 class AccountMoveLine(models.Model):
@@ -141,7 +153,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id.country_id.code == 'FR' and l.move_id.state == 'posted' and l.journal_id.l10n_fr_b2c for l in self):
+            if any(l.company_id._is_accounting_unalterable() and l.move_id.state == 'posted' and l.journal_id.type == 'sale' for l in self):
                 raise UserError(ERR_MSG % ('journal item', ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
@@ -149,57 +161,46 @@ class AccountMoveLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    l10n_fr_b2c = fields.Boolean('Data Inalterability', help="If this checkbox is ticked, the inalterability, securisation and archiving of the data will be insured, as required by the French Law (CGI art. 286, I. 3°bis)")
-
-    @api.onchange('l10n_fr_b2c')
-    def _onchange_cancel_inalterability(self):
-        inalterability = self.l10n_fr_b2c
-        cancel_allowed = self.update_posted
-        if self.l10n_fr_b2c:
-            cancel_allowed = False
-        if self.l10n_fr_b2c is False:
-            inalterability = True
-            active_id = self._origin.id
-            if active_id and self._is_journal_alterable(active_id):
-                inalterability = False
-        self.update({'update_posted': cancel_allowed, 'l10n_fr_b2c': inalterability})
-
     @api.onchange('type')
-    def _compute_b2c(self):
-        if not self.l10n_fr_b2c:
-            self.l10n_fr_b2c = self.company_id.country_id.code == 'FR' and self.type == "sale"
+    def _onchange_type(self):
+        if self.company_id._is_accounting_unalterable() and self.type != 'sale':
+            self._origin._is_journal_alterable()
+
+    @api.onchange('update_posted')
+    def _onchange_update_posted(self):
+        if self.type == 'sale' and self.update_posted:
+            field_string = self._fields['update_posted'].string
+            raise UserError(ERR_MSG % ('journal', field_string))
 
     @api.multi
-    def _is_journal_alterable(self, active_id=None):
-        if not active_id:
-            return True
-        critical_domain = [('journal_id', '=', active_id),
+    def _is_journal_alterable(self):
+        critical_domain = [('journal_id', '=', self.id),
                             '|', ('l10n_fr_hash', '!=', False),
-                            ('l10n_fr_secure_sequence_number', '!=', False)]
+                            '&', ('l10n_fr_secure_sequence_number', '!=', False),
+                            ('l10n_fr_secure_sequence_number', '!=', 0)]
         if self.env['account.move'].search(critical_domain):
-            raise UserError('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected' % (self.name, ))
+            raise UserError('It is not permitted to disable the data inalterability in this journal (%s) since journal entries have already been protected.' % (self.name, ))
         return True
 
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if self.company_id.country_id.code == 'FR':
-            if vals.get('l10n_fr_b2c'):
+        if self.company_id._is_accounting_unalterable():
+            if vals.get('type') == 'sale':
                 vals['update_posted'] = False
-            if self.l10n_fr_b2c:
+            if self.type == 'sale':
                 if vals.get('update_posted'):
                     field_string = self._fields['update_posted'].string
                     raise UserError(ERR_MSG % ('journal', field_string))
-                if vals.get('l10n_fr_b2c') is False:
-                    self._is_journal_alterable(self.id)
+                if vals.get('type') and vals['type'] != 'sale':
+                    self._is_journal_alterable()
         return super(AccountJournal, self).write(vals)
 
     @api.model
     def create(self, vals):
         # restrict the operation in case we are trying to set a forbidden field
-        if self.company_id.country_id.code == 'FR'\
-           and vals.get('l10n_fr_b2c')\
-           and vals.get('update_posted'):
+        if self.company_id._is_accounting_unalterable():
+            if vals.get('update_posted'):
                 field_string = self._fields['update_posted'].string
                 raise UserError(ERR_MSG % ('journal', field_string))
         return super(AccountJournal, self).create(vals)

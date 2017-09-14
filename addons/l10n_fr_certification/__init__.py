@@ -3,13 +3,15 @@
 
 import models
 from openerp import api, SUPERUSER_ID
+from models.res_company import UNALTERABLE_COUNTRIES
+
 
 def _setup_inalterability(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     # enable ping for this module
     env['publisher_warranty.contract'].update_notification(cron_mode=True)
 
-    fr_companies = env['res.company'].search([('partner_id.country_id.code', '=', 'FR')])
+    fr_companies = env['res.company'].search([('partner_id.country_id.code', 'in', UNALTERABLE_COUNTRIES)])
     if fr_companies:
         # create the securisation sequence per company
         fr_companies._create_secure_sequence()
@@ -18,4 +20,4 @@ def _setup_inalterability(cr, registry):
         journals = env['account.journal'].search([('company_id', 'in', fr_companies.ids),
                                                   ('type', 'like', 'sale')])
         for journal in journals:
-            journal.write({'update_posted': False, 'l10n_fr_b2c': True})
+            journal.write({'update_posted': False})
