@@ -41,10 +41,10 @@
                             <div class="col-xs-12 col-md-6 o_setting_box" title="This installs the Sales Management app.
                             Expenses can be invoiced to customers from sales orders.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_sale"/>
+                                    <field name="module_sale_management"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_sale"/>
+                                    <label for="module_sale_management"/>
                                     <div class="text-muted">
                                         Sell services and invoice expenses to customer
                                     </div>
@@ -65,7 +65,7 @@
             <field name="context">{'module' : 'hr_expense'}</field>
         </record>
 
-        <menuitem id="menu_hr_expense_global_settings" name="Settings" 
+        <menuitem id="menu_hr_expense_global_settings" name="Settings"
             parent="menu_hr_expense_configuration" sequence="0" action="action_hr_expense_configuration" groups="base.group_system"/>
     </data>
 </odoo>
