@@ -78,6 +78,12 @@ var KanbanController = BasicController.extend({
      * @returns {Deferred}
      */
     _confirmSave: function (id) {
+        var data = this.model.get(this.handle, {raw: true});
+        var grouped = data.groupedBy.length;
+        if (grouped) {
+            var columnState = this.model.getColumn(id);
+            return this.renderer.updateColumn(columnState.id, columnState);
+        }
         return this.renderer.updateRecord(this.model.get(id));
     },
     /**
@@ -164,7 +170,7 @@ var KanbanController = BasicController.extend({
                             var data = self.model.get(db_id);
                             self.renderer.updateColumn(db_id, data);
                         });
-                });
+                    });
             }).fail(this.reload.bind(this));
     },
     /**
@@ -305,7 +311,7 @@ var KanbanController = BasicController.extend({
                     context: _.extend({default_name: name}, context),
                     title: _t("Create"),
                     disable_multiple_selection: true,
-                    on_saved: function(record) {
+                    on_saved: function (record) {
                         add_record([record.res_id]);
                     },
                 }).open();
@@ -353,17 +359,13 @@ var KanbanController = BasicController.extend({
         });
     },
     /**
-     * @param {OdooEvent} event
+     * @todo should simply use field_changed event...
+     * @param {OdooEvent} ev
      */
-    _onUpdateRecord: function (event) {
-        var self = this;
-        var record = event.target;
-        this.model.notifyChanges(record.db_id, event.data).then(function () {
-            self.model.save(record.db_id).then(function () {
-                var state = self.model.get(record.db_id);
-                record.update(state);
-            });
-        });
+    _onUpdateRecord: function (ev) {
+        var changes = _.clone(ev.data);
+        ev.data.force_save = true;
+        this._applyChanges(ev.target.db_id, changes, ev);
     },
 });
 

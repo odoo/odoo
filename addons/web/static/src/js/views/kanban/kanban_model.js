@@ -98,7 +98,23 @@ var KanbanModel = BasicModel.extend({
         if (dp && dp.tooltipData) {
             result.tooltipData = $.extend(true, {}, dp.tooltipData);
         }
+        if (dp && dp.progressBarValues) {
+            result.progressBarValues = $.extend(true, {}, dp.progressBarValues);
+        }
         return result;
+    },
+    /**
+     * Same as @see get but getting the parent element whose ID is given.
+     *
+     * @param {string} id
+     * @returns {Object}
+     */
+    getColumn: function (id) {
+        var element = this.localData[id];
+        if (element) {
+            return this.get(element.parentID);
+        }
+        return null;
     },
     /**
      * @override
@@ -144,27 +160,34 @@ var KanbanModel = BasicModel.extend({
         } else {
             changes[groupedFieldName] = new_group.value;
         }
+
+        // Manually updates groups data. Note: this is done before the actual
+        // save as it might need to perform a read group in some cases so those
+        // updated data might be overriden again.
+        var record = self.localData[recordID];
+        var resID = record.res_id;
+        // Remove record from its current group
+        var old_group;
+        for (var i = 0; i < parent.data.length; i++) {
+            old_group = self.localData[parent.data[i]];
+            var index = _.indexOf(old_group.data, recordID);
+            if (index >= 0) {
+                old_group.data.splice(index, 1);
+                old_group.count--;
+                old_group.res_ids = _.without(old_group.res_ids, resID);
+                self._updateParentResIDs(old_group);
+                break;
+            }
+        }
+        // Add record to its new group
+        new_group.data.push(recordID);
+        new_group.res_ids.push(resID);
+        new_group.count++;
+
         return this.notifyChanges(recordID, changes).then(function () {
             return self.save(recordID);
         }).then(function () {
-            var resID = self.localData[recordID].res_id;
-            // Remove record from its current group
-            var old_group;
-            for (var i = 0; i < parent.data.length; i++) {
-                old_group = self.localData[parent.data[i]];
-                var index = _.indexOf(old_group.data, recordID);
-                if (index >= 0) {
-                    old_group.data.splice(index, 1);
-                    old_group.count--;
-                    old_group.res_ids = _.without(old_group.res_ids, resID);
-                    self._updateParentResIDs(old_group);
-                    break;
-                }
-            }
-            // Add record to its new group
-            new_group.data.push(recordID);
-            new_group.res_ids.push(resID);
-            new_group.count++;
+            record.parentID = new_group.id;
             return [old_group.id, new_group.id];
         });
     },
@@ -177,13 +200,40 @@ var KanbanModel = BasicModel.extend({
         if (options && options.groupBy && !options.groupBy.length) {
             options.groupBy = this.defaultGroupedBy;
         }
-        return this._super(id, options);
+        var def = this._super(id, options);
+        return this._reloadProgressBarGroupFromRecord(id, def);
+    },
+    /**
+     * @override
+     */
+    save: function (recordID) {
+        var def = this._super.apply(this, arguments);
+        return this._reloadProgressBarGroupFromRecord(recordID, def);
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _makeDataPoint: function (params) {
+        var dataPoint = this._super.apply(this, arguments);
+        if (params.progressBar) {
+            dataPoint.progressBar = params.progressBar;
+        }
+        return dataPoint;
+    },
+    /**
+     * @override
+     */
+    _load: function (dataPoint, options) {
+        if (dataPoint.progressBar) {
+            return this._readProgressBarGroup(dataPoint, options);
+        }
+        return this._super.apply(this, arguments);
+    },
     /**
      * Ensures that there is no nested groups in Kanban (only the first grouping
      * level is taken into account).
@@ -199,6 +249,34 @@ var KanbanModel = BasicModel.extend({
         }
         return this._super.apply(this, arguments).then(function (result) {
             return self._readTooltipFields(list).then(_.constant(result));
+        });
+    },
+    /**
+     * @private
+     * @param {Object} dataPoint
+     * @returns {Deferred<Object>}
+     */
+    _readProgressBarGroup: function (list, options) {
+        var self = this;
+        var groupsDef = this._readGroup(list, options);
+        var progressBarDef = this._rpc({
+            model: list.model,
+            method: 'read_progress_bar',
+            kwargs: {
+                domain: list.domain,
+                group_by: list.groupedBy[0],
+                progress_bar: list.progressBar,
+                context: list.context,
+            },
+        });
+        return $.when(groupsDef, progressBarDef).then(function (a, data) {
+            _.each(list.data, function (groupID) {
+                var group = self.localData[groupID];
+                group.progressBarValues = _.extend({
+                    counts: data[group.value] || {},
+                }, list.progressBar);
+            });
+            return list;
         });
     },
     /**
@@ -248,8 +326,37 @@ var KanbanModel = BasicModel.extend({
         }
         return $.when();
     },
+    /**
+     * Reloads all progressbar data if the given id is a record's one. This is
+     * done after given deferred and insures that the given deferred's result is
+     * not lost.
+     *
+     * @private
+     * @param {string} recordID
+     * @param {Deferred} def
+     * @returns {Deferred}
+     */
+    _reloadProgressBarGroupFromRecord: function (recordID, def) {
+        var element = this.localData[recordID];
+        if (element.type !== 'record') {
+            return def;
+        }
+
+        // If we updated a record, then we must potentially update columns'
+        // progressbars, so we need to load groups info again
+        var self = this;
+        while (element) {
+            if (element.progressBar) {
+                return def.then(function (data) {
+                    return self._load(element, {onlyGroups: true}).then(function () {
+                        return data;
+                    });
+                });
+            }
+            element = this.localData[element.parentID];
+        }
+        return def;
+    },
 });
-
 return KanbanModel;
-
 });
