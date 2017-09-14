@@ -49,7 +49,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, pycompat
+                   Collector, LastOrderedSet, OrderedSet, pycompat, unique
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -3671,6 +3671,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
             args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
+        cr = self.env.cr
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
         order_by = self._generate_order_by(order, query)
@@ -3682,14 +3683,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
             query_str = 'SELECT count(1) FROM ' + from_clause + where_str
-            self._cr.execute(query_str, where_clause_params)
-            res = self._cr.fetchone()
+            cr.execute(query_str, where_clause_params)
+            res = cr.fetchone()
             return res[0]
 
-        limit_str = limit and ' limit %d' % limit or ''
-        offset_str = offset and ' offset %d' % offset or ''
+        limit_str = ' LIMIT %d' % limit if limit else ''
+        offset_str = ' OFFSET %d' % offset if offset else ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
-        return self._cr.lazy(query_str, where_clause_params)
+
+        if limit or offset:
+            # execute the query and return results
+            cr.execute(query_str, where_clause_params)
+            return tuple(unique(row[0] for row in cr.fetchall()))
+
+        # execute the query with an arbitrary limit; return the results if less
+        # than this limit, or make the query lazy otherwise
+        limit = 1000
+        cr.execute(query_str + ' LIMIT %d' % limit, where_clause_params)
+        if cr.rowcount < limit:
+            return tuple(unique(row[0] for row in cr.fetchall()))
+        else:
+            return cr.lazy(query_str, where_clause_params)
 
     @api.multi
     @api.returns(None, lambda value: value[0])
