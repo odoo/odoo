@@ -5,7 +5,7 @@
         <xpath expr="//div[@id='order_total_untaxed']" position="before">
             <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
                   <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
-                  <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
+                  <span class="col-xs-6 text-right text-muted">
                       <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
                               "widget": "monetary",
                               "display_currency": website_sale_order.currency_id,
@@ -23,7 +23,7 @@
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="col-md-12 row o_rightfit" id="delivery_carrier">
+            <div t-if="deliveries" class="col-md-12 row o_website_sale_rightfit" id="delivery_carrier">
                 <div class="col-lg-7 col-sm-8">
                 <h3 title="Delivery price will be updated after choosing a new delivery method">Choose a delivery method</h3>
                 <ul class="list-unstyled">
