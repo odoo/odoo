@@ -698,6 +698,40 @@ var MockServer = Class.extend({
         return result;
     },
     /**
+     * Simulates a 'read_progress_bar' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {Object} kwargs
+     * @returns {Object[][]}
+     */
+    _mockReadProgressBar: function (model, kwargs) {
+        var domain = kwargs.domain;
+        var groupBy = kwargs.groupBy;
+        var progress_bar = kwargs.progress_bar;
+
+        var records = this._getRecords(model, domain || []);
+
+        var data = {};
+        _.each(records, function (record) {
+            var groupByValue = record[groupBy]; // always technical value here
+
+            if (!(groupByValue in data)) {
+                data[groupByValue] = {};
+                _.each(progress_bar.colors, function (val, key) {
+                    data[groupByValue][key] = 0;
+                });
+            }
+
+            var fieldValue = record[progress_bar.field];
+            if (fieldValue in data[groupByValue]) {
+                data[groupByValue][fieldValue]++;
+            }
+        });
+
+        return data;
+    },
+    /**
      * Simulate a 'search_count' operation
      *
      * @private
@@ -888,6 +922,9 @@ var MockServer = Class.extend({
 
             case 'read_group':
                 return $.when(this._mockReadGroup(args.model, args.kwargs));
+
+            case 'read_progress_bar':
+                return $.when(this._mockReadProgressBar(args.model, args.kwargs));
 
             case 'search_count':
                 return $.when(this._mockSearchCount(args.model, args.args));

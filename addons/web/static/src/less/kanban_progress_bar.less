@@ -1,0 +1,115 @@
+
+.o-kanban-css-filter(@class, @accent-color) {
+    // Provide CSS reordering and highlight
+    &.o_kanban_group_show_@{class} {
+        @mix-soft: mix(@accent-color, @odoo-webclient-background-color, 5%);
+        @mix-full: mix(@accent-color, @odoo-webclient-background-color);
+
+        &, .o_kanban_header {
+            background-color: @mix-soft;
+            border-color: @mix-full;
+        }
+
+        .progress-bar.bg-@{class}-full {
+            border: 1px solid white;
+        }
+
+        .oe_kanban_card_@{class} {
+            order: 1;
+            margin-bottom: @o-kanban-inside-vgutter*0.5;
+
+            ~ .oe_kanban_card_@{class} {
+                margin-top: -@o-kanban-inside-vgutter*0.5 - 1px;
+            }
+        }
+
+        .o_kanban_load_more {
+            order: 2;
+            padding: @o-kanban-inside-vgutter*0.5 0 @o-kanban-inside-vgutter;
+        }
+
+        .o_kanban_record:not(.oe_kanban_card_@{class}) {
+            order: 3;
+            opacity: 0.5;
+            box-shadow: none;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.o_kanban_counter {
+    position: relative;
+    .o-flex-display();
+    .o-align-items(center);
+    height: 30px;
+    margin-bottom: @o-kanban-record-margin*2;
+
+    > .o_kanban_counter_progress {
+        width: 76%;
+        height: @font-size-base;
+        margin-bottom: 0;
+        background: fade(black, 7%);
+        box-shadow: none;
+
+        .progress-bar {
+            margin-bottom: 0;
+            box-shadow: none;
+            cursor: pointer;
+
+            // Be sure that a bar with data has a minimun width
+            &.o_bar_has_records {
+                min-width: 10px;
+            }
+        }
+
+        .o_kanban_counter_label {
+            font-size: 10px;
+            .user-select(none);
+        }
+    }
+
+    > .o_kanban_counter_side {
+        width: 21%;
+        margin-left: 3%;
+        color: @headings-color;
+        font-weight: bold;
+        text-align: right;
+
+        &.o_kanban_grow {
+            .o-animation(grow, 400ms, ease-in, 200ms);
+        }
+    }
+}
+.o_column_folded .o_kanban_counter {
+    display: none;
+}
+
+.o_kanban_view .o_kanban_group {
+    .o-kanban-css-filter(success, @brand-success);
+    .o-kanban-css-filter(warning, @brand-warning);
+    .o-kanban-css-filter(danger, @brand-danger);
+
+    &.o_kanban_group_show {
+        .o-flex-display();
+        .o-flex-flow(column, nowrap);
+
+        > * {
+            .o-flex(0, 0, auto);
+        }
+    }
+}
+
+@keyframes grow {
+    0% {
+        transform: scale3d(1, 1, 1);
+    }
+    50% {
+        transform: scale3d(1.5, 1.5, 1.5);
+    }
+    100% {
+        transform: scale3d(1, 1, 1);
+    }
+}
