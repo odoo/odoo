@@ -539,6 +539,48 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('drag and drop a record, grouped by selection', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div><field name="state"/></div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+            groupBy: ['state'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return $.when(true);
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    assert.deepEqual(args.args[1], {state: 'def'});
+                }
+                return this._super(route, args);
+            },
+        });
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 0,
+                        "column should now contain 0 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;

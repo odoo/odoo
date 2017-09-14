@@ -141,6 +141,9 @@ var KanbanModel = BasicModel.extend({
                 id: new_group.res_id,
                 display_name: new_group.value,
             };
+        } else if (groupedField.type === 'selection') {
+            var value = _.findWhere(groupedField.selection, {1: new_group.value});
+            changes[groupedFieldName] = value && value[0] || false;
         } else {
             changes[groupedFieldName] = new_group.value;
         }
