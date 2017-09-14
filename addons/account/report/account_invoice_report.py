@@ -114,7 +114,7 @@ class AccountInvoiceReport(models.Model):
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
-                    SUM(ail.price_subtotal_signed) AS price_total,
+                    SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN SUM(ail.quantity / u.factor * u2.factor)
