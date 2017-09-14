@@ -260,7 +260,7 @@ class Cursor(object):
     def lazy(self, query, params=None):
         """ Return a lazy sequence of values determined by the given query. """
         if params:
-            query = self.mogrify(query, params)
+            query = self.mogrify(query, params).decode('utf-8')
         return LazyQuery(self, query)
 
     def split_for_in_conditions(self, ids, size=None):
