@@ -1362,6 +1362,56 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('can_create and can_write option on a many2one', function (assert) {
+        assert.expect(5);
+
+        this.data.product.options = {
+            can_create: "false",
+            can_write: "false",
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<sheet>' +
+                            '<field name="product_id" can_create="false" can_write="false"/>' +
+                        '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form string="Products"><field name="display_name"/></form>',
+            },
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_many2one input').click();
+        assert.strictEqual($('.ui-autocomplete .o_m2o_dropdown_option:contains(Create)').length, 0,
+            "there shouldn't be any option to search and create");
+
+        $('.ui-autocomplete li:contains(xpad)').mouseenter().click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), "xpad",
+            "the correct record should be selected");
+        assert.strictEqual(form.$('.o_field_many2one .o_external_button').length, 1,
+            "there should be an external button displayed");
+
+        form.$('.o_field_many2one .o_external_button').click();
+        assert.strictEqual($('.modal .o_form_view.o_form_readonly').length, 1,
+            "there should be a readonly form view opened");
+
+        $('.modal .o_form_button_cancel').click();
+
+        form.$('.o_field_many2one input').val('new product').trigger('keyup').trigger('focusout');
+
+        assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+        form.destroy();
+    });
+
     QUnit.test('pressing enter in a m2o in an editable list', function (assert) {
         assert.expect(9);
         var done = assert.async();

@@ -255,6 +255,10 @@ var MockServer = Class.extend({
         var relModel, relFields;
         _.each(fieldNodes, function (node, name) {
             var field = fields[name];
+            if (field.type === "many2one" || field.type === "many2many") {
+                node.attrs.can_create = node.attrs.can_create || "true";
+                node.attrs.can_write = node.attrs.can_write || "true";
+            }
             if (field.type === "one2many" || field.type === "many2many") {
                 field.views = {};
                 _.each(node.children, function (children) {
