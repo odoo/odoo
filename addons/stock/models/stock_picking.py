@@ -80,10 +80,10 @@ class PickingType(models.Model):
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
-            'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
-            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting', 'partially_available'))],
+            'count_picking_ready': [('state', '=', 'assigned')],
+            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field in domains:
             data = self.env['stock.picking'].read_group(domains[field] +
@@ -186,19 +186,20 @@ class Picking(models.Model):
         help="It specifies goods to be deliver partially or all at once")
 
     state = fields.Selection([
-        ('draft', 'Draft'), ('cancel', 'Cancelled'),
+        ('draft', 'Draft'),
         ('waiting', 'Waiting Another Operation'),
-        ('confirmed', 'Waiting Availability'),
-        ('partially_available', 'Partially Available'),
-        ('assigned', 'Available'), ('done', 'Done')], string='Status', compute='_compute_state',
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
-        help=" * Draft: not confirmed yet and will not be scheduled until confirmed\n"
-             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
-             " * Waiting Availability: still waiting for the availability of products\n"
-             " * Partially Available: some products are available and reserved\n"
-             " * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
-             " * Transferred: has been processed, can't be modified or cancelled anymore\n"
-             " * Cancelled: has been cancelled, can't be confirmed anymore")
+        help=" * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
+             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
+             " * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
+             " * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
+             " * Done: has been processed, can't be modified or cancelled anymore.\n"
+             " * Cancelled: has been cancelled, can't be confirmed anymore.")
 
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
@@ -287,14 +288,16 @@ class Picking(models.Model):
     @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
-         - no moves: draft or assigned (launch_pack_operations)
-         - all moves canceled: cancel
-         - all moves done (including possible canceled): done
-         - All at once picking: least of confirmed / waiting / assigned
-         - Partial picking
-          - all moves assigned: assigned
-          - one of the move is assigned or partially available: partially available
-          - otherwise in waiting or confirmed state
+        - Draft: only used for "planned pickings"
+        - Waiting: if the picking is not ready to be sent so if
+          - (a) no quantity could be reserved at all or if
+          - (b) some quantities could be reserved and the shipping policy is "deliver all at once"
+        - Waiting another move: if the picking is waiting for another move
+        - Ready: if the picking is ready to be sent so if:
+          - (a) all quantities are reserved or if
+          - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
+        - Done: if the picking is done.
+        - Cancelled: if the picking is cancelled
         '''
         if not self.move_lines:
             self.state = 'draft'

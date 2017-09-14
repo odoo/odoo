@@ -142,10 +142,10 @@
     ref('stock_location_stock'))])
     assert len(records.ids) == 0, 'This should not have created a negative quant'
 - 
-  Check the other delivery order has changed its state back to partially available
+  Check the other delivery order has changed its state back to ready
 - 
   !python {model: stock.picking, id: delivery_order_wise2}: |
-    assert self.state == 'partially_available', "Delivery order 2 should be back in confirmed state"
+    assert self.state == 'assigned', "Delivery order 2 should be back in ready state"
 - 
   Process the second picking
 - 
