@@ -4,8 +4,15 @@
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/mrp/static/src/js/mrp.js"></script>
             <link rel="stylesheet" type="text/less" href="/mrp/static/src/less/mrp.less"/>
+            <script type="text/javascript" src="/mrp/static/src/js/mrp_bom_report.js"></script>
         </xpath>
    </template>
+
+    <template id="assets_common" name="mrp bom common assets" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/mrp/static/src/less/mrp_bom_report.less" />
+        </xpath>
+    </template>
 
     <template id="qunit_suite" inherit_id="web.qunit_suite">
         <xpath expr="//script[last()]" position="after">

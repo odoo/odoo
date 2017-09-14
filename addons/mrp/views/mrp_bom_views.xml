@@ -2,6 +2,12 @@
 <odoo>
     <data>
         <!-- Bill of Materials -->
+        <record id="action_report_mrp_bom" model="ir.actions.client">
+            <field name="name">Cost &amp; Structure</field>
+            <field name="tag">mrp_bom_report</field>
+            <field name="context" eval="{'model': 'mrp.bom.report'}" />
+        </record>
+
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
             <field name="model">mrp.bom</field>
@@ -9,6 +15,8 @@
                 <form string="Bill of Material">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="%(action_report_mrp_bom)d" type="action"
+                                class="oe_stat_button" icon="fa-bars" string="Cost &amp; Structure" attrs="{'invisible': [('bom_line_ids', '=', [])]}"/>
                             <button name="toggle_active" type="object"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"

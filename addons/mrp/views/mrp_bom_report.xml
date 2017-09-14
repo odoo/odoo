@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mrp_bom">
+        <div class="container o_mrp_bom_report_page" style="padding-left:30px; padding-right: 90px;">
+            <t t-if="datas">
+                <t t-foreach="datas" t-as="data">
+                    <span class="text-left">
+                        <h1>BoM Structure &amp; Cost</h1>
+                        <h6><b>Reference: </b><t t-esc="data['bom'].code"/></h6>
+                        <h6><b>Product: </b><a t-att-data-res-id="data['product'].id" t-att-data-model="data['product']._name" class="o_mrp_reports_web_action"><t t-esc="data['bom_prod_name']"/></a></h6>
+                        <h6><b>Quantity: </b><t t-esc="data['bom'].product_qty"/> <t t-esc="data['bom'].product_uom_id.name"/></h6>
+                    </span>
+                    <t t-set="currency" t-value="data['currency']"/>
+                    <div class="o_mrp_bom_report_table">
+                        <h4 class="mt32"><b>Components</b></h4>
+                        <table width='100%' class="table-responsive">
+                            <thead>
+                                <tr class="o_report_header">
+                                    <th>Product</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="o_uom" groups="product.group_uom">Unit of Measure</th>
+                                    <th class="text-right">Unit Cost</th>
+                                    <th class="text-right">Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-call="mrp.report_mrp_bom_line"/>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td groups="product.group_uom"></td>
+                                    <td class="text-right"><strong>Total Cost of Components</strong></td>
+                                    <td class="text-right"><t t-esc="data['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <span class="text-center"><h1>Not available.</h1></span>
+            </t>
+        </div>
+    </template>
+
+    <template id="report_mrp_bom_line">
+        <t t-set="currency" t-value="data['currency']"/>
+        <t t-foreach="data['components']" t-as="l">
+            <t t-set="space_td" t-value="'margin-left: '+ str(l['level'] * 16) + 'px;'"/>
+            <tr class="o_mrp_bom_report_line" t-att-data-id="l['child_bom']" t-att-parent_id="l['parent_id']" t-att-data-qty="l['prod_qty']" t-att-data-level="l['level']">
+                <td>
+                    <span t-att-style="space_td"/>
+                    <t t-if="l['child_bom']">
+                        <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right"/>
+                    </t>
+                    <a t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_reports_web_action"><t t-esc="l['prod_name']"/></a>
+                </td>
+                <td class="text-right"><t t-esc="l['prod_qty']"/></td>
+                <td class="o_uom" groups="product.group_uom"><t t-esc="l['prod_uom']"/></td>
+                <td class="text-right"><span t-esc="l['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                <td class="text-right"><span t-esc="l['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+            </tr>
+        </t>
+    </template>
+</odoo>

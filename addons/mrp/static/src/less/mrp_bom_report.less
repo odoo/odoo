@@ -1,0 +1,49 @@
+.o_mrp_bom_report_page {
+    background-color: @odoo-view-background-color;
+    color: @odoo-main-text-color;
+    padding: 24px 90px 24px 30px;
+
+    .o_mrp_bom_report_table {
+        white-space: nowrap;
+        margin-top: 30px;
+    }
+    .o_report_header {
+        border-width: 2px;
+        border-bottom-style: groove;
+    }
+    table > tfoot {
+        border-width: 2px;
+        border-top-style: groove;
+
+        > tr {
+            &:first-child  > td {
+                padding-top: 25px;
+            }
+            > td:last-child {
+                color: @odoo-brand-primary;
+                font-weight: bold;
+            }
+        }
+    }
+    .o_uom {
+        padding-left: 20px;
+    }
+    .o_mrp_bom_report_line {
+        color: @odoo-brand-primary;
+        font-weight: bold;
+
+        &:last-child  > td {
+            padding-bottom: 25px;
+        }
+        > td {
+            padding-top: 15px;
+        }
+    }
+    .o_mrp_bom_unfoldable, .o_mrp_bom_foldable {
+        margin-left: -20px;
+        cursor: pointer;
+    }
+    a.o_mrp_reports_web_action  {
+        cursor: pointer;
+    }
+}
