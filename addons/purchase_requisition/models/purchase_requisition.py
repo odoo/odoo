@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class PurchaseRequisitionType(models.Model):
@@ -160,9 +161,15 @@ class PurchaseRequisitionLine(models.Model):
             self.schedule_date = self.requisition_id.schedule_date
 
     @api.multi
-    def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+    def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False, partner_id=False, po=False):
         self.ensure_one()
         requisition = self.requisition_id
+        seller = self.product_id._select_seller(
+            partner_id=partner_id,
+            quantity=product_qty,
+            date=requisition.schedule_date or fields.Date.today(),
+            uom_id=self.product_id.uom_po_id)
+        date_planned = requisition.schedule_date or self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {
             'name': name,
             'product_id': self.product_id.id,
@@ -170,7 +177,7 @@ class PurchaseRequisitionLine(models.Model):
             'product_qty': product_qty,
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],
-            'date_planned': requisition.schedule_date or fields.Date.today(),
+            'date_planned': date_planned,
             'account_analytic_id': self.account_analytic_id.id,
             'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }
@@ -248,7 +255,7 @@ class PurchaseOrder(models.Model):
             # Create PO line
             order_line_values = line._prepare_purchase_order_line(
                 name=name, product_qty=product_qty, price_unit=price_unit,
-                taxes_ids=taxes_ids)
+                taxes_ids=taxes_ids, partner_id=self.partner_id, po=self)
             order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
