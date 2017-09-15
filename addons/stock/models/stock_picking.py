@@ -225,7 +225,7 @@ class Picking(models.Model):
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Completion Date of Transfer")
 
     location_id = fields.Many2one(
-        'stock.location', "Source Location Zone",
+        'stock.location', "Source Location",
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
         readonly=True, required=True,
         states={'draft': [('readonly', False)]})
