@@ -24,4 +24,55 @@
             display: none;
         }
     }
+
+    .o_chat_composer {
+        background: #fff;
+        border-top: 1px solid #d9d9d9;
+        position: relative;
+        .o_composer {
+            .o_composer_input {
+                display: inline-block;
+                float: left;
+                width: 70%;
+                textarea {
+                    display: block;
+                    padding: 10px;
+                    font-size: 13px;
+
+                    @media (max-width: @screen-xs-max) {
+                        padding: 15px 10px;
+                    }
+                }
+            }
+
+            .o_chatter_composer_tools {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+
+                button {
+                    padding: 10px;
+                    @media (max-width: @screen-xs-max) {
+                        padding: 13px;
+                    }
+                    &.btn-icon{
+                        font-size: 1.3em;
+                    }
+                }
+            }
+        }
+        .o_composer_tabs_toggle_button {
+            display: none;
+        }
+        .o_composer_attachments_list {
+            margin: 0px;
+        }
+        .o_composer_attachments_list, .o_composer_buttons {
+            .o_composer_button_emoji, .o_composer_button_add_attachment {
+                &:hover, &:focus {
+                    background-color: #FFFFFF !important;
+                }
+            }
+        }
+    }
 }

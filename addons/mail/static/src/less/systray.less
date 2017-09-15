@@ -22,11 +22,12 @@
     .o_notification_counter {
         background: @odoo-brand-optional;
         color: white;
-        padding: 0em 0.3em;
+        padding: 0em 0.5em;
         font-size: 0.7em;
-        top: 19%;
+        top: 0px;
+        right: 0px;
         position: absolute;
-        margin: 0px 0px 0px 6px;
+        margin: 0px;
     }
     .o_mail_navbar_dropdown {
         width: 350px;
@@ -45,7 +46,9 @@
             .o-flex(0, 0, auto);
             justify-content: space-between;
             border-bottom: 1px solid lightgray;
-
+            @media (max-width: @screen-xs-max) {
+                padding: 5px;
+            }
             .o_filter_button, .o_new_message {
                 .btn-link;
                 padding: 5px;
@@ -80,6 +83,10 @@
                 cursor: pointer;
                 font-size: 12px;
                 overflow: hidden;
+                @media (max-width: @screen-xs-max) {
+                    padding: 10px;
+                    height: 85px;
+                }
                 &~.o_mail_channel_preview {
                     border-top: 1px solid lightgray;
                 }
@@ -93,6 +100,12 @@
                 .o_channel_image {
                     .o-flex(0, 0, 36px);
                     max-height: 36px;
+                    @media (max-width: @screen-xs-max) {
+                        .o-flex(0, 0, 50px);
+                        border-radius: 3px;
+                        margin-right: 10px;
+                        max-height: 50px;
+                    }
                 }
                 .o_channel_info {
                     .o-flex(1, 1, 100%);
@@ -105,6 +118,11 @@
                             .o-flex(1, 1, auto);
                             .o-text-overflow();
                             color: @odoo-main-text-color;
+                            @media (max-width: @screen-xs-max) {
+                                font-size: 1.4em;
+                                color: #000;
+                                font-weight: 300;
+                            }
                         }
                         .o_last_message_date {
                             .o-flex(0, 0, auto);
@@ -133,9 +151,86 @@
             opacity: 0.5;
             padding: 3px;
         }
+
+        &.o_mail_navbar_mobile {
+            position: relative;
+
+            .o_mail_navbar_mobile_header {
+                padding: 5px 5px 5px 0px;
+                min-height: 44px;
+                border-bottom: 1px solid #ccc;
+                background: #ffffff;
+            }
+
+            .o_mail_navbar_dropdown_channels {
+                padding-bottom: 55px;
+            }
+
+            .o_mail_navbar_mobile_tabs {
+                background: #fff;
+                box-shadow: 0px 0px 20px #afafaf;
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+
+                .o_mail_navbar_mobile_tab {
+                    display: inline-block;
+                    width: 20%;
+                    height: 100%;
+                    min-height: 100%;
+                    padding: 8px 4px;
+                    text-align: center;
+                    float: left;
+                    font-size: 1.2em;
+                    color: #666666;
+
+                    &:first-child:nth-last-child(3),
+                    &:first-child:nth-last-child(3) ~ .o_mail_navbar_mobile_tab {
+                        width: 33.33%;
+                    }
+
+                    &:first-child:nth-last-child(4),
+                    &:first-child:nth-last-child(4) ~ .o_mail_navbar_mobile_tab {
+                        width: 25%;
+                    }
+
+                    &:first-child:nth-last-child(5),
+                    &:first-child:nth-last-child(5) ~ .o_mail_navbar_mobile_tab {
+                        width: 20%;
+                    }
+
+                    &:not(:last-child) {
+                        border-right: 1px solid #d7d7d7;
+                    }
+
+                    span {
+                        display: block;
+                        &.fa {
+                           font-size: 16px;
+                        }
+
+                        &.o_tab_title{
+                           font-size: 11px;
+                           padding-top: 8px;
+                        }
+                    }
+                    &.o_selected {
+                        span {
+                           color: @odoo-brand-optional;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 .o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
     display: none;  // hide 'new message' button if chat windows are disabled
+}
+
+// Fix for enterprise nav bar
+.o_main_navbar .o_menu_systray .o_notification_counter {
+    top: 5px;
 }
