@@ -46,6 +46,7 @@ var QuickCreate = Dialog.extend({
                     if (!self._quickAdd(dataCalendar)) {
                         self.focus();
                     }
+                    self._flagEnter = true;
                 }},
                 {text: _t("Edit"), click: function () {
                     dataCalendar.disableQuickCreate = true;
