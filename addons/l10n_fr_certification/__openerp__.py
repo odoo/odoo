@@ -19,6 +19,7 @@
     'application': False,
     'data': [
         'data/account_move.xml',
+        'views/res_config.xml',
     ],
     'post_init_hook': '_setup_inalterability',
 }

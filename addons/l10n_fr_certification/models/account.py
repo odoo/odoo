@@ -113,7 +113,7 @@ class AccountMove(models.Model):
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
-            raise UserError(_('There isn\'t any sales entry flagged for data inalterability yet. This mechanism only runs for sales entries generated after the installation of the module France - Certification CGI 286 I-3 bis.'))
+            raise UserError(_('There isn\'t any sales entry flagged for data inalterability yet for the company %s. This mechanism only runs for sales entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.user.company_id.name)
         previous_hash = ''
         start_move_info = []
         for move in moves:
