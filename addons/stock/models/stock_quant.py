@@ -48,7 +48,6 @@ class StockQuant(models.Model):
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
 
-    @api.multi
     def action_view_stock_moves(self):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
@@ -60,20 +59,17 @@ class StockQuant(models.Model):
             ('package_id', '=', self.package_id.id)]
         return action
 
-    @api.multi
     @api.constrains('product_id')
     def check_product_id(self):
         if any(elem.product_id.type != 'product' for elem in self):
             raise ValidationError(_('Quants cannot be created for consumables or services.'))
 
-    @api.multi
     @api.constrains('quantity')
     def check_quantity(self):
         for quant in self:
             if quant.quantity > 1 and quant.lot_id and quant.product_id.tracking == 'serial':
                 raise ValidationError(_('A serial number should only be linked to a single product.'))
 
-    @api.multi
     @api.constrains('in_date', 'lot_id')
     def check_in_date(self):
         for quant in self:
@@ -304,7 +300,6 @@ class QuantPackage(models.Model):
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
 
-    @api.multi
     def name_get(self):
         return list(self._compute_complete_name().items())
 
@@ -324,7 +319,6 @@ class QuantPackage(models.Model):
         else:
             self.current_picking_move_line_ids = False
             self.current_picking_id = False
-
 
     def _search_location(self, operator, value):
         if value:
@@ -367,7 +361,6 @@ class QuantPackage(models.Model):
                 raise UserError(_('Everything inside a package should be in the same location'))
         return True
 
-    @api.multi
     def unpack(self):
         for package in self:
             move_lines_to_remove = self.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
@@ -382,16 +375,13 @@ class QuantPackage(models.Model):
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
-    @api.multi
     def view_content_package(self):
         action = self.env['ir.actions.act_window'].for_xml_id('stock', 'quantsact')
         action['domain'] = [('id', 'in', self._get_contained_quants().ids)]
         return action
-    get_content_package = view_content_package
 
     def _get_contained_quants(self):
         return self.env['stock.quant'].search([('package_id', 'child_of', self.ids)])
-    get_content = _get_contained_quants
 
     def _get_all_products_quantities(self):
         '''This function computes the different product quantities for the given package

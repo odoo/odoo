@@ -302,7 +302,7 @@ class MrpProduction(models.Model):
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
             production._adjust_procure_method()
-            production.move_raw_ids.action_confirm()
+            production.move_raw_ids._action_confirm()
         return True
 
     def _generate_finished_moves(self):
@@ -322,7 +322,7 @@ class MrpProduction(models.Model):
             'propagate': self.propagate,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
         })
-        move.action_confirm()
+        move._action_confirm()
         return move
 
     def _generate_raw_moves(self, exploded_lines):
@@ -402,7 +402,7 @@ class MrpProduction(models.Model):
             else:
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
-                move[0].action_cancel()
+                move[0]._action_cancel()
                 move[0].unlink()
             return move
         else:
@@ -411,7 +411,7 @@ class MrpProduction(models.Model):
     @api.multi
     def action_assign(self):
         for production in self:
-            production.move_raw_ids.action_assign()
+            production.move_raw_ids._action_assign()
         return True
 
     @api.multi
@@ -496,7 +496,7 @@ class MrpProduction(models.Model):
 
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            (finish_moves | raw_moves).action_cancel()
+            (finish_moves | raw_moves)._action_cancel()
 
         self.write({'state': 'cancel'})
         return True
@@ -510,11 +510,11 @@ class MrpProduction(models.Model):
         for order in self:
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves_to_do.action_done()
+            moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
-            moves_to_finish.action_done()
+            moves_to_finish._action_done()
             #order.action_assign()
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
@@ -535,14 +535,14 @@ class MrpProduction(models.Model):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
-        moves_to_cancel.action_cancel()
+        moves_to_cancel._action_cancel()
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         return self.write({'state': 'done'})
 
     @api.multi
     def do_unreserve(self):
         for production in self:
-            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).do_unreserve()
+            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
         return True
 
     @api.multi

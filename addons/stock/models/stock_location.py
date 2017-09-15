@@ -79,7 +79,6 @@ class Location(models.Model):
             name = '%s/%s' % (current.name, name)
         self.complete_name = name
 
-    @api.multi
     def name_get(self):
         ret_list = []
         for location in self:
@@ -109,7 +108,6 @@ class Location(models.Model):
             current_location = current_location.location_id
         return putaway_location
 
-    @api.multi
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
@@ -149,7 +147,6 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    @api.multi
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)
@@ -158,7 +155,6 @@ class Route(models.Model):
             self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
         return res
 
-    @api.multi
     def view_product_ids(self):
         return {
             'name': _('Products'),
@@ -169,7 +165,6 @@ class Route(models.Model):
             'domain': [('route_ids', 'in', self.ids)],
         }
 
-    @api.multi
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
@@ -228,7 +223,7 @@ class PushedFlow(models.Model):
             new_move_vals = self._prepare_move_copy_values(move, new_date)
             new_move = move.copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move.action_confirm()
+            new_move._action_confirm()
 
     def _prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = {

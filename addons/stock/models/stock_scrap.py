@@ -66,7 +66,6 @@ class StockScrap(models.Model):
         scrap.do_scrap()
         return scrap
 
-    @api.multi
     def unlink(self):
         if 'done' in self.mapped('state'):
             raise UserError(_('You cannot delete a scrap which is done.'))
@@ -75,7 +74,6 @@ class StockScrap(models.Model):
     def _get_origin_moves(self):
         return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
 
-    @api.multi
     def do_scrap(self):
         for scrap in self:
             move = self.env['stock.move'].create(scrap._prepare_move_values())
@@ -89,7 +87,7 @@ class StockScrap(models.Model):
                 ]).mapped('quantity'))
                 if quantity_in_stock < move.product_qty:  # FIXME: float compare
                     raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
-            move.action_done()
+            move._action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
         return True
 
@@ -116,18 +114,12 @@ class StockScrap(models.Model):
             'picking_id': self.picking_id.id
         }
 
-    @api.multi
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
         action['domain'] = [('id', '=', self.picking_id.id)]
         return action
 
-    @api.multi
     def action_get_stock_move(self):
         action = self.env.ref('stock.stock_move_action').read([])[0]
         action['domain'] = [('id', '=', self.move_id.id)]
         return action
-
-    @api.multi
-    def action_done(self):
-        return {'type': 'ir.actions.act_window_close'}

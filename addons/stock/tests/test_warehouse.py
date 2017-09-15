@@ -19,7 +19,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_1.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         # As done in common.py, there is already an inventory line existing
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 50.0)
@@ -99,20 +99,20 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(customer_move.location_dest_id, self.env.ref('stock.stock_location_customers'))
 
         # confirm move, check quantity on hand and virtually available, without location context
-        customer_move.action_confirm()
+        customer_move._action_confirm()
         self.assertEqual(product.qty_available, 0.0)
         self.assertEqual(product.virtual_available, -5.0)
 
         customer_move.quantity_done = 5
-        customer_move.action_done()
+        customer_move._action_done()
         self.assertEqual(product.qty_available, -5.0)
 
         # compensate negative quants by receiving products from supplier
         receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse_1.lot_stock_id, product_uom_qty=15)
 
-        receive_move.action_confirm()
+        receive_move._action_confirm()
         receive_move.quantity_done = 15
-        receive_move.action_done()
+        receive_move._action_done()
 
         product._compute_quantities()
         self.assertEqual(product.qty_available, 10.0)
@@ -121,13 +121,13 @@ class TestWarehouse(TestStockCommon):
         # new move towards customer
         customer_move_2 = self._create_move(product, self.warehouse_1.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=2)
 
-        customer_move_2.action_confirm()
+        customer_move_2._action_confirm()
         product._compute_quantities()
         self.assertEqual(product.qty_available, 10.0)
         self.assertEqual(product.virtual_available, 8.0)
 
         customer_move_2.quantity_done = 2.0
-        customer_move_2.action_done()
+        customer_move_2._action_done()
         product._compute_quantities()
         self.assertEqual(product.qty_available, 8.0)
 
@@ -208,7 +208,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': stock_location.id,
             'product_id': productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
         self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0

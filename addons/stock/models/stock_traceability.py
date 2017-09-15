@@ -292,7 +292,6 @@ class MrpStockReport(models.TransientModel):
             final_vals += self.make_dict_head(level, model=model, stream=stream, parent_id=parent_id, move_line=line)
         return final_vals
 
-    @api.multi
     def get_pdf_lines(self, line_data=[]):
         final_vals = []
         lines = []

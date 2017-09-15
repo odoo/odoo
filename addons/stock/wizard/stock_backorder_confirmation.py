@@ -25,10 +25,8 @@ class StockBackorderConfirmation(models.TransientModel):
             backorder_pick.action_cancel()
             self.pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
 
-    @api.multi
     def process(self):
         self._process()
 
-    @api.multi
     def process_cancel_backorder(self):
         self._process(cancel_backorder=True)

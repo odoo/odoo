@@ -56,11 +56,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
@@ -71,7 +71,7 @@ class StockMove(TransactionCase):
         move_line.qty_done = 100.0
 
         # validation
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(move1.state, 'done')
         # no quants are created in the supplier location
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location), 0.0)
@@ -98,11 +98,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         move_line = move1.move_line_ids[0]
@@ -111,7 +111,7 @@ class StockMove(TransactionCase):
         move_line.qty_done = 5.0
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation
 
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
@@ -143,11 +143,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 5)
         move_line = move1.move_line_ids[0]
@@ -161,7 +161,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.quantity_done, 5.0)
         self.assertEqual(move1.product_qty, 5)  # don't change reservation
 
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(move1.quantity_done, 5.0)
         self.assertEqual(move1.product_qty, 5)  # don't change reservation
@@ -200,11 +200,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
@@ -218,7 +218,7 @@ class StockMove(TransactionCase):
         move_line.qty_done = 100.0
 
         # validation
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(move1.state, 'done')
         # Check there is one quant in customer location
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 100.0)
@@ -249,11 +249,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
@@ -267,7 +267,7 @@ class StockMove(TransactionCase):
         move_line.qty_done = 100.0
 
         # validation
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(move1.state, 'done')
         # no quants are created in the customer location since it's a consumable
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 0.0)
@@ -298,8 +298,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(len(move1.move_line_ids), 2)
 
@@ -330,8 +330,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 4.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(len(move1.move_line_ids), 4)
         for ml in move1.move_line_ids:
             self.assertEqual(ml.product_qty, 1.0)
@@ -360,7 +360,7 @@ class StockMove(TransactionCase):
 
         move1.move_line_ids.write({'qty_done': 1.0})
 
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
@@ -395,10 +395,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.write({'qty_done': 1.0})
-        move1.action_done()
+        move1._action_done()
 
         self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 2)
         lot3 = self.env['stock.production.lot'].create({
@@ -462,10 +462,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.write({'qty_done': 1.0})
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
@@ -493,8 +493,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'confirmed')
 
         # create an untracked quant
@@ -518,7 +518,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.reserved_availability, 0)
 
         # validating the move line should move the lot, not create a negative quant in stock
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 0.0)
 
@@ -533,8 +533,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
 
         lot1 = self.env['stock.production.lot'].create({
@@ -554,7 +554,7 @@ class StockMove(TransactionCase):
         move_line.qty_done = 1
 
         # validating the move line should move the lot, not create a negative quant in stock
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 0.0)
 
@@ -585,8 +585,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(len(move1.move_line_ids), 2)
         for ml in move1.move_line_ids:
             self.assertEqual(ml.product_qty, 1.0)
@@ -597,7 +597,7 @@ class StockMove(TransactionCase):
 
         move1.move_line_ids.write({'qty_done': 1.0})
 
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
@@ -636,11 +636,11 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
@@ -708,8 +708,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.reserved_availability, 1.0)
 
@@ -734,17 +734,17 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.availability, 100.0)
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 50.0)
 
         # unreserve
-        move1.do_unreserve()
+        move1._do_unreserve()
         self.assertEqual(len(move1.move_line_ids), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 150.0)
         self.assertEqual(move1.state, 'confirmed')
@@ -772,17 +772,17 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.availability, 100.0)
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, package_id=package1), 50.0)
 
         # unreserve
-        move1.do_unreserve()
+        move1._do_unreserve()
         self.assertEqual(len(move1.move_line_ids), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, package_id=package1), 150.0)
         self.assertEqual(move1.state, 'confirmed')
@@ -807,11 +807,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
@@ -821,7 +821,7 @@ class StockMove(TransactionCase):
         self.assertEqual(quants.quantity, 2.0)
         self.assertEqual(quants.reserved_quantity, 2.0)
 
-        move1.do_unreserve()
+        move1._do_unreserve()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
         self.assertEqual(len(quants), 1.0)
         self.assertEqual(quants.quantity, 2.0)
@@ -848,11 +848,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'partially_available')
         self.assertEqual(len(move1.move_line_ids), 1)
 
@@ -862,7 +862,7 @@ class StockMove(TransactionCase):
         self.assertEqual(quants.quantity, 2.0)
         self.assertEqual(quants.reserved_quantity, 2.0)
 
-        move1.do_unreserve()
+        move1._do_unreserve()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
         self.assertEqual(len(quants), 1.0)
         self.assertEqual(quants.quantity, 2.0)
@@ -894,14 +894,14 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
-        move1.do_unreserve()
+        move1._do_unreserve()
 
         quants = self.env['stock.quant']._gather(self.product1, self.stock_location)
         self.assertEqual(len(quants), 2.0)
@@ -935,10 +935,10 @@ class StockMove(TransactionCase):
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
 
-        (move_stock_pack + move_pack_cust).action_confirm()
-        move_stock_pack.action_assign()
+        (move_stock_pack + move_pack_cust)._action_confirm()
+        move_stock_pack._action_assign()
         move_stock_pack.move_line_ids[0].qty_done = 1.0
-        move_stock_pack.action_done()
+        move_stock_pack._action_done()
         self.assertEqual(len(move_pack_cust.move_line_ids), 1)
         move_line = move_pack_cust.move_line_ids[0]
         self.assertEqual(move_line.location_id.id, self.pack_location.id)
@@ -977,8 +977,8 @@ class StockMove(TransactionCase):
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
 
-        (move_stock_pack + move_pack_cust).action_confirm()
-        move_stock_pack.action_assign()
+        (move_stock_pack + move_pack_cust)._action_confirm()
+        move_stock_pack._action_assign()
 
         move_line_stock_pack = move_stock_pack.move_line_ids[0]
         self.assertEqual(move_line_stock_pack.lot_id.id, lot1.id)
@@ -987,7 +987,7 @@ class StockMove(TransactionCase):
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.pack_location, lot1)), 0.0)
 
         move_line_stock_pack.qty_done = 1.0
-        move_stock_pack.action_done()
+        move_stock_pack._action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location, lot1)), 0.0)
 
@@ -1032,14 +1032,14 @@ class StockMove(TransactionCase):
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
 
-        (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust).action_confirm()
+        (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
         # assign and fulfill the first move
-        move_stock_pack_1.action_assign()
+        move_stock_pack_1._action_assign()
         self.assertEqual(move_stock_pack_1.state, 'assigned')
         self.assertEqual(len(move_stock_pack_1.move_line_ids), 1)
         move_stock_pack_1.move_line_ids[0].qty_done = 1.0
-        move_stock_pack_1.action_done()
+        move_stock_pack_1._action_done()
         self.assertEqual(move_stock_pack_1.state, 'done')
 
         # the destination move should be partially available and have one move line
@@ -1049,11 +1049,11 @@ class StockMove(TransactionCase):
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.pack_location)), 1.0)
 
-        move_stock_pack_2.action_assign()
+        move_stock_pack_2._action_assign()
         self.assertEqual(move_stock_pack_2.state, 'assigned')
         self.assertEqual(len(move_stock_pack_2.move_line_ids), 1)
         move_stock_pack_2.move_line_ids[0].qty_done = 1.0
-        move_stock_pack_2.action_done()
+        move_stock_pack_2._action_done()
         self.assertEqual(move_stock_pack_2.state, 'done')
 
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
@@ -1108,23 +1108,23 @@ class StockMove(TransactionCase):
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
 
-        (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust).action_confirm()
+        (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
         # assign and fulfill the first move
-        move_stock_pack_1.action_assign()
+        move_stock_pack_1._action_assign()
         self.assertEqual(len(move_stock_pack_1.move_line_ids), 1)
         self.assertEqual(move_stock_pack_1.move_line_ids[0].lot_id.id, lot1.id)
         move_stock_pack_1.move_line_ids[0].qty_done = 1.0
-        move_stock_pack_1.action_done()
+        move_stock_pack_1._action_done()
 
         # the destination move should be partially available and have one move line
         self.assertEqual(len(move_pack_cust.move_line_ids), 1)
 
-        move_stock_pack_2.action_assign()
+        move_stock_pack_2._action_assign()
         self.assertEqual(len(move_stock_pack_2.move_line_ids), 1)
         self.assertEqual(move_stock_pack_2.move_line_ids[0].lot_id.id, lot1.id)
         move_stock_pack_2.move_line_ids[0].qty_done = 1.0
-        move_stock_pack_2.action_done()
+        move_stock_pack_2._action_done()
 
         self.assertEqual(len(move_pack_cust.move_line_ids), 1)
         move_line_1 = move_pack_cust.move_line_ids[0]
@@ -1169,13 +1169,13 @@ class StockMove(TransactionCase):
         move_pack_cust_1.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
         move_pack_cust_2.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
 
-        (move_stock_pack + move_pack_cust_1 + move_pack_cust_2).action_confirm()
+        (move_stock_pack + move_pack_cust_1 + move_pack_cust_2)._action_confirm()
 
         # assign and fulfill the first move
-        move_stock_pack.action_assign()
+        move_stock_pack._action_assign()
         self.assertEqual(len(move_stock_pack.move_line_ids), 1)
         move_stock_pack.move_line_ids[0].qty_done = 2.0
-        move_stock_pack.action_done()
+        move_stock_pack._action_done()
 
         # the destination moves should be available and have one move line
         self.assertEqual(len(move_pack_cust_1.move_line_ids), 1)
@@ -1183,7 +1183,7 @@ class StockMove(TransactionCase):
 
         move_pack_cust_1.move_line_ids[0].qty_done = 1.0
         move_pack_cust_2.move_line_ids[0].qty_done = 1.0
-        (move_pack_cust_1 + move_pack_cust_2).action_done()
+        (move_pack_cust_1 + move_pack_cust_2)._action_done()
 
     def test_link_assign_6(self):
         """ Test the assignment mechanism when four chained stock moves (2 sources, 2 dest) try to
@@ -1225,8 +1225,8 @@ class StockMove(TransactionCase):
         })
         move_stock_stock_2.write({'move_orig_ids': [(4, [move_supp_stock_1.id, move_supp_stock_2.id], 0)]})
 
-        (move_supp_stock_1 + move_supp_stock_2 + move_stock_stock_1 + move_stock_stock_2).action_confirm()
-        move_supp_stock_1.action_assign()
+        (move_supp_stock_1 + move_supp_stock_2 + move_stock_stock_1 + move_stock_stock_2)._action_confirm()
+        move_supp_stock_1._action_assign()
         self.assertEqual(move_supp_stock_1.state, 'assigned')
         self.assertEqual(move_supp_stock_2.state, 'confirmed')
         self.assertEqual(move_stock_stock_1.state, 'waiting')
@@ -1236,7 +1236,7 @@ class StockMove(TransactionCase):
         # do the fist move, it'll bring 3 units in stock location so only `move_stock_stock_1`
         # should be assigned
         move_supp_stock_1.move_line_ids.qty_done = 3.0
-        move_supp_stock_1.action_done()
+        move_supp_stock_1._action_done()
         self.assertEqual(move_supp_stock_1.state, 'done')
         self.assertEqual(move_supp_stock_2.state, 'confirmed')
         self.assertEqual(move_stock_stock_1.state, 'assigned')
@@ -1269,15 +1269,15 @@ class StockMove(TransactionCase):
 
         # reserve those move
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         self.assertEqual(move2.state, 'confirmed')
 
         # force assign the second one
-        move2.force_assign()
+        move2._force_assign()
         self.assertEqual(move2.state, 'assigned')
 
         # use the product from the first one
@@ -1292,7 +1292,7 @@ class StockMove(TransactionCase):
             'location_id': move2.location_id.id,
             'location_dest_id': move2.location_dest_id.id,
         })]})
-        move2.action_done()
+        move2._action_done()
 
         # the first move should go back to confirmed
         self.assertEqual(move1.state, 'confirmed')
@@ -1330,15 +1330,15 @@ class StockMove(TransactionCase):
 
         # reserve those move
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 1.0)
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         self.assertEqual(move2.state, 'confirmed')
 
         # force assign the second one
-        move2.force_assign()
+        move2._force_assign()
         self.assertEqual(move2.state, 'assigned')
 
         # use the product from the first one
@@ -1353,7 +1353,7 @@ class StockMove(TransactionCase):
             'location_id': move2.location_id.id,
             'location_dest_id': move2.location_dest_id.id,
         })]})
-        move2.action_done()
+        move2._action_done()
 
         # the first move should go back to confirmed
         self.assertEqual(move1.state, 'confirmed')
@@ -1388,8 +1388,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), 1.0)
@@ -1428,8 +1428,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(move1.reserved_availability, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
@@ -1464,8 +1464,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, package_id=package1), 0.0)
@@ -1499,8 +1499,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, owner_id=owner1), 0.0)
@@ -1542,8 +1542,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1, package_id=package1), 0.0)
@@ -1584,8 +1584,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), 0.0)
@@ -1624,11 +1624,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
         move_line = move1.move_line_ids[0]
@@ -1638,7 +1638,7 @@ class StockMove(TransactionCase):
         move_line.with_context(debug=True).lot_id = lot1
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation when assgning a lot now
 
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
@@ -1677,11 +1677,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'draft')
 
         # confirmation
-        move1.action_confirm()
+        move1._action_confirm()
         self.assertEqual(move1.state, 'confirmed')
 
         # assignment
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 2)
 
@@ -1702,7 +1702,7 @@ class StockMove(TransactionCase):
         untracked_move_line.qty_done = 3
         self.assertEqual(untracked_move_line.product_qty, 3)  # don't change reservation
 
-        move1.action_done()
+        move1._action_done()
         self.assertEqual(untracked_move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(tracked_move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
@@ -1744,10 +1744,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), 1.0)
@@ -1786,10 +1786,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 0.0)
@@ -1824,10 +1824,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, package_id=package1), 0.0)
@@ -1860,10 +1860,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, owner_id=owner1), 0.0)
@@ -1904,10 +1904,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1, package_id=package1), 0.0)
@@ -1947,10 +1947,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf2_location), 0.0)
@@ -1993,10 +1993,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         move2 = self.env['stock.move'].create({
             'name': 'test_edit_moveline_1',
@@ -2006,8 +2006,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
 
         self.assertEqual(move2.state, 'assigned')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
@@ -2044,10 +2044,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(move1.product_uom_qty, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
@@ -2084,10 +2084,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(move1.product_uom_qty, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, shelf1_location), 0.0)
@@ -2113,10 +2113,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 10
-        move1.action_done()
+        move1._action_done()
 
         quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
         self.assertEqual(len(quant), 1.0)
@@ -2359,12 +2359,12 @@ class StockMove(TransactionCase):
 
         picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
         # should raise because no serial numbers were specified
-        self.assertRaises(UserError, picking.do_new_transfer)
+        self.assertRaises(UserError, picking.button_validate)
 
         picking_type_id.use_create_lots = False
         picking_type_id.use_existing_lots = False
         picking = self._create_picking_test_immediate_validate_5(picking_type_id, product_id)
-        picking.do_new_transfer()
+        picking.button_validate()
         self.assertEqual(picking.state, 'done')
 
     def test_immediate_validate_5(self):
@@ -2439,8 +2439,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
-        (move1 + move2).action_confirm()
-        (move1 + move2).force_assign()
+        (move1 + move2)._action_confirm()
+        (move1 + move2)._force_assign()
         (move1 + move2).write({'quantity_done': 1})
         self.assertEqual(move1.quantity_done, 1)
         self.assertEqual(move2.quantity_done, 1)
@@ -2509,8 +2509,8 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
@@ -2535,11 +2535,11 @@ class StockMove(TransactionCase):
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.lot_name = 'lot1'
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         quant = self.env['stock.quant']._gather(self.product3, self.stock_location)
         self.assertEqual(len(quant), 1.0)
@@ -2556,10 +2556,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         move2.move_line_ids.qty_done = 1
-        move2.action_done()
+        move2._action_done()
 
         quant = self.env['stock.quant']._gather(self.product3, self.pack_location)
         self.assertEqual(len(quant), 1.0)
@@ -2588,11 +2588,11 @@ class StockMove(TransactionCase):
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.lot_id = lot1
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         # receive lot2
         move2 = self.env['stock.move'].create({
@@ -2604,11 +2604,11 @@ class StockMove(TransactionCase):
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         move2.move_line_ids.lot_id = lot2
         move2.move_line_ids.qty_done = 1
-        move2.action_done()
+        move2._action_done()
 
         initial_in_date_lot2 = self.env['stock.quant'].search([
             ('location_id', '=', self.stock_location.id),
@@ -2635,10 +2635,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move3.action_confirm()
-        move3.action_assign()
+        move3._action_confirm()
+        move3._action_assign()
         move3.move_line_ids.qty_done = 1
-        move3.action_done()
+        move3._action_done()
         quant_in_pack = self.env['stock.quant'].search([
             ('product_id', '=', self.product3.id),
             ('location_id', '=', self.pack_location.id),
@@ -2693,11 +2693,11 @@ class StockMove(TransactionCase):
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.lot_id = lot1
         move1.move_line_ids.qty_done = 1
-        move1.action_done()
+        move1._action_done()
 
         # receive lot2
         move2 = self.env['stock.move'].create({
@@ -2709,11 +2709,11 @@ class StockMove(TransactionCase):
             'product_uom_qty': 1.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         move2.move_line_ids.lot_id = lot2
         move2.move_line_ids.qty_done = 1
-        move2.action_done()
+        move2._action_done()
 
         initial_in_date_lot2 = self.env['stock.quant'].search([
             ('location_id', '=', self.stock_location.id),
@@ -2740,10 +2740,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move3.action_confirm()
-        move3.action_assign()
+        move3._action_confirm()
+        move3._action_assign()
         move3.move_line_ids.qty_done = 1
-        move3.action_done()
+        move3._action_done()
 
         # Now, also move lot2
         self.env['stock.move.line'].create({
@@ -2781,10 +2781,10 @@ class StockMove(TransactionCase):
             'product_uom_qty': 10.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.move_line_ids.qty_done = 10
-        move1.action_done()
+        move1._action_done()
 
         self.assertEqual(self.product1.qty_available, 10.0)
 
@@ -2796,10 +2796,10 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
-        move2.action_confirm()
-        move2.action_assign()
+        move2._action_confirm()
+        move2._action_assign()
         move2.move_line_ids.qty_done = 5
-        move2.action_done()
+        move2._action_done()
 
         self.assertEqual(self.product1.qty_available, 5.0)
         self.assertEqual(self.product1.with_context(company_owned=True).qty_available, 10.0)
@@ -2820,15 +2820,15 @@ class StockMove(TransactionCase):
 
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
 
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move_line = move1.move_line_ids
 
         default = {'product_uom_qty': 3,
                    'qty_done': 3}
         move_line.copy(default=default)
         move_line.with_context(bypass_reservation_update=True).write({'product_uom_qty': 7, 'qty_done': 0})
-        move1.action_done()
+        move1._action_done()
 
         new_move = self.env['stock.move'].search([('name', '=', 'test_split_1'), ('state', '=', 'confirmed')])
 
@@ -2850,12 +2850,12 @@ class StockMove(TransactionCase):
             'product_uom_qty': 10.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.product_uom_qty = 15
         self.assertEqual(move1.state, 'partially_available')
 
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 15)
         self.assertEqual(len(move1.move_line_ids), 1)
@@ -2874,13 +2874,13 @@ class StockMove(TransactionCase):
             'product_uom_qty': 10.0,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        move1.action_confirm()
-        move1.action_assign()
+        move1._action_confirm()
+        move1._action_assign()
         move1.product_uom_qty = 5
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(len(move1.move_line_ids), 0)
 
-        move1.action_assign()
+        move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)

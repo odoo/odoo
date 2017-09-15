@@ -1075,7 +1075,7 @@ class TestStockFlow(TestStockCommon):
         inventory = self.InvObj.create({'name': 'Test',
                                         'product_id': self.UnitA.id,
                                         'filter': 'product'})
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
             'inventory_id': inventory.id,
@@ -1093,7 +1093,7 @@ class TestStockFlow(TestStockCommon):
         inventory = self.InvObj.create({'name': 'Test',
                                         'product_id': self.UnitA.id,
                                         'filter': 'product'})
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', self.UnitA.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(inventory_line.product_qty, 120, "Wrong product quantity in inventory line.")
@@ -1117,7 +1117,7 @@ class TestStockFlow(TestStockCommon):
         inventory = self.InvObj.create({'name': 'Inventory Product KG',
                                         'product_id': productKG.id,
                                         'filter': 'product'})
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         inventory_line = self.InvLineObj.create({
             'inventory_id': inventory.id,
@@ -1134,7 +1134,7 @@ class TestStockFlow(TestStockCommon):
         inventory = self.InvObj.create({'name': 'Test',
                                         'product_id': productKG.id,
                                         'filter': 'product'})
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "One inventory line should be created.")
         inventory_line = self.InvLineObj.search([('product_id', '=', productKG.id), ('inventory_id', '=', inventory.id)], limit=1)
         self.assertEqual(inventory_line.product_qty, 5000, "Wrong product quantity in inventory line.")
@@ -1160,7 +1160,7 @@ class TestStockFlow(TestStockCommon):
         inventory = self.InvObj.create({'name': 'Test Partial and Pack',
                                         'filter': 'partial',
                                         'location_id': self.stock_location})
-        inventory.prepare_inventory()
+        inventory.action_start()
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.production.lot']
         pack1 = pack_obj.create({'name': 'PACK00TEST1'})
@@ -1186,7 +1186,7 @@ class TestStockFlow(TestStockCommon):
         inventory2 = self.InvObj.create({'name': 'Test Partial Lot and Pack2',
                                          'filter': 'partial',
                                          'location_id': self.stock_location})
-        inventory2.prepare_inventory()
+        inventory2.action_start()
         line_vals = []
         line_vals += [{'location_id': self.stock_location, 'product_id': packproduct.id, 'product_qty': 20, 'product_uom_id': packproduct.uom_id.id}]
         line_vals += [{'location_id': self.stock_location, 'product_id': lotproduct.id, 'product_qty': 0, 'product_uom_id': lotproduct.uom_id.id, 'prod_lot_id': False}]
@@ -1211,7 +1211,7 @@ class TestStockFlow(TestStockCommon):
                                     'category_id': category_id
                                 })
         # Start Inventory
-        inventory3.prepare_inventory()
+        inventory3.action_start()
         # check all products have given category id
         products_category = inventory3.line_ids.mapped('product_id.categ_id')
         self.assertEqual(len(products_category), 1, "Inventory line should have only one category")
@@ -1224,7 +1224,7 @@ class TestStockFlow(TestStockCommon):
                                     'category_id': category_id,
                                     'exhausted': True,
                                 })
-        inventory4.prepare_inventory()
+        inventory4.action_start()
         inventory4._get_inventory_lines_values()
         inventory4_lines_count = len(inventory4.line_ids)
         inventory4.action_done()
@@ -1238,7 +1238,7 @@ class TestStockFlow(TestStockCommon):
                                     'category_id': category_id,
                                     'exhausted': True,
                                 })
-        inventory5.prepare_inventory()
+        inventory5.action_start()
         inventory5._get_inventory_lines_values()
         inventory5_lines_count = len(inventory5.line_ids)
         inventory5.action_done()
@@ -1795,13 +1795,13 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location})
 
         with self.assertRaises(UserError):
-            move_mto_alone.action_confirm()
-        move_with_ancestors.action_confirm()
-        other_move.action_confirm()
+            move_mto_alone._action_confirm()
+        move_with_ancestors._action_confirm()
+        other_move._action_confirm()
 
-        move_mto_alone.do_unreserve()
-        move_with_ancestors.do_unreserve()
-        other_move.do_unreserve()
+        move_mto_alone._do_unreserve()
+        move_with_ancestors._do_unreserve()
+        other_move._do_unreserve()
 
         self.assertEquals(move_mto_alone.state, "waiting")
         self.assertEquals(move_with_ancestors.state, "waiting")

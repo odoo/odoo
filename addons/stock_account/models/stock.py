@@ -148,10 +148,9 @@ class StockMove(models.Model):
         """
         return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
 
-    @api.multi
-    def action_done(self):
+    def _action_done(self):
         self.product_price_update_before_done()
-        res = super(StockMove, self).action_done()
+        res = super(StockMove, self)._action_done()
         for move in res:
             if move._is_in():
                 if move.product_id.cost_method in ['fifo', 'average']:

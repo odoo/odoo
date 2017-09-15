@@ -118,7 +118,6 @@ class Warehouse(models.Model):
             self._update_partner_data(vals['partner_id'], vals.get('company_id'))
         return warehouse
 
-    @api.multi
     def write(self, vals):
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)  # TDE FIXME: check this
@@ -251,7 +250,6 @@ class Warehouse(models.Model):
         PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
         return warehouse_data
 
-    @api.multi
     def create_routes(self):
         self.ensure_one()
         routes_data = self.get_routes_dict()
@@ -459,7 +457,6 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
         }) for warehouse in self)
 
-    @api.multi
     def _get_reception_delivery_route_values(self, route_type):
         return {
             'name': self._format_routename(route_type=route_type),
@@ -499,7 +496,6 @@ class Warehouse(models.Model):
     # Pull / Push tools
     # ------------------------------------------------------------
 
-    @api.multi
     def _get_push_pull_rules_values(self, route_values, values=None, push_values=None, pull_values=None, name_suffix=''):
         first_rule = True
         push_rules_list, pull_rules_list = [], []
@@ -584,7 +580,6 @@ class Warehouse(models.Model):
             '&', ('route_id', 'in', routes.ids),
             ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location.id})
 
-    @api.multi
     def _update_routes(self):
         routes_data = self.get_routes_dict()
         # change the default source and destination location and (de)activate operation types
@@ -601,7 +596,6 @@ class Warehouse(models.Model):
         for field_name, values in picking_type_values.items():
             self[field_name].write(values)
 
-    @api.multi
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
             self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
@@ -688,18 +682,15 @@ class Warehouse(models.Model):
             'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
         }
 
-    @api.multi
     def _format_rulename(self, from_loc, dest_loc, suffix):
         return '%s: %s -> %s%s' % (self.code, from_loc.name, dest_loc.name, suffix)
 
-    @api.multi
     def _format_routename(self, name=None, route_type=None):
         if route_type:
             name = self._get_route_name(route_type)
         return '%s: %s' % (self.name, name)
 
     @api.returns('self')
-    @api.multi
     def _get_all_routes(self):
         # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
@@ -707,7 +698,6 @@ class Warehouse(models.Model):
         return routes
     get_all_routes_for_wh = _get_all_routes
 
-    @api.multi
     def action_view_all_routes(self):
         routes = self._get_all_routes()
         return {
@@ -786,7 +776,6 @@ class Orderpoint(models.Model):
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
 
-    @api.multi
     def _quantity_in_progress(self):
         """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
         (example: purchases created from orderpoints)"""
@@ -822,7 +811,6 @@ class Orderpoint(models.Model):
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-    @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a procurement rule
         comming from an orderpoint. This method could be override in order to add other custom key that could

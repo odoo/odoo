@@ -13,7 +13,7 @@ class TestInventory(TestStockCommon):
 
         # create and confirm an incoming move of product 3
         incoming_move = self._create_move_in(self.product_3, self.warehouse_1, create_picking=True, product_uom_qty=50)
-        incoming_move.action_confirm()
+        incoming_move._action_confirm()
 
         # receive only 40 units of products; this will create a backorder of incoming shipment for the remaining 10
         pack_operation = self._create_pack_operation(

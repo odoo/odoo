@@ -244,7 +244,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,
@@ -294,7 +294,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,

@@ -75,7 +75,6 @@ class PickingType(models.Model):
                 tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('OK'), 'value': 1})
         self.last_done_picking = json.dumps(tristates)
 
-    @api.multi
     def _compute_picking_count(self):
         # TDE TODO count picking can be done using previous two
         domains = {
@@ -100,7 +99,6 @@ class PickingType(models.Model):
             record.rate_picking_late = record.count_picking and record.count_picking_late * 100 / record.count_picking or 0
             record.rate_picking_backorders = record.count_picking and record.count_picking_backorders * 100 / record.count_picking or 0
 
-    @api.multi
     def name_get(self):
         """ Display 'Warehouse_name: PickingType_name' """
         # TDE TODO remove context key support + update purchase
@@ -136,7 +134,6 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
-    @api.multi
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
@@ -144,23 +141,18 @@ class PickingType(models.Model):
             action['display_name'] = self.display_name
         return action
 
-    @api.multi
     def get_action_picking_tree_late(self):
         return self._get_action('stock.action_picking_tree_late')
 
-    @api.multi
     def get_action_picking_tree_backorder(self):
         return self._get_action('stock.action_picking_tree_backorder')
 
-    @api.multi
     def get_action_picking_tree_waiting(self):
         return self._get_action('stock.action_picking_tree_waiting')
 
-    @api.multi
     def get_action_picking_tree_ready(self):
         return self._get_action('stock.action_picking_tree_ready')
 
-    @api.multi
     def get_stock_picking_action_picking_type(self):
         return self._get_action('stock.stock_picking_action_picking_type')
 
@@ -449,7 +441,7 @@ class Picking(models.Model):
 
     @api.multi
     def unlink(self):
-        self.mapped('move_lines').action_cancel()
+        self.mapped('move_lines')._action_cancel()
         self.mapped('move_lines').unlink() # Checks if moves are not done
         return super(Picking, self).unlink()
 
@@ -467,14 +459,14 @@ class Picking(models.Model):
 
     @api.multi
     def action_confirm(self):
-        # call `action_confirm` on every draft move
+        # call `_action_confirm` on every draft move
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
-            .action_confirm()
-        # call `action_assign` on every confirmed move which location_id bypasses the reservation
+            ._action_confirm()
+        # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production'))\
             .filtered(lambda move: move.state == 'confirmed')\
-            .mapped('move_lines').action_assign()
+            .mapped('move_lines')._action_assign()
         return True
 
     @api.multi
@@ -488,7 +480,7 @@ class Picking(models.Model):
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
-        moves.action_assign()
+        moves._action_assign()
         return True
 
     @api.multi
@@ -496,12 +488,12 @@ class Picking(models.Model):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
         """
-        self.mapped('move_lines').filtered(lambda move: move.state in ['confirmed', 'waiting', 'partially_available']).force_assign()
+        self.mapped('move_lines').filtered(lambda move: move.state in ['confirmed', 'waiting', 'partially_available'])._force_assign()
         return True
 
     @api.multi
     def action_cancel(self):
-        self.mapped('move_lines').action_cancel()
+        self.mapped('move_lines')._action_cancel()
         return True
 
     @api.multi
@@ -548,10 +540,10 @@ class Picking(models.Model):
                                                     'picking_id': pick.id,
                                                    })
                     ops.move_id = new_move.id
-                    new_move.action_confirm()
+                    new_move._action_confirm()
                     todo_moves |= new_move
                     #'qty_done': ops.qty_done})
-        todo_moves.action_done()
+        todo_moves._action_done()
         self.write({'date_done': fields.Datetime.now()})
         return True
 
@@ -584,7 +576,7 @@ class Picking(models.Model):
     def do_unreserve(self):
         for move in self:
             for move_line in move.move_lines:
-                move_line.do_unreserve()
+                move_line._do_unreserve()
         self.write({'state': 'confirmed'})
 
     @api.multi
@@ -627,12 +619,10 @@ class Picking(models.Model):
             }
 
         # Check backorder should check for other barcodes
-        if self.check_backorder():
+        if self._check_backorder():
             return self.action_generate_backorder_wizard()
         self.action_done()
         return
-
-    do_new_transfer = button_validate #TODO: replace later
 
     def action_generate_backorder_wizard(self):
         view = self.env.ref('stock.view_backorder_confirmation')
@@ -654,7 +644,7 @@ class Picking(models.Model):
         self.is_locked = not self.is_locked
         return True
 
-    def check_backorder(self):
+    def _check_backorder(self):
         self.ensure_one()
         quantity_todo = {}
         quantity_done = {}
@@ -685,7 +675,7 @@ class Picking(models.Model):
                     vals = self._prepare_values_extra_move(move_line, product, remaining_qty)
                     moves |= moves.create(vals)
         if moves:
-            moves.with_context(skip_check=True).action_confirm()
+            moves.with_context(skip_check=True)._action_confirm()
         return moves
 
     @api.model
@@ -722,7 +712,6 @@ class Picking(models.Model):
             'group_id': picking.group_id.id,
         }
 
-    @api.multi
     def _create_backorder(self, backorder_moves=[]):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
@@ -751,7 +740,6 @@ class Picking(models.Model):
             backorders |= backorder_picking
         return backorders
 
-    @api.multi
     def _put_in_pack(self):
         package = False
         for pick in self:
@@ -777,11 +765,9 @@ class Picking(models.Model):
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
 
-    @api.multi
     def put_in_pack(self):
         return self._put_in_pack()
 
-    @api.multi
     def button_scrap(self):
         self.ensure_one()
         return {
@@ -795,7 +781,6 @@ class Picking(models.Model):
             'target': 'new',
         }
 
-    @api.multi
     def action_see_move_scrap(self):
         self.ensure_one()
         action = self.env.ref('stock.action_stock_scrap').read()[0]
@@ -803,7 +788,6 @@ class Picking(models.Model):
         action['domain'] = [('id', 'in', scraps.ids)]
         return action
 
-    @api.multi
     def action_see_packages(self):
         self.ensure_one()
         action = self.env.ref('stock.action_package_view').read()[0]

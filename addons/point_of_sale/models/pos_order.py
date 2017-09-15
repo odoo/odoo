@@ -673,9 +673,9 @@ class PosOrder(models.Model):
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
-                moves.action_assign()
+                moves._action_assign()
                 moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
-                moves.filtered(lambda m: m.product_id.tracking == 'none').action_done()
+                moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
         return True
 

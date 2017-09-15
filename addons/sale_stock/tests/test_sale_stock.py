@@ -141,7 +141,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.force_assign()
         pick.move_lines.write({'quantity_done': 5})
-        pick.do_new_transfer()
+        pick.button_validate()
 
         # Check quantity delivered
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
@@ -168,7 +168,7 @@ class TestSaleStock(TestSale):
         # Validate picking
         return_pick.force_assign()
         return_pick.move_lines.write({'quantity_done': 2})
-        return_pick.do_new_transfer()
+        return_pick.button_validate()
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)

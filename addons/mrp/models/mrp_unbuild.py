@@ -105,7 +105,7 @@ class MrpUnbuild(models.Model):
             })
         else:
             consume_move.quantity_done = consume_move.product_uom_qty
-        consume_move.action_done()
+        consume_move._action_done()
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         for produce_move in produce_moves:
@@ -128,7 +128,7 @@ class MrpUnbuild(models.Model):
                         needed_quantity -= taken_quantity
             else:
                 produce_move.quantity_done = produce_move.product_uom_qty
-        produce_moves.action_done()
+        produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
         consume_move.move_line_ids.write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
 
@@ -148,7 +148,7 @@ class MrpUnbuild(models.Model):
                 'origin': unbuild.name,
                 'consume_unbuild_id': unbuild.id,
             })
-            move.action_confirm()
+            move._action_confirm()
             moves += move
         return moves
 

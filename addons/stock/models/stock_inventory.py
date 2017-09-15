@@ -149,13 +149,10 @@ class Inventory(models.Model):
         if self.filter != 'pack' and self.package_id:
             raise UserError(_('The selected inventory options are not coherent.'))
 
-    @api.multi
     def action_reset_product_qty(self):
         self.mapped('line_ids').write({'product_qty': 0})
         return True
-    reset_real_qty = action_reset_product_qty
 
-    @api.multi
     def action_done(self):
         negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
         if negative:
@@ -165,14 +162,12 @@ class Inventory(models.Model):
         self.post_inventory()
         return True
 
-    @api.multi
     def post_inventory(self):
         # The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
         # as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
         # as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
-        self.mapped('move_ids').filtered(lambda move: move.state != 'done').action_done()
+        self.mapped('move_ids').filtered(lambda move: move.state != 'done')._action_done()
 
-    @api.multi
     def action_check(self):
         """ Checks the inventory and computes the stock move to do """
         # tde todo: clean after _generate_moves
@@ -181,15 +176,13 @@ class Inventory(models.Model):
             inventory.mapped('move_ids').unlink()
             inventory.line_ids._generate_moves()
 
-    @api.multi
     def action_cancel_draft(self):
-        self.mapped('move_ids').action_cancel()
+        self.mapped('move_ids')._action_cancel()
         self.write({
             'line_ids': [(5,)],
             'state': 'draft'
         })
 
-    @api.multi
     def action_start(self):
         for inventory in self:
             vals = {'state': 'confirm', 'date': fields.Datetime.now()}
@@ -197,9 +190,7 @@ class Inventory(models.Model):
                 vals.update({'line_ids': [(0, 0, line_values) for line_values in inventory._get_inventory_lines_values()]})
             inventory.write(vals)
         return True
-    prepare_inventory = action_start
 
-    @api.multi
     def action_inventory_line_tree(self):
         action = self.env.ref('stock.action_inventory_line_tree').read()[0]
         action['context'] = {
@@ -212,7 +203,6 @@ class Inventory(models.Model):
         }
         return action
 
-    @api.multi
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])

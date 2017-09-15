@@ -71,27 +71,24 @@ class StockMove(models.Model):
         else:
             return super(StockMove, self)._get_move_lines()
 
-    @api.multi
     @api.depends('state')
     def _compute_is_done(self):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
-    @api.multi
-    def action_assign(self):
-        res = super(StockMove, self).action_assign()
+    def _action_assign(self):
+        res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
                                                'workorder_id': move.workorder_id.id,})
         return res
 
-    @api.multi
-    def action_cancel(self):
+    def _action_cancel(self):
         if any(move.quantity_done for move in self): #TODO: either put in stock, or check there is a production order related to it
             raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
              If you want to cancel this MO, please change the consumed quantities to 0.'))
-        return super(StockMove, self).action_cancel()
+        return super(StockMove, self)._action_cancel()
 
     @api.multi
     # Could use split_move_operation from stock here
@@ -127,17 +124,12 @@ class StockMove(models.Model):
         }
         return result
 
-    @api.multi
-    def save(self):
-        return True
-
-    @api.multi
-    def action_confirm(self):
+    def _action_confirm(self):
         moves = self
         for move in self.filtered(lambda m: m.production_id):
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves).action_confirm()
+        return super(StockMove, moves)._action_confirm()
 
     def action_explode(self):
         """ Explodes pickings """

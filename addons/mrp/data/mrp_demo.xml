@@ -533,7 +533,7 @@
             <field name="bom_id" ref="mrp_bom_laptop_cust"/>
         </record>
 
-        <function model="stock.inventory" name="prepare_inventory" eval="[[ref('mrp.stock_inventory_product_laptop_charger'), ref('mrp.stock_inventory_product_laptop_keypad')]]"/>
+        <function model="stock.inventory" name="action_start" eval="[[ref('mrp.stock_inventory_product_laptop_charger'), ref('mrp.stock_inventory_product_laptop_keypad')]]"/>
 
         <function model="stock.inventory" name="action_done" eval="[[ref('stock_inventory_product_laptop_charger'), ref('stock_inventory_product_laptop_keypad')]]"/>
 

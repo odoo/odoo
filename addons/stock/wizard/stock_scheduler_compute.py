@@ -41,7 +41,6 @@ class StockSchedulerCompute(models.TransientModel):
             new_cr.close()
             return {}
 
-    @api.multi
     def procure_calculation(self):
         threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=())
         threaded_calculation.start()

@@ -18,7 +18,6 @@ class StockImmediateTransfer(models.TransientModel):
             res['pick_id'] = self._context['active_id']
         return res
 
-    @api.multi
     def process(self):
         self.ensure_one()
         # If still in draft => confirm and assign
@@ -34,6 +33,6 @@ class StockImmediateTransfer(models.TransientModel):
                     move_line.qty_done = move_line.product_uom_qty
             else:
                 move.quantity_done = move.product_uom_qty
-        if self.pick_id.check_backorder():
+        if self.pick_id._check_backorder():
             return self.pick_id.action_generate_backorder_wizard()
         self.pick_id.do_transfer()
