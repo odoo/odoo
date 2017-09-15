@@ -69,7 +69,7 @@ class TestWarehouse(common.TestMrpCommon):
             'line_ids': [
                 (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.ref('stock.stock_location_14')})
             ]})
-        (stock_inv_product_4 | stock_inv_product_2).prepare_inventory()
+        (stock_inv_product_4 | stock_inv_product_2).action_start()
         (stock_inv_product_4 | stock_inv_product_2).action_done()
 
         #Create Manufacturing order.

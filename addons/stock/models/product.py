@@ -84,12 +84,10 @@ class Product(models.Model):
             product.outgoing_qty = res[product.id]['outgoing_qty']
             product.virtual_available = res[product.id]['virtual_available']
 
-    @api.multi
     def _product_available(self, field_names=None, arg=False):
         """ Compatibility method """
         return self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
 
-    @api.multi
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
@@ -348,18 +346,15 @@ class Product(models.Model):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
-    @api.multi
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
-    @api.multi
     def action_view_stock_move_lines(self):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
         return action
 
-    @api.multi
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]
@@ -367,7 +362,6 @@ class Product(models.Model):
         action['context'] = {'default_product_id': self.id}
         return action
 
-    @api.multi
     def write(self, values):
         res = super(Product, self).write(values)
         if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
@@ -498,7 +492,6 @@ class ProductTemplate(models.Model):
     def onchange_tracking(self):
         return self.mapped('product_variant_ids').onchange_tracking()
 
-    @api.multi
     def write(self, vals):
         if 'uom_id' in vals:
             new_uom = self.env['product.uom'].browse(vals['uom_id'])
@@ -508,14 +501,12 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         return super(ProductTemplate, self).write(vals)
 
-    @api.multi
     def action_view_routes(self):
         routes = self.mapped('route_ids') | self.mapped('categ_id').mapped('total_route_ids') | self.env['stock.location.route'].search([('warehouse_selectable', '=', True)])
         action = self.env.ref('stock.action_routes_form').read()[0]
         action['domain'] = [('id', 'in', routes.ids)]
         return action
 
-    @api.multi
     def action_open_quants(self):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
@@ -523,7 +514,6 @@ class ProductTemplate(models.Model):
         action['context'] = {'search_default_internal_loc': 1}
         return action
 
-    @api.multi
     def action_view_orderpoints(self):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_orderpoint').read()[0]
@@ -534,14 +524,12 @@ class ProductTemplate(models.Model):
             action['context'] = {}
         return action
 
-    @api.multi
     def action_view_stock_move_lines(self):
         self.ensure_one()
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
 
-    @api.multi
     def action_open_product_lot(self):
         self.ensure_one()
         action = self.env.ref('stock.action_production_lot_form').read()[0]

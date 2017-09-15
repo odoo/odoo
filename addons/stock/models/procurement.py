@@ -62,7 +62,6 @@ class ProcurementRule(models.Model):
         'stock.warehouse', 'Warehouse to Propagate',
         help="The warehouse to propagate on the created move/procurement, which can be different of the warehouse this rule is for (e.g for resupplying rules from another warehouse)")
 
-    @api.multi
     def _run_move(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         if not self.location_src_id:
             msg = _('No source location defined on procurement rule: %s!') % (self.name, )
@@ -79,8 +78,8 @@ class ProcurementRule(models.Model):
         data = self._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         # Since action_confirm launch following procurement_group we should activate it.
         move = self.env['stock.move'].sudo().create(data)
-        move.assign_picking()
-        move.action_confirm()
+        move._assign_picking()
+        move._action_confirm()
         return True
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
@@ -249,7 +248,7 @@ class ProcurementGroup(models.Model):
             # Search all confirmed stock_moves and try to assign them
             confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
             for moves_chunk in split_every(100, confirmed_moves.ids):
-                self.env['stock.move'].browse(moves_chunk).action_assign()
+                self.env['stock.move'].browse(moves_chunk)._action_assign()
                 if use_new_cursor:
                     self._cr.commit()
 

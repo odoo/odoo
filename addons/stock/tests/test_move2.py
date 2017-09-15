@@ -785,7 +785,7 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'product_id': self.productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         inventory.line_ids.product_qty = 2
         inventory.action_done()
         delivery_order.action_assign()
@@ -842,7 +842,7 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'product_id': self.productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 2
         inventory.action_done()
@@ -902,7 +902,7 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'product_id': self.productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
             'location_id': inventory.location_id.id,
@@ -969,7 +969,7 @@ class TestSinglePicking(TestStockCommon):
             'location_id': self.stock_location,
             'product_id': self.productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.env['stock.inventory.line'].create({
             'inventory_id': inventory.id,
             'location_id': inventory.location_id.id,

@@ -76,14 +76,12 @@ class StockMoveLine(models.Model):
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
 
-    @api.multi
     @api.constrains('product_uom_qty')
     def check_reserved_done_quantity(self):
         for move_line in self:
             if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_rounding=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
-    @api.multi
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
@@ -122,11 +120,10 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
             next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
-            next_moves.do_unreserve()
-            next_moves.action_assign()
+            next_moves._do_unreserve()
+            next_moves._action_assign()
         return ml
 
-    @api.multi
     def write(self, vals):
         """ Through the interface, we allow users to change the charateristics of a move line. If a
         quantity has been reserved for this move line, we impact the reservation directly to free
@@ -195,7 +192,7 @@ class StockMoveLine(models.Model):
                         new_product_uom_qty = self.product_id.uom_id._compute_quantity(new_product_qty, self.product_uom_id, rounding_method='HALF-UP')
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
 
-        # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `action_assign` on the concerned moves.
+        # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         next_moves = self.env['stock.move']
         if updates or 'qty_done' in vals:
             for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product'):
@@ -240,11 +237,10 @@ class StockMoveLine(models.Model):
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
-        next_moves.do_unreserve()
-        next_moves.action_assign()
+        next_moves._do_unreserve()
+        next_moves._action_assign()
         return res
 
-    @api.multi
     def unlink(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
@@ -256,7 +252,7 @@ class StockMoveLine(models.Model):
                                                                    package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         return super(StockMoveLine, self).unlink()
 
-    def action_done(self):
+    def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
         location.

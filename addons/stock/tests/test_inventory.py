@@ -37,7 +37,7 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'product_id': self.product1.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 100)
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
@@ -57,7 +57,7 @@ class TestInventory(TransactionCase):
             'product_id': self.product2.id,
             'exhausted': True,  # should be set by an onchange
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
@@ -87,7 +87,7 @@ class TestInventory(TransactionCase):
             'product_id': self.product2.id,
             'exhausted': True,  # should be set by an onchange
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
@@ -113,7 +113,7 @@ class TestInventory(TransactionCase):
             'product_id': self.product2.id,
             'exhausted': True,  # should be set by an onchange
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
 
@@ -154,7 +154,7 @@ class TestInventory(TransactionCase):
             'product_id': self.product1.id,
             'exhausted': True,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
         inventory.line_ids.partner_id = owner1

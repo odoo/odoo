@@ -212,7 +212,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        # inventory.prepare_inventory()
+        # inventory.action_start()
         inventory.action_done()
 
         # Check consumed move status
@@ -382,7 +382,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        # inventory.prepare_inventory()
+        # inventory.action_start()
         inventory.action_done()
 
         # Start Production ...

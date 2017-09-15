@@ -414,12 +414,12 @@ class PurchaseOrder(models.Model):
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date_expected):
                     seq += 5
                     move.sequence = seq
-                moves.action_assign()
+                moves._action_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
@@ -655,8 +655,8 @@ class PurchaseOrderLine(models.Model):
                 for move_val in move_vals:
                     self.env['stock.move']\
                         .create(move_val)\
-                        .action_confirm()\
-                        .action_assign()
+                        ._action_confirm()\
+                        ._action_assign()
 
     @api.multi
     def _get_stock_move_price_unit(self):

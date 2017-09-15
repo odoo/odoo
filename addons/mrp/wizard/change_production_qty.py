@@ -55,7 +55,7 @@ class ChangeProductionQty(models.TransientModel):
                     operation_bom_qty[operation.id] = bom_data['qty']
             self._update_product_to_produce(production, production.product_qty - qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves.action_assign()
+            moves._action_assign()
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):
