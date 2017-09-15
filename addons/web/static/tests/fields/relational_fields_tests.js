@@ -481,6 +481,40 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+    QUnit.test('many2one in edit mode with "can_create option"', function (assert) {
+        assert.expect(2);
+
+        // create 10 partners to have the 'Search More' option in the autocomplete dropdown
+        for (var i=0; i<10; i++) {
+            var id = 20 + i;
+            this.data.partner.records.push({id: id, display_name: "Partner " + id});
+        }
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu" can_create="false"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+    
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+
+        assert.ok($dropdown.is(':visible'),
+                    'clicking on the m2o input should open the dropdown if it is not open yet');
+
+        assert.strictEqual($dropdown.find('li a:contains("Create and Edit...")').length, 0,
+                    'dropdown should not contain `Create and Edit...` ');
+        form.destroy();
+    });
 
     QUnit.test('many2one searches with correct value', function (assert) {
         var done = assert.async();
