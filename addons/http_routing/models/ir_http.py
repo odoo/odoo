@@ -29,7 +29,7 @@ odoo._geoip_resolver = None
 # Slug API
 # ------------------------------------------------------------
 
-def slugify(s, max_length=None):
+def slugify_one(s, max_length=None):
     """ Transform a string to a slug that can be used in a url path.
         This method will first try to do the job with python-slugify if present.
         Otherwise it will process string by stripping leading and ending spaces,
@@ -52,6 +52,13 @@ def slugify(s, max_length=None):
 
     return slug_str[:max_length]
 
+
+def slugify(s, max_length=None, allow_slash=False):
+    if not allow_slash:
+        return slugify_one(s, max_length=max_length)
+    else:
+        return '/'.join([slugify_one(u, max_length=max_length) for u in s.split('/') if slugify_one(u, max_length=max_length) != ''])
+        
 
 def slug(value):
     if isinstance(value, models.BaseModel):

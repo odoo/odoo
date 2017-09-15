@@ -217,22 +217,20 @@
 </template>
 
 <!-- Blog Post Complete -->
+<template id="blog_edit_options" inherit_id="website.user_navbar" name="Edit Blog Options">
+    <xpath expr="//li[@id='edit-in-backend']" position="after">
+        <li t-if="main_object._name == 'blog.post'">
+            <form class="duplicate hidden" action="/blog/post_duplicate" method="POST">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input name="blog_post_id" t-att-value="blog_post.id if blog_post else None"/>
+            </form>
+            <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
+        </li>
+    </xpath>
+</template>
 <template id="blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
         <div id="title" class="blog_header" t-ignore="True">
-            <div class="container" style="position: relative;">
-                <t t-call="website.publish_management">
-                    <t t-set="object" t-value="blog_post"/>
-                    <t t-set="publish_edit" t-value="True"/>
-                    <li>
-                        <form class="duplicate hidden" action="/blog/post_duplicate" method="POST">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <input name="blog_post_id" t-att-value="blog_post.id"/>
-                        </form>
-                        <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-                    </li>
-                </t>
-            </div>
             <t t-call="website_blog.blog_cover">
                 <t t-set="cover_properties" t-value="blog_post_cover_properties"/>
 
