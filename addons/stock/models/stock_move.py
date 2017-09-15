@@ -156,6 +156,12 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    reference = fields.Char(compute='_compute_stock_picking', string="Reference", store=True)
+
+    @api.depends('picking_id', 'name')
+    def _compute_stock_picking(self):
+        for move in self:
+            move.reference = move.picking_id.name if move.picking_id else move.name
 
     @api.multi
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
