@@ -52,18 +52,15 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="name"/>
-                    <field name="picking_id" string="Reference"/>
-                    <field name="origin"/>
+                    <field name="date" groups="base.group_no_one"/>
+                    <field name="reference"/>
                     <field name="picking_type_id" invisible="1"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="date" groups="base.group_no_one"/>
-                    <field name="date_expected" invisible="context.get('scrap_move')"/>  <!-- TDE FIXME: woooooo -->
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="state"/>
                 </tree>
             </field>
