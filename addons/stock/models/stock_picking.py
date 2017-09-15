@@ -310,7 +310,11 @@ class Picking(models.Model):
     @api.one
     @api.depends('move_lines.priority')
     def _compute_priority(self):
-        self.priority = self.mapped('move_lines') and max(self.mapped('move_lines').mapped('priority')) or '1'
+        if self.mapped('move_lines'):
+            priorities = [priority for priority in self.mapped('move_lines.priority') if priority] or ['1']
+            self.priority = max(priorities)
+        else:
+            self.priority = '1'
 
     @api.one
     def _set_priority(self):
