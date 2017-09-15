@@ -11,9 +11,8 @@
     </t>
 
     <t t-extend="mail.ChatWindowHeaderContent">
-        <t t-jquery=".o_chat_window_close" t-operation="before">
-            <a href="#" class="o_chat_window_expand fa fa-expand" title="
-            Open in Discuss"/>
+        <t t-jquery=".o_chat_window_buttons" t-operation="prepend">
+            <a href="#" class="o_chat_window_expand fa fa-expand" title="Open in Discuss"/>
         </t>
     </t>
 

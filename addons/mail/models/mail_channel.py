@@ -354,6 +354,13 @@ class Channel(models.Model):
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
                                           .read(['id', 'name', 'im_status']))
+
+            # add last message preview (only used in mobile)
+            if self._context.get('isMobile', False):
+                last_message = channel.channel_fetch_preview()
+                if last_message:
+                    info['last_message'] = last_message[0].get('last_message')
+
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
@@ -572,9 +579,9 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        channel_info = new_channel.channel_info('creation')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
 

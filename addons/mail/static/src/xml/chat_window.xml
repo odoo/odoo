@@ -41,12 +41,15 @@
     </t>
 
     <t t-name="mail.ChatWindowHeaderContent">
+        <span t-if="widget.isMobile">
+            <a href="#" class="o_chat_window_close fa fa-1x fa-arrow-left mr4"/>
+        </span>
         <span class="o_chat_title">
             <t t-if="status" t-call="mail.chat.UserStatus"/>
             <t t-esc="title"/>
             <span t-if="unread_counter"> (<t t-esc="unread_counter"/>)</span>
         </span>
-        <span class="o_chat_window_buttons">
+        <span t-if="!widget.isMobile" class="o_chat_window_buttons">
             <a href="#" class="o_chat_window_close fa fa-close"/>
         </span>
     </t>

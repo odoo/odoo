@@ -24,4 +24,37 @@
             display: none;
         }
     }
+
+    .o_chat_composer {
+        .o_composer {
+            .o_composer_input {
+                width: 80%;
+                > textarea {
+                    padding: 10px;
+                    font-size: 13px;
+                }
+                @media (max-width: @screen-xs-max) {
+                    width: 70%;
+                    > textarea {
+                        padding: 15px 10px;
+                    }
+                }
+            }
+            .o_chatter_composer_tools {
+                .o-position-absolute(@right: 0px, @top: 0px);
+                button {
+                    padding: 10px;
+                    @media (max-width: @screen-xs-max) {
+                        padding: 13px;
+                    }
+                    &.btn-icon {
+                        font-size: 1.3em;
+                    }
+                }
+            }
+        }
+        .o_composer_attachments_list {
+            margin: 0px;
+        }
+    }
 }

@@ -11,6 +11,10 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
+        @media (max-width: @screen-xs-max) {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
         border-bottom: 1px solid @odoo-color-silver-darker; // cannot use gray-lighter-darker as this file is also frontend
         text-align: center;
 
@@ -69,14 +73,12 @@
                 opacity: 0;
             }
         }
-        .o_thread_icons {
+        .o_thread_icon {
             cursor: pointer;
-            > .o_thread_icon {
-                opacity: 0;
-                &.fa-star {
-                    opacity: @mail-thread-icon-opacity;
-                    color: gold;
-                }
+            opacity: 0;
+            &.fa-star {
+                opacity: @mail-thread-icon-opacity;
+                color: gold;
             }
         }
 
@@ -84,7 +86,7 @@
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }
-            .o_thread_icons > * {
+            .o_thread_icon {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -207,9 +209,7 @@
 }
 
 .o_web_client.o_touch_device {
-    .o_thread_icons {
-        > .o_thread_icon {
-            opacity: @mail-thread-icon-opacity;
-        }
+    .o_mail_thread .o_thread_icon {
+        opacity: @mail-thread-icon-opacity;
     }
 }

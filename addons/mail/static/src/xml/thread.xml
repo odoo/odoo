@@ -3,10 +3,10 @@
 
     <t t-name="mail.ChatThread">
         <t t-if="messages.length">
-            <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.ASC"
+            <t t-if="options.display_load_more and options.display_order == ORDER.ASC"
                t-call="mail.ChatThread.LoadMore"/>
             <t t-call="mail.ChatThread.Content"/>
-            <t t-if="options.display_load_more &amp;&amp; options.display_order == ORDER.DESC"
+            <t t-if="options.display_load_more and options.display_order == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
         <t t-if="options.display_empty_channel">
@@ -133,23 +133,23 @@
     <t t-name="mail.ChatThread.Message">
         <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '')" t-att-data-message-id="message.id">
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
-                <t t-if="!message.mailto &amp;&amp; message.author_id[0]">
-                    <img t-if="message.avatar_src &amp;&amp; message.display_author"
+                <t t-if="!message.mailto and message.author_id[0]">
+                    <img t-if="message.avatar_src and message.display_author"
                         t-att-src="message.avatar_src"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
                         t-attf-class="o_thread_message_avatar img-circle #{message.author_redirect ? 'o_mail_redirect' : ''}"/>
                 </t>
                 <t t-if="message.mailto || !message.author_id[0]">
-                    <img t-if="message.avatar_src &amp;&amp; message.display_author"
+                    <img t-if="message.avatar_src and message.display_author"
                         t-att-src="message.avatar_src"
                         class="o_thread_message_avatar img-circle"/>
                 </t>
                 <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
                     <t t-esc="message.date.format('hh:mm')"/>
                 </span>
-                <i t-if="!message.display_author &amp;&amp; options.display_stars &amp;&amp; message.message_type != 'notification'"
-                    t-att-class="'fa o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
+                <i t-if="!message.display_author and options.display_stars and message.message_type != 'notification'"
+                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.id" title="Mark as Todo"/>
             </div>
             <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
@@ -163,23 +163,23 @@
                             <t t-esc="message.mailto"/>
                         </a>
                     </strong>
-                    <strong t-if="!message.mailto &amp;&amp; message.author_id[0]"
+                    <strong t-if="!message.mailto and message.author_id[0]"
                             data-oe-model="res.partner" t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
-                            t-attf-class="#{message.author_redirect ? 'o_mail_redirect' : ''}">
+                            t-attf-class="o_thread_author #{message.author_redirect ? 'o_mail_redirect' : ''}">
                         <t t-esc="message.displayed_author"/>
                     </strong>
-                    <strong t-if="!message.mailto &amp;&amp; !message.author_id[0]">
+                    <strong t-if="!message.mailto and !message.author_id[0]" class="o_thread_author">
                         <t t-esc="message.displayed_author"/>
                     </strong>
 
                     - <small class="o_mail_timestamp" t-att-title="message.date"><t t-esc="message.hour"/></small>
-                    <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; options.display_document_link">
-                        on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id"><t t-esc="message.record_name"/></a>
+                    <t t-if="message.model and (message.model != 'mail.channel') and options.display_document_link">
+                        <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link">on <t t-esc="message.record_name"/></a>
                     </t>
-                    <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
+                    <t t-if="message.origin_id and (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
-                    <span t-if="options.display_email_icon &amp;&amp; message.customer_email_data &amp;&amp; message.customer_email_data.length" class="o_thread_tooltip_container">
+                    <span t-if="options.display_email_icon and message.customer_email_data and message.customer_email_data.length" class="o_thread_tooltip_container">
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.customer_email_status + ' fa fa-envelope-o'"/>
                         <span class="o_thread_tooltip_content">
                             <t t-foreach="message.customer_email_data" t-as="customer">
@@ -206,19 +206,21 @@
                            t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
-                <t t-if="message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0">
-                    <t t-if="message.subtype_description">
-                        <p t-esc="message.subtype_description"/>
+                <div class="o_thread_message_content">
+                    <t t-if="message.tracking_value_ids and message.tracking_value_ids.length &gt; 0">
+                        <t t-if="message.subtype_description">
+                            <p><t t-esc="message.subtype_description"/></p>
+                        </t>
+                        <t t-call="mail.ChatThread.MessageTracking"/>
                     </t>
-                    <t t-call="mail.ChatThread.MessageTracking"/>
-                </t>
-                <p t-if="options.display_subject &amp;&amp; message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
-                <t t-if="!(message.tracking_value_ids &amp;&amp; message.tracking_value_ids.length &gt; 0)">
-                    <t t-raw="message.body"/>
-                </t>
-                <t t-foreach="message.attachment_ids" t-as="attachment">
-                    <t t-call="mail.Attachment"/>
-                </t>
+                    <p t-if="options.display_subject and message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
+                    <t t-if="!(message.tracking_value_ids and message.tracking_value_ids.length &gt; 0)">
+                        <t t-raw="message.body"/>
+                    </t>
+                     <t t-foreach="message.attachment_ids" t-as="attachment">
+                         <t t-call="mail.Attachment"/>
+                     </t>
+                </div>
             </div>
         </div>
         <t t-if="options.messages_separator_position == message.id">
@@ -329,5 +331,4 @@
             <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
         </div>
     </t>
-
 </templates>
