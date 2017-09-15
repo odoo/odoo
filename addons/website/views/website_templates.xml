@@ -68,15 +68,15 @@
 <!-- Layout -->
 <template id="submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
-        'active' if submenu.url and submenu.url != '/' and unslug_url(request.httprequest.path) == unslug_url(submenu.url.replace('/page/website.', '/page/')) else None
+        'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
         ">
-        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
     <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id if child.url]) or
-         (submenu.url and request.httprequest.path == submenu.url.replace('/page/website.', '/page/'))) and 'active'
+        (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
+         (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
@@ -299,7 +299,7 @@
                 <div class="col-md-4  col-lg-3" id="info">
                     <h4>Connect with us</h4>
                     <ul class="list-unstyled">
-                        <li><a href="/page/website.contactus">Contact us</a></li>
+                        <li><a href="/contactus">Contact us</a></li>
                     </ul>
                     <ul class="list-unstyled">
                         <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
@@ -317,7 +317,7 @@
                 <div class="col-md-4 col-lg-5 col-lg-offset-1">
                     <h4>
                         <span t-field="res_company.name" />
-                        <small> - <a href="/page/website.aboutus">About us</a></small>
+                        <small> - <a href="/aboutus">About us</a></small>
                     </h4>
                     <div>
                         <p>
@@ -628,7 +628,7 @@
                 <p>Maybe you were looking for one of these popular pages ?</p>
                 <ul>
                     <li><a href="/">Homepage</a></li>
-                    <li><a href="/page/website.contactus/">Contact Us</a></li>
+                    <li><a href="/contactus">Contact Us</a></li>
                 </ul>
             </div>
             <t t-if="editable or request.debug">
@@ -653,7 +653,7 @@
                     <p>Maybe you were looking for one of these popular pages ?</p>
                     <ul>
                         <li><a href="/">Homepage</a></li>
-                        <li><a href="/page/website.contactus/">Contact Us</a></li>
+                        <li><a href="/contactus">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -801,14 +801,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </sitemapindex>
 </template>
 
-<!-- Actual pages -->
-<template id="homepage" name="Homepage" page="True" priority="29">
-    <t t-call="website.layout">
-        <t t-set="pageName" t-value="'homepage'"/>
-        <div id="wrap" class="oe_structure oe_empty"/>
-    </t>
-</template>
-
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
         <!-- TODO widget contact must add itemprop attributes -->
@@ -826,77 +818,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
-<template id="contactus" name="Contact us" page="True">
-    <t t-call="website.layout">
-      <div id="wrap">
-        <div class="oe_structure"/>
-        <div class="container">
-            <h1>Contact us</h1>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="oe_structure">
-                        <div>
-                            <p>Contact us about anything related to our company or services.</p>
-                            <p>We'll do our best to get back to you as soon as possible.</p>
-                        </div>
-                    </div>
-                    <div class="text-center mt64" name="mail_button">
-                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb32">
-                    <t t-call="website.company_description"/>
-                </div>
-            </div>
-        </div>
-        <div class="oe_structure"/>
-      </div>
-    </t>
-</template>
-
-<template id="aboutus" name="About us" page="True">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center">About us</h1>
-                                <h3 class="text-muted text-center">Great products for great people</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 mt32">
-                                <p>
-                                      We are a team of passionate people whose goal is to improve everyone's
-                                      life through disruptive products. We build great products to solve your
-                                      business problems.
-                                </p>
-                                <p>
-                                      Our products are designed for small to medium size companies willing to optimize
-                                      their performance.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
-                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-            <div class="oe_structure"></div>
-        </div>
-    </t>
-</template>
-
 <template id="website_search_box" name="Website Searchbox">
     <div class="input-group">
         <div class="oe_search">
@@ -907,4 +828,81 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </span>
     </div>
 </template>
+
+<template id="index_management">
+    <t groups="website.group_website_publisher" t-ignore="true">
+        <div t-attf-class="pull-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
+            <button class="btn btn-danger js_index_btn">Unindexed</button>
+            <button class="btn btn-success js_index_btn">Indexed</button>
+        </div>
+    </t>
+</template>
+
+<template id="edit_website_pages" name="Website Pages Management">
+  <t t-call="website.layout">
+    <div id="wrap">
+      <div class="container" id="edit_website_pages">
+          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages_management" method="get">
+              <t t-call="website.website_search_box"/>
+          </form>
+          <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
+              <button class="btn btn-default" type="button" data-toggle="dropdown">
+                  <span class="fa fa-sort fa-lg" />
+                  <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                  <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                      <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                          <span t-esc="searchbar_sortings[option].get('label')"/>
+                      </a>
+                  </li>
+              </ul>
+          </div>
+          <h3 class="mt16">Pages Management</h3>
+          <t t-if="not pages">
+              <div t-if="search" class="alert alert-warning mt8" role="alert">
+                  Your search '<t t-esc="search" />' did not match any pages.
+              </div>
+              <div t-else="" class="alert alert-warning mt8" role="alert">
+                  There are currently no pages for your website.
+              </div>
+          </t>
+          <div t-if="pages" class="table-responsive">
+              <table class="table table-hover o_my_status_table">
+                  <thead>
+                    <tr class="active">
+                      <th>Name</th>
+                      <th>Url</th>
+                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page published?" class="fa fa-eye" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
+                      <th class="col-md-1"></th>
+                    </tr>
+                  </thead>
+                  <t t-foreach="pages" t-as="page">
+                      <tr>
+                          <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
+                          <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
+                          <td style="text-align:center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+                          <td style="text-align:center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td style="text-align:center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td>
+                              <a class="fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+                              <a class="fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                          </td>
+                      </tr>
+                  </t>
+              </table>
+          </div>
+          <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+          </div>
+      </div>
+    </div>
+  </t>
+</template>
+
 </odoo>

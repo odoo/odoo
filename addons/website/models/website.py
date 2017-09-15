@@ -5,6 +5,7 @@ import inspect
 import logging
 import hashlib
 import re
+import unicodedata
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
@@ -66,6 +67,7 @@ class Website(models.Model):
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner')
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
+    homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
 
     @api.multi
@@ -86,84 +88,74 @@ class Website(models.Model):
     #----------------------------------------------------------
     # Page Management
     #----------------------------------------------------------
-
     @api.model
-    def new_page(self, name, template='website.default_page', ispage=True, namespace=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
             :param namespace : module part of the xml_id if none, the template module name is used
         """
+
         if namespace:
             template_module = namespace
         else:
-            template_module, dummy = template.split('.')
-        website_id = self._context.get('website_id')
-
+            template_module, _ = template.split('.')
         # completely arbitrary max_length
-        page_name = slugify(name, max_length=50)
-        page_xmlid = "%s.%s" % (template_module, page_name)
+        page_url = '/' + slugify(name, max_length=200, path=True)
+        page_key = self.get_unique_path(slugify(name, 50))
 
-        # find a free xmlid
-        inc = 0
-        domain_static = [('website_id', '=', False), ('website_id', '=', website_id)]
-        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', page_xmlid), '|'] + domain_static):
-            inc += 1
-            page_xmlid = "%s.%s" % (template_module, page_name + ("-%s" % inc if inc else ""))
-        page_name += (inc and "-%s" % inc or "")
+        if not name:
+            name = 'Home'
+            page_key = 'home'
 
-        # new page
         template_record = self.env.ref(template)
-        key = '%s.%s' % (template_module, page_name)
-        page = template_record.copy({'website_id': website_id, 'key': key})
-        page.with_context(lang=None).write({
-            'arch': page.arch.replace(template, page_xmlid),
-            'name': page_name,
-            'page': ispage,
+        website_id = self._context.get('website_id')
+        key = '%s.%s' % (template_module, page_key)
+        view = template_record.copy({'website_id': website_id, 'key': key})
+
+        view.with_context(lang=None).write({
+            'arch': template_record.arch.replace(template, key),
+            'name': name,
         })
-        return page_xmlid
+        if ispage:
+            page = self.env['website.page'].create({
+                'name': name,
+                'url': page_url,
+                'website_ids': [(6, None, [self.get_current_website().id])],
+                'ir_ui_view_id': view.id
+            })
+        if add_menu:
+            self.env['website.menu'].create({
+                'name': name,
+                'url': page_url,
+                'parent_id': self.get_current_website().menu_id.id,
+                'page_id': page.id,
+                'website_id': self.get_current_website().id,
+            })
+        return page_url
+
+    def get_unique_path(self, page_url):
+        """ Given an url, return that url suffixed by counter if it already exists
+            :param page_url : the url to be checked for uniqueness
+        """
+        website_id = self.get_current_website().id
+        inc = 0
+        domain_static = ['|', ('website_ids', '=', False), ('website_ids', 'in', website_id)]
+        page_temp = page_url
+        while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
+            inc += 1
+            page_temp = page_url + (inc and "-%s" % inc or "")
+        return page_temp
 
     def key_to_view_id(self, view_id):
         return self.env['ir.ui.view'].search([
             ('id', '=', view_id),
             '|', ('website_id', '=', self._context.get('website_id')), ('website_id', '=', False),
-            ('page', '=', True),
             ('type', '=', 'qweb')
         ])
 
     @api.model
-    def delete_page(self, view_id):
-        """ Delete a page, given its identifier
-            :param view_id : ir.ui.view identifier
-        """
-        view = self.key_to_view_id(view_id)
-        if view:
-            view.unlink()
-
-    @api.model
-    def rename_page(self, view_id, new_name):
-        """ Change the name of the given page
-            :param view_id : id of the view to rename
-            :param new_name : name to use
-        """
-        view = self.key_to_view_id(view_id)
-        if view:
-            # slugify the new name and prefix by module if
-            # not already done by end user
-            new_name = slugify(new_name, max_length=50)
-            prefix = view.key.split('.')[0]
-            if not new_name.startswith(prefix):
-                new_name = "%s.%s" % (prefix, new_name)
-
-            view.write({
-                'key': new_name,
-                'arch_db': view.arch_db.replace(view.key, new_name, 1)
-            })
-            return new_name
-        return False
-
-    @api.model
-    def page_search_dependencies(self, view_id=False):
+    def page_search_dependencies(self, page_id=False):
         """ Search dependencies just for information. It will not catch 100%
             of dependencies and False positive is more than possible
             Each module could add dependences in this dict
@@ -171,60 +163,65 @@ class Website(models.Model):
                 view, and the value is the list of text and link to the resource using given page
         """
         dependencies = {}
-        if not view_id:
+        if not page_id:
             return dependencies
 
-        view = self.env['ir.ui.view'].browse(view_id)
+        page = self.env['website.page'].browse(int(page_id))
         website_id = self._context.get('website_id')
-        name = view.key.replace("website.", "")
-        fullname = "website.%s" % name
+        url = page.url
 
-        if view.page:
-            # search for page with link
-            page_search_dom = [
-                '|', ('website_id', '=', website_id), ('website_id', '=', False),
-                '|', ('arch_db', 'ilike', '/page/%s' % name), ('arch_db', 'ilike', '/page/%s' % fullname)
-            ]
 
-            page_key = _('Page')
-            pages = self.env['ir.ui.view'].search(page_search_dom)
-            for page in pages:
-                dependencies.setdefault(page_key, [])
-                if page.page:
-                    dependencies[page_key].append({
-                        'text': _('Page <b>%s</b> contains a link to this page') % page.key,
-                        'link': '/page/%s' % page.key
-                    })
-                else:
-                    dependencies[page_key].append({
-                        'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (page.key, page.id),
-                        'link': '#'
-                    })
+        page_key = _('Page')
 
-            # search for menu with link
-            menu_search_dom = [
-                '|', ('website_id', '=', website_id), ('website_id', '=', False),
-                '|', ('url', 'ilike', '/page/%s' % name), ('url', 'ilike', '/page/%s' % fullname)
-            ]
+        # search for website_page with link
+        website_page_search_dom = [
+            '|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('ir_ui_view_id.arch_db', 'ilike', url)
+        ]
+        pages = self.env['website.page'].search(website_page_search_dom)
+        page_view_ids = []
+        for page in pages:
+            dependencies.setdefault(page_key, [])
+            dependencies[page_key].append({
+                'text': _('Page <b>%s</b> contains a link to this page') % page.url,
+                'link': page.url
+            })
+            page_view_ids.append(page.ir_ui_view_id.id)
 
-            menu_key = _('Menu')
-            menus = self.env['website.menu'].search(menu_search_dom)
-            for menu in menus:
-                dependencies.setdefault(menu_key, []).append({
-                    'text': _('This page is in the menu <b>%s</b>') % menu.name,
-                    'link': False
-                })
+        # search for ir_ui_view (not from a website_page) with link
+        page_search_dom = [
+            '|', ('website_id', '=', website_id), ('website_id', '=', False),
+            ('arch_db', 'ilike', url), ('id', 'not in', page_view_ids)
+        ]
+        views = self.env['ir.ui.view'].search(page_search_dom)
+        for view in views:
+            dependencies.setdefault(page_key, [])
+            dependencies[page_key].append({
+            'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (view.key or view.name, view.id),
+            'link': '#'
+            })
+        # search for menu with link
+        menu_search_dom = [
+            '|', ('website_id', '=', website_id), ('website_id', '=', False), ('url', 'ilike', '%s' % url)
+        ]
+
+        menu_key = _('Menu')
+        menus = self.env['website.menu'].search(menu_search_dom)
+        for menu in menus:
+            dependencies.setdefault(menu_key, []).append({
+                'text': _('This page is in the menu <b>%s</b>') % menu.name,
+                'link': False
+            })
 
         return dependencies
 
     @api.model
     def page_exists(self, name, module='website'):
         try:
-            name = (name or "").replace("/page/website.", "").replace("/page/", "")
+            name = (name or "").replace("/website.", "").replace("/", "")
             if not name:
                 return False
             return self.env.ref('%s.%s' % module, name)
-        except:
+        except Exception:
             return False
 
     #----------------------------------------------------------
@@ -348,7 +345,7 @@ class Website(models.Model):
         return all((arg in rule._converters) for arg in args)
 
     @api.multi
-    def enumerate_pages(self, query_string=None):
+    def enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
             controllers for dynamic pages (e.g. blog).
@@ -360,13 +357,13 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
+
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
-
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
@@ -400,12 +397,37 @@ class Website(models.Model):
 
                 yield page
 
+        # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
+        domain = [('url', '!=', '/')]
+        if not force:
+            domain += [('website_indexed', '=', True)]
+            #is_visible
+            domain += [('website_published', '=', True), '|', ('date_publish', '!=', False), ('date_publish', '>', fields.Datetime.now())]
+
+        if query_string:
+            domain += [('url', 'like', query_string)]
+
+        pages = self.get_website_pages(domain)
+
+        for page in pages:
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            if page.ir_ui_view_id and page.ir_ui_view_id.priority != 16:
+                record['__priority'] = min(round(page.ir_ui_view_id.priority / 32.0, 1), 1)
+            if page['write_date']:
+                record['__lastmod'] = page['write_date'][:10]
+            yield record
+
+    @api.multi
+    def get_website_pages(self, domain=[], order='name', limit=None):
+        domain += ['|', ('website_ids', 'in', self.get_current_website().id), ('website_ids', '=', False)]
+        pages = request.env['website.page'].search(domain, order='name', limit=limit)
+        return pages
+
     @api.multi
     def search_pages(self, needle=None, limit=None):
-        name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
-        name = slugify(name, max_length=50)
+        name = slugify(needle, max_length=50, path=True)
         res = []
-        for page in self.enumerate_pages(query_string=name):
+        for page in self.enumerate_pages(query_string=name, force=True):
             res.append(page)
             if len(res) == limit:
                 break
@@ -435,72 +457,6 @@ class Website(models.Model):
         if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
             return self.env.ref('website.backend_dashboard').read()[0]
         return self.env.ref('website.action_website').read()[0]
-
-
-class Menu(models.Model):
-
-    _name = "website.menu"
-    _description = "Website Menu"
-
-    _parent_store = True
-    _parent_order = 'sequence'
-    _order = "sequence"
-
-    def _default_sequence(self):
-        menu = self.search([], limit=1, order="sequence DESC")
-        return menu.sequence or 0
-
-    name = fields.Char('Menu', required=True, translate=True)
-    url = fields.Char('Url', default='')
-    new_window = fields.Boolean('New Window')
-    sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
-    parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
-    child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_left = fields.Integer('Parent Left', index=True)
-    parent_right = fields.Integer('Parent Rigth', index=True)
-
-    # would be better to take a menu_id as argument
-    @api.model
-    def get_tree(self, website_id, menu_id=None):
-        def make_tree(node):
-            menu_node = dict(
-                id=node.id,
-                name=node.name,
-                url=node.url,
-                new_window=node.new_window,
-                sequence=node.sequence,
-                parent_id=node.parent_id.id,
-                children=[],
-            )
-            for child in node.child_id:
-                menu_node['children'].append(make_tree(child))
-            return menu_node
-        if menu_id:
-            menu = self.browse(menu_id)
-        else:
-            menu = self.env['website'].browse(website_id).menu_id
-        return make_tree(menu)
-
-    @api.model
-    def save(self, website_id, data):
-        def replace_id(old_id, new_id):
-            for menu in data['data']:
-                if menu['id'] == old_id:
-                    menu['id'] = new_id
-                if menu['parent_id'] == old_id:
-                    menu['parent_id'] = new_id
-        to_delete = data['to_delete']
-        if to_delete:
-            self.browse(to_delete).unlink()
-        for menu in data['data']:
-            mid = menu['id']
-            if isinstance(mid, pycompat.string_types):
-                new_menu = self.create({'name': menu['name']})
-                replace_id(mid, new_menu.id)
-        for menu in data['data']:
-            self.browse(menu['id']).write(menu)
-        return True
 
 
 class SeoMetadata(models.AbstractModel):
@@ -538,3 +494,260 @@ class WebsitePublishedMixin(models.AbstractModel):
             'url': self.website_url,
             'target': 'self',
         }
+
+
+class Page(models.Model):
+    _name = 'website.page'
+    _inherits = {'ir.ui.view': 'ir_ui_view_id'}
+    _inherit = 'website.published.mixin'
+    _description = 'Page'
+
+    name = fields.Char('Page Name')
+    url = fields.Char('Page URL')
+    website_ids = fields.Many2many('website', string='Websites')
+    ir_ui_view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
+    website_indexed = fields.Boolean('Page Indexed', default=True)
+    date_publish = fields.Datetime('Publishing Date')
+    # This is needed to be able to display if page is a menu in /website/page_management
+    menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
+    is_homepage = fields.Boolean(compute='_compute_homepage', string='Homepage')
+    is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+
+    @api.one
+    def _compute_homepage(self):
+        self.is_homepage = self == self.env['website'].get_current_website().homepage_id
+
+    @api.one
+    def _compute_visible(self):
+        self.is_visible = self.website_published and (not self.date_publish or self.date_publish < fields.Datetime.now())
+
+    @api.model
+    def get_page_info(self, id, website_id):
+        domain = ['|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('id', '=', id)]
+        item = self.search_read(domain, fields=['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish', 'menu_ids', 'is_homepage'], limit=1)
+        return item
+
+    @api.model
+    def save_page_info(self, website_id, data):
+        website = self.env['website'].browse(website_id)
+
+        if data['is_homepage'] and website.homepage_id.id != int(data['id']):
+            # If page is set as the new homepage, set it on website (only page can be set as homepage)
+            website.write({'homepage_id': data['id']})
+        else:
+            if not data['is_homepage'] and website.homepage_id.id == int(data['id']):
+                # If the page is not a homepage, check if it was the homepage
+                website.write({'homepage_id': None})
+
+        #If URL has been edited, slug it
+        page = self.browse(int(data['id']))
+        original_url = page.url
+        url = data['url']
+        if page.url != url:
+            url = slugify(url, max_length=200, path=True)
+
+        menu = self.env['website.menu'].search([('page_id', '=', int(data['id']))])
+        if not data['is_menu']:
+            #If the page is no longer in menu, we should remove its website_menu
+            if menu:
+                menu.unlink()
+        else:
+            #The page is now a menu, check if has already one
+            if menu:
+                menu.write({'url': url})
+            else:
+                self.env['website.menu'].create({
+                    'name': data['name'],
+                    'url': url,
+                    'page_id': data['id'],
+                    'parent_id': website.menu_id.id,
+                    'website_id': website.id,
+                })
+
+        page.write({
+            'name': data['name'], 'url': url,
+            'website_published': data['website_published'],
+            'website_indexed': data['website_indexed'],
+            'date_publish': data['date_publish'] or None
+        })
+
+        # Create redirect if needed
+        if data['create_redirect']:
+            self.env['website.redirect'].create({
+                'type': data['redirect_type'],
+                'url_from': original_url,
+                'url_to': url,
+                'website_id': website.id,
+            })
+
+        return True
+
+    @api.multi
+    def copy(self, default=None):
+        view = self.env['ir.ui.view'].browse(self.ir_ui_view_id.id)
+        new_view = view.copy()
+        default = {
+            'name': self.name + ' (copy)',
+            'url': self.env['website'].get_unique_path(self.url),
+            'ir_ui_view_id': new_view.id,
+        }
+        return super(Page, self).copy(default=default)
+
+    @api.model
+    def clone_page(self, page_id, clone_menu=True):
+        """ Clone a page, given its identifier
+            :param page_id : website.page identifier
+        """
+        page = self.browse(int(page_id))
+        new_page = page.copy()
+        if clone_menu:
+            menu = self.env['website.menu'].search([('page_id', '=', page_id)], limit=1)
+            if menu:
+                # If the page being cloned has a menu, clone it too
+                new_menu = menu.copy()
+                new_menu.write({'url': new_page.url, 'name': menu.name + ' (copy)', 'page_id': new_page.id})
+
+        return new_page.url + '?enable_editor=1'
+
+    @api.multi
+    def unlink(self):
+        """ When a website_page is deleted, the ORM does not delete its ir_ui_view.
+            So we got to delete it ourself, but only if the ir_ui_view is not used by another website_page.
+        """
+        # Handle it's ir_ui_view
+        for page in self:
+            # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
+            pages_linked_to_iruiview = self.env['website.page'].search(
+                [('ir_ui_view_id', '=', self.ir_ui_view_id.id), ('id', '!=', self.id)]
+            )
+            if len(pages_linked_to_iruiview) == 0:
+                # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
+                self.env['ir.ui.view'].search([('id', '=', self.ir_ui_view_id.id)]).unlink()
+        # And then delete the website_page itself
+        return super(Page, self).unlink()
+
+    @api.model
+    def delete_page(self, page_id):
+        """ Delete a page or a link, given its identifier
+            :param object_id : object identifier eg: menu-5
+        """
+        # If we are deleting a page (that could possibly be a menu with a page)
+        page = self.env['website.page'].browse(int(page_id))
+        if page:
+            # Check if it is a menu with a page and also delete menu if so
+            menu = self.env['website.menu'].search([('page_id', '=', page.id)], limit=1)
+            if menu:
+                menu.unlink()
+            page.unlink()
+
+    @api.multi
+    def write(self, vals):
+        self.ensure_one()
+        if 'url' in vals and not vals['url'].startswith('/'):
+            vals['url'] = '/' + vals['url']
+        result = super(Page, self).write(vals)
+        return result
+
+
+class Menu(models.Model):
+
+    _name = "website.menu"
+    _description = "Website Menu"
+
+    _parent_store = True
+    _parent_order = 'sequence'
+    _order = "sequence"
+
+    def _default_sequence(self):
+        menu = self.search([], limit=1, order="sequence DESC")
+        return menu.sequence or 0
+
+    name = fields.Char('Menu', required=True, translate=True)
+    url = fields.Char('Url', default='')
+    page_id = fields.Many2one('website.page', 'Related Page')
+    new_window = fields.Boolean('New Window')
+    sequence = fields.Integer(default=_default_sequence)
+    website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
+    parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
+    child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
+    parent_left = fields.Integer('Parent Left', index=True)
+    parent_right = fields.Integer('Parent Rigth', index=True)
+
+    @api.model
+    def clean_url(self):
+        # clean the url with heuristic
+        if self.page_id:
+            url = self.page_id.url
+        else:
+            url = self.url
+            if not self.url.startswith('/'):
+                if '@' in self.url and not self.url.startswith('mailto'):
+                    url = 'mailto:%s' % self.url
+                elif not self.url.startswith('http'):
+                    url = '/%s' % self.url
+        return url
+
+    # would be better to take a menu_id as argument
+    @api.model
+    def get_tree(self, website_id, menu_id=None):
+        def make_tree(node):
+            page_id = node.page_id.id if node.page_id else None
+            is_homepage = page_id and self.env['website'].browse(website_id).homepage_id.id == page_id
+            menu_node = dict(
+                id=node.id,
+                name=node.name,
+                url=node.page_id.url if page_id else node.url,
+                new_window=node.new_window,
+                sequence=node.sequence,
+                parent_id=node.parent_id.id,
+                children=[],
+                is_homepage=is_homepage,
+            )
+            for child in node.child_id:
+                menu_node['children'].append(make_tree(child))
+            return menu_node
+        if menu_id:
+            menu = self.browse(menu_id)
+        else:
+            menu = self.env['website'].browse(website_id).menu_id
+        return make_tree(menu)
+
+    @api.model
+    def save(self, website_id, data):
+        def replace_id(old_id, new_id):
+            for menu in data['data']:
+                if menu['id'] == old_id:
+                    menu['id'] = new_id
+                if menu['parent_id'] == old_id:
+                    menu['parent_id'] = new_id
+        to_delete = data['to_delete']
+        if to_delete:
+            self.browse(to_delete).unlink()
+        for menu in data['data']:
+            mid = menu['id']
+            # new menu are prefixed by new-
+            if isinstance(mid, pycompat.string_types):
+                new_menu = self.create({'name': menu['name']})
+                replace_id(mid, new_menu.id)
+        for menu in data['data']:
+            # if the url match a website.page, set the m2o relation
+            page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
+            if page:
+                menu['page_id'] = page.id
+            self.browse(menu['id']).write(menu)
+
+        return True
+
+
+class WebsiteRedirect(models.Model):
+    _name = "website.redirect"
+    _description = "Website Redirect"
+    _order = "sequence, id"
+    _rec_name = 'url_from'
+
+    type = fields.Selection([('301', 'Moved permanently'), ('302', 'Moved temporarily')], string='Redirection Type')
+    url_from = fields.Char('Redirect From')
+    url_to = fields.Char('Redirect To')
+    website_id = fields.Many2one('website', 'Website')
+    active = fields.Boolean(default=True)
+    sequence = fields.Integer(default=0)

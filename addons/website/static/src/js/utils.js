@@ -7,7 +7,7 @@ var weContext = require('web_editor.context');
 var qweb = core.qweb;
 
 /**
- * Allows the given input to propose existing website pages.
+ * Allows the given input to propose existing website URLs.
  *
  * @param {ServicesMixin|Widget} self - an element capable to trigger an RPC
  * @param {jQuery} $input
@@ -25,7 +25,12 @@ function autocompleteWithPages(self, $input) {
                 },
             }).then(function (exists) {
                 var rs = _.map(exists, function (r) {
-                    return r.loc;
+                    if (show_only_website_page_model) {
+                        return r.loc + ' (' + r.name + ')';
+                    }
+                    else {
+                        return r.loc;
+                    }
                 });
                 response(rs);
             });

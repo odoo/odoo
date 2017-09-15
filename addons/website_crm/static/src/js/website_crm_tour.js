@@ -6,7 +6,7 @@ odoo.define('website_crm.tour', function(require) {
 
     tour.register('website_crm_tour', {
         test: true,
-        url: '/page/contactus',
+        url: '/contactus',
         wait_for: base.ready(),
     }, [{
         content: "Complete name",

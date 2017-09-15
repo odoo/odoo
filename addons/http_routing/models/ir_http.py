@@ -29,7 +29,19 @@ odoo._geoip_resolver = None
 # Slug API
 # ------------------------------------------------------------
 
-def slugify(s, max_length=None):
+def _guess_mimetype(ext=False, default='text/html'):
+    exts = {
+        '.css': 'text/css',
+        '.less': 'text/less',
+        '.js': 'text/javascript',
+        '.xml': 'text/xml',
+        '.csv': 'text/csv',
+        '.html': 'text/html',
+    }
+    return ext is not False and exts.get(ext, default) or exts
+
+
+def slugify_one(s, max_length=None):
     """ Transform a string to a slug that can be used in a url path.
         This method will first try to do the job with python-slugify if present.
         Otherwise it will process string by stripping leading and ending spaces,
@@ -51,6 +63,21 @@ def slugify(s, max_length=None):
     slug_str = re.sub('[-\s]+', '-', slug_str)
 
     return slug_str[:max_length]
+
+
+def slugify(s, max_length=None, path=False):
+    if not path:
+        return slugify_one(s, max_length=max_length)
+    else:
+        res = []
+        for u in s.split('/'):
+            if slugify_one(u, max_length=max_length) != '':
+                res.append(slugify_one(u, max_length=max_length))
+        # check if supported extension
+        path_no_ext, ext = os.path.splitext(s)
+        if ext and ext in _guess_mimetype():
+            res[-1] = slugify_one(path_no_ext) + ext
+        return '/'.join(res)
 
 
 def slug(value):

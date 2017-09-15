@@ -173,7 +173,11 @@
 </template>
 
 
-
+<template id="track_edit_options" inherit_id="website.user_navbar" name="Edit Track Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.track'" t-set="action" t-value="'website_event_track.action_event_track'" />
+    </xpath>
+</template>
 <template id="track_view">
     <t t-call="website.layout">
         <div id="wrap" class="js_event">
@@ -186,11 +190,6 @@
                             </t>
                         </ol>
                     </div>
-                    <t t-call="website.publish_management">
-                        <t t-set="object" t-value="track"/>
-                        <t t-set="publish_edit" t-value="True"/>
-                        <t t-set="action" t-value="'website_event_track.action_event_track'"/>
-                    </t>
                 </div>
             </div>
         </div>

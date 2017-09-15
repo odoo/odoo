@@ -3,12 +3,240 @@ odoo.define('website.contentMenu', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var time = require('web.time');
 var weContext = require('web_editor.context');
 var widget = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
+var websiteRootData = require('website.WebsiteRoot');
+var Widget = require('web.Widget');
 
 var _t = core._t;
 var qweb = core.qweb;
+
+var PagePropertiesDialog = widget.Dialog.extend({
+    template: 'website.pagesMenu.page_info',
+    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+        ['/website/static/src/xml/website.pageProperties.xml']
+    ),
+    events: _.extend({}, widget.Dialog.prototype.events, {
+        'keyup input#page_url': '_onUrlChanged',
+        'change input#create_redirect': '_onCreateRedirectChanged',
+    }),
+
+    /**
+     * @constructor
+     * @override
+     */
+    init: function (parent, page_id, options) {
+        var self = this;
+        var serverUrl = window.location.origin + "/";
+        var length_url = serverUrl.length;
+        var serverUrlTrunc = serverUrl;
+        if(length_url > 30)
+            serverUrlTrunc = serverUrl.slice(0,14) + '..' + serverUrl.slice(-14);
+        this.serverUrl = serverUrl;
+        this.serverUrlTrunc = serverUrlTrunc;
+        this.current_page_url = window.location.pathname;
+        this.page_id = page_id;
+
+        var buttons = [
+            {text: _t("Save"), classes: "btn-primary o_save_button", click: self.save},
+            {text: _t("Discard"), close: true},
+        ];
+        if (options.fromPageManagement) {
+            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = self.page.url;}});
+        }
+        this._super(parent, _.extend({}, {
+            title: _t("Page Properties"),
+            size: 'medium',
+            buttons: buttons,
+        }, options || {}));
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var defs = [this._super.apply(this, arguments)];
+        var self = this;
+        var context = weContext.get();
+
+        defs.push(this._rpc({
+            model: 'website.page',
+            method: 'get_page_info',
+            args: [self.page_id,context.website_id],
+            kwargs: {
+                context: context
+            },
+        }).then(function (page) {
+            page[0].url = page[0].url.startsWith('/') ? page[0].url.substring(1) : page[0].url;
+            self.page = page[0];
+        }));
+
+        defs.push(this._rpc({
+            model: 'website.redirect',
+            method: 'fields_get',
+        }).then(function (fields) {
+            self.fields = fields;
+        }));
+
+        return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    start: function() {
+        var self = this;
+        var context = weContext.get();
+
+        this.$(".ask_for_redirect").hide();
+        this.$(".redirect_type").hide();
+
+        //TODO: remove.html() & set self.var & display in view instead of controller (here)
+        this._getPageDependencies(self.page_id, context)
+        .then(function (dependencies) {
+            var dep = [];
+            _.each(dependencies, function( value, index ) {
+                if (dependencies[index].length > 0) {
+                    dep.push(dependencies[index].length + ' ' + index.toLowerCase() + (dependencies[index].length > 1 ? 's': ''));
+                }
+            });
+            if (dep.length > 0) {
+                $("#dependencies_redirect").html("(" + _("used in") + " " + dep.join(", ") + ")");
+            }
+        });
+
+        var l10n = _t.database.parameters;
+        var datepickersOptions = {
+           minDate: moment({ y: 1900 }),
+           maxDate: moment().add(200, "y"),
+           calendarWeeks: true,
+           icons : {
+               time: 'fa fa-clock-o',
+               date: 'fa fa-calendar',
+               next: 'fa fa-chevron-right',
+               previous: 'fa fa-chevron-left',
+               up: 'fa fa-chevron-up',
+               down: 'fa fa-chevron-down',
+              },
+           locale : moment.locale(),
+           format : time.strftime_to_moment_format(l10n.date_format +' '+ l10n.time_format),
+           widgetPositioning : {
+              horizontal: 'auto',
+              vertical: 'top',
+           },
+         };
+         if (self.page.date_publish) {
+            datepickersOptions.defaultDate = self.page.date_publish;
+         }
+
+         this.$("#date_publish_container").datetimepicker(datepickersOptions);
+
+         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    save: function(data){
+        var self = this;
+        var context = weContext.get();
+        var url = $(".o_page_management_info #page_url").val();
+
+        var date_publish = $(".o_page_management_info #date_publish").val();
+        if (date_publish != "") {
+            date_publish = time.datetime_to_str(new Date(date_publish));
+        }
+        var params = {
+            id: self.page.id,
+            name: $(".o_page_management_info #page_name").val(),
+            //replace duplicate following "/" by only one "/"
+            url: url.replace(/\/{2,}/g,"/"),
+            is_menu: $(".o_page_management_info #is_menu").prop('checked'),
+            is_homepage: $(".o_page_management_info #is_homepage").prop('checked'),
+            website_published: $(".o_page_management_info #is_published").prop('checked'),
+            create_redirect: $(".o_page_management_info #create_redirect").prop('checked'),
+            redirect_type: $(".o_page_management_info #redirect_type").val(),
+            website_indexed: $(".o_page_management_info #is_indexed").prop('checked'),
+            date_publish: date_publish,
+        };
+        self._rpc({
+            model: 'website.page',
+            method: 'save_page_info',
+            args: [[context.website_id], params],
+            kwargs: {
+                context: context
+            },
+        }).then(function () {
+            // If from page manager: reload url, if from page itself: go to (possibly) new url
+            if (self._getMainObject().model == 'website.page')
+                window.location.href = url.toLowerCase();
+            else
+                window.location.reload(true);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves the page dependencies for the given object id.
+     *
+     * @private
+     * @param {integer} moID
+     * @param {Object} context
+     * @returns {Deferred<Array>}
+     */
+    _getPageDependencies: function (moID, context) {
+        return this._rpc({
+            model: 'website',
+            method: 'page_search_dependencies',
+            args: [moID],
+            context: context,
+        });
+    },
+    /**
+     * Returns information about the page main object.
+     *
+     * @private
+     * @returns {Object} model and id
+     */
+    _getMainObject: function () {
+        var repr = $('html').data('main-object');
+        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+        return {
+            model: m[1],
+            id: m[2] | 0,
+        };
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    _onUrlChanged: function () {
+        var url = this.$('input#page_url').val();
+        if (url != this.page.url) {
+            this.$(".ask_for_redirect").show();
+        }
+        else {
+            this.$(".ask_for_redirect").hide();
+        }
+    },
+    _onCreateRedirectChanged: function () {
+      var createRedirect = this.$('input#create_redirect').prop('checked');
+      if (createRedirect) {
+          this.$(".redirect_type").show();
+      }
+      else {
+          this.$(".redirect_type").hide();
+      }
+    },
+});
 
 var MenuEntryDialog = widget.LinkDialog.extend({
     xmlDependencies: widget.LinkDialog.prototype.xmlDependencies.concat(
@@ -24,13 +252,16 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         data.isNewWindow = data.new_window;
         this.data = data;
         this.menu_link_options = options.menu_link_options;
-        return this._super.apply(this, arguments);
+        this._super(parent, _.extend({}, {
+            title: _t("Create Menu"),
+        }, options || {}), editor, data);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
+        self.$('#o_link_dialog_url_input').closest('.form-group').hide();
         this.$('.o_link_dialog_preview').remove();
         this.$('.window-new, .link-style').closest('.form-group').remove();
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
@@ -288,9 +519,8 @@ var EditMenuDialog = widget.Dialog.extend({
 var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/website/static/src/xml/website.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
-        delete_page: '_deletePage',
         edit_menu: '_editMenu',
-        rename_page: '_renamePage',
+        page_properties: '_pageProperties',
     }),
 
     //--------------------------------------------------------------------------
@@ -311,68 +541,11 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             id: m[2] | 0,
         };
     },
-    /**
-     * Retrieves the page dependencies for the given object id.
-     *
-     * @private
-     * @param {integer} moID
-     * @param {Object} context
-     * @returns {Deferred<Array>}
-     */
-    _getPageDependencies: function (moID, context) {
-        return this._rpc({
-            model: 'website',
-            method: 'page_search_dependencies',
-            args: [moID],
-            context: context,
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Actions
     //--------------------------------------------------------------------------
 
-    /**
-     * Searches for the page dependencies, inform the user about them then
-     * delete the page if the user agrees.
-     *
-     * @private
-     * @returns {Deferred}
-     */
-    _deletePage: function () {
-        var self = this;
-        var moID = self._getMainObject().id;
-        var context = weContext.get();
-
-        var def = $.Deferred();
-
-        // Search the page dependencies
-        this._getPageDependencies(moID, context)
-        .then(function (dependencies) {
-        // Inform the user about those dependencies and ask him confirmation
-            var confirmDef = $.Deferred();
-            Dialog.safeConfirm(self, "", {
-                title: _t("Delete Page"),
-                $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
-                confirm_callback: confirmDef.resolve.bind(confirmDef),
-                cancel_callback: def.resolve.bind(self),
-            });
-            return confirmDef;
-        }).then(function () {
-        // Delete the page if the user confirmed
-            return self._rpc({
-                model: 'website',
-                method: 'delete_page',
-                args: [moID],
-                context: context,
-            });
-        }).then(function () {
-        // Redirect to homepage as the page is now deleted
-            window.location.href = '/';
-        }, def.reject.bind(def));
-
-        return def;
-    },
     /**
      * Asks the user which menu to edit if multiple menus exist on the page.
      * Then opens the menu edition dialog.
@@ -419,58 +592,104 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         return def;
     },
-    /**
-     * Asks the user for the new name of the page, then reloads to the new page
-     * with the correct name if saved.
-     *
-     * @private
-     * @returns {Deferred}
-     *          Unresolved if the page's name is changed and saved as the page
-     *          will be reloaded.
-     *          Resolved otherwise.
-     */
-    _renamePage: function () {
-        var def = $.Deferred();
-
+    _pageProperties: function () {
         var self = this;
         var moID = self._getMainObject().id;
-        var context = weContext.get();
-
-        // Search the page dependencies
-        this._getPageDependencies(moID, context).then(function (dependencies) {
-            // Ask the user for the new page name and inform him about the dependencies
-            var renameDef = $.Deferred();
-            var $content = $(qweb.render('website.rename_page', {dependencies: dependencies}));
-            Dialog.confirm(self, "", {
-                title: _t("Rename This Page"),
-                $content: $content,
-                confirm_callback: function () {
-                    var $newNameInput = $content.find('input#new_name');
-                    renameDef.resolve($newNameInput.val());
-                },
-                cancel_callback: def.resolve.bind(def),
-            });
-            return renameDef;
-        }).then(function (newName) {
-            // Rename the page with the user's choice
-            return self._rpc({
-                model: 'website',
-                method: 'rename_page',
-                args: [moID, newName],
-                context: context,
-            });
-        }).then(function (newTechnicalName) {
-            // Redirects to the new renamed page
-            window.location.href = ('/page/' + encodeURIComponent(newTechnicalName));
-        }, def.reject.bind(def));
-
-        return def;
+        var dialog = new PagePropertiesDialog(self,moID,{}).open();
+        return dialog;
     },
 });
 
+
+var PageManagement = Widget.extend({
+    events: {
+        'click a.js_page_properties': '_onPagePropertiesButtonClick',
+        'click a.js_clone_page': '_onClonePageButtonClick',
+        'click a.js_delete_page': '_onDeletePageButtonClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieves the page dependencies for the given object id.
+     *
+     * @private
+     * @param {integer} moID
+     * @param {Object} context
+     * @returns {Deferred<Array>}
+     */
+    _getPageDependencies: function (moID, context) {
+        return this._rpc({
+            model: 'website',
+            method: 'page_search_dependencies',
+            args: [moID],
+            context: context,
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    _onPagePropertiesButtonClick: function (ev) {
+        var moID = $(ev.currentTarget).data('id');
+        var dialog = new PagePropertiesDialog(this,moID, {'fromPageManagement': true}).open();
+        return dialog;
+    },
+    _onClonePageButtonClick: function (ev) {
+        var pageId = $(ev.currentTarget).data('id');
+        var context = weContext.get();
+        this._rpc({
+            model: 'website.page',
+            method: 'clone_page',
+            args: [pageId],
+            kwargs: {
+                context: context,
+            },
+        }).then(function (path) {
+            window.location.href = path;
+        });
+    },
+    _onDeletePageButtonClick: function (ev) {
+        var pageId = $(ev.currentTarget).data('id');
+        var self = this;
+        var context = weContext.get();
+
+        var def = $.Deferred();
+        // Search the page dependencies
+        this._getPageDependencies(pageId, context)
+        .then(function (dependencies) {
+        // Inform the user about those dependencies and ask him confirmation
+            var confirmDef = $.Deferred();
+            Dialog.safeConfirm(self, "", {
+                title: _t("Delete Page"),
+                $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
+                confirm_callback: confirmDef.resolve.bind(confirmDef),
+                cancel_callback: def.resolve.bind(self),
+            });
+            return confirmDef;
+        }).then(function () {
+        // Delete the page if the user confirmed
+            return self._rpc({
+                model: 'website.page',
+                method: 'delete_page',
+                args: [pageId],
+                context: context,
+            });
+        }).then(function () {
+            window.location.reload(true);
+        }, def.reject.bind(def));
+    },
+});
+
+
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
+websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');
 
 return {
+    PagePropertiesDialog: PagePropertiesDialog,
     ContentMenu: ContentMenu,
     EditMenuDialog: EditMenuDialog,
     MenuEntryDialog: MenuEntryDialog,

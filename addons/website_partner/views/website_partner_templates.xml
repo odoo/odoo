@@ -15,10 +15,6 @@
 </template>
 
 <template id="partner_detail" name="Partner Details">
-    <t t-call="website.publish_management">
-        <t t-set="object" t-value="partner"/>
-        <t t-set="publish_edit" t-value="True"/>
-    </t>
     <h1 class="col-md-12 text-center" id="partner_name" t-field="partner.display_name"/>
     <div class="col-md-4">
         <div t-field="partner.image" t-options='{"widget": "image", "class": "center-block mb16"}'/>

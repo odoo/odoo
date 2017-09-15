@@ -1184,7 +1184,7 @@ var LinkDialog = Dialog.extend({
             }
         }
 
-        if (!test && (!val || !$e[0].checkValidity())) {
+        if (!test && $e.prop('required') && (!val || !$e[0].checkValidity())) {
             // FIXME: error message
             $e.closest('.form-group').addClass('has-error');
             $e.focus();

@@ -10,7 +10,6 @@ import mimetypes
 import os
 import re
 import sys
-import unicodedata
 
 import werkzeug
 import werkzeug.exceptions
@@ -158,15 +157,23 @@ class IrHttp(models.AbstractModel):
             return response
 
     @classmethod
+    def _serve_fallback(cls, exception):
+        # serve attachment
+        attach = cls._serve_attachment()
+        if attach:
+            return attach
+        return False
+
+    @classmethod
     def _handle_exception(cls, exception):
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
         # not match any HTTP controller
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
-            attach = cls._serve_attachment()
-            if attach:
-                return attach
+            serve = cls._serve_fallback(exception)
+            if serve:
+                return serve
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
         if 'werkzeug' in tools.config['dev_mode']:
