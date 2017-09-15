@@ -805,10 +805,15 @@ var FormRenderer = BasicRenderer.extend({
 
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
+            var idForLabel = self.idsForLabels[widget.name];
+            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
             if (core.debug || widget.attrs.help || widget.field.help) {
-                var idForLabel = self.idsForLabels[widget.name];
-                var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
                 self._addFieldTooltip(widget, $label);
+            }
+            if (widget.attrs.widget === 'upgrade_boolean') {
+                // this widget needs a reference to its $label to be correctly
+                // rendered
+                widget.renderWithLabel($label);
             }
         });
     },

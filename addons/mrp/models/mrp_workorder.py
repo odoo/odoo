@@ -127,6 +127,10 @@ class MrpWorkorder(models.Model):
         'Capacity', default=1.0,
         help="Number of pieces that can be produced in parallel.")
 
+    @api.multi
+    def name_get(self):
+        return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
+
     @api.one
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):

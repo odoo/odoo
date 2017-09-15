@@ -662,56 +662,6 @@ class Picking(models.Model):
             quantity_done[pack.product_id.id] += pack.qty_done
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
-    def _create_extra_moves(self):
-        '''This function creates move lines on a picking, at the time of do_transfer, based on
-        unexpected product transfers (or exceeding quantities) found in the pack operations.
-        '''
-        # TDE FIXME: move to batch
-        self.ensure_one()
-        moves = self.env['stock.move']
-        for move_line in self.move_line_ids:
-            for product, remaining_qty in move_line._get_remaining_prod_quantities().items():
-                if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
-                    vals = self._prepare_values_extra_move(move_line, product, remaining_qty)
-                    moves |= moves.create(vals)
-        if moves:
-            moves.with_context(skip_check=True)._action_confirm()
-        return moves
-
-    @api.model
-    def _prepare_values_extra_move(self, op, product, remaining_qty):
-        """
-        Creates an extra move when there is no corresponding original move to be copied
-        """
-        Uom = self.env["product.uom"]
-        uom_id = product.uom_id.id
-        qty = remaining_qty
-        if op.product_id and op.product_uom_id and op.product_uom_id.id != product.uom_id.id:
-            if op.product_uom_id.factor > product.uom_id.factor:  # If the pack operation's is a smaller unit
-                uom_id = op.product_uom_id.id
-                # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
-                qty = product.uom_id._compute_quantity(remaining_qty, op.product_uom_id, rounding_method='HALF-UP')
-        picking = op.picking_id
-        ref = product.default_code
-        name = '[' + ref + ']' + ' ' + product.name if ref else product.name
-        proc_id = False
-        for m in op.linked_move_operation_ids:
-            if m.move_id.procurement_id:
-                proc_id = m.move_id.procurement_id.id
-                break
-        return {
-            'picking_id': picking.id,
-            'location_id': picking.location_id.id,
-            'location_dest_id': picking.location_dest_id.id,
-            'product_id': product.id,
-            'product_uom': uom_id,
-            'product_uom_qty': qty,
-            'name': _('Extra Move: ') + name,
-            'state': 'draft',
-            'restrict_partner_id': op.owner_id.id,
-            'group_id': picking.group_id.id,
-        }
-
     def _create_backorder(self, backorder_moves=[]):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """

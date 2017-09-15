@@ -74,7 +74,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Inventory Valuation" create="0" delete="0">
+            <tree string="Inventory Valuation" create="0" delete="0" decoration-danger="quantity &lt; 0">
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>

@@ -662,6 +662,48 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('drag and drop a record, grouped by selection', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates>' +
+                            '<t t-name="kanban-box">' +
+                                '<div><field name="state"/></div>' +
+                            '</t>' +
+                        '</templates>' +
+                    '</kanban>',
+            groupBy: ['state'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return $.when(true);
+                }
+                if (args.model === 'partner' && args.method === 'write') {
+                    assert.deepEqual(args.args[1], {state: 'def'});
+                }
+                return this._super(route, args);
+            },
+        });
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        testUtils.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 0,
+                        "column should now contain 0 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;
@@ -1969,6 +2011,45 @@ QUnit.module('Views', {
         assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side').last().text()), 36,
             "counter should display the sum of int_field values");
         kanban.destroy();
+    });
+
+    QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban on_create="quick_create">' +
+                    '<field name="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['int_field'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var $quickCreateGroup;
+        var $groups;
+        _quickCreateAndTest();
+        testUtils.dragAndDrop($groups.first().find('.o_kanban_record:first'), $groups.eq(1));
+        _quickCreateAndTest();
+        kanban.destroy();
+
+        function _quickCreateAndTest() {
+            kanban.$buttons.find('.o-kanban-button-new').click();
+            $quickCreateGroup = kanban.$('.o_kanban_quick_create').closest('.o_kanban_group');
+            $groups = kanban.$('.o_kanban_group');
+            assert.strictEqual($quickCreateGroup[0], $groups[0],
+                "quick create should have been added in the first column");
+        }
     });
 });
 

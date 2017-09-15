@@ -145,10 +145,10 @@ var KanbanRenderer = BasicRenderer.extend({
      * @returns {Deferred}
      */
     updateColumn: function (localID, columnState) {
-        var column = _.findWhere(this.widgets, {db_id: localID});
-        this.widgets.splice(_.indexOf(this.widgets, column), 1); // remove column from widgets' list
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
-        this.widgets.push(newColumn);
+        var index = _.findIndex(this.widgets, {db_id: localID});
+        var column = this.widgets[index];
+        this.widgets[index] = newColumn;
         return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
     },
     /**
