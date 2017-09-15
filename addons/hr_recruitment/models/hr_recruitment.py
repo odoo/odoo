@@ -89,7 +89,6 @@ class Applicant(models.Model):
     _description = "Applicant"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
-    _mail_mass_mailing = _('Applicants')
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):

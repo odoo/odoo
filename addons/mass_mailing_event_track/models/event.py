@@ -16,7 +16,7 @@ class Event(models.Model):
             view_mode='form',
             target='current',
             context=dict(
-                default_mailing_model='event.track',
+                default_mailing_model=self.env.ref('website_event_track.model_event_track').id,
                 default_mailing_domain="[('event_id', 'in', %s), ('stage_id.is_cancel', '!=', True)]" % self.ids,
             ),
         )

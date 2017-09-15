@@ -11,6 +11,7 @@
                 <field name="mass_mailing_id"/>
                 <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('bounced', '=', False)]"/>
                 <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
+                <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>
                 <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
                 <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
                 <group expand="0" string="Group By">
@@ -34,6 +35,7 @@
                 <field name="sent"/>
                 <field name="exception"/>
                 <field name="opened"/>
+                <field name="clicked"/>
                 <field name="replied"/>
                 <field name="bounced"/>
             </tree>
@@ -54,6 +56,7 @@
                         <field name="exception"/>
                         <field name="sent"/>
                         <field name="opened"/>
+                        <field name="clicked"/>
                         <field name="replied"/>
                         <field name="bounced"/>
                     </group>
