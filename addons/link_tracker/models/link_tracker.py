@@ -212,7 +212,7 @@ class link_tracker_code(models.Model):
     def get_random_code_string(self):
         size = 3
         while True:
-            code_proposition = ''.join(random.choice(string.letters + string.digits) for _ in range(size))
+            code_proposition = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
 
             if self.search([('code', '=', code_proposition)]):
                 size += 1
