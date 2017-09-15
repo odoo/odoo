@@ -219,6 +219,11 @@
                                     <field name="state_id"/>
                                     <field name="image"/>
                                     <field name="lang"/>
+                                    <!-- fields in form x2many view to diminish requests -->
+                                    <field name="comment"/>
+                                    <field name="customer"/>
+                                    <field name="display_name"/>
+                                    <field name="supplier"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
