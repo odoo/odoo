@@ -1529,7 +1529,7 @@
                 </span>
             </div>
             <div class="row" id="order_total">
-                <hr class="mt8 mb0"/>
+                <hr class="mt8 mb0 col-lg-offset-3"/>
                 <span class="col-xs-6 text-right h4 mt0">Total:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs h4 mt0" style="white-space: nowrap;">
                     <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
