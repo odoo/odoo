@@ -69,7 +69,7 @@ class AccountMove(models.Model):
     def write(self, vals):
         has_been_posted = False
         for move in self:
-            if move.company_id._is_accounting_unalterable() and move.journal_id.type == 'sale':
+            if move.company_id._is_accounting_unalterable():
                 # write the hash and the secure_sequence_number when posting an account.move
                 if vals.get('state') == 'posted':
                     has_been_posted = True
@@ -95,7 +95,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
-        if self.company_id._is_accounting_unalterable() and self.journal_id.type == 'sale':
+        if self.company_id._is_accounting_unalterable():
             raise UserError(_('You cannot modify a posted journal entry of a business to customer journal which are unalterable.'))
         super(AccountMove, self).button_cancel()
 
@@ -113,7 +113,7 @@ class AccountMove(models.Model):
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
-            raise UserError(_('There isn\'t any sales entry flagged for data inalterability yet for the company %s. This mechanism only runs for sales entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.user.company_id.name)
+            raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet for the company %s. This mechanism only runs for journal entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.user.company_id.name)
         previous_hash = ''
         start_move_info = []
         for move in moves:
@@ -153,7 +153,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id._is_accounting_unalterable() and l.move_id.state == 'posted' and l.journal_id.type == 'sale' for l in self):
+            if any(l.company_id._is_accounting_unalterable() and l.move_id.state == 'posted' for l in self):
                 raise UserError(ERR_MSG % ('journal item', ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
@@ -161,14 +161,9 @@ class AccountMoveLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        if self.company_id._is_accounting_unalterable() and self.type != 'sale':
-            self._origin._is_journal_alterable()
-
     @api.onchange('update_posted')
     def _onchange_update_posted(self):
-        if self.type == 'sale' and self.update_posted:
+        if self.update_posted:
             field_string = self._fields['update_posted'].string
             raise UserError(ERR_MSG % ('journal', field_string))
 
@@ -186,14 +181,9 @@ class AccountJournal(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if self.company_id._is_accounting_unalterable():
-            if vals.get('type') == 'sale':
-                vals['update_posted'] = False
-            if self.type == 'sale':
-                if vals.get('update_posted'):
-                    field_string = self._fields['update_posted'].string
-                    raise UserError(ERR_MSG % ('journal', field_string))
-                if vals.get('type') and vals['type'] != 'sale':
-                    self._is_journal_alterable()
+            if vals.get('update_posted'):
+                field_string = self._fields['update_posted'].string
+                raise UserError(ERR_MSG % ('journal', field_string))
         return super(AccountJournal, self).write(vals)
 
     @api.model
