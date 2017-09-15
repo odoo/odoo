@@ -18,7 +18,6 @@ class Partner(models.Model):
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
     _mail_flat_thread = False
-    _mail_mass_mailing = _('Customers')
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     opt_out = fields.Boolean(

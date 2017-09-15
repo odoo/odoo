@@ -16,7 +16,7 @@ class Event(models.Model):
             view_mode='form',
             target='current',
             context=dict(
-                default_mailing_model='event.registration',
+                default_mailing_model_id=self.env.ref('event.model_event_registration').id,
                 default_mailing_domain="[('event_id', 'in', %s)]" % self.ids,  # , ('state', 'in', ['draft', 'open', 'done'])
             ),
         )

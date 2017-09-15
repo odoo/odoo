@@ -11,7 +11,7 @@ class MassMailController(MassMailController):
     def mailing(self, mailing_id, email=None, res_id=None, **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
         if mailing.exists():
-            if mailing.mailing_model == 'mail.mass_mailing.contact':
+            if mailing.mailing_model_name == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
                 return request.render('website_mass_mailing.page_unsubscribe', {
                     'contacts': contacts,

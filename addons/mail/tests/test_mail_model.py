@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
+
+
+class MailTestSimple(models.Model):
+    _description = 'Test Simple Chatter Record'
+    _name = 'mail.test.simple'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    email_from = fields.Char()
+    description = fields.Text()
 
 
 class MailTest(models.Model):
-    """ A mail.channel is a discussion group that may behave like a listener
-    on documents. """
     _description = 'Test Mail Model'
     _name = 'mail.test'
     _mail_post_access = 'read'
-    # _mail_flat_thread = False
     _inherit = ['mail.thread', 'mail.alias.mixin']
 
     name = fields.Char()
