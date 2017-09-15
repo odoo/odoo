@@ -95,7 +95,7 @@ class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['mail.thread', 'resource.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
 
     _mail_post_access = 'read'
 
