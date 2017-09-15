@@ -421,18 +421,18 @@ class procurement_order(osv.osv):
                     pass
         return {}
 
-    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
+    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, product_qty, start_date, context=None):
         days = orderpoint.lead_days or 0.0
         if orderpoint.lead_type == 'supplier':
             # These days will be substracted when creating the PO
-            days += orderpoint.product_id._select_seller(orderpoint.product_id).delay or 0.0
+            days += orderpoint.product_id._select_seller(orderpoint.product_id, quantity=product_qty).delay or 0.0
         date_planned = start_date + relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
     def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
         return {
             'name': orderpoint.name,
-            'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
+            'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, product_qty, datetime.today(), context=context),
             'product_id': orderpoint.product_id.id,
             'product_qty': product_qty,
             'company_id': orderpoint.company_id.id,
