@@ -69,7 +69,7 @@ class AccountMove(models.Model):
     def write(self, vals):
         has_been_posted = False
         for move in self:
-            if move.company_id._is_accounting_unalterable():
+            if move.company_id._is_accounting_unalterable(raise_on_nocountry=True):
                 # write the hash and the secure_sequence_number when posting an account.move
                 if vals.get('state') == 'posted':
                     has_been_posted = True
@@ -153,7 +153,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id._is_accounting_unalterable() and l.move_id.state == 'posted' for l in self):
+            if any(l.company_id._is_accounting_unalterable(raise_on_nocountry=True) and l.move_id.state == 'posted' for l in self):
                 raise UserError(ERR_MSG % ('journal item', ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
@@ -180,7 +180,7 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if self.company_id._is_accounting_unalterable():
+        if self.company_id._is_accounting_unalterable(raise_on_nocountry=True):
             if vals.get('update_posted'):
                 field_string = self._fields['update_posted'].string
                 raise UserError(ERR_MSG % ('journal', field_string))

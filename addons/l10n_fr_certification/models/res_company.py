@@ -49,7 +49,7 @@ class ResCompany(models.Model):
     def _is_vat_french(self):
         return self.vat and self.vat.startswith('FR') and len(self.vat) == 13
 
-    def _is_accounting_unalterable(self):
-        # if not self.vat and not self.country_id:
-        #     raise UserError(_('Please set up a country or a VAT number on the company %s.') % self.name, )
-        return self.country_id.code in UNALTERABLE_COUNTRIES or self._is_vat_french()
+    def _is_accounting_unalterable(self, raise_on_nocountry=False):
+        if raise_on_nocountry and not self.vat and not self.country_id:
+            raise UserError(_('Please set up a country or a VAT number on the company %s.') % self.name, )
+        return self.country_id and self.country_id.code in UNALTERABLE_COUNTRIES or self._is_vat_french()
