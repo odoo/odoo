@@ -152,8 +152,8 @@ class PaymentAcquirer(models.Model):
              "Use this field anywhere a small image is required.")
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
-    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website.'),
-        ('form', 'The customer is redirected to the website of the acquirer.')],
+    payment_flow = fields.Selection(selection=[('s2s','The customer pays from the website.'),
+        ('form', 'The customer is redirected to the website of the payment acquirer.')],
         default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
 
