@@ -47,6 +47,12 @@ class StockMoveLine(models.Model):
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
+    reference = fields.Char(compute='_compute_stock_move', string="Reference", store=True)
+
+    @api.depends('picking_id', 'move_id')
+    def _compute_stock_move(self):
+        for move in self:
+            move.reference = move.picking_id.name if move.picking_id else move.move_id.name
 
     @api.one
     def _compute_location_description(self):
