@@ -16,6 +16,7 @@ class AccountChartTemplate(models.Model):
         if not self == self.env.ref('l10n_mx.mx_coa'):
             return res
         journal_basis = self.env['account.journal'].search([
+            ('company_id', '=', company.id),
             ('type', '=', 'general'),
             ('code', '=', 'CBMX')], limit=1)
         company.write({'tax_cash_basis_journal_id': journal_basis.id})
