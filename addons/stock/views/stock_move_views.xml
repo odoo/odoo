@@ -164,7 +164,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_stock_move_nosuggest_operations" model="ir.ui.view">
             <field name="name">stock.move.operations.nosuggest.form</field>
             <field name="model">stock.move</field>
@@ -183,7 +183,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-succes="product_uom_qty==qty_done" decoration-danger="qty_done > product_uom_qty)">
+                <tree editable="bottom" decoration-success="product_uom_qty==qty_done" decoration-danger="qty_done &gt; product_uom_qty">
                     <field name="picking_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="location_id" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)])" groups="stock.group_stock_multi_locations"/>
