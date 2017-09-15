@@ -14,12 +14,6 @@
             <field name="country_id" ref="be"/>
         </record>
 
-        <record model="res.partner.bank" id="bank_partner_demo">
-            <field name="acc_number">60-16-13 31926819</field>
-            <field name="acc_type">bank</field>
-            <field name="partner_id" ref="partner_demo" />
-        </record>
-
         <record id="main_partner" model="res.partner">
             <field name="name">YourCompany</field>
             <field name="company_name">YourCompany</field>
@@ -32,11 +26,6 @@
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
             <field name="image" type="base64" file="base/static/img/res_company_logo.png"/>
-        </record>
-
-        <record id="main_company" model="res.company">
-            <field name="name">YourCompany</field>
-            <field name="external_report_layout">standard</field>
         </record>
 
         <record id="user_demo" model="res.users">
