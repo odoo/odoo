@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
-
 from odoo import models, fields, api, _
-from odoo.tools import amount_to_text_en, float_round
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -29,7 +26,7 @@ class AccountRegisterPayments(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
             super(AccountRegisterPayments, self)._onchange_amount()
-        self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
 
     def _prepare_payment_vals(self, invoices):
         res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
@@ -50,15 +47,6 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
-    def _get_check_amount_in_words(self, amount):
-        # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
-        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
-        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
-        return check_amount_in_words
-
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         if hasattr(super(AccountPayment, self), '_onchange_journal_id'):
@@ -69,7 +57,7 @@ class AccountPayment(models.Model):
     @api.onchange('amount')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
-        self.check_amount_in_words = self._get_check_amount_in_words(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
         return res
 
     def _check_communication(self, payment_method_id, communication):
