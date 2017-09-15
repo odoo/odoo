@@ -268,6 +268,10 @@ class Picking(models.Model):
         'Has Packages', compute='_compute_has_packages',
         help='Check the existence of destination packages on move lines')
 
+    show_check_availability = fields.Boolean(
+        compute='_compute_show_check_availability',
+        help='Technical field used to compute whether the check availability button should be shown.')
+
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -352,6 +356,16 @@ class Picking(models.Model):
                 has_packages = True
                 break
         self.has_packages = has_packages
+
+    @api.multi
+    def _compute_show_check_availability(self):
+        for picking in self:
+            has_moves_to_reserve = any(
+                move.state in ('waiting', 'confirmed', 'partially_available') and
+                float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
+                for move in picking.move_lines
+            )
+            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
