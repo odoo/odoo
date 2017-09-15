@@ -13,7 +13,7 @@ The kernel of Odoo, needed for all installation.
     'depends': [],
     'data': [
         'res/res.lang.csv',
-        'base_data.xml',
+        'data/base_data.xml',
         'res/res_currency_data.xml',
         'res/res_country_data.xml',
         'security/base_security.xml',
@@ -65,7 +65,7 @@ The kernel of Odoo, needed for all installation.
         'security/ir.model.access.csv',
     ],
     'demo': [
-        'base_demo.xml',
+        'data/base_demo.xml',
         'res/res_currency_demo.xml',
         'res/res_bank_demo.xml',
         'res/res_partner_demo.xml',
