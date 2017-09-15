@@ -5,6 +5,7 @@ var chat_mixin = require('mail.chat_mixin');
 var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var dom = require('web.dom');
@@ -374,6 +375,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             send_text: _t('Send'),
             default_body: '',
             default_mention_selections: {},
+            isMobile: config.isMobile
         });
         this.context = this.options.context;
 

@@ -6,6 +6,7 @@
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
 
                 <script type="text/javascript" src="/mail/static/src/js/client_action.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/client_action_mobile.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/extended_chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
@@ -40,6 +41,7 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/mail/static/tests/client_action_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chat_window_test.js"></script>
