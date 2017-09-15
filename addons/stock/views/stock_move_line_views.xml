@@ -6,11 +6,11 @@
         <field name="arch" type="xml">
             <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
-                <field name="picking_id" string="Reference"/>
+                <field name="reference" string="Reference"/>
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
-                <field name="qty_done" string="Quantity Done"/>
+                <field name="product_uom_qty" string="Initial Demand"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                 <field name="state"/>
             </tree>
