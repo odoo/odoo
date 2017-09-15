@@ -32,7 +32,7 @@ class GoogleDrive(models.Model):
         for node in doc.xpath("//field"):
             if node.get('modifiers'):
                 modifiers = json.loads(node.get('modifiers'))
-                if not modifiers.get('invisible') and not modifiers.get('tree_invisible'):
+                if not modifiers.get('invisible') and not modifiers.get('column_invisible'):
                     display_fields.append(node.get('name'))
         fields = " ".join(display_fields)
         domain = domain.replace("'", r"\'").replace('"', "'")
