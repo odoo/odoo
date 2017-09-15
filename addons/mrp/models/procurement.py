@@ -54,8 +54,25 @@ class ProcurementOrder(models.Model):
         date_planned = date_planned - relativedelta(days=self.company_id.manufacturing_lead)
         return date_planned
 
+    def _guess_initial_mo(self):
+        """ Try to guess the manufacturing order that caused this procurement. """
+        self.ensure_one()
+        move = self.move_dest_id or self.move_dest_id
+        if move:
+            original_prod = move.raw_material_production_id or move.production_id
+            return original_prod
+        return False
+
     def _prepare_mo_vals(self, bom):
-        return {
+        self.ensure_one()
+
+        # try to guess the user which is assigned to the original manufacturing order
+        user = self.env['res.users']
+        original_prod = self._guess_initial_mo()
+        if original_prod.user_id:
+            user = original_prod.user_id
+
+        res = {
             'origin': self.origin,
             'product_id': self.product_id.id,
             'product_qty': self.product_qty,
@@ -71,6 +88,9 @@ class ProcurementOrder(models.Model):
             'company_id': self.company_id.id,
             'procurement_ids': [(6, 0, [self.id])],
         }
+        if user:
+            res['user_id'] = user.id
+        return res
 
     @api.multi
     def make_mo(self):

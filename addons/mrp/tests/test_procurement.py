@@ -140,3 +140,54 @@ class TestProcurement(TestMrpCommon):
             [('group_id', '=', production_product_4.procurement_group_id.id),
              ('product_id', 'in', self.bom_1.bom_line_ids.mapped('product_id.id'))])
         self.assertEqual(len(procurement), 2)
+
+    def test_procurement_user(self):
+        """Check that the user_id is correctly set on 'child' manufacturing orders."""
+        # Create manufacture route
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+
+        self.product_6.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        self.product_5.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
+        # change product_5's BOM to normal so that a procurement & MO is generated
+        self.bom_2.write({'type': 'normal'})
+
+        production_product_6 = self.env['mrp.production'].create({
+            'name': 'MO/Test-00001',
+            'product_id': self.product_6.id,
+            'user_id': self.user_mrp_user.id,
+            'product_qty': 24.0,
+            'bom_id': self.bom_3.id,
+            'product_uom_id': self.product_6.uom_id.id,
+        })
+        production_product_6.action_assign()
+        self.assertEqual(len(production_product_6.move_raw_ids), 3)
+        self.assertEqual(production_product_6.state, 'confirmed', 'Production order should be for Confirmed state')
+
+        procurement_5 = self.env['procurement.order'].search([
+            ('product_id', '=', self.product_5.id)
+        ])
+        self.assertTrue(procurement_5, "procurement for product 5 was not created")
+        self.assertEqual(len(procurement_5), 1, "exactly one procurement for product 5 should have been created")
+
+        procurement_4 = self.env['procurement.order'].search([
+            ('group_id', '=', production_product_6.procurement_group_id.id),
+            ('product_id', '=', self.product_4.id)
+        ])
+        self.assertTrue(procurement_4, "procurement for product 4 was not created")
+        self.assertEqual(len(procurement_4), 2, "two procurements should have been created")
+
+        production_product_5 = self.env['mrp.production'].search([
+            ('product_id', '=', self.product_5.id)
+        ])
+        production_product_4 = self.env['mrp.production'].search([
+            ('product_id', '=', self.product_4.id)
+        ])
+        self.assertEqual(len(production_product_5), 1)
+        self.assertEqual(production_product_5.user_id, self.user_mrp_user)
+
+        self.assertEqual(len(production_product_4), 2, "exactly two manufacturing orders should have been created.")
+        self.assertTrue(production_product_4, "Manufacturing order for product 4 was not created")
+        self.assertEqual(production_product_4.mapped('user_id'), self.user_mrp_user)
