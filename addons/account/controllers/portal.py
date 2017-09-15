@@ -21,6 +21,7 @@ class PortalAccount(CustomerPortal):
         ])
 
         values['invoice_count'] = invoice_count
+        values['is_documents'] = bool(invoice_count)
         return values
 
     # ------------------------------------------------------------

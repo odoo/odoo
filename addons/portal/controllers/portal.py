@@ -120,6 +120,7 @@ class CustomerPortal(Controller):
             'sales_user': sales_user,
             'page_name': 'home',
             'archive_groups': [],
+            'is_documents': False,
         }
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)

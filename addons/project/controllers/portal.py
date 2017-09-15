@@ -18,6 +18,7 @@ class CustomerPortal(CustomerPortal):
             'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
             'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
         })
+        values['is_documents'] = bool(values['project_count'] or values['task_count'])
         return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)

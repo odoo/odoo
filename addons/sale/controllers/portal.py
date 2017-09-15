@@ -31,6 +31,7 @@ class CustomerPortal(CustomerPortal):
             'quotation_count': quotation_count,
             'order_count': order_count,
         })
+        values['is_documents'] = bool(values['quotation_count'] or values['order_count'])
         return values
 
     #
