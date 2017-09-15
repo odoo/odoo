@@ -157,6 +157,7 @@ class StockMove(models.Model):
     is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
+    reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
@@ -207,6 +208,11 @@ class StockMove(models.Model):
                 move.is_quantity_done_editable = False
             else:
                 move.is_quantity_done_editable = True
+
+    @api.depends('picking_id', 'name')
+    def _compute_reference(self):
+        for move in self:
+            move.reference = move.picking_id.name if move.picking_id else move.name
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
