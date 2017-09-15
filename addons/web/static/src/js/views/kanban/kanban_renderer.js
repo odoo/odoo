@@ -38,7 +38,7 @@ function qwebAddIf(node, condition) {
 function transformQwebTemplate(node, fields) {
     // Process modifiers
     if (node.tag && node.attrs.modifiers) {
-        var modifiers = JSON.parse(node.attrs.modifiers || "{}");
+        var modifiers = node.attrs.modifiers || {};
         if (modifiers.invisible) {
             qwebAddIf(node, _.str.sprintf("!kanban_compute_domain(%s)", JSON.stringify(modifiers.invisible)));
         }

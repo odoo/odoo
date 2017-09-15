@@ -1504,7 +1504,9 @@ QUnit.module('Views', {
             default: {
                 foo: {},
                 bar: {
-                    modifiers:"{\"readonly\": true}",
+                    modifiers: {
+                        readonly: true,
+                    },
                 },
             }
         };
@@ -1524,7 +1526,6 @@ QUnit.module('Views', {
                 return this._super(route, args);
             },
         });
-
         model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.bar, 2,
@@ -1568,7 +1569,9 @@ QUnit.module('Views', {
             default: {
                 foo: {},
                 bar: {
-                    modifiers:"{\"readonly\": true}",
+                    modifiers: {
+                        readonly: true,
+                    },
                     force_save: true,
                 },
             }

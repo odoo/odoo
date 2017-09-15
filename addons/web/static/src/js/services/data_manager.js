@@ -283,15 +283,15 @@ return core.Class.extend({
         // the invisible attribute of a field is supposed to be static ("1" in
         // general), but not totally as it may use keys of the context
         // ("context.get('some_key')"). It is evaluated server-side, and the
-        // result is put inside the modifiers as a value of the '(tree_)invisible'
+        // result is put inside the modifiers as a value of the '(column_)invisible'
         // key, and the raw value is left in the invisible attribute (it is used
         // in debug mode for informational purposes).
         // this should change, for instance the server might set the evaluated
         // value in invisible, which could then be seen as static by the client,
         // and add another key in debug mode containing the raw value.
-        // for now, we do an hack to detect if the value is static and retrieve
-        // it from the modifiers,
-        if (attrs.invisible && attrs.modifiers.match('"(?:tree_)?invisible": ?true')) {
+        // for now, we look inside the modifiers and consider the value only if
+        // it is static (=== true),
+        if (attrs.modifiers.invisible === true || attrs.modifiers.column_invisible === true) {
             attrs.__no_fetch = true;
         }
 
@@ -357,6 +357,15 @@ return core.Class.extend({
                             attrs.orderedBy = [{name: handleField.attrs.name, asc: true}];
                         }
                     }
+
+                    attrs.columnInvisibleFields = {};
+                    _.each(view.arch.children, function (child) {
+                        if (child.attrs && child.attrs.modifiers) {
+                            attrs.columnInvisibleFields[child.attrs.name] =
+                                child.attrs.modifiers.column_invisible || false;
+                        }
+                    });
+
                     // detect editables list has they behave differently with respect
                     // to the sorting (changes are not sorted directly)
                     if (mode === 'list' && view.arch.attrs.editable) {
@@ -395,6 +404,9 @@ return core.Class.extend({
         utils.traverse(arch, function (node) {
             if (typeof node === 'string') {
                 return false;
+            }
+            if (!_.isObject(node.attrs.modifiers)) {
+                node.attrs.modifiers = node.attrs.modifiers ? JSON.parse(node.attrs.modifiers) : {};
             }
             if (node.tag === 'field') {
                 fieldsInfo[node.attrs.name] = self._processField(viewType,

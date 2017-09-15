@@ -604,6 +604,11 @@ var FieldX2Many = AbstractField.extend({
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
+    // We need to trigger the reset on every changes to be aware of the parent changes
+    // and then evaluate the 'column_invisible' modifier in case a evaluated value
+    // changed.
+    resetOnAnyFieldChange: true,
+
     /**
      * useSubview is used in form view to load view of the related model of the x2many field
      */
@@ -628,6 +633,9 @@ var FieldX2Many = AbstractField.extend({
                                             JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
+        }
+        if (this.attrs.columnInvisibleFields) {
+            this._processColumnInvisibleFields();
         }
     },
     /**
@@ -673,10 +681,20 @@ var FieldX2Many = AbstractField.extend({
      * @override
      * @param {Object} record
      * @param {OdooEvent} [ev] an event that triggered the reset action
+     * @param {Boolean} [fieldChanged] if true, the widget field has changed
      * @returns {Deferred}
      */
-    reset: function (record, ev) {
-        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
+    reset: function (record, ev, fieldChanged) {
+        // If 'fieldChanged' is false, it means that the reset was triggered by
+        // the 'resetOnAnyFieldChange' mechanism. If it is the case the
+        // modifiers are evaluated and if there is no change in the modifiers
+        // values, the reset is skipped.
+        if (!fieldChanged) {
+           var newEval = this._evalColumnInvisibleFields();
+           if (_.isEqual(this.currentColInvisibleFields, newEval)) {
+               return $.when();
+           }
+        } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             // Here, we only consider 'UPDATE' commands with data, which occur
             // with editable list view. In order to keep the current line in
@@ -701,6 +719,20 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Evaluates the 'column_invisible' modifier for the parent record.
+     *
+     * @return {Object} Object containing fieldName as key and the evaluated
+     *                         column_invisible modifier
+     */
+    _evalColumnInvisibleFields: function () {
+        var self = this;
+        return _.mapObject(this.columnInvisibleFields, function (domains) {
+            return self.record.evalModifiers({
+                column_invisible: domains,
+             }).column_invisible;
+        });
+    },
+    /**
      * Instanciates or updates the adequate renderer.
      *
      * @override
@@ -713,19 +745,25 @@ var FieldX2Many = AbstractField.extend({
         }
         if (this.renderer) {
             this.renderer.updateState(this.value, {});
-            this.pager.updateState({ size: this.value.count });
+            this.currentColInvisibleFields = this._evalColumnInvisibleFields();
+            this.pager.updateState({
+                size: this.value.count,
+                columnInvisibleFields: this.currentColInvisibleFields,
+            });
             return $.when();
         }
         var arch = this.view.arch;
         var viewType;
         if (arch.tag === 'tree') {
             viewType = 'list';
+            this.currentColInvisibleFields = this._evalColumnInvisibleFields();
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 viewType: viewType,
+                columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
         if (arch.tag === 'kanban') {
@@ -825,6 +863,30 @@ var FieldX2Many = AbstractField.extend({
             this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
         }
         return def;
+    },
+    /**
+     * Parses the 'columnInvisibleFields' attribute to search for the domains
+     * containing the key 'parent'. If there are such domains, the string
+     * 'parent.field' is replaced with 'field' in order to be evaluated
+     * with the right field name in the parent context.
+     *
+     * @private
+     */
+    _processColumnInvisibleFields: function () {
+        var columnInvisibleFields = {};
+        _.each(this.attrs.columnInvisibleFields, function (domains, fieldName) {
+            if (_.isArray(domains)) {
+                columnInvisibleFields[fieldName] = _.map(domains, function (domain) {
+                    // We check if the domain is an array to avoid processing
+                    // the '|' and '&' cases
+                    if (_.isArray(domain)) {
+                        return [domain[0].split('.')[1]].concat(domain.slice(1));
+                    }
+                    return domain;
+                });
+            }
+        });
+        this.columnInvisibleFields = columnInvisibleFields;
     },
 
     //--------------------------------------------------------------------------

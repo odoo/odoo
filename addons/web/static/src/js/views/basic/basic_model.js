@@ -1689,6 +1689,9 @@ var BasicModel = AbstractModel.extend({
         if ('invisible' in modifiers) {
             result.invisible = evalModifier(modifiers.invisible);
         }
+        if ('column_invisible' in modifiers) {
+            result.column_invisible = evalModifier(modifiers.column_invisible);
+        }
         if ('readonly' in modifiers) {
             result.readonly = evalModifier(modifiers.readonly);
         }
@@ -2847,7 +2850,7 @@ var BasicModel = AbstractModel.extend({
     _isFieldProtected: function (record, fieldName, viewType) {
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         if (fieldInfo) {
-            var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+            var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, rawModifiers);
             return modifiers.readonly && !fieldInfo.force_save;
         } else {
@@ -2899,7 +2902,7 @@ var BasicModel = AbstractModel.extend({
             _.each(element.getFieldNames(), function (fieldName) {
                 var field = element.fields[fieldName];
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
-                var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+                var rawModifiers = fieldInfo.modifiers || {};
                 var modifiers = self._evalModifiers(record, rawModifiers);
                 if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
