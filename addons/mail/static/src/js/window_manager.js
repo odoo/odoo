@@ -272,6 +272,7 @@ function render_hidden_sessions_dropdown () {
         sessions: display_state.hidden_sessions,
         open: display_state.windows_dropdown_is_open,
         unread_counter: display_state.hidden_unread_counter,
+        widget: {isMobile: config.isMobile},
     }));
     return $dropdown;
 }

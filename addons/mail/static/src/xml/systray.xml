@@ -6,7 +6,7 @@
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
                 <i class="fa fa-comments"/> <span class="o_notification_counter badge"/>
             </a>
-            <ul t-att-class="'o_mail_navbar_dropdown dropdown-menu ' + (widget.isMobile ? 'o_mail_navbar_mobile' : '')" role="menu">
+            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
                 <li t-if="widget.isMobile">
                     <div class="o_mail_navbar_mobile_header">
                         <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
@@ -14,7 +14,7 @@
                 </li>
                 <li t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
                     <div>
-                        <button type="button" class="btn btn-sm o_filter_button o_selected"> All </button>
+                        <button type="button" class="btn btn-sm o_filter_button active"> All </button>
                         <button type="button" class="btn btn-sm o_filter_button" data-filter='chat'> Chat </button>
                         <button type="button" class="btn btn-sm o_filter_button" data-filter='channels'> Channels </button>
                     </div>
@@ -22,16 +22,16 @@
                 </li>
                 <li class="o_mail_navbar_dropdown_channels"/>
                 <li t-if="widget.isMobile">
-                    <div class="o_mail_navbar_mobile_tabs">
-                        <div class="o_mail_navbar_mobile_tab o_filter_button o_selected">
+                    <div class="o_mail_mobile_tabs">
+                        <div class="o_mail_mobile_tab o_filter_button active">
                             <span class="fa fa-envelope"/>
                             <span class="o_tab_title">All</span>
                         </div>
-                        <div class="o_mail_navbar_mobile_tab o_filter_button" data-filter='chat'>
-                            <span class="fa fa-comments"/>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat'>
+                            <span class="fa fa-user"/>
                             <span class="o_tab_title">Chat</span>
                         </div>
-                        <div class="o_mail_navbar_mobile_tab o_filter_button" data-filter='channels'>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels'>
                             <span class="fa fa-users"/>
                             <span class="o_tab_title">Channels</span>
                         </div>
@@ -48,26 +48,7 @@
             </li>
         </t>
         <t t-foreach="channels" t-as="channel">
-            <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
-                 t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
-                <img class="o_channel_image" t-att-src="channel.image_src"/>
-                <div class="o_channel_info">
-                    <div class="o_channel_title">
-                        <span class="o_channel_name">
-                            <t t-if="channel.status" t-call="mail.chat.UserStatus">
-                                <t t-set="status" t-value="channel.status"/>
-                            </t>
-                            <t t-esc="channel.name"/>
-                            <t t-if="channel.unread_counter">(<t t-esc="channel.unread_counter"/>)</t>
-                        </span>
-                        <span class="o_last_message_date"> <t t-esc="channel.last_message_date"/> </span>
-                    </div>
-                    <div class="o_last_message_preview">
-                        <t t-esc="channel.last_message.displayed_author"/>:
-                        <t t-raw="channel.last_message_preview"/>
-                    </div>
-                </div>
-            </div>
+            <t t-call="mail.chat.ChannelPreview"/>
         </t>
     </t>
 
@@ -79,7 +60,9 @@
         </t>
         <t t-foreach="activities" t-as="activity">
             <div class="o_mail_channel_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
-                <img class="o_channel_image" t-att-src="activity.icon"/>
+                <div class="o_mail_channel_image">
+                    <img t-att-src="activity.icon"/>
+                </div>
                 <div class="o_channel_info">
                     <div class="o_channel_title">
                         <span class="o_channel_name">

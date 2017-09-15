@@ -2,7 +2,7 @@
 @o-chat-window-width: 325px;
 @o-mail-chatter-gap: 10px; // has to be defined here as this file is both in
                            // backend and other assets (livechat)
-@o-chat-header-height: 44px;
+@o-chat-header-height: 46px;
 
 .o_chat_window {
     .o-flex-display();
@@ -43,7 +43,7 @@
 
         @media (max-width: @screen-xs-max) {
             height: @o-chat-header-height;
-            padding-top: 10px;
+            padding-top: 12px;
             border-radius: 0px;
             .o_chat_title {
                 font-size: 16px;
@@ -58,7 +58,6 @@
 
         .o_chat_title {
             cursor: pointer;
-            font-weight: bold;
             .o-flex(1, 1, auto);
             .o-text-overflow();
         }
@@ -78,115 +77,22 @@
     .o_mail_thread {
         .o-flex(1, 1, auto);
         overflow: auto;
-        border: 1px solid @odoo-color-silver-dark; // cannot use gray-lighter-dark as this file is also frontend
-        border-width: 0 1px;
-        font-weight: 400;
-
         .o_thread_date_separator {
-            margin-top: 0px;
-            margin-bottom: 25px;
-            border-bottom: 1px dashed #cccccc;
+            margin: 0px 0px 15px 0px;
             .o_thread_date {
                 background-color: @o-chat-window-bg;
             }
         }
         .o_thread_message {
+            padding: 4px 5px;
             .o_thread_message_sidebar {
-                margin-right: 10px;
-
-                .o_thread_message_avatar {
-                    border-radius: 4px;
-                    border: 1px solid #ebebeb;
-                    max-width: 40px;
-                }
-            }
-            padding: 4px 5px 0px 10px;
-
-            .o_mail_info {
-
-                .o_thread_author, strong a.o_mail_mailto, strong a.o_mail_mailto:hover {
-                    font-weight: 500;
-                    color: #111;
-                    font-size: 11px;
-                    @media (max-width: @screen-xs-max) {
-                        font-size: 13px;
-                    }
-                    margin-top: 5px;
-                }
-                .o_mail_timestamp {
-                    font-size: 11px;
-                    color: #aaa;
-                }
-
-                .o_thread_message_star {
-                    opacity: 1;
-                }
-
-                .o_document_link {
-                    display: block;
-                    max-width: 90%;
-                    font-size: 12px;
-                    @media (max-width: @screen-xs-max) {
-                        font-size: 14px;
-                    }
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    padding-bottom: 0px;
-                    font-weight: 500;
-                }
-            }
-
-            .o_thread_message_content {
-                font-size: 12px;
-                padding-right: 10px;
-                @media (max-width: @screen-xs-max) {
-                    font-size: 14px;
-                }
-                color: #333;
-                p {
-                    margin: 0px 0px 8px;
-                }
-                ul.o_mail_thread_message_tracking {
-                    padding-left: 20px;
-                }
+                margin-right: 5px;
             }
         }
     }
 
-    .o_chat_composer {
-        .o-flex(0, 0, auto);
-        border-left: 1px solid #ebebeb;
-        border-right: 1px solid #ebebeb;
-
-        .o_composer_buttons > button {
-            border: none;
-        }
-
-        .o_composer_button {
-            display: none;
-        }
-
-        .o_composer_mobile_button {
-            display: none;
-        }
-
-
-        @media (max-width: @screen-xs-max) {
-            .o_composer_mobile_button {
-                display: inline-block;
-                background-color: @odoo-brand-optional;
-                color: #fff;
-            }
-        }
-
-        > input {
-            padding: 5px;
-            width: 100%;
-        }
-        .o_composer_input > textarea {
-            border-color: transparent;
-        }
+    .o_chat_composer input {
+        width: 100%;
     }
 }
 
