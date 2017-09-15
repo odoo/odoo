@@ -1576,7 +1576,7 @@ var BasicModel = AbstractModel.extend({
             if (change.id) {
                 relRecord = self.localData[change.id];
             }
-            switch(change.operation) {
+            switch (change.operation) {
                 case 'ADD':
                     list.count++;
                     var resID = relRecord ? relRecord.res_id : change.resID;
@@ -1666,7 +1666,7 @@ var BasicModel = AbstractModel.extend({
         var result = {};
         var self = this;
         var evalContext;
-        function evalModifier (mod) {
+        function evalModifier(mod) {
             if (mod === undefined || mod === false || mod === true) {
                 return !!mod;
             }
@@ -2775,7 +2775,7 @@ var BasicModel = AbstractModel.extend({
         var context = _.extend({}, record.data, record._changes);
 
         // calls _generateX2ManyCommands for a given field, and returns the array of commands
-        function _generateX2ManyCommands (fieldName) {
+        function _generateX2ManyCommands(fieldName) {
             var commands = self._generateX2ManyCommands(record, {fieldNames: [fieldName]});
             return commands[fieldName];
         }
@@ -2903,14 +2903,20 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} dataPoint some local resource
      * @param {Object} [options]
      * @param {string[]} [options.fieldNames] the fields to fetch for a record
+     * @param {boolean} [options.onlyGroups=false]
      * @returns {Deferred}
      */
     _load: function (dataPoint, options) {
+        if (options && options.onlyGroups &&
+          !(dataPoint.type === 'list' && dataPoint.groupedBy.length)) {
+            return $.when(dataPoint);
+        }
+
         if (dataPoint.type === 'record') {
             return this._fetchRecord(dataPoint, options);
         }
         if (dataPoint.type === 'list' && dataPoint.groupedBy.length) {
-            return this._readGroup(dataPoint);
+            return this._readGroup(dataPoint, options);
         }
         if (dataPoint.type === 'list' && !dataPoint.groupedBy.length) {
             return this._fetchUngroupedList(dataPoint);
@@ -3349,9 +3355,10 @@ var BasicModel = AbstractModel.extend({
      * were open before.
      *
      * @param {Object} list valid resource object
+     * @param {Object} [options] @see _load
      * @returns {Deferred<Object>} resolves to the fetched group object
      */
-    _readGroup: function (list) {
+    _readGroup: function (list, options) {
         var self = this;
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
@@ -3406,26 +3413,31 @@ var BasicModel = AbstractModel.extend({
                         type: 'list',
                         viewType: list.viewType,
                     });
-                    list.data.push(newGroup.id);
-                    list.count += newGroup.count;
                     var oldGroup = _.find(previousGroups, function (g) {
                         return g.res_id === newGroup.res_id && g.value === newGroup.value;
                     });
                     if (oldGroup) {
                         // restore the internal state of the group
-                        _.extend(newGroup, _.pick(oldGroup, 'limit', 'isOpen', 'offset'));
-                        // if the group is open and contains subgroups, also
-                        // restore its data to keep internal state of sub-groups
-                        if (newGroup.isOpen && newGroup.groupedBy.length) {
-                            newGroup.data = oldGroup.data;
+                        delete self.localData[newGroup.id];
+                        var updatedProps = _.omit(newGroup, 'limit', 'isOpen', 'offset', 'id');
+                        if (options && options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
+                            // If the group is opened and contains subgroups,
+                            // also keep its data to keep internal state of
+                            // sub-groups
+                            // Also keep data if we only reload groups' own data
+                            delete updatedProps.data;
                         }
+                        _.extend(oldGroup, updatedProps);
+                        newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {
                         newGroup.isOpen = false;
                     } else {
                         newGroup.isOpen = '__fold' in group ? !group.__fold : true;
                     }
+                    list.data.push(newGroup.id);
+                    list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
-                        defs.push(self._load(newGroup));
+                        defs.push(self._load(newGroup, options));
                     }
                 });
                 return $.when.apply($, defs).then(function () {

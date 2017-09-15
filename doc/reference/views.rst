@@ -797,7 +797,7 @@ following attributes:
 Pivots
 ------
 
-The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
 
 ``disable_linking``
@@ -853,6 +853,24 @@ Possible children of the view element are:
 
   ``name`` (required)
     the name of the field to fetch
+
+``progressbar``
+  declares a progressbar element to put on top of kanban columns.
+
+  Possible attributes are:
+
+  ``field`` (required)
+    the name of the field whose values are used to subgroup column's records in
+    the progressbar
+
+  ``colors`` (required)
+    JSON mapping the above field values to either "danger", "warning" or
+    "success" colors
+
+  ``sum`` (optional)
+    the name of the field whose column's records' values will be summed and
+    displayed next to the progressbar (if omitted, displays the total number of
+    records)
 
 ``templates``
   defines a list of :ref:`reference/qweb` templates. Cards definition may be
@@ -1067,7 +1085,7 @@ take the following attributes:
   ``gantt`` classic gantt view (default)
 
   ``consolidate`` values of the first children are consolidated in the gantt's task
-  
+
   ``planning`` children are displayed in the gantt's task
 ``consolidation``
   field name to display consolidation value in record cell
