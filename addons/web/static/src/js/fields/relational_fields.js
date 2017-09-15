@@ -93,8 +93,12 @@ var FieldMany2One = AbstractField.extend({
         this._super.apply(this, arguments);
         this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
-        this.can_create = ('can_create' in this.attrs ? this.attrs.can_create : true) && !this.nodeOptions.no_create;
-        this.can_write = 'can_write' in this.attrs ? this.attrs.can_write : true;
+
+        // should normally also be set, except in standalone M20
+        this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
+            !this.nodeOptions.no_create;
+        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
