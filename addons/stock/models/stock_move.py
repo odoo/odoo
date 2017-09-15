@@ -864,7 +864,6 @@ class StockMove(models.Model):
 
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
                 move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move})
-                self.browse(new_move).quantity_done = 0.0
             move.move_line_ids._action_done()
         picking = self and self[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})

@@ -2275,6 +2275,55 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('skip buttons when navigating list view with TAB (end)', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<button name="kikou" string="Kikou" type="object"/>' +
+                '</tree>',
+            res_id: 1,
+        });
+
+        list.$('tbody tr:eq(2) td:eq(1)').click();
+        assert.strictEqual(list.$('tbody tr:eq(2) input[name="foo"]')[0], document.activeElement,
+            "foo should be focused");
+        list.$('tbody tr:eq(2) input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(list.$('tbody tr:eq(3) input[name="foo"]')[0], document.activeElement,
+            "next line should be selected");
+
+        list.destroy();
+    });
+
+    QUnit.test('skip buttons when navigating list view with TAB (middle)', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
+                    '<button name="kikou" string="Kikou" type="object"/>' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+            res_id: 1,
+        });
+
+        list.$('tbody tr:eq(2) td:eq(1)').click();
+        assert.strictEqual(list.$('tbody tr:eq(2) input[name="foo"]')[0], document.activeElement,
+            "foo should be focused");
+        list.$('tbody tr:eq(2) input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(list.$('tbody tr:eq(2) input[name="int_field"]')[0], document.activeElement,
+            "int_field should be focused");
+
+        list.destroy();
+    });
+
     QUnit.test('navigation: moving down with keydown', function (assert) {
         assert.expect(2);
 
