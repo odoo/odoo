@@ -7,7 +7,9 @@
     'depends': ['website', 'mail'],
     'data': [
         'views/assets.xml',
+        'views/website_contactus.xml',
+        'data/mail_mail_data.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }

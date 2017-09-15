@@ -44,7 +44,7 @@
     </data>
     <data>
         <record id="sale.model_sale_order" model="ir.model">
-            <field name="website_form_access" eval="True"/>
+            <field name="website_form_access" eval="False"/>
             <field name="website_form_label">Sales Order</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
@@ -55,8 +55,10 @@
         </function>
 
         <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_default_field_id" ref="base.field_res_partner_comment" />
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Customer</field>
+            <field name="website_form_label">Create a Customer</field>
+            <field name="website_form_default_template">website_sale.default_res_partner_form</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>res.partner</value>

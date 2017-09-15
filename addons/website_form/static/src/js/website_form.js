@@ -48,6 +48,21 @@ odoo.define('website_form.animation', function (require) {
             datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
 
+            // set input values from the span tag with id=default_form_data tag
+            // Necessary to handle field values generated server-side, since
+            // using t-att- inside a snippet makes it non-editable !
+            if (this.$target.parents('body.editor_enable').length === 0) {
+                var $default_form_data = $('#default_form_data');
+                if ($default_form_data.length) {
+                    var data = jQuery.parseJSON($default_form_data.attr('default_data'));
+                    var form_fields = this.$target.serializeArray();
+                    _.each(form_fields, function(field) {
+                        if (_.has(data, field.name)) {
+                            self.$target.find("input[name='" + field.name + "'], textarea[name='" + field.name + "']").val(data[field.name]);
+                        }
+                    });
+                }
+            }
             return this._super.apply(this, arguments);
         },
 
@@ -58,8 +73,7 @@ odoo.define('website_form.animation', function (require) {
 
         send: function (e) {
             e.preventDefault();  // Prevent the default submit behavior
-            this.$target.find('.o_website_form_send').off();  // Prevent users from crazy clicking
-
+            $(e.currentTarget).attr("disabled", true);
             var self = this;
 
             self.$target.find('#o_website_form_result').empty();
@@ -101,15 +115,6 @@ odoo.define('website_form.animation', function (require) {
                 }
             });
 
-            // Overwrite form_values array with values from the form tag
-            // Necessary to handle field values generated server-side, since
-            // using t-att- inside a snippet makes it non-editable !
-            for (var key in this.$target.data()) {
-                if (_.str.startsWith(key, 'form_field_')){
-                    form_values[key.replace('form_field_', '')] = this.$target.data(key);
-                }
-            }
-
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function (result_data) {
@@ -130,7 +135,6 @@ odoo.define('website_form.animation', function (require) {
                     else {
                         self.update_status('success');
                     }
-
                     // Reset the form
                     self.$target[0].reset();
                 }
@@ -138,6 +142,7 @@ odoo.define('website_form.animation', function (require) {
             .fail(function (result_data){
                 self.update_status('error');
             });
+
         },
 
         check_error_fields: function (error_fields) {
@@ -229,10 +234,7 @@ odoo.define('website_form.animation', function (require) {
         },
 
         update_status: function (status) {
-            var self = this;
-            if (status !== 'success') {  // Restore send button behavior if result is an error
-                this.$target.find('.o_website_form_send').on('click',function (e) {self.send(e);});
-            }
+            this.$target.find('.o_website_form_send').attr('disabled', false);
             this.$target.find('#o_website_form_result').replaceWith(qweb.render("website_form.status_" + status));
         },
     });
