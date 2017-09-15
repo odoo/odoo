@@ -33,12 +33,10 @@
                     <li t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
                         <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a>
-                            </li>
+                            <li><a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a></li>
+                            <li><a href="/website/pages" title="Manage Your Website Pages">Manage Pages</a></li>
                             <li t-if="deletable" role="separator" class="divider"></li>
-                            <li t-if="deletable"><a href="#" data-action="rename_page">Rename Page</a></li>
-                            <li t-if="deletable"><a href="#" data-action="delete_page">Delete Page</a></li>
+                            <li t-if="deletable"><a href="#" data-action="page_properties">Page Properties</a></li>
                         </ul>
                     </li>
                     <!-- Customize -->
@@ -61,6 +59,16 @@
                 </ul>
 
                 <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
+                    <li t-if="'website_published' in main_object.fields_get()" t-attf-class="js_publish_management #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
+                        <a>
+                            <label class="o_switch js_publish_btn" for="id" >
+                                <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
+                                <span/>
+                                <span class="css_publish">Unpublished</span>
+                                <span class="css_unpublish">Published</span>
+                            </label>
+                        </a>
+                    </li>
                     <!-- Mobile preview -->
                     <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="fa fa-mobile"/></a>
@@ -76,6 +84,18 @@
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                    </li>
+                    <li t-if="'website_published' in main_object.fields_get()">
+                        <a class="btn btn-primary btn-xs dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="edit-in-backend">
+                                <a style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}"
+                                   class="btn btn-link btn-xs" title='Edit in backend'>Edit in backend</a>
+                            </li>
+                        </ul>
                     </li>
                     <li t-if="translatable">
                         <a data-action="translate" href="#">TRANSLATE</a>

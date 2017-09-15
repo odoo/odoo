@@ -702,8 +702,6 @@ form: module.record_id""" % (xml_id,)
         if groups:
             grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
             record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
-        if el.attrib.pop('page', None) == 'True':
-            record.append(Field(name="page", eval="True"))
         if el.get('primary') == 'True':
             # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
             el.append(

@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 import traceback
+import datetime
+import os
 
 import werkzeug
 import werkzeug.routing
@@ -17,8 +18,7 @@ from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.http_routing.models.ir_http import ModelConverter
-
+from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,6 @@ class Http(models.AbstractModel):
         return dict(
             super(Http, cls)._get_converters(),
             model=ModelConverter,
-            page=PageConverter,
         )
 
     @classmethod
@@ -90,6 +89,53 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
+    def _serve_page(cls):
+        req_page = request.httprequest.path
+
+        domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
+
+        if not request.website.is_publisher:
+            domain += [('is_visible', '=', True)]
+
+        mypage = request.env['website.page'].search(domain, limit=1)
+        _, ext = os.path.splitext(req_page)
+        if mypage:
+            return request.render(mypage.ir_ui_view_id.id, {
+                # 'path': req_page[1:],
+                'deletable': True,
+                'main_object': mypage,
+            }, mimetype=_guess_mimetype(ext))
+
+        return request.website.is_publisher() and request.render('website.page_404', {'path': req_page[1:]}) or False
+
+    @classmethod
+    def _serve_redirect(cls):
+        req_page = request.httprequest.path
+        domain = [
+            '|', ('website_id', '=', request.website.id), ('website_id', '=', False),
+            ('url_from', '=', req_page)
+        ]
+        return request.env['website.redirect'].search(domain, limit=1)
+
+    @classmethod
+    def _serve_fallback(cls, exception):
+        # serve attachment before
+        parent = super(Http, cls)._serve_fallback(exception)
+        if parent:  # attachment
+            return parent
+
+        website_page = cls._serve_page()
+        if website_page:
+            return website_page
+
+        redirect = cls._serve_redirect()
+        if redirect:
+            return request.redirect(redirect.url_to, code=redirect.type)
+
+        return False
+
+
+    @classmethod
     def _handle_exception(cls, exception):
         code = 500  # default code
         is_website_request = bool(getattr(request, 'is_frontend', False) and getattr(request, 'website', False))
@@ -99,6 +145,7 @@ class Http(models.AbstractModel):
         else:
             try:
                 response = super(Http, cls)._handle_exception(exception)
+
                 if isinstance(response, Exception):
                     exception = response
                 else:
@@ -135,7 +182,7 @@ class Http(models.AbstractModel):
                 if 'qweb_exception' in values:
                     view = request.env["ir.ui.view"]
                     views = view._views_get(exception.qweb['template'])
-                    to_reset = views.filtered(lambda view: view.model_data_id.noupdate is True and not view.page)
+                    to_reset = views.filtered(lambda view: view.model_data_id.noupdate is True and view.arch_fs)
                     values['views'] = to_reset
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])
@@ -178,30 +225,3 @@ class ModelConverter(ModelConverter):
         for record in Model.search_read(domain=domain, fields=['write_date', Model._rec_name]):
             if record.get(Model._rec_name, False):
                 yield {'loc': (record['id'], record[Model._rec_name])}
-
-
-class PageConverter(werkzeug.routing.PathConverter):
-    """ Only point of this converter is to bundle pages enumeration logic """
-
-    def generate(self, uid, query=None, args={}):
-        View = request.env['ir.ui.view'].sudo(uid)
-        domain = [('page', '=', True)]
-        query = query and query.startswith('website.') and query[8:] or query
-        if query:
-            domain += [('key', 'like', query)]
-        website = request.env['website'].get_current_website()
-        domain += ['|', ('website_id', '=', website.id), ('website_id', '=', False)]
-
-        views = View.search_read(domain, fields=['key', 'priority', 'write_date'], order='name')
-        for view in views:
-            xid = view['key'].startswith('website.') and view['key'][8:] or view['key']
-            # the 'page/homepage' url is indexed as '/', avoid aving the same page referenced twice
-            # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
-            if xid == 'homepage':
-                continue
-            record = {'loc': xid}
-            if view['priority'] != 16:
-                record['__priority'] = min(round(view['priority'] / 32.0, 1), 1)
-            if view['write_date']:
-                record['__lastmod'] = view['write_date'][:10]
-            yield record

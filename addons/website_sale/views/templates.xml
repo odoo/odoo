@@ -378,6 +378,11 @@
     </template>
 
     <!-- /shop/product product page -->
+    <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
+        <xpath expr="//li[@id='edit-page-menu']" position="after">
+            <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'product.product_template_action'" />
+        </xpath>
+    </template>
     <template id="product" name="Product">
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
@@ -401,11 +406,6 @@
                             <t t-call="website_sale.search" />
                         </div>
                         <div id="website_published_button" class="col-sm-3">
-                            <t t-call="website.publish_management" groups="sales_team.group_sale_manager">
-                                <t t-set="object" t-value="product" />
-                                <t t-set="publish_edit" t-value="True" />
-                                <t t-set="action" t-value="'product.product_template_action'" />
-                            </t>
                         </div>
                         <div class="col-sm-2 text-right">
                             <t t-call="website_sale.pricelist_list" />

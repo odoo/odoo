@@ -375,8 +375,10 @@ var SeoConfigurator = Dialog.extend({
             self.updateTable(removed);
         });
         this.keywordList.insertAfter(this.$('.table thead'));
-        this.disableUnsavableFields();
-        this.renderPreview();
+        this.disableUnsavableFields().then(function(){
+            self.renderPreview();
+        });
+
         this.getLanguages();
         this.updateTable();
     },
@@ -396,7 +398,9 @@ var SeoConfigurator = Dialog.extend({
     },
     disableUnsavableFields: function () {
         var self = this;
-        this.loadMetaData().then(function (data) {
+        return this.loadMetaData().then(function (data) {
+            //If website.page, hide the google preview & tell user his page is currently unindexed 
+            self.isIndexed = (data && ('website_indexed' in data)) ? data.website_indexed : true;
             self.canEditTitle = data && ('website_meta_title' in data);
             self.canEditDescription = data && ('website_meta_description' in data);
             self.canEditKeywords = data && ('website_meta_keywords' in data);
@@ -474,6 +478,9 @@ var SeoConfigurator = Dialog.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
+            if (obj.model == 'website.page'){
+                fields.push('website_indexed');
+            }
             rpc.query({
                 model: obj.model,
                 method: 'read',
@@ -521,11 +528,20 @@ var SeoConfigurator = Dialog.extend({
         });
     },
     renderPreview: function () {
-        var preview = new Preview(this, {
-            title: this.htmlPage.title(),
-            description: this.htmlPage.description(),
-            url: this.htmlPage.url(),
-        });
+        var indexed = this.isIndexed;
+        var preview = "";
+        if(indexed){
+            preview = new Preview(this, {
+                title: this.htmlPage.title(),
+                description: this.htmlPage.description(),
+                url: this.htmlPage.url(),
+            });
+        }
+        else{
+            preview = new Preview(this, {
+                description: _("You have hidden this page from search results. It won't be indexed by search engine"),
+            });
+        }
         var $preview = this.$('.js_seo_preview');
         $preview.empty();
         preview.appendTo($preview);
