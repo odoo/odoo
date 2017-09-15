@@ -202,6 +202,11 @@
     </xpath>
 </template>
 
+<template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'" />
+    </xpath>
+</template>
 <template id="layout">
     <t t-call="website.layout">
       <div id="wrap" class="js_event o_website_event">
@@ -225,13 +230,6 @@
                             <t t-call="website.submenu"/>
                         </t>
                     </ol>
-                </div>
-                <div class="col-sm-5" groups="event.group_event_manager">
-                    <t t-call="website.publish_management">
-                      <t t-set="object" t-value="event"/>
-                      <t t-set="publish_edit" t-value="True"/>
-                      <t t-set="action" t-value="'event.action_event_view'"/>
-                    </t>
                 </div>
             </div>
         </div>

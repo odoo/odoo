@@ -368,6 +368,11 @@
 </template>
 
 <!-- Slide: main template: detailed view -->
+<template id="slide_edit_options" inherit_id="website.user_navbar" name="Edit Slide Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'slide.slide'" t-set="action" t-value="'website_slides.action_slides_slides'" />
+    </xpath>
+</template>
 <template id="slide_detail_view" name="Slide Detailed View">
     <t t-set="head">
         <t t-if="not private">
@@ -409,13 +414,6 @@
                                     <div class="col-md-8" t-if="slide.tag_ids">
                                         <t t-foreach="slide.tag_ids" t-as="slide_tag">
                                             <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 pull-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
-                                        </t>
-                                    </div>
-                                    <div class="pull-right">
-                                        <t t-call="website.publish_management">
-                                            <t t-set="object" t-value="slide"/>
-                                            <t t-set="publish_edit" t-value="True"/>
-                                            <t t-set="action" t-value="'website_slides.action_slides_slides'"/>
                                         </t>
                                     </div>
                                 </div>

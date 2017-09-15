@@ -18,7 +18,6 @@ class View(models.Model):
     _name = "ir.ui.view"
     _inherit = ["ir.ui.view", "website.seo.metadata"]
 
-    page = fields.Boolean("Whether this view is a web page template (complete)", default=False)
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
 

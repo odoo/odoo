@@ -23,11 +23,27 @@ body.o_connected_user {
         border-radius: 0;
     }
 
+    .o_menu_sections {
+        a {
+            > .fa-plus, > .fa-pencil {
+                margin-right: @grid-gutter-width/4;
+            }
+        }
+
+        .o_mobile_preview a {
+            text-align: center;
+            font-size: 20px;
+        }
+    }
     .o_menu_systray {
         a {
             padding: 0 @grid-gutter-width/2;
 
-            &[data-action="edit"], &[data-action="translate"] {
+            &.css_edit_dynamic{
+                padding: 0 @grid-gutter-width/4;
+            }
+
+            &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
                 .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
             }
 
