@@ -5,8 +5,8 @@ var chat_mixin = require('mail.chat_mixin');
 var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
-var core = require('web.core');
 var config = require('web.config');
+var core = require('web.core');
 var data = require('web.data');
 var dom = require('web.dom');
 var session = require('web.session');

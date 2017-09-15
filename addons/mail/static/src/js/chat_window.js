@@ -77,13 +77,6 @@ return Widget.extend({
         this.unread_msgs = counter;
         this.render_header();
     },
-
-    /**
-     * When user status (online/offline/away) changed, this method update
-     * user status with last seen and render header again.
-     *
-     * @param {string} status
-     */
     update_status: function (status) {
         this.status = status;
         this.render_header();
@@ -92,8 +85,8 @@ return Widget.extend({
         this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
             status: this.status,
             title: this.title,
-            isMobile: this.isMobile,
             unread_counter: this.unread_msgs,
+            widget: this,
         }));
     },
     fold: function () {

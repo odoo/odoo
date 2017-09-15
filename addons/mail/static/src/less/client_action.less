@@ -8,277 +8,6 @@
     height: 100%;
     overflow: hidden;
 
-    @media (max-width: @screen-xs-max) {
-        height: auto;
-
-        .o_mail_chat_inbox_starred_button {
-            position: absolute;
-            width: 100%;
-            top: 40px;
-            padding-left: 15px;
-            padding-right: 15px;
-            padding-top: 15px;
-            padding-bottom: 10px;
-            text-align: center;
-            background: #ffffff;
-
-            .o_channel_inbox_item {
-                width: 50%;
-                border: 1px solid @odoo-brand-optional;
-
-                &:first-child {
-                    border-radius: 4px 0px 0px 4px;
-                }
-                &:last-child {
-                    border-radius: 0px 4px 4px 0px;
-                }
-            }
-        }
-
-        .o_mail_chat_content {
-            padding-top: 80px;
-            padding-bottom: 55px;
-
-            .o_mail_no_content {
-                padding-top: 30px;
-                display: block;
-                text-align: center;
-                margin: auto 0px;
-                position: absolute;
-                top: 30%;
-                width: 100%;
-            }
-        }
-
-        .o_mail_chat_mobile_tabs {
-            display: block !important;
-        }
-
-        .o_mail_chat_tab_pane {
-            display: none;
-            position: relative;
-            height: 100%;
-            padding-top: 50px;
-            padding-bottom: 55px;
-            overflow-x: scroll;
-            display: block;
-            background: #ffffff;
-
-            .o_mail_mobile_add_channel {
-                width: auto;
-                padding: 5px 0px; // larger padding-left than titles
-                position: relative;
-                margin: 10px;
-                display: none;
-                border: 1px solid #afafaf;
-                border-radius: 4px;
-
-                > input {
-                    width: 100%;
-                    padding: 5px 8px;
-                    padding-left: 20px;
-                    border: none;
-                }
-                > span {
-                    position: absolute;
-                    top: 10px;
-                    left: 10px;
-                }
-            }
-
-            .o_mail_tab_pane_item {
-                padding: 15px;
-                border-bottom: 1px solid #ebebeb;
-                overflow: hidden;
-                max-height: 100px;
-                position: relative;
-
-                &:last-child {
-                    border: none;
-                }
-
-                .item_avatar_status {
-                    display: inline-block;
-                    position: absolute;
-                    top: 15px;
-                    left: 10px;
-                    width: 55px;
-                    vertical-align: top;
-
-                    img {
-                        border-radius: 4px;
-                        max-width: 55px;
-                    }
-
-                    .o_mail_user_status {
-                        position: absolute;
-                        bottom: 5px;
-                        right: -8px;
-                        font-size: 13px;
-                        color: #cc0000;
-                        border-radius: 30px;
-                        background: #fff;
-                        padding: 2px;
-
-                        &.o_user_online {
-                            color: #21b799;
-                        }
-                    }
-                }
-
-                .chat_user_detail {
-                    display: inline-block;
-                    width: 100%;
-                    vertical-align: middle;
-                    padding-top: 5px;
-                    padding-left: 65px;
-
-                    h2 {
-                        font-size: 17px;
-                        display: block;
-                        font-weight: 500;
-                        margin: 0px;
-                        padding: 0px;
-                        color: #414141;
-
-                        small {
-                            float: right;
-                        }
-
-                        &.unread {
-                            font-weight: 700;
-                        }
-                    }
-
-                    p {
-                        display: inline-block;
-                        color: #b3b3b3;
-                        max-height: 27px;
-                        margin-top: 10px;
-                        overflow: hidden;
-                        line-height: 15px;
-
-                        &.unread{
-                            font-weight: 700;
-                            color: #8f8f8f;
-                        }
-                    }
-                }
-            }
-        }
-
-        .o_mail_chat_mobile_control_panel {
-            display: block !important;
-        }
-    }
-
-    .o_mail_chat_mobile_control_panel {
-        display: none;
-        position: absolute;
-        background: #ffffff;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        padding: 5px;
-        min-height: 44px;
-        box-shadow: 0px 0px 20px #afafaf;
-        border-bottom: 1px solid #ebebeb;
-        height: auto;
-        z-index: 1;
-
-        .o_mail_channel_title {
-            padding: 5px 10px 5px 0px;
-            color: #8f8f8f;
-            font-size: 14px;
-        }
-
-        .o_searchview {
-            color: #414141;
-            background: none;
-            border-color: transparent;
-            padding: 5px 5px 0px 5px;
-
-            .o_searchview_input {
-                width: 250px;
-                font-size: 15px;
-            }
-        }
-
-        .o_enable_searchview, .o_enable_searchview:focus,
-            .o_enable_searchview:hover, .o_enable_searchview:active  {
-                color: #414141;
-                background: none;
-                border-color: transparent;
-                display: inline-block;
-                width: auto;
-                position: absolute;
-                right: 5px;
-                top: 5px;
-
-                &::before {
-                    font-size: 15px;
-                }
-        }
-        .o_searchview_more {
-            display: none;
-        }
-    }
-
-    .o_mail_chat_mobile_tabs {
-        display: none;
-        background: #fff;
-        box-shadow: 0px 0px 20px #afafaf;
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
-        width: 100%;
-
-        .o_mail_chat_mobile_tab {
-            display: inline-block;
-            width: 20%;
-            height: 100%;
-            min-height: 100%;
-            padding: 8px 4px;
-            text-align: center;
-            float: left;
-
-            &:first-child:nth-last-child(4),
-            &:first-child:nth-last-child(4) ~ .o_mail_chat_mobile_tab {
-               width: 25%;
-            }
-
-            &:first-child:nth-last-child(5),
-            &:first-child:nth-last-child(5) ~ .o_mail_chat_mobile_tab {
-               width: 20%;
-            }
-
-            &:not(:last-child) {
-               border-right: 1px solid #d7d7d7;
-            }
-
-            span {
-               display: block;
-               &.fa {
-                   font-size: 16px;
-               }
-
-               &.o_tab_title{
-                   font-size: 8px;
-                   padding-top: 8px;
-               }
-            }
-            &.active {
-               span {
-                   color: @odoo-brand-optional;
-               }
-            }
-        }
-    }
-
-    .o_mail_chat_tab_pane {
-        display: none;
-    }
-
     .o_mail_annoying_notification_bar {
         height: 40px;
         background-color: #DFA941;
@@ -314,12 +43,6 @@
         float: left;
         overflow: auto;
         padding: @odoo-horizontal-padding 0;
-
-        @media (max-width: @screen-xs-max) {
-            width: 100%;
-            float: none;
-            display: none;
-        }
 
         @media (min-width: @screen-lg-min) {
             width: @mail-chat-sidebar-width + 50px;
@@ -396,12 +119,6 @@
         position: relative;
         @media (min-width: @screen-sm-min) {
             overflow: auto;
-        }
-
-        @media (max-width: @screen-xs-max) {
-            margin-left: 0;
-            display: block;
-            overflow-x: scroll;
         }
 
         @media (min-width: @screen-lg-min) {
@@ -538,9 +255,221 @@
     font-size: 1em;
     position: relative;
     &.o_user_online {
-        color: @brand-success;
+        color: @odoo-brand-optional;
     }
     &.o_user_idle {
         color: @brand-warning;
+    }
+}
+
+
+// ------------------------------------------------------------------
+// Mobile
+// ------------------------------------------------------------------
+@media (max-width: @screen-xs-max) {
+    .o_mail_chat {
+        .o-flex-display();
+        .o-flex-flow(column, nowrap);
+        background: white;
+
+        .o_mail_chat_mobile_control_panel {
+            .o-flex(0, 0, auto);
+            padding: 5px;
+            min-height: 44px;
+            border-bottom: 1px solid #ebebeb;
+            box-shadow: 0px 0px 10px #afafaf;
+            z-index: 1; // so that box shaddow is above thread's images
+            .o_searchview {
+                border: none;
+                padding: 5px 5px 0px 5px;
+                .o_searchview_input {
+                    font-size: 15px;
+                }
+                .o_searchview_more {
+                    display: none;
+                }
+            }
+            .o_enable_searchview, .o_enable_searchview:focus,
+                .o_enable_searchview:hover, .o_enable_searchview:active  {
+                    .o-position-absolute(@right: 5px, @top: 5px);
+                    color: gray;
+                    background: none;
+                    font-size: 15px;
+                    &:active {
+                        box-shadow: none;
+                    }
+            }
+        }
+
+        .o_mail_chat_mobile_inbox_buttons {
+            .o-flex(0, 0, auto);
+            padding: 15px 15px 10px 15px;
+            .o_channel_inbox_item {
+                width: 50%;
+                border: 1px solid @odoo-brand-optional;
+                &:first-child {
+                    border-radius: 4px 0px 0px 4px;
+                }
+                &:last-child {
+                    border-radius: 0px 4px 4px 0px;
+                }
+            }
+        }
+
+        .o_mail_chat_content {
+            .o-flex(1, 0, 0);
+            margin-left: 0;
+            background-color: transparent;
+            .o_mail_no_content {
+                .o-position-absolute(@top: 30%);
+                text-align: center;
+            }
+        }
+
+
+        .o_mail_chat_tab_pane {
+            overflow-x: scroll;
+            .o_mail_add_channel {
+                display: none;
+                position: relative;
+                padding: 5px 0px;
+                margin: 10px;
+                border: 1px solid #afafaf;
+                border-radius: 4px;
+                > span {
+                    .o-position-absolute(@top: 10px, @left: 10px);
+                }
+                > input {
+                    border: none;
+                    padding: 5px 8px;
+                    padding-left: 20px;
+                }
+            }
+        }
+        .o_mail_mobile_tabs {
+            .o-flex(0, 0, auto);
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Channel preview: shared between client action (mobile) and systray
+// ------------------------------------------------------------------
+
+.o_mail_channel_preview {
+    .o-flex-display();
+    border-bottom: 1px solid #ebebeb;
+    overflow: hidden;
+    position: relative;
+    .o_mail_channel_image {
+        .o-flex(0, 0, auto);
+        position: relative;
+        text-align: center;
+        > img {
+            border-radius: 50%;
+        }
+        .o_mail_user_status {
+            .o-position-absolute(@bottom: 0px, @right: 0px);
+        }
+    }
+    .o_channel_info {
+        .o-flex(1, 1, 100%);
+        overflow: hidden;
+        .o_channel_title {
+            .o-flex-display();
+            .o_channel_name {
+                .o-flex(0, 1, auto);
+                .o-text-overflow();
+            }
+            .o_channel_counter {
+                .o-flex(1, 1, auto);
+            }
+            .o_channel_name, .o_channel_counter {
+                color: @odoo-main-text-color;
+            }
+            .o_last_message_date {
+                .o-flex(0, 0, auto);
+                color: @odoo-main-color-muted;
+            }
+        }
+        .o_last_message_preview {
+            width: 100%;
+            max-height: 20px;
+            color: @odoo-main-color-muted;
+            .o-text-overflow();
+        }
+    }
+    &.o_channel_unread {
+        background-color: #f5f5f5;
+        .o_channel_info {
+            .o_channel_title {
+                .o_channel_name, .o_channel_counter {
+                    font-weight: 700;
+                }
+                .o_last_message_date {
+                    color: @odoo-brand-optional;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: @screen-xs-max) {
+    .o_mail_channel_preview {
+        height: 85px;
+        padding: 15px;
+        .o_channel_info {
+            margin-left: 15px;
+            padding-top: 5px;
+            .o_channel_title {
+                .o_channel_name, .o_channel_counter {
+                    font-size: 15px;
+                    font-weight: 500;
+                }
+                .o_last_message_date {
+                    padding-top: 2px;
+                    margin-left: 10px;
+                }
+            }
+        }
+        &.o_channel_unread {
+            .o_channel_info .o_last_message_preview {
+                font-weight: 500;
+            }
+        }
+    }
+    .o_mail_channel_image {
+        width: 55px;
+        > img {
+            max-height: 55px;
+        }
+    }
+    .o_mail_mobile_tabs {
+        .o-flex-display();
+        .o-flex-flow(row, nowrap);
+        border-top: 1px solid #ebebeb;
+        box-shadow: 0px 0px 10px #afafaf;
+        z-index: 1; // so that box shaddow is above thread's images
+        .o_mail_mobile_tab {
+            .o-flex(1, 1, 0);
+            padding: 8px 4px;
+            text-align: center;
+            &:not(:last-child) {
+               border-right: 1px solid #d7d7d7;
+            }
+            > span {
+               display: block;
+               &.fa {
+                   font-size: 16px;
+               }
+               &.o_tab_title{
+                   font-size: 8px;
+                   padding-top: 8px;
+               }
+            }
+            &.active > span {
+               color: @odoo-brand-optional;
+            }
+        }
     }
 }

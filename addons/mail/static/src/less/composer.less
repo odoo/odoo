@@ -54,6 +54,11 @@
         .o_composer_button_full_composer {
             .o-position-absolute(0, 0);
         }
+        @media (max-width: @screen-xs-max) {
+            .o_composer_button_send {
+                color: @odoo-brand-optional;
+            }
+        }
     }
 
     // Both inline and not-inline design. Mini-composer disabled.
