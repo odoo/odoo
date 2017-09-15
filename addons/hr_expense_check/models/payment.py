@@ -27,7 +27,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(HrExpenseRegisterPaymentWizard, self), '_onchange_amount'):
             super(HrExpenseRegisterPaymentWizard, self)._onchange_amount()
-        self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
 
     def _get_payment_vals(self):
         res = super(HrExpenseRegisterPaymentWizard, self)._get_payment_vals()
