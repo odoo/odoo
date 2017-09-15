@@ -446,7 +446,7 @@ class PaymentTransaction(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         onchange_vals = self.on_change_partner_id(self.partner_id.id).get('value', {})
-        self.write(onchange_vals)
+        self.update(onchange_vals)
 
     @api.multi
     def on_change_partner_id(self, partner_id):
