@@ -4,9 +4,16 @@
 Python 3 compatibility/conversions
 ==================================
 
-Goal (notsure?): for v11 to provide an alpha/beta Python 3 compatibility, for
-v12 to provide official Python 3 support and drop Python 2 in either v12 or
-v13.
+Official compatibility: Odoo 11 will be the first LTS release to introduce
+Python 3 compatibility, starting with Python 3.5. It will also be the first
+LTS release to drop official support for Python 2.
+
+Rationale: Python 3 has been around since 2008, and all Python libraries
+used by the official Odoo distribution have been ported and are considered
+stable. Most supported platforms have a Python 3.5 package, or a similar
+way to deploy it. Preserving dual compatibility is therefore considered
+unnecessary, and would represent a significant overhead in testing for the
+lifetime of Odoo 11.
 
 Python 2 and Python 3 are somewhat different language, but following
 backports, forward ports and cross-compatibility library it is possible to
