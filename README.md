@@ -1,3 +1,5 @@
+这是由pigpigAutumn使用odoo二次开发的大学课程题库建设系统
+------------------------------------------------------------------------------------------------------
 [![Build Status](http://runbot.odoo.com/runbot/badge/flat/1/10.0.svg)](http://runbot.odoo.com/runbot)
 [![Tech Doc](http://img.shields.io/badge/10.0-docs-875A7B.svg?style=flat)](http://www.odoo.com/documentation/10.0)
 [![Help](http://img.shields.io/badge/10.0-help-875A7B.svg?style=flat)](https://www.odoo.com/forum/help-1)
