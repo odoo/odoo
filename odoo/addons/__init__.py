@@ -14,4 +14,7 @@ This module also conveniently reexports some symbols from odoo.modules.
 Importing them from here is deprecated.
 
 """
-__import__('pkg_resources').declare_namespace(__name__)
+# make odoo.addons a namespace package, while keeping this __init__.py
+# present, for python 2 compatibility
+# https://packaging.python.org/guides/packaging-namespace-packages/
+__path__ = __import__('pkgutil').extend_path(__path__, __name__)
