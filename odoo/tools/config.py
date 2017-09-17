@@ -124,7 +124,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "XML-RPC Configuration")
         group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", my_default='',
                          help="Specify the TCP IP address for the XML-RPC protocol. The empty string binds to all interfaces.")
-        group.add_option("--xmlrpc-port", dest="xmlrpc_port", my_default=8069,
+        group.add_option("-p", "--xmlrpc-port", dest="xmlrpc_port", my_default=8069,
                          help="specify the TCP port for the XML-RPC protocol", type="int")
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
                          help="disable the XML-RPC protocol")
