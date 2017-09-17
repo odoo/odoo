@@ -3472,7 +3472,7 @@ msgstr "客户退款"
 #: model:ir.model.fields,field_description:account.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
 msgid "Customer Taxes"
-msgstr "客户税金"
+msgstr "销项税"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -9932,7 +9932,7 @@ msgstr "供应商退款"
 #: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "供应商税"
+msgstr "进项税"
 
 #. module: account
 #. openerp-web
@@ -10335,6 +10335,12 @@ msgstr "你不能在这个日记账中用这个总账，在相关日记账中检
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
 msgstr "你有"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
