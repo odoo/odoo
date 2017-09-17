@@ -121,15 +121,15 @@ msgstr ""
 "</table>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"<p> ${object.name},様</p>\n"
+"<p> ${object.name} 様</p>\n"
 "<p>\n"
-"Odooであなたの書類にアクセスするために \"$ {object.company_id.name}\"に接続するように招待されました。\n"
+"Odoo環境 \"${object.company_id.name}\" に招待いたします。\n"
 "</p>\n"
 "<p>\n"
-"招待状を受け入れるには、次のリンクをクリックしてください：\n"
+"Odooに接続するには、次のリンクをクリックしてください。\n"
 "</p>\n"
 "<div style=\"text-align: center; margin-top: 16px;\">\n"
-"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\"> \"${object.company_id.name}\"からの招待を受け入れる</a>\n"
+"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\"> \"${object.company_id.name}\" からの招待を受け入れる</a>\n"
 "</div>\n"
 "<p>以上、よろしくお願いいたします。</p>\n"
 "</div>\n"
@@ -143,7 +143,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} 弊社Odooポータル接続のご招待"
+msgstr "${object.company_id.name} Odoo接続のご招待"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
