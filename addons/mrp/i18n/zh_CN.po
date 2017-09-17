@@ -487,7 +487,7 @@ msgstr "BoM"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "BoM组件"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
@@ -687,7 +687,7 @@ msgstr "已确认"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "投料明细"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
@@ -712,7 +712,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
 msgid "Consumed in Operation"
-msgstr "消耗在操作"
+msgstr "消耗在作业"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -727,17 +727,17 @@ msgstr "成本结构"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Count Mo Late"
-msgstr ""
+msgstr "延迟Mo数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
 msgid "Count Mo Todo"
-msgstr ""
+msgstr "待办Mo数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Count Mo Waiting"
-msgstr ""
+msgstr "等待中Mo数量"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1198,7 +1198,7 @@ msgstr "当前用户工作中"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Is Produced"
-msgstr ""
+msgstr "已生产"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
@@ -1355,7 +1355,7 @@ msgstr "保养"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr "管理工单操作"
+msgstr "管理工单作业"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -1587,7 +1587,7 @@ msgstr "新的"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr "下一操作"
+msgstr "下一作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
@@ -1705,18 +1705,18 @@ msgstr "所有产品处理完"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_operation_id
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Operation"
-msgstr "操作"
+msgstr "作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
 msgid "Operation To Consume"
-msgstr "待消耗的操作"
+msgstr "待消耗的作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "作业类型"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1730,7 +1730,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_graph
 #: model:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Operations"
-msgstr "操作"
+msgstr "作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_order_ids
@@ -1924,7 +1924,7 @@ msgstr "产品"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
 msgid "Product Lifecycle Management"
-msgstr ""
+msgstr "产品生命周期管理"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
@@ -2407,7 +2407,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr "每个制造操作的确保天数"
+msgstr "每个制造作业的确保天数"
 
 #. module: mrp
 #. openerp-web
@@ -2585,7 +2585,7 @@ msgstr "容量必须严格为正数."
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "The components of 1st operation"
-msgstr "首次操作的部件"
+msgstr "第一作业的部件"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2594,7 +2594,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr "生产产成品需要的一系列操作（发生在一系列工作中心上）。工艺主要用于计算工作中心成本和根据生产计划来规划工作中心负载。"
+msgstr "生产产成品需要的一系列作业（发生在一系列工作中心上）。工艺主要用于计算工作中心成本和根据生产计划来规划工作中心负载。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
@@ -3323,7 +3323,7 @@ msgstr "你需要提供批次/序列号"
 #: code:addons/mrp/wizard/mrp_product_produce.py:80
 #, python-format
 msgid "You should at least produce some quantity"
-msgstr ""
+msgstr "必须输入生产数量"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:288
@@ -3366,7 +3366,7 @@ msgstr "最后的"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "minute(s)"
-msgstr ""
+msgstr "分钟"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit

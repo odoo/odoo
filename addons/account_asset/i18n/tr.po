@@ -49,12 +49,12 @@ msgstr "Demirbaş Girişi Sayısı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
 msgid "# of Depreciation Lines"
-msgstr "Amortisman kalemleri sayısı"
+msgstr "Amortisman Kalemleri Sayısı"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "Taksitli Hatlar"
+msgstr "Amortisman Kalemleri Sayısı"
 
 #. module: account_asset
 #: model:ir.actions.server,name:account_asset.account_asset_cron_ir_actions_server
@@ -121,7 +121,7 @@ msgstr "Amortisman Satırları Tutarı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr "Taksitlendirme Hattı Miktarı"
+msgstr "Amortisman Kalemleri Tutarı"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -206,7 +206,7 @@ msgstr "Demirbaş oluşturuldu"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Demirbaş amortisman satırı"
+msgstr "Demirbaş amortisman kalemi"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:319
@@ -219,7 +219,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Demirbaş/Gelir Tahhakkuku"
+msgstr "Demirbaş/Gelir Tahakkuku"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -242,7 +242,7 @@ msgstr "Demirbaş Analizi"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr "Demirbaş Amortisman Satırları"
+msgstr "Demirbaş Amortisman Kalemleri"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -813,7 +813,7 @@ msgstr "Bir dönemdeki ay sayısı"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr "Her Giriş Tek Bir Giriş"
+msgstr "Her Bir Giriş"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:593
@@ -999,8 +999,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Bu sihirbaz, seçilen ay için taksitlendirme / amortisman satırları gönderir.<br/>\n"
-"Bu, bu varlık / gelir tanıma döneminde de ilgili tüm taksit hatları için günlük girdileri oluşturacaktır."
+"Bu sihirbaz, seçilen ay için amortisman kalemlerinin yevmiye kayıtlarını "
+"oluşturur."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1078,7 +1078,7 @@ msgstr "İşlenmiş amortisman kalemleri içeren bir varlığı silemezsiniz."
 #: code:addons/account_asset/models/account_asset.py:604
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "Gönderilen taksit satırlarını silemezsiniz."
+msgstr "Onaylanmış amortisman kalemlerini silemezsiniz."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
