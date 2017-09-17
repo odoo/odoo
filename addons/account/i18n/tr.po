@@ -7499,7 +7499,7 @@ msgstr "+Banka"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Fixed Assets"
-msgstr ""
+msgstr "(+) Duran Varlıklar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8434,6 +8434,8 @@ msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
 msgstr ""
+"Geçiş döneminde müşteri hesap özeti bildirimlerini (ödenmemiş faturalar) "
+"elle göndermek"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9548,7 +9550,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
 #: model:ir.model.fields,help:account.field_account_reconcile_model_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr ""
+msgstr "Bu alan bir banka hesap özeti uzlaştırmasında dikkate alınmaz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
@@ -10660,6 +10662,7 @@ msgstr ""
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
 msgstr ""
+"Kapalı bir banka hesap özetinde para gönderme ve alma işlemi yapamazsınız."
 
 #. module: account
 #: code:addons/account/models/account.py:198
@@ -10691,6 +10694,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
 msgstr "Var"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
