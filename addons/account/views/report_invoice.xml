@@ -53,7 +53,7 @@
                     <!-- Is there a discount on at least one line? -->
                     <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
 
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" name="invoice_line_table">
                         <thead>
                             <tr>
                                 <th>Description</th>
