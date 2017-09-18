@@ -169,7 +169,7 @@ class PurchaseRequisitionLine(models.Model):
             quantity=product_qty,
             date=requisition.schedule_date or fields.Date.today(),
             uom_id=self.product_id.uom_po_id)
-        date_planned = requisition.schedule_date or self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = requisition.schedule_date or self.env['purchase.order.line']._get_date_planned(seller, po=po)
         return {
             'name': name,
             'product_id': self.product_id.id,
