@@ -1113,7 +1113,7 @@ class AccountInvoice(models.Model):
         if self.origin:
             communication = '%s (%s)' % (communication, self.origin)
 
-        payment = self.env['account.payment'].create({
+        payment_vals = {
             'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'payment_date': date or fields.Date.context_today(self),
@@ -1125,7 +1125,11 @@ class AccountInvoice(models.Model):
             'payment_method_id': payment_method.id,
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
-        })
+        }
+        if self.env.context.get('tx_currency_id'):
+            payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
+
+        payment = self.env['account.payment'].create(payment_vals)
         payment.post()
 
         return True
