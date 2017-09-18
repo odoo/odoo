@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
 
             created_invoice.action_invoice_open()
             if tx.acquirer_id.journal_id:
-                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+                created_invoice.with_context(tx_currency_id=tx.currency_id.id).pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
                 if created_invoice.payment_ids:
                     created_invoice.payment_ids[0].payment_transaction_id = tx
             else:
