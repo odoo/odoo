@@ -747,9 +747,10 @@
             <field name="name">India</field>
             <field name="code">in</field>
             <field file="base/static/img/country_flags/in.png" name="image" type="base64" />
-            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s\n%(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s %(state_code)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="INR" />
             <field eval="91" name="phone_code" />
+            <field name="vat_label">GSTIN</field>
         </record>
         <record id="io" model="res.country">
             <field name="name">British Indian Ocean Territory</field>
