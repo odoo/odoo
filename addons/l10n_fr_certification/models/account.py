@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
         if self.company_id._is_accounting_unalterable():
-            raise UserError(_('You cannot modify a posted journal entry of a business to customer journal which are unalterable.'))
+            raise UserError(_('You cannot modify a posted journal. This ensures their inalterability.'))
         super(AccountMove, self).button_cancel()
 
     @api.model
@@ -118,7 +118,7 @@ class AccountMove(models.Model):
         start_move_info = []
         for move in moves:
             if move.l10n_fr_hash != move._compute_hash(previous_hash=previous_hash):
-                raise UserError(_('Corrupted Data on move %s.') % move.id)
+                raise UserError(_('Corrupted data on journal entry with id %s.') % move.id)
             if not previous_hash:
                 #save the date and sequence number of the first move hashed
                 start_move_info = build_move_info(move)
