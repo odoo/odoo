@@ -267,6 +267,8 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
         if (this.menu_link_options) { // add menu link option only when adding new menu
             this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
+            // remove the label that is automatically added before
+            this.$('#o_link_dialog_url_input').parent().siblings().html('');
             this.$('input[name=link_menu_options]').on('change', function () {
                 self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
             });
