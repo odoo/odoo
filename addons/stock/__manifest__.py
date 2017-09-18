@@ -43,6 +43,7 @@
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',
         'wizard/stock_overprocessed_transfer_views.xml',
+        'wizard/stock_quantity_history.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
