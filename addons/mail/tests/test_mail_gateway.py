@@ -495,8 +495,8 @@ class TestMailgateway(TestMail):
         self.assertTrue(msg_fw.res_id == channel.id)
 
         # tmp
-        from odoo.addons.mail.tests.models.test_mail_models import MailTest
-        MailTest._mail_flat_thread = False
+        from odoo.addons.mail.tests.models.test_mail_models import MailTestAlias
+        MailTestAlias._mail_flat_thread = False
 
         fw_msg_id = '<THIS.IS.A.FW.MESSAGE.2@bert.fr>'
         fw_message = MAIL_TEMPLATE.format(to='public@example.com',
@@ -515,4 +515,4 @@ class TestMailgateway(TestMail):
         self.assertTrue(msg_fw.res_id == self.test_public.id)
 
         # re-tmp
-        MailTest._mail_flat_thread = True
+        MailTestAlias._mail_flat_thread = True
