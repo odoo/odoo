@@ -281,7 +281,7 @@ def build_deb(o):
     move_glob(build_dir_parent, wildcards, o.build_dir)
 
 def build_rpm(o):
-    system(['python2', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
+    system(['python3', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
     system(['mv', glob('%s/dist/odoo-*.noarch.rpm' % o.build_dir)[0], '%s/odoo_%s.%s.noarch.rpm' % (o.build_dir, version, timestamp)])
 
 def build_exe(o):
@@ -360,7 +360,7 @@ def test_exe(o):
 #---------------------------------------------------------
 def gen_deb_package(o, published_files):
     # Executes command to produce file_name in path, and moves it to o.pub/deb
-    def _gen_file(o, (command, file_name), path):
+    def _gen_file(o, command, file_name, path):
         cur_tmp_file_path = os.path.join(path, file_name)
         with open(cur_tmp_file_path, 'w') as out:
             subprocess.call(command, stdout=out, cwd=path)
@@ -379,7 +379,7 @@ def gen_deb_package(o, published_files):
     ]
     # Generate files
     for command in commands:
-        _gen_file(o, command, temp_path)
+        _gen_file(o, *command, temp_path)
     # Remove temp directory
     shutil.rmtree(temp_path)
 
@@ -487,8 +487,8 @@ def main():
                 published_files = publish(o, 'windows', ['exe'])
             except Exception as e:
                 print("Won't publish the exe release.\n Exception: %s" % str(e))
-    except Exception, exception_text:
-        print('Something bad happened ! : {}'.format(exception_text), file=stderr)
+    except Exception as e:
+        print('Something bad happened ! : {}'.format(e), file=stderr)
     finally:
         if o.no_remove:
             print('Build dir "{}" not removed'.format(o.build_dir))
