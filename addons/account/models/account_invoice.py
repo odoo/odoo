@@ -732,11 +732,18 @@ class AccountInvoice(models.Model):
                     if child.type_tax_use != 'none':
                         tax_ids.append((4, child.id, None))
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
-
+            #Codigo agregado por TRESCLOUD
+            try:
+                #Colocamos este código en un try para que si internal_number no existe se mantenga
+                #el funcionamiento nativo
+                name = line.invoice_id.internal_number or line.name.split('\n')[0][:64]
+            except:
+                name = line.name.split('\n')[0][:64]
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
-                'name': line.name.split('\n')[0][:64],
+                #Codigo modificado por TRESCLOUD
+                'name': name,
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
                 'price': line.price_subtotal,
@@ -766,11 +773,19 @@ class AccountInvoice(models.Model):
                     for child_tax in tax.children_tax_ids:
                         done_taxes.append(child_tax.id)
                 done_taxes.append(tax.id)
+                #Codigo agregado por TRESCLOUD
+                try:
+                    #Colocamos este código en un try para que si internal_number no existe se mantenga
+                    #el funcionamiento nativo
+                    name = tax_line.invoice_id.internal_number or tax_line.name
+                except:
+                    name = tax_line.name
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
                     'type': 'tax',
-                    'name': tax_line.name,
+                    #Codigo modificado por TRESCLOUD
+                    'name': name,
                     'price_unit': tax_line.amount,
                     'quantity': 1,
                     'price': tax_line.amount,
@@ -866,6 +881,7 @@ class AccountInvoice(models.Model):
 
                     iml.append({
                         'type': 'dest',
+                        #Codigo modificado por TRESCLOUD
                         'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
                         'price': t[1],
                         'account_id': inv.account_id.id,
