@@ -8,7 +8,6 @@ class AccountInvoice(models.Model):
 
     _inherit = "account.invoice"
 
-
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
         for invoice in self:
@@ -18,6 +17,8 @@ class AccountInvoice(models.Model):
 
     def _get_printed_report_name(self):
         self.ensure_one()
+        if self.company_id.country_id.code != 'IN':
+            return super(AccountInvoice, self)._get_printed_report_name()
         return self.type == 'out_invoice' and self.state == 'draft' and _('Draft %s') % (self.journal_id.name) or \
             self.type == 'out_invoice' and self.state in ('open','paid') and '%s - %s' % (self.journal_id.name, self.number) or \
             self.type == 'out_refund' and self.state == 'draft' and _('Credit Note') or \
