@@ -2074,8 +2074,7 @@ exports.Order = Backbone.Model.extend({
 
     initialize_validation_date: function () {
         this.validation_date = new Date();
-        this.formatted_validation_date = formats.format_value(
-            this.validation_date, {type: 'datetime'});
+        this.formatted_validation_date = field_utils.format.datetime(this.validation_date);
     },
 
     set_tip: function(tip) {
