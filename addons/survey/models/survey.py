@@ -293,6 +293,15 @@ class Survey(models.Model):
             result['skipped'] = result['total_inputs'] - result['answered']
         return result
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            user_input = self.env['survey.user_input'].search([('survey_id', '=', rec.id)])
+            if user_input:
+                user_input.unlink()
+            res = super(Survey, rec).unlink()
+        return res
+
     # Actions
 
     @api.multi
