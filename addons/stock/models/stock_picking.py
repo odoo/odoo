@@ -312,7 +312,11 @@ class Picking(models.Model):
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
         else:
-            self.state = self.move_lines._get_relevant_state_among_moves()
+            relevant_move_state = self.move_lines._get_relevant_state_among_moves()
+            if relevant_move_state == 'partially_available':
+                self.state = 'assigned'
+            else:
+                self.state = relevant_move_state
 
     @api.one
     @api.depends('move_lines.priority')
