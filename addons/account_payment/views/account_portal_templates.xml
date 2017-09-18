@@ -15,13 +15,9 @@
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='o_portal_account_actions']/a" position="before">
             <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
-            <a t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total"
+            <a t-if="invoice.state != 'paid' and invoice.amount_total"
                     class="btn btn-primary pull-right ml8" href="#portal_pay">
                 <i class="fa fa-arrow-circle-right"/> Pay Now
-            </a>
-            <a t-if="tx_ids and invoice.state != 'paid'"
-                    class="btn btn-warning ml8 pull-right" disabled="disabled">
-                <i class="fa fa-check-circle"/> Pending
             </a>
             <a t-if="tx_ids and invoice.state == 'paid'"
                     class="btn btn-success ml8 pull-right" disabled="disabled">
@@ -29,7 +25,7 @@
             </a>
         </xpath>
         <xpath expr="//div[hasclass('panel-body')]" position="after">
-            <div class="panel-body" t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
+            <div class="panel-body" t-if="invoice.state != 'paid' and invoice.amount_total" id="portal_pay">
                 <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="col-md-offset-3 col-md-6">
                     <h4 class="mb24">Pay with</h4>
                     <t t-call="payment.payment_tokens_list">
@@ -65,7 +61,7 @@
                             <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
                         </t>
                         <t t-if="tx.state != 'done'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting for payment</span>
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>
