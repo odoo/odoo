@@ -157,7 +157,7 @@
                     <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
                     <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
                     <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><i class="fa fa-building-o"/> VAT: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div class="text-muted">
@@ -196,7 +196,7 @@
                     <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
                     <li t-if="company.email">Mail: <span t-field="company.email"/></li>
                     <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div>
@@ -215,7 +215,7 @@
                 <div class="col-xs-5 col-xs-offset-1" name="company_address">
                     <ul class="list-unstyled">
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
-                        <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                        <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                         <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
                         <li t-if="company.email"><span t-field="company.email"/></li>
                         <li t-if="company.website"><span t-field="company.website"/></li>
@@ -281,7 +281,7 @@
                     <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
                     <li t-if="company.email">Email: <span t-field="company.email"/></li>
                     <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
 
                 <div name="financial_infos">

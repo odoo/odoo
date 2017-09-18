@@ -10,15 +10,7 @@
             name="account.report_invoice_with_payments"
             file="account.report_invoice_with_payments"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            print_report_name="(
-                object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
-                object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice - %s' % (object.number) or
-                object.type == 'out_refund' and object.state == 'draft' and 'Credit Note' or
-                object.type == 'out_refund' and 'Credit Note - %s' % (object.number) or
-                object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
-                object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill - %s' % (object.number) or
-                object.type == 'in_refund' and object.state == 'draft' and 'Vendor Credit Note' or
-                object.type == 'in_refund' and 'Vendor Credit Note - %s' % (object.number))"
+            print_report_name="(object._get_printed_report_name())"
         />
 
         <report
@@ -29,15 +21,7 @@
             name="account.report_invoice"
             file="account.report_invoice"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            print_report_name="(
-                object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
-                object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice - %s' % (object.number) or
-                object.type == 'out_refund' and object.state == 'draft' and 'Credit Note' or
-                object.type == 'out_refund' and 'Credit Note - %s' % (object.number) or
-                object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
-                object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill - %s' % (object.number) or
-                object.type == 'in_refund' and object.state == 'draft' and 'Vendor Credit Note' or
-                object.type == 'in_refund' and 'Vendor Credit Note - %s' % (object.number))"
+            print_report_name="(object._get_printed_report_name())"
         />
 
         <report 

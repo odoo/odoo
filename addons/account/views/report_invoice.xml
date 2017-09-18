@@ -9,7 +9,7 @@
                         <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
                             <address t-field="o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                            <div t-if="o.partner_id.vat" class="mt16">VAT: <span t-field="o.partner_id.vat"/></div>
+                            <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
                     <!-- Is there a discount on at least one line? -->
                     <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
 
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" name="invoice_line_table">
                         <thead>
                             <tr>
                                 <th>Description</th>
