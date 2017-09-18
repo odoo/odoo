@@ -25,12 +25,7 @@ function autocompleteWithPages(self, $input) {
                 },
             }).then(function (exists) {
                 var rs = _.map(exists, function (r) {
-                    if (show_only_website_page_model) {
-                        return r.loc + ' (' + r.name + ')';
-                    }
-                    else {
-                        return r.loc;
-                    }
+                    return r.loc;
                 });
                 response(rs);
             });
