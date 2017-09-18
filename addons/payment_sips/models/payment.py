@@ -40,16 +40,11 @@ class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('sips', 'Sips')])
-    sips_merchant_id = fields.Char('SIPS API User Password', required_if_provider='sips', groups='base.group_user')
-    sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips', groups='base.group_user')
-
-    def _get_sips_urls(self, environment):
-        """ Worldline SIPS URLS """
-        url = {
-            'prod': 'https://payment-webinit.sips-atos.com/paymentInit',
-            'test': 'https://payment-webinit.simu.sips-atos.com/paymentInit', }
-
-        return {'sips_form_url': url.get(environment, url['test']), }
+    sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
+    sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
+    sips_test_url = fields.Char("Test's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.sips-atos.com/paymentInit')
+    sips_prod_url = fields.Char("Prod's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
+    sips_version = fields.Char("Interface Version", required_if_provider='sips', groups='base.group_no_one', default='HP_2.3')
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -97,7 +92,7 @@ class AcquirerSips(models.Model):
                     u'transactionReference=%s|' % values['reference'] +
                     u'statementReference=%s|' % values['reference'] +
                     u'keyVersion=%s' % key_version,
-            'InterfaceVersion': 'HP_2.3',
+            'InterfaceVersion': self.sips_version,
         })
 
         return_context = {}
@@ -113,7 +108,7 @@ class AcquirerSips(models.Model):
     @api.multi
     def sips_get_form_action_url(self):
         self.ensure_one()
-        return self._get_sips_urls(self.environment)['sips_form_url']
+        return self.environment == 'prod' and self.sips_prod_url or self.sips_test_url
 
 
 class TxSips(models.Model):

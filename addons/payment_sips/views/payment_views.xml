@@ -9,8 +9,11 @@
             <field name="arch" type="xml">
                 <xpath expr='//group[@name="acquirer"]' position='after'>
                     <group attrs="{'invisible': [('provider', '!=', 'sips')]}">
-                        <field name="sips_secret"/>
                         <field name="sips_merchant_id"/>
+                        <field name="sips_secret"/>
+                        <field name="sips_test_url"/>
+                        <field name="sips_prod_url"/>
+                        <field name="sips_version"/>
                     </group>
                 </xpath>
             </field>
