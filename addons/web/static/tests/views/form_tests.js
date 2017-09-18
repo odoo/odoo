@@ -5842,5 +5842,45 @@ QUnit.module('Views', {
             "there should be only one column");
         form.destroy();
     });
+
+    QUnit.test('can toggle column in x2many in sub form view', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[2].p = [1,2];
+        this.data.partner.fields.foo.sortable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="trululu"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                'partner,false,form': '<form string="Partners">' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>',
+            },
+            viewOptions: {mode: 'edit'},
+        });
+        form.$('.o_external_button').click();
+        assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "yopblip",
+            "table has some initial order");
+
+        $('.modal-body .o_form_view .o_list_view th').click();
+        assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "blipyop",
+            "table is now sorted");
+        form.destroy();
+    });
 });
 });

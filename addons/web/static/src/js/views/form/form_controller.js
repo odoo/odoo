@@ -514,6 +514,7 @@ var FormController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleColumnOrder: function (event) {
+        event.stopPropagation();
         this.model.setSort(event.data.id, event.data.name);
         var field = event.data.field;
         var state = this.model.get(this.handle);
