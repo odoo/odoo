@@ -96,7 +96,7 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
     },
 });
 
-ExtendedSearchProposition.Field = Widget.extend({
+var Field = Widget.extend({
     init: function (parent, field) {
         this._super(parent);
         this.field = field;
@@ -153,7 +153,7 @@ ExtendedSearchProposition.Field = Widget.extend({
     }
 });
 
-ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
+var Char = Field.extend({
     tagName: 'input',
     className: 'o_input',
     attributes: {
@@ -172,7 +172,7 @@ ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
     }
 });
 
-ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
+var DateTime = Field.extend({
     tagName: 'span',
     attributes: {
         type: 'datetime'
@@ -241,7 +241,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     },
 });
 
-ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
+var Date = DateTime.extend({
     attributes: {
         type: 'date'
     },
@@ -250,7 +250,7 @@ ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
     },
 });
 
-ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
+var Integer = Field.extend({
     tagName: 'input',
     className: 'o_input',
     attributes: {
@@ -280,11 +280,11 @@ ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
     }
 });
 
-ExtendedSearchProposition.Id = ExtendedSearchProposition.Integer.extend({
+var Id = Integer.extend({
     operators: [{value: "=", text: _lt("is")}]
 });
 
-ExtendedSearchProposition.Float = ExtendedSearchProposition.Field.extend({
+var Float = Field.extend({
     template: 'SearchView.extended_search.proposition.float',
     operators: [
         {value: "=", text: _lt("is equal to")},
@@ -313,7 +313,7 @@ ExtendedSearchProposition.Float = ExtendedSearchProposition.Field.extend({
     }
 });
 
-ExtendedSearchProposition.Selection = ExtendedSearchProposition.Field.extend({
+var Selection = Field.extend({
     template: 'SearchView.extended_search.proposition.selection',
     operators: [
         {value: "=", text: _lt("is")},
@@ -331,7 +331,7 @@ ExtendedSearchProposition.Selection = ExtendedSearchProposition.Field.extend({
     }
 });
 
-ExtendedSearchProposition.Boolean = ExtendedSearchProposition.Field.extend({
+var Boolean = Field.extend({
     tagName: 'span',
     operators: [
         {value: "=", text: _lt("is true")},
@@ -347,19 +347,19 @@ ExtendedSearchProposition.Boolean = ExtendedSearchProposition.Field.extend({
 });
 
 core.search_filters_registry
-    .add('char', ExtendedSearchProposition.Char)
-    .add('text', ExtendedSearchProposition.Char)
-    .add('one2many', ExtendedSearchProposition.Char)
-    .add('many2one', ExtendedSearchProposition.Char)
-    .add('many2many', ExtendedSearchProposition.Char)
-    .add('datetime', ExtendedSearchProposition.DateTime)
-    .add('date', ExtendedSearchProposition.Date)
-    .add('integer', ExtendedSearchProposition.Integer)
-    .add('float', ExtendedSearchProposition.Float)
-    .add('monetary', ExtendedSearchProposition.Float)
-    .add('boolean', ExtendedSearchProposition.Boolean)
-    .add('selection', ExtendedSearchProposition.Selection)
-    .add('id', ExtendedSearchProposition.Id);
+    .add('char', Char)
+    .add('text', Char)
+    .add('one2many', Char)
+    .add('many2one', Char)
+    .add('many2many', Char)
+    .add('datetime', DateTime)
+    .add('date', Date)
+    .add('integer', Integer)
+    .add('float', Float)
+    .add('monetary', Float)
+    .add('boolean', Boolean)
+    .add('selection', Selection)
+    .add('id', Id);
 
 return {
     ExtendedSearchProposition: ExtendedSearchProposition

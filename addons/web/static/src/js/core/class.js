@@ -12,45 +12,46 @@ odoo.define('web.Class', function () {
  * Defines The Class object. That object can be used to define and inherit classes using
  * the extend() method.
  *
- * Example:
+ * Example::
  *
- * var Person = Class.extend({
- *  init: function(isDancing){
- *     this.dancing = isDancing;
- *   },
- *   dance: function(){
- *     return this.dancing;
- *   }
- * });
+ *     var Person = Class.extend({
+ *      init: function(isDancing){
+ *         this.dancing = isDancing;
+ *       },
+ *       dance: function(){
+ *         return this.dancing;
+ *       }
+ *     });
  *
- * The init() method act as a constructor. This class can be instancied this way:
+ * The init() method act as a constructor. This class can be instanced this way::
  *
- * var person = new Person(true);
- * person.dance();
+ *     var person = new Person(true);
+ *     person.dance();
  *
- * The Person class can also be extended again:
+ *     The Person class can also be extended again:
  *
- * var Ninja = Person.extend({
- *   init: function(){
- *     this._super( false );
- *   },
- *   dance: function(){
- *     // Call the inherited version of dance()
- *     return this._super();
- *   },
- *   swingSword: function(){
- *     return true;
- *   }
- * });
+ *     var Ninja = Person.extend({
+ *       init: function(){
+ *         this._super( false );
+ *       },
+ *       dance: function(){
+ *         // Call the inherited version of dance()
+ *         return this._super();
+ *       },
+ *       swingSword: function(){
+ *         return true;
+ *       }
+ *     });
  *
  * When extending a class, each re-defined method can use this._super() to call the previous
  * implementation of that method.
+ *
+ * @class Class
  */
+function OdooClass(){}
+
 var initializing = false;
 var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
-
-// The web Class implementation (does nothing)
-function OdooClass(){};
 
 /**
  * Subclass an existing class

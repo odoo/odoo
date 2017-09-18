@@ -321,8 +321,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
      * @param {Object} options additional options for rpc call
-     * @param {Function} success_callback function to execute on RPC call success
-     * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function (url, params, options) {
@@ -413,7 +411,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * (host system settings) to UTC, for a given date. The offset is positive
      * if the local timezone is behind UTC, and negative if it is ahead.
      *
-     * @param {string || moment} date a valid string date or moment instance
+     * @param {string | moment} date a valid string date or moment instance
      * @returns {integer}
      */
     getTZOffset: function (date) {

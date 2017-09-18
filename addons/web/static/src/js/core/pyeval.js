@@ -530,11 +530,11 @@ datetime.date = py.type('date', null, {
     }),
 });
 /**
-    Returns the current local date, which means the date on the client (which can be different
-    compared to the date of the server).
-
-    @return {datetime.date}
-*/
+ * Returns the current local date, which means the date on the client (which can be different
+ * compared to the date of the server).
+ *
+ * @return {datetime.date}
+ */
 function context_today() {
     var d = new Date();
     return py.PY_call(

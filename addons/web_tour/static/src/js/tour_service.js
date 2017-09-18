@@ -23,6 +23,16 @@ var CallService = Class.extend(mixins.EventDispatcherMixin, mixins.ServiceProvid
     },
 });
 
+/**
+ * @namespace
+ * @property {Object} active_tooltips
+ * @property {Object} tours
+ * @property {Array} consumed_tours
+ * @property {String} running_tour
+ * @property {Number} running_step_delay
+ * @property {'community' | 'enterprise'} edition
+ * @property {Array} _log
+ */
 return session.is_bound.then(function () {
     var defs = [];
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,

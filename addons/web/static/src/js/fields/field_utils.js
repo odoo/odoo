@@ -80,7 +80,7 @@ function formatChar(value, field, options) {
  * Returns a string representing a date.  If the value is false, then we return
  * an empty string. Note that this is dependant on the localization settings
  *
- * @param {Moment|false}
+ * @param {Moment|false} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -258,7 +258,7 @@ function formatX2Many(value) {
  * @param {Object} [options]
  *        additional options to override the values in the python description of
  *        the field.
- * @param {Object} [options.currency] - the description of the currency to use
+ * @param {Object} [options.currency] the description of the currency to use
  * @param {integer} [options.currency_id]
  *        the id of the 'res.currency' to use (ignored if options.currency)
  * @param {string} [options.currency_field]
@@ -336,7 +336,7 @@ function formatSelection(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -375,7 +375,7 @@ function parseDate(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options

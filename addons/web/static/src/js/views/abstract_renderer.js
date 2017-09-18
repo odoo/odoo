@@ -9,6 +9,9 @@ odoo.define('web.AbstractRenderer', function (require) {
 
 var Widget = require('web.Widget');
 
+/**
+ * @class AbstractRenderer
+ */
 return Widget.extend({
     /**
      * @constructor
