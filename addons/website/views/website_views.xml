@@ -109,12 +109,6 @@
             <field name="target">current</field>
         </record>
 
-        <menuitem name="Redirects"
-            id="menu_website_redirect_list"
-            action="action_website_redirect_list"
-            parent="website.menu_website_configuration"
-            groups="base.group_system"/>
-
         <!-- website.page views -->
         <record id="website_pages_form_view" model="ir.ui.view">
             <field name="name">website.page.form</field>
@@ -134,7 +128,8 @@
                                 <field name="date_publish"/>
                             </group>
                         </group>
-                        <field name="website_ids"/>
+                        <field groups="base.group_no_one" name="website_ids"/>
+                        <label string="Related Menu Items"/>
                         <field name="menu_ids"/>
                     </sheet>
                 </form>
@@ -165,12 +160,6 @@
             <field name="view_id" ref="website_pages_tree_view"/>
             <field name="target">current</field>
         </record>
-
-        <menuitem name="Pages"
-            id="menu_website_pages_list"
-            action="action_website_pages_list"
-            parent="website.menu_website_configuration"
-            groups="base.group_system"/>
 
         <!-- website.menu views -->
         <record id="action_website_menu" model="ir.actions.act_window">

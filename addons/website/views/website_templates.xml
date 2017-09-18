@@ -116,6 +116,8 @@
     </xpath>
     <xpath expr="//t[@t-set='head_website']" position="replace">
         <t t-set="head_website">
+            <meta t-if="main_object and 'website_indexed' in main_object
+                and not main_object.website_indexed" name="robots" content="noindex"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
@@ -859,7 +861,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                   </li>
               </ul>
           </div>
-          <h3 class="mt16">Pages Management</h3>
+          <h3 class="mt16">Manage your custom pages</h3>
           <t t-if="not pages">
               <div t-if="search" class="alert alert-warning mt8" role="alert">
                   Your search '<t t-esc="search" />' did not match any pages.
@@ -877,21 +879,22 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                       <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
                       <th class="col-md-1 text-center"><i title="Is the page published?" class="fa fa-eye" aria-hidden="true"></i></th>
                       <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
-                      <th class="col-md-1"></th>
+                      <th class="col-sm-3 col-md-2"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">
                       <tr>
                           <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
                           <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-                          <td style="text-align:center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-                          <td style="text-align:center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
-                          <td style="text-align:center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
-                          <td>
-                              <a class="fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-right">
+                              <a class="mr4 fa fa-lg fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.ir_ui_view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit page content in backend"></a>
+                              <a class="mr4 fa fa-lg fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+                              <a class="fa fa-lg fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
                           </td>
                       </tr>
                   </t>
