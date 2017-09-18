@@ -320,42 +320,21 @@ class Picking(models.Model):
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
         else:
-            # We sort our moves by importance of state:
-            #     ------------- 0
-            #     | Confirmed |
-            #     -------------
-            #     |  Partial  |
-            #     -------------
-            #     |  Waiting  |
-            #     -------------
-            #     |  Assigned |
-            #     ------------- len - 1
-            sort_map = {
-                'assigned': 4,
-                'waiting': 3,
-                'partially_available': 2,
-                'confirmed': 1,
-            }
-            moves_todo = self.move_lines\
-                .filtered(lambda move: move.state not in ['cancel', 'done'])\
-                .sorted(key=lambda move: sort_map.get(move.state, 0))
+            states_by_importance = self._get_ordered_move_states()
             if self.move_type == 'one':
-                if moves_todo[0].state in ('partially_available', 'confirmed'):
+                if states_by_importance[0] in ('partially_available', 'confirmed'):
                     self.state = 'confirmed'
                 else:
-                    most_important_state = moves_todo[0].state or 'draft'
+                    most_important_state = states_by_importance[0] or 'draft'
                     if most_important_state == 'partially_available':
                         most_important_state = 'assigned'
-
                     self.state = most_important_state
-            elif moves_todo[0].state != 'assigned' and any(x.state in ['assigned', 'partially_available'] for x in moves_todo):
+            elif states_by_importance[0] != 'assigned' and any(x in ['assigned', 'partially_available'] for x in states_by_importance):
                 self.state = 'assigned'
             else:
-                # take the less important state among all move_lines.
-                least_important_state = moves_todo[-1].state or 'draft'
+                least_important_state = states_by_importance[-1] or 'draft'
                 if least_important_state == 'partially_available':
                     least_important_state = 'assigned'
-
                 self.state = least_important_state
 
     @api.one
@@ -722,6 +701,38 @@ class Picking(models.Model):
         if not self._context.get('planned_picking'):
             for picking in self.filtered(lambda picking: picking.state not in ('done', 'cancel') and picking.move_lines):
                 picking.action_confirm()
+
+    def _get_ordered_move_states(self):
+        self.ensure_one()
+        # We sort our moves by importance of state:
+        #     ------------- 0
+        #     | Confirmed |
+        #     -------------
+        #     |  Partial  |
+        #     -------------
+        #     |  Waiting  |
+        #     -------------
+        #     |  Assigned |
+        #     ------------- len - 1
+        sort_map = {
+            'assigned': 4,
+            'waiting': 3,
+            'partially_available': 2,
+            'confirmed': 1,
+        }
+        picking_states = []
+        moves_todo = self.move_lines\
+                         .filtered(lambda move: move.state not in ['cancel', 'done'])\
+                         .sorted(key=lambda move: sort_map.get(move.state, 0))
+
+        for move in moves_todo:
+            # consider confirmed moves with an initial demand as assigned
+            if move.state == 'confirmed' and move.product_uom_qty == 0:
+                picking_states.append('assigned')
+            else:
+                picking_states.append(move.state)
+
+        return picking_states
 
     def _get_overprocessed_stock_moves(self):
         self.ensure_one()
