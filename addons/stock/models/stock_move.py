@@ -534,18 +534,24 @@ class StockMove(models.Model):
         }
         moves_todo = self\
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
-            .sorted(key=lambda move: sort_map.get(move.state, 0))
+            .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
         if moves_todo[0].picking_id.move_type == 'one':
-            if moves_todo[0].state in ('partially_available', 'confirmed'):
+            most_important_move = moves_todo[0]
+            if most_important_move.state == 'confirmed':
+                return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
+            elif most_important_move.state == 'partially_available':
                 return 'confirmed'
             else:
                 return moves_todo[0].state or 'draft'
         elif moves_todo[0].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
             return 'partially_available'
         else:
-            # take the less important state among all move_lines.
-            return moves_todo[-1].state or 'draft'
+            least_important_move = moves_todo[-1]
+            if least_important_move.state == 'confirmed' and least_important_move.product_uom_qty == 0:
+                return 'assigned'
+            else:
+                return moves_todo[-1].state or 'draft'
 
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
