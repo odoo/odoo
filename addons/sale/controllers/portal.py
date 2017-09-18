@@ -204,7 +204,7 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
         if request.env['ir.config_parameter'].sudo().get_param(
-                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
+                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign') and not signature:
             return False
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)
