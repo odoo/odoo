@@ -33,7 +33,8 @@ var SnippetEditor = Widget.extend({
     /**
      * @constructor
      * @param {Widget} parent
-     * @param {DOMElement} target
+     * @param {Element} target
+     * @param templateOptions
      */
     init: function (parent, target, templateOptions) {
         this._super.apply(this, arguments);
@@ -640,7 +641,7 @@ var SnippetsMenu = Widget.extend({
      * @private
      * @param {jQuery} [$selectorSiblings]
      *        elements which must have siblings drop zones
-     * @param {jQuery} [$selectorSiblings]
+     * @param {jQuery} [$selectorChildren]
      *        elements which must have child drop zones between each of existing
      *        child
      */

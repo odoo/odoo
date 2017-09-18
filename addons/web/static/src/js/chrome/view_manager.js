@@ -232,8 +232,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     /**
      * Returns the default view with the following fallbacks:
-     *  - use the default_view defined in the flags, if any
-     *  - use the first view in the view_order
+     *
+     * - use the default_view defined in the flags, if any
+     * - use the first view in the view_order
      *
      * @returns {Object} the default view
      */

@@ -18,7 +18,6 @@ var _t = core._t;
 var Mutex = concurrency.Mutex;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
-var Backbone = window.Backbone;
 
 var exports = {};
 

@@ -13,7 +13,7 @@ var _t = core._t;
 
 /**
  * Set the 'label_delay' entry in activity data according to the deadline date
- * @param {Array} list of activity Object
+ * @param {Array} activities list of activity Object
  * @return {Array} : list of modified activity Object
  */
 var setDelayLabel = function(activities){

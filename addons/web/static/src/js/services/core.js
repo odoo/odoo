@@ -7,6 +7,11 @@ var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
 
+/**
+ * Whether the client is currently in "debug" mode
+ *
+ * @type Boolean
+ */
 var debug = $.deparam($.param.querystring()).debug !== undefined;
 
 var bus = new Bus ();
@@ -43,8 +48,11 @@ return {
     one2many_view_registry: new Registry(),
     search_filters_registry: new Registry(),
     search_widgets_registry: new Registry(),
-
+    /**
+     * @type {String}
+     */
     csrf_token: odoo.csrf_token,
+    a_thing: 42,
 };
 
 });

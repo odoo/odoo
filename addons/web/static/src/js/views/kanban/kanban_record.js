@@ -99,7 +99,7 @@ var KanbanRecord = Widget.extend({
      * Generates the color classname from a given variable
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @return {string} the classname
      */
     _getColorClassname: function (variable) {
@@ -110,7 +110,7 @@ var KanbanRecord = Widget.extend({
      * Computes a color id between 0 and 10 from a given value
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @returns {integer} the color id
      */
     _getColorID: function (variable) {

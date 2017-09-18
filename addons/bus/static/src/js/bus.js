@@ -136,12 +136,13 @@ bus.Bus = Widget.extend({
  * one in the list of open tabs. This one start polling for the other. When a notification is recieved from the poll, it
  * is signaling through the localStorage too.
  *
- * localStorage used keys are :
- *      - bus.channels : shared public channel list to listen during the poll
- *      - bus.options : shared options
- *      - bus.notification : the received notifications from the last poll
- *      - bus.tab_list : list of opened tab ids
- *      - bus.tab_master : generated id of the master tab
+ * localStorage used keys are:
+ *
+ * - bus.channels : shared public channel list to listen during the poll
+ * - bus.options : shared options
+ * - bus.notification : the received notifications from the last poll
+ * - bus.tab_list : list of opened tab ids
+ * - bus.tab_master : generated id of the master tab
  */
 var CrossTabBus = bus.Bus.extend({
     init: function(){

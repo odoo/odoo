@@ -101,7 +101,7 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
     /**
      * Refresh the DOM html
-     * @param {string|html}
+     * @param {string|html} dom
      * @private
      */
     _refreshPlan: function(dom){

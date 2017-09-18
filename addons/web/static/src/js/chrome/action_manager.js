@@ -67,7 +67,7 @@ var Action = core.Class.extend({
     },
     /**
      * Stores the DOM fragment of the action
-     * @param {jQuery} [fragment] the DOM fragment
+     * @param {jQuery} [$fragment] the DOM fragment
      */
     set_fragment: function($fragment) {
         this.$fragment = $fragment;
@@ -300,11 +300,11 @@ var ActionManager = Widget.extend({
     /**
      * Add a new action to the action manager
      *
-     * widget: typically, widgets added are openerp.web.ViewManager. The action manager
-     *      uses the stack of actions to handle the breadcrumbs.
-     * action_descr: new action description
-     * options.on_reverse_breadcrumb: will be called when breadcrumb is clicked on
-     * options.clear_breadcrumbs: boolean, if true, action stack is destroyed
+     * @param {Widget} widget typically, widgets added are openerp.web.ViewManager. The action manager uses the stack of actions to handle the breadcrumbs.
+     * @param {Object} action_descr new action description
+     * @param {Object} options
+     * @param options.on_reverse_breadcrumb will be called when breadcrumb is clicked on
+     * @param options.clear_breadcrumbs: boolean, if true, action stack is destroyed
      */
     push_action: function(widget, action_descr, options) {
         var self = this;
@@ -613,7 +613,7 @@ var ActionManager = Widget.extend({
     /**
      * Execute an OpenERP action
      *
-     * @param {Number|String|String|Object} Can be either an action id, an action XML id, a client action tag or an action descriptor.
+     * @param {Number|String|String|Object} action Can be either an action id, an action XML id, a client action tag or an action descriptor.
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Boolean} [options.replace_breadcrumb=false] Replace the current breadcrumb with the action

@@ -122,7 +122,7 @@ return {
      * the last operation.
      *
      * For example, let us say that we have a _fetch method on a widget which
-     * fetches data.  We want to rerender the widget after.  We could do this:
+     * fetches data.  We want to rerender the widget after.  We could do this::
      *
      *      this._fetch().then(function (result) {
      *          self.state = result;
@@ -130,17 +130,18 @@ return {
      *      });
      *
      * Now, we have at least two problems:
+     *
      * - if this code is called twice and the second _fetch completes before the
      *   first, the end state will be the result of the first _fetch, which is
      *   not what we expect
      * - in any cases, the user interface will rerender twice, which is bad.
      *
-     * Now, if we have a DropPrevious:
+     * Now, if we have a DropPrevious::
      *
      *      this.dropPrevious = new DropPrevious();
      *
      * Then we can wrap the _fetch in a DropPrevious and have the expected
-     * result:
+     * result::
      *
      *      this.dropPrevious
      *          .add(this._fetch())
@@ -153,7 +154,7 @@ return {
         /**
          * Registers a new deferred and rejects the previous one
          *
-         * @param {Deferred} the new deferred
+         * @param {Deferred} deferred the new deferred
          * @returns {Promise}
          */
         add: function (deferred) {
@@ -171,7 +172,7 @@ return {
      *
      * Imagine that we have a function to fetch some data _load(), which returns
      * a deferred which resolves to something useful. Now, we have some code
-     * looking like this:
+     * looking like this::
      *
      *      return this._load().then(function (result) {
      *          this.state = result;
@@ -179,11 +180,11 @@ return {
      *
      * If this code is run twice, but the second execution ends before the
      * first, then the final state will be the result of the first call to
-     * _load.  However, if we have a mutex:
+     * _load.  However, if we have a mutex::
      *
      *      this.mutex = new Mutex();
      *
-     * and if we wrap the calls to _load in a mutex:
+     * and if we wrap the calls to _load in a mutex::
      *
      *      return this.mutex.exec(function() {
      *          return this._load().then(function (result) {

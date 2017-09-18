@@ -200,7 +200,7 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} id local resource id of a record
      * @param {string} viewType the current viewType
-     * @returns {Deferred -> string} resolves to the id of the record
+     * @returns {Deferred<string>} resolves to the id of the record
      */
     applyRawChanges: function (recordID, viewType) {
         var record = this.localData[recordID];
@@ -277,7 +277,7 @@ var BasicModel = AbstractModel.extend({
      * Duplicate a record (by calling the 'copy' route)
      *
      * @param {string} recordID id for a local resource
-     * @returns {Deferred -> string} resolves to the id of duplicate record
+     * @returns {Deferred<string>} resolves to the id of duplicate record
      */
     duplicateRecord: function (recordID) {
         var self = this;
@@ -544,7 +544,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} params.fields contains the description of each field
      * @param {string} [params.type] 'record' or 'list'
      * @param {string} [params.recordID] an ID for an existing resource.
-     * @returns {Deferred -> string} resolves to a local id, or handle
+     * @returns {Deferred<string>} resolves to a local id, or handle
      */
     load: function (params) {
         params.type = params.type || (params.res_id !== undefined ? 'record' : 'list');
@@ -694,7 +694,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {boolean} [options.keepChanges=false] if true, doesn't discard the
      *   changes on the record before reloading it
-     * @returns {Deferred -> string} resolves to the id of the resource
+     * @returns {Deferred<string>} resolves to the id of the resource
      */
     reload: function (id, options) {
         options = options || {};
@@ -784,7 +784,7 @@ var BasicModel = AbstractModel.extend({
      * Resequences records.
      *
      * @param {string} modelName the resIDs model
-     * @param {Array[integer]} resIDs the new sequence of ids
+     * @param {Array<integer>} resIDs the new sequence of ids
      * @param {string} parentID the localID of the parent
      * @param {object} [options]
      * @param {integer} [options.offset]
@@ -834,8 +834,7 @@ var BasicModel = AbstractModel.extend({
      * - it needs to check all changes,
      * - generate commands for x2many fields,
      * - call the /create or /write method according to the record status
-     * - After that, it has to reload all data, in case something changed,
-     *   server side.
+     * - After that, it has to reload all data, in case something changed, server side.
      *
      * @param {string} record_id local resource
      * @param {Object} [options]
@@ -1006,7 +1005,7 @@ var BasicModel = AbstractModel.extend({
      * data
      *
      * @param {string} groupId
-     * @returns {Deferred -> string} resolves to the group id
+     * @returns {Deferred<string>} resolves to the group id
      */
     toggleGroup: function (groupId) {
         var self = this;
@@ -1048,7 +1047,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string} [options.position=top] if the new record should be added
      *   on top or on bottom of the list
-     * @returns {Deferred -> string} resolves to the new record id
+     * @returns {Deferred<string>} resolves to the new record id
      */
     _addX2ManyDefaultRecord: function (list, options) {
         var self = this;
@@ -1760,7 +1759,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string} [optinos.viewType] the type of view for which the record
      *   is fetched (usefull to load the adequate fields), by defaults, uses
      *   record.viewType
-     * @returns {Deferred -> Object} resolves to the record or is rejected in
+     * @returns {Deferred<Object>} resolves to the record or is rejected in
      *   case no id given were valid ids
      */
     _fetchRecord: function (record, options) {
@@ -2221,7 +2220,7 @@ var BasicModel = AbstractModel.extend({
      * Fetch all data in a ungrouped list
      *
      * @param {Object} list a valid resource object
-     * @returns {Deferred -> Object} resolves to the fecthed list
+     * @returns {Deferred<Object>} resolves to the fecthed list
      */
     _fetchUngroupedList: function (list) {
         var self = this;
@@ -3029,7 +3028,7 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} params.fields contains the description of each field
      * @param {Object} params.context the context for the new record
      * @param {string} params.viewType the key in fieldsInfo of the fields to load
-     * @returns {Deferred -> string} resolves to the id for the created resource
+     * @returns {Deferred<string>} resolves to the id for the created resource
      */
     _makeDefaultRecord: function (modelName, params) {
         var self = this;
@@ -3318,7 +3317,7 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record
      * @param {Object} record
-     * @returns {Deferred -> Object} resolves to the finished resource
+     * @returns {Deferred<Object>} resolves to the finished resource
      */
     _postprocess: function (record, options) {
         var self = this;
@@ -3455,7 +3454,7 @@ var BasicModel = AbstractModel.extend({
      * instead of a /search_read.
      *
      * @param {Object} list a valid resource object
-     * @returns {Deferred -> Object} resolves to the fetched list object
+     * @returns {Deferred<Object>} resolves to the fetched list object
      */
     _readUngroupedList: function (list) {
         var self = this;
