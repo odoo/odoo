@@ -924,7 +924,7 @@ class Lead(models.Model):
                     if date_deadline < date.today() and not opp.date_closed:
                         result['closing']['overdue'] += 1
                 # Next activities
-                for activity in opp.activity_ids:
+                for activity in opp.activity_ids.filtered(lambda activity: activity.user_id == self.env.user):
                     date_deadline = fields.Date.from_string(activity.date_deadline)
                     if date_deadline == date.today():
                         result['activity']['today'] += 1
