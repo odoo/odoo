@@ -13,7 +13,7 @@
         <attribute name="groups">!sale.group_sale_layout</attribute>
     </xpath>
     <xpath expr="//table" position="after">
-        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page">
+        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="lines_layouted">
             <table class="table table-condensed">
                 <thead>
                     <tr>

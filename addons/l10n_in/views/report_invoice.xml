@@ -3,7 +3,7 @@
 
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-        <xpath expr="//t[@t-set='display_discount']" position="after">
+        <xpath expr="//table[@name='invoice_line_table']" position="before">
             <!-- Tag wise Tax Calculation -->
             <t t-set="tag_cgst_id" t-value="env.ref('l10n_in.cgst_tag_tax').id"/>
             <t t-set="tag_sgst_id" t-value="env.ref('l10n_in.sgst_tag_tax').id"/>
