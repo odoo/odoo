@@ -29,7 +29,7 @@
                         <group>
                             <field name="date"/>
                             <field name="create_date" invisible="1" groups="base.group_no_one"/>
-                            <field name="picking_id" string="Reference"/>
+                            <field name="reference" string="Reference"/>
                             <field name="product_id"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
@@ -44,6 +44,10 @@
                             <div class="o_row">
                                 <field name="qty_done"/>
                             </div>
+                            <field name="lot_id" string="Lot/Serial Number" groups="stock.group_production_lot"/>
+                            <field name="location_id" string="Source Package" groups="product.group_stock_packaging"/>
+                            <field name="location_dest_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
                         </group>
                     </group>
                 </sheet>
