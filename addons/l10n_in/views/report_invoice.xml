@@ -16,10 +16,12 @@
             <t t-set="tax_datas" t-value="o._invoice_line_tax_values()"/>
         </xpath>
         <xpath expr="//p[@t-if='o.comment']" position="before">
-            <p id="total_in_words" class="mb16">
-                <strong>Total (In Words): </strong>
-                <span t-field="o.amount_total_words"/>
-            </p>
+            <t t-if="o.company_id.country_id.code == 'IN'">
+                <p id="total_in_words" class="mb16">
+                    <strong>Total (In Words): </strong>
+                    <span t-field="o.amount_total_words"/>
+                </p>
+            </t>
         </xpath>
         <xpath expr="//table[@name='invoice_line_table']" position="replace">
             <table class="table table-condensed" name="invoice_line_table">
@@ -34,10 +36,12 @@
                             <th class="text-right">Taxes</th>
                         </t>
                         <th class="text-right">Amount</th>
-                        <th class="text-right" t-if="is_cgst">CGST</th>
-                        <th class="text-right" t-if="is_cgst">SGST</th>
-                        <th class="text-right" t-if="is_igst">IGST</th>
-                        <th class="text-right" t-if="is_cess">CESS</th>
+                        <t t-if="o.company_id.country_id.code == 'IN'">
+                            <th class="text-right" t-if="is_cgst">CGST</th>
+                            <th class="text-right" t-if="is_cgst">SGST</th>
+                            <th class="text-right" t-if="is_igst">IGST</th>
+                            <th class="text-right" t-if="is_cess">CESS</th>
+                        </t>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -63,36 +67,38 @@
                             <span t-field="l.price_subtotal"
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
-                        <td class="text-right" t-if="is_cgst">
-                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                <t t-if="tag_cgst_id in tax_data['tag_ids']">
-                                    <t t-esc="tax_data['amount']"/>
+                        <t t-if="o.company_id.country_id.code == 'IN'">
+                            <td class="text-right" t-if="is_cgst">
+                                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                    <t t-if="tag_cgst_id in tax_data['tag_ids']">
+                                        <t t-esc="tax_data['amount']"/>
+                                    </t>
                                 </t>
-                            </t>
-                        </td>
-                        <td class="text-right" t-if="is_cgst">
-                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                <t t-if="tag_sgst_id in tax_data['tag_ids']">
-                                    <t t-esc="tax_data['amount']"/>
+                            </td>
+                            <td class="text-right" t-if="is_cgst">
+                                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                    <t t-if="tag_sgst_id in tax_data['tag_ids']">
+                                        <t t-esc="tax_data['amount']"/>
+                                    </t>
                                 </t>
-                            </t>
-                        </td>
-                        <td class="text-right" t-if="is_igst">
-                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                <t t-if="tag_igst_id in tax_data['tag_ids']">
-                                    <t t-esc="tax_data['amount']"/>
+                            </td>
+                            <td class="text-right" t-if="is_igst">
+                                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                    <t t-if="tag_igst_id in tax_data['tag_ids']">
+                                        <t t-esc="tax_data['amount']"/>
+                                    </t>
                                 </t>
-                            </t>
-                        </td>
-                        <t t-set="total_cess" t-value="0.0"/>
-                        <td class="text-right" t-if="is_cess">
-                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                <t t-if="tag_cess_id in tax_data['tag_ids']">
-                                    <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                            </td>
+                            <t t-set="total_cess" t-value="0.0"/>
+                            <td class="text-right" t-if="is_cess">
+                                <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                    <t t-if="tag_cess_id in tax_data['tag_ids']">
+                                        <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                                    </t>
                                 </t>
-                            </t>
-                            <t t-esc="total_cess"/>
-                        </td>
+                                <t t-esc="total_cess"/>
+                            </td>
+                        </t>
                     </tr>
                     <tr t-foreach="range(max(5-len(o.invoice_line_ids),0))" t-as="l">
                         <td>&amp;nbsp;</td>
@@ -100,11 +106,7 @@
                         <td></td>
                         <td></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td t-att-colspan="o.company_id.country_id.code == 'IN' and 5 or 1"></td>
                     </tr>
                 </tbody>
             </table>

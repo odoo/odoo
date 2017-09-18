@@ -12,10 +12,12 @@
                         <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                         <th class="text-right" t-if="len(o.tax_line_ids) > 0">Tax</th>
                         <th class="text-right">Price</th>
-                        <th class="text-right" t-if="is_cgst">CGST</th>
-                        <th class="text-right" t-if="is_cgst">SGST</th>
-                        <th class="text-right" t-if="is_igst">IGST</th>
-                        <th class="text-right" t-if="is_cess">CESS</th>
+                        <t t-if="o.company_id.country_id.code == 'IN'">
+                            <th class="text-right" t-if="is_cgst">CGST</th>
+                            <th class="text-right" t-if="is_cgst">SGST</th>
+                            <th class="text-right" t-if="is_igst">IGST</th>
+                            <th class="text-right" t-if="is_cess">CESS</th>
+                        </t>
                     </thead>
                     <tbody class="invoice_tbody">
                         <t t-foreach="page" t-as="layout_category">
@@ -54,42 +56,44 @@
                                         <span t-field="l.price_total"
                                             t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                     </td>
-                                    <td class="text-right" t-if="is_cgst">
-                                        <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                            <t t-if="tag_cgst_id in tax_data['tag_ids']">
-                                                <t t-esc="tax_data['amount']"/>
+                                    <t t-if="o.company_id.country_id.code == 'IN'">
+                                        <td class="text-right" t-if="is_cgst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_cgst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
                                             </t>
-                                        </t>
-                                    </td>
-                                    <td class="text-right" t-if="is_cgst">
-                                        <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                            <t t-if="tag_sgst_id in tax_data['tag_ids']">
-                                                <t t-esc="tax_data['amount']"/>
+                                        </td>
+                                        <td class="text-right" t-if="is_cgst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_sgst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
                                             </t>
-                                        </t>
-                                    </td>
-                                    <td class="text-right" t-if="is_igst">
-                                        <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                            <t t-if="tag_igst_id in tax_data['tag_ids']">
-                                                <t t-esc="tax_data['amount']"/>
+                                        </td>
+                                        <td class="text-right" t-if="is_igst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_igst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
                                             </t>
-                                        </t>
-                                    </td>
-                                    <t t-set="total_cess" t-value="0.0"/>
-                                    <td class="text-right" t-if="is_cess">
-                                        <t t-foreach="tax_datas[l.id]" t-as="tax_data">
-                                            <t t-if="tag_cess_id in tax_data['tag_ids']">
-                                                <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                                        </td>
+                                        <t t-set="total_cess" t-value="0.0"/>
+                                        <td class="text-right" t-if="is_cess">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_cess_id in tax_data['tag_ids']">
+                                                    <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                                                </t>
                                             </t>
-                                        </t>
-                                        <t t-esc="total_cess"/>
-                                    </td>
+                                            <t t-esc="total_cess"/>
+                                        </td>
+                                    </t>
                                 </tr>
                             </t>
 
                             <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
                                 <tr class="text-right">
-                                    <td colspan="9">
+                                    <td t-att-colspan="o.company_id.country_id.code == 'IN' and 9 or 6">
                                         <strong>Subtotal: </strong>
                                         <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
                                         <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
