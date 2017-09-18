@@ -1,4 +1,4 @@
-Hong Kong, 2015-04-27
+Hong Kong, 2017-09-18
 
 Quartile Limited agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 
