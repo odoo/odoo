@@ -1280,7 +1280,7 @@
                             </t>
                          </div>
                          <div class="row">
-                            <div class='col-md-12'>
+                            <div class='col-md-12 o_website_sale_rightfit'>
                                 <h2 class="mb8 mt8">Confirm Order</h2>
                                 <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                                     <thead>
@@ -1337,7 +1337,7 @@
                             <div class="clearfix" />
                             <div class="oe_structure" />
 
-                            <div id="payment_method" class="col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                            <div id="payment_method" class="col-md-12 o_website_sale_rightfit" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
                                 <h3 class="mb24">Pay with </h3>
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
