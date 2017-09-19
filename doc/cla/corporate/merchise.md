@@ -18,3 +18,5 @@ Henrik Pestano henrik@merchise.org https://github.com/hpestano
 Oraldo Jacinto Simón oraldo@merchise.org
 Sergio Valdés sergiov@merchise.org
 Medardo Rodríguez med@merchise.org https://github.com/med-merchise
+Abel Firvida firvida@merchise.org
+Abel Firvida abel@merchise.org
