@@ -3536,6 +3536,93 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with CREATE onchanges correctly refreshed', function (assert) {
+        assert.expect(4);
+
+        var deactiveOnchange = true;
+
+        this.data.partner.records[0].turtles = [];
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                if (deactiveOnchange) { return; }
+                // the onchange will either:
+                //  - create a second line if there is only one line
+                //  - edit the second line if there are two lines
+                if (obj.turtles.length === 1) {
+                    obj.turtles = [
+                        [5], // delete all
+                        [0, obj.turtles[0][1], {
+                            display_name: "first",
+                            turtle_int: obj.turtles[0][2].turtle_int,
+                        }],
+                        [0, 0, {
+                            display_name: "second",
+                            turtle_int: -obj.turtles[0][2].turtle_int,
+                        }],
+                    ];
+                } else if (obj.turtles.length === 2) {
+                    obj.turtles = [
+                        [5], // delete all
+                        [0, obj.turtles[0][1], {
+                            display_name: "first",
+                            turtle_int: obj.turtles[0][2].turtle_int,
+                        }],
+                        [0, obj.turtles[1][1], {
+                            display_name: "second",
+                            turtle_int: -obj.turtles[0][2].turtle_int,
+                        }],
+                    ];
+                }
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="turtle_int"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "o2m shouldnn't contain any row");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        // trigger the first onchange
+        deactiveOnchange = false;
+        form.$('input[name="turtle_int"]').val('10').trigger('input');
+        // put the list back in non edit mode
+        form.$('input[name="foo"]').click();
+        assert.strictEqual(form.$('.o_data_row').text(), "first10second-10",
+            "should correctly refresh the records");
+
+        // trigger the second onchange
+        form.$('.o_field_x2many_list tbody tr:first td:first').click();
+        form.$('input[name="turtle_int"]').val('20').trigger('input');
+
+        form.$('input[name="foo"]').click();
+        assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
+            "should correctly refresh the records");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
+            "should correctly refresh the records after save");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many list (editable): readonly domain is evaluated', function (assert) {
         assert.expect(2);
 
@@ -4731,15 +4818,17 @@ QUnit.module('relational_fields', {
                 '</form>',
         });
 
+        // add new line (first, xpad)
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('input[name="display_name"]').val('first').trigger('input');
         form.$('div[name="product_id"] input').click();
-        $('li.ui-menu-item a').click();
+        // the onchange won't be generated
+        $('li.ui-menu-item a:contains(xpad)').trigger('mouseenter').click();
 
         assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
             'should display the line in editable mode');
         assert.strictEqual(form.$('.o_field_many2one input').val(), "xpad",
-            'should display the product');
+            'should display the product xpad');
         assert.strictEqual(form.$('.o_field_many2manytags.o_input .o_badge_text').text(), "first record",
             'should display the tag from the onchange');
 
@@ -4750,6 +4839,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "first record",
             'should display the tag in readonly');
 
+        // enable the many2many onchange and generate it
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
 
         assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphonexenomorphe",
@@ -4757,17 +4847,22 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record firstxenomorphe second record ",
             'should display the name, one2many and many2many value');
 
+        // disable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
 
+        // delete and start over
         form.$('.o_list_record_delete:first span').click();
         form.$('.o_list_record_delete:first span').click();
 
+        // enable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
 
+        // add new line (first, xenomorphe)
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('input[name="display_name"]').val('first').trigger('input');
         form.$('div[name="product_id"] input').click();
-        $('li.ui-menu-item a').click();
+        // generate the onchange
+        $('li.ui-menu-item a:contains(xenomorphe)').trigger('mouseenter').click();
 
         assert.strictEqual(form.$('.o_field_many2manytags.o_input').length, 1,
             'should display the line in editable mode');
@@ -4776,6 +4871,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_field_many2manytags.o_input .o_badge_text').text(), "second record",
             'should display the tag from the onchange');
 
+        // put list in readonly mode
         form.$('input.o_field_integer[name="int_field"]').click();
 
         assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphonexenomorphe",

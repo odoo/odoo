@@ -681,17 +681,16 @@ var FieldX2Many = AbstractField.extend({
             var command = ev.data.changes[this.name];
             // Here, we only consider 'UPDATE' commands with data, which occur
             // with editable list view. In order to keep the current line in
-            // edition, we call confirmChange which will reset the widgets
-            // instead of re-rendering the list. 'UPDATE' commands with no data
-            // can be ignored: they occur in one2manys when the record is
-            // updated from a dialog and in this case, we can re-render the
-            // whole subview.
+            // edition, we call confirmUpdate which will try to reset the widgets
+            // of the line being edited, and rerender the rest of the list.
+            // 'UPDATE' commands with no data can be ignored: they occur in
+            // one2manys when the record is updated from a dialog and in this
+            // case, we can re-render the whole subview.
             if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this._reset(record, ev);
-                this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
-                return $.when();
+                return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
         }
         return this._super.apply(this, arguments);
