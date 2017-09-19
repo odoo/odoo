@@ -76,45 +76,37 @@ var DashboardInvitations = Widget.extend({
         'click .o_web_settings_dashboard_access_rights': 'on_access_rights_clicked',
         'click .o_web_settings_dashboard_user': 'on_user_clicked',
         'click .o_web_settings_dashboard_more': 'on_more',
-        'focusout .select2-input': 'on_focusout',
     },
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
         return this._super.apply(this, arguments);
     },
-    start: function(){
-        var temp = this._super.apply(this, arguments);
-        var self = this;
+    start: function (){
+        var def = this._super.apply(this, arguments);
         this.s2input = this.parent.$('textarea#user_emails').select2({
-            placeholder: _t("Enter e-mail addresses"),
             tags: [],
             tokenSeparators: [" ", ","],
             dropdownCss: {display:'none'},
             width: '100%',
-        });
-        this.s2input.on("select2-open", function(e){
+        })
+        .on("select2-open", function (){
             $('.select2-drop-mask').remove();
+        })
+        .on('select2-blur', function (ev){
+            $(ev.target).data("select2").selectHighlighted({noFocus: true});
         });
-        return temp;
+        return def;
     },
-    on_focusout: function(e){
-        var self = this;
-        var value = $(e.currentTarget).val();
-        this.s2input = this.parent.$('textarea#user_emails');
-        if(value){
-            var data = _.union(self.s2input.select2('data'), [{id:value, text:value}]);
-            self.s2input.select2('data', data);
-        }
-    },
-    send_invitations: function(e){
+    send_invitations: function (e){
         var self = this;
         var $target = $(e.currentTarget);
-        var user_emails =  _.filter($(e.delegateTarget).find('#user_emails').val().split(/[\n, ]/), function(email){
-            return email !== "";
+        var email_data = this.s2input.select2('data');
+        var user_emails = _.map(email_data, function (email) {
+            return email.text;
         });
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
-        var is_valid_emails = _.every(user_emails, function(email) {
+        var is_valid_emails = _.every(user_emails, function (email) {
             return re.test(email);
         });
         if (is_valid_emails) {
