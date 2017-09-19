@@ -37,7 +37,7 @@
             <t t-set="tx_ids" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-if="tx_ids">
                 <div>
-                    <strong>Transactions</strong>
+                    <strong>Transaction</strong>
                 </div>
                 <div>
                     <t t-foreach="tx_ids" t-as="tx">
