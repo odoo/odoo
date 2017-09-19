@@ -14,7 +14,8 @@ odoo.define('payment.payment_form', function (require) {
             'click #o_payment_form_pay': 'payEvent',
             'click #o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
-            'click input[type="radio"]': 'radioClickEvent'
+            'click input[type="radio"]': 'radioClickEvent',
+            'click .o_payment_form_pay_icon_more': 'onClickMorePaymentIcon',
         },
 
         init: function(parent, options) {
@@ -337,6 +338,16 @@ odoo.define('payment.payment_form', function (require) {
                 );
             });
         },
+
+        // event handler when clicking on 'and more' to show more payment icon
+        onClickMorePaymentIcon: function (ev) {
+            ev.preventDefault();
+            var $listItems = $(ev.currentTarget).parents('ul').children('li');
+            var $moreItem = $(ev.currentTarget).parents('li');
+            $listItems.removeClass('hidden');
+            $moreItem.addClass('hidden');
+        },
+
         // event handler when clicking on a radio button
         radioClickEvent: function (ev) {
             this.updateNewPaymentDisplayStatus();
