@@ -600,6 +600,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {keyup event} event
      */
     _onInputKeyup: function (event) {
+        var target_partner_id = $(event.target).parents('[name="partner_id"]');
+        if (target_partner_id.length === 1) {
+            return;
+        }
         if(event.keyCode === 13) {
             if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
                 this._onCreateProposition();
