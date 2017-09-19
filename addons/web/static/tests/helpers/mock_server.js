@@ -910,8 +910,7 @@ var MockServer = Class.extend({
             return $.when(this.data[args.model][args.method](args.args, args.kwargs));
         }
 
-        console.error("Unimplemented route", route, args);
-        return $.when();
+        throw new Error("Unimplemented route: " + route);
     },
     /**
      * helper function: traverse a tree and apply the function f to each of its
