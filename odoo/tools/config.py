@@ -443,7 +443,6 @@ class configmanager(object):
             odoo_dirname = os.path.join(os.path.dirname(__file__),'..')
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(odoo_dirname)))
-        print('ROOT_PATH {}'.format(self.options['root_path']))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')
