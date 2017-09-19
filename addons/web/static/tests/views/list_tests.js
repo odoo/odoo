@@ -881,6 +881,7 @@ QUnit.module('Views', {
         assert.ok(form.$('tbody tr:eq(2) td input').val(),
             "Value 2 should be third (shouldn't be sorted)");
 
+        form.$('.o_form_sheet_bg').click();
         $o2m.find('.o_column_sortable').click();
         assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
             "Value 3 should be first");
