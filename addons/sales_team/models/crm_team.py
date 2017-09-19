@@ -59,7 +59,7 @@ class CrmTeam(models.Model):
         help="Favorite teams to display them in the dashboard and access them easily.")
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales channel")
-    color = fields.Integer(string='Color Index', help="The color of the channel", default=1)
+    color = fields.Integer(string='Color Index', help="The color of the channel")
     team_type = fields.Selection([('sales', 'Sales'), ('website', 'Website')], string='Channel Type', default='sales', required=True,
                                  help="The type of this channel, it will define the resources this channel uses.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
