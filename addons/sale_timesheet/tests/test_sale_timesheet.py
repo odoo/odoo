@@ -214,7 +214,6 @@ class TestSaleTimesheet(CommonTest):
             'unit_amount': 7,
             'employee_id': self.employee_user.id,
         })
-         # import pdb;pdb.set_trace()
         self.assertTrue(float_is_zero(so_line_deliver_only_project.qty_delivered, precision_digits=2), "Timesheeting on project should not incremented the delivered quantity on the SO line")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" timesheets should be invoiced completely by now')
 
