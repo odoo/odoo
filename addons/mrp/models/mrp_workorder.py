@@ -243,7 +243,7 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         MoveLine = self.env['stock.move.line']
         tracked_moves = self.move_raw_ids.filtered(
-            lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id)
+            lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id and move.bom_line_id)
         for move in tracked_moves:
             qty = move.unit_factor * self.qty_producing
             if move.product_id.tracking == 'serial':
