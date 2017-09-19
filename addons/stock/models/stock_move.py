@@ -156,6 +156,7 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
@@ -195,6 +196,17 @@ class StockMove(models.Model):
                 move.is_initial_demand_editable = True
             else:
                 move.is_initial_demand_editable = False
+
+    @api.multi
+    @api.depends('state', 'picking_id')
+    def _compute_is_quantity_done_editable(self):
+        for move in self:
+            if self._context.get('planned_picking') and move.picking_id.state == 'draft':
+                move.is_quantity_done_editable = False
+            elif move.picking_id.is_locked and move.state in ('done', 'cancel'):
+                move.is_quantity_done_editable = False
+            else:
+                move.is_quantity_done_editable = True
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
