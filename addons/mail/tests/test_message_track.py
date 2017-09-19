@@ -1,135 +1,137 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api
-from odoo.addons.mail.tests.common import TestMail
+from email.utils import formataddr
+
+from odoo.addons.mail.tests import common
 
 
-class TestTracking(TestMail):
+class TestTracking(common.BaseFunctionalTest, common.MockEmails):
 
-    def test_message_track(self):
-        """ Testing auto tracking of fields. Warning, it has not be cleaned and
-        should probably be. """
-        test_channel = self.env['mail.channel'].create({
+    def assertTracking(self, message, data):
+        tracking_values = message.sudo().tracking_value_ids
+        for field_name, value_type, old_value, new_value in data:
+            tracking = tracking_values.filtered(lambda track: track.field == field_name)
+            self.assertEqual(len(tracking), 1)
+            if value_type in ('char', 'integer'):
+                self.assertEqual(tracking.old_value_char, old_value)
+                self.assertEqual(tracking.new_value_char, new_value)
+            elif value_type in ('many2one'):
+                self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
+                self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
+                self.assertEqual(tracking.old_value_char, old_value and old_value.name_get()[0][1] or '')
+                self.assertEqual(tracking.new_value_char, new_value and new_value.name_get()[0][1] or '')
+            else:
+                self.assertEqual(1, 0)
+
+    def setUp(self):
+        super(TestTracking, self).setUp()
+
+        self.track_subtype_umbrella = self.env['mail.message.subtype'].create({
+            'name': 'Umbrella',
+            'description': 'Umbrella Changed',
+        })
+        self.env['ir.model.data'].create({
+            'name': 'track_subtype_umbrella',
+            'model': 'mail.message.subtype',
+            'module': 'mail',
+            'res_id': self.track_subtype_umbrella.id
+        })
+
+        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(self._quick_create_ctx).create({
             'name': 'Test',
-            'channel_partner_ids': [(4, self.user_employee.partner_id.id)]
+        })
+        self.record = record.with_context(mail_notrack=False)
+
+    def test_message_track_no_tracking(self):
+        """ Update a set of non tracked fields -> no message, no tracking """
+        self.record.write({
+            'name': 'Tracking or not',
+            'count': 32,
+        })
+        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+
+    def test_message_track_no_subtype(self):
+        """ Update some tracked fields not linked to some subtype -> message with onchange + always tracked values """
+        customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
+        self.record.write({
+            'name': 'Test2',
+            'customer_id': customer.id,
         })
 
-        Subtype = self.env['mail.message.subtype']
-        Data = self.env['ir.model.data']
-        note_subtype = self.env.ref('mail.mt_note')
+        # one new message containing tracking; without subtype linked to tracking, a note is generated
+        self.assertEqual(len(self.record.message_ids), 1)
+        self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('mail.mt_note'))
 
-        group_system = self.env.ref('base.group_system')
-        group_user = self.env.ref('base.group_user')
+        # no specific recipients except those following notes, no email
+        self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
+        self.assertEqual(self.record.message_ids.needaction_partner_ids, self.env['res.partner'])
+        self.assertEqual(self._mails, [])
 
-        # mt_private: public field (tracked as onchange) set to 'private' (selection)
-        mt_private = Subtype.create({
-            'name': 'private',
-            'description': 'Public field set to private'
+        # verify tracked value
+        self.assertTracking(
+            self.record.message_ids,
+            [('email_from', 'char', False, False),  # always tracked field
+             ('customer_id', 'many2one', False, customer)  # onchange tracked field
+             ])
+
+    def test_message_track_subtype(self):
+        """ Update some tracked fields linked to some subtype -> message with onchange + always tracked values """
+        self.record.message_subscribe(
+            partner_ids=[self.user_admin.partner_id.id],
+            subtype_ids=[self.track_subtype_umbrella.id]
+        )
+
+        umbrella = self.env['mail.test'].create({'name': 'Umbrella'})
+        self.record.write({
+            'name': 'Test2',
+            'email_from': 'noone@example.com',
+            'umbrella_id': umbrella.id,
         })
-        Data.create({
-            'name': 'mt_private',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': mt_private.id
+        # one new message containing tracking; subtype linked to tracking
+        self.assertEqual(len(self.record.message_ids), 1)
+        self.assertEqual(self.record.message_ids.subtype_id, self.track_subtype_umbrella)
+
+        # no specific recipients except those following umbrella
+        self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
+        self.assertEqual(self.record.message_ids.needaction_partner_ids, self.user_admin.partner_id)
+
+        # verify tracked value
+        self.assertTracking(
+            self.record.message_ids,
+            [('email_from', 'char', False, 'noone@example.com'),  # always tracked field
+             ('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
+             ])
+
+    def test_message_track_template(self):
+        """ Update some tracked fields linked to some template -> message with onchange + always tracked values """
+        mail_template = self.env['mail.template'].create({
+            'model_id': self.env.ref('mail.model_mail_test_full').id,
+            'body_html': '<p>Hello ${object.name}</p>',
+            'subject': 'Test Template',
+            'partner_to': '${object.customer_id.id | safe}',
+        })
+        self.record.write({'mail_template': mail_template.id})
+        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+
+        self.record.write({
+            'name': 'Test2',
+            'customer_id': self.user_admin.partner_id.id,
         })
 
-        # mt_name_supername: name field (tracked as always) set to 'supername' (char)
-        mt_name_supername = Subtype.create({
-            'name': 'name_supername',
-            'description': 'Name field set to supername'
-        })
-        Data.create({
-            'name': 'mt_name_supername',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': mt_name_supername.id
-        })
+        self.assertEqual(len(self.record.message_ids), 2, 'should have 2 new messages: one for tracking, one for template')
 
-        # mt_group_public_set: group_public field (tracked as onchange) set to something (m2o)
-        mt_group_public_set = Subtype.create({
-            'name': 'group_public_set',
-            'description': 'Group_public field set'
-        })
-        Data.create({
-            'name': 'mt_group_public_set',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': mt_group_public_set.id
-        })
+        # one new message containing the template linked to tracking
+        self.assertEqual(self.record.message_ids[0].subject, 'Test Template')
+        self.assertEqual(self.record.message_ids[0].body, '<p>Hello Test2</p>')
 
-        # mt_group_public_set: group_public field (tracked as onchange) set to nothing (m2o)
-        mt_group_public_unset = Subtype.create({
-            'name': 'group_public_unset',
-            'description': 'Group_public field unset'
-        })
-        Data.create({
-            'name': 'mt_group_public_unset',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': mt_group_public_unset.id
-        })
+        # one email send due to template
+        self.assertEqual(len(self._mails), 1)
+        self.assertEqual(set(self._mails[0]['email_to']), set([formataddr((self.user_admin.name, self.user_admin.email))]))
+        self.assertHtmlEqual(self._mails[0]['body'], '<p>Hello Test2</p>')
 
-        @api.multi
-        def _track_subtype(self, init_values):
-            if 'public' in init_values and self.public == 'private':
-                return 'mail.mt_private'
-            elif 'name' in init_values and self.name == 'supername':
-                return 'mail.mt_name_supername'
-            elif 'group_public_id' in init_values and self.group_public_id:
-                return 'mail.mt_group_public_set'
-            elif 'group_public_id' in init_values and not self.group_public_id:
-                return 'mail.mt_group_public_unset'
-            return False
-        self.registry('mail.channel')._patch_method('_track_subtype', _track_subtype)
-
-        visibility = {
-            'public': 'onchange',
-            'name': 'always',
-            'group_public_id': 'onchange'
-        }
-        cls = type(self.env['mail.channel'])
-        for key in visibility:
-            self.assertFalse(hasattr(getattr(cls, key), 'track_visibility'))
-            getattr(cls, key).track_visibility = visibility[key]
-
-        @self.addCleanup
-        def cleanup():
-            for key in visibility:
-                del getattr(cls, key).track_visibility
-
-        # Test: change name -> always tracked, not related to a subtype
-        test_channel.sudo(self.user_employee).write({'name': 'my_name'})
-        self.assertEqual(len(test_channel.message_ids), 1)
-        last_msg = test_channel.message_ids[-1]
-        self.assertEqual(last_msg.subtype_id, note_subtype)
-        self.assertEqual(len(last_msg.tracking_value_ids), 1)
-        self.assertEqual(last_msg.tracking_value_ids.field, 'name')
-        self.assertEqual(last_msg.tracking_value_ids.field_desc, 'Name')
-        self.assertEqual(last_msg.tracking_value_ids.old_value_char, 'Test')
-        self.assertEqual(last_msg.tracking_value_ids.new_value_char, 'my_name')
-
-        # Test: change name as supername, public as private -> 1 subtype, private
-        test_channel.sudo(self.user_employee).write({'name': 'supername', 'public': 'private'})
-        test_channel.invalidate_cache()
-        self.assertEqual(len(test_channel.message_ids.ids), 2)
-        last_msg = test_channel.message_ids[0]
-        self.assertEqual(last_msg.subtype_id, mt_private)
-        self.assertEqual(len(last_msg.tracking_value_ids), 2)
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('field')), set(['name', 'public']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('field_desc')), set(['Name', 'Privacy']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('old_value_char')), set(['my_name', 'Selected group of users']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('new_value_char')), set(['supername', 'Invited people only']))
-
-        # Test: change public as public, group_public_id -> 1 subtype, group public set
-        test_channel.sudo(self.user_employee).write({'public': 'public', 'group_public_id': group_system.id})
-        test_channel.invalidate_cache()
-        self.assertEqual(len(test_channel.message_ids), 3)
-        last_msg = test_channel.message_ids[0]
-        self.assertEqual(last_msg.subtype_id, mt_group_public_set)
-        self.assertEqual(len(last_msg.tracking_value_ids), 3)
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('field')), set(['group_public_id', 'public', 'name']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('field_desc')), set(['Authorized Group', 'Privacy', 'Name']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('old_value_char')), set([group_user.name_get()[0][1], 'Invited people only', 'supername']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('new_value_char')), set([group_system.name_get()[0][1], 'Everyone', 'supername']))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('old_value_integer')), set([0, group_user.id]))
-        self.assertEqual(set(last_msg.tracking_value_ids.mapped('new_value_integer')), set([0, group_system.id]))
+        # one new message containing tracking; without subtype linked to tracking
+        self.assertEqual(self.record.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertTracking(
+            self.record.message_ids[1],
+            [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
+             ])
