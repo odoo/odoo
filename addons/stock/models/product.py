@@ -500,6 +500,13 @@ class ProductTemplate(models.Model):
             done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
+        if 'type' in vals:
+            existing_move_lines = self.env['stock.move.line'].search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', 'in', ['partially_available', 'assigned']),
+            ])
+            if existing_move_lines:
+                raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
     def action_view_routes(self):
