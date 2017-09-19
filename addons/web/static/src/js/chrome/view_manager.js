@@ -26,7 +26,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         search: function(event) {
             var d = event.data;
             _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys));
-            this.active_view.controller.reload(_.extend({}, this.env));
+            this.active_view.controller.reload(_.extend({offset: 0}, this.env));
         },
         add_filter: '_onAddFilter',
         switch_view: function(event) {

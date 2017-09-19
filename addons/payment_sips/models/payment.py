@@ -167,8 +167,6 @@ class TxSips(models.Model):
         # check what is bought
         if float_compare(float(data.get('amount', '0.0')) / 100, self.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
-        if self.partner_reference and data.get('customerId') != self.partner_reference:
-            invalid_parameters.append(('customerId', data.get('customerId'), self.partner_reference))
 
         return invalid_parameters
 

@@ -6,9 +6,11 @@
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
         .o-justify-content(space-between);
+        margin: 0 0 0 (@o-kanban-record-margin - 2 * @grid-gutter-width);
 
-        @media (min-width: @screen-md-min) {
-            margin: 0 -@grid-gutter-width;
+        @media (max-width: @screen-xs-max) {
+            padding-left: @odoo-horizontal-padding - @o-kanban-record-margin;
+            padding-right: @odoo-horizontal-padding;
         }
 
         .o_kanban_record {
@@ -17,8 +19,7 @@
     }
 
     .o_kanban_record {
-        margin-left: @grid-gutter-width;
-        margin-right: @grid-gutter-width;
+        margin-left: @grid-gutter-width * 2;
         padding: 0;
         box-shadow: none;
         background: none;
