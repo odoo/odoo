@@ -305,40 +305,16 @@ class Picking(models.Model):
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
         else:
-            # We sort our moves by importance of state:
-            #     ------------- 0
-            #     | Confirmed |
-            #     -------------
-            #     |  Partial  |
-            #     -------------
-            #     |  Waiting  |
-            #     -------------
-            #     |  Assigned |
-            #     ------------- len - 1
-            sort_map = {
-                'assigned': 4,
-                'waiting': 3,
-                'partially_available': 2,
-                'confirmed': 1,
-            }
-            moves_todo = self.move_lines\
-                .filtered(lambda move: move.state not in ['cancel', 'done'])\
-                .sorted(key=lambda move: sort_map.get(move.state, 0))
-            if self.move_type == 'one':
-                if moves_todo[0].state in ('partially_available', 'confirmed'):
-                    self.state = 'confirmed'
-                else:
-                    self.state = moves_todo[0].state or 'draft'
-            elif moves_todo[0].state != 'assigned' and any(x.state in ['assigned', 'partially_available'] for x in moves_todo):
-                self.state = 'partially_available'
-            else:
-                # take the less important state among all move_lines.
-                self.state = moves_todo[-1].state or 'draft'
+            self.state = self.move_lines._get_relevant_state_among_moves()
 
     @api.one
     @api.depends('move_lines.priority')
     def _compute_priority(self):
-        self.priority = self.mapped('move_lines') and max(self.mapped('move_lines').mapped('priority')) or '1'
+        if self.mapped('move_lines'):
+            priorities = [priority for priority in self.mapped('move_lines.priority') if priority] or ['1']
+            self.priority = max(priorities)
+        else:
+            self.priority = '1'
 
     @api.one
     def _set_priority(self):

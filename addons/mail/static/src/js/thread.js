@@ -130,11 +130,11 @@ var Thread = Widget.extend({
     },
 
     /**
-     *  Modifies $element to add the 'read more/read less' functionality
-     *  All element nodes with "data-o-mail-quote" attribute are concerned.
-     *  All text nodes after a ""#stopSpelling" element are concerned.
-     *  Those text nodes need to be wrapped in a span (toggle functionality).
-     *  All consecutive elements are joined in one 'read more/read less'.
+     * Modifies $element to add the 'read more/read less' functionality
+     * All element nodes with "data-o-mail-quote" attribute are concerned.
+     * All text nodes after a ``#stopSpelling`` element are concerned.
+     * Those text nodes need to be wrapped in a span (toggle functionality).
+     * All consecutive elements are joined in one 'read more/read less'.
      */
     insert_read_more: function ($element) {
         var self = this;

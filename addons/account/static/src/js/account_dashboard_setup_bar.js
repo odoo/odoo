@@ -124,7 +124,7 @@ var AccountSetupBarModel = KanbanModel.extend({
 
     /**
      * @abstract
-     * @returns {Deferred -> Object} resolves to the required dashboard data
+     * @returns {Deferred<Object>} resolves to the required dashboard data
      */
     _fetchDashboardData: function () {
         return $.when(this._rpc({
@@ -136,7 +136,7 @@ var AccountSetupBarModel = KanbanModel.extend({
     /**
      * @private
      * @param {Deferred} super_def a deferred that resolves with a dataPoint id
-     * @returns {Deferred -> string} resolves to the dataPoint id
+     * @returns {Deferred<string>} resolves to the dataPoint id
      */
     _loadDashboard: function (super_def) {
         var self = this;

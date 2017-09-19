@@ -3955,6 +3955,46 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('basic domain field: show the selection', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = "[]";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="domain" options="{\'model\': \'partner_type\'}"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="name" string="Name"/></search>',
+            },
+            res_id: 1,
+        });
+
+        assert.equal(form.$(".o_domain_show_selection_button").text().trim().substr(0, 2), "2 ",
+            "selection should contain 2 records");
+
+        // open the selection
+        form.$(".o_domain_show_selection_button").click();
+        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 2,
+            "should have open a list view with 2 records in a dialog");
+
+        // click on a record -> should not open the record
+        // we don't actually check that it doesn't open the record because even
+        // if it tries to, it will crash as we don't define an arch in this test
+        $('.modal .o_list_view .o_data_row:first .o_data_cell').click();
+
+        form.destroy();
+    });
 });
 });
 });

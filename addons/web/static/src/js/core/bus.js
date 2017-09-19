@@ -6,6 +6,8 @@ var mixins = require('web.mixins');
 
 /**
  * Event Bus used to bind events scoped in the current instance
+ *
+ * @class Bus
  */
 return Class.extend(mixins.EventDispatcherMixin, {
     init: function() {

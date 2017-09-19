@@ -6,7 +6,8 @@ var Widget = require('web.Widget');
 /**
  * Generic widget to create an iframe that listens for clicks
  *
- * It should be extended by overwritting the methods:
+ * It should be extended by overwriting the methods::
+ *
  *      init: function(parent) {
  *          this._super(parent, <url_of_iframe>);
  *      },

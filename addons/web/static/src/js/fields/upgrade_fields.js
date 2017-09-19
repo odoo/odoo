@@ -112,7 +112,7 @@ var AbstractFieldUpgrade = {
 
     /**
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} event
      */
     _onInputClicked: function (event) {
         if ($(event.currentTarget).prop("checked")) {

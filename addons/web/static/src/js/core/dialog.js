@@ -9,17 +9,17 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 /**
-    A useful class to handle dialogs.
-
-    Attributes:
-    - $footer: A jQuery element targeting a dom part where buttons can be added. It always exists
-    during the lifecycle of the dialog.
-*/
+ * A useful class to handle dialogs.
+ * Attributes:
+ *
+ * ``$footer``
+ *   A jQuery element targeting a dom part where buttons can be added. It
+ *   always exists during the lifecycle of the dialog.
+ **/
 var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
 
     /**
-     * @constructor
      * @param {Widget} parent
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]

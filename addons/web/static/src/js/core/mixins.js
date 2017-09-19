@@ -10,6 +10,9 @@ var AbstractService = require('web.AbstractService');
  * relationship. Each object can a have a parent and multiple children.
  * When an object is destroyed, all its children are destroyed too releasing
  * any resource they could have reserved before.
+ *
+ * @name ParentedMixin
+ * @mixin
  */
 var ParentedMixin = {
     __parentedMixin : true,
@@ -57,21 +60,21 @@ var ParentedMixin = {
         return this.__parentedDestroyed;
     },
     /**
-        Utility method to only execute asynchronous actions if the current
-        object has not been destroyed.
-
-        @param {$.Deferred} promise The promise representing the asynchronous
-                                    action.
-        @param {bool} [reject=false] If true, the returned promise will be
-                                     rejected with no arguments if the current
-                                     object is destroyed. If false, the
-                                     returned promise will never be resolved
-                                     or rejected.
-        @returns {$.Deferred} A promise that will mirror the given promise if
-                              everything goes fine but will either be rejected
-                              with no arguments or never resolved if the
-                              current object is destroyed.
-    */
+     * Utility method to only execute asynchronous actions if the current
+     * object has not been destroyed.
+     *
+     * @param {$.Deferred} promise The promise representing the asynchronous
+     *                             action.
+     * @param {bool} [reject=false] If true, the returned promise will be
+     *                              rejected with no arguments if the current
+     *                              object is destroyed. If false, the
+     *                              returned promise will never be resolved
+     *                              or rejected.
+     * @returns {$.Deferred} A promise that will mirror the given promise if
+     *                       everything goes fine but will either be rejected
+     *                       with no arguments or never resolved if the
+     *                       current object is destroyed.
+     */
     alive: function (promise, reject) {
         var self = this;
         return $.Deferred(function (def) {
@@ -228,13 +231,16 @@ var Events = Class.extend({
 });
 
 /**
-    Mixin containing an event system. Events are also registered by specifying the target object
-    (the object which will receive the event when it is raised). Both the event-emitting object
-    and the target object store or reference to each other. This is used to correctly remove all
-    reference to the event handler when any of the object is destroyed (when the destroy() method
-    from ParentedMixin is called). Removing those references is necessary to avoid memory leak
-    and phantom events (events which are raised and sent to a previously destroyed object).
-*/
+ * Mixin containing an event system. Events are also registered by specifying the target object
+ * (the object which will receive the event when it is raised). Both the event-emitting object
+ * and the target object store or reference to each other. This is used to correctly remove all
+ * reference to the event handler when any of the object is destroyed (when the destroy() method
+ * from ParentedMixin is called). Removing those references is necessary to avoid memory leak
+ * and phantom events (events which are raised and sent to a previously destroyed object).
+ *
+ * @name EventDispatcherMixin
+ * @mixin
+ */
 var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     __eventDispatcherMixin: true,
     custom_events: {},
@@ -349,6 +355,10 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     }
 });
 
+/**
+ * @name PropertiesMixin
+ * @mixin
+ */
 var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
     init: function () {
         EventDispatcherMixin.init.call(this);
@@ -432,6 +442,10 @@ odoo.define('web.ServicesMixin', function (require) {
 
 var rpc = require('web.rpc');
 
+/**
+ * @mixin
+ * @name ServicesMixin
+ */
 var ServicesMixin = {
     call: function (service, method) {
         var args = Array.prototype.slice.call(arguments, 2);
@@ -450,9 +464,9 @@ var ServicesMixin = {
      * Builds and executes RPC query. Returns a deferred's promise resolved with
      * the RPC result.
      *
-     * @param {string} arg1 either a route or a model
-     * @param {string} method if a model is given, this argument is a method
-     * @returns {Deferred's Promise}
+     * @param {string} params either a route or a model
+     * @param {string} options if a model is given, this argument is a method
+     * @returns {Promise}
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);

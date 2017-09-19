@@ -59,6 +59,8 @@ var AbstractField = Widget.extend({
     specialData: false,
     /**
      * to override to indicate which field types are supported by the widget
+     *
+     * @type Array<String>
      */
     supportedFieldTypes: [],
 
@@ -196,7 +198,7 @@ var AbstractField = Widget.extend({
      * will have the cursor at the very end.
      *
      * @param {Object} [options]
-     * @param {boolean} [noselect=false] if false and the input
+     * @param {boolean} [options.noselect=false] if false and the input
      *   is of type text or textarea, the content will also be selected
      * @param {Event} [options.event] the event which fired this activation
      * @returns {boolean} true if the widget was activated, false if the

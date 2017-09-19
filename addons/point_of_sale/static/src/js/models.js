@@ -18,7 +18,6 @@ var _t = core._t;
 var Mutex = concurrency.Mutex;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
-var Backbone = window.Backbone;
 
 var exports = {};
 
@@ -2208,6 +2207,8 @@ exports.Order = Backbone.Model.extend({
 
     initialize_validation_date: function () {
         this.validation_date = new Date();
+        this.formatted_validation_date = field_utils.format.datetime(
+            moment(this.validation_date), {}, {timezone: false});
     },
 
     set_tip: function(tip) {

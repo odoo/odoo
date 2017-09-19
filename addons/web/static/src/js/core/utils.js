@@ -107,7 +107,7 @@ var utils = {
     /**
      * Returns a human readable size
      *
-     * @param {Number} number of bytes
+     * @param {Number} size number of bytes
      */
     human_size: function (size) {
         var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
@@ -271,8 +271,8 @@ var utils = {
     /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
-     * @param {Number} the value to be rounded
-     * @param {Number} the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
+     * @param {Number} value the value to be rounded
+     * @param {Number} decimals the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
      */
     round_decimals: function (value, decimals) {
         return utils.round_precision(value, Math.pow(10,-decimals));
@@ -319,9 +319,9 @@ var utils = {
     },
     /**
      * Create a cookie
-     * @param {String} name : the name of the cookie
-     * @param {String} value : the value stored in the cookie
-     * @param {Integer} ttl : time to live of the cookie in millis. -1 to erase the cookie.
+     * @param {String} name the name of the cookie
+     * @param {String} value the value stored in the cookie
+     * @param {Integer} ttl time to live of the cookie in millis. -1 to erase the cookie.
      */
     set_cookie: function (name, value, ttl) {
         ttl = ttl || 24*60*60*365;

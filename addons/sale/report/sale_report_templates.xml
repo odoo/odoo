@@ -24,7 +24,7 @@
                 <div class="col-xs-5 col-xs-offset-1">
                     <div t-field="doc.partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                    <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
+                    <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
                 </div>
             </div>
 

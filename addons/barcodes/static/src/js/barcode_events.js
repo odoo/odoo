@@ -182,9 +182,12 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
 });
 
 return {
-    // Singleton that emits barcode_scanned events on core.bus
+    /** Singleton that emits barcode_scanned events on core.bus */
     BarcodeEvents: new BarcodeEvents(),
-    // List of barcode prefixes that are reserved for internal purposes
+    /**
+     * List of barcode prefixes that are reserved for internal purposes
+     * @type Array
+     */
     ReservedBarcodePrefixes: ['O-CMD'],
 };
 

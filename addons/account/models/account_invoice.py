@@ -431,6 +431,18 @@ class AccountInvoice(models.Model):
             sequence = journal_sequence._get_current_sequence()
             sequence.number_next = int(result.group(2))
 
+    @api.multi
+    def _get_printed_report_name(self):
+        self.ensure_one()
+        return  self.type == 'out_invoice' and self.state == 'draft' and _('Draft Invoice') or \
+                self.type == 'out_invoice' and self.state in ('open','paid') and _('Invoice - %s') % (self.number) or \
+                self.type == 'out_refund' and self.state == 'draft' and _('Credit Note') or \
+                self.type == 'out_refund' and _('Credit Note - %s') % (self.number) or \
+                self.type == 'in_invoice' and self.state == 'draft' and _('Vendor Bill') or \
+                self.type == 'in_invoice' and self.state in ('open','paid') and _('Vendor Bill - %s') % (self.number) or \
+                self.type == 'in_refund' and self.state == 'draft' and _('Vendor Credit Note') or \
+                self.type == 'in_refund' and _('Vendor Credit Note - %s') % (self.number)
+
     @api.model
     def create(self, vals):
         onchanges = {
@@ -551,7 +563,8 @@ class AccountInvoice(models.Model):
             default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
-            custom_layout="account.mail_template_data_notification_email_account_invoice"
+            custom_layout="account.mail_template_data_notification_email_account_invoice",
+            force_email=True
         )
         return {
             'name': _('Compose Email'),
