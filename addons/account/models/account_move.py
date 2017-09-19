@@ -867,6 +867,15 @@ class AccountMoveLine(models.Model):
 
         #Iterate process again on self
         return self.auto_reconcile_lines()
+    
+    #Código agregado por TRESCLOUD
+    @api.model
+    def is_payment_massive(self):
+        '''
+        Este método va ser implementado en ecua_hr para los pagos masivos en nómina, se pretende hacer un bypass
+        cuando los apuntes sean de diferentes partner
+        '''
+        return False
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
@@ -887,7 +896,8 @@ class AccountMoveLine(models.Model):
             raise UserError(_('Entries are not of the same account!'))
         if not all_accounts[0].reconcile:
             raise UserError(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
-        if len(partners) > 1:
+        #Código modificado por TRESCLOUD
+        if len(partners) > 1 and not self.is_payment_massive():
             raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
 
         #reconcile everything that can be
