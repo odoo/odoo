@@ -436,6 +436,26 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: save data when list sorting in edit mode', function (assert) {
+        assert.expect(1);
+
+        this.data.foo.fields.foo.sortable = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        list.$('td:not(.o_list_record_selector)').first().click();
+        list.$('input[name="foo"]').val('xyz').trigger('input');
+        list.$('.o_column_sortable').click();
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$buttons.hasClass('o-editing'),false,"data saved");
+        list.destroy();
+    });
+
     QUnit.test('selection changes are triggered correctly', function (assert) {
         assert.expect(8);
 
@@ -861,6 +881,7 @@ QUnit.module('Views', {
         assert.ok(form.$('tbody tr:eq(2) td input').val(),
             "Value 2 should be third (shouldn't be sorted)");
 
+        form.$('.o_form_sheet_bg').click();
         $o2m.find('.o_column_sortable').click();
         assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
             "Value 3 should be first");

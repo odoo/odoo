@@ -667,6 +667,18 @@ ListRenderer.include({
         }
     },
     /**
+     * If record is editing currenly and user do sorting on column then do not allow to do that.
+     *
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onSortColumn: function (event) {
+        if (this.currentRow === null) {
+            this._super.apply(this, arguments);
+        }
+    },
+    /**
      * Triggers a delete event. I don't know why we stop the propagation of the
      * event.
      *
