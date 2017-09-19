@@ -211,7 +211,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('invisible fields are properly hidden', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -224,6 +224,10 @@ QUnit.module('Views', {
                             '<field name="bar"/>' +
                         '</group>' +
                         '<field name="qux" invisible="1"/>' +
+                        // x2many field without inline view: as it is always invisible, the view
+                        // should not be fetched. we don't specify any view in this test, so if it
+                        // ever tries to fetch it, it will crash, indicating that this is wrong.
+                        '<field name="p" invisible="True"/>' +
                     '</sheet>' +
                 '</form>',
             res_id: 1,
@@ -235,6 +239,8 @@ QUnit.module('Views', {
                         "should not contain span with field value");
         assert.strictEqual(form.$('.o_field_widget.o_invisible_modifier:contains(0.4)').length, 1,
                         "field qux should be invisible");
+        assert.ok(form.$('.o_field_widget[name=p]').hasClass('o_invisible_modifier'),
+                        "field p should be invisible");
         form.destroy();
     });
 
@@ -5840,6 +5846,46 @@ QUnit.module('Views', {
         });
         assert.strictEqual(form.$('.o_list_view thead tr th').length, 1,
             "there should be only one column");
+        form.destroy();
+    });
+
+    QUnit.test('can toggle column in x2many in sub form view', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[2].p = [1,2];
+        this.data.partner.fields.foo.sortable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="trululu"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            archs: {
+                'partner,false,form': '<form string="Partners">' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>',
+            },
+            viewOptions: {mode: 'edit'},
+        });
+        form.$('.o_external_button').click();
+        assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "yopblip",
+            "table has some initial order");
+
+        $('.modal-body .o_form_view .o_list_view th').click();
+        assert.strictEqual($('.modal-body .o_form_view .o_list_view .o_data_cell').text(), "blipyop",
+            "table is now sorted");
         form.destroy();
     });
 
