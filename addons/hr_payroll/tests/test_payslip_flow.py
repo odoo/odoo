@@ -56,7 +56,7 @@ class TestPayslipFlow(TestPayslipBase):
         # I create record for generating the payslip for this Payslip run.
 
         payslip_employee = self.env['hr.payslip.employees'].create({
-            'employee_ids': [(4, self.richard_emp.ids)]
+            'employee_ids': [(4, self.richard_emp.id)]
         })
 
         # I generate the payslip by clicking on Generat button wizard.
