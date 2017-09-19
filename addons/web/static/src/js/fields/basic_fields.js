@@ -2391,6 +2391,43 @@ var AceEditor = DebouncedField.extend({
     },
 });
 
+
+var ImageSelection = AbstractField.extend({
+    supportedFieldTypes: ['selection'],
+    events: {
+        'click img': '_onImgClick',
+    },
+
+    _onImgClick: function(event) {
+        var key = $(event.currentTarget).data('key');
+        this.$el.find('img').removeClass('btn-info');
+        $(event.currentTarget).addClass('btn-info');
+        this._setValue(key);
+    },
+
+    _render: function () {
+        if(!this.selectionData) {
+            this.selectionData = this.nodeOptions || {};
+            var self = this;
+            _.each(_.keys(this.selectionData),function (key) {
+                var $container = $('<div>').addClass('col-xs-3 text-center');
+                var $element = $("<img>").addClass("img img-responsive img-thumbnail ml16")
+                                .attr('src',self.selectionData[key].image_link).data('key',key);
+                if(key === self.value) {
+                    $element.addClass('btn-info');
+                }
+                $container.append($element);
+                if(self.selectionData[key].preview_link) {
+                    $container.append($('<a>Preview</a>')
+                        .attr('href',self.selectionData[key].preview_link)
+                        .attr('target','_blank'));
+                }
+                self.$el.append($container);
+            });
+        }
+    },
+});
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -2417,6 +2454,7 @@ return {
     InputField: InputField,
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
+    ImageSelection: ImageSelection,
     StateSelectionWidget: StateSelectionWidget,
     FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,
