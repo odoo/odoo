@@ -111,6 +111,12 @@ odoo.define('payment.payment_form', function (require) {
                                 _t('Server Error'),
                                 _t("<p>" + data.error + "</p>"));
                         }
+                        if (!data.result && !data.error) {
+                            $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
+                            $(button).attr('disabled', false);
+                            self.$('#o_payment_add_token_acq_' + acquirer_id)
+                                .append('<div class="text-danger ml16">' + _t('e.g. Your credit card details are wrong. Please verify.') + '</div>');
+                        }
                     }).fail(function (message, data) {
                         // if the rpc fails, pretty obvious
                         $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
