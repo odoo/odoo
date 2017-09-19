@@ -15,6 +15,7 @@ odoo.define('payment.payment_form', function (require) {
             'click .o_payment_form_add_pm': 'addPmEvent',
             'click button[name="delete_pm"]': 'deletePmEvent',
             'click input[type="radio"], .o_payment_acquirer': 'radioClickEvent',
+            'click #more_payment_icon': 'showMorePaymentIcon',
         },
 
         init: function(parent, options) {
@@ -282,6 +283,13 @@ odoo.define('payment.payment_form', function (require) {
                     _t('<p>Please select the option to add a new payment method.</p>')
                 );
             }
+        },
+        // event handler when clicking on 'and more' to show more payment icon
+        showMorePaymentIcon: function (ev) {
+            ev.preventDefault();
+            var data = $(ev.currentTarget).parents('.o_payment_acquirer').find('input[type="radio"]').data();
+            $('.o_payment_icon_button_' + data.acquirerId).addClass('hidden');
+            $('.o_show_payment_icon_' + data.acquirerId).removeClass('hidden');
         },
         // event handler when clicking on a button to delete a payment method
         deletePmEvent: function (ev) {
