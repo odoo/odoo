@@ -158,11 +158,20 @@ class TestPerformance(TransactionCase):
 
     @queryCount(admin=38, demo=38)
     def test_create_base_with_lines(self):
-        """ Create records with lines. """
+        """ Create records with one2many lines. """
         model = self.env['test_performance.base']
         model.create({
             'name': self.str('Y'),
             'line_ids': [(0, 0, {'value': val}) for val in range(10)],
+        })
+
+    @queryCount(admin=17, demo=17)
+    def test_create_base_with_tags(self):
+        """ Create records with many2many tags. """
+        model = self.env['test_performance.base']
+        model.create({
+            'name': self.str('X'),
+            'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
         })
 
     @queryCount(admin=3, demo=3)
