@@ -136,10 +136,22 @@
                     <hr />
                     <div class="row mt16">
                         <field name="external_report_layout" widget="image_selection" options="{
-                                'background': '/base/static/img/preview_background.png',
-                                'boxed': '/base/static/img/preview_boxed.png',
-                                'clean': '/base/static/img/preview_clean.png',
-                                'standard': '/base/static/img/preview_standard.png'
+                                'background': {
+                                    'image_link': '/base/static/img/preview_background.png',
+                                    'preview_link': '/base/static/pdf/preview_background.pdf'
+                                },
+                                'boxed': {
+                                    'image_link': '/base/static/img/preview_boxed.png',
+                                    'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                                },
+                                'clean': {
+                                    'image_link': '/base/static/img/preview_clean.png',
+                                    'preview_link': '/base/static/pdf/preview_clean.pdf'
+                                },
+                                'standard': {
+                                    'image_link': '/base/static/img/preview_standard.png',
+                                    'preview_link': '/base/static/pdf/preview_standard.pdf'
+                                }
                             }"/>
                     </div>
                     <footer>

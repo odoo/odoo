@@ -2410,12 +2410,19 @@ var ImageSelection = AbstractField.extend({
             this.selectionData = this.nodeOptions || {};
             var self = this;
             _.each(_.keys(this.selectionData),function (key) {
+                var $container = $('<div>').addClass('col-xs-3 text-center');
                 var $element = $("<img>").addClass("img img-responsive img-thumbnail ml16")
-                                .attr('src',self.selectionData[key]).data('key',key);
+                                .attr('src',self.selectionData[key].image_link).data('key',key);
                 if(key === self.value) {
                     $element.addClass('btn-info');
                 }
-                self.$el.append($element);
+                $container.append($element);
+                if(self.selectionData[key].preview_link) {
+                    $container.append($('<a>Preview</a>')
+                        .attr('href',self.selectionData[key].preview_link)
+                        .attr('target','_blank'));
+                }
+                self.$el.append($container);
             });
         }
     },
