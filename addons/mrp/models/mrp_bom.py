@@ -214,7 +214,8 @@ class MrpBomLine(models.Model):
     has_attachments = fields.Boolean('Has Attachments', compute='_compute_has_attachments')
 
     _sql_constraints = [
-        ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n'
+        ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater than or equal to 0.\n'
+            'Lines with 0 quantities can be used as optional lines. \n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 

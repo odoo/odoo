@@ -915,6 +915,8 @@ class StockMove(models.Model):
             # move.quantity_done = float_round(move.quantity_done, precision_rounding=rounding, rounding_method ='UP')
             if move.quantity_done <= 0:
                 continue
+            if move.product_uom_qty == 0.0:
+                move.product_uom_qty = move.quantity_done
             moves_todo |= move
             moves_todo |= move._create_extra_move()
         # Split moves where necessary and move quants
