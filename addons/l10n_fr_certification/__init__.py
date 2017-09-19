@@ -17,7 +17,6 @@ def _setup_inalterability(cr, registry):
         fr_companies._create_secure_sequence()
 
         #reset the update_posted field on journals
-        journals = env['account.journal'].search([('company_id', 'in', fr_companies.ids),
-                                                  ('type', 'like', 'sale')])
+        journals = env['account.journal'].search([('company_id', 'in', fr_companies.ids)])
         for journal in journals:
             journal.write({'update_posted': False})
