@@ -403,7 +403,9 @@ class Picking(models.Model):
                 if len(move) == 3:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
-        return super(Picking, self).create(vals)
+        res = super(Picking, self).create(vals)
+        res._autoconfirm_picking()
+        return res
 
     @api.multi
     def write(self, vals):
@@ -416,6 +418,8 @@ class Picking(models.Model):
             after_vals['location_dest_id'] = vals['location_dest_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
+        if vals.get('move_lines'):
+            self._autoconfirm_picking()
         return res
 
     @api.multi
@@ -641,6 +645,13 @@ class Picking(models.Model):
             quantity_done[pack.product_id.id] += pack.qty_done
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
+    @api.multi
+    def _autoconfirm_picking(self):
+        if not self._context.get('planned_picking'):
+            for picking in self.filtered(lambda picking: picking.state not in ('done', 'cancel') and picking.move_lines):
+                picking.action_confirm()
+
+    @api.multi
     def _create_backorder(self, backorder_moves=[]):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
