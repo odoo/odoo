@@ -741,7 +741,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation change partner', function (assert) {
-        assert.expect(13);
+        assert.expect(17);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
@@ -759,6 +759,20 @@ QUnit.module('account', {
         var widget = clientAction.widgets[0];
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
+        
+        // Adding the two propositions
+        // This is in order to try that after changing partner the propositions are emptied
+        widget.$('.match .cell_account_code:first').trigger('click');
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "Both proposition should be selected");
+
+        // Similate changing partner to one that does not have propositions to see if create mode is open after
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(partner 1)').trigger('mouseenter').trigger('click');
+        clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'partner 1', id: 1}}, stopped: false});
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "partner 1", "the partner many2one should display partner 1");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 0, "partner 1 should have 0 propositions for reconciliation");
+        assert.strictEqual(widget.$el.data('mode'), 'create', "widget should be in create mode");
 
         // Simulate changing partner
         widget.$('.o_input_dropdown input').trigger('click');
