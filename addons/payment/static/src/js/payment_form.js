@@ -155,16 +155,18 @@ odoo.define('payment.payment_form', function (require) {
                                 newForm.submit(); // and finally submit the form
                             }
                             else {
-                                self.displayError(
-                                    _t('Server Error'),
-                                    _t("<p>We are not able to redirect you to the payment form.</p>")
-                                );
+                                // removed if exist
+                                self.$('.o_payment_token_error').remove();
+                                // error message
+                                var error_msg = _t('We are not able to redirect you to the payment form. ');
+                                self.$el.append('<div class="text-danger o_payment_token_error">' + error_msg + '</div>');
                             }
                         }).fail(function (message, data) {
-                            self.displayError(
-                                _t('Server Error'),
-                                _t("<p>We are not able to redirect you to the payment form.</p>") + (core.debug ? data.data.message : '')
-                            );
+                            // removed if exist
+                            self.$('.o_payment_token_error').remove();
+                            // error message
+                            var error_msg = (_t('We are not able to redirect you to the payment form. ') + (core.debug ? data.data.message : '') );
+                            self.$el.append('<div class="text-danger o_payment_token_error">' + error_msg + '</div>');
                         });
                     }
                     else {
