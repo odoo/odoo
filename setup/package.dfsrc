@@ -1,6 +1,6 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 RUN apt-get update && \
@@ -27,17 +27,18 @@ RUN apt-get update -qq &&  \
 		libsasl2-dev \
 		libssl-dev \
 		libjpeg-dev \
-		python-dev \
-		python-pip \
+		zlib1g-dev \
+		python3-dev \
+		python3-pip \
+		python3-wheel \
 		build-essential \
-		python -y && \
-	easy_install --upgrade pip && \
+		python3 -y && \
 	rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
 COPY requirements.txt /opt/release/requirements.txt
 
-RUN pip install -r /opt/release/requirements.txt
+RUN pip3 install -r /opt/release/requirements.txt
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
