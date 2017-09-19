@@ -128,6 +128,7 @@ class SaleOrder(models.Model):
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
+    is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
@@ -167,6 +168,14 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
             order.portal_url = '/my/orders/%s' % (order.id)
+
+    def _compute_is_expired(self):
+        now = datetime.now()
+        for order in self:
+            if order.validity_date and fields.Datetime.from_string(order.validity_date) < now:
+                order.is_expired = True
+            else:
+                order.is_expired = False
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
