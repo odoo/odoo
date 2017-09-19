@@ -667,6 +667,17 @@ ListRenderer.include({
         }
     },
     /**
+     * Overrides to prevent from sorting if we are currently editing a record.
+     *
+     * @override
+     * @private
+     */
+    _onSortColumn: function () {
+        if (this.currentRow === null) {
+            this._super.apply(this, arguments);
+        }
+    },
+    /**
      * Triggers a delete event. I don't know why we stop the propagation of the
      * event.
      *
