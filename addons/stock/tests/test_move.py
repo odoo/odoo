@@ -2935,3 +2935,43 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)
+
+    def test_change_product_type(self):
+        """ Changing type of an existing product will raise a user error if some move
+        are reserved.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_customer',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        with self.assertRaises(UserError):
+            self.product1.type = 'consu'
+        move1._action_cancel()
+        self.product1.type = 'consu'
+
+        move2 = self.env['stock.move'].create({
+            'name': 'test_customer',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        move2._action_confirm()
+        move2._action_assign()
+
+        with self.assertRaises(UserError):
+            self.product1.type = 'product'
+        move2._action_cancel()
+        self.product1.type = 'product'
