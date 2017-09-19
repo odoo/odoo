@@ -34,7 +34,7 @@ var DocumentViewer = Widget.extend({
      * Documents that are not of type image or video are filtered out.
      *
      * @override
-     * @param {Array[Object]} attachments list of attachments
+     * @param {Array<Object>} attachments list of attachments
      * @param {integer} activeAttachmentID
      */
     init: function (parent, attachments, activeAttachmentID) {

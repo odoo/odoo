@@ -115,10 +115,14 @@ return {
         }
     },
     /**
-     * jQuery find function behavior is:
+     * jQuery find function behavior is::
+     *
      *      $('A').find('A B') <=> $('A A B')
-     * The searches behavior to find options' DOM needs to be
+     *
+     * The searches behavior to find options' DOM needs to be::
+     *
      *      $('A').find('A B') <=> $('A B')
+     *
      * This is what this function does.
      *
      * @param {jQuery} $from - the jQuery element(s) from which to search

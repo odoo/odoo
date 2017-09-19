@@ -26,7 +26,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         search: function(event) {
             var d = event.data;
             _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys));
-            this.active_view.controller.reload(_.extend({}, this.env));
+            this.active_view.controller.reload(_.extend({offset: 0}, this.env));
         },
         add_filter: '_onAddFilter',
         switch_view: function(event) {
@@ -232,8 +232,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     /**
      * Returns the default view with the following fallbacks:
-     *  - use the default_view defined in the flags, if any
-     *  - use the first view in the view_order
+     *
+     * - use the default_view defined in the flags, if any
+     * - use the first view in the view_order
      *
      * @returns {Object} the default view
      */

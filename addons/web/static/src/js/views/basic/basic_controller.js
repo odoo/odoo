@@ -114,7 +114,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     /**
      * Method that will be overriden by the views with the ability to have selected ids
      *
-     * @returns []
+     * @returns {Array}
      */
     getSelectedIds: function () {
         return [];
@@ -517,7 +517,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * in readonly (e.g. Priority).
      *
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
         if (this.mode === 'readonly') {

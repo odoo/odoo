@@ -97,6 +97,18 @@
                 vertical-align: middle;
             }
         }
+
+        &.o_full {
+            position: relative;
+            .o_button_more {
+                padding: 0 10px;
+            }
+            .o_dropdown_more {
+                .o-position-absolute(@top: 100%, @right: 0);
+                min-width: 0;
+                padding: 0px;
+            }
+        }
     }
 
     // Avatar

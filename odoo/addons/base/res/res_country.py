@@ -64,6 +64,7 @@ class Country(models.Model):
             ('after', 'After Address'),
         ], string="Customer Name Position", default="before",
         help="Determines where the customer/company name should be placed, i.e. after or before the address.")
+    vat_label = fields.Char(string='Vat Label', translate=True, help="Use this field if you want to change vat label.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',

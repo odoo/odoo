@@ -206,16 +206,17 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     // Window title handling
     // --------------------------------------------------------------
     /**
-       Sets the first part of the title of the window, dedicated to the current action.
+     * Sets the first part of the title of the window, dedicated to the current action.
     */
     set_title: function (title) {
        this.set_title_part("action", title);
     },
     /**
-       Sets an arbitrary part of the title of the window. Title parts are identified by strings. Each time
-       a title part is changed, all parts are gathered, ordered by alphabetical order and displayed in the
-       title of the window separated by '-'.
-    */
+     * Sets an arbitrary part of the title of the window. Title parts are
+     * identified by strings. Each time a title part is changed, all parts
+     * are gathered, ordered by alphabetical order and displayed in the title
+     * of the window separated by ``-``.
+     */
     set_title_part: function (part, title) {
         var tmp = _.clone(this.get("title_part"));
         tmp[part] = title;

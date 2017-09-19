@@ -71,6 +71,7 @@ class Product(models.Model):
              "Otherwise, this includes goods leaving any Stock "
              "Location with 'internal' type.")
 
+    orderpoint_ids = fields.One2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules')
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')

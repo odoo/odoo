@@ -12,7 +12,7 @@ var _t = core._t;
  * Model use to fetch, format and update 'account.bank.statement' and
  * 'account.bank.statement.line' datas allowing reconciliation
  *
- * The statement internal structure:
+ * The statement internal structure::
  *
  *  {
  *      valuenow: integer
@@ -25,7 +25,7 @@ var _t = core._t;
  *      accounts: {id: code}
  *  }
  *
- * The internal structure of each line is:
+ * The internal structure of each line is::
  *
  *   {
  *      balance: {
@@ -114,7 +114,7 @@ var StatementModel = BasicModel.extend({
      * account type
      *
      * @param {string} handle
-     * @param {number} mv_lines id
+     * @param {number} mv_line_id
      * @returns {Deferred}
      */
     addProposition: function (handle, mv_line_id) {
@@ -167,13 +167,15 @@ var StatementModel = BasicModel.extend({
      * change the mode line ('inactive', 'match', 'create'), and fetch the new
      * matched lines or prepare to create a new line
      *
-     * 'match': display the matched lines, the user can select the lines to
-     *   apply there as proposition
-     * 'create': display fields and quick create button to create a new
-     *   proposition for the reconciliation
+     * ``match``
+     *   display the matched lines, the user can select the lines to apply
+     *   there as proposition
+     * ``create``
+     *   display fields and quick create button to create a new proposition
+     *   for the reconciliation
      *
      * @param {string} handle
-     * @param {string} mode
+     * @param {'inactive' | 'match' | 'create'} mode
      * @returns {Deferred}
      */
     changeMode: function (handle, mode) {
@@ -316,7 +318,7 @@ var StatementModel = BasicModel.extend({
     /**
      * get the line data for this handle
      *
-     * @param {OdooEvent} event
+     * @param {Object} handle
      * @returns {Object}
      */
     getLine: function (handle) {
@@ -324,6 +326,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * load data from
+     *
      * - 'account.bank.statement' fetch the line id and bank_statement_id info
      * - 'account.reconcile.model'  fetch all reconcile model (for quick add)
      * - 'account.account' fetch all account code
@@ -430,7 +433,7 @@ var StatementModel = BasicModel.extend({
      * 'amount_type'
      *
      * @param {string} handle
-     * @param {integer} reconcile model id
+     * @param {integer} reconcileModelId
      * @returns {Deferred}
      */
     quickCreateProposition: function (handle, reconcileModelId) {
@@ -460,7 +463,7 @@ var StatementModel = BasicModel.extend({
      * Remove a proposition and switch to an active mode ('create' or 'match')
      *
      * @param {string} handle
-     * @param {number} proposition id (move line id)
+     * @param {number} id (move line id)
      * @returns {Deferred}
      */
     removeProposition: function (handle, id) {
@@ -519,7 +522,7 @@ var StatementModel = BasicModel.extend({
      * Then the total is recomputed to have 100%.
      *
      * @param {string} handle
-     * @param {number[]} context.statement_ids
+     * @param {*} values
      * @returns {Deferred}
      */
     updateProposition: function (handle, values) {
@@ -636,7 +639,7 @@ var StatementModel = BasicModel.extend({
      * stop the editable proposition line and remove it if it's invalid then
      * compute the line
      *
-     * @see '_computeLine'
+     * See :func:`_computeLine`
      *
      * @private
      * @param {string} handle
@@ -679,7 +682,7 @@ var StatementModel = BasicModel.extend({
      * Check the taxes server side for each updated propositions with tax_id
      *
      * @private
-     * @param {Object}
+     * @param {Object} line
      * @returns {Deferred}
      */
     _computeLine: function (line) {
@@ -771,7 +774,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {string} handle
-     * @param {integer} reconcile model id
+     * @param {integer} reconcileModelId
      */
     _computeReconcileModels: function (handle, reconcileModelId) {
         var line = this.getLine(handle);
@@ -788,8 +791,7 @@ var StatementModel = BasicModel.extend({
      * format a name_get into an object {id, display_name}, idempotent
      *
      * @private
-     * @param {Object|Array} data or name_get
-     * @param {Object|false} {id, display_name}
+     * @param {Object|Array} [value] data or name_get
      */
     _formatNameGet: function (value) {
         return value ? (value.id ? value : {'id': value[0], 'display_name': value[1]}) : false;
@@ -798,8 +800,8 @@ var StatementModel = BasicModel.extend({
      * Format each propositions (amount, label, account_id)
      *
      * @private
-     * @param {Object}
-     * @param {Object[]}
+     * @param {Object} line
+     * @param {Object[]} props
      */
     _formatLineProposition: function (line, props) {
         var self = this;
@@ -818,7 +820,7 @@ var StatementModel = BasicModel.extend({
      * @see '_computeLine'
      *
      * @private
-     * @param {Object[]}
+     * @param {Object[]} lines
      * @returns {Deferred}
      */
     _formatLine: function (lines) {
@@ -845,7 +847,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {string} handle
-     * @param {Object[]}
+     * @param {Object[]} mv_lines
      * @returns {Deferred}
      */
     _formatMoveLine: function (handle, mv_lines) {
@@ -869,8 +871,8 @@ var StatementModel = BasicModel.extend({
      * base_amount with the decimal number from the currency
      *
      * @private
-     * @param {Object}
-     * @param {Object}
+     * @param {Object} line
+     * @param {Object} values
      * @returns {Object}
      */
     _formatQuickCreate: function (line, values) {
@@ -980,7 +982,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {object} line
-     * @param {object} proposition
+     * @param {object} prop
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
@@ -1073,7 +1075,7 @@ var ManualModel = StatementModel.extend({
                     return self._rpc({
                             model: 'account.move.line',
                             method: 'get_data_for_manual_reconciliation',
-                            args: ['account', model.account_ids || self.account_ids],
+                            args: ['account', context.account_ids || self.account_ids],
                             context: context,
                         })
                         .then(function (result) {
@@ -1216,7 +1218,7 @@ var ManualModel = StatementModel.extend({
      * 
      * @override
      * @private
-     * @param {Object}
+     * @param {Object} line
      * @returns {Deferred}
      */
     _computeLine: function (line) {
@@ -1237,8 +1239,8 @@ var ManualModel = StatementModel.extend({
      * @see '_computeLine'
      *
      * @private
-     * @param {string} 'customers', 'suppliers' or 'accounts'
-     * @param {Object}
+     * @param {'customers' | 'suppliers' | 'accounts'} type
+     * @param {Object} data
      * @returns {Deferred}
      */
     _formatLine: function (type, data) {
@@ -1264,8 +1266,8 @@ var ManualModel = StatementModel.extend({
      * 
      * @override
      * @private
-     * @param {Object}
-     * @param {Object}
+     * @param {Object} line
+     * @param {Object} props
      */
     _formatLineProposition: function (line, props) {
         var self = this;

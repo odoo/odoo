@@ -49,7 +49,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'One move should be created')
         # Change purchase order line product quantity
         self.po.order_line.write({'product_qty': 7.0})
-        self.assertEqual(len(self.po.order_line.move_ids), 2, 'Two move should be created')
+        self.assertEqual(len(self.po.order_line.move_ids), 1, 'The two moves should be merged in one')
 
         # Validate first shipment
         self.picking = self.po.picking_ids[0]
