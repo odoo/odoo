@@ -154,8 +154,14 @@ class StockMove(models.Model):
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
     product_type = fields.Selection(related='product_id.type', readonly=True)
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
-    is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
+    is_locked = fields.Boolean(compute='_compute_is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+
+    @api.depends('picking_id.is_locked')
+    def _compute_is_locked(self):
+        for move in self:
+            move.is_locked = move.picking_id.is_locked
+
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):

@@ -157,6 +157,13 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+    is_locked = fields.Boolean('Is Locked', default=True)
+    show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
+
+    @api.depends('product_id.tracking')
+    def _compute_show_lots(self):
+        for production in self:
+            production.show_final_lots = production.product_id.tracking != 'none'
 
     @api.multi
     @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
@@ -199,18 +206,22 @@ class MrpProduction(models.Model):
                 assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in order.move_raw_ids]
                 order.availability = (all(assigned_list) and 'assigned') or (any(partial_list) and 'partially_available') or 'waiting'
 
+    @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
     def _compute_unreserve_visible(self):
-        return True
+        for order in self:
+            unreserve_visible = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids').mapped('move_line_ids') or False
+            touched_moves = any([x.quantity_done > 0 for x in order.move_raw_ids])
+            order.unreserve_visible = not touched_moves and unreserve_visible
 
     @api.multi
-    @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
+    @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done', 'is_locked')
     def _compute_post_visible(self):
         for order in self:
             if order.product_tmpl_id._is_cost_method_standard():
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids) or \
+                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids) or \
                     any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
             else:
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
+                order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_raw_ids.product_uom_qty')
@@ -223,7 +234,7 @@ class MrpProduction(models.Model):
             )
 
     @api.multi
-    @api.depends('workorder_ids.state', 'move_finished_ids')
+    @api.depends('workorder_ids.state', 'move_finished_ids', 'is_locked')
     def _get_produced_qty(self):
         for production in self:
             done_moves = production.move_finished_ids.filtered(lambda x: x.state != 'cancel' and x.product_id.id == production.product_id.id)
@@ -231,7 +242,7 @@ class MrpProduction(models.Model):
             wo_done = True
             if any([x.state not in ('done', 'cancel') for x in production.workorder_ids]):
                 wo_done = False
-            production.check_to_done = done_moves and (qty_produced >= production.product_qty) and (production.state not in ('done', 'cancel')) and wo_done
+            production.check_to_done = production.is_locked and done_moves and (qty_produced >= production.product_qty) and (production.state not in ('done', 'cancel')) and wo_done
             production.qty_produced = qty_produced
         return True
 
@@ -292,6 +303,10 @@ class MrpProduction(models.Model):
         if any(production.state != 'cancel' for production in self):
             raise UserError(_('Cannot delete a manufacturing order not in cancel state'))
         return super(MrpProduction, self).unlink()
+
+    def action_toggle_is_locked(self):
+        self.is_locked = not self.is_locked
+        return True
 
     @api.multi
     def _generate_moves(self):

@@ -47,6 +47,7 @@ class StockMoveLine(models.Model):
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
+    has_tracking = fields.Selection(related='move_id.has_tracking')
 
     @api.one
     def _compute_location_description(self):
