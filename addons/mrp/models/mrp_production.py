@@ -106,6 +106,9 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products',
         copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
         domain=[('scrapped', '=', False)])
+    move_line_ids = fields.Many2many(
+        'stock.move.line', compute='_compute_lines', inverse='_inverse_lines',
+        )
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders',
         copy=False, oldname='workcenter_lines', readonly=True)
@@ -164,6 +167,15 @@ class MrpProduction(models.Model):
     def _compute_show_lots(self):
         for production in self:
             production.show_final_lots = production.product_id.tracking != 'none'
+
+    def _inverse_lines(self):
+        """ Little hack to make sure that when you change something on these objects, it gets saved"""
+        pass
+
+    @api.depends('move_finished_ids.move_line_ids')
+    def _compute_lines(self):
+        for production in self:
+            production.move_line_ids = production.move_finished_ids.mapped('move_line_ids').ids
 
     @api.multi
     @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
@@ -338,6 +350,7 @@ class MrpProduction(models.Model):
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
         })
         move._action_confirm()
+        move._action_assign()
         return move
 
     def _generate_raw_moves(self, exploded_lines):
@@ -530,6 +543,7 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish._action_done()
+            order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))._action_assign()
             #order.action_assign()
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
@@ -549,7 +563,7 @@ class MrpProduction(models.Model):
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
         self.post_inventory()
-        moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
+        moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel') or x.product_uom_qty == 0.0)
         moves_to_cancel._action_cancel()
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         return self.write({'state': 'done'})

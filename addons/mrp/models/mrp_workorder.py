@@ -330,13 +330,18 @@ class MrpWorkorder(models.Model):
             production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
             if production_move.has_tracking != 'none':
                 move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                false_move_line = production_move.move_line_ids.filtered(lambda x: not x.lot_id.id)
                 if move_line:
-                    move_line.product_uom_qty += self.qty_producing
+                    move_line = move_line[0]
+                    move_line.qty_done += self.qty_producing
+                elif false_move_line:
+                    false_move_line = false_move_line[0]
+                    false_move_line.qty_done += self.qty_producing
+                    false_move_line.lot_id = self.final_lot_id.id
                 else:
                     move_line.create({'move_id': production_move.id,
                                  'product_id': production_move.product_id.id,
                                  'lot_id': self.final_lot_id.id,
-                                 'product_uom_qty': self.qty_producing,
                                  'product_uom_id': production_move.product_uom.id,
                                  'qty_done': self.qty_producing,
                                  'workorder_id': self.id,

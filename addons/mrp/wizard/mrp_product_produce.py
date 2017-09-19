@@ -116,16 +116,21 @@ class MrpProductProduce(models.TransientModel):
         if produce_move and produce_move.product_id.tracking != 'none':
             if not self.lot_id:
                 raise UserError(_('You need to provide a lot for the finished product'))
+            existing_false_line = produce_move.move_line_ids.filtered(lambda x: not x.lot_id)
             existing_move_line = produce_move.move_line_ids.filtered(lambda x: x.lot_id == self.lot_id)
             if existing_move_line:
-                existing_move_line.product_uom_qty += self.product_qty
+                existing_move_line = existing_move_line[0]
                 existing_move_line.qty_done += self.product_qty
+            elif existing_false_line:
+                existing_false_line = existing_false_line[0]
+                existing_false_line.qty_done += self.product_qty
+                existing_false_line.lot_id = self.lot_id.id
             else:
                 vals = {
                   'move_id': produce_move.id,
                   'product_id': produce_move.product_id.id,
                   'production_id': self.production_id.id,
-                  'product_uom_qty': self.product_qty,
+                  'product_uom_qty': 0.0,
                   'product_uom_id': produce_move.product_uom.id,
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,

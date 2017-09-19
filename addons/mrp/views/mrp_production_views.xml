@@ -130,20 +130,15 @@
                             </field>
                         </page>
                         <page string="Finished Products">
-                            <field name="move_finished_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" create="0">
-                                    <field name="product_id" required="1"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
-                                    <field name="is_done" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
+                            <field name="move_line_ids" attrs="{'readonly': [('is_locked', '=', True)]}">
+                                <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('has_tracking', '=', 'none')]}"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="qty_done"/>
                                     <field name="has_tracking" invisible="1"/>
-                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
-                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Produce"/>
-                                    <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Produced"/>
-                                    <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
-                                        attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
+                                    <field name="done_move" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
