@@ -1030,7 +1030,7 @@ class StockMove(TransactionCase):
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1106,7 +1106,7 @@ class StockMove(TransactionCase):
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1165,7 +1165,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, move_pack_cust_2.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, 0), (4, move_pack_cust_2.id, 0)]})
         move_pack_cust_1.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
         move_pack_cust_2.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
 
@@ -1214,7 +1214,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_1.write({'move_orig_ids': [(4, [move_supp_stock_1.id, move_supp_stock_2.id], 0)]})
+        move_stock_stock_1.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
         move_stock_stock_2 = self.env['stock.move'].create({
             'name': 'test_link_assign_6_1',
             'location_id': self.stock_location.id,
@@ -1223,7 +1223,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_2.write({'move_orig_ids': [(4, [move_supp_stock_1.id, move_supp_stock_2.id], 0)]})
+        move_stock_stock_2.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
 
         (move_supp_stock_1 + move_supp_stock_2 + move_stock_stock_1 + move_stock_stock_2)._action_confirm()
         move_supp_stock_1._action_assign()
