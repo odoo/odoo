@@ -103,19 +103,16 @@ odoo.define('payment.payment_form', function (require) {
                             }
                         }
                         // if the server has returned error, we display an error
-                        if (data.error) {
-                            // here we remove the 'processing' icon from the 'Pay Now' button
-                             $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
-                             $(button).attr('disabled', false);
-                            self.displayError(
-                                _t('Server Error'),
-                                _t("<p>" + data.error + "</p>"));
-                        }
-                        if (!data.result && !data.error) {
-                            $(button).find('i').toggleClass('fa-refresh fa-lock').removeClass('fa-spin');
+                        if (data.error || (!data.result && !data.error)) {
+                            // here we remove the 'processing' icon from the 'add new card' button
+                            $(button).find('i').toggleClass('fa-refresh fa-plus-circle').removeClass('fa-spin');
                             $(button).attr('disabled', false);
-                            self.$('#o_payment_add_token_acq_' + acquirer_id)
-                                .append('<div class="text-danger ml16">' + _t('e.g. Your credit card details are wrong. Please verify.') + '</div>');
+                            var paymentToken = self.$('#o_payment_add_token_acq_' + acquirer_id);
+                            // removed if exist
+                            self.$('.o_payment_token_error').remove();
+                            // error message
+                            var error_msg = data.error ? data.error : _t('e.g. Your credit card details are wrong. Please verify.')
+                            paymentToken.append('<div class="text-danger ml16 o_payment_token_error">' + error_msg + '</div>');
                         }
                     }).fail(function (message, data) {
                         // if the rpc fails, pretty obvious
@@ -257,14 +254,16 @@ odoo.define('payment.payment_form', function (require) {
                         }
                     }
                     // if the server has returned error, we display an error
-                    if (data.error) {
-                         // here we remove the 'processing' icon from the 'add new card' button
-                         $(button).find('i').toggleClass('fa-refresh fa-plus-circle').removeClass('fa-spin');
-                         $(button).attr('disabled', false);
-                        self.displayError(
-                            _t('Server Error'),
-                            _t("<p>" + data.error + "</p>")
-                        );
+                    if (data.error || (!data.result && !data.error)) {
+                        // here we remove the 'processing' icon from the 'add new card' button
+                        $(button).find('i').toggleClass('fa-refresh fa-plus-circle').removeClass('fa-spin');
+                        $(button).attr('disabled', false);
+                        var paymentToken = self.$('#o_payment_add_token_acq_' + acquirer_id);
+                        // removed if exist
+                        self.$('.o_payment_token_error').remove();
+                        // error message
+                        var error_msg = data.error ? data.error : _t('e.g. Your credit card details are wrong. Please verify.')
+                        paymentToken.find('.o_payment_form_add_pm').before('<div class="text-danger ml16 o_payment_token_error">' + error_msg + '</div>');
                     }
                 }).fail(function (message, data) {
                     // if the rpc fails, pretty obvious
