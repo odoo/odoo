@@ -146,8 +146,8 @@
                             <label for="quantity_done"/>
                             <div class="o_row">
                                 <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
-                                <span> / </span>
-                                <span><field name="reserved_availability" nolabel="1"/></span>
+                                <span attrs="{'invisible': [('state', '=', 'done')]}"> / </span>
+                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': [('state', '=', 'done')]}" /></span>
                                 <span><field name="product_uom" readonly="1" nolabel="1"/></span>
                             </div>
 
