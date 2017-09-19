@@ -66,7 +66,31 @@ class StockMove(models.Model):
         'Done', compute='_compute_is_done',
         store=True,
         help='Technical Field to order moves')
-    
+    needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
+    order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
+
+    @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
+    def _compute_done_quantity(self):
+        super(StockMove, self)._compute_done_quantity()
+
+    @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
+    def _compute_order_finished_lot_ids(self):
+        for move in self:
+            if move.product_id.tracking != 'none' and move.raw_material_production_id:
+                move.order_finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+
+    @api.depends('product_id.tracking')
+    def _compute_needs_lots(self):
+        for move in self:
+            move.needs_lots = move.product_id.tracking != 'none'
+
+    @api.depends('raw_material_production_id.is_locked', 'picking_id.is_locked')
+    def _compute_is_locked(self):
+        super(StockMove, self)._compute_is_locked()
+        for move in self:
+            if move.raw_material_production_id:
+                move.is_locked = move.raw_material_production_id.is_locked
+
     def _get_move_lines(self):
         self.ensure_one()
         if self.raw_material_production_id:
@@ -92,40 +116,6 @@ class StockMove(models.Model):
             raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
              If you want to cancel this MO, please change the consumed quantities to 0.'))
         return super(StockMove, self)._action_cancel()
-
-    @api.multi
-    # Could use split_move_operation from stock here
-    def split_move_lot(self):
-        ctx = dict(self.env.context)
-        self.ensure_one()
-        view = self.env.ref('mrp.view_stock_move_lots')
-        serial = (self.has_tracking == 'serial')
-        only_create = False  # Check operation type in theory
-        show_reserved = any([x for x in self.move_line_ids if x.product_qty > 0.0])
-        ctx.update({
-            'serial': serial,
-            'only_create': only_create,
-            'create_lots': True,
-            'state_done': self.is_done,
-            'show_reserved': show_reserved,
-        })
-        if ctx.get('w_production'):
-            action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-            action['context'] = ctx
-            return action
-        result = {
-            'name': _('Register Lots'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'stock.move',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'res_id': self.id,
-            'context': ctx,
-        }
-        return result
 
     def _action_confirm(self, merge=True):
         moves = self
