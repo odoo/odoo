@@ -271,6 +271,12 @@ class Picking(models.Model):
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
         help='Technical field used to compute whether the check availability button should be shown.')
+    show_mark_as_todo = fields.Boolean(
+        compute='_compute_show_mark_as_todo',
+        help='Technical field used to compute whether the mark as todo button should be shown.')
+    show_validate = fields.Boolean(
+        compute='_compute_show_validate',
+        help='Technical field used to compute whether the validate should be shown.')
 
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
@@ -370,6 +376,28 @@ class Picking(models.Model):
                 for move in picking.move_lines
             )
             picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
+
+    @api.multi
+    @api.depends('state')
+    def _compute_show_mark_as_todo(self):
+        for picking in self:
+            if self._context.get('planned_picking') and picking.state == 'draft':
+                picking.show_mark_as_todo = True
+            elif picking.state != 'draft' or not picking.id:
+                picking.show_mark_as_todo = False
+            else:
+                picking.show_mark_as_todo = True
+
+    @api.multi
+    @api.depends('state', 'is_locked')
+    def _compute_show_validate(self):
+        for picking in self:
+            if self._context.get('planned_picking') and picking.state == 'draft':
+                picking.show_validate = False
+            elif picking.state not in ('draft', 'confirmed', 'assigned') or not picking.is_locked:
+                picking.show_validate = False
+            else:
+                picking.show_validate = True
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
