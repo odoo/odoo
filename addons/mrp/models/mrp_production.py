@@ -399,7 +399,7 @@ class MrpProduction(models.Model):
         if move:
             if quantity > 0:
                 move[0].write({'product_uom_qty': quantity})
-            else:
+            elif quantity < 0:  # Do not remove 0 lines
                 if move[0].quantity_done > 0:
                     raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
                 move[0]._action_cancel()
@@ -510,6 +510,8 @@ class MrpProduction(models.Model):
         for order in self:
             moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
+                move.product_uom_qty = move.quantity_done
             moves_to_do._action_done()
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
