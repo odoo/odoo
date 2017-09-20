@@ -546,7 +546,7 @@ class StockMove(models.Model):
         }
         moves_todo = self\
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
-            .sorted(key=lambda move: sort_map.get(move.state, 0))
+            .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
         if moves_todo[0].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
