@@ -906,7 +906,7 @@ class StockMove(models.Model):
         extra_move = self.env['stock.move']
         rounding = self.product_uom.rounding
         # moves created after the picking is assigned do not have `product_uom_qty`, but we shouldn't create extra moves for them
-        if self.product_uom_qty and float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
+        if float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
             # create the extra moves
             extra_move_quantity = float_round(
                 self.quantity_done - self.product_uom_qty,
