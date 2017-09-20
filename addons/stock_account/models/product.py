@@ -199,7 +199,7 @@ class ProductCategory(models.Model):
         ('fifo', 'First In First Out (FIFO)'),
         ('average', 'Average Cost (AVCO)')], string="Costing Method",
         company_dependent=True, copy=True, required=True,
-        help=""""Standard Price: The products are valued at their standard cost defined on the product.
+        help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
         """)
