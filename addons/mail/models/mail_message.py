@@ -802,8 +802,9 @@ class Message(models.Model):
         if self_sudo.subtype_id and self.model and self.res_id:
             followers = self.env['mail.followers'].sudo().search([
                 ('res_model', '=', self.model),
-                ('res_id', '=', self.res_id)
-            ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
+                ('res_id', '=', self.res_id),
+                ('subtype_ids', 'in', self_sudo.subtype_id.id),
+            ])
             if self_sudo.subtype_id.internal:
                 followers = followers.filtered(lambda fol: fol.channel_id or (fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id')))
             channels_sudo |= followers.mapped('channel_id')
