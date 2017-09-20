@@ -730,7 +730,7 @@ def trans_parse_rml(de):
 
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
-    term = (term or "").strip().encode('utf8')
+    term = (term or "").strip()
     # Avoid non-char tokens like ':' '...' '.00' etc.
     if len(term) > 8 or any(x.isalpha() for x in term):
         callback(term, source_line)
