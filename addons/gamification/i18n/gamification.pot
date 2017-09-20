@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~16\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-25 10:05+0000\n"
-"PO-Revision-Date: 2017-07-25 10:05+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,7 @@ msgid "\n"
 "                            </table>                   \n"
 "                        % else: \n"
 "                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
-"                                The following message contains the current progress for the challenge <strong>${object.name}</strong>.\n"
+"                                Challenge: <strong>${object.name}</strong>.\n"
 "                            </span> \n"
 "                            % for line in challenge_lines:\n"
 "                                <!-- Header + Button table -->\n"
@@ -110,7 +110,7 @@ msgid "\n"
 "                                % if len(line['goals'])>2:\n"
 "                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
 "                                        <tr><td style=\"padding:0 30px;\">\n"
-"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
 "                                                <tr>\n"
 "                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
 "                                                    % for goal in top_goals:\n"
@@ -141,9 +141,10 @@ msgid "\n"
 "                                                                <div style=\"height:${heightA}px;\">\n"
 "                                                                    ${extra_div | safe}   \n"
 "                                                                    <div style=\"height:55px;\">\n"
-"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"/web/image?model=res.users&amp;field=image_small&amp;id=${goal['user_id']}\" alt=\"\"/>\n"
+"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
 "                                                                    </div> \n"
-"                                                                    <div align=\"center\" style =\"color:${bgColor};\">\n"
+"                                                                    <div align=\"center\" style =\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
 "                                                                    </div \n"
 "                                                                </div>\n"
@@ -174,8 +175,8 @@ msgid "\n"
 "                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\">\n"
 "                                                <thead>\n"
 "                                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
-"                                                        <th style=\"width:10%;text-align:center;\">Rank</th>\n"
-"                                                        <th style=\"width:15%;text-align:left;\">Name</th>\n"
+"                                                        <th style=\"width:15%;text-align:center;\">Rank</th>\n"
+"                                                        <th style=\"width:25%;text-align:left;\">Name</th>\n"
 "                                                        <th style=\"width:30%;text-align:right;\">Performance \n"
 "                                                            % if line['suffix']:\n"
 "                                                                (${line['suffix']})\n"
@@ -196,12 +197,12 @@ msgid "\n"
 "                                                            % set tdColor = 'gray'\n"
 "                                                            % set mutedColor = '#AAAAAA'\n"
 "                                                            % set tdPercentageColor = '#9A6C8E'\n"
-"                                                            <td width=\"10%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\">${goal['rank']+1}\n"
+"                                                            <td width=\"15%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\">${goal['rank']+1}\n"
 "                                                            </td>\n"
-"                                                            <td width=\"15%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\">${goal['name']}</td>\n"
-"                                                            <td width=\"20%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\">${\"%.2f\" % goal['current']}<br/><span style=\"font-size:13px;color:${mutedColor};\">on ${\"%.2f\" % line['target']}</span>\n"
+"                                                            <td width=\"25%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\">${goal['name']}</td>\n"
+"                                                            <td width=\"30%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\">${\"%.2f\" % goal['current']}<br/><span style=\"font-size:13px;color:${mutedColor};\">on ${\"%.2f\" % line['target']}</span>\n"
 "                                                            </td>\n"
-"                                                            <td width=\"20%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
+"                                                            <td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
 "                                                        </tr>\n"
 "                                                        <tr>\n"
 "                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
@@ -267,73 +268,37 @@ msgid "\n"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:587
+#: code:addons/gamification/models/challenge.py:589
 #, python-format
 msgid "%s has joined the challenge"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:596
+#: code:addons/gamification/models/challenge.py:598
 #, python-format
 msgid "%s has refused the challenge"
 msgstr ""
 
 #. module: gamification
-#: model:mail.template,body_html:gamification.email_template_badge_received
-msgid "<?xml version=\"1.0\"?>\n"
-"<data><div>\n"
-"    <p>Congratulations ${object.user_id.name} !</p>\n"
-"    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>\n"
-"</div>\n"
-"<div>\n"
-"% if object.badge_id.description\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
-"<tbody><tr>\n"
-"    <td valign=\"center\">\n"
-"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
-"    </td>\n"
-"    <td valign=\"center\">\n"
-"        <cite>${object.badge_id.description}</cite>\n"
-"    </td>\n"
-"</tr></tbody>\n"
-"</table>\n"
-"% endif\n"
-"</div>\n"
-"<div>\n"
-"    <p>\n"
-"% if object.sender_id\n"
-"        This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
-"% endif\n"
-"    </p>\n"
-"    <p>\n"
-"% if object.comment\n"
-"        <em>${object.comment}</em>\n"
-"% endif\n"
-"    </p>\n"
-"</div>\n"
-"</data>"
-msgstr ""
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:653
+#: code:addons/gamification/models/challenge.py:655
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:650
+#: code:addons/gamification/models/challenge.py:652
 #, python-format
 msgid "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:648
+#: code:addons/gamification/models/challenge.py:650
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:658
+#: code:addons/gamification/models/challenge.py:660
 #, python-format
 msgid "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
 msgstr ""
@@ -360,7 +325,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3233
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3116
 msgid "A goal is considered as completed when the current value is compared to the value to reach"
 msgstr ""
 
@@ -494,7 +459,7 @@ msgid "Can not grant"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:410
+#: code:addons/gamification/models/goal.py:412
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr ""
@@ -691,7 +656,7 @@ msgid "Defined how will be computed the goals. The result of the operation will 
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3242
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3115
 msgid "Definition Description"
 msgstr ""
 
@@ -890,7 +855,7 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3244
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3100
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -921,7 +886,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3233
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3116
 msgid "Goal Performance"
 msgstr ""
 
@@ -1256,7 +1221,7 @@ msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:665
+#: code:addons/gamification/models/challenge.py:667
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1587,7 +1552,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3238
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3117
 msgid "Suffix"
 msgstr ""
 
@@ -1612,7 +1577,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:644
+#: code:addons/gamification/models/challenge.py:646
 #, python-format
 msgid "The challenge %s is finished."
 msgstr ""
@@ -1620,7 +1585,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3238
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3117
 msgid "The currency and suffix field"
 msgstr ""
 
@@ -1640,7 +1605,7 @@ msgid "The day a new challenge will be automatically started. If no periodicity 
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:91
+#: code:addons/gamification/models/goal.py:93
 #, python-format
 msgid "The domain for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1683,7 +1648,7 @@ msgid "The maximum number of time this badge can be sent per month per person."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:108
+#: code:addons/gamification/models/goal.py:110
 #, python-format
 msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1691,7 +1656,7 @@ msgid "The model configuration for the definition %s seems incorrect, please che
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:105
+#: code:addons/gamification/models/goal.py:107
 #, python-format
 msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1828,7 +1793,7 @@ msgid "Update"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:445
+#: code:addons/gamification/models/goal.py:447
 #, python-format
 msgid "Update %s"
 msgstr ""
@@ -1931,6 +1896,11 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,body_html:gamification.email_template_badge_received
+msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c6469763e0a202020203c703e436f6e67726174756c6174696f6e7320247b6f626a6563742e757365725f69642e6e616d657d20213c2f703e0a202020203c703e596f75206a757374207265636569766564206261646765203c7374726f6e673e247b6f626a6563742e62616467655f69642e6e616d657d3c2f7374726f6e673e20213c2f703e0a3c2f6469763e0a3c6469763e0a25206966206f626a6563742e62616467655f69642e6465736372697074696f6e0a3c7461626c652063656c6c73706163696e673d2230222063656c6c70616464696e673d22302220626f726465723d223022207374796c653d2277696474683a2036303070783b206d617267696e2d746f703a203570783b223e0a3c74626f64793e3c74723e0a202020203c74642076616c69676e3d2263656e746572223e0a20202020202020203c696d67207372633d222f7765622f696d6167652f67616d696669636174696f6e2e62616467652f247b6f626a6563742e62616467655f69642e69647d2f696d6167652f383078383022207374796c653d2270616464696e673a203070783b206d617267696e3a203070783b206865696768743a206175746f3b2077696474683a20383070783b2220616c743d22247b757365722e636f6d70616e795f69642e6e616d657d222f3e0a202020203c2f74643e0a202020203c74642076616c69676e3d2263656e746572223e0a20202020202020203c636974653e247b6f626a6563742e62616467655f69642e6465736372697074696f6e7d3c2f636974653e0a202020203c2f74643e0a3c2f74723e3c2f74626f64793e0a3c2f7461626c653e0a2520656e6469660a3c2f6469763e0a3c6469763e0a202020203c703e0a25206966206f626a6563742e73656e6465725f69640a20202020202020205468697320626164676520776173206772616e746564206279203c7374726f6e673e247b6f626a6563742e73656e6465725f69642e6e616d657d3c2f7374726f6e673e2e0a2520656e6469660a202020203c2f703e0a202020203c703e0a25206966206f626a6563742e636f6d6d656e740a20202020202020203c656d3e247b6f626a6563742e636f6d6d656e747d3c2f656d3e0a2520656e6469660a202020203c2f703e0a3c2f6469763e0a3c2f646174613e"
 msgstr ""
 
 #. module: gamification
