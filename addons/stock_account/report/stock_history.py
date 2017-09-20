@@ -35,8 +35,17 @@ class StockHistory(models.Model):
                 group_lines.setdefault(str(domain), self.search(domain))
                 stock_history |= group_lines[str(domain)]
 
+            # get data of stock_history in one shot to speed things up (the view can be very slow)
+            stock_history_data = {}
+            if stock_history:
+                self._cr.execute("""SELECT id, product_id, price_unit_on_quant, company_id, quantity
+                                    FROM stock_history WHERE id in %s""", (tuple(stock_history.ids),))
+                stock_history_data = {line['id']: line for line in self._cr.dictfetchall()}
+
             histories_dict = {}
-            not_real_cost_method_products = stock_history.mapped('product_id').filtered(lambda product: product.cost_method != 'real')
+            not_real_cost_method_products = self.env['product.product'].browse(
+                record['product_id'] for record in stock_history_data.values()
+            ).filtered(lambda product: product.cost_method != 'real')
             if not_real_cost_method_products:
                 self._cr.execute("""SELECT DISTINCT ON (product_id, company_id) product_id, company_id, cost
                     FROM product_price_history
@@ -48,12 +57,13 @@ class StockHistory(models.Model):
             for line in res:
                 inv_value = 0.0
                 for stock_history in group_lines.get(str(line.get('__domain', domain))):
-                    product = stock_history.product_id
-                    if product.cost_method == 'real':
-                        price = stock_history.price_unit_on_quant
+                    history_data = stock_history_data[stock_history.id]
+                    product_id = history_data['product_id']
+                    if self.env['product.product'].browse(product_id).cost_method == 'real':
+                        price = history_data['price_unit_on_quant']
                     else:
-                        price = histories_dict.get((product.id, stock_history.company_id.id), 0.0)
-                    inv_value += price * stock_history.quantity
+                        price = histories_dict.get((product_id, history_data['company_id']), 0.0)
+                    inv_value += price * history_data['quantity']
                 line['inventory_value'] = inv_value
 
         return res
