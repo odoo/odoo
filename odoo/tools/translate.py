@@ -953,7 +953,7 @@ def trans_generate(lang, modules, cr):
         module, fabsolutepath, _, display_path = verified_module_filepaths(fname, path, root)
         extra_comments = extra_comments or []
         if not module: return
-        src_file = open(fabsolutepath, 'r')
+        src_file = open(fabsolutepath, 'rb')
         try:
             for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords):
                 # Babel 0.9.6 yields lineno, message, comments
