@@ -541,8 +541,10 @@
             display: none!important;
         }
 
-        &:hover .o_kanban_header {
-            opacity: 1;
+        &:hover, &.o_kanban_hover {
+            .o_kanban_header_title {
+                opacity: 1;
+            }
         }
     }
 
