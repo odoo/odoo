@@ -186,6 +186,7 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
+        var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         this.state = state;
         if (rowIndex === -1) {
@@ -194,8 +195,20 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             this.currentRow = null;
         }
+
+        // remove the row
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
-        $row.remove();
+        if (this.state.count >= 4) {
+            $row.remove();
+        } else {
+            $row.replaceWith(this._renderEmptyRow());
+        }
+
+        // destroy the removed row's widgets
+        var widgetsToDestroy = this.allFieldWidgets[recordID].slice();
+        _.each(widgetsToDestroy, function (widget) {
+            self._destroyFieldWidget(recordID, widget);
+        });
     },
     /**
      * Updates the already rendered row associated to the given recordID so that
@@ -274,7 +287,7 @@ ListRenderer.include({
             // destroyed. This is not the case for simple buttons so we have to
             // do it here.
             if ($td.hasClass('o_list_button')) {
-                self._unregisterModifiersElement(node, record, $td.children());
+                self._unregisterModifiersElement(node, recordID, $td.children());
             }
 
             // For edit mode we only replace the content of the cell with its
@@ -284,14 +297,14 @@ ListRenderer.include({
             if (editMode) {
                 $td.empty().append($newTd.contents());
             } else {
-                self._unregisterModifiersElement(node, record, $td);
+                self._unregisterModifiersElement(node, recordID, $td);
                 $td.replaceWith($newTd);
             }
         });
         delete this.defs;
 
         // Destroy old field widgets
-        _.each(oldWidgets, this._destroyFieldWidget.bind(this, record));
+        _.each(oldWidgets, this._destroyFieldWidget.bind(this, recordID));
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);

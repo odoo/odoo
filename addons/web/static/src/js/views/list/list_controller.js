@@ -182,6 +182,7 @@ var ListController = BasicController.extend({
         if ((recordID || this.handle) !== this.handle) {
             var state = this.model.get(this.handle);
             this.renderer.removeLine(state, recordID);
+            this._updatePager();
         }
     },
     /**
@@ -202,6 +203,7 @@ var ListController = BasicController.extend({
             var state = self.model.get(self.handle);
             self.renderer.updateState(state, {});
             self.renderer.editRecord(recordID);
+            self._updatePager();
         }).always(this._enableButtons.bind(this));
     },
     /**
