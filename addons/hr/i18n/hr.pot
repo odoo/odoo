@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~16\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-25 10:03+0000\n"
-"PO-Revision-Date: 2017-07-25 10:03+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -65,11 +65,6 @@ msgid "Birth"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
-msgid "Cancel"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
 msgstr ""
@@ -114,7 +109,6 @@ msgid "Companies"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -123,7 +117,7 @@ msgid "Company"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
 msgid "Company Working Hours"
 msgstr ""
 
@@ -153,7 +147,6 @@ msgid "Contact Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -162,7 +155,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
@@ -202,7 +194,6 @@ msgid "Departments"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -284,13 +275,13 @@ msgid "Enter here the private address of the employee, not the one linked to you
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:294
+#: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:181
+#: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -352,7 +343,6 @@ msgid "Human Resources"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_id
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
@@ -420,7 +410,6 @@ msgid "Jobs"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
@@ -429,7 +418,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
@@ -438,7 +426,6 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
@@ -538,7 +525,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"                leaves, recruitments, etc."
 msgstr ""
 
 #. module: hr
@@ -587,7 +574,7 @@ msgid "Private Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Prout prout prout"
 msgstr ""
 
@@ -637,12 +624,7 @@ msgid "SSN No"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
-msgid "Save"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default calendar used to compute time allocation for leaves, timesheets, ..."
 msgstr ""
 
@@ -658,17 +640,17 @@ msgid "Settings"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_org_chart
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
 msgid "Show Organizational Chart"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
 msgstr ""
 
@@ -730,6 +712,11 @@ msgid "Tags"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
@@ -753,6 +740,13 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
 msgstr ""
@@ -760,6 +754,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
 msgstr ""
 
 #. module: hr
@@ -811,7 +810,7 @@ msgid "Work Mobile"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
 msgstr ""
 
@@ -863,13 +862,13 @@ msgid "e.g. Sales Manager"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_config_settings
-msgid "hr.config.settings"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_alias_mixin
-msgid "mail.alias.mixin"
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
 msgstr ""
 
 #. module: hr

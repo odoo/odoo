@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~16\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-25 10:04+0000\n"
-"PO-Revision-Date: 2017-07-25 10:04+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -135,16 +135,6 @@ msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.quotations
-msgid "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> Expired</span>"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.quotations
-msgid "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> Cancelled</span>"
-msgstr ""
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>, for an amount of </span>"
 msgstr ""
@@ -158,12 +148,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>I agree that by signing this proposal, I\n"
-"                                  accept it on the behalf of </span>"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "<span>No payment gateway is available for your country</span>"
+"                                    accept it on the behalf of </span>"
 msgstr ""
 
 #. module: website_quote
@@ -174,11 +159,6 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
-msgid "<strong>Draw your signature</strong>"
 msgstr ""
 
 #. module: website_quote
@@ -220,13 +200,13 @@ msgid "<strong>Total:</strong>"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "About us"
 msgstr ""
 
 #. module: website_quote
-#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-msgid "About us"
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
+msgid "Active"
 msgstr ""
 
 #. module: website_quote
@@ -242,6 +222,11 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
+msgid "Archived"
 msgstr ""
 
 #. module: website_quote
@@ -277,8 +262,9 @@ msgid "Cancel"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
-msgid "Clear"
+#: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
+msgid "Choose how you want to confirm an order to launch the delivery process. You can either request a digital signature or an upfront payment. With a digital signature, you can request the payment when issuing the invoice."
 msgstr ""
 
 #. module: website_quote
@@ -287,8 +273,19 @@ msgid "Click here to create your template."
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "Confirmation"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_require_payment
+msgid "Confirmation Mode"
 msgstr ""
 
 #. module: website_quote
@@ -318,6 +315,11 @@ msgid "Customer:"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_res_config_settings_default_template_id
+msgid "Default Template"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_website_description
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_name
@@ -329,12 +331,6 @@ msgid "Description"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_website_description
-msgid "Description for Online Quotations"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
@@ -422,22 +418,15 @@ msgid "If edit a quotation from the 'Preview' of a quotation, you will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:80
-#: code:addons/website_quote/controllers/main.py:219
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
+msgid "If unchecked, it will allow you to hide the quotation template without removing it."
+msgstr ""
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:110
+#: code:addons/website_quote/controllers/main.py:206
 #, python-format
 msgid "If we store your payment information on our server, subscription payments will be made automatically."
-msgstr ""
-
-#. module: website_quote
-#: selection:sale.order,require_payment:0
-#: selection:sale.quote.template,require_payment:0
-msgid "Immediate after website order validation"
-msgstr ""
-
-#. module: website_quote
-#: selection:sale.order,require_payment:0
-#: selection:sale.quote.template,require_payment:0
-msgid "Immediate after website order validation and save a token"
 msgstr ""
 
 #. module: website_quote
@@ -492,19 +481,20 @@ msgid "Lines"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Quotations"
+#: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
+msgid "Number of days for the validity date computation of the quotation"
 msgstr ""
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
-msgid "Not mandatory on website quote validation"
+msgid "Online Payment"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
-msgid "Number of days for the validity date computation of the quotation"
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+msgid "Online Signature"
 msgstr ""
 
 #. module: website_quote
@@ -525,20 +515,15 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:195
+#: code:addons/website_quote/controllers/main.py:34
+#, python-format
+msgid "Order is not in a state requiring customer validation."
+msgstr ""
+
+#. module: website_quote
+#: code:addons/website_quote/models/sale_order.py:205
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr ""
-
-#. module: website_quote
-#: code:addons/website_quote/controllers/main.py:96
-#, python-format
-msgid "Order signed by %s"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
-msgid "Other Settings"
 msgstr ""
 
 #. module: website_quote
@@ -557,27 +542,19 @@ msgid "Our Service"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:69
-#: code:addons/website_quote/controllers/main.py:212
+#: code:addons/website_quote/controllers/main.py:204
 #, python-format
 msgid "Pay & Confirm"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
-#: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_require_payment
-msgid "Payment"
-msgstr ""
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Payment Method:"
+msgid "Pay with"
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
-#: model:ir.ui.view,arch_db:website_quote.sale_config_settings_view_form_inherit_website_quote
-msgid "Payment Methods"
+msgid "Payment Acquirers"
 msgstr ""
 
 #. module: website_quote
@@ -646,11 +623,6 @@ msgid "Quantity"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Quotation"
-msgstr ""
-
-#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
 msgstr ""
@@ -682,7 +654,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
-#: model:ir.ui.view,arch_db:website_quote.sale_config_settings_view_form_inherit_website_quote
+#: model:ir.ui.view,arch_db:website_quote.res_config_settings_view_form
 msgid "Quotation Templates"
 msgstr ""
 
@@ -692,7 +664,12 @@ msgid "Quotation Viewed"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:29
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid "Quotation expires after"
+msgstr ""
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:57
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr ""
@@ -710,12 +687,6 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
-#: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
-msgid "Require immediate payment by the customer when validating the order from the website quote"
 msgstr ""
 
 #. module: website_quote
@@ -752,15 +723,15 @@ msgid "Sales Quotation Template Lines"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
+msgid "Search Quotation Template"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
 msgid "Section"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
-msgid "Security Token"
 msgstr ""
 
 #. module: website_quote
@@ -772,11 +743,6 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Ship To:"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Sign &amp; Confirm"
 msgstr ""
 
 #. module: website_quote
@@ -814,7 +780,7 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
-msgid "These Terms & Conditions will replace the default ones set in the Configuration menu."
+msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
 msgstr ""
 
 #. module: website_quote
@@ -894,7 +860,7 @@ msgid "We always ensure that our products are\n"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.actions.report.xml,name:website_quote.report_web_quote
+#: model:ir.actions.report,name:website_quote.report_web_quote
 msgid "Web Quotation"
 msgstr ""
 
@@ -913,7 +879,7 @@ msgid "You can <strong>set a description per product</strong>. Odoo will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:140
+#: code:addons/website_quote/controllers/main.py:157
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""
@@ -921,11 +887,6 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Contact:"
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your Name:"
 msgstr ""
 
 #. module: website_quote
@@ -1018,5 +979,10 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "if you want a new one."
+msgstr ""
+
+#. module: website_quote
+#: model:ir.model,name:website_quote.model_res_config_settings
+msgid "res.config.settings"
 msgstr ""
 
