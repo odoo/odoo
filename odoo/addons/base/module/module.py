@@ -8,6 +8,7 @@ import io
 import logging
 import os
 import shutil
+import sys
 import tempfile
 import zipfile
 
@@ -114,6 +115,12 @@ class MyWriter(Writer):
     Custom docutils html4ccs1 writer that doesn't add the warnings to the
     output document.
     """
+
+    def write(self, document, destination):
+        if getattr(sys, 'frozen', False):
+            document.settings.template = os.path.abspath(os.path.join(os.path.join(os.path.dirname(sys.executable),'docutils'), 'template.txt'))
+        return super(MyWriter, self).write(document, destination)
+
     def get_transforms(self):
         return [MyFilterMessages, writer_aux.Admonitions]
 
