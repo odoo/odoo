@@ -127,7 +127,7 @@ ListRenderer.include({
      */
     confirmUpdate: function (state, id, fields, ev) {
         var self = this;
-        var oldRowIndex = _.findIndex(this.state.data, {id: id});
+        var oldData = this.state.data;
         this.state = state;
         return this.confirmChange(state, id, fields, ev).then(function () {
             // If no record with 'id' can be found in the state, the
@@ -137,9 +137,15 @@ ListRenderer.include({
             if (!record) {
                 return;
             }
+            var oldRowIndex = _.findIndex(oldData, {id: id});
             var $row = self.$('.o_data_row:nth(' + oldRowIndex + ')');
             $row.nextAll('.o_data_row').remove();
             $row.prevAll().remove();
+            _.each(oldData, function (rec) {
+                if (rec.id !== id) {
+                    self._destroyFieldWidgets(rec.id);
+                }
+            });
             var newRowIndex = _.findIndex(state.data, {id: id});
             _.each(state.data, function (record, index) {
                 if (index === newRowIndex) {
@@ -186,7 +192,6 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
-        var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         this.state = state;
         if (rowIndex === -1) {
@@ -204,11 +209,7 @@ ListRenderer.include({
             $row.replaceWith(this._renderEmptyRow());
         }
 
-        // destroy the removed row's widgets
-        var widgetsToDestroy = this.allFieldWidgets[recordID].slice();
-        _.each(widgetsToDestroy, function (widget) {
-            self._destroyFieldWidget(recordID, widget);
-        });
+        this._destroyFieldWidgets(recordID);
     },
     /**
      * Updates the already rendered row associated to the given recordID so that
@@ -354,6 +355,19 @@ ListRenderer.include({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Destroy all field widgets corresponding to a record.  Useful when we are
+     * removing a useless row.
+     *
+     * @param {string} recordID
+     */
+    _destroyFieldWidgets: function (recordID) {
+        if (recordID in this.allFieldWidgets) {
+            var widgetsToDestroy = this.allFieldWidgets[recordID].slice();
+            _.each(widgetsToDestroy, this._destroyFieldWidget.bind(this, recordID));
+            delete this.allFieldWidgets[recordID];
+        }
+    },
     /**
      * Returns the current number of columns.  The editable renderer may add a
      * trash icon on the right of a record, so we need to take this into account

@@ -1,6 +1,7 @@
 odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
@@ -3537,7 +3538,19 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many with CREATE onchanges correctly refreshed', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
+
+        var delta = 0;
+        var oldInit = AbstractField.prototype.init;
+        var oldDestroy = AbstractField.prototype.destroy;
+        AbstractField.prototype.init = function () {
+            delta++;
+            oldInit.apply(this, arguments);
+        };
+        AbstractField.prototype.destroy = function () {
+            delta--;
+            oldDestroy.apply(this, arguments);
+        };
 
         var deactiveOnchange = true;
 
@@ -3584,7 +3597,7 @@ QUnit.module('relational_fields', {
                     '<field name="foo"/>' +
                     '<field name="turtles">' +
                         '<tree editable="bottom">' +
-                            '<field name="display_name"/>' +
+                            '<field name="display_name" widget="char"/>' +
                             '<field name="turtle_int"/>' +
                         '</tree>' +
                     '</field>' +
@@ -3596,7 +3609,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(form.$('.o_data_row').length, 0,
-            "o2m shouldnn't contain any row");
+            "o2m shouldn't contain any row");
 
         form.$('.o_field_x2many_list_row_add a').click();
         // trigger the first onchange
@@ -3615,12 +3628,17 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
             "should correctly refresh the records");
 
+        assert.strictEqual(form.$('.o_field_widget').length, delta,
+            "all (non visible) field widgets should have been destroyed");
+
         form.$buttons.find('.o_form_button_save').click();
 
         assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
             "should correctly refresh the records after save");
 
         form.destroy();
+        AbstractField.prototype.init = oldInit;
+        AbstractField.prototype.destroy = oldDestroy;
     });
 
     QUnit.test('one2many list (editable): readonly domain is evaluated', function (assert) {
