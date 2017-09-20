@@ -376,7 +376,7 @@
                                 attrs="{'invisible': [('sent', '=', 0)]}" >
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_received': True}"
                                     type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
@@ -395,7 +395,7 @@
                                 type="action" class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicks" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                 context="{'search_default_filter_bounced': True}"
                                 type="action" class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
