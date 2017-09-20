@@ -617,6 +617,10 @@ class Picking(models.Model):
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
         no_quantities_done = all(line.qty_done == 0.0 for line in self.move_line_ids)
+        no_initial_demand = all(move.product_uom_qty == 0.0 for move in self.move_lines)
+        if no_initial_demand and no_quantities_done:
+            raise UserError(_('You cannot validate a transfer if you have not processed any quantity.'))
+
         if picking_type.use_create_lots or picking_type.use_existing_lots:
             lines_to_check = self.move_line_ids
             if not no_quantities_done:
