@@ -106,16 +106,12 @@ QUnit.module('mail', {}, function () {
         var chatWindow = new ChatWindow(parent, 1, "user", false, [], {});
         chatWindow.appendTo($dom);
 
-        // Simulate clicking: 1) the focus event is fired, 2) we remove the
-        // 'fade' class of the generated popover so that animations do not break
-        // the test, 3) fire the click event which was the cause of the problem
         var $emojiButton = chatWindow.$('.o_composer_button_emoji');
-        $emojiButton.trigger('focusin').focus();
-        var $popover = chatWindow.$('.o_composer_emoji .popover');
-        $popover.removeClass('fade');
-        $emojiButton.click();
+        $emojiButton.trigger('focusin').focus().click();
+        var $popover = chatWindow.$('.o_mail_emoji_container');
 
         var done = assert.async();
+        // Async is needed as the popover focusout hiding is deferred
         setTimeout(function () {
             assert.ok($popover.is(':visible'), "emoji popover should have stayed opened");
             parent.destroy();
