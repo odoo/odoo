@@ -139,13 +139,13 @@ def initialize_sys_path():
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
