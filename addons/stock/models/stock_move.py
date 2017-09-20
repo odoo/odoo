@@ -353,7 +353,7 @@ class StockMove(models.Model):
             raise UserError(_('Cannot unreserve a done move'))
         self.quants_unreserve()
         if not self.env.context.get('no_state_change'):
-            waiting = self.filtered(lambda move: move.procure_method == 'make_to_order' or move.get_ancestors())
+            waiting = self.filtered(lambda move: move.procure_method == 'make_to_order' or any(m.state != 'done' for m in move.get_ancestors()))
             waiting.write({'state': 'waiting'})
             (self - waiting).write({'state': 'confirmed'})
 
@@ -464,13 +464,13 @@ class StockMove(models.Model):
         self.set_default_price_unit_from_product()
         for move in self:
             # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
-            if move.move_orig_ids:
+            if any(m.state != 'done' for m in move.move_orig_ids):
                 move_waiting |= move
             # if the move is split and some of the ancestor was preceeded, then it's waiting as well
             else:
                 inner_move = move.split_from
                 while inner_move:
-                    if inner_move.move_orig_ids:
+                    if any(m.state != 'done' for m in inner_move.move_orig_ids):
                         move_waiting |= move
                         break
                     inner_move = inner_move.split_from
@@ -699,7 +699,7 @@ class StockMove(models.Model):
             if len(reserved_quant_ids) == 0 and move.partially_available:
                 vals['partially_available'] = False
             if move.state == 'assigned':
-                if move.procure_method == 'make_to_order' or move.find_move_ancestors():
+                if move.procure_method == 'make_to_order' or any(m.state != 'done' for m in move.find_move_ancestors()):
                     vals['state'] = 'waiting'
                 else:
                     vals['state'] = 'confirmed'
