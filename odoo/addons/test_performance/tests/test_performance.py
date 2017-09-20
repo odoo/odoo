@@ -7,6 +7,7 @@ import logging
 
 from odoo.tests.common import TransactionCase
 
+_logger = logging.getLogger(__name__)
 sql_logger = logging.getLogger('odoo.sql_db')
 
 
@@ -27,9 +28,8 @@ def queryCount(**counters):
                 self._round = True
                 self.resetQueryCount()
                 func(self)
-                self.assertLessEqual(self.cr.sql_log_count - self._count,
-                                     counters[user.login],
-                                     "as user %s" % user.login)
+                self.assertQueryCount(self.cr.sql_log_count - self._count,
+                                      counters[user.login], user.login)
 
         return wrapper
 
@@ -37,6 +37,11 @@ def queryCount(**counters):
 
 
 class TestPerformance(TransactionCase):
+
+    def assertQueryCount(self, actual, expected, message):
+        self.assertLessEqual(actual, expected, message)
+        if actual < expected:
+            _logger.info("Warning: Got %d queries instead of %d: %s", actual, expected, message)
 
     def resetQueryCount(self):
         """ Reset the query counter. """
