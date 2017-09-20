@@ -263,11 +263,6 @@
     // Provide a basic style for different kanban record layouts
     // ---------------------------------------------------------
     .oe_kanban_card, .o_kanban_record {
-        // Apps List records sizing
-        &.oe_module_vignette {
-            .o-flex(1, 1, 350px);
-        }
-
         // -------  v11 Layout + generic layouts (~v10) -------
         // Kanban Record - Dropdown
         .o_dropdown_kanban {
@@ -603,7 +598,8 @@
         padding: @o-kanban-record-margin (@odoo-horizontal-padding - @o-kanban-record-margin);
 
         .o_kanban_record {
-            .o-flex(1, 1, @o-kanban-default-record-width);
+            .o-flex(1, 1, auto);
+            width: @o-kanban-default-record-width;
             margin: (@o-kanban-record-margin * 0.5) @o-kanban-record-margin;
 
             @media (max-width: @screen-xs-max) {
