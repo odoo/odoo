@@ -129,7 +129,7 @@ class PadCommon(models.AbstractModel):
                 myPad.setText(path, (html2plaintext(vals[field.pad_content_field]).encode('utf-8')))
 
         # Update the `pad_content_field` if the pad is modified
-        for k, v in vals.items():
+        for k, v in list(vals.items()):
             field = self._fields[k]
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)

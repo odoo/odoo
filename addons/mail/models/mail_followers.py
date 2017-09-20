@@ -63,17 +63,15 @@ class Followers(models.Model):
                 if follower.channel_id:
                     c_exist.setdefault(follower.channel_id.id, list()).append(follower.res_id)
 
-        default_subtypes = self.env['mail.message.subtype'].search([
-            ('default', '=', True),
-            '|', ('res_model', '=', res_model), ('res_model', '=', False)])
-        external_default_subtypes = default_subtypes.filtered(lambda subtype: not subtype.internal)
+        default_subtypes, _internal_subtypes, external_subtypes = \
+            self.env['mail.message.subtype'].default_subtypes(res_model)
 
         if force_mode:
             employee_pids = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_data)), ('share', '=', False)]).mapped('partner_id').ids
             for pid, data in partner_data.items():
                 if not data:
                     if pid not in employee_pids:
-                        partner_data[pid] = external_default_subtypes.ids
+                        partner_data[pid] = external_subtypes.ids
                     else:
                         partner_data[pid] = default_subtypes.ids
             for cid, data in channel_data.items():

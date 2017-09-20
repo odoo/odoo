@@ -60,7 +60,7 @@
                           <t t-if="quotation.state == 'cancel'">
                             <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                           </t>
-                          <t t-if="quotation.validity_date and quotation.validity_date &lt; date">
+                          <t t-if="quotation.is_expired">
                             <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                           </t>
                         </td>

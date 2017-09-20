@@ -263,6 +263,34 @@ class StockQuant(models.Model):
                 break
         return reserved_quants
 
+    @api.model
+    def _merge_quants(self):
+        """ In a situation where one transaction is updating a quant via
+        `_update_available_quantity` and another concurrent one calls this function with the same
+        argument, we’ll create a new quant in order for these transactions to not rollback. This
+        method will find and deduplicate these quants.
+        """
+        query = """WITH
+                        dupes AS (
+                            SELECT min(id) as to_update_quant_id,
+                                (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
+                                SUM(reserved_quantity) as reserved_quantity,
+                                SUM(quantity) as quantity
+                            FROM stock_quant
+                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id, in_date
+                            HAVING count(id) > 1
+                        ),
+                        _up AS (
+                            UPDATE stock_quant q
+                                SET quantity = d.quantity,
+                                    reserved_quantity = d.reserved_quantity
+                            FROM dupes d
+                            WHERE d.to_update_quant_id = q.id
+                        )
+                   DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
+        """
+        self.env.cr.execute(query)
+
 
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
