@@ -49,20 +49,16 @@
         <xpath expr="//div[@name='customer_address']" position="after">
             <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-if="tx_ids">
-                <div>
-                    <strong>Transactions</strong>
+                <div class="col-md-12">
+                    <strong>Transaction</strong>
                 </div>
-                <div>
+                <div class="col-md-12">
                     <t t-foreach="tx_ids" t-as="tx">
                     <div>
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
                         <t t-if="tx.state == 'done'">
                             <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
-                        </t>
-                        <t t-if="tx.state != 'done'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting for payment</span>
-                            <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>
                     </t>
