@@ -358,6 +358,10 @@ var BasicComposer = Widget.extend(chat_mixin, {
         "click .o_attachment_delete": "on_attachment_delete",
         "click .o_attachment_download": "_onAttachmentDownload",
         "click .o_attachment_view": "_onAttachmentView",
+        'click .o_composer_button_emoji': '_onEmojiButtonClick',
+        'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
+        'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
+        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
     },
     // RPCs done to fetch the mention suggestions are throttled with the following value
     MENTION_THROTTLE: 200,
@@ -420,9 +424,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
             });
         }
 
-        // Emojis
-        this.emoji_container_classname = 'o_composer_emoji';
-
         this.isMini = options.isMini;
 
         this.avatarURL = session.uid > 0 ? session.url('/web/image', {
@@ -447,23 +448,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
         // Attachments
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.on("change:attachment_ids", this, this.render_attachments);
-
-        // Emoji
-        this.$('.o_composer_button_emoji').popover({
-            placement: 'top',
-            content: function() {
-                if (!self.$emojis) { // lazy rendering
-                    self.$emojis = $(QWeb.render('mail.ChatComposer.emojis', {
-                        emojis: self._getEmojis(),
-                    }));
-                    self.$emojis.filter('.o_mail_emoji').on('click', self, self.on_click_emoji_img);
-                }
-                return self.$emojis;
-            },
-            html: true,
-            container: '.' + self.emoji_container_classname,
-            trigger: 'focus',
-        });
 
         // Mention
         this.mention_manager.prependTo(this.$('.o_composer'));
@@ -526,11 +510,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
     // Events
     on_click_add_attachment: function () {
         this.$('input.o_input_file').click();
-        this.$input.focus();
-    },
-
-    on_click_emoji_img: function(event) {
-        this.$input.val(this.$input.val() + " " + $(event.currentTarget).data('emoji') + " ");
         this.$input.focus();
     },
 
@@ -775,6 +754,20 @@ var BasicComposer = Widget.extend(chat_mixin, {
     focus: function () {
         this.$input.focus();
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Hides the emojis container.
+     *
+     * @private
+     */
+    _hideEmojis: function () {
+        this.$emojisContainer.remove();
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -798,6 +791,56 @@ var BasicComposer = Widget.extend(chat_mixin, {
             attachmentViewer.appendTo($('body'));
         }
     },
+    /**
+     * Called when the emoji button is clicked -> opens/hides the emoji panel.
+     * Also, this method is in charge of the rendering of this panel the first
+     * time it is opened.
+     *
+     * @private
+     */
+    _onEmojiButtonClick: function () {
+        if (!this.$emojisContainer) { // lazy rendering
+            this.$emojisContainer = $(QWeb.render('mail.ChatComposer.emojis', {
+                emojis: this._getEmojis(),
+            }));
+        }
+        if (this.$emojisContainer.parent().length) {
+            this._hideEmojis();
+        } else {
+            this.$emojisContainer.appendTo(this.$('.o_composer'));
+        }
+    },
+    /**
+     * Called when the emoji button is blurred -> closes the emoji panel. The
+     * closing is scheduled to be done at the end of the current execution
+     * stack to allow stoping this closing if the button was focusout to select
+     * an emoji (for example).
+     *
+     * @private
+     */
+    _onEmojiButtonFocusout: function () {
+        this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+    },
+    /**
+     * Called when an emoji is focused -> @see _onEmojiButtonFocusout
+     *
+     * @private
+     */
+    _onEmojiImageFocus: function () {
+        clearTimeout(this._hideEmojisTimeout);
+    },
+    /**
+     * Called when an emoji is clicked -> adds it in the <input/>, focuses the
+     * <input/> and closes the emoji panel.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onEmojiImageClick: function (ev) {
+        this.$input.val(this.$input.val() + " " + $(ev.currentTarget).data('emoji') + " ");
+        this.$input.focus();
+        this._hideEmojis();
+    },
 });
 
 var ExtendedComposer = BasicComposer.extend({
@@ -807,7 +850,6 @@ var ExtendedComposer = BasicComposer.extend({
         });
         this._super(parent, options);
         this.extended = true;
-        this.emoji_container_classname = 'o_extended_composer_emoji';
     },
 
     start: function () {
