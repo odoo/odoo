@@ -6,7 +6,7 @@ SERVER_DIRECTORY=../..
 FILES_DIRECTORY=release
 
 LAUNCH_PY2EXE_SERVICE=/cygdrive/c/python${PYTHON_VERSION}/python.exe win32_setup.py py2exe
-LAUNCH_PY2EXE=/cygdrive/c/python${PYTHON_VERSION}/python.exe setup.py py2exe
+LAUNCH_PY2EXE=/cygdrive/c/python${PYTHON_VERSION}/python.exe setup-py2exe.py py2exe
 
 MAKENSIS_ARGUMENTS=/DVERSION=$(VERSION) /DSERVICENAME=${SERVICENAME}
 
