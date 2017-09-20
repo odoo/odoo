@@ -138,6 +138,25 @@ class MrpProductProduce(models.TransientModel):
 
         for pl in self.produce_line_ids:
             if pl.qty_done and pl.lot_id:
+                if not pl.move_id:
+                    # Find move_id that would match
+                    move_id = self.production_id.move_raw_ids.filtered(lambda x: x.product_id == pl.product_id and x.state not in ('done', 'cancel'))
+                    if move_id:
+                        pl.move_id = move_id
+                    else:
+                        # create a move and put it in there
+                        order = self.production_id
+                        pl.move_id = self.env['stock.move'].create({
+                                        'name': order.name,
+                                        'product_id': pl.product_id.id,
+                                        'product_uom': pl.product_uom_id.id,
+                                        'location_id': order.location_src_id.id,
+                                        'location_dest_id': self.product_id.property_stock_production.id,
+                                        'raw_material_production_id': order.id,
+                                        'origin': order.name,
+                                        'group_id': order.procurement_group_id.id,
+                                        'state': 'confirmed',
+                                    })
                 ml = pl.move_id.move_line_ids.filtered(lambda ml: ml.lot_id == pl.lot_id and not ml.lot_produced_id)
                 if ml:
                     if (ml.qty_done + pl.qty_done) >= ml.product_uom_qty:
@@ -162,6 +181,7 @@ class MrpProductProduce(models.TransientModel):
                         'lot_produced_id': self.lot_id.id,
                     })
         return True
+
 
 class MrpProductProduceLine(models.TransientModel):
     _name = "mrp.product.produce.line"
@@ -198,3 +218,7 @@ class MrpProductProduceLine(models.TransientModel):
             for (product_id, lot_id), occurrences in recorded_serials_counter.items():
                 if occurrences > 1 and lot_id is not False:
                     return _('You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.product_uom_id = self.product_id.uom_id.id
