@@ -1040,6 +1040,24 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('url widget takes text from proper attribute', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo" widget="url" text="kebeclibre">' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a[name="foo"]').text(), 'kebeclibre',
+            "url text should come from the text attribute");
+        form.destroy();
+    });
+
     QUnit.test('char field in editable list view', function (assert) {
         assert.expect(10);
 
