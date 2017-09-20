@@ -1,6 +1,7 @@
 odoo.define('website_sale_stock.website_sale', function(require) {
 'use strict';
 
+require('web.dom_ready');
 var base = require('web_editor.base');
 var ajax = require('web.ajax');
 var core = require('web.core');
