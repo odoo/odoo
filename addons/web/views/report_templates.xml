@@ -114,11 +114,17 @@
 
                             var index = vars['webpage'].split('.', 4)[3]
                             var header = document.getElementById('minimal_layout_report_headers');
-                            if(header != null)
-                                header.innerHTML = header.children[index].innerHTML;
+                            if(header !== null){
+                                var companyHeader = header.children[index];
+                                header.textContent = '';
+                                header.appendChild(companyHeader);
+                            }
                             var footer = document.getElementById('minimal_layout_report_footers');
-                            if(footer != null)
-                                footer.innerHTML = footer.children[index].innerHTML;
+                            if(footer !== null){
+                                var companyFooter = footer.children[index];
+                                footer.textContent = '';
+                                footer.appendChild(companyFooter);
+                            }
                         }
                     </script>
                 </t>
