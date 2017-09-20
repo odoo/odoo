@@ -47,7 +47,7 @@
                     <field name="active_move_line_ids" attrs="{'readonly': [('is_locked', '=', True)], 'invisible': [('has_tracking', '=', 'none')]}" context="{'default_workorder_id': workorder_id, 'default_product_uom_id': product_uom, 'default_product_id': product_id,  'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_production_id': production_id or raw_material_production_id}">
                         <tree editable="bottom" decoration-success="product_qty==qty_done" decoration-danger="(product_qty &gt; 0) and (qty_done&gt;product_qty)">
                             <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}"/>
-                            <field name="lot_produced_id" options="{'no_open': True, 'o_create': True}" domain="[('id', 'in', parent.finished_lot_ids)]" invisible="not context.get('final_lots')"/>
+                            <field name="lot_produced_id" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.finished_lot_ids)]" invisible="not context.get('final_lots')"/>
                             <field name="product_qty" string="Reserved" readonly="1"/>
                             <field name="qty_done"/>
                             <field name="workorder_id" invisible="1"/>
