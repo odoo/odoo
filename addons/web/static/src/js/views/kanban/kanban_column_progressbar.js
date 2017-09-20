@@ -88,10 +88,10 @@ var KanbanColumnProgressBar = Widget.extend({
             subgroupCounts[key] = subgroupCount;
         });
 
-        this.groupCount = columnState.count;
+        this.groupCount = columnState.data.length;
         this.subgroupCounts = subgroupCounts;
         this.prevTotalCounterValue = this.totalCounterValue;
-        this.totalCounterValue = this.sumField ? (columnState.aggregateValues[this.sumField] || 0) : columnState.count;
+        this.totalCounterValue = this.sumField ? (columnState.aggregateValues[this.sumField] || 0) : columnState.data.length;
         this._notifyState();
         this._render();
     },
