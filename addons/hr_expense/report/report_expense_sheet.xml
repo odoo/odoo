@@ -77,21 +77,19 @@
                             </tbody>
                         </table>
 
-                        <t t-if="len(o.mapped('expense_line_ids').mapped('currency_id')) &lt; 2">
-                            <div class="row">
-                                <div class="col-xs-4 pull-right">
-                                    <table class="table table-condensed">
-                                        <tr class="border-black">
-                                            <td><strong>Total</strong></td>
-                                            <td class="text-right">
-                                                <span t-field="o.total_amount"
-                                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right">
+                                            <span t-field="o.total_amount"
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                        </t>
+                        </div>
                         <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
                     </div>
                 </t>
