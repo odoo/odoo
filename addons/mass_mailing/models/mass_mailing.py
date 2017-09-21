@@ -445,7 +445,7 @@ class MassMailing(models.Model):
                 self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
             else:
                 self.mailing_domain = "[(0, '=', 1)]"
-        elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+        elif self.mailing_model_name and 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
             self.mailing_domain = "[('opt_out', '=', False)]"
         self.body_html = "on_change_model_and_list"
 
