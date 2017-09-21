@@ -5,11 +5,8 @@ var core = require('web.core');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
-var QWeb = core.qweb;
-
 var Menu = Widget.extend({
     init: function() {
-        var self = this;
         this._super.apply(this, arguments);
         this.is_bound = $.Deferred();
         this.data = {data:{children:[]}};

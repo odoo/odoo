@@ -56,4 +56,6 @@ var SwitchCompanyMenu = Widget.extend({
 
 SystrayMenu.Items.push(SwitchCompanyMenu);
 
+return SwitchCompanyMenu;
+
 });
