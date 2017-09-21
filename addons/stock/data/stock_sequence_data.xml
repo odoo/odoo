@@ -54,7 +54,10 @@
             <field name="name">Procurement: run MRP scheduler</field>
             <field name="model_id" ref="model_procurement_group"/>
             <field name="state">code</field>
-            <field name="code">model.run_scheduler(True)</field>
+            <field name="code">
+model.run_scheduler(True)
+env['stock.quant']._merge_quants()
+            </field>
             <field eval="False" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
