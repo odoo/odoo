@@ -53,10 +53,17 @@
     line-height: 2.2;
     color: @headings-color;
 }
-.o-kanban-v-title() {
-    .o-position-absolute(@o-kanban-inside-vgutter * 2, @left: floor(-@o-kanban-inside-vgutter * 1.2));
+.o-position-kanban-transform() when (@lng-direction = ltr) {
     .o-transform-origin(left, bottom, @z: 0);
     .o-transform(rotate(90deg));
+}
+.o-position-kanban-transform() when (@lng-direction = rtl) {
+    .o-transform-origin(right, bottom, @z: 0);
+    .o-transform(rotate(-90deg));
+}
+.o-kanban-v-title() {
+    .o-position-absolute(@o-kanban-inside-vgutter * 2, @left: floor(-@o-kanban-inside-vgutter * 1.2));
+    .o-position-kanban-transform();
     overflow: visible;
     white-space: nowrap;
     font-size: 15px;
