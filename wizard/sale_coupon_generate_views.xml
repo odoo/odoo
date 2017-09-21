@@ -8,7 +8,6 @@
                 <group>
                     <field name="generation_type" widget="radio"/>
                     <field name="partners_domain" attrs="{'invisible': [('generation_type', '!=', 'nbr_customer')]}" widget="domain" options="{'model': 'res.partner'}"/>
-                    <field name="partner_ids" groups="base.group_no_one"/>
                     <field name="nbr_coupons" attrs="{'invisible': [('generation_type', '!=', 'nbr_coupon')]}"/>
                 </group>
                 <footer>
