@@ -3,6 +3,7 @@
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
 
+
 class SaleCouponGenerate(models.TransientModel):
     _name = 'sale.coupon.generate'
 
@@ -12,7 +13,6 @@ class SaleCouponGenerate(models.TransientModel):
         ('nbr_customer', 'Number of Selected Customers')
         ], default='nbr_coupon')
     partners_domain = fields.Char(string="Customer", default='[]')
-    partner_ids = fields.Many2many('res.partner', string="Related Partners", compute='_compute_partner_ids')
 
     @api.multi
     def generate_coupon(self):
@@ -27,7 +27,7 @@ class SaleCouponGenerate(models.TransientModel):
                 self.env['sale.coupon'].create(vals)
 
         if self.generation_type == 'nbr_customer' and self.partners_domain:
-            for partner in self.partner_ids:
+            for partner in self.env['res.partner'].search(safe_eval(self.partners_domain)):
                 vals.update({'partner_id': partner.id})
                 coupon = self.env['sale.coupon'].create(vals)
                 subject = '%s, a coupon has been generated for you' % (partner.name)
@@ -41,7 +41,3 @@ class SaleCouponGenerate(models.TransientModel):
                     'email_from': self.env.user.email or '',
                     'email_to': partner.email,
                 })
-
-    @api.depends('partners_domain')
-    def _compute_partner_ids(self):
-        self.partner_ids = self.partners_domain and self.env['res.partner'].search(safe_eval(self.partners_domain))
