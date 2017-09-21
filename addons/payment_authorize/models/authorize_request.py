@@ -114,8 +114,16 @@ class AuthorizeAPI():
         city = partner.city
         zipCode = partner.zip
         country = partner.country_id.name
-        if not city or not country or not zipCode:
-            raise ValidationError("Some mandatory fields are missing in your account profile, please configure it <a href='/my/account'> Configure your account</a>")
+        missing_field = ''  # missing configure fields name
+        if not city:
+            missing_field += 'city, '
+        if not country:
+            missing_field += 'country, '
+        if not zipCode:
+            missing_field += 'zipCode '
+        if missing_field:
+            msg = _("%s fields %s invalid or missing in your account profile, please contact to administrator" % (missing_field, "are" if len(missing_field) > 1 else "is"))
+            raise ValidationError("%s" % msg)
         etree.SubElement(billTo, "city").text = city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
         etree.SubElement(billTo, "zip").text = zipCode
