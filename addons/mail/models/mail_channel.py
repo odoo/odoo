@@ -302,6 +302,8 @@ class Channel(models.Model):
             of the received message indicates on wich mail channel the message should be displayed.
             :param : mail.message to broadcast
         """
+        if not self:
+            return
         message.ensure_one()
         notifications = self._channel_message_notifications(message)
         self.env['bus.bus'].sendmany(notifications)
