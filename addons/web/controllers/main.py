@@ -417,10 +417,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
+                   filename=None, filename_field='datas_fname', download=False, mimetype=None,
+                   default_mimetype='application/octet-stream', access_token=None, env=None):
     return request.registry['ir.http'].binary_content(
-        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
-        download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+        filename_field=filename_field, download=download, mimetype=mimetype,
+        default_mimetype=default_mimetype, access_token=access_token, env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -971,8 +974,13 @@ class Binary(http.Controller):
         '/web/content/<int:id>-<string:unique>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
-    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       filename=None, filename_field='datas_fname', unique=None, mimetype=None,
+                       download=None, data=None, token=None, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            access_token=access_token)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1004,8 +1012,13 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
-    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                      filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                      download=None, width=0, height=0, crop=False, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype='image/png', access_token=access_token)
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
         elif status == 301:
