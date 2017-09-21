@@ -40,7 +40,8 @@ class MrpProductProduce(models.TransientModel):
                 for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel')):
                     qty_to_consume = todo_quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
                     for move_line in move.move_line_ids:
-                        if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) < 0:
+                        if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) < 0\
+                                or move_line.product_id.tracking == 'serial' and move_line.qty_done != 0:
                             break
                         to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
                         lines.append({
