@@ -378,10 +378,12 @@ class Picking(models.Model):
             picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
 
     @api.multi
-    @api.depends('state')
+    @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
         for picking in self:
-            if self._context.get('planned_picking') and picking.state == 'draft':
+            if not self.move_lines:
+                picking.show_mark_as_todo = False
+            elif self._context.get('planned_picking') and picking.state == 'draft':
                 picking.show_mark_as_todo = True
             elif picking.state != 'draft' or not picking.id:
                 picking.show_mark_as_todo = False
