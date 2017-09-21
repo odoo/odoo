@@ -235,6 +235,7 @@ var StatementModel = BasicModel.extend({
         return $.when(partner && this._changePartner(handle, partner.id))
                 .then(function() {
                     line.reconciliation_proposition = [];
+                    self._computeLine(line);
                     return self.changeMode(handle, 'match');
                 })
                 .then(function () {

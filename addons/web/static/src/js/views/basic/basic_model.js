@@ -768,7 +768,7 @@ var BasicModel = AbstractModel.extend({
     removeLine: function (elementID) {
         var record = this.localData[elementID];
         var parent = this.localData[record.parentID];
-        if (parent.parentID) {
+        if (parent.static) {
             // x2Many case: the new record has been stored in _changes, as a
             // command so we remove the command(s) related to that record
             parent._changes = _.filter(parent._changes, function (change) {
@@ -777,6 +777,7 @@ var BasicModel = AbstractModel.extend({
         } else {
             // main list view case: the new record is in data
             parent.data = _.without(parent.data, elementID);
+            parent.count--;
         }
     },
     /**
