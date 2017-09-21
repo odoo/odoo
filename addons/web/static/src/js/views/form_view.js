@@ -308,7 +308,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             field._inhibit_on_change_flag = true;
-            var result = field.set_value(self.datarecord[f] || false);
+            var result = field.set_value_from_record(self.datarecord);
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });

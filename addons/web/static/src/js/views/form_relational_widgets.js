@@ -453,12 +453,18 @@ var AbstractManyField = common.AbstractField.extend({
         });
     },
 
-    _on_load_record: function (record) {
+    set_value_from_record: function (record) {
+        this._super.apply(this, arguments);
+        // we want to update starting_ids straight away so the value can be used as soon as
+        // possible without inconsistency
         this.starting_ids = [];
         // don't set starting_ids for the new record
         if (record.id && record[this.name] && (!isNaN(record.id) || record.id.indexOf(this.dataset.virtual_id_prefix) === -1)) {
             this.starting_ids =  this.get('value').slice();
         }
+    },
+
+    _on_load_record: function (record) {
         this.trigger("load_record", record);
     },
 

@@ -71,7 +71,7 @@ class SaleOrder(models.Model):
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line[0].tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
         return {
             'product_id': product_id,
@@ -159,10 +159,11 @@ class SaleOrder(models.Model):
                     'pricelist': order.pricelist_id.id,
                 })
                 product = self.env['product.product'].with_context(product_context).browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
-                    order_line.tax_id
+                    order_line.tax_id,
+                    self.company_id
                 )
 
             order_line.write(values)
