@@ -77,6 +77,16 @@ class website_account(http.Controller):
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
+        in_europe = False
+        if data.get('country_id'):
+            europe = request.env.ref('base.europe')
+            if not europe:
+                europe = request.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+            if europe and data.get('country_id') in europe.country_ids.ids:
+                in_europe = True
+                country = request.env["res.country"].browse(data.get('country_id'))
+                country_code = country.code
+
         # email validation
         if data.get('email') and not tools.single_email_re.match(data.get('email')):
             error["email"] = 'error'
@@ -91,7 +101,8 @@ class website_account(http.Controller):
                 # quick and partial off-line checksum validation
                 check_func = request.env["res.partner"].simple_vat_check
             vat_country, vat_number = request.env["res.partner"]._split_vat(data.get("vat"))
-            if not check_func(vat_country, vat_number):  # simple_vat_check
+            check_europe = in_europe and (vat_country != country_code or '.' in vat_number or '-' in vat_number)
+            if not check_func(vat_country, vat_number) or check_europe:  # simple_vat_check
                 error["vat"] = 'error'
         # error message for empty required fields
         if [err for err in error.values() if err == 'missing']:
