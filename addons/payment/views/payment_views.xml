@@ -84,10 +84,10 @@
                                     <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="payment_icon_ids" widget="many2many_cards" options="{'image_field': 'image'}"/>
                                     <field name="payment_flow" widget="radio" attrs="{'invisible': [('provider', 'not in', ['stripe', 'ogone','authorize'])]}"/>
-                                    <field name="save_token" widget="radio" attrs="{'invisible': [('payment_flow', '=', 's2s')]}"/>
-                                    <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
-                                    <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
+                                    <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                    <div groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '=', 's2s')]}">
                                     <label for="view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '=', 's2s')]}"/>
                                     <div groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '=', 's2s')]}">
                                         <field name="view_template_id" nolabel="1"/>

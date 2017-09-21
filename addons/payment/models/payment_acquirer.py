@@ -121,9 +121,9 @@ class PaymentAcquirer(models.Model):
         ('ask', 'Let the customer decide'),
         ('always', 'Always')],
         string='Save Cards', default='none',
-        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
-             "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
-             "issue an invoice.")
+        help="""This option allows customers to save and reuse cards in later purchases thanks to payment tokens saved in Odoo.
+                Payment tokens are automatically saved if the customer pays from the website or if you sell Subscription products
+                (only available in Odoo Online & Enterprise).""")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -155,7 +155,10 @@ class PaymentAcquirer(models.Model):
     payment_flow = fields.Selection(selection=[('s2s','The customer pays from the website'),
         ('form', 'The customer is redirected to the website of the payment acquirer')],
         default='form', required=True, string='Payment Flow',
-        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+        help="""Choose how to process payments. Paying straight from Odoo (S2S mode) is easier and
+                faster for the customer but usually requires more configuration acquirer-side.
+                Paying from the acquirer website (Form mode) might be useful if you want to benefit
+                from advanced features only available on the acquirer form.""")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -501,7 +504,7 @@ class PaymentTransaction(models.Model):
         ('refunding', 'Refunding'),
         ('refunded', 'Refunded'),
         ('error', 'Error'),
-        ('cancel', 'Canceled')], 'Status',
+        ('cancel', 'Cancelled')], 'Status',
         copy=False, default='draft', required=True, track_visibility='onchange')
     state_message = fields.Text('Message', help='Field used to store error and/or validation messages for information')
     # payment

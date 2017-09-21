@@ -34,8 +34,9 @@
             </div>
         </xpath>
         <xpath expr="//t[@t-if='invoices']" position="before">
-            <t t-set="tx" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))[0]"/>
-            <t t-if="tx">
+            <t t-set="tx_ids" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-if="tx_ids">
+                <t t-set="tx" t-value="tx_ids[0]"/>
                 <div>
                     <strong>Transaction</strong>
                 </div>
