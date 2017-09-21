@@ -216,7 +216,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
 
     # Install Visual C redistribuable files
     DetailPrint "Installing Visual C++ redistributable files"
-    nsExec::Exec "dist\vcredist\vcredist_x86.exe /q"
+    nsExec::Exec '"$INSTDIR\service\vcredist\vcredist_x86.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
