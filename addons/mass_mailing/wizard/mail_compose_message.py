@@ -37,7 +37,7 @@ class MailComposeMessage(models.TransientModel):
                         'reply_to': reply_to,
                         'sent_date': fields.Datetime.now(),
                         'body_html': self.body,
-                        'mailing_model_id': self.env['ir.model'].search([('model', '=', self.model)], limit=1).id,
+                        'mailing_model_id': self.env['ir.model']._get(self.model).id,
                         'mailing_domain': self.active_domain,
                 })
 
