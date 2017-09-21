@@ -376,6 +376,7 @@ class AccountChartTemplate(models.Model):
                 'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company.id,
                 'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
+                'group_id': account_template.group_id.id,
             }
         return val
 
