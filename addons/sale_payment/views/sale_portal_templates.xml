@@ -34,13 +34,12 @@
             </div>
         </xpath>
         <xpath expr="//t[@t-if='invoices']" position="before">
-            <t t-set="tx_ids" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
-            <t t-if="tx_ids">
+            <t t-set="tx" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))[0]"/>
+            <t t-if="tx">
                 <div>
                     <strong>Transaction</strong>
                 </div>
                 <div>
-                    <t t-foreach="tx_ids" t-as="tx">
                     <div>
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
@@ -52,7 +51,6 @@
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>
-                    </t>
                 </div>
             </t>
         </xpath>
