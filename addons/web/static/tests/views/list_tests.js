@@ -487,6 +487,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: save data when list sorting in edit mode', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.foo.sortable = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1], {foo: 'xyz'}],
+                        "should correctly save the edited record");
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        list.$('.o_data_cell:first').click();
+        list.$('input[name="foo"]').val('xyz').trigger('input');
+        list.$('.o_column_sortable').click();
+
+        assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should still be in edition");
+
+        list.$buttons.find('.o_list_button_save').click();
+        assert.ok(!list.$buttons.hasClass('o-editing'),
+            "list buttons should be back to their readonly mode");
+
+        list.destroy();
+    });
+
     QUnit.test('selection changes are triggered correctly', function (assert) {
         assert.expect(8);
 
@@ -912,6 +945,7 @@ QUnit.module('Views', {
         assert.ok(form.$('tbody tr:eq(2) td input').val(),
             "Value 2 should be third (shouldn't be sorted)");
 
+        form.$('.o_form_sheet_bg').click(); // validate the row before sorting
         $o2m.find('.o_column_sortable').click();
         assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
             "Value 3 should be first");

@@ -13,6 +13,7 @@ var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
+        'click .oe_title, .o_group': '_onClick',
     }),
     /**
      * @override
@@ -832,6 +833,16 @@ var FormRenderer = BasicRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Makes the Edit button bounce in readonly
+     *
+     * @private
+     */
+    _onClick: function () {
+        if (this.mode === 'readonly') {
+            this.trigger_up('bounce_edit');
+        }
+    },
     /**
      * @override
      * @private

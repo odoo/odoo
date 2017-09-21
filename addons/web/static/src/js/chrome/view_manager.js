@@ -294,12 +294,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }).fail(view.loaded.reject.bind(view.loaded));
             } else {
                 view.loaded = view.loaded.then(function() {
-                    // By default, the view will be loaded in readonly mode
-                    // Returns to this default mode if you load action from breadcrumb
                     view_options = _.extend({}, view_options, self.env);
-                    if (view_type === 'form') {
-                        view_options.mode = view_options.mode || 'readonly';
-                    }
                     return view.controller.reload(view_options);
                 });
             }
@@ -384,8 +379,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         });
     },
     select_view: function (index) {
-        var view_type = this.view_stack[index].type;
-        return this.switch_mode(view_type);
+        var viewType = this.view_stack[index].type;
+        var viewOptions = {};
+        if (viewType === 'form') {
+            // reload form views in readonly, except for inline actions (i.e.
+            // settings views) that stay in edit
+            viewOptions.mode = this.action.target === 'inline' ? 'edit' : 'readonly';
+        }
+        return this.switch_mode(viewType, viewOptions);
     },
     /**
      * Renders the switch buttons for multi- and mono-record views and adds
