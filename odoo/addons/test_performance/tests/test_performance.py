@@ -180,7 +180,7 @@ class TestPerformance(TransactionCase):
         model = self.env['test_performance.mail']
         model.with_context(tracking_disable=True).create({'name': self.str('X')})
 
-    @queryCount(admin=43, demo=61)
+    @queryCount(admin=42, demo=60)
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
         model = self.env['test_performance.mail']

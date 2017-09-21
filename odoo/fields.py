@@ -885,9 +885,12 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
         return NotImplementedError("Method read() undefined on %s" % self)
 
-    def write(self, records, value):
+    def write(self, records, value, create=False):
         """ Write the value of ``self`` on ``records``. The ``value`` must be in
         the format of method :meth:`BaseModel.write`.
+
+        :param create: whether ``records`` have just been created (to enable
+            some optimizations)
         """
         return NotImplementedError("Method write() undefined on %s" % self)
 
@@ -1651,15 +1654,17 @@ class Binary(Field):
         for record in records:
             cache.set(record, self, data.get(record.id, False))
 
-    def write(self, records, value):
+    def write(self, records, value, create=False):
         # retrieve the attachments that stores the value, and adapt them
         assert self.attachment
-        domain = [
-            ('res_model', '=', records._name),
-            ('res_field', '=', self.name),
-            ('res_id', 'in', records.ids),
-        ]
-        atts = records.env['ir.attachment'].sudo().search(domain)
+        if create:
+            atts = records.env['ir.attachment'].sudo()
+        else:
+            atts = records.env['ir.attachment'].sudo().search([
+                ('res_model', '=', records._name),
+                ('res_field', '=', self.name),
+                ('res_id', 'in', records.ids),
+            ])
         with records.env.norecompute():
             if value:
                 # update the existing attachments
@@ -2202,7 +2207,7 @@ class One2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(group[record.id]))
 
-    def write(self, records, value):
+    def write(self, records, value, create=False):
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
 
@@ -2400,7 +2405,7 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(group[record.id]))
 
-    def write(self, records, value):
+    def write(self, records, value, create=False):
         cr = records._cr
         comodel = records.env[self.comodel_name]
         parts = dict(rel=self.relation, id1=self.column1, id2=self.column2)
@@ -2429,7 +2434,7 @@ class Many2many(_RelationalMulti):
                 clear = True
                 links = dict.fromkeys(act[2], True)
 
-        if clear:
+        if clear and not create:
             # remove all records for which user has access rights
             clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
             cond = " AND ".join(clauses) if clauses else "1=1"
