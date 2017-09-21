@@ -7,3 +7,4 @@ from . import make_procurement
 from . import procurement_orderpoint_compute
 from . import stock_immediate_transfer
 from . import stock_backorder_confirmation
+from . import stock_scrap_wizard

@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class MrpUnbuild(models.Model):
@@ -174,3 +175,18 @@ class MrpUnbuild(models.Model):
             'location_id': self.product_id.property_stock_production.id,
             'unbuild_id': self.id,
         })
+
+    def action_validate(self):
+        self.ensure_one()
+        lot_id = self.lot_id or None
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, lot_id, strict=True)
+        if float_compare(available_qty, self.product_qty, 2) >= 0:
+            return self.action_unbuild()
+        else:
+            action = self.env['stock.scrap.wizard'].get_action()
+            action['context'] = {
+                    'default_product_id': self.product_id.id,
+                    'default_product_uom_id': self.product_uom_id.id,
+                    'default_unbuild_id': self.id,
+                }
+            return action

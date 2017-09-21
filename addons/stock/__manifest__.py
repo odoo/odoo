@@ -42,6 +42,7 @@
         'wizard/procurement_orderpoint_compute_views.xml',
         'wizard/stock_immediate_transfer_views.xml',
         'wizard/stock_backorder_confirmation_views.xml',
+        'wizard/stock_scrap_wizard_views.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
