@@ -128,6 +128,7 @@ class SaleOrder(models.Model):
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
     validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
+    is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
@@ -167,6 +168,14 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
             order.portal_url = '/my/orders/%s' % (order.id)
+
+    def _compute_is_expired(self):
+        now = datetime.now()
+        for order in self:
+            if order.validity_date and fields.Datetime.from_string(order.validity_date) < now:
+                order.is_expired = True
+            else:
+                order.is_expired = False
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -1012,7 +1021,7 @@ class SaleOrderLine(models.Model):
         self._compute_tax_id()
 
         if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
         self.update(vals)
 
         return result
@@ -1032,7 +1041,7 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')
             )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
     def unlink(self):
@@ -1108,7 +1117,7 @@ class SaleOrderLine(models.Model):
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-        new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
+        new_list_price = self.env['account.tax']._fix_tax_included_price_company(new_list_price, self.product_id.taxes_id, self.tax_id, self.company_id)
 
         if new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:

@@ -14,6 +14,7 @@ class BaseModel(models.Model):
 
     line_ids = fields.One2many('test_performance.line', 'base_id')
     total = fields.Integer(compute="_total", store=True)
+    tag_ids = fields.Many2many('test_performance.tag')
 
     @api.depends('value')
     def _value_pc(self):
@@ -31,6 +32,12 @@ class LineModel(models.Model):
 
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
+
+
+class TagModel(models.Model):
+    _name = 'test_performance.tag'
+
+    name = fields.Char()
 
 
 class MailModel(models.Model):

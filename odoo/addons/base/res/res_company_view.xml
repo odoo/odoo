@@ -135,40 +135,24 @@
               <xpath expr="//sheet" position="inside">
                     <hr />
                     <div class="row mt16">
-                        <field name="external_report_layout" invisible="1"/>
-                        <div class="col-xs-3 text-center">
-                            <button type="object" name="set_report_template" context="{'report_template': 'background'}" attrs="{'invisible': [('external_report_layout', '=', 'background')]}">
-                                <img src="/base/static/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Background Template"/>
-                            </button>
-                            <button class="btn-info" type="object" name="set_report_template" context="{'report_template': 'background'}" attrs="{'invisible': [('external_report_layout', '!=', 'background')]}">
-                                <img src="/base/static/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Background Template"/>
-                            </button>
-                            <a href="/base/static/pdf/preview_background.pdf" target="_blank">preview</a>
-                        </div><div class="col-xs-3 text-center">
-                            <button type="object" name="set_report_template" context="{'report_template': 'boxed'}"  attrs="{'invisible': [('external_report_layout', '=', 'boxed')]}">
-                                <img src="/base/static/img/preview_boxed.png" class="img img-responsive img-thumbnail" alt="Preview Boxed Template"/>
-                            </button>
-                            <button class="btn-info" type="object" name="set_report_template" context="{'report_template': 'boxed'}" attrs="{'invisible': [('external_report_layout', '!=', 'boxed')]}">
-                                <img src="/base/static/img/preview_boxed.png" class="img img-responsive img-thumbnail" alt="Preview Boxed Template"/>
-                            </button>
-                            <a href="/base/static/pdf/preview_boxed.pdf" target="_blank">preview</a>
-                        </div><div class="col-xs-3 text-center">
-                            <button type="object" name="set_report_template" context="{'report_template': 'clean'}" attrs="{'invisible': [('external_report_layout', '=', 'clean')]}">
-                                <img src="/base/static/img/preview_clean.png" class="img img-responsive img-thumbnail" alt="Preview Clean Template"/>
-                            </button>
-                            <button class="btn-info" type="object" name="set_report_template" context="{'report_template': 'clean'}" attrs="{'invisible': [('external_report_layout', '!=', 'clean')]}">
-                                <img src="/base/static/img/preview_clean.png" class="img img-responsive img-thumbnail" alt="Preview Clean Template"/>
-                            </button>
-                            <a href="/base/static/pdf/preview_clean.pdf" target="_blank">preview</a>
-                        </div><div class="col-xs-3 text-center">
-                            <button type="object" name="set_report_template" context="{'report_template': 'standard'}" attrs="{'invisible': [('external_report_layout', '=', 'standard')]}">
-                                <img src="/base/static/img/preview_standard.png" class="img img-responsive img-thumbnail" alt="Preview Minimalist Template"/>
-                            </button>
-                            <button class="btn-info" type="object" name="set_report_template" context="{'report_template': 'standard'}" attrs="{'invisible': [('external_report_layout', '!=', 'standard')]}">
-                                <img src="/base/static/img/preview_standard.png" class="img img-responsive img-thumbnail" alt="Preview Minimalist Template"/>
-                            </button>
-                            <a href="/base/static/pdf/preview_standard.pdf" target="_blank">preview</a>
-                        </div>
+                        <field name="external_report_layout" widget="image_selection" options="{
+                            'background': {
+                                'image_link': '/base/static/img/preview_background.png',
+                                'preview_link': '/base/static/pdf/preview_background.pdf'
+                            },
+                            'boxed': {
+                                'image_link': '/base/static/img/preview_boxed.png',
+                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                            },
+                            'clean': {
+                                'image_link': '/base/static/img/preview_clean.png',
+                                'preview_link': '/base/static/pdf/preview_clean.pdf'
+                            },
+                            'standard': {
+                                'image_link': '/base/static/img/preview_standard.png',
+                                'preview_link': '/base/static/pdf/preview_standard.pdf'
+                            }
+                        }"/>
                     </div>
                     <footer>
                         <button string="Save" type="object" class="oe_highlight" name="write"/>

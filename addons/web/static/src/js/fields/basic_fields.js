@@ -2391,6 +2391,56 @@ var AceEditor = DebouncedField.extend({
     },
 });
 
+var ImageSelection = AbstractField.extend({
+    supportedFieldTypes: ['selection'],
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click img': '_onImgClicked',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        this.$el.empty();
+        _.each(this.nodeOptions, function (val, key) {
+            var $container = $('<div>').addClass('col-xs-3 text-center');
+            var $img = $('<img>')
+                .addClass('img img-responsive img-thumbnail ml16')
+                .toggleClass('btn-info', key === self.value)
+                .attr('src', val.image_link)
+                .data('key', key);
+            $container.append($img);
+            if (val.preview_link) {
+                var $previewLink = $('<a>')
+                    .text('Preview')
+                    .attr('href', val.preview_link)
+                    .attr('target', '_blank');
+                $container.append($previewLink);
+            }
+            self.$el.append($container);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onImgClicked: function (event) {
+        this._setValue($(event.currentTarget).data('key'));
+    },
+});
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -2416,6 +2466,7 @@ return {
     HandleWidget: HandleWidget,
     InputField: InputField,
     AttachmentImage: AttachmentImage,
+    ImageSelection: ImageSelection,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
     FavoriteWidget: FavoriteWidget,

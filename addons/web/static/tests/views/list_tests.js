@@ -2,6 +2,7 @@ odoo.define('web.list_tests', function (require) {
 "use strict";
 
 var config = require('web.config');
+var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
@@ -390,6 +391,54 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list: add a line and discard', function (assert) {
+        assert.expect(11);
+
+        var oldDestroy = basicFields.FieldChar.prototype.destroy;
+        basicFields.FieldChar.prototype.destroy = function () {
+            assert.step('destroy');
+            oldDestroy.apply(this, arguments);
+        };
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
+            domain: [['foo', '=', 'yop']],
+        });
+
+        assert.strictEqual(list.$('tbody tr').length, 4,
+            "list should contain 4 rows");
+        assert.strictEqual(list.$('.o_data_row').length, 1,
+            "list should contain one record (and thus 3 empty rows)");
+        assert.strictEqual(list.pager.$('.o_pager_value').text(), '1-1',
+            "pager should be correct");
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.strictEqual(list.$('tbody tr').length, 4,
+            "list should still contain 4 rows");
+        assert.strictEqual(list.$('.o_data_row').length, 2,
+            "list should contain two record (and thus 2 empty rows)");
+        assert.strictEqual(list.pager.$('.o_pager_value').text(), '1-2',
+            "pager should be correct");
+
+        list.$buttons.find('.o_list_button_discard').click();
+
+        assert.strictEqual(list.$('tbody tr').length, 4,
+            "list should still contain 4 rows");
+        assert.strictEqual(list.$('.o_data_row').length, 1,
+            "list should contain one record (and thus 3 empty rows)");
+        assert.strictEqual(list.pager.$('.o_pager_value').text(), '1-1',
+            "pager should be correct");
+        assert.verifySteps(['destroy'],
+            "should have destroyed the widget of the removed line");
+
+        basicFields.FieldChar.prototype.destroy = oldDestroy;
+        list.destroy();
+    });
+
     QUnit.test('field changes are triggered correctly', function (assert) {
         assert.expect(2);
 
@@ -435,6 +484,39 @@ QUnit.module('Views', {
             'saved row should be in readonly mode');
         assert.strictEqual(this.data.foo.records[0].foo, 'abc',
             "the edition should have been properly saved");
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: save data when list sorting in edit mode', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.foo.sortable = true;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1], {foo: 'xyz'}],
+                        "should correctly save the edited record");
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        list.$('.o_data_cell:first').click();
+        list.$('input[name="foo"]').val('xyz').trigger('input');
+        list.$('.o_column_sortable').click();
+
+        assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should still be in edition");
+
+        list.$buttons.find('.o_list_button_save').click();
+        assert.ok(!list.$buttons.hasClass('o-editing'),
+            "list buttons should be back to their readonly mode");
+
         list.destroy();
     });
 
@@ -863,6 +945,7 @@ QUnit.module('Views', {
         assert.ok(form.$('tbody tr:eq(2) td input').val(),
             "Value 2 should be third (shouldn't be sorted)");
 
+        form.$('.o_form_sheet_bg').click(); // validate the row before sorting
         $o2m.find('.o_column_sortable').click();
         assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
             "Value 3 should be first");

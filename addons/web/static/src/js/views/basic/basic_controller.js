@@ -71,7 +71,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             return $.when(false);
         }
 
-        var message = _t("The record has been modified, your changes will be discarded. Are you sure you want to ?");
+        var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
         var def = $.Deferred();
         var dialog = Dialog.confirm(this, message, {
             title: _t("Warning"),

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from collections import Counter
 
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.pycompat import izip
@@ -98,8 +99,57 @@ class StockMoveLine(models.Model):
 
     @api.onchange('lot_name', 'lot_id')
     def onchange_serial_number(self):
+        res = {}
         if self.product_id.tracking == 'serial':
             self.qty_done = 1
+            # we remove the record with _origin, because _get_move_lines will find the record which is the same than
+            # self but with the origin id
+            move_lines_to_check = self._get_similar_move_lines() - self._origin
+            message = move_lines_to_check._check_for_duplicated_serial_numbers()
+            if message:
+                res['warning'] = {'title': _('Warning'), 'message': message}
+        return res
+
+    @api.constrains('lot_id', 'lot_name', 'qty_done')
+    def _check_unique_serial_number(self):
+        for ml in self.filtered(lambda ml: ml.move_id.product_id.tracking == 'serial' and (ml.lot_id or ml.lot_name)):
+            move_lines_to_check = ml._get_similar_move_lines()
+            message = move_lines_to_check._check_for_duplicated_serial_numbers()
+            if message:
+                raise ValidationError(message)
+            if float_compare(ml.qty_done, 1.0, precision_rounding=ml.move_id.product_id.uom_id.rounding) == 1:
+                raise UserError(_(
+                    'You can only process 1.0 %s for products with unique serial number.') % ml.product_id.uom_id.name)
+            if ml.lot_name:
+                already_exist = self.env['stock.production.lot'].search(
+                    [('name', '=', ml.lot_name), ('product_id', '=', ml.product_id.id)])
+                if already_exist:
+                    return _('You have already assigned this serial number to this product. Please correct the serial numbers encoded.')
+
+    def _get_similar_move_lines(self):
+        self.ensure_one()
+        lines = self.env['stock.move.line']
+        if self.move_id.picking_id:
+            lines |= self.move_id.picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
+        return lines
+
+    def _check_for_duplicated_serial_numbers(self):
+        """ This method is used in _check_unique_serial_number and in onchange_serial_number to check that a same serial number is not used twice amongst the recordset passed.
+
+        :return: an error message directed to the user if needed else False
+        """
+        if self.mapped('lot_id'):
+            lot_names = [ml.lot_id.name for ml in self]
+            recorded_serials_counter = Counter(lot_names)
+            for lot_id, occurrences in recorded_serials_counter.items():
+                if occurrences > 1 and lot_id is not False:
+                    return _('You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
+        elif self.mapped('lot_name'):
+            recorded_serials_counter = Counter(self.mapped('lot_name'))
+            for lot_id, occurrences in recorded_serials_counter.items():
+                if occurrences > 1 and lot_id is not False:
+                    return _('You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
+        return False
 
     @api.model
     def create(self, vals):

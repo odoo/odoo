@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -103,6 +103,11 @@ msgid "% On tasks"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
+msgstr ""
+
+#. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
 msgstr ""
@@ -116,11 +121,15 @@ msgid "Automatically modify the kanban state when the customer replies to the fe
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+msgid "Customer Ratings from task"
 msgstr ""
 
 #. module: rating_project
@@ -129,7 +138,7 @@ msgid "Customer ratings on tasks. If you have no rating, change your project Set
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
 msgid "Customer ratings on tasks/issues. If you have no rating, change your project Settings to activate it."
 msgstr ""
 
@@ -174,6 +183,11 @@ msgid "If set and if the project's rating configuration is 'Rating when changing
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
+msgid "Last 30 days"
+msgstr ""
+
+#. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
 msgstr ""
@@ -194,11 +208,6 @@ msgid "No rating"
 msgstr ""
 
 #. module: rating_project
-#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-msgid "No rating yet"
-msgstr ""
-
-#. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
 msgstr ""
@@ -215,6 +224,7 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Project"
 msgstr ""
 
@@ -236,6 +246,7 @@ msgid "Rated tasks"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
 msgid "Rating"
 msgstr ""
@@ -256,7 +267,7 @@ msgid "Rating Request Deadline"
 msgstr ""
 
 #. module: rating_project
-#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Rating for tasks"
 msgstr ""
 
@@ -271,7 +282,18 @@ msgid "Ratings"
 msgstr ""
 
 #. module: rating_project
-#: model:ir.ui.view,arch_db:rating_project.project_config_settings_view_form_inherit_rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings for tasks"
+msgstr ""
+
+#. module: rating_project
+#: code:addons/rating_project/models/project.py:107
+#, python-format
+msgid "Ratings of %s"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
 msgstr ""
 
@@ -289,6 +311,16 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
 msgid "Task Stage"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
+msgid "There is no rating for tasks of this project at the moment."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating
+msgid "There is no rating for this object at the moment."
 msgstr ""
 
 #. module: rating_project

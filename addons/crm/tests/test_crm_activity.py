@@ -11,7 +11,7 @@ class TestCrmMailActivity(TestCrmCases):
     def setUp(self):
         super(TestCrmMailActivity, self).setUp()
         # Set up activities
-        lead_model_id = self.env['ir.model'].search([('model', '=', 'crm.lead')]).id
+        lead_model_id = self.env['ir.model']._get('crm.lead').id
         ActivityType = self.env['mail.activity.type']
         self.activity3 = ActivityType.create({
             'name': 'Celebrate the sale',
@@ -83,7 +83,7 @@ class TestCrmMailActivity(TestCrmCases):
     def test_crm_activity_next_action(self):
         """ This test case set the next activity on a lead, log another, and schedule a third. """
         # Add the next activity (like we set it from a form view)
-        lead_model_id = self.env['ir.model'].search([('model', '=', 'crm.lead')]).id
+        lead_model_id = self.env['ir.model']._get('crm.lead').id
         activity = self.env['mail.activity'].sudo(self.crm_salesman.id).create({
             'activity_type_id': self.activity1.id,
             'summary': 'My Own Summary',

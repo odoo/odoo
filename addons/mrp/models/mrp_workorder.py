@@ -286,7 +286,7 @@ class MrpWorkorder(models.Model):
             raise UserError(_('Please set the quantity you produced in the Current Qty field. It can not be 0!'))
 
         if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id:
-            raise UserError(_('You should provide a lot for the final product'))
+            raise UserError(_('You should provide a lot/serial number for the final product'))
 
         # Update quantities done on each raw material line
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
@@ -302,7 +302,7 @@ class MrpWorkorder(models.Model):
                 move_line.sudo().unlink()
                 continue
             if not move_line.lot_id:
-                raise UserError(_('You should provide a lot for a component'))
+                raise UserError(_('You should provide a lot/serial number for a component'))
             # Search other move_line where it could be added:
             lots = self.move_line_ids.filtered(lambda x: (x.lot_id.id == move_line.lot_id.id) and (not x.lot_produced_id) and (not x.done_move))
             if lots:

@@ -80,10 +80,10 @@ class PickingType(models.Model):
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
-            'count_picking_ready': [('state', 'in', ('assigned', 'partially_available'))],
-            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed', 'partially_available'))],
-            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting', 'partially_available'))],
+            'count_picking_ready': [('state', '=', 'assigned')],
+            'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field in domains:
             data = self.env['stock.picking'].read_group(domains[field] +
@@ -186,19 +186,20 @@ class Picking(models.Model):
         help="It specifies goods to be deliver partially or all at once")
 
     state = fields.Selection([
-        ('draft', 'Draft'), ('cancel', 'Cancelled'),
+        ('draft', 'Draft'),
         ('waiting', 'Waiting Another Operation'),
-        ('confirmed', 'Waiting Availability'),
-        ('partially_available', 'Partially Available'),
-        ('assigned', 'Available'), ('done', 'Done')], string='Status', compute='_compute_state',
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state',
         copy=False, index=True, readonly=True, store=True, track_visibility='onchange',
-        help=" * Draft: not confirmed yet and will not be scheduled until confirmed\n"
-             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"
-             " * Waiting Availability: still waiting for the availability of products\n"
-             " * Partially Available: some products are available and reserved\n"
-             " * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
-             " * Transferred: has been processed, can't be modified or cancelled anymore\n"
-             " * Cancelled: has been cancelled, can't be confirmed anymore")
+        help=" * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
+             " * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
+             " * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
+             " * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
+             " * Done: has been processed, can't be modified or cancelled anymore.\n"
+             " * Cancelled: has been cancelled, can't be confirmed anymore.")
 
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
@@ -267,6 +268,16 @@ class Picking(models.Model):
         'Has Packages', compute='_compute_has_packages',
         help='Check the existence of destination packages on move lines')
 
+    show_check_availability = fields.Boolean(
+        compute='_compute_show_check_availability',
+        help='Technical field used to compute whether the check availability button should be shown.')
+    show_mark_as_todo = fields.Boolean(
+        compute='_compute_show_mark_as_todo',
+        help='Technical field used to compute whether the mark as todo button should be shown.')
+    show_validate = fields.Boolean(
+        compute='_compute_show_validate',
+        help='Technical field used to compute whether the validate should be shown.')
+
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -287,14 +298,16 @@ class Picking(models.Model):
     @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
-         - no moves: draft or assigned (launch_pack_operations)
-         - all moves canceled: cancel
-         - all moves done (including possible canceled): done
-         - All at once picking: least of confirmed / waiting / assigned
-         - Partial picking
-          - all moves assigned: assigned
-          - one of the move is assigned or partially available: partially available
-          - otherwise in waiting or confirmed state
+        - Draft: only used for "planned pickings"
+        - Waiting: if the picking is not ready to be sent so if
+          - (a) no quantity could be reserved at all or if
+          - (b) some quantities could be reserved and the shipping policy is "deliver all at once"
+        - Waiting another move: if the picking is waiting for another move
+        - Ready: if the picking is ready to be sent so if:
+          - (a) all quantities are reserved or if
+          - (b) some quantities could be reserved and the shipping policy is "as soon as possible"
+        - Done: if the picking is done.
+        - Cancelled: if the picking is cancelled
         '''
         if not self.move_lines:
             self.state = 'draft'
@@ -305,7 +318,11 @@ class Picking(models.Model):
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
         else:
-            self.state = self.move_lines._get_relevant_state_among_moves()
+            relevant_move_state = self.move_lines._get_relevant_state_among_moves()
+            if relevant_move_state == 'partially_available':
+                self.state = 'assigned'
+            else:
+                self.state = relevant_move_state
 
     @api.one
     @api.depends('move_lines.priority')
@@ -349,6 +366,38 @@ class Picking(models.Model):
                 has_packages = True
                 break
         self.has_packages = has_packages
+
+    @api.multi
+    def _compute_show_check_availability(self):
+        for picking in self:
+            has_moves_to_reserve = any(
+                move.state in ('waiting', 'confirmed', 'partially_available') and
+                float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
+                for move in picking.move_lines
+            )
+            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
+
+    @api.multi
+    @api.depends('state')
+    def _compute_show_mark_as_todo(self):
+        for picking in self:
+            if self._context.get('planned_picking') and picking.state == 'draft':
+                picking.show_mark_as_todo = True
+            elif picking.state != 'draft' or not picking.id:
+                picking.show_mark_as_todo = False
+            else:
+                picking.show_mark_as_todo = True
+
+    @api.multi
+    @api.depends('state', 'is_locked')
+    def _compute_show_validate(self):
+        for picking in self:
+            if self._context.get('planned_picking') and picking.state == 'draft':
+                picking.show_validate = False
+            elif picking.state not in ('draft', 'confirmed', 'assigned') or not picking.is_locked:
+                picking.show_validate = False
+            else:
+                picking.show_validate = True
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
@@ -400,7 +449,9 @@ class Picking(models.Model):
                 if len(move) == 3:
                     move[2]['location_id'] = vals['location_id']
                     move[2]['location_dest_id'] = vals['location_dest_id']
-        return super(Picking, self).create(vals)
+        res = super(Picking, self).create(vals)
+        res._autoconfirm_picking()
+        return res
 
     @api.multi
     def write(self, vals):
@@ -413,6 +464,8 @@ class Picking(models.Model):
             after_vals['location_dest_id'] = vals['location_dest_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
+        if vals.get('move_lines'):
+            self._autoconfirm_picking()
         return res
 
     @api.multi
@@ -564,6 +617,10 @@ class Picking(models.Model):
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
         no_quantities_done = all(line.qty_done == 0.0 for line in self.move_line_ids)
+        no_initial_demand = all(move.product_uom_qty == 0.0 for move in self.move_lines)
+        if no_initial_demand and no_quantities_done:
+            raise UserError(_('You cannot validate a transfer if you have not processed any quantity.'))
+
         if picking_type.use_create_lots or picking_type.use_existing_lots:
             lines_to_check = self.move_line_ids
             if not no_quantities_done:
@@ -594,6 +651,21 @@ class Picking(models.Model):
                 'context': self.env.context,
             }
 
+        if self._get_overprocessed_stock_moves() and not self._context.get('skip_overprocessed_check'):
+            view = self.env.ref('stock.view_overprocessed_transfer')
+            wiz = self.env['stock.overprocessed.transfer'].create({'picking_id': self.id})
+            return {
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.overprocessed.transfer',
+                'views': [(view.id, 'form')],
+                'view_id': view.id,
+                'target': 'new',
+                'res_id': wiz.id,
+                'context': self.env.context,
+            }
+
         # Check backorder should check for other barcodes
         if self._check_backorder():
             return self.action_generate_backorder_wizard()
@@ -617,6 +689,7 @@ class Picking(models.Model):
         }
 
     def action_toggle_is_locked(self):
+        self.ensure_one()
         self.is_locked = not self.is_locked
         return True
 
@@ -638,6 +711,20 @@ class Picking(models.Model):
             quantity_done[pack.product_id.id] += pack.qty_done
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
+    @api.multi
+    def _autoconfirm_picking(self):
+        if not self._context.get('planned_picking'):
+            for picking in self.filtered(lambda picking: picking.state not in ('done', 'cancel') and picking.move_lines):
+                picking.action_confirm()
+
+    def _get_overprocessed_stock_moves(self):
+        self.ensure_one()
+        return self.move_lines.filtered(
+            lambda move: move.product_uom_qty != 0 and float_compare(move.quantity_done, move.product_uom_qty,
+                                                                     precision_rounding=move.product_uom.rounding) == 1
+        )
+
+    @api.multi
     def _create_backorder(self, backorder_moves=[]):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
