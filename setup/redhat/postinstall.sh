@@ -54,6 +54,7 @@ Type=simple
 User=odoo
 Group=odoo
 ExecStart=/usr/bin/odoo --config $ODOO_CONFIGURATION_FILE --logfile $ODOO_LOG_FILE
+KillMode=mixed
 
 [Install]
 WantedBy=multi-user.target
