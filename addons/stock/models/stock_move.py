@@ -156,6 +156,7 @@ class StockMove(models.Model):
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
     is_locked = fields.Boolean(related='picking_id.is_locked', readonly=True)
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
+    is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
 
     @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
     def _compute_show_details_visible(self):
@@ -189,12 +190,23 @@ class StockMove(models.Model):
     @api.depends('state', 'picking_id')
     def _compute_is_initial_demand_editable(self):
         for move in self:
-            if move.state == 'draft':
+            if self._context.get('planned_picking'):
                 move.is_initial_demand_editable = True
-            elif move.state != 'done' and move.picking_id and not move.picking_id.is_locked:
+            elif not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
                 move.is_initial_demand_editable = True
             else:
                 move.is_initial_demand_editable = False
+
+    @api.multi
+    @api.depends('state', 'picking_id')
+    def _compute_is_quantity_done_editable(self):
+        for move in self:
+            if self._context.get('planned_picking') and move.picking_id.state == 'draft':
+                move.is_quantity_done_editable = False
+            elif move.picking_id.is_locked and move.state in ('done', 'cancel'):
+                move.is_quantity_done_editable = False
+            else:
+                move.is_quantity_done_editable = True
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -534,18 +546,24 @@ class StockMove(models.Model):
         }
         moves_todo = self\
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
-            .sorted(key=lambda move: sort_map.get(move.state, 0))
+            .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
         if moves_todo[0].picking_id.move_type == 'one':
-            if moves_todo[0].state in ('partially_available', 'confirmed'):
+            most_important_move = moves_todo[0]
+            if most_important_move.state == 'confirmed':
+                return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
+            elif most_important_move.state == 'partially_available':
                 return 'confirmed'
             else:
                 return moves_todo[0].state or 'draft'
         elif moves_todo[0].state != 'assigned' and any(move.state in ['assigned', 'partially_available'] for move in moves_todo):
             return 'partially_available'
         else:
-            # take the less important state among all move_lines.
-            return moves_todo[-1].state or 'draft'
+            least_important_move = moves_todo[-1]
+            if least_important_move.state == 'confirmed' and least_important_move.product_uom_qty == 0:
+                return 'assigned'
+            else:
+                return moves_todo[-1].state or 'draft'
 
     @api.onchange('product_id', 'product_qty')
     def onchange_quantity(self):
@@ -888,7 +906,7 @@ class StockMove(models.Model):
         extra_move = self.env['stock.move']
         rounding = self.product_uom.rounding
         # moves created after the picking is assigned do not have `product_uom_qty`, but we shouldn't create extra moves for them
-        if self.product_uom_qty and float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
+        if float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
             # create the extra moves
             extra_move_quantity = float_round(
                 self.quantity_done - self.product_uom_qty,
@@ -914,6 +932,8 @@ class StockMove(models.Model):
             # rounding = move.product_uom.rounding
             # move.quantity_done = float_round(move.quantity_done, precision_rounding=rounding, rounding_method ='UP')
             if move.quantity_done <= 0:
+                if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0:
+                    move._action_cancel()
                 continue
             moves_todo |= move
             moves_todo |= move._create_extra_move()

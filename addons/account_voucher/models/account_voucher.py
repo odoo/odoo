@@ -134,8 +134,10 @@ class AccountVoucher(models.Model):
                 self.account_id = self.partner_id.property_account_receivable_id \
                     if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
             else:
-                self.account_id = self.journal_id.default_debit_account_id \
-                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
+                account_type = self.voucher_type == 'purchase' and 'payable' or 'receivable'
+                domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
+
+                self.account_id = self.env['account.account'].search(domain, limit=1)
 
     @api.multi
     def proforma_voucher(self):

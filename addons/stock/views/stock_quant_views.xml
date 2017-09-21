@@ -139,7 +139,17 @@
         <field name="res_model">stock.quant</field>
     </record>
 
-    <menuitem id="menu_quants" name="Inventory" parent="stock.menu_warehouse_report" sequence="100" action="quantsact"/>
+    <record model="ir.actions.server" id="quant_merge_action"> <!-- Menu + python -->
+      <field name="name">Merge duplicate quants</field>
+      <field name="model_id" ref="stock.model_stock_quant"/>
+      <field name="state">code</field>
+      <field name="code">
+env['stock.quant']._merge_quants()
+action = env.ref('stock.quantsact').read()[0]
+      </field>
+    </record>
+
+    <menuitem id="menu_quants" name="Inventory" parent="stock.menu_warehouse_report" sequence="100" action="stock.quant_merge_action"/>
 
     <record id="quant_package_search_view" model="ir.ui.view">
         <field name="name">stock.quant.package.search</field>

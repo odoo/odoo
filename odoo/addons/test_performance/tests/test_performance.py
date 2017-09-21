@@ -7,6 +7,7 @@ import logging
 
 from odoo.tests.common import TransactionCase
 
+_logger = logging.getLogger(__name__)
 sql_logger = logging.getLogger('odoo.sql_db')
 
 
@@ -27,9 +28,8 @@ def queryCount(**counters):
                 self._round = True
                 self.resetQueryCount()
                 func(self)
-                self.assertLessEqual(self.cr.sql_log_count - self._count,
-                                     counters[user.login],
-                                     "as user %s" % user.login)
+                self.assertQueryCount(self.cr.sql_log_count - self._count,
+                                      counters[user.login], user.login)
 
         return wrapper
 
@@ -37,6 +37,11 @@ def queryCount(**counters):
 
 
 class TestPerformance(TransactionCase):
+
+    def assertQueryCount(self, actual, expected, message):
+        self.assertLessEqual(actual, expected, message)
+        if actual < expected:
+            _logger.info("Warning: Got %d queries instead of %d: %s", actual, expected, message)
 
     def resetQueryCount(self):
         """ Reset the query counter. """
@@ -118,7 +123,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'value': self.int(20)})
 
-    @queryCount(admin=7, demo=7)
+    @queryCount(admin=6, demo=6)
     def test_write_mail(self):
         """ Write records inheriting from 'mail.thread' (no recomputation). """
         records = self.env['test_performance.mail'].search([])
@@ -127,7 +132,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'name': self.str('X')})
 
-    @queryCount(admin=9, demo=9)
+    @queryCount(admin=8, demo=8)
     def test_write_mail_with_recomputation(self):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
         records = self.env['test_performance.mail'].search([])
@@ -136,7 +141,7 @@ class TestPerformance(TransactionCase):
 
         records.write({'value': self.int(20)})
 
-    @queryCount(admin=45, demo=62)
+    @queryCount(admin=22, demo=35)
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
         record = self.env['test_performance.mail'].search([], limit=1)
@@ -153,11 +158,20 @@ class TestPerformance(TransactionCase):
 
     @queryCount(admin=38, demo=38)
     def test_create_base_with_lines(self):
-        """ Create records with lines. """
+        """ Create records with one2many lines. """
         model = self.env['test_performance.base']
         model.create({
             'name': self.str('Y'),
             'line_ids': [(0, 0, {'value': val}) for val in range(10)],
+        })
+
+    @queryCount(admin=17, demo=17)
+    def test_create_base_with_tags(self):
+        """ Create records with many2many tags. """
+        model = self.env['test_performance.base']
+        model.create({
+            'name': self.str('X'),
+            'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
         })
 
     @queryCount(admin=3, demo=3)
@@ -166,7 +180,7 @@ class TestPerformance(TransactionCase):
         model = self.env['test_performance.mail']
         model.with_context(tracking_disable=True).create({'name': self.str('X')})
 
-    @queryCount(admin=87, demo=114)
+    @queryCount(admin=42, demo=60)
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
         model = self.env['test_performance.mail']

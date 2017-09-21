@@ -769,7 +769,7 @@ var BasicModel = AbstractModel.extend({
     removeLine: function (elementID) {
         var record = this.localData[elementID];
         var parent = this.localData[record.parentID];
-        if (parent.parentID) {
+        if (parent.static) {
             // x2Many case: the new record has been stored in _changes, as a
             // command so we remove the command(s) related to that record
             parent._changes = _.filter(parent._changes, function (change) {
@@ -778,6 +778,7 @@ var BasicModel = AbstractModel.extend({
         } else {
             // main list view case: the new record is in data
             parent.data = _.without(parent.data, elementID);
+            parent.count--;
         }
     },
     /**
@@ -1307,13 +1308,25 @@ var BasicModel = AbstractModel.extend({
                 record._changes[name] = list.id;
                 var shouldLoad = false;
                 list._changes = list._changes || [];
+
+                // save it in case of a [5] which will remove the _changes
+                var oldChanges = list._changes;
                 _.each(val, function (command) {
-                    var rec;
+                    var rec, recID;
                     if (command[0] === 0 || command[0] === 1) {
                         // CREATE or UPDATE
+                        if (command[0] === 0 && command[1]) {
+                            // updating an existing (virtual) record
+                            var previousChange = _.find(oldChanges, function (operation) {
+                                var child = self.localData[operation.id];
+                                return child && (child.res_id === command[1]);
+                            });
+                            recID = previousChange && previousChange.id;
+                            rec = self.localData[recID];
+                        }
                         if (command[0] === 1 && command[1]) {
                             // updating an existing record
-                            var recID = _.find(list.data, function (childID) {
+                            recID = _.find(list.data, function (childID) {
                                 var child = self.localData[childID];
                                 return child.res_id === command[1];
                             });
@@ -1327,7 +1340,7 @@ var BasicModel = AbstractModel.extend({
                                 modelName: list.model,
                                 parentID: list.id,
                                 viewType: list.viewType,
-                            ref: command[1],
+                                ref: command[1],
                             };
                             if (command[0] === 1) {
                                 params.res_id = command[1];

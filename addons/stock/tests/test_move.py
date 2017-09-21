@@ -1030,7 +1030,7 @@ class StockMove(TransactionCase):
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1106,7 +1106,7 @@ class StockMove(TransactionCase):
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
         move_stock_pack_2.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
-        move_pack_cust.write({'move_orig_ids': [(4, [move_stock_pack_1.id, move_stock_pack_2.id], 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack_1.id, 0), (4, move_stock_pack_2.id, 0)]})
 
         (move_stock_pack_1 + move_stock_pack_2 + move_pack_cust)._action_confirm()
 
@@ -1165,7 +1165,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, move_pack_cust_2.id, 0)]})
+        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, 0), (4, move_pack_cust_2.id, 0)]})
         move_pack_cust_1.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
         move_pack_cust_2.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
 
@@ -1214,7 +1214,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_1.write({'move_orig_ids': [(4, [move_supp_stock_1.id, move_supp_stock_2.id], 0)]})
+        move_stock_stock_1.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
         move_stock_stock_2 = self.env['stock.move'].create({
             'name': 'test_link_assign_6_1',
             'location_id': self.stock_location.id,
@@ -1223,7 +1223,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
-        move_stock_stock_2.write({'move_orig_ids': [(4, [move_supp_stock_1.id, move_supp_stock_2.id], 0)]})
+        move_stock_stock_2.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
 
         (move_supp_stock_1 + move_supp_stock_2 + move_stock_stock_1 + move_stock_stock_2)._action_confirm()
         move_supp_stock_1._action_assign()
@@ -2347,7 +2347,7 @@ class StockMove(TransactionCase):
 
         return picking
 
-    def test_immediate_validate_575487534895(self):
+    def test_immediate_validate_5(self):
         """ Create a picking and simulates validate button effect.
             Test that tracked products can be received without specifying a serial
             number when the picking type is configured that way.
@@ -2367,13 +2367,14 @@ class StockMove(TransactionCase):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
 
-    def test_immediate_validate_5(self):
+    def test_immediate_validate_6(self):
         """ Create a picking and simulates validate button effect.
-            This tests two cases:
+            This tests three cases:
             - if a user has processed no quantities and at least one product is tracked,
               he should specify lots
             - if a user has processed some quantities then it's ok because a backorder
               will be created for the ones not filled in
+            - if a user overprocesses a move he will be asked to confirm if this is ok
         """
         picking_type = self.env.ref('stock.picking_type_in')
         picking_type.use_create_lots = True
@@ -2421,6 +2422,11 @@ class StockMove(TransactionCase):
         action = picking.button_validate()  # should open backorder wizard
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+
+        product3_move.move_line_ids[0].qty_done = 2
+        action = picking.button_validate()  # should request confirmation
+        self.assertTrue(isinstance(action, dict), 'Should open overprocessing wizard')
+        self.assertEqual(action.get('res_model'), 'stock.overprocessed.transfer')
 
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({

@@ -287,7 +287,7 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
-    color = fields.Integer('Color Index', default=1)
+    color = fields.Integer('Color Index')
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):

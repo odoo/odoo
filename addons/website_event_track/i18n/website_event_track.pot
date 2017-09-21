@@ -4,37 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: website_event_track
-#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
-msgid "<?xml version=\"1.0\"?>\n"
-"<div>\n"
-"    <p>\n"
-"        Dear <t t-esc=\"object.partner_name\"/>\n"
-"    </p><p>\n"
-"        We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.\n"
-"    </p><p>\n"
-"        You will find more details here:\n"
-"        <div style=\"margin-top: 16px;\">\n"
-"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"                View Event\n"
-"            </a>\n"
-"        </div>\n"
-"    </p>\n"
-"    <p>Sincerely,</p>\n"
-"</div>\n"
-"            "
-msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -124,7 +103,8 @@ msgid "Active"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:89
+#: code:addons/website_event_track/models/event.py:95
+#: code:addons/website_event_track/models/event.py:104
 #, python-format
 msgid "Agenda"
 msgstr ""
@@ -370,6 +350,11 @@ msgid "Folded in Kanban"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Future Activities"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
 msgstr ""
@@ -460,6 +445,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Late Activities"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
 msgstr ""
@@ -513,11 +503,6 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_sponsor
 msgid "Our Sponsors"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Overdue Activities"
 msgstr ""
 
 #. module: website_event_track
@@ -579,7 +564,7 @@ msgid "Responsible"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_9002
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10881
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr ""
@@ -618,7 +603,7 @@ msgid "Speaker Biography"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:160
+#: code:addons/website_event_track/models/event_track.py:159
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_email
 #, python-format
 msgid "Speaker Email"
@@ -635,7 +620,7 @@ msgid "Speaker Phone"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:166
+#: code:addons/website_event_track/models/event_track.py:179
 #, python-format
 msgid "Speakers"
 msgstr ""
@@ -673,7 +658,7 @@ msgid "Sponsors"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_id_9024
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_id_10876
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
 msgstr ""
@@ -716,7 +701,8 @@ msgstr ""
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:62
-#: code:addons/website_event_track/models/event.py:91
+#: code:addons/website_event_track/models/event.py:95
+#: code:addons/website_event_track/models/event.py:106
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
@@ -728,7 +714,8 @@ msgstr ""
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:56
-#: code:addons/website_event_track/models/event.py:88
+#: code:addons/website_event_track/models/event.py:95
+#: code:addons/website_event_track/models/event.py:103
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -810,12 +797,6 @@ msgid "Track Ready for Next Stage"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:53
-#, python-format
-msgid "Track Speakers"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
@@ -883,11 +864,6 @@ msgid "Unread Messages"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Upcoming Activities (7 days)"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Use this tag:"
 msgstr ""
@@ -931,6 +907,11 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Phone"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c6469763e0a202020203c703e0a202020202020202044656172203c7420742d6573633d226f626a6563742e706172746e65725f6e616d65222f3e0a202020203c2f703e3c703e0a202020202020202057652061726520706c656173656420746f20696e666f726d20796f75207468617420796f75722070726f706f73616c20247b6f626a6563742e6e616d657d20686173206265656e20616363657074656420616e6420636f6e6669726d656420666f7220746865206576656e7420247b6f626a6563742e6576656e745f69642e6e616d657d2e0a202020203c2f703e3c703e0a2020202020202020596f752077696c6c2066696e64206d6f72652064657461696c7320686572653a0a20202020202020203c646976207374796c653d226d617267696e2d746f703a20313670783b223e0a2020202020202020202020203c6120687265663d222f6576656e742f247b6f626a6563742e6576656e745f69642e69647d2f22207374796c653d2270616464696e673a2038707820313270783b20666f6e742d73697a653a20313270783b20636f6c6f723a20234646464646463b20746578742d6465636f726174696f6e3a206e6f6e652021696d706f7274616e743b20666f6e742d7765696768743a203430303b206261636b67726f756e642d636f6c6f723a20233837354137423b20626f726465723a2030707820736f6c696420233837354137423b20626f726465722d7261646975733a337078223e0a2020202020202020202020202020202056696577204576656e740a2020202020202020202020203c2f613e0a20202020202020203c2f6469763e0a202020203c2f703e0a202020203c703e53696e636572656c792c3c2f703e0a3c2f6469763e0a202020202020202020202020"
 msgstr ""
 
 #. module: website_event_track

@@ -26,9 +26,12 @@
                 <div class="o_composer_suggested_partners">
                     <t t-foreach='widget.suggested_partners' t-as='recipient'>
                         <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                            <input type="checkbox"
-                                   t-att-checked="recipient.checked ? 'checked' : undefined"
-                                   t-att-data-fullname="recipient.full_name"/>
+                            <div class="o_checkbox">
+                                <input type="checkbox"
+                                       t-att-checked="recipient.checked ? 'checked' : undefined"
+                                       t-att-data-fullname="recipient.full_name"/>
+                                <span/>
+                            </div>
                             <t t-esc="recipient.name"/>
                             <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
                         </div>

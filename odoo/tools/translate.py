@@ -730,7 +730,7 @@ def trans_parse_rml(de):
 
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
-    term = (term or "").strip().encode('utf8')
+    term = (term or "").strip()
     # Avoid non-char tokens like ':' '...' '.00' etc.
     if len(term) > 8 or any(x.isalpha() for x in term):
         callback(term, source_line)
@@ -953,7 +953,7 @@ def trans_generate(lang, modules, cr):
         module, fabsolutepath, _, display_path = verified_module_filepaths(fname, path, root)
         extra_comments = extra_comments or []
         if not module: return
-        src_file = open(fabsolutepath, 'r')
+        src_file = open(fabsolutepath, 'rb')
         try:
             for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords):
                 # Babel 0.9.6 yields lineno, message, comments
