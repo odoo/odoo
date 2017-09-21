@@ -267,6 +267,9 @@ var MenuEntryDialog = widget.LinkDialog.extend({
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
         if (this.menu_link_options) { // add menu link option only when adding new menu
             this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
+            /* We should remove the label "URL or email" (the one on the left of the input, not the one from the radio button options)
+               But it comes from the XML template from LinkDialog that is used elsewhere in odoo (eg: dialog to create a link in web_editor)
+               Therefore, I cannot edit that template, and we don't want to duplicate the template just for this case */
             this.$('#o_link_dialog_url_input').parent().siblings().html('');
             this.$('input[name=link_menu_options]').on('change', function () {
                 self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
