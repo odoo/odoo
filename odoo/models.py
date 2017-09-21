@@ -3433,7 +3433,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # call the 'write' method of fields which are not columns
             for name in sorted(upd_todo, key=lambda name: self._fields[name]._sequence):
                 field = self._fields[name]
-                field.write(self.with_context(rel_context), vals[name])
+                field.write(self.with_context(rel_context), vals[name], create=True)
 
             # for recomputing new-style fields
             self.modified(upd_todo)
