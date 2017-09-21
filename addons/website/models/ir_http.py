@@ -202,7 +202,10 @@ class Http(models.AbstractModel):
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     @classmethod
-    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       unique=False, filename=None, filename_field='datas_fname', download=False,
+                       mimetype=None, default_mimetype='application/octet-stream',
+                       access_token=None, env=None):
         env = env or request.env
         obj = None
         if xmlid:
@@ -212,7 +215,10 @@ class Http(models.AbstractModel):
         if obj and 'website_published' in obj._fields:
             if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
                 env = env(user=SUPERUSER_ID)
-        return super(Http, cls).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        return super(Http, cls).binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype=default_mimetype, access_token=access_token, env=env)
 
 
 class ModelConverter(ModelConverter):
