@@ -273,18 +273,18 @@ var BasicRenderer = AbstractRenderer.extend({
      * from internal referencing.
      *
      * @private
-     * @param {Object} record
+     * @param {string} recordID id of the local resource
      * @param {AbstractField} widget
      * @returns {integer} the index of the removed widget
      */
-    _destroyFieldWidget: function (record, widget) {
-        var recordWidgets = this.allFieldWidgets[record.id];
+    _destroyFieldWidget: function (recordID, widget) {
+        var recordWidgets = this.allFieldWidgets[recordID];
         var index = recordWidgets.indexOf(widget);
         if (index >= 0) {
             recordWidgets.splice(index, 1);
         }
-        this._unregisterModifiersElement(widget.__node, record, widget);
-        widget.$el.destroy();
+        this._unregisterModifiersElement(widget.__node, recordID, widget);
+        widget.destroy();
         return index;
     },
     /**
@@ -541,7 +541,7 @@ var BasicRenderer = AbstractRenderer.extend({
         widget.$el.replaceWith(newWidget.$el);
 
         // Destroy the old widget and position the new one at the old one's
-        var oldIndex = this._destroyFieldWidget(record, widget);
+        var oldIndex = this._destroyFieldWidget(record.id, widget);
         var recordWidgets = this.allFieldWidgets[record.id];
         recordWidgets.splice(oldIndex, 0, newWidget);
         recordWidgets.pop();
@@ -553,13 +553,13 @@ var BasicRenderer = AbstractRenderer.extend({
      * node and record.
      *
      * @param {Object} node
-     * @param {Object} record
+     * @param {string} recordID id of the local resource
      * @param {jQuery|AbstractField} element
      */
-    _unregisterModifiersElement: function (node, record, element) {
+    _unregisterModifiersElement: function (node, recordID, element) {
         var modifiersData = this._getModifiersData(node);
         if (modifiersData) {
-            var elements = modifiersData.elementsByRecord[record.id];
+            var elements = modifiersData.elementsByRecord[recordID];
             var index = _.findIndex(elements, function (oldElement) {
                 return oldElement.widget === element
                     || oldElement.$el[0] === element[0];
