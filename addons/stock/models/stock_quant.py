@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import OperationalError
+from psycopg2 import OperationalError, Error
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class StockQuant(models.Model):
@@ -289,7 +293,11 @@ class StockQuant(models.Model):
                         )
                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
         """
-        self.env.cr.execute(query)
+        try:
+            with self.env.cr.savepoint():
+                self.env.cr.execute(query)
+        except Error as e:
+            _logger.info('an error occured while merging quants: %s', e.pgerror)
 
 
 class QuantPackage(models.Model):
