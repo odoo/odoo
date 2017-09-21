@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import Counter
 from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round
 
 class MrpProductProduce(models.TransientModel):
@@ -175,5 +176,25 @@ class MrpProductProduceLine(models.TransientModel):
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):
+        res = {}
         if self.product_id.tracking == 'serial':
             self.qty_done = 1
+        return res
+
+    @api.constrains('lot_id')
+    def _check_lot_id(self):
+        for ml in self:
+            if ml.product_id.tracking == 'serial':
+                produce_lines_to_check = ml.product_produce_id.produce_line_ids.filtered(lambda l: l.product_id == ml.product_id and l.lot_id)
+                message = produce_lines_to_check._check_for_duplicated_serial_numbers()
+                if message:
+                    raise ValidationError(message)
+
+    def _check_for_duplicated_serial_numbers(self):
+        if self.mapped('lot_id'):
+            lot_names = [ml.lot_id.name for ml in self]
+            recorded_serials_counter = Counter(lot_names)
+            for lot_id, occurrences in recorded_serials_counter.items():
+                if occurrences > 1 and lot_id is not False:
+                    return _(
+                        'You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
