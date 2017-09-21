@@ -67,6 +67,13 @@ class StockMove(models.Model):
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_finished_lot_ids')
     
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
+    def _quantity_done_compute(self):
+        for move in self:
+            for move_line in move._get_move_lines():
+                # Transform the move_line quantity_done into the move uom.
+                move.quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom)
+
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_finished_lot_ids(self):
         for move in self:
