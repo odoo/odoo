@@ -15,7 +15,14 @@
 @odoo-color-silver-dark: #E5E5E5;
 @odoo-color-silver-darker: #d9d7d7;
 
-@odoo-color-pink: #875A7B;
+// Define @gray-lighter-dark as a minor bootstrap @gray-lighter variation used
+// for design purposes only (e.g. cards' borders). We avoid to overwrite the
+// default @gray-light because it is deeply used by bootstrap to define muted
+// elements.
+@gray-lighter-dark: @odoo-color-silver-dark;
+@gray-lighter-darker: @odoo-color-silver-darker;
+
+@odoo-color-pink: #875A7B; // Enterprise @odoo-brand-primary
 @odoo-main-color-muted: #a8a8a8;
 @odoo-main-text-color: #4c4c4c;
 
@@ -34,7 +41,7 @@
 @odoo-tooltip-color: white;
 @odoo-tooltip-arrow-color: black;
 
-// UI custom colors for tags, kanban records' colors, ...
+// UI custom colors for tags, kanban records' colors, ...)
 @odoo-color-0: #00C7AB;
 @odoo-color-1: #F06050;
 @odoo-color-2: #F4A460;
