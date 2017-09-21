@@ -8,13 +8,12 @@ from odoo.http import request
 from odoo.tools import consteq
 
 
-def _special_access_object(res_model, res_id, token='', token_field=''):
+def _has_token_access(res_model, res_id, token=''):
     record = request.env[res_model].browse(res_id).sudo()
-    if token and record and getattr(record, token_field, None) and consteq(getattr(record, token_field), token):
-        return True
-    return False
+    token_field = request.env[res_model]._mail_post_token_field
+    return (token and record and consteq(record[token_field], token))
 
-def _message_post_helper(res_model='', res_id=None, message='', token='', token_field='token', nosubscribe=True, **kw):
+def _message_post_helper(res_model='', res_id=None, message='', token='', nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread.
         If a token is specified, all logged in users will be able to write a message regardless
         of access rights; if the user is the public user, the message will be posted under the name
@@ -27,15 +26,14 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         optional keywords arguments:
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
-        :param string token_field: name of the field that contains the token on the object (defaults to 'token')
         :param bool nosubscribe: set False if you want the partner to be set as follower of the object when posting (default to True)
 
         The rest of the kwargs are passed on to message_post()
     """
     record = request.env[res_model].browse(res_id)
     author_id = request.env.user.partner_id.id if request.env.user.partner_id else False
-    if token_field and token:
-        access_as_sudo = _special_access_object(res_model, res_id, token=token, token_field=token_field)
+    if token:
+        access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
             if request.env.user == request.env.ref('base.public_user'):
@@ -46,6 +44,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         else:
             raise Forbidden()
     kw.pop('csrf_token', None)
+    kw.pop('attachment_ids', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),
@@ -93,7 +92,7 @@ class PortalChatter(http.Controller):
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
-            access_as_sudo = _special_access_object(res_model, res_id, token=kw.get('token'), token_field=kw.get('token_field'))
+            access_as_sudo = _has_token_access(res_model, res_id, token=kw.get('token'))
             if not access_as_sudo:  # if token is not correct, raise Forbidden
                 raise Forbidden()
             Message = request.env['mail.message'].sudo()

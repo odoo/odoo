@@ -346,11 +346,10 @@
             :token string (optional): if you want your chatter to be available for non-logged user,
                      you can use a token to verify the identity of the user;
                      the message will be posted with the identity of the partner_id of the object
-            :token_field string (optional): name of the field that contains the token on the object (default to 'token')
     -->
     <template id="message_thread">
         <div id="discussion" class="hidden-print o_portal_chatter"
-            t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-token_field="token_field" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
+            t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>
 
