@@ -135,12 +135,10 @@ var PortalChatter = Widget.extend({
             'offset': (this._current_page-1) * this.options['pager_step'],
             'allow_composer': this.options['allow_composer'],
         };
-        // add fields to allow to post comment without being logged
-        _.each(['token', 'token_field'], function(field){
-            if(self.options[field]){
-                data[field] = self.options[field];
-            }
-        });
+        // add token field to allow to post comment without being logged
+        if(self.options['token']){
+            data['token'] = self.options['token'];
+        }
         // add domain
         if(this.get('domain')){
             data['domain'] = this.get('domain');

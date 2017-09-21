@@ -221,7 +221,7 @@ class CustomerPortal(CustomerPortal):
             res_id=order_sudo.id,
             message=_('Order signed by %s') % (partner_name,),
             attachments=[('signature.png', base64.b64decode(signature))] if signature else [],
-            **({'token': access_token, 'token_field': 'access_token'} if access_token else {}))
+            **({'token': access_token} if access_token else {}))
         return {
             'success': _('Your Order has been confirmed.'),
             'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
