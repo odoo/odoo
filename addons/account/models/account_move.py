@@ -68,7 +68,7 @@ class AccountMove(models.Model):
     @api.multi
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
-            return self.env['account.journal'].search([('type', '=', self.env.context['default_journal_type'])], limit=1).id
+            return self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
 
     @api.multi
     @api.depends('line_ids.partner_id')
