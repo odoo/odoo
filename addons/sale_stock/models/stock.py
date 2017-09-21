@@ -26,14 +26,12 @@ class StockMove(models.Model):
     @api.multi
     def assign_picking(self):
         result = super(StockMove, self).assign_picking()
-        for move in self:
-            if move.picking_id and move.picking_id.group_id:
-                picking = move.picking_id
-                order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
-                picking.message_post_with_view(
-                    'mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+        for picking in self.mapped('picking_id'):
+            order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
+            picking.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': picking, 'origin': order},
+                subtype_id=self.env.ref('mail.mt_note').id)
         return result
 
     @api.multi

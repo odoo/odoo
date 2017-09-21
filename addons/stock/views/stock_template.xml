@@ -9,4 +9,15 @@
         </xpath>
    </template>
 
+    <template id="track_move_template">
+        <div>
+            <t t-if="move.state != 'done'"><strong>The initial demand has been updated.</strong></t>
+            <t t-if="move.state == 'done'"><strong>The done quantity has been corrected after transferring.</strong></t>
+            <li>
+                <t t-esc="move.product_id.display_name"/>:
+                <t t-esc="move.product_uom_qty"/> -&gt; <t t-esc="float(product_uom_qty)"/>
+            </li>
+        </div>
+    </template>
+
 </odoo>

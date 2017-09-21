@@ -38,6 +38,7 @@ Dashboard / Reports for Purchase Management will include:
         'views/stock_views.xml',
         'views/stock_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'views/purchase_template.xml',
         'report/purchase_report_views.xml',
         'data/mail_template_data.xml',
         'views/purchase_config_settings_views.xml',

@@ -353,11 +353,14 @@ class StockMove(models.Model):
     def write(self, vals):
         # FIXME: pim fix your crap
         if vals.get('product_uom_qty'):
+            for move in self:
+                move.picking_id.message_post_with_view('stock.track_move_template',
+                    values = {'move': move, 'product_uom_qty': vals.get('product_uom_qty')},
+                    subtype_id = self.env.ref('mail.mt_note').id)
             if self.env.context.get('do_not_unreserve') is None:
                 move_to_unreserve = self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))
                 move_to_unreserve.do_unreserve()
                 (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
-
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
         # Check that we do not modify a stock.move which is done
@@ -926,7 +929,7 @@ class StockMove(models.Model):
                         'move_line_ids': [],
                         'backorder_id': picking.id
                     })
-                picking.message_post('Backorder Created') #message needs to be improved
+                picking.message_post(_('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been Created.') % (backorder_picking.id , backorder_picking.name)) #message needs to be improved
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
             moves_to_backorder.action_assign()

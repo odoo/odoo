@@ -23,7 +23,6 @@ class StockBackorderConfirmation(models.TransientModel):
         if cancel_backorder:
             backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', self.pick_id.id)])
             backorder_pick.action_cancel()
-            self.pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
 
     @api.multi
     def process(self):

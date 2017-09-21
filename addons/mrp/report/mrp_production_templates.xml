@@ -97,4 +97,12 @@
         </t>
     </t>
 </template>
+<template id="track_mo_qty">
+    <div>
+        <strong>The Manufacturing Order quantity has been updated.</strong>
+        <ul>
+            <li>Quantity To Produce: <t t-esc="production.product_qty"/> -&gt; <t t-esc="product_qty"/></li>
+        </ul>
+    </div>
+</template>
 </odoo>
