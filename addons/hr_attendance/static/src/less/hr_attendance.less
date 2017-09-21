@@ -34,8 +34,8 @@
     right: 0px;
     top: 0px;
     bottom: auto;
-    
-    @media (min-width: @screen-xs-max) {
+
+    @media (min-width: @screen-sm-min) {
         transform: translate(50%, -50%);
     }
 }
@@ -56,7 +56,7 @@
     background: white;
     border: 1px solid #d5d5d5;
     text-align: center;
-    margin: 5px 0px 5px 0px;   
+    margin: 5px 0px 5px 0px;
 }
 
 .o_hr_attendance_kiosk_mode_container {
@@ -65,14 +65,8 @@
     .o-justify-content(center);
     .o-align-items(center);
 
-    @media (min-width: @screen-xs-max) {
-        background: url("../../../../web_enterprise/static/src/img/application-switcher-bg.jpg") no-repeat center center fixed;
-        background-size: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    @media (min-width: @screen-sm-min) {
+        .o-position-absolute(0, 0, 0, 0);
     }
 }
 
@@ -119,7 +113,7 @@
         margin-bottom: 0;
     }
 
-    @media (min-width: @screen-xs-max) {
+    @media (min-width: @screen-sm-min) {
         flex: 0 0 auto;
         width: 550px;
         border-radius: 10px;
@@ -137,7 +131,7 @@
     top: 20px;
     right: 20px;
 
-    @media (min-width: @screen-xs-max) {
+    @media (min-width: @screen-sm-min) {
         flex: 0 0 auto;
         border-radius: 3px;
         background-color: rgba(255,255,255,0.5);
@@ -151,14 +145,8 @@
     .o-justify-content(center);
     .o-align-items(center);
 
-    @media (min-width: @screen-xs-max) {
-        background: url("../../../../web_enterprise/static/src/img/application-switcher-bg.jpg") no-repeat center center fixed;
-        background-size: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+    @media (min-width: @screen-sm-min) {
+        .o-position-absolute(0, 0, 0, 0);
     }
 }
 
@@ -198,7 +186,7 @@
         margin-bottom: 0;
     }
 
-    @media (min-width: @screen-xs-max) {
+    @media (min-width: @screen-sm-min) {
         flex: 0 0 auto;
         width: 550px;
         border-radius: 10px;
