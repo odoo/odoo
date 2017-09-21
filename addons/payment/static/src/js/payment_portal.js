@@ -4,6 +4,11 @@ $(document).ready(function () {
     $('input#cc_cvc').payment('formatCardCVC');
     $('input#cc_expiry').payment('formatCardExpiry')
 
+    if ($('input#cc_number').val()) {
+        // set default cursor/focus on cc_number if value exist, when we use next and previous page
+        $('input#cc_number').focus();
+    }
+
     $('input#cc_number').on('focusout', function (e) {
         var valid_value = $.payment.validateCardNumber(this.value);
         var card_type = $.payment.cardType(this.value);
