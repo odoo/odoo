@@ -1,6 +1,7 @@
 odoo.define('website_sale_wishlist.wishlist', function (require) {
 "use strict";
 
+require('web.dom_ready');
 var ajax = require('web.ajax');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
