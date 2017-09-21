@@ -151,7 +151,7 @@ QUnit.module('DomainSelector', {
     });
 
     QUnit.test("building a domain with a datetime", function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var $target = $("#qunit-fixture");
 
@@ -163,8 +163,16 @@ QUnit.module('DomainSelector', {
         domainSelector.appendTo($target);
 
         // Check that there is a datepicker to choose the date
-        assert.strictEqual(domainSelector.$(".o_datepicker:visible").length, 1,
+        var $datepicker = domainSelector.$(".o_datepicker:visible");
+        assert.strictEqual($datepicker.length, 1,
             "there should be a datepicker");
+
+        var val = $datepicker.find('input').focus().click().val();
+        $('.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]').click();
+        assert.notEqual(domainSelector.$(".o_datepicker:visible input").val(), val,
+            "datepicker value should have changed");
+
+        domainSelector.destroy();
     });
 });
 });

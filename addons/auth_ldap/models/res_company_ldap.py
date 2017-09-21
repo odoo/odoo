@@ -6,6 +6,7 @@ import logging
 from ldap.filter import filter_format
 
 from odoo import api, fields, models, tools
+from odoo.tools.pycompat import to_native
 
 _logger = logging.getLogger(__name__)
 
@@ -107,7 +108,7 @@ class CompanyLDAP(models.Model):
             if len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
-                conn.simple_bind_s(dn, password.encode('utf-8'))
+                conn.simple_bind_s(dn, to_native(password))
                 conn.unbind()
                 entry = results[0]
         except ldap.INVALID_CREDENTIALS:
@@ -144,8 +145,8 @@ class CompanyLDAP(models.Model):
             conn = self.connect(conf)
             ldap_password = conf['ldap_password'] or ''
             ldap_binddn = conf['ldap_binddn'] or ''
-            conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
-            results = conn.search_st(conf['ldap_base'].encode('utf-8'), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
+            conn.simple_bind_s(to_native(ldap_binddn), to_native(ldap_password))
+            results = conn.search_st(to_native(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')

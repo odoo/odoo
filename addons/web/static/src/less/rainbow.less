@@ -2,6 +2,7 @@
 
 // Variables
 @reward-size: 400px;
+@reward-size-mobile: 300px;
 @reward-text-color: #727880;
 @reward-base-time: 1.4s;
 
@@ -11,6 +12,9 @@
     z-index: @zindex-modal + 1;
     padding: 50px;
     margin: -5% auto 0 -(@reward-size / 2);
+    @media (max-width: @screen-xs-max) {
+        margin: -5% auto 0 -(@reward-size-mobile / 2);
+    }
     background-image: -webkit-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: -o-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
@@ -18,6 +22,9 @@
     .o-animation(reward-fading, @reward-base-time * 0.5, ease-in-out, 0s, 1, normal, forwards);
     .o-position-absolute(20%, auto, auto, 50%);
     .size(@reward-size, @reward-size);
+    @media (max-width: @screen-xs-max) {
+        .size(@reward-size-mobile, @reward-size-mobile);
+    }
 
     &.o_reward_fading {
         display: block;
@@ -70,6 +77,9 @@
     .o_reward_stars {
         display: block;
         .size(@reward-size * 0.75, @reward-size / 2);
+        @media (max-width: @screen-xs-max) {
+            .size(@reward-size-mobile * 0.75, @reward-size-mobile / 2);
+        }
         .o-position-absolute(18%, 7%);
 
         svg {

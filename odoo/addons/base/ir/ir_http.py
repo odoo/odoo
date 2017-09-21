@@ -228,7 +228,7 @@ class IrHttp(models.AbstractModel):
         if not hasattr(cls, '_routing_map'):
             _logger.info("Generating routing map")
             installed = request.registry._init_modules - {'web'}
-            if tools.config['test_enable']:
+            if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
             mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`

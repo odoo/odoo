@@ -192,6 +192,7 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
+        var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         this.state = state;
         if (rowIndex === -1) {
@@ -743,6 +744,17 @@ ListRenderer.include({
      */
     _onRowClicked: function () {
         if (!this._isEditable()) {
+            this._super.apply(this, arguments);
+        }
+    },
+    /**
+     * Overrides to prevent from sorting if we are currently editing a record.
+     *
+     * @override
+     * @private
+     */
+    _onSortColumn: function () {
+        if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
     },
