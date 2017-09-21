@@ -34,7 +34,7 @@ class StockMoveLine(models.Model):
         if 'lot_id' in vals:
             for movelot in self:
                 movelot.move_id.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+                    .filtered(lambda r: r.done_wo and not r.done_move and movelot.lot_id and r.lot_produced_id == movelot.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
         return super(StockMoveLine, self).write(vals)
 

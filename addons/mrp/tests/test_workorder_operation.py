@@ -252,7 +252,6 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Produce remaining 4 quantity
         # ----------------------------
-
         # Produce 4 Unit of custom laptop will consume ( 8 Unit of keybord and 8 Unit of charger).
         context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
         product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 4.00})
@@ -261,7 +260,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.assertEquals(len(product_consume.produce_line_ids), 2)
         product_consume.produce_line_ids.write({'qty_done': 8})
         product_consume.do_produce()
-        charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state != 'done')
+        charger_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state !='done')
         keybord_move = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_keybord.id and x.state !='done')
         self.assertEquals(charger_move.quantity_done, 8, "Wrong consumed quantity of %s" % charger_move.product_id.name)
         self.assertEquals(keybord_move.quantity_done, 8, "Wrong consumed quantity of %s" % keybord_move.product_id.name)
