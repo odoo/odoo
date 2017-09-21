@@ -367,8 +367,8 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Inventory Control')",
-    content: _t("Go to Inventory Control"),
+    trigger: ".o_menu_sections a:contains('Master Data')",
+    content: _t("Go to Master Data"),
     position: "bottom"
 }, {
     trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_reordering_rules_config']",
