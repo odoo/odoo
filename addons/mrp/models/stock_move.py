@@ -17,17 +17,15 @@ class StockMoveLine(models.Model):
     done_wo = fields.Boolean('Done for Work Order', default=True, help="Technical Field which is False when temporarily filled in in work order")  # TDE FIXME: naming
     done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)  # TDE FIXME: naming
 
-    @api.one
-    @api.constrains('lot_id', 'qty_done')
-    def _check_lot_id(self):
-        if self.move_id.product_id.tracking == 'serial':
-            lots = set([])
-            for move_lot in self.move_id.active_move_line_ids.filtered(lambda r: not r.lot_produced_id and r.lot_id):
-                if move_lot.lot_id in lots:
-                    raise exceptions.UserError(_('You cannot use the same serial number in two different lines.'))
-                if float_compare(move_lot.qty_done, 1.0, precision_rounding=move_lot.move_id.product_id.uom_id.rounding) == 1:
-                    raise exceptions.UserError(_('You can only produce 1.0 %s for products with unique serial number.') % move_lot.product_id.uom_id.name)
-                lots.add(move_lot.lot_id)
+    def _get_similar_move_lines(self):
+        lines = super(StockMoveLine, self)._get_similar_move_lines()
+        if self.move_id.production_id:
+            lines |= self.move_id.production_id.move_finished_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
+        if self.move_id.raw_material_production_id:
+            lines |= self.move_id.raw_material_production_id.move_raw_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
+        if self.workorder_id:
+            lines |= self.workorder_id.active_move_line_ids
+        return lines
 
     @api.multi
     def write(self, vals):
