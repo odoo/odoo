@@ -13,7 +13,10 @@
             <rng:ref name="node"/>
             <rng:ref name="arrow"/>
             <rng:zeroOrMore>
-                <rng:ref name="label"/>
+                <rng:choice>
+                    <rng:ref name="label"/>
+                    <rng:ref name="renamed_label"/>
+                </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -25,7 +28,10 @@
             <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="field"/>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="renamed_field"/>
+                </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -38,7 +44,10 @@
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:optional><rng:attribute name="label"/></rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="field"/>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="renamed_field"/>
+                </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
