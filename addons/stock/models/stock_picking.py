@@ -647,8 +647,7 @@ class Picking(models.Model):
                 if product and product.tracking != 'none' and (line.qty_done == 0 or (not line.lot_name and not line.lot_id)):
                     raise UserError(_('You need to supply a lot/serial number for %s.') % product.name)
 
-        # In draft or with no pack operations edited yet, ask if we can just do everything
-        if self.state == 'draft' or no_quantities_done:
+        if no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({'pick_id': self.id})
             return {
