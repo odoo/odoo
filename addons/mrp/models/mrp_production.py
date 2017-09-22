@@ -106,7 +106,7 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products',
         copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
         domain=[('scrapped', '=', False)])
-    move_line_ids = fields.Many2many(
+    finished_move_line_ids = fields.Many2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines',
         )
     workorder_ids = fields.One2many(
@@ -175,7 +175,7 @@ class MrpProduction(models.Model):
     @api.depends('move_finished_ids.move_line_ids')
     def _compute_lines(self):
         for production in self:
-            production.move_line_ids = production.move_finished_ids.mapped('move_line_ids').ids
+            production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids').ids
 
     @api.multi
     @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
