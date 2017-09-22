@@ -221,9 +221,9 @@ class MrpProduction(models.Model):
     @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
     def _compute_unreserve_visible(self):
         for order in self:
-            unreserve_visible = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids').mapped('move_line_ids') or False
-            touched_moves = any([x.quantity_done > 0 for x in order.move_raw_ids])
-            order.unreserve_visible = not touched_moves and unreserve_visible
+            unreserve_visible = order.is_locked and order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids') or False
+            moves_qty_done = any([x.quantity_done > 0 for x in order.move_raw_ids])
+            order.unreserve_visible = not moves_qty_done and unreserve_visible
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done', 'is_locked')
@@ -317,6 +317,7 @@ class MrpProduction(models.Model):
         return super(MrpProduction, self).unlink()
 
     def action_toggle_is_locked(self):
+        self.ensure_one()
         self.is_locked = not self.is_locked
         return True
 

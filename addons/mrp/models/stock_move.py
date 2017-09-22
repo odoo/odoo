@@ -63,7 +63,6 @@ class StockMove(models.Model):
         'Done', compute='_compute_is_done',
         store=True,
         help='Technical Field to order moves')
-    production_product_id = fields.Many2one('product.product', 'Production Product', compute='_compute_production_product')
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_finished_lot_ids')
     
@@ -78,22 +77,18 @@ class StockMove(models.Model):
     def _compute_finished_lot_ids(self):
         for move in self:
             if move.product_id.tracking != 'none' and move.raw_material_production_id:
-                move.finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids').mapped('lot_id').ids
+                move.finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
         for move in self:
             move.needs_lots = move.product_id.tracking != 'none'
 
-    @api.depends('production_id.product_id', 'raw_material_production_id.product_id')
-    def _compute_production_product(self):
-        for move in self:
-            move.production_product_id = move.raw_material_production_id.product_id.id or move.production_id.product_id.id
-
     @api.depends('raw_material_production_id.is_locked', 'picking_id.is_locked')
     def _compute_is_locked(self):
-        for move in self:
-            move.is_locked = move.raw_material_production_id.is_locked or move.picking_id.is_locked
+        super(StockMove, self)._compute_is_locked()
+        for move in self.filtered(lambda m: m.raw_material_production_id):
+            move.is_locked = move.raw_material_production_id.is_locked
 
     def _get_move_lines(self):
         self.ensure_one()
