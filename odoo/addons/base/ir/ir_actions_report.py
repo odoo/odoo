@@ -490,7 +490,7 @@ class IrActionsReport(models.Model):
 
         # Check special case having only one record with existing attachment.
         if len(save_in_attachment) == 1 and not pdf_content:
-            return base64.decodestring(save_in_attachment.values()[0].datas)
+            return base64.decodestring(list(save_in_attachment.values())[0].datas)
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
