@@ -1900,8 +1900,8 @@ class MailThread(models.AbstractModel):
             if not subtype_rec.internal:
                 # done with SUPERUSER_ID, because on some models users can post only with read access, not necessarily write access
                 self.sudo().write({'message_last_post': fields.Datetime.now()})
-        if new_message.author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([new_message.author_id.id], force=False)
+        if author_id and model and self.ids and message_type != 'notification' and not self._context.get('mail_create_nosubscribe'):
+            self.message_subscribe([author_id], force=False)
 
         self._message_post_after_hook(new_message)
 
