@@ -32,11 +32,13 @@ class StockMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
-        if 'lot_id' in vals:
-            for movelot in self:
-                movelot.move_id.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
+        for move_line in self:
+            if move_line.production_id and 'lot_id' in vals:
+                move_line.production_id.move_raw_ids.mapped('move_line_ids')\
+                    .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == move_line.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
+            if move_line.production_id and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
+                move_line._log_message(move_line.production_id, move_line, 'mrp.track_production_move_template', vals)
         return super(StockMoveLine, self).write(vals)
 
 
