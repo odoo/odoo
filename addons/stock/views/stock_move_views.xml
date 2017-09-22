@@ -215,38 +215,46 @@
                     <group>
                         <group name="main_grp" colspan="2">
                             <group name="main_grp_col1">
+                                <field name="reference"/>
+                                <field name="location_id"/>
+                                <field name="location_dest_id"/>
+                            </group>
+                            <group name="main_grp_col2">
                                 <field name="product_id"/>
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                 </div>
-                                <field name="name"/>
-                            </group>
-                            <group name="main_grp_col2">
-                                <field name="picking_type_id"/>
-                                <field name="priority"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field name="date_expected" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                                <field name="name" invisible="1"/>
+                                <field name="date_expected" invisible="1"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin">
                             <field name="origin"/>
-                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                            <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
-                            <field name="create_date" groups="base.group_no_one"/>
-                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                             <field name="group_id"/>
+                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         </group>
-                        <group name="destination_grp" string="Destination" groups="stock.group_stock_multi_locations">
-                            <field name="location_dest_id" />
-                            <field name="partner_id" context="{'contact_display':'partner'}" />
-                            <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
-                            <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
-                        </group>
-                        <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
-                            <field name="string_availability_info"/>
+                        <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2">
+                            <field name="move_orig_ids" string="Origin Moves" readonly="1">
+                                <tree>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                            <field name="move_dest_ids" string="Destination Moves" readonly="1">
+                                <tree>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </group>
                     </group>
                 </sheet>
