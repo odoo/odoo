@@ -162,5 +162,18 @@
             </field>
         </record>
 
+    <record id="view_company_report_form_with_print" model="ir.ui.view">
+            <field name="name">res.company.report.form.with.print</field>
+            <field name="model">res.company</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="base.view_company_report_form" />
+            <field name="priority">1024</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='write']" position="before" >
+                    <button string="Save and Print" type="object" class="oe_highlight" name="write_company_and_print_report"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
