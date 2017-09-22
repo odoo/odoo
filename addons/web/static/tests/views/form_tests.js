@@ -1741,10 +1741,10 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$("label").length, 2, "should have rendered only two label");
-        assert.strictEqual(form.$("label").first().text(), "Product",
+        assert.strictEqual(form.$("label:not(.o_checkbox label)").length, 2, "should have rendered only two label");
+        assert.strictEqual(form.$("label:not(.o_checkbox label)").first().text(), "Product",
             "one should be the one for the product field");
-        assert.strictEqual(form.$("label").eq(1).text(), "Bar",
+        assert.strictEqual(form.$("label:not(.o_checkbox label)").eq(1).text(), "Bar",
             "one should be the one for the bar field");
 
         assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), undefined,
@@ -3787,7 +3787,7 @@ QUnit.module('Views', {
             "button box should contain two children");
         assert.strictEqual(form.$('.oe_button_box .oe_stat_button').length, 1,
             "button box should only contain one button");
-        assert.strictEqual(form.$('.oe_button_box label').length, 1,
+        assert.strictEqual(form.$('.oe_button_box label:not(.o_checkbox label)').length, 1,
             "button box should only contain one label");
 
         form.destroy();
