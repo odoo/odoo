@@ -15,7 +15,7 @@
             <field name="report_template" ref="account_invoices"/>
             <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html" type="html">
+            <field name="body_html" type="html"><![CDATA[
 <div>
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
@@ -59,7 +59,7 @@ from ${object.company_id.name}.
     ${object.user_id.signature | safe}
 % endif
 </p>
-</div></field>
+</div>]]></field>
         </record>
 
         <!--Default Notification Email template for invoices-->
@@ -68,7 +68,7 @@ from ${object.company_id.name}.
             <field name="subject">${object.subject}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
-            <field name="body_html" type="html">
+            <field name="body_html" type="html"><![CDATA[
 <div>
 % set record = ctx.get('record')
 % set company = record and record.company_id or user.company_id
@@ -133,7 +133,7 @@ from ${object.company_id.name}.
     </tr>
 </tbody>
 </table>
-</div></field>
+</div>]]></field>
         </record>
 
     </data>
