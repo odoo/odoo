@@ -265,7 +265,7 @@ def build_deb(o):
     cmd=['sed', '-i', '1s/^.*$/odoo (%s.%s) stable; urgency=low/'%(version,timestamp), 'debian/changelog']
     subprocess.call(cmd, cwd=o.build_dir)
     if not o.no_debsign:
-        deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
+        deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir, encoding='utf-8')
         deb.logfile = stdout
         if GPGPASSPHRASE:
             deb.expect_exact('Enter passphrase: ', timeout=1200)
