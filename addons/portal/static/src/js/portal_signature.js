@@ -41,6 +41,7 @@ odoo.define('portal.signature_form', function (require){
                 'color': '#000',
                 'background-color': '#fff',
                 'height': '142px',
+                'width': '100%',
             });
             this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
         },

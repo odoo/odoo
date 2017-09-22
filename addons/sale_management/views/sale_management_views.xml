@@ -84,10 +84,10 @@
             <xpath expr="//button[@name='action_quotation_send']" position="before">
                 <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                     type="action" class="btn-primary"
-                    attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                    attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}" groups="sales_team.group_sale_salesman"/>
                 <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                     type="action" context="{'default_advance_payment_method': 'percentage'}"
-                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>
