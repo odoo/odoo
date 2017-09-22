@@ -580,6 +580,12 @@ class PurchaseOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
+        if 'product_qty' in values:
+            for line in self:
+                if line.order_id.state == 'purchase':
+                    line.order_id.message_post_with_view('purchase.track_po_line_template',
+                                                         values={'line': line, 'product_qty': values['product_qty']},
+                                                         subtype_id=self.env.ref('mail.mt_note').id)
         result = super(PurchaseOrderLine, self).write(values)
         # Update expected date of corresponding moves
         if 'date_planned' in values:
