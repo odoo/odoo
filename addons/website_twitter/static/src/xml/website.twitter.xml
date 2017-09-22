@@ -35,11 +35,15 @@
         <button type="button" contenteditable="false" class="btn btn-primary hover-edition-button">Reload</button>
     </t>
     <t t-name="website.Twitter.Error">
-        <div class="alert alert-info" contenteditable="false">
-            <t t-esc="data.error"/>
-                <i t-if='!data.nodata' class="fa fa-plus-circle">
-                    <a class="lnk_configure" href="/web#action=website.action_website_configuration">Twitter Configuration</a>
-                </i>
+      <div class="container">
+        <div class="row">
+          <div class="alert alert-info" contenteditable="false">
+              <t t-esc="data.error"/>
+              <i t-if='!data.nodata' class="fa fa-plus-circle">
+                  <a class="lnk_configure" href="/web#action=website.action_website_configuration">Twitter Configuration</a>
+              </i>
+          </div>
         </div>
+      </div>
     </t>
 </templates>
