@@ -2054,7 +2054,12 @@ QUnit.module('Views', {
         }
     });
 
-    QUnit.test('mobile grouped rendering', function (assert) {
+    QUnit.skip('mobile grouped rendering', function (assert) {
+        // Temporarily disable this test until we introduce a mobile test suite, as
+        // the code of the kanban renderer for mobile is in a specific file which isn't
+        // executed in desktop (so setting 'isMobile: True' in the test is useless).
+        // So to re-activate this test, it will need to be moved in another file
+        // included in the bundle of the mobile test suite.
         assert.expect(8);
         var done = assert.async();
 
