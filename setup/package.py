@@ -379,7 +379,7 @@ def gen_deb_package(o, published_files):
     ]
     # Generate files
     for command in commands:
-        _gen_file(o, *command, temp_path)
+        _gen_file(o, command[0], command[-1], temp_path)
     # Remove temp directory
     shutil.rmtree(temp_path)
 
