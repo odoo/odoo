@@ -123,7 +123,7 @@
             <field name="arch" type="xml">
               <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" attrs="{'invisible': [('logo','!=',False)]}">
-                      To get a beautiful document, you should update your company informations.
+                      Update your company details and upload your logo to get a beautiful document.
                 </div>
               </xpath>
               <xpath expr="//h1" position="replace">
@@ -135,7 +135,7 @@
               <xpath expr="//sheet" position="inside">
                     <hr />
                     <div class="row mt16">
-                        <field name="external_report_layout" widget="image_selection" options="{
+                        <field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
                             'background': {
                                 'image_link': '/base/static/img/preview_background.png',
                                 'preview_link': '/base/static/pdf/preview_background.pdf'
