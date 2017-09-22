@@ -26,7 +26,7 @@ from tempfile import NamedTemporaryFile
 # Utils
 #----------------------------------------------------------
 exec(open(join(dirname(__file__), '..', 'odoo', 'release.py'), 'rb').read())
-version = version.split('-')[0]
+version = version.split('-')[0].replace('saas~','')
 docker_version = version.replace('+', '')
 timestamp = time.strftime("%Y%m%d", time.gmtime())
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
