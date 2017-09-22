@@ -7,7 +7,6 @@ odoo.define('web.KanbanModel', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
-var config = require('web.config');
 
 var KanbanModel = BasicModel.extend({
 
@@ -126,15 +125,25 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
+     * Opens a given group and loads its <limit> first records
+     *
+     * @param {string} groupID
+     * @returns {Deferred}
+     */
+    loadColumnRecords: function (groupID) {
+        var dataPoint = this.localData[groupID];
+        dataPoint.isOpen = true;
+        return this.reload(groupID);
+    },
+    /**
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group
-     * @param {integer} offset optional offset override
      * @returns {Deferred<string>} resolves to the localID of the group
      */
-    loadMore: function (groupID, offset) {
+    loadMore: function (groupID) {
         var group = this.localData[groupID];
-        offset = offset === 0 ? 0 : group.loadMoreOffset + group.limit;
+        var offset = group.loadMoreOffset + group.limit;
         return this.reload(group.id, {
             loadMoreOffset: offset,
         });
@@ -251,12 +260,6 @@ var KanbanModel = BasicModel.extend({
         var self = this;
         if (list.groupedBy.length > 1) {
             list.groupedBy = [list.groupedBy[0]];
-        }
-        // to prevent pre-loading data by default in mobile for kanban column
-        // by setting openGroupByDefault to 'false' which will set column's isOpen property
-        // to false and will ingore _load().
-        if (config.isMobile) {
-            list.openGroupByDefault = false;
         }
         return this._super.apply(this, arguments).then(function (result) {
             return self._readTooltipFields(list).then(_.constant(result));
