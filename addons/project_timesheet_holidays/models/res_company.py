@@ -30,7 +30,6 @@ class Company(models.Model):
                     'name': _('Internal Project'),
                     'allow_timesheets': True,
                     'active': False,
-                    'company_id': company.id,
                 })
                 company.write({
                     'leave_timesheet_project_id': project.id,
@@ -44,3 +43,5 @@ class Company(models.Model):
                 company.write({
                     'leave_timesheet_task_id': task.id,
                 })
+            # Multicompany record rule will restrict create and write for new company project so after creating new project write new company.
+            company.leave_timesheet_project_id.write({'company_id': company.id})
