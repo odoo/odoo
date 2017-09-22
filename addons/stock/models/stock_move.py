@@ -500,11 +500,12 @@ class StockMove(models.Model):
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
         into another existing one, return this one and not the (now unlinked) original.
         """
-        distinct_fields = ['price_unit', 'product_id', 'product_packaging',
+        distinct_fields = ['product_id', 'price_unit', 'product_packaging',
                            'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id']
 
         def _keys_sorted(move):
-            return tuple([getattr(move, attr) for attr in distinct_fields])
+            return move.product_id.id, move.price_unit, move.product_packaging.id, move.product_uom.id,\
+                   move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
