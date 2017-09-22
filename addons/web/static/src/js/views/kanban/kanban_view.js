@@ -21,8 +21,8 @@ var KanbanView = BasicView.extend({
         Model: KanbanModel,
         Controller: KanbanController,
         Renderer: KanbanRenderer,
-        js_libs: []
     },
+    jsLibs: [],
     viewType: 'kanban',
 
     /**
@@ -34,7 +34,9 @@ var KanbanView = BasicView.extend({
         var arch = viewInfo.arch;
 
         this.loadParams.limit = this.loadParams.limit || 40;
-        this.loadParams.openGroupByDefault = true;
+        // in mobile, columns are lazy-loaded, so set 'openGroupByDefault' to
+        // false so that they will won't be loaded by the initial load
+        this.loadParams.openGroupByDefault = config.isMobile ? false : true;
         this.loadParams.type = 'list';
         this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
         var progressBar;
@@ -61,7 +63,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            group_creatable: activeActions.group_create,
+            group_creatable: activeActions.group_create && !config.isMobile,
             quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
             hasProgressBar: !!progressBar,
         };
@@ -75,6 +77,10 @@ var KanbanView = BasicView.extend({
 
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
+
+        if (config.isMobile) {
+            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -98,18 +104,6 @@ var KanbanView = BasicView.extend({
             return JSON.parse(viewInfo.arch.attrs.quick_create);
         }
         return true;
-    },
-    /**
-     * Adding touch swipe library for mobile
-     *
-     * @override
-     * @private
-     */
-    _loadLibs: function () {
-        if (config.isMobile) {
-            this.config.js_libs.push("/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js");
-        }
-        return this._super.apply(this, arguments);
     },
 });
 

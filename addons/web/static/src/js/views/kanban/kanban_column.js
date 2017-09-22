@@ -99,7 +99,7 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
-        if (config.device.size_class > config.device.SIZES.XS && this.draggable !== false) {
+        if (!config.isMobile && this.draggable !== false) {
             // deactivate sortable in mobile mode.  It does not work anyway,
             // and it breaks horizontal scrolling in kanban views.  Someday, we
             // should find a way to use the touch events to make sortable work.
