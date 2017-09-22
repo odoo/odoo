@@ -53,6 +53,13 @@ class ResConfigSettings(models.TransientModel):
             self.google_management_client_id = False
             self.google_management_client_secret = False
 
+    @api.onchange('language_ids')
+    def _onchange_language_ids(self):
+        # If current default language is removed from language_ids
+        # update the default_lang_id
+        if self.language_ids and self.default_lang_id not in self.language_ids:
+            self.default_lang_id = self.language_ids[0]
+
     @api.depends('language_ids')
     def _compute_language_count(self):
         for config in self:
