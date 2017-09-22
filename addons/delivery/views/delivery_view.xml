@@ -267,23 +267,6 @@
             </field>
         </record>
 
-        <record id="view_move_withweight_form" model="ir.ui.view">
-            <field name="name">stock.move.form.weight</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='main_grp']" position="inside">
-                    <group>
-                        <label for="weight"/>
-                        <div>
-                            <field name="weight" nolabel="1" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                        </div>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_order_form_with_carrier" model="ir.ui.view">
             <field name="name">delivery.sale.order.form.view.with_carrier</field>
             <field name="model">sale.order</field>
