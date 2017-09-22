@@ -23,7 +23,10 @@
             <rng:optional><rng:attribute name="orientation"/></rng:optional>
             <rng:optional><rng:attribute name="interval"/></rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="field"/>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="renamed_field"/>
+                </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>

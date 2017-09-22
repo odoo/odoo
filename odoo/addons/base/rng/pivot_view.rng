@@ -13,7 +13,10 @@
             <rng:optional><rng:attribute name="display_quantity"/></rng:optional>
             <rng:optional><rng:attribute name="disable_linking"/></rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="field"/>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                    <rng:ref name="renamed_field"/>
+                </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
