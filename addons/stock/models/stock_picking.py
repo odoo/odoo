@@ -288,11 +288,22 @@ class Picking(models.Model):
                                'changing the done quantities.')
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
-    show_operations = fields.Boolean(related='picking_type_id.show_operations')
+    show_operations = fields.Boolean(compute='_compute_show_operations')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    @api.depends('picking_type_id.show_operations')
+    def _compute_show_operations(self):
+        for picking in self:
+            if picking.picking_type_id.show_operations:
+                if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
+                    picking.show_operations = True
+                else:
+                    picking.show_operations = False
+            else:
+                picking.show_operations = False
 
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
     @api.one
@@ -381,7 +392,7 @@ class Picking(models.Model):
     @api.depends('state', 'move_lines')
     def _compute_show_mark_as_todo(self):
         for picking in self:
-            if not self.move_lines:
+            if not picking.move_lines:
                 picking.show_mark_as_todo = False
             elif self._context.get('planned_picking') and picking.state == 'draft':
                 picking.show_mark_as_todo = True
