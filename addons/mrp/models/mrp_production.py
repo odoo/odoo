@@ -425,7 +425,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
         if move:
-            if quantity > 0 or move.bom_line_id.product_qty == 0:
+            if quantity > 0 or move.product_qty == 0: #Do not remove 0 lines
                 move[0].write({'product_uom_qty': quantity})
             else:
                 if move[0].quantity_done > 0:
