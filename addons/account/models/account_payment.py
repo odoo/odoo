@@ -455,7 +455,7 @@ class account_payment(models.Model):
         for rec in self:
 
             if rec.state != 'draft':
-                raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
+                raise UserError(_("Only a draft payment can be posted."))
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
                 raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
