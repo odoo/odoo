@@ -59,7 +59,7 @@ class MailMessageSubtype(models.Model):
         subtype_ids, relations = self._auto_subscribe_subtypes(model_name)
         return self.browse(subtype_ids), relations
 
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
+    @tools.ormcache('self.env.uid', 'model_name')
     def _auto_subscribe_subtypes(self, model_name):
         domain = ['|', ('res_model', '=', False), ('parent_id.res_model', '=', model_name)]
         subtypes = self.search(domain)
@@ -70,7 +70,7 @@ class MailMessageSubtype(models.Model):
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
         return self.browse(subtype_ids), self.browse(internal_ids), self.browse(external_ids)
 
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
+    @tools.ormcache('self.env.uid', 'model_name')
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]
