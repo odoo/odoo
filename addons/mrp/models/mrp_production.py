@@ -57,7 +57,7 @@ class MrpProduction(models.Model):
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
-        readonly=True, required=True,
+        readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
