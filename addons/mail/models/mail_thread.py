@@ -527,13 +527,17 @@ class MailThread(models.AbstractModel):
         <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
     % endfor
     </ul>""", self._name, [rid])[rid]
-                self.env['mail.message'].create_fast({
-                    'model': self._name,
-                    'res_id': rid,
-                    'body': body,
-                    'message_type': 'notification',
-                    'subtype_id': subtype_id,
-                })
+
+                if subtype_xmlid:
+                    record.message_post(subtype=subtype_xmlid, body=body)
+                else:
+                    self.env['mail.message'].create_fast({
+                        'model': self._name,
+                        'res_id': rid,
+                        'body': body,
+                        'message_type': 'notification',
+                        'subtype_id': subtype_id,
+                    })
 
 
         # tracking = self._message_track_get_changes(tracked_fields, initial_values)
