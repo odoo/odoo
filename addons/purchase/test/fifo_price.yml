@@ -115,6 +115,7 @@
   Check stock valuation is 1600
 - 
   !python {model: product.product, id: product_fifo_icecream}: |
+    self.invalidate_cache(fnames=['stock_value'], ids=self.ids)
     assert self.stock_value == 1600.0, 'Stock valuation should be 1600'
 - 
   Do a delivery of an extra 500 g (delivery order)
@@ -146,6 +147,7 @@
   Check stock valuation and qty in stock
 - 
   !python {model: product.product, id: product_fifo_icecream}: |
+    self.invalidate_cache(fnames=['stock_value'], ids=self.ids)
     assert self.stock_value == 1560.0, 'Stock valuation should be 1560'
     assert self.qty_available == 19.5, 'Should still have 19.5 in stock'
 - 

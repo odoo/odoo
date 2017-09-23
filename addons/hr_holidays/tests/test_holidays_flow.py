@@ -18,6 +18,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         HolidaysStatus = self.env['hr.holidays.status']
 
         def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
+            holiday_status.invalidate_cache(fnames=['max_leaves','virtual_remaining_leaves', 'remaining_leaves', 'leaves_taken'], ids=holiday_status.ids)
             self.assertEqual(holiday_status.max_leaves, ml,
                              'hr_holidays: wrong type days computation')
             self.assertEqual(holiday_status.leaves_taken, lt,
