@@ -443,13 +443,11 @@ class HrExpenseSheet(models.Model):
     @api.model
     def create(self, vals):
         # Add the followers at creation, so they can be notified
+        sheet = super(HrExpenseSheet, self).create(vals)
         if vals.get('employee_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
             users = self._get_users_to_subscribe(employee=employee) - self.env.user
-            vals['message_follower_ids'] = []
-            for partner in users.mapped('partner_id'):
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
-        sheet = super(HrExpenseSheet, self).create(vals)
+            self.env['mail.followers']._add_follower_command(self._name, self.ids, users.mapped('partner_id'), {})
         self.check_consistency()
         return sheet
 
