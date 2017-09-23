@@ -33,7 +33,8 @@ class Followers(models.Model):
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
 
     @api.model
-    def _set_default_subtype(self, doc_id, model):
+    def _set_default_subtype(self, doc_id, model, employee=False):
+        int_query = (not employee) and ' and internal=false' or ''
         self.env.cr.execute('''
             INSERT INTO
                 mail_followers_mail_message_subtype_rel (mail_followers_id, mail_message_subtype_id)
@@ -42,8 +43,9 @@ class Followers(models.Model):
             WHERE
                 "default"=true AND 
                 ((res_model IS NULL) or (res_model=%s)) AND
-                id not in (select mail_message_subtype_id from mail_followers_mail_message_subtype_rel where mail_followers_id=%s)
-            ''', (doc_id, model, doc_id))
+                id not in (select mail_message_subtype_id from mail_followers_mail_message_subtype_rel where mail_followers_id=%s) '''+
+                int_query, 
+            (doc_id, model, doc_id))
 
     @api.model
     def _add_follower_command(self, res_model, res_ids, partner_ids=[], channel_ids=[], subtype_ids=None):
@@ -79,6 +81,7 @@ class Followers(models.Model):
 
         # insert into mail_followers_mail_message_subtype_rel ()
 
+        user_ids = None
         for resid in res_ids:
             for partner in partner_ids:
                 doc = self.search([('res_model','=',res_model),('res_id','=',resid),('partner_id','=',partner)], limit=1)
@@ -92,7 +95,9 @@ class Followers(models.Model):
                 elif subtype_ids:
                     doc.write({'subtype_ids': [(6,0, subtype_ids)]})
                 if not subtype_ids:
-                    self._set_default_subtype(doc.id, res_model)
+                    if user_ids is None:
+                        user_ids = self.env['res.users'].sudo().search([('partner_id', 'in', partner_ids), ('share', '=', False)]).mapped('partner_id').ids
+                    self._set_default_subtype(doc.id, res_model, partner in user_ids)
             for channel in channel_ids:
                 doc = self.search([('res_model','=',res_model),('res_id','=',resid),('channel_id','=',channel)], limit=1)
                 if not doc:
