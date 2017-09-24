@@ -53,34 +53,6 @@ class Followers(models.Model):
         :param force: if True, delete existing followers before creating new one
                       using the subtypes given in the parameters
         """
-        # force_mode = force or (all(data for data in pycompat.values(partner_data)) and all(data for data in pycompat.values(channel_data)))
-        # generic = []
-        # specific = {}
-        # existing = {}  # {res_id: follower_ids}
-        # p_exist = {}  # {partner_id: res_ids}
-        # c_exist = {}  # {channel_id: res_ids}
-
-        # followers = self.sudo().search([
-        #     '&',
-        #     '&', ('res_model_id', '=', res_model_id), ('res_id', 'in', res_ids),
-        #     '|', ('partner_id', 'in', list(partner_data)), ('channel_id', 'in', list(channel_data))])
-
-        # if force_mode:
-        #     followers.unlink()
-        # else:
-        #     for follower in followers:
-        #         existing.setdefault(follower.res_id, list()).append(follower)
-        #         if follower.partner_id:
-        #             p_exist.setdefault(follower.partner_id.id, list()).append(follower.res_id)
-        #         if follower.channel_id:
-        #             c_exist.setdefault(follower.channel_id.id, list()).append(follower.res_id)
-
-        # default_subtypes = self.env['mail.message.subtype'].search([
-        #     ('default', '=', True),
-        #     '|', ('res_model', '=', res_model), ('res_model', '=', False)])
-
-        # insert into mail_followers_mail_message_subtype_rel ()
-
         user_ids = None
         for resid in res_ids:
             for partner in partner_ids:

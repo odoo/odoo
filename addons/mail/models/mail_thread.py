@@ -424,7 +424,12 @@ class MailThread(models.AbstractModel):
             tracking = []
             for key, val in values.items():
                 if (val != getattr(self.browse([rid]), key)):
-                    tracking.append((key, val, getattr(self.browse([rid]), key)))
+                    record = self.browse([rid])
+                    oldval = bool(val) and self._fields[key].convert_to_display_name(val, record) or '/'
+                    newval_raw = getattr(record, key)
+                    newval = self._fields[key].convert_to_display_name(newval_raw, record)
+                    if newval=='False': newval = '/'
+                    tracking.append((self._fields[key].string, oldval, newval))
             subtype_id = 2
             body = ''
             if subtype_xmlid:
@@ -437,7 +442,7 @@ class MailThread(models.AbstractModel):
             if tracking or body:
                 body += self.env['mail.template'].with_context(tracking=tracking).render_template("""<ul>
     % for tracking in ctx['tracking']
-        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+        <li>${tracking[0]}: ${tracking[1] or ''} -&gt; ${tracking[2]}</li>
     % endfor
     </ul>""", self._name, [rid])[rid]
 

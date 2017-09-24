@@ -62,14 +62,14 @@ class speed_test(models.Model):
     def check_create(self):
         self.with_context(tracking_disable=True).create({'name': 'kjkj'})
 
-    @sql_count(target=4)
+    @sql_count(target=4, log=True)
     def check_create_track(self):
         self.create({'name': 'kjkjmlkm'})
 
-    @sql_count(target=10, log=True)
+    @sql_count(target=4)
     def check_track(self):
-        obj = self.create({'name': 'kjkj'})
-        obj.track = '1'
+        obj = self[0]
+        obj.track = str(random.randint(0,1000))
 
     def check(self):
         # Without Cache
