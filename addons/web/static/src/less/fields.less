@@ -91,19 +91,15 @@
         .o-flex-flow(row, wrap);
         .o-align-items(baseline);
 
-        .o_tag_color_0 { background-color: @odoo-color-0; }
-        .o_tag_color_1 { background-color: @odoo-color-1; }
-        .o_tag_color_2 { background-color: @odoo-color-2; }
-        .o_tag_color_3 { background-color: @odoo-color-3; }
-        .o_tag_color_4 { background-color: @odoo-color-4; }
-        .o_tag_color_5 { background-color: @odoo-color-5; }
-        .o_tag_color_6 { background-color: @odoo-color-6; }
-        .o_tag_color_7 { background-color: @odoo-color-7; }
-        .o_tag_color_8 { background-color: @odoo-color-8; }
-        .o_tag_color_9 { background-color: @odoo-color-9; }
-        .o_tag_color_10 { background-color: @odoo-color-10; }
-        .o_tag_color_11 { background-color: @odoo-color-11; }
-        .o_tag_color_12 { background-color: @odoo-color-12; }
+        .o-tag-color(@size: 0) when (@size < @odoo-nb-ui-color) {
+            .o_tag_color_@{size} {
+                &, &::after {
+                    background-color: ~"@{odoo-color-@{size}}";
+                }
+            }
+            .o-tag-color(@size + 1);
+        }
+        .o-tag-color();
 
         > .o_field_widget {
             .o-flex(1, 0, 100px);
@@ -123,30 +119,9 @@
                 max-width: 200px;
             }
 
-            > ul {
-                @colored-tag-width: 45px;
-                width: 5*@colored-tag-width + 3px;
-                > li {
-                    float: left;
-                    color: black;
-                    > span {
-                        border-radius: 6px;
-                        width: @colored-tag-width;
-                        height: 30px;
-                        display: inline-block;
-                        border: 2px solid white;
-                        cursor: pointer;
-                        padding: 0;
-
-                        &:hover {
-                            opacity: 0.8;
-                        }
-                    }
-                }
-                > li:last-child {
-                    margin-top: 7px;
-                    cursor: auto;
-                }
+            > .o_colorpicker > ul {
+                .o-kanban-colorpicker();
+                white-space: normal;
             }
 
             .o_delete {

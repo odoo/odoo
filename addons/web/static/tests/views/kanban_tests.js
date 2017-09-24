@@ -518,10 +518,15 @@ QUnit.module('Views', {
     });
 
     QUnit.test('many2many_tags in kanban views', function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         this.data.partner.records[0].category_ids = [6, 7];
-        this.data.partner.records[1].category_ids = [7];
+        this.data.partner.records[1].category_ids = [7, 8];
+        this.data.category.records.push({
+            id: 8,
+            name: "hello",
+            color: 0,
+        });
 
         var kanban = createView({
             View: KanbanView,
@@ -557,6 +562,10 @@ QUnit.module('Views', {
             'first tag should have color 2');
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/category/read'],
             'two RPC should have been done (one search read and one read for the m2m)');
+
+        // Checks that second records has only one tag as one should be hidden (color 0)
+        assert.strictEqual(kanban.$('.o_kanban_record').eq(1).find('.o_tag').length, 1,
+            'there should be only one tag in second record');
 
         // Write on the record using the priority widget to trigger a re-render in readonly
         kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star-o').first().click();

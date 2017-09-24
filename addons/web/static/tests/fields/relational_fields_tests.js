@@ -7542,9 +7542,11 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags: update color', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.records[0].timmy = [12, 14];
+        this.data.partner_type.records[0].color = 0;
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -7555,16 +7557,20 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
+        // First checks that default color 0 is rendered as 0 color
+        assert.ok(form.$('span:first()').is('.o_tag_color_0'),
+            'first tag color should be 0');
+
         // Update the color in readonly
         form.$('span:first()').click();
-        $('.o_colorpicker span[data-color="1"]').trigger('mousedown'); // choose color 1
+        $('.o_colorpicker a[data-color="1"]').trigger('mousedown'); // choose color 1
         assert.strictEqual(form.$('span:first()').data('color'), 1,
             'should have correctly updated the color (in readonly)');
 
         // Update the color in edit
         form.$buttons.find('.o_form_button_edit').click();
         form.$('span:first()').click();
-        $('.o_colorpicker span[data-color="6"]').trigger('mousedown'); // choose color 6
+        $('.o_colorpicker a[data-color="6"]').trigger('mousedown'); // choose color 6
         assert.strictEqual(form.$('span:first()').data('color'), 6,
             'should have correctly updated the color (in edit)');
         form.destroy();
