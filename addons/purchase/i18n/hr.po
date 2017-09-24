@@ -6,11 +6,11 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Tina Milas <tina@uvid.hr>, 2016
-# Marko Carević <marko.carevic@live.com>, 2016
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 # Bole <bole@dajmi5.com>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
+# Marko Carević <marko.carevic@live.com>, 2016
 # Jasmina Otročak <jasmina@uvid.hr>, 2016
 msgid ""
 msgstr ""
@@ -220,7 +220,7 @@ msgstr "Svi proizvodi i kupci mogu se koristiti u nabavnom nalogu"
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Allow suppliers to deliver directly to your customers"
-msgstr "Dopusti dobavljačima direktnu dostavu vašim kupcima"
+msgstr "Dopusti dobavljačima direktnu dostavu Vašim kupcima"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -252,13 +252,13 @@ msgstr ""
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
-"Omogućuje vam da odaberete i koristite različite mjerne jedinice za "
+"Omogućuje Vam da odaberete i koristite različite mjerne jedinice za "
 "proizvode."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "Omogućuje Vam da odredite analitička konta za naloge za nabavu"
+msgstr "Omogućuje Vam da odredite analitička konta za naloge za nabavu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -284,7 +284,7 @@ msgstr "Analitički konto"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr "Analitičko računovodstvo za Nabavu"
+msgstr "Analitičko računovodstvo za nabavu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
@@ -294,7 +294,7 @@ msgstr "Oznake analitike"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Analytic accounting for purchases"
-msgstr "Analitičko računovodstvo za Nabavu"
+msgstr "Analitičko računovodstvo za nabavu"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -349,7 +349,7 @@ msgstr "Naplaćena kol."
 #: code:addons/purchase/models/purchase.py:581
 #, python-format
 msgid "Billed Quantity"
-msgstr ""
+msgstr "Naplaćena količina"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -439,13 +439,13 @@ msgstr "Ne možete obrisati prodajni nalog koji je u stanju '%s'."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr "Kliknite ovdje za spremanje računa dobavljača"
+msgstr "Kliknite ovdje za spremanje računa dobavljača."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
-msgstr "Klikni kako bi kreirao ponudu koja će se pretvoriti u narudžbenicu."
+msgstr "Kliknite za kreiranje ponude koja će se pretvoriti u narudžbenicu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -503,7 +503,7 @@ msgstr "Postava"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr "Postavke Nabave"
+msgstr "Postavke nabave"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -718,7 +718,7 @@ msgstr "ID"
 #: code:addons/purchase/models/purchase.py:197
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr "Da bi mogli obrisati nalog za nabavu , morate na prije otkazati."
+msgstr "Kako biste mogli izbrisati nalog za nabavu, morate ga prvo otkazati."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -960,13 +960,13 @@ msgstr "Status naloga"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr "narudžebe dana"
+msgstr "Narudžbe dana"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:578
 #, python-format
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "Naručena količina"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:816
@@ -1287,7 +1287,7 @@ msgid ""
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
 "Navedite adresu ako želite da dobavljač izvrši dostavu direktno kupcu, inače"
-" ostavite prazno polje za isporuku u vašu Tvrtku."
+" ostavite prazno polje za isporuku u Vašu tvrtku."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1333,7 +1333,7 @@ msgstr "ZZN_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "ZzP i Nabave"
+msgstr "ZZP i nabave"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1354,7 +1354,7 @@ msgstr "Zaprimljena kol."
 #: code:addons/purchase/models/purchase.py:580
 #, python-format
 msgid "Received Quantity"
-msgstr ""
+msgstr "Zaprimljena količina"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1453,7 +1453,7 @@ msgid ""
 msgstr ""
 "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
 "opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok."
-" Poruku treba napisati u slijedećem polju."
+" Poruku treba napisati u sljedećem polju."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1540,7 +1540,7 @@ msgstr "Valuta dobavljača"
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
-msgstr "Dobavljači uvijek dostavljaju u vaše skladište(a)"
+msgstr "Dobavljači uvijek dostavljaju u Vaše skladište(a)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
