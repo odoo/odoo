@@ -5,6 +5,7 @@ from distutils.core import setup
 import os
 import py2exe
 import re
+import shutil
 
 class Target(object):
     '''Target is the baseclass for all executables that are created.
@@ -141,7 +142,7 @@ odoo_bin = Target(
 
 
 py2exe_options = dict(
-    packages = ['dateutil', 'pkg_resources', 'lxml', 'odoo', 'reportlab', 'docutils' , 'passlib'],
+    packages = ['dateutil', 'pkg_resources', 'lxml', 'odoo', 'reportlab', 'docutils' , 'passlib', 'pytz'],
     excludes = ['gevent._util_py2', ],
 ##    ignores = "dotblas gnosis.xml.pickle.parsers._cexpat mx.DateTime".split(),
 ##    dll_excludes = "MSVCP90.dll mswsock.dll powrprof.dll".split(),
@@ -162,7 +163,16 @@ def py2exe_datafiles():
     # importing pkg_resources makes py2exe fails !
     #template_relapath = 'writers/html4css1/template.txt'
     #template_path = pkg_resources.resource_filename('docutils', template_relapath)
-    
+  
+     
+    import pytz
+    tzdir = os.path.dirname(pytz.__file__)
+    for root, _, filenames in os.walk(os.path.join(tzdir, 'zoneinfo')):
+        base = os.path.join('pytz', root[len(tzdir) + 1:])
+        data_files[base] = [os.path.join(root, f) for f in filenames]
+    #dst_dir = os.path.join('dist', 'pytz')
+    #shutil.copytree(tzdir, dst_dir, ignore=shutil.ignore_patterns('*.py'))
+  
     import docutils
     template_path = os.path.join(docutils.__path__[0], 'writers','html4css1', 'template.txt')
     data_files.update({ 'docutils' : [template_path,]})
