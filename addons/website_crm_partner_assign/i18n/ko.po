@@ -1,31 +1,18 @@
-# #-#-#-#-#  ko.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm_partner_assign
-#
-# Translators:
-# #-#-#-#-#  ko.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * crm_partner_assign
-#
-# Translators:
-#, fuzzy
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  ko.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  ko.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm_partner_assign
@@ -35,44 +22,30 @@ msgid ""
 "<p>Hello,</p>\n"
 "\n"
 "\n"
-"<p>We have been contacted by those prospects that are in your region. Thus, "
-"the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
+"<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject "
-"Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or "
-"'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id."
-"country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or "
-"'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
 "% if ctx.get('partner_in_portal'):\n"
-"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner "
-"Portal</a> to get details. On each lead are two buttons on the top left "
-"corner that you should press after having contacted the lead: \"I'm "
-"interested\" & \"I'm not interested\".</p>\n"
+"<p>Please connect to your <a href=\"${object.get_portal_url()}\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" & \"I'm not interested\".</p>\n"
 "% else:\n"
 "<p>\n"
 "    You do not have yet a portal access to our database. Please contact \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and "
-"'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,"
-"ctx['partner_id'].user_id.email) or 'us'}.\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
 "</p>\n"
 "% endif\n"
-"<p>The lead will be sent to another partner if you do not contact the lead "
-"before 20 days.</p>\n"
+"<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>\n"
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe "
-"or ''}\n"
-"</pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
 "% if not ctx['partner_id'].user_id:\n"
-"PS: It looks like you do not have an account manager assigned to you, please "
-"contact us.\n"
+"PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
 msgstr ""
@@ -80,12 +53,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
 msgid "# of Cases"
-msgstr "# 사례"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_nbr_opportunities
 msgid "# of Opportunity"
-msgstr "# 기회"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -113,37 +86,33 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;"
-"=',0)]}\">N </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
-"[('partner_latitude','&gt;=',0)]}\">S </span>"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;"
-"=',0)]}\">E </span>\n"
-"                                <span class=\"oe_grey\" attrs=\"{'invisible':"
-"[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
-"<span class=\"text-danger error_partner_assign_desinterested\" style="
-"\"display:none;\">You need to fill up the next action and contact the "
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid ""
-"<span class=\"text-danger error_partner_assign_interested\" style=\"display:"
-"none;\">You need to fill up the next action and contact the customer before "
-"accepting the lead</span>"
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">You need to fill up the next action and contact the "
+"customer before accepting the lead</span>"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -160,16 +129,17 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
 msgid "Activation"
-msgstr "활성화"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_active
 msgid "Active"
-msgstr "활성"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:235
@@ -193,18 +163,18 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/controllers/main.py:206
 #, python-format
 msgid "All Categories"
-msgstr "모든 분류"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:223
 #, python-format
 msgid "All Countries"
-msgstr "모든 국가"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
 msgid "Assign Date"
-msgstr "할당 날짜"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
@@ -219,7 +189,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
 msgid "Assignation Date"
-msgstr "할당일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
@@ -230,7 +200,7 @@ msgstr "할당일"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Assigned Partner"
-msgstr "할당된 파트너"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -241,12 +211,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
 msgid "Automatically sanitized HTML contents"
-msgstr "HTML 내용 중 불건전한 내용을 자동으로 제거함"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability
 msgid "Avg Probability"
-msgstr "평균 확률"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
@@ -256,12 +226,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr "고객관계관리 개척 보고서"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partner Report"
-msgstr "고객관계관리 파트너 보고서"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -273,7 +243,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Cancel"
-msgstr "취소"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -283,19 +253,19 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_closed
 msgid "Close Date"
-msgstr "마감일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_company_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Company"
-msgstr "회사"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Confirm"
-msgstr "확인"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:50
@@ -309,12 +279,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Contact a reseller"
-msgstr "대리점 문의"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
 msgid "Contents"
-msgstr "내용"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -326,12 +296,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_country_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Country"
-msgstr "국가"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_create_date
 msgid "Create Date"
-msgstr "작성일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_uid
@@ -339,7 +309,7 @@ msgstr "작성일"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_uid
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_uid
 msgid "Created by"
-msgstr "작성자"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
@@ -347,7 +317,7 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_date
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_date
 msgid "Created on"
-msgstr "작성일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -359,12 +329,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Customer"
-msgstr "고객"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Customer Name"
-msgstr "고객명"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -375,12 +345,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr "협력관계 협약일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr "검토 날짜"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -390,12 +360,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
 msgid "Delay to Assign"
-msgstr "할당 지연"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
 msgid "Delay to Close"
-msgstr "마감 지연"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -410,7 +380,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_display_name
 msgid "Display Name"
-msgstr "표시 이름"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -435,7 +405,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr "이메일 서식"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -457,12 +427,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Extended Filters..."
-msgstr "확장 필터..."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by Country"
-msgstr "국가별"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -483,7 +453,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
 #: model:ir.actions.act_window,name:website_crm_partner_assign.crm_lead_forward_to_partner_act
 msgid "Forward to Partner"
-msgstr "파트너에 전달"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
@@ -493,12 +463,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_latitude
 msgid "Geo Latitude"
-msgstr "위도"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_longitude
 msgid "Geo Longitude"
-msgstr "경도"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -509,11 +479,11 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
 msgstr ""
-"이 파트너에게 개척을 할당할 수 있는 가능성을 제공합니다.(0은 할당 없음)"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
@@ -524,18 +494,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_grade_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_grade_id
 msgid "Grade"
-msgstr "등급"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr "그룹화"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "High"
-msgstr "높음"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:203
@@ -557,15 +527,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
 msgid "Implementation References"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
 
@@ -582,7 +554,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation___last_update
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade___last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_uid
@@ -590,7 +562,7 @@ msgstr "최근 수정"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_uid
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_uid
 msgid "Last Updated by"
-msgstr "최근 갱신한 사람"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_date
@@ -598,24 +570,25 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_date
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_date_assign
 msgid "Last date this case was forwarded/assigned to a partner"
-msgstr "이 사례가 파트너로 전달/할당된 최근 날짜"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
 msgid "Latest Partner Review"
-msgstr "최신 파트너 검토"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_id
 msgid "Lead"
-msgstr "개척"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -626,7 +599,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_graph
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_pivot
 msgid "Lead Assign"
-msgstr "개척 할당"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -646,23 +619,24 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "개척/기회"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 msgid "Leads"
-msgstr "개척"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Leads Analysis"
-msgstr "개척 분석"
+msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9928
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
-msgstr "단계"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_name
@@ -672,13 +646,14 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Looking For a Local Store?"
-msgstr "로컬 저장소를 찾고 계십니까?"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:100
@@ -689,12 +664,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Low"
-msgstr "낮음"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability_max
 msgid "Max Probability"
-msgstr "최대 확률"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -730,7 +705,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
 msgid "Name"
-msgstr "이름"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:48
@@ -751,54 +726,60 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
 msgid "Next Partner Review"
-msgstr "다음 파트너 검토"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
+msgid "No more partner available"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No result found"
-msgstr "결과가 없습니다."
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Normal"
-msgstr "보통"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
 msgid "Number of Days to close the case"
-msgstr "사례를 마감하기까지의 잔여일수"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
 msgid "Number of Days to open the case"
-msgstr "사례 개시까지의 소요일수"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_opening_date
 msgid "Opening Date"
-msgstr "개시일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr "OPP. 할당 분석"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 msgid "Opportunities"
-msgstr "기회"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr "기회 할당 분석"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
-msgstr "기회"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -808,7 +789,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "Our Partners"
-msgstr "우리의 파트너"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:98
@@ -819,7 +800,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
 msgid "Overpassed Deadline"
-msgstr "과거 만기일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner
@@ -828,24 +809,24 @@ msgstr "과거 만기일"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.grade_in_detail
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner"
-msgstr "파트너"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Activation"
-msgstr "파트너 활성화"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:website_crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr "파트너 활성화"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_forward_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
 msgid "Partner Assignation"
-msgstr "파트너 할당"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
@@ -853,7 +834,7 @@ msgstr "파트너 할당"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_tree
 msgid "Partner Level"
-msgstr "파트너 수준"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_location
@@ -863,12 +844,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr "파트너 검토"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr "할당된 파트너 분석"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_declined_ids
@@ -878,23 +859,24 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_partner_assigned_id
 msgid "Partner this case has been forwarded/assigned to."
-msgstr "이 사례가 전달/할당된 파트너"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Partners"
-msgstr "파트너"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
 msgid "Partnership Analysis"
-msgstr "협력관계 분석"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
 msgid "Partnership Date"
-msgstr "협력관계 협약일"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_partner_assign_tree
@@ -910,7 +892,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_planned_revenue
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
-msgstr "계획된 수익"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
@@ -920,7 +902,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
 msgid "Priority"
-msgstr "우선 순위"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -937,7 +919,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probable_revenue
 msgid "Probable Revenue"
-msgstr "예상 수익"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -948,13 +930,13 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.references_block
 msgid "References"
-msgstr "참조"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "Resellers"
-msgstr "대리점"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_team_id
@@ -963,41 +945,41 @@ msgstr "대리점"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Sales Team"
-msgstr "영업팀"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Salesperson"
-msgstr "영업사원"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Search"
-msgstr "검색"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send"
-msgstr "보내기"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Send Email"
-msgstr "이메일 보내기"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send Mail"
-msgstr "메일 보내기"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_sequence
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence
 msgid "Sequence"
-msgstr "순서"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:72
@@ -1017,11 +999,16 @@ msgid "Silver"
 msgstr ""
 
 #. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
+msgid "Spam"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:109
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
 msgid "Stage"
-msgstr "단계"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1090,33 +1077,33 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_turnover
 msgid "Turnover"
-msgstr "회전율"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_type
 msgid "Type"
-msgstr "유형"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "유형은 개척과 기회를 구분하기 위해 사용됩니다"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_user_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_user_id
 msgid "User"
-msgstr "사용자"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr "매우 높음"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
 msgid "Visible in Website"
-msgstr "웹사이트 표시"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1137,7 +1124,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 msgid "World Map"
-msgstr "세계 지도"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1201,26 +1188,26 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "pull-left"
-msgstr "왼쪽으로 당기기"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "reference(s)"
-msgstr "참조"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_activation
 msgid "res.partner.activation"
-msgstr "res.partner.activation"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
 msgid "res.partner.grade"
-msgstr "res.partner.grade"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid ""
-"several partners: automatic assignation, using GPS coordinates and partner's "
-"grades"
+"several partners: automatic assignation, using GPS coordinates and partner's"
+" grades"
 msgstr ""
