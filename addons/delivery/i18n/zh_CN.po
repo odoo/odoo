@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
+# 林俊 <54773801@qq.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -39,12 +40,12 @@ msgstr "# 物料清单"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr "# 采购开票"
+msgstr "# 采购账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr "# 销售开票"
+msgstr "# 销售账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
@@ -190,7 +191,7 @@ msgstr "生成该产品的平均延时天数。在多级BoM的情况下，部件
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "客户发票中的平均价格"
+msgstr "客户账单中的平均价格"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
@@ -625,7 +626,7 @@ msgstr "费用科目"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "如果你打算根据发货的实际数量开票的话，就填写这一字段"
+msgstr "如果你打算根据发货的实际数量填写账单的话，就填写这一字段"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -837,12 +838,12 @@ msgstr "库存计价"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "基于交货单开票"
+msgstr "基于交货单填写账单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
 msgid "Invoice State"
-msgstr "发票状态"
+msgstr "账单状态"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
@@ -1103,8 +1104,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
-"订购数量：基于客户订购的数量开具发票。\n"
-"交付数量：基于供应商交付的数量开具发票(可以是工时或者货物)。"
+"订购数量：基于客户订购的数量填写账单。\n"
+"交付数量：基于供应商交付的数量填写账单(可以是工时或者货物)。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty

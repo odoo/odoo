@@ -19,13 +19,14 @@
 # Ermin Trevisan <trevi@twanda.com>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
+# Gab_Odoo <gab@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Philipp Hug <philipp@hug.cx>, 2017\n"
+"Last-Translator: Gab_Odoo <gab@odoo.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +82,7 @@ msgstr "Buchungssatz"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Konto für die Abschreibungsbuchungen, um den Wert der Anlage zu mindern."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -88,12 +90,14 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Erlöskonto für die Abschreibungsbuchungen, um den Wertverlust der Anlage als"
+" Kosten zu buchen."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
-msgstr ""
+msgstr "Anlagenkonto, zum Buchen der Anlage zu ihren Anschaffungskosten."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -239,7 +243,7 @@ msgstr "Anlagenanalyse"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Abschreibungsbuchungen"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -269,7 +273,7 @@ msgstr "Anlage 'aktiv'"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Anlagen automatisch bestätigen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -302,6 +306,8 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Aktivieren, um die generierten Abschreibungsbuchungen nach Anlagetyp zu "
+"gruppieren."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -646,7 +652,7 @@ msgstr "Gruppieren nach ..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Abschreibungsbuchungen gruppieren"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -749,7 +755,7 @@ msgstr "Linear"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Mit Abschreibungsbuchung verbunden"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -810,7 +816,7 @@ msgstr "Anzahl der Monate in Perioden"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Eine Buchung alle"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:593
@@ -900,7 +906,7 @@ msgstr "Grund"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Abschreibungsposten: Aufwandskonto"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
