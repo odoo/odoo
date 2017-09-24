@@ -695,15 +695,6 @@ class Task(models.Model):
     # ---------------------------------------------------
 
     @api.multi
-    def _track_template(self, tracking):
-        res = super(Task, self)._track_template(tracking)
-        test_task = self[0]
-        changes, tracking_value_ids = tracking[test_task.id]
-        if 'stage_id' in changes and test_task.stage_id.mail_template_id:
-            res['stage_id'] = (test_task.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
-        return res
-
-    @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if self.env.context.get('is_new', False):

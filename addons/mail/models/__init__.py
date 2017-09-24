@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from . import mail_message_subtype
-from . import mail_tracking_value
 from . import mail_alias
 from . import mail_followers
 from . import mail_notification

@@ -79,8 +79,5 @@ class AssetModify(models.TransientModel):
         }
         asset.write(asset_vals)
         asset.compute_depreciation_board()
-        tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
-        changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
-        if changes:
-            asset.message_post(subject=_('Depreciation board modified'), body=self.name, tracking_value_ids=tracking_value_ids)
+        asset.message_post(body=_('Depreciation board modified'))
         return {'type': 'ir.actions.act_window_close'}

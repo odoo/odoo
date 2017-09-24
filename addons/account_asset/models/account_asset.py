@@ -282,8 +282,7 @@ class AccountAssetAsset(models.Model):
                 del(tracked_fields['method_end'])
             else:
                 del(tracked_fields['method_number'])
-            dummy, tracking_value_ids = asset._message_track(tracked_fields, dict.fromkeys(fields))
-            asset.message_post(subject=_('Asset created'), tracking_value_ids=tracking_value_ids)
+            asset.message_post(body=_('Asset created'))
 
     def _get_disposal_moves(self):
         move_ids = []
@@ -313,9 +312,7 @@ class AccountAssetAsset(models.Model):
                 commands.append((0, False, vals))
                 asset.write({'depreciation_line_ids': commands, 'method_end': today, 'method_number': sequence})
                 tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
-                changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
-                if changes:
-                    asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
+                asset.message_post(body=_('Asset sold or disposed. Accounting entry awaiting for validation.'))
                 move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
 
         return move_ids

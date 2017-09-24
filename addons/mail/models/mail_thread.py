@@ -238,8 +238,6 @@ class MailThread(models.AbstractModel):
                 'subtype_id': 2,
             })
 
-            # thread.message_post(body=_('%s created') % doc_name)
-
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in self._context.items():
@@ -247,8 +245,6 @@ class MailThread(models.AbstractModel):
                 create_values[key[8:]] = val
         thread.message_auto_subscribe(list(create_values), values=create_values)
 
-
-        # print 'track', '-'*40
         # track values
         if not self._context.get('mail_notrack'):
             initial_values = {thread.id: {}}
@@ -281,25 +277,6 @@ class MailThread(models.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            #            for rid, values in initial_values.items():
-            #                tracking = []
-            #                for key, val in values.items():
-            #                    if (val != getattr(self.browse([rid]), key)):
-            #                        tracking.append((key, val, getattr(self.browse([rid]), key)))
-            #                if tracking:
-            #                    body = self.env['mail.template'].with_context(tracking=tracking).render_template("""<ul>
-            #        % for tracking in ctx['tracking']
-            #            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
-            #        % endfor
-            #        </ul>""", self._name, [rid])[rid]
-            #                    self.env['mail.message'].create_fast({
-            #                        'model': self._name,
-            #                        'res_id': rid,
-            #                        'body': body,
-            #                        'message_type': 'notification',
-            #                        'subtype_id': 2,
-            #                    })
-            #
             track_self.message_track(tracked_fields, initial_values)
         return result
 
@@ -428,70 +405,6 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.multi
-    def _track_template(self, tracking):
-        return dict()
-
-    @api.multi
-    def _message_track_post_template(self, tracking):
-        if not any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
-            return True
-        templates = self._track_template(tracking)
-        for field_name, (template, post_kwargs) in templates.items():
-            if not template:
-                continue
-            if isinstance(template, pycompat.string_types):
-                self.message_post_with_view(template, **post_kwargs)
-            else:
-                self.message_post_with_template(template.id, **post_kwargs)
-        return True
-
-    @api.multi
-    def _message_track_get_changes(self, tracked_fields, initial_values):
-        """ Batch method of _message_track. """
-        result = dict()
-        for record in self:
-            result[record.id] = record._message_track(tracked_fields, initial_values[record.id])
-        return result
-
-    @api.multi
-    def _message_track(self, tracked_fields, initial):
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a structure that is a tuple containing :
-
-         - a set of updated column names
-         - a list of changes (initial value, new value, column name, column info) """
-        self.ensure_one()
-        changes = set()  # contains always and onchange tracked fields that changed
-        displays = set()  # contains always tracked field that did not change but displayed for information
-        tracking_value_ids = []
-        display_values_ids = []
-
-        # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in tracked_fields.items():
-            track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
-            initial_value = initial[col_name]
-            new_value = getattr(self, col_name)
-
-            if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info)
-                if tracking:
-                    tracking_value_ids.append([0, 0, tracking])
-
-                if col_name in tracked_fields:
-                    changes.add(col_name)
-            # 'always' tracked fields in separate variable; added if other changes
-            elif new_value == initial_value and track_visibility == 'always' and col_name in tracked_fields:
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, initial_value, col_name, col_info)
-                if tracking:
-                    display_values_ids.append([0, 0, tracking])
-                    displays.add(col_name)
-
-        if changes and displays:
-            tracking_value_ids = display_values_ids + tracking_value_ids
-
-        return changes, tracking_value_ids
-
-    @api.multi
     def message_track(self, tracked_fields, initial_values):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
@@ -539,29 +452,6 @@ class MailThread(models.AbstractModel):
                         'subtype_id': subtype_id,
                     })
 
-
-        # tracking = self._message_track_get_changes(tracked_fields, initial_values)
-        # for record in self:
-        #     changes, tracking_value_ids = tracking[record.id]
-        #     if not changes:
-        #         continue
-
-        #     # find subtypes and post messages or log if no subtype found
-        #     subtype_xmlid = False
-        #     # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
-        #     if not self._context.get('mail_track_log_only'):
-        #         subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-
-        #     if subtype_xmlid:
-        #         subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
-        #         if not (subtype_rec and subtype_rec.exists()):
-        #             _logger.debug('subtype %s not found' % subtype_xmlid)
-        #             continue
-        #         record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
-        #     elif tracking_value_ids:
-        #         record.message_post(tracking_value_ids=tracking_value_ids)
-
-        # self._message_track_post_template(tracking)
         return True
 
     #------------------------------------------------------

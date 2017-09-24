@@ -13,7 +13,6 @@
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
         'views/mail_message_subtype_views.xml',
-        'views/mail_tracking_views.xml',
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
