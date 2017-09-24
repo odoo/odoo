@@ -235,7 +235,7 @@ class MailThread(models.AbstractModel):
                 'res_id': thread.id,
                 'body': _('%s created') % doc_name,
                 'message_type': 'notification',
-                'subtype_id': 2,
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
             })
 
         # auto_subscribe: take values and defaults into account
@@ -430,7 +430,7 @@ class MailThread(models.AbstractModel):
                     newval = self._fields[key].convert_to_display_name(newval_raw, record)
                     if newval=='False': newval = '/'
                     tracking.append((self._fields[key].string, oldval, newval))
-            subtype_id = 2
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
             body = ''
             if subtype_xmlid:
                 subtype_rec = self.env.ref(subtype_xmlid)
@@ -2034,7 +2034,7 @@ class MailThread(models.AbstractModel):
                 auto_delete=True,
                 auto_delete_message=True,
                 parent_id=False, # override accidental context defaults
-                subtype_id=self.env.ref('mail.mt_note').id)
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
 
     @api.multi
     def message_auto_subscribe(self, updated_fields, values=None):
