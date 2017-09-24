@@ -32,23 +32,18 @@ var KanbanColumnProgressBar = Widget.extend({
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
-        this.groupCount = state ? state.groupCount : 0;
-        this.subgroupCounts = state ? state.subgroupCounts : {};
-        this.totalCounterValue = state ? state.totalCounterValue : 0;
-        this.activeFilter = state ? state.activeFilter : false;
+        if (state) {
+            this.groupCount = state.groupCount;
+            this.subgroupCounts = state.subgroupCounts;
+            this.totalCounterValue = state.totalCounterValue;
+            this.activeFilter = state.activeFilter;
+        }
 
         // Prepare currency (TODO this should be automatic... use a field ?)
-        this.counterPrefix = '';
-        this.counterSuffix = '';
         var sumFieldInfo = this.sumField && columnState.fieldsInfo.kanban[this.sumField];
         var currencyField = sumFieldInfo && sumFieldInfo.options && sumFieldInfo.options.currency_field;
         if (currencyField && columnState.data.length) {
-            var currency = session.currencies[columnState.data[0].data[currencyField].res_id];
-            if (currency.position === 'before') {
-                this.counterPrefix = currency.symbol + ' ';
-            } else {
-                this.counterSuffix = ' ' + currency.symbol;
-            }
+            this.currency = session.currencies[columnState.data[0].data[currencyField].res_id];
         }
     },
     /**
@@ -62,6 +57,18 @@ var KanbanColumnProgressBar = Widget.extend({
             self.$bars[val] = self.$('.bg-' + val + '-full');
         });
         this.$counter = this.$('.o_kanban_counter_side');
+        this.$number = this.$counter.find('b');
+
+        if (this.currency) {
+            var $currency = $('<span/>', {
+                text: this.currency.symbol,
+            });
+            if (this.currency.position === 'before') {
+                $currency.prependTo(this.$counter);
+            } else {
+                $currency.appendTo(this.$counter);
+            }
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -136,7 +143,7 @@ var KanbanColumnProgressBar = Widget.extend({
         // Display and animate the progress bars
         _.each(self.colors, function (val, key) {
             var $bar = self.$bars[val];
-            var count = self.subgroupCounts[key];
+            var count = self.subgroupCounts && self.subgroupCounts[key] || 0;
 
             if (!$bar) {
                 return;
@@ -165,35 +172,28 @@ var KanbanColumnProgressBar = Widget.extend({
         });
 
         // Display and animate the counter number
-        var humanNumber;
-        var suffix = this.counterSuffix;
+        var start = this.prevTotalCounterValue;
         var end = this.totalCounterValue;
-        if (end >= 10000) {
-            humanNumber = utils.human_number(end, 1);
-            end = parseFloat(humanNumber.substr(0, humanNumber.length - 1));
-            suffix = humanNumber[humanNumber.length - 1] + suffix;
-        }
-        var start = this.prevTotalCounterValue || 0;
-        if (start >= 10000) {
-            humanNumber = utils.human_number(start, 1);
-            start = parseFloat(humanNumber.substr(0, humanNumber.length - 1));
-        }
-        if (end > start && this.ANIMATE) {
+        if (start !== undefined && end > start && this.ANIMATE) {
             $({currentValue: start}).animate({currentValue: end}, {
                 duration: 1000,
                 start: function () {
                     self.$counter.addClass('o_kanban_grow');
                 },
                 step: function () {
-                    self.$counter.html(self.counterPrefix + Math.round(this.currentValue) + suffix);
+                    self.$number.html(_getCounterHTML(this.currentValue));
                 },
                 complete: function () {
-                    self.$counter.html(self.counterPrefix + this.currentValue + suffix);
+                    self.$number.html(_getCounterHTML(this.currentValue));
                     self.$counter.removeClass('o_kanban_grow');
                 },
             });
         } else {
-            this.$counter.html(this.counterPrefix + end + suffix);
+            this.$number.html(_getCounterHTML(end));
+        }
+
+        function _getCounterHTML(value) {
+            return utils.human_number(value, 0, 3);
         }
     },
     /**

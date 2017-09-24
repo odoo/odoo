@@ -86,23 +86,39 @@ var utils = {
         return "";
     },
     /**
-     * Returns a human readable number
+     * Returns a human readable number (e.g. 34000 -> 34k).
      *
-     * @param {Number} number
+     * @param {number} number
+     * @param {integer} [decimals=0]
+     *        maximum number of decimals to use in human readable representation
+     * @param {integer} [minDigits=1]
+     *        the minimum number of digits to preserve when switching to another
+     *        level of thousands (e.g. with a value of '2', 4321 will still be
+     *        represented as 4321 otherwise it will be down to one digit (4k))
+     * @param {function} [formatterCallback]
+     *        a callback to transform the final number before adding the
+     *        thousands symbol (default to adding thousands separators (useful
+     *        if minDigits > 1))
+     * @returns {string}
      */
-    human_number: function (number, decimals) {
-        decimals = decimals | 0;
+    human_number: function (number, decimals, minDigits, formatterCallback) {
         number = Math.round(number);
+        decimals = decimals | 0;
+        minDigits = minDigits || 1;
+        formatterCallback = formatterCallback || utils.insert_thousand_seps;
+
         var d2 = Math.pow(10, decimals);
-        var val = _t("kMGTPE");
-        var i = val.length-1, s;
-        while( i ) {
-            s = Math.pow(10,i--*3);
-            if( s <= number ) {
-                number = Math.round(number*d2/s)/d2 + val[i];
+        var val = _t('kMGTPE');
+        var symbol = '';
+        for (var i = val.length - 1 ; i > 0 ; i--) {
+            var s = Math.pow(10, i * 3);
+            if (s <= number / Math.pow(10, minDigits - 1)) {
+                number = Math.round(number * d2 / s) / d2;
+                symbol = val[i - 1];
+                break;
             }
         }
-        return number;
+        return formatterCallback('' + number) + symbol;
     },
     /**
      * Returns a human readable size
