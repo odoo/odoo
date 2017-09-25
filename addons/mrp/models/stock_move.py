@@ -68,6 +68,7 @@ class StockMove(models.Model):
         help='Technical Field to order moves')
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
+    finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
     @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
     def _compute_done_quantity(self):
@@ -76,8 +77,13 @@ class StockMove(models.Model):
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
         for move in self:
-            if move.product_id.tracking != 'none' and move.raw_material_production_id:
-                move.order_finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+            if move.raw_material_production_id.move_finished_ids:
+                finished_lots_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+                if finished_lots_ids:
+                    move.order_finished_lot_ids = finished_lots_ids
+                    move.finished_lots_exist = True
+                else:
+                    move.finished_lots_exist = False
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
@@ -177,6 +183,37 @@ class StockMove(models.Model):
                 'name': self.name,
             })
         return self.env['stock.move']
+
+    def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
+        if lot:
+            ml = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
+        else:
+            ml = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
+        if ml:
+            new_quantity_done = (ml.qty_done + qty_to_add)
+            if new_quantity_done >= ml.product_uom_qty:
+                ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
+            else:
+                new_qty_reserved = ml.product_uom_qty - new_quantity_done
+                default = {'product_uom_qty': new_quantity_done,
+                           'qty_done': new_quantity_done,
+                           'lot_produced_id': final_lot.id}
+                ml.copy(default=default)
+                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
+        else:
+            vals = {
+                'move_id': self.id,
+                'product_id': self.product_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom.id,
+                'qty_done': qty_to_add,
+                'lot_produced_id': final_lot.id,
+            }
+            if lot:
+                vals.update({'lot_id': lot.id})
+            self.env['stock.move.line'].create(vals)
 
 
 class PushedFlow(models.Model):
