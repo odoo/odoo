@@ -58,6 +58,7 @@ var Chatter = Widget.extend(chat_mixin, {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
             var nodeOptions = this.record.fieldsInfo.form[mailFields.mail_thread].options;
             this.hasLogButton = nodeOptions.display_log_button;
+            this.postRefresh = nodeOptions.post_refresh || 'never';
         }
     },
     start: function () {
@@ -121,15 +122,11 @@ var Chatter = Widget.extend(chat_mixin, {
     // private
     _closeComposer: function (force) {
         if (this.composer && (this.composer.is_empty() || force)) {
+            this.$el.removeClass('o_chatter_composer_active');
+            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             this.composer.do_hide();
             this.composer.clear_composer();
-            this._muteNewMessageButton(false);
         }
-    },
-    _muteNewMessageButton: function (mute) {
-        this.$('.o_chatter_button_new_message')
-            .toggleClass('btn-primary', !mute)
-            .toggleClass('btn-default', mute);
     },
     _openComposer: function (options) {
         var self = this;
@@ -158,12 +155,21 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
-                self.fields.thread.postMessage(message).then(self._closeComposer.bind(self, true));
+                self.fields.thread.postMessage(message).then(function () {
+                    self._closeComposer(true);
+                    if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
+                        self.trigger_up('reload');
+                    }
+                });
             });
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
+
+            self.$el.addClass('o_chatter_composer_active');
+            self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
+            self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
+            self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
         });
-        this._muteNewMessageButton(true);
     },
     _render: function (def) {
         // the rendering of the chatter is aynchronous: relational data of its fields needs to be
@@ -282,10 +288,13 @@ var Chatter = Widget.extend(chat_mixin, {
         if (this.fields.thread && event.data.thread) {
             fieldNames.push(this.fields.thread.name);
         }
-        this.trigger_up('reload', {fieldNames: fieldNames});
+        this.trigger_up('reload', {
+            fieldNames: fieldNames,
+            keepChanges: true,
+        });
     },
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity();
+        this.fields.activity.scheduleActivity(false);
     },
 });
 

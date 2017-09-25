@@ -83,12 +83,17 @@ function transformQwebTemplate(node, fields) {
 
 var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
+    custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
+        'set_progress_bar_state': '_onSetProgressBarState',
+    }),
+
     /**
      * @override
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
+        this.widgets = [];
         this.qweb = new QWeb(session.debug, {_s: session.origin});
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
@@ -99,6 +104,11 @@ var KanbanRenderer = BasicRenderer.extend({
             viewType: 'kanban',
         });
         this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
+        if (this.columnOptions.hasProgressBar) {
+            this.columnOptions.progressBarStates = {};
+        }
+
+        this._setState(state);
     },
 
     //--------------------------------------------------------------------------
@@ -112,10 +122,10 @@ var KanbanRenderer = BasicRenderer.extend({
         this.widgets[0].addQuickCreate();
     },
     /**
-     * @returns {Deferred}
+     * Toggle fold/unfold the Column quick create widget
      */
-    canBeSaved: function () {
-        return $.when();
+    quickCreateToggleFold: function () {
+        this.quickCreate.toggleFold();
     },
     /**
      * Removes a widget (record if ungrouped, column if grouped) from the view.
@@ -135,10 +145,10 @@ var KanbanRenderer = BasicRenderer.extend({
      * @returns {Deferred}
      */
     updateColumn: function (localID, columnState) {
-        var column = _.findWhere(this.widgets, {db_id: localID});
-        this.widgets.splice(_.indexOf(this.widgets, column), 1); // remove column from widgets' list
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
-        this.widgets.push(newColumn);
+        var index = _.findIndex(this.widgets, {db_id: localID});
+        var column = this.widgets[index];
+        this.widgets[index] = newColumn;
         return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
     },
     /**
@@ -166,11 +176,31 @@ var KanbanRenderer = BasicRenderer.extend({
             record.update(recordState);
         }
     },
+    /**
+     * @override
+     */
+    updateState: function (state) {
+        this._setState(state);
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * The nocontent helper should be displayed in kanban:
+     *   - ungrouped: if there is no records
+     *   - grouped: if there is no groups and no column quick create
+     *
+     * @override
+     * @private
+     */
+    _hasContent: function () {
+        return this._super.apply(this, arguments) ||
+               this.createColumnEnabled ||
+               (this.state.groupedBy.length && this.state.data.length);
+    },
     /**
      * Renders empty invisible divs in a document fragment.
      *
@@ -192,25 +222,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderGrouped: function (fragment) {
         var self = this;
-        var groupByFieldAttrs = this.state.fields[this.state.groupedBy[0]];
-        // Deactivate the drag'n'drop if the groupedBy field:
-        // - is a date or datetime since we group by month or
-        // - is readonly
-        var draggable = true;
-        if (groupByFieldAttrs) {
-            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
-                draggable = false;
-            } else if (groupByFieldAttrs.readonly !== undefined) {
-                draggable = !(groupByFieldAttrs.readonly);
-            }
-        }
-        var groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
-        var grouped_by_field = groupedByM2O && groupByFieldAttrs.relation;
-        this.columnOptions = _.extend(this.columnOptions, {
-            draggable: draggable,
-            grouped_by_m2o: groupedByM2O,
-            relation: grouped_by_field,
-        });
 
         // Render columns
         _.each(this.state.data, function (group) {
@@ -224,12 +235,12 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
-        if (groupedByM2O) {
+        if (this.groupedByM2O) {
             // Enable column sorting
             this.$el.sortable({
                 axis: 'x',
                 items: '> .o_kanban_group',
-                handle: '.o_kanban_header',
+                handle: '.o_kanban_header_title',
                 cursor: 'move',
                 revert: 150,
                 delay: 100,
@@ -245,9 +256,9 @@ var KanbanRenderer = BasicRenderer.extend({
             });
 
             // Enable column quickcreate
-            if (this.columnOptions.group_creatable) {
-                var quickCreate = new ColumnQuickCreate(this);
-                quickCreate.appendTo(fragment);
+            if (this.createColumnEnabled) {
+                this.quickCreate = new ColumnQuickCreate(this);
+                this.quickCreate.appendTo(fragment);
             }
         }
 
@@ -274,19 +285,81 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      */
     _renderView: function () {
-        var isGrouped = !!this.state.groupedBy.length;
-        this.$el.toggleClass('o_kanban_grouped', isGrouped);
-        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+        var oldWidgets = this.widgets;
+        this.widgets = [];
         this.$el.empty();
 
-        var fragment = document.createDocumentFragment();
-        if (isGrouped) {
-            this._renderGrouped(fragment);
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
+        this.$el.toggleClass('o_kanban_nocontent', displayNoContentHelper);
+        if (displayNoContentHelper) {
+            // display the no content helper if there is no data to display
+            this._renderNoContentHelper();
         } else {
-            this._renderUngrouped(fragment);
+            var isGrouped = !!this.state.groupedBy.length;
+            this.$el.toggleClass('o_kanban_grouped', isGrouped);
+            this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+            var fragment = document.createDocumentFragment();
+            // render the kanban view
+            if (isGrouped) {
+                this._renderGrouped(fragment);
+            } else {
+                this._renderUngrouped(fragment);
+            }
+            this.$el.append(fragment);
         }
-        this.$el.append(fragment);
-        return this._super.apply(this, arguments);
+
+        return this._super.apply(this, arguments).then(_.invoke.bind(_, oldWidgets, 'destroy'));
+    },
+    /**
+     * Sets the current state and updates some internal attributes accordingly.
+     *
+     * @private
+     * @param {Object} state
+     */
+    _setState: function (state) {
+        this.state = state;
+
+        var groupByFieldAttrs = state.fields[state.groupedBy[0]];
+        var groupByFieldInfo = state.fieldsInfo.kanban[state.groupedBy[0]];
+        // Deactivate the drag'n'drop if the groupedBy field:
+        // - is a date or datetime since we group by month or
+        // - is readonly
+        var draggable = true;
+        if (groupByFieldAttrs) {
+            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
+                draggable = false;
+            } else if (groupByFieldAttrs.readonly !== undefined) {
+                draggable = !(groupByFieldAttrs.readonly);
+            }
+        }
+        this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
+        var grouped_by_field = this.groupedByM2O && groupByFieldAttrs.relation;
+        var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
+        this.columnOptions = _.extend(this.columnOptions, {
+            draggable: draggable,
+            group_by_tooltip: groupByTooltip,
+            grouped_by_m2o: this.groupedByM2O,
+            relation: grouped_by_field,
+        });
+        this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Updates progressbar internal states (necessary for animations) with
+     * received data.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSetProgressBarState: function (ev) {
+        if (!this.columnOptions.progressBarStates[ev.data.columnID]) {
+            this.columnOptions.progressBarStates[ev.data.columnID] = {};
+        }
+        _.extend(this.columnOptions.progressBarStates[ev.data.columnID], ev.data.values);
     },
 });
 

@@ -1298,7 +1298,7 @@ activated as actual fields on the model.
 Report printing
 ---------------
 
-Available reports can be listed by searching the ``ir.actions.report.xml``
+Available reports can be listed by searching the ``ir.actions.report``
 model, fields of interest being
 
 ``model``

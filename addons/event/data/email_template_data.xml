@@ -26,7 +26,7 @@
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="reply_to" eval="False"/>
             <field name="subject">Your registration at ${object.event_id.name}</field>
             <field name="body_html"><![CDATA[
 <div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
@@ -200,7 +200,7 @@
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="reply_to">${object.event_id.reply_to|safe}</field>
+            <field name="reply_to" eval="False"/>
             <field name="subject">${object.event_id.name}: ${object.get_date_range_str()}</field>
             <field name="body_html"><![CDATA[
 <div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">

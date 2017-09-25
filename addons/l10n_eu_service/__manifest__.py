@@ -52,11 +52,11 @@ References
 - Council Implementing Regulation (EU) No 1042/2013
 
     """,
-    'depends': ['account_accountant'],
+    'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/wizard.xml',
         'data/l10n_eu_service.service_tax_rate.csv',
-        'views/account_settings_config_views.xml'
+        'views/res_config_settings_views.xml'
     ],
 }

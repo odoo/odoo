@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Payment Tx Assets">
+        <xpath expr="." position="inside">
+        	<link rel='stylesheet' href='/payment/static/src/css/portal_payment.css'/>
+        	<script type="text/javascript" src="/payment/static/lib/jquery.payment/jquery.payment.js"></script>
+          	<script type="text/javascript" src="/payment/static/src/js/payment_portal.js"></script>
+          	<script type="text/javascript" src="/payment/static/src/js/payment_transaction_portal.js"></script>
+          <script type="text/javascript" src="/payment/static/src/js/payment_form.js"></script>
+          <link rel="stylesheet" href="/payment/static/src/less/payment_form.less"/>
+        </xpath>
+    </template>
+</odoo>

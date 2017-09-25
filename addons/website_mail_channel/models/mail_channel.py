@@ -3,11 +3,11 @@
 
 import hmac
 
-from urlparse import urljoin
+from werkzeug import urls
 
 from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailGroup(models.Model):
@@ -47,7 +47,7 @@ class MailGroup(models.Model):
             # generate a new token per subscriber
             token = self._generate_action_token(partner_id, action=action)
 
-            token_url = urljoin(base_url, route % {
+            token_url = urls.url_join(base_url, route % {
                 'action': action,
                 'channel': self.id,
                 'partner': partner_id,
@@ -68,4 +68,4 @@ class MailGroup(models.Model):
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data).hexdigest()
+        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()

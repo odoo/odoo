@@ -8,6 +8,7 @@ var kanban_quick_create = require('web.kanban_quick_create');
 var KanbanRecord = require('web.KanbanRecord');
 var view_dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
+var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,6 +20,8 @@ var KanbanColumn = Widget.extend({
         cancel_quick_create: '_onCancelQuickCreate',
         kanban_record_delete: '_onDeleteRecord',
         quick_create_add_record: '_onQuickCreateAddRecord',
+        tweak_column: '_onTweakColumn',
+        tweak_column_records: '_onTweakColumnRecords',
     },
     events: {
         'click .o_column_edit': '_onEditColumn',
@@ -36,19 +39,13 @@ var KanbanColumn = Widget.extend({
         this._super(parent);
         this.db_id = data.id;
         this.data_records = data.data;
+        this.data = data;
 
         var value = data.value;
         this.id = data.res_id || value;
-        var field = data.fields[data.groupedBy[0]]; // fixme: grouped by field might not be in the fvg
-        if (field && field.type === "selection") {
-            value = _.find(field.selection, function (s) { return s[0] === data.value; })[1]; // fixme: same process done in list_renderer
-        }
-        // todo: handle group_by_m2o (nameget)
-        this.title = value || _t('Undefined');
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.size = data.count;
-        this.values = data.values;
         this.fields = data.fields;
         this.records = [];
         this.modelName = data.model;
@@ -64,15 +61,29 @@ var KanbanColumn = Widget.extend({
         this.offset = 0;
         this.remaining = this.size - this.data_records.length;
 
+        if (options.hasProgressBar) {
+            this.barOptions = {
+                columnID: this.db_id,
+                progressBarStates: options.progressBarStates,
+            };
+        }
+
         this.record_options = _.clone(recordOptions);
 
-        if (data.options && data.options.group_by_tooltip) {
-            var self = this;
-            this.tooltip_info = _.map(data.options.group_by_tooltip, function (key, value) {
-                return (self.values && self.values[value] && "<div>" +key + "<br>" + self.values[value] + "</div>") || '';
+        if (options.grouped_by_m2o) {
+            // For many2one, a false value means that the field is not set.
+            this.title = value ? value : _t('Undefined');
+        } else {
+            // False and 0 might be valid values for these fields.
+            this.title = value === undefined ? _t('Undefined') : value;
+        }
+
+        if (options.group_by_tooltip) {
+            this.tooltipInfo = _.map(options.group_by_tooltip, function (help, field) {
+                return (data.tooltipData && data.tooltipData[field] && "<div>" + help + "<br>" + data.tooltipData[field] + "</div>") || '';
             }).join('');
         } else {
-            this.tooltip_info = "";
+            this.tooltipInfo = "";
         }
     },
     /**
@@ -80,12 +91,13 @@ var KanbanColumn = Widget.extend({
      */
     start: function () {
         var self = this;
+        var defs = [this._super.apply(this, arguments)];
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
             this.addRecord(this.data_records[i], {no_update: true});
         }
-        this.$header.tooltip();
+        this.$header.find('.o_kanban_header_title').tooltip();
 
         if (config.device.size_class > config.device.SIZES.XS && this.draggable !== false) {
             // deactivate sortable in mobile mode.  It does not work anyway,
@@ -109,7 +121,6 @@ var KanbanColumn = Widget.extend({
                     var record = ui.item.data('record');
                     var index = self.records.indexOf(record);
                     record.$el.removeAttr('style');  // jqueryui sortable add display:block inline
-                    ui.item.addClass('o_updating');
                     if (index >= 0) {
                         if ($.contains(self.$el[0], record.$el[0])) {
                             // resequencing records
@@ -117,6 +128,7 @@ var KanbanColumn = Widget.extend({
                         }
                     } else {
                         // adding record to this column
+                        ui.item.addClass('o_updating');
                         self.trigger_up('kanban_column_add_record', {record: record, ids: self._getIDs()});
                     }
                 }
@@ -127,9 +139,12 @@ var KanbanColumn = Widget.extend({
                 self._onToggleFold(event);
             }
         });
-        this._update();
+        if (this.barOptions) {
+            this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
+            defs.push(this.progressBar.appendTo(this.$header));
+        }
 
-        return this._super.apply(this, arguments);
+        return $.when.apply($, defs).then(this._update.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -143,16 +158,9 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             return;
         }
-        var self = this;
         var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
         this.quickCreateWidget = new RecordQuickCreate(this, width);
         this.quickCreateWidget.insertAfter(this.$header);
-        this.quickCreateWidget.$el.focusout(function () {
-            var hasFocus = (self.quickCreateWidget.$(':focus').length > 0);
-            if (! hasFocus && self.quickCreateWidget) {
-                self._cancelQuickCreate();
-            }
-        });
     },
     /**
      * Adds a record in the column.
@@ -185,6 +193,18 @@ var KanbanColumn = Widget.extend({
      */
     isEmpty: function () {
         return !this.records.length;
+    },
+    /**
+     * Updates the column progressBar and sets the new data. New data are
+     * supposed to already match column rendering (except for the progressBar).
+     *
+     * @param {Object} data
+     */
+    updateProgressBar: function (data) {
+        this.data = data;
+        if (!this.folded && this.progressBar) {
+            this.progressBar.update(this.data);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -220,13 +240,14 @@ var KanbanColumn = Widget.extend({
 
         this.$el.toggleClass('o_column_folded', this.folded);
         var tooltip = this.size + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
-        this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
+        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
+        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
         }
+        this.updateProgressBar(this.data);
     },
 
     //--------------------------------------------------------------------------
@@ -324,6 +345,22 @@ var KanbanColumn = Widget.extend({
     _onToggleFold: function (event) {
         event.preventDefault();
         this.trigger_up('column_toggle_fold');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onTweakColumn: function (ev) {
+        ev.data.callback(this.$el);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onTweakColumnRecords: function (ev) {
+        _.each(this.records, function (record) {
+            ev.data.callback(record.$el, record.state.data);
+        });
     },
     /**
      * @private

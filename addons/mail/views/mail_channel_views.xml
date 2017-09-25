@@ -61,9 +61,9 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_global_click">
-                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_module_icon"/>
+                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.raw_value)" class="oe_module_icon"/>
                                 <div class="oe_module_desc">
-                                    <h4>#<field name="name"/></h4>
+                                    <h4 class="o_kanban_record_title">#<field name="name"/></h4>
                                     <p class="oe_module_name">
                                         <field name="description"/>
                                     </p>

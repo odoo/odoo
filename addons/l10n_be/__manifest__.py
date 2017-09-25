@@ -37,13 +37,14 @@ Wizards provided by this module:
     'author': 'Noviat, Odoo SA',
     'depends': [
         'account',
-        'base_vat',
         'base_iban',
+        'base_vat',
         'l10n_multilang',
     ],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account_pcmn_belgium_data.xml',
+        'data/account_data.xml',
         'data/account_tax_template_data.xml',
         'data/l10n_be_sequence_data.xml',
         'data/fiscal_templates_data.xml',

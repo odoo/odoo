@@ -4,7 +4,6 @@
     <menuitem
         id="menu_point_root"
         name="Point of Sale"
-        load_xmlid="True"
         groups="group_pos_manager,group_pos_user"
         web_icon="point_of_sale,static/description/icon.png"
         sequence="20"/>
@@ -29,14 +28,9 @@
         sequence="100"
         groups="group_pos_manager"/>
 
-    <menuitem id="pos_config_menu_configuration"
-        name="Point of Sale"
-        parent="menu_point_config_product"
-        sequence="10"/>
-
-    <menuitem id="pos_config_menu_configuration_product"
+    <menuitem id="pos_menu_products_configuration"
         name="Products"
         parent="menu_point_config_product"
-        sequence="20"/>
+        sequence="11"/>
 
 </odoo>

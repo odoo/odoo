@@ -11,9 +11,12 @@ var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var widgetRegistry = require('web.widget_registry');
 
 var _t = core._t;
 var QWeb = core.qweb;
+
+var NB_KANBAN_RECORD_COLORS = 12;
 
 var KanbanRecord = Widget.extend({
     events: {
@@ -39,6 +42,8 @@ var KanbanRecord = Widget.extend({
         this.subWidgets = {};
 
         this._setState(state);
+        // avoid quick multiple clicks
+        this._onKanbanActionClicked = _.debounce(this._onKanbanActionClicked, 300, true);
     },
     start: function () {
         return this._super.apply(this, arguments).then(this._render.bind(this));
@@ -88,13 +93,13 @@ var KanbanRecord = Widget.extend({
      * @returns {boolean} the domain evaluted with the current values
      */
     _computeDomain: function (d) {
-        return new Domain(d).compute(this.state.getEvalContext());
+        return new Domain(d).compute(this.state.evalContext);
     },
     /**
      * Generates the color classname from a given variable
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @return {string} the classname
      */
     _getColorClassname: function (variable) {
@@ -105,19 +110,19 @@ var KanbanRecord = Widget.extend({
      * Computes a color id between 0 and 10 from a given value
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @returns {integer} the color id
      */
     _getColorID: function (variable) {
-        if (typeof(variable) === 'number') {
-            return Math.round(variable) % 10;
+        if (typeof variable === 'number') {
+            return Math.round(variable) % NB_KANBAN_RECORD_COLORS;
         }
-        if (typeof(variable) === 'string') {
+        if (typeof variable === 'string') {
             var index = 0;
-            for (var i=0; i<variable.length; i++) {
+            for (var i = 0 ; i < variable.length ; i++) {
                 index += variable.charCodeAt(i);
             }
-            return index % 10;
+            return index % NB_KANBAN_RECORD_COLORS;
         }
         return 0;
     },
@@ -252,12 +257,26 @@ var KanbanRecord = Widget.extend({
             }
             attrs[key] = value;
         });
-        this.fieldsInfo[field_name] = attrs;
-
-        var widget = new Widget(this, field_name, this.state, this.options);
+        var options = _.extend({}, this.options, {attrs: attrs});
+        var widget = new Widget(this, field_name, this.state, options);
         widget.replace($field);
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
+    },
+    _processWidgets: function () {
+        var self = this;
+        this.$("widget").each(function () {
+            var $field = $(this);
+            var Widget = widgetRegistry.get($field.attr('name'));
+            var widget = new Widget(self, self.state);
+
+            var def = widget.__widgetRenderAndInsert(function () {});
+            if (def.state() === 'pending') {
+                self.defs.push(def);
+            }
+            widget.$el.addClass('o_widget');
+            $field.replaceWith(widget.$el);
+        });
     },
     /**
      * Renders the record
@@ -271,6 +290,7 @@ var KanbanRecord = Widget.extend({
             this.$el.on('click', this._onGlobalClick.bind(this));
         }
         this._processFields();
+        this._processWidgets();
         this._setupColor();
         this._setupColorPicker();
         this._attachTooltip();
@@ -366,7 +386,7 @@ var KanbanRecord = Widget.extend({
             if ((r.type === 'date' || r.type === 'datetime') && value) {
                 r.raw_value = value.toDate();
             } else if (r.type === 'one2many' || r.type === 'many2many') {
-                r.raw_value = value.count ? value.res_ids : false;
+                r.raw_value = value.count ? value.res_ids : [];
             } else if (r.type === 'many2one' ) {
                 r.raw_value = value && value.res_id || false;
             } else {
@@ -492,8 +512,7 @@ var KanbanRecord = Widget.extend({
      */
     _onManageTogglerClicked: function (event) {
         event.preventDefault();
-        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        this.$el.toggleClass('o_dropdown_open');
         var colorClass = this._getColorClassname(this.recordData.color || 0);
         this.$('.o_kanban_manage_button_section').toggleClass(colorClass);
     },

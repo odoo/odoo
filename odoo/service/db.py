@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import base64
 import json
 import logging
 import os
@@ -7,7 +7,7 @@ import shutil
 import tempfile
 import threading
 import traceback
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 import zipfile
 
 from functools import wraps
@@ -23,6 +23,7 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -160,7 +161,7 @@ def exp_dump(db_name, format):
     with tempfile.TemporaryFile() as t:
         dump_db(db_name, t, format)
         t.seek(0)
-        return t.read().encode('base64')
+        return base64.b64encode(t.read())
 
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
@@ -215,7 +216,7 @@ def dump_db(db_name, stream, backup_format='zip'):
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        data_file.write(base64.b64decode(data))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
@@ -223,7 +224,7 @@ def exp_restore(db_name, data, copy=False):
     return True
 
 def restore_db(db, dump_file, copy=False):
-    assert isinstance(db, basestring)
+    assert isinstance(db, pycompat.string_types)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")
@@ -316,11 +317,24 @@ def exp_migrate_databases(databases):
 @odoo.tools.mute_logger('odoo.sql_db')
 def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
-    return bool(odoo.sql_db.db_connect(db_name))
+    try:
+        db = odoo.sql_db.db_connect(db_name)
+        with db.cursor():
+            return True
+    except Exception:
+        return False
 
 def list_dbs(force=False):
     if not odoo.tools.config['list_db'] and not force:
         raise odoo.exceptions.AccessDenied()
+
+    if not odoo.tools.config['dbfilter'] and odoo.tools.config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will not
+        # fetch the list of databases available on the postgres server and instead will
+        # use the value of --database as comma seperated list of exposed databases.
+        res = sorted(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        return res
+
     chosen_template = odoo.tools.config['db_template']
     templates_list = tuple(set(['postgres', chosen_template]))
     db = odoo.sql_db.db_connect('postgres')
@@ -351,7 +365,7 @@ def list_db_incompatible(databases):
         :return: A list of databases that are incompatible
     """
     incompatible_databases = []
-    server_version = '.'.join(map(str, version_info[:2]))
+    server_version = '.'.join(str(v) for v in version_info[:2])
     for database_name in databases:
         with closing(db_connect(database_name).cursor()) as cr:
             if odoo.tools.table_exists(cr, 'ir_module_module'):

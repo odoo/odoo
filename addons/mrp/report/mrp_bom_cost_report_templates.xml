@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="mrp_bom_cost_report">
-        <t t-call="report.html_container">
+        <t t-call="web.html_container">
             <t t-foreach="lines" t-as="line">
-                <t t-call="report.internal_layout">
+                <t t-call="web.internal_layout">
                     <div class="page">
                         <t t-set="currency" t-value="line['currency']"/>
                         <h1><t t-esc="line['name']"/></h1><br/>

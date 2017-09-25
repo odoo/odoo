@@ -10,14 +10,14 @@ from werkzeug.exceptions import NotFound
 from odoo import fields
 from odoo import http
 from odoo.http import request
-from odoo.addons.website.models.website import slug, unslug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+
 from odoo.tools.translate import _
 
-from odoo.addons.website_portal.controllers.main import website_account
 
-
-class WebsiteAccount(website_account):
+class WebsiteAccount(CustomerPortal):
 
     def get_domain_my_lead(self, user):
         return [
@@ -274,7 +274,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             offset=pager['offset'], limit=self._references_per_page)
         partners = partner_ids.sudo()
 
-        google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
+        google_map_partner_ids = ','.join(str(p.id) for p in partners)
         google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         values = {

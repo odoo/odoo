@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <menuitem id="account_reports_in_statements_menu" name="Indian Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+        <menuitem id="account_reports_in_statements_menu" name="India" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
         <record id="standard_transfer_account_id" model="account.account.template">
             <field name="code">1008</field>
@@ -20,6 +20,19 @@
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
          </record>
 
+        <record id="sgst_tag_account" model="account.account.tag">
+            <field name="name">SGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="cgst_tag_account" model="account.account.tag">
+            <field name="name">CGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="igst_tag_account" model="account.account.tag">
+            <field name="name">IGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+
         <record model="account.account.template" id="p10031">
             <field name="name">Inventories</field>
             <field name="code">10031</field>
@@ -34,47 +47,31 @@
             <field name="reconcile" eval="True"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
         </record>
-        <record model="account.account.template" id="p10050">
-            <field name="name">Sales Tax Receivable</field>
-            <field name="code">10050</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
         <record model="account.account.template" id="p10051">
-            <field name="name">VAT Receivable</field>
+            <field name="name">SGST Receivable</field>
             <field name="code">10051</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_account'),])]"/>
         </record>
-        <record model="account.account.template" id="p100521">
-            <field name="name">Excise Duty Receivable</field>
-            <field name="code">100521</field>
+
+        <record model="account.account.template" id="p10052">
+            <field name="name">CGST Receivable</field>
+            <field name="code">10052</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_account'),])]"/>
         </record>
-        <record model="account.account.template" id="p100531">
-            <field name="name">Service Tax Receivable</field>
-            <field name="code">100531</field>
+
+        <record model="account.account.template" id="p10053">
+            <field name="name">IGST Receivable</field>
+            <field name="code">10053</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
-        <record model="account.account.template" id="p100532">
-            <field name="name">Swachh Bharat Cess Receivable On Service</field>
-            <field name="code">100532</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
-        <record model="account.account.template" id="p100533">
-            <field name="name">Krishi Kalyan Cess Receivable On Service</field>
-            <field name="code">100533</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('igst_tag_account'),])]"/>
         </record>
         <record model="account.account.template" id="p10054">
             <field name="name">TDS Receivable</field>
@@ -207,46 +204,30 @@
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
         </record>
         <record model="account.account.template" id="p11232">
-            <field name="name">VAT Payable</field>
+            <field name="name">SGST Payable</field>
             <field name="code">11232</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_account'),])]"/>
         </record>
-        <record model="account.account.template" id="p112331">
-            <field name="name">Excise Duty Payable</field>
-            <field name="code">112331</field>
+
+        <record model="account.account.template" id="p11233">
+            <field name="name">CGST Payable</field>
+            <field name="code">11233</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_account'),])]"/>
         </record>
-        <record model="account.account.template" id="p112341">
-            <field name="name">Service Tax Payable</field>
-            <field name="code">112341</field>
+
+        <record model="account.account.template" id="p11234">
+            <field name="name">IGST Payable</field>
+            <field name="code">11234</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
-        <record model="account.account.template" id="p112342">
-            <field name="name">Swachh Bharat Cess Payable On Service</field>
-            <field name="code">112342</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
-        <record model="account.account.template" id="p112343">
-            <field name="name">Krishi Kalyan Cess Payable On Service</field>
-            <field name="code">112343</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        </record>
-        <record model="account.account.template" id="p11235">
-            <field name="name">Sales Tax Payable</field>
-            <field name="code">11235</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('igst_tag_account'),])]"/>
         </record>
         <record model="account.account.template" id="p11241">
             <field name="name">Wages Payable</field>
@@ -528,4 +509,5 @@
             <field name="income_currency_exchange_account_id" ref="p2013"/>
             <field name="expense_currency_exchange_account_id" ref="p2117"/>
         </record>
+
 </odoo>

@@ -50,8 +50,8 @@ class AccountInvoiceReport(models.Model):
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
-        ('out_refund', 'Customer Refund'),
-        ('in_refund', 'Vendor Refund'),
+        ('out_refund', 'Customer Credit Note'),
+        ('in_refund', 'Vendor Credit Note'),
         ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -66,6 +66,7 @@ class AccountInvoiceReport(models.Model):
     residual = fields.Float(string='Due Amount', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
 
     _order = 'date desc'
 
@@ -108,8 +109,8 @@ class AccountInvoiceReport(models.Model):
                     1 AS nbr,
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
-                    SUM ((invoice_type.sign * ail.quantity) / (u.factor * u2.factor)) AS product_qty,
-                    SUM(ail.price_subtotal_signed) AS price_total,
+                    SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
+                    SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN SUM(ail.quantity / u.factor * u2.factor)
@@ -132,7 +133,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
                 JOIN (
-                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Refund) 
+                    -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
                          WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1

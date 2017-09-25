@@ -43,6 +43,8 @@ class AccountBankStatementImport(models.TransientModel):
         if not journal:
             # The active_id is passed in context so the wizard can call import_file again once the journal is created
             return self.with_context(active_id=self.ids[0])._journal_creation_wizard(currency, account_number)
+        if not journal.default_debit_account_id or not journal.default_credit_account_id:
+            raise UserError(_('You have to set a Default Debit Account and a Default Credit Account for the journal: %s') % (journal.name,))
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
         # Create the bank statements
@@ -213,13 +215,12 @@ class AccountBankStatementImport(models.TransientModel):
                 if 'unique_import_id' not in line_vals \
                    or not line_vals['unique_import_id'] \
                    or not bool(BankStatementLine.sudo().search([('unique_import_id', '=', line_vals['unique_import_id'])], limit=1)):
-                    if line_vals['amount'] != 0:
-                        # Some banks, like ING, create a line for free charges.
-                        # We just skip those lines as there's a 'non-zero' constraint
-                        # on the amount of account.bank.statement.line
-                        filtered_st_lines.append(line_vals)
+                    filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
+                    if 'balance_start' in st_vals:
+                        st_vals['balance_start'] += float(line_vals['amount'])
+
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)

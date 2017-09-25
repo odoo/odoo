@@ -6,7 +6,8 @@ import logging
 from lxml import etree, html
 
 from odoo.exceptions import AccessError
-from odoo import api, models
+from odoo import api, fields, models
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +35,10 @@ class IrUiView(models.Model):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
     @api.model
+    def get_default_lang_code(self):
+        return False
+
+    @api.model
     def save_embedded_field(self, el):
         Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
@@ -44,7 +49,10 @@ class IrUiView(models.Model):
 
         if value is not None:
             # TODO: batch writes?
-            Model.browse(int(el.get('data-oe-id'))).write({field: value})
+            if not self.env.context.get('lang') and self.get_default_lang_code():
+                Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
+            else:
+                Model.browse(int(el.get('data-oe-id'))).write({field: value})
 
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and
@@ -83,8 +91,8 @@ class IrUiView(models.Model):
     @api.model
     def to_field_ref(self, el):
         # filter out meta-information inserted in the document
-        attributes = dict((k, v) for k, v in el.items()
-                          if not k.startswith('data-oe-'))
+        attributes = {k: v for k, v in el.attrib.items()
+                           if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
 
         out = html.html_parser.makeelement(el.tag, attrib=attributes)
@@ -119,9 +127,9 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, basestring):
+        if isinstance(view_id, pycompat.string_types):
             return self.env.ref(view_id)
-        elif isinstance(view_id, (int, long)):
+        elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
         # assume it's already a view object (WTF?)
         return view_id

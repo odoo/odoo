@@ -50,7 +50,6 @@ var PlannerDialog = Dialog.extend({
     init: function (parent, options, planner) {
         this._super.apply(this, arguments);
 
-        this.$modal.addClass("o_planner_dialog");
         this.planner = planner;
         this.cookie_name = this.planner.planner_application + '_last_page';
         this.pages = [];
@@ -80,6 +79,7 @@ var PlannerDialog = Dialog.extend({
         return $.when(this._super.apply(this, arguments), def);
     },
     start: function() {
+        this.$modal.addClass("o_planner_dialog");
         this.$template.find(".o_planner_page").addBack(".o_planner_page").each((function (index, dom_page) {
             this.pages.push(new Page(dom_page, index));
         }).bind(this));
@@ -397,9 +397,6 @@ var PlannerLauncher = Widget.extend({
     sequence: 100, // force it to be the left-most item in the systray to prevent flickering as it is not displayed in all apps
     events: {
         "click": "show_dialog"
-    },
-    init: function () {
-        this._super.apply(this, arguments);
     },
     start: function () {
         this.$progress = this.$(".progress");

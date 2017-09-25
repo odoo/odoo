@@ -5,12 +5,13 @@ var config = require('web.config');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var pyeval = require('web.pyeval');
-var session = require('web.session');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
 
 return core.Class.extend({
     init: function () {
         this._init_cache();
+        core.bus.on('clear_cache', this, this.invalidate.bind(this));
     },
 
     _init_cache: function () {
@@ -42,9 +43,12 @@ return core.Class.extend({
         var key = this._gen_key(action_id, additional_context || {});
 
         if (!this._cache.actions[key]) {
-            this._cache.actions[key] = session.rpc("/web/action/load", {
-                action_id: action_id,
-                additional_context : additional_context,
+            this._cache.actions[key] = rpc.query({
+                route: "/web/action/load",
+                params: {
+                    action_id: action_id,
+                    additional_context : additional_context,
+                },
             }).then(function (action) {
                 self._cache.actions[key] = action.no_cache ? null : self._cache.actions[key];
                 return action;
@@ -60,9 +64,11 @@ return core.Class.extend({
      * Loads various information concerning views: fields_view for each view,
      * the fields of the corresponding model, and optionally the filters.
      *
-     * @param {Object} [dataset] the dataset for which the views are loaded
-     * @param {Array} [views_descr] array of [view_id, view_type]
-     * @param {Object} [options] dictionnary of various options:
+     * @param {Object} params
+     * @param {String} params.model
+     * @param {Object} params.context
+     * @param {Array} params.views_descr array of [view_id, view_type]
+     * @param {Object} [options] dictionary of various options:
      *     - options.load_filters: whether or not to load the filters,
      *     - options.action_id: the action_id (required to load filters),
      *     - options.toolbar: whether or not a toolbar will be displayed,
@@ -84,7 +90,7 @@ return core.Class.extend({
                 options.load_filters = !this._cache.filters[filters_key];
             }
 
-            this._cache.views[key] = session.rpc('/web/dataset/call_kw/' + model + '/load_views', {
+            this._cache.views[key] = rpc.query({
                 args: [],
                 kwargs: {
                     views: views_descr,
@@ -125,7 +131,7 @@ return core.Class.extend({
     load_filters: function (dataset, action_id) {
         var key = this._gen_key(dataset.model, action_id);
         if (!this._cache.filters[key]) {
-            this._cache.filters[key] = session.rpc('/web/dataset/call_kw/ir.filters/get_filters', {
+            this._cache.filters[key] = rpc.query({
                 args: [dataset.model, action_id],
                 kwargs: {
                     context: dataset.get_context(),
@@ -145,7 +151,7 @@ return core.Class.extend({
      */
     create_filter: function (filter) {
         var self = this;
-        return session.rpc('/web/dataset/call_kw/ir.filters/create_or_replace', {
+        return rpc.query({
                 args: [filter],
                 model: 'ir.filters',
                 method: 'create_or_replace',
@@ -168,7 +174,7 @@ return core.Class.extend({
      */
     delete_filter: function (filter) {
         var self = this;
-        return session.rpc('/web/dataset/call_kw/ir.filters/unlink', {
+        return rpc.query({
                 args: [filter.id],
                 model: 'ir.filters',
                 method: 'unlink',
@@ -271,6 +277,24 @@ return core.Class.extend({
             field.onChange = "1";
         }
 
+        // the relational data of invisible relational fields should not be
+        // fetched (e.g. name_gets of invisible many2ones), at least those that
+        // are always invisible.
+        // the invisible attribute of a field is supposed to be static ("1" in
+        // general), but not totally as it may use keys of the context
+        // ("context.get('some_key')"). It is evaluated server-side, and the
+        // result is put inside the modifiers as a value of the '(tree_)invisible'
+        // key, and the raw value is left in the invisible attribute (it is used
+        // in debug mode for informational purposes).
+        // this should change, for instance the server might set the evaluated
+        // value in invisible, which could then be seen as static by the client,
+        // and add another key in debug mode containing the raw value.
+        // for now, we do an hack to detect if the value is static and retrieve
+        // it from the modifiers,
+        if (attrs.invisible && attrs.modifiers.match('"(?:tree_)?invisible": ?true')) {
+            attrs.__no_fetch = true;
+        }
+
         if (!_.isEmpty(field.views)) {
             // process the inner fields_view as well to find the fields they use.
             // register those fields' description directly on the view.
@@ -312,18 +336,46 @@ return core.Class.extend({
                     }
                 }
                 attrs.mode = mode;
+                if (mode in attrs.views) {
+                    var view = attrs.views[mode];
+                    var defaultOrder = view.arch.attrs.default_order;
+                    if (defaultOrder) {
+                        // process the default_order, which is like 'name,id desc'
+                        // but we need it like [{name: 'name', asc: true}, {name: 'id', asc: false}]
+                        attrs.orderedBy = _.map(defaultOrder.split(','), function (order) {
+                            order = order.trim().split(' ');
+                            return {name: order[0], asc: order[1] !== 'desc'};
+                        });
+                    } else {
+                        // if there is a field with widget `handle`, the x2many
+                        // needs to be ordered by this field to correctly display
+                        // the records
+                        var handleField = _.find(view.arch.children, function (child) {
+                            return child.attrs && child.attrs.widget === 'handle';
+                        });
+                        if (handleField) {
+                            attrs.orderedBy = [{name: handleField.attrs.name, asc: true}];
+                        }
+                    }
+                    // detect editables list has they behave differently with respect
+                    // to the sorting (changes are not sorted directly)
+                    if (mode === 'list' && view.arch.attrs.editable) {
+                         attrs.keepChangesUnsorted = true;
+                    }
+                }
             }
-            if (attrs.Widget.prototype.fetchSubFields) {
-                attrs.relatedFields = {
-                    display_name: {type: 'char'},
-                    //id: {type: 'integer'},
-                };
-                attrs.fieldsInfo = {};
-                attrs.fieldsInfo.default = {display_name: {}, id: {}};
+            if (attrs.Widget.prototype.fieldsToFetch) {
                 attrs.viewType = 'default';
-                if (attrs.color || 'color') {
-                    attrs.relatedFields[attrs.color || 'color'] = {type: 'integer'};
-                    attrs.fieldsInfo.default.color = {};
+                attrs.relatedFields = _.extend({}, attrs.Widget.prototype.fieldsToFetch);
+                attrs.fieldsInfo = {
+                    default: _.mapObject(attrs.Widget.prototype.fieldsToFetch, function () {
+                        return {};
+                    }),
+                };
+                if (attrs.options.color_field) {
+                    // used by m2m tags
+                    attrs.relatedFields[attrs.options.color_field] = { type: 'integer' };
+                    attrs.fieldsInfo.default[attrs.options.color_field] = {};
                 }
             }
         }
@@ -363,11 +415,6 @@ return core.Class.extend({
      */
     _processFieldsView: function (viewInfo) {
         var viewFields = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
-        // by default fetch display_name and id
-        if (!viewInfo.fields.display_name) {
-            viewInfo.fields.display_name = {type: 'char'};
-            viewFields.display_name = {};
-        }
         viewInfo.fieldsInfo = {};
         viewInfo.fieldsInfo[viewInfo.type] = viewFields;
         utils.deepFreeze(viewInfo.fields);

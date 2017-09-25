@@ -42,7 +42,7 @@
                             name="%(hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
                             class="oe_stat_button"
                             icon="fa-clock-o">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="total_timesheet" widget="float_time"/></span>
                                 <span class="o_stat_text">Timesheet</span>
                             </div>
@@ -54,7 +54,7 @@
                         </button>
                     </div>
                 </div>
-                <xpath expr="//page[@class='o_hr_timesheet_sheet_details']" position="after">
+                <xpath expr="//page[hasclass('o_hr_timesheet_sheet_details')]" position="after">
                     <page string="Attendances" groups="hr_attendance.group_hr_attendance">
                         <group>
                             <group groups="hr_attendance.group_hr_attendance">

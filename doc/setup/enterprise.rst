@@ -15,7 +15,7 @@ In any case the basic guidelines are:
 
 * Shutdown your server
 
-* Upgrade the web module
+* Install the web_enterprise module
 
 * Restart your server
 
@@ -45,7 +45,7 @@ On Linux, using an installer
 
   .. code-block:: console
 
-    $ python /usr/bin/odoo.py -d <database_name> -u web --stop-after-init
+    $ python /usr/bin/odoo.py -d <database_name> -i web_enterprise --stop-after-init
 
 * You should be able to connect to your Odoo Enterprise instance using your usual mean of identification.
   You can then link your database with your Odoo Enterprise Subscription by entering the code you received
@@ -61,11 +61,11 @@ have your own favourite. You may need to adapt sections to your usual workflow.
 * Shutdown your server
 * Backup your community database
 * Update the ``--addons-path`` parameter of your launch command (see :ref:`setup/install/source`)
-* Update the web module by using
+* Install the web_enterprise module by using
 
   .. code-block:: console
 
-    $ -d <database_name> -u web --stop-after-init
+    $ -d <database_name> -i web_enterprise --stop-after-init
 
   Depending on the size of your database, this may take some time.
 
@@ -97,7 +97,7 @@ On Windows
 
   .. code-block:: console
 
-    $ odoo.exe -d <database_name> -u web --stop-after-init
+    $ odoo.exe -d <database_name> -i web_enterprise --stop-after-init
 
 * No need to manually launch the server, the service is running.
   You should be able to connect to your Odoo Enterprise instance using your usual

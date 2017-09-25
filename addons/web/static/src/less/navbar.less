@@ -1,18 +1,17 @@
 
 .o_main_navbar {
+    position: relative;
     height: @odoo-navbar-height;
-    border: 1px solid @odoo-navbar-inverse-link-hover-bg;
+    border-bottom: 1px solid @odoo-navbar-inverse-link-hover-bg;
     background-color: @odoo-brand-primary;
     color: white;
-    .box-shadow(0px 0px 8px @odoo-main-text-color);
 
     > a, > button {
         float: left;
-        width: @odoo-navbar-height - 2;
-        height: @odoo-navbar-height - 2;
+        height: @odoo-navbar-height;
         border: none;
-        padding: 0;
-        line-height: @odoo-navbar-height - 2;
+        padding: 0 @odoo-horizontal-padding - 4px 0 @odoo-horizontal-padding;
+        line-height: @odoo-navbar-height;
         background-color: transparent;
         text-align: center;
         color: inherit;
@@ -26,6 +25,24 @@
         }
         &:focus, &:active, &:focus:active {
             outline: none;
+        }
+    }
+
+    > .o_menu_brand {
+        display: block;
+        float: left;
+        margin-right: 35px;
+        .user-select(none);
+        color: white;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: @odoo-navbar-height;
+
+        @media (max-width: @screen-xs-max) {
+            float: none;
+            margin: 0;
+            border-bottom: 1px solid @odoo-navbar-inverse-link-hover-bg;
+            color: transparent;
         }
     }
 
@@ -47,10 +64,10 @@
 
             > a {
                 display: block;
-                height: @odoo-navbar-height - 2;
+                height: @odoo-navbar-height;
                 padding: 0 10px;
                 color: white;
-                line-height: @odoo-navbar-height - 2;
+                line-height: @odoo-navbar-height;
 
                 &:hover {
                     background-color: @odoo-navbar-inverse-link-hover-bg;
@@ -58,6 +75,37 @@
 
                 &:focus, &:active, &:focus:active {
                     outline: none;
+                }
+            }
+
+            &.o_extra_menu_items {
+                > a {
+                    width: @odoo-navbar-height;
+                    text-align: center;
+                }
+                &.open > ul {
+                    padding: 0;
+
+                    > li {
+                        > a {
+                            background-color: @odoo-brand-primary;
+                            color: white;
+                            border-bottom: 1px solid @odoo-brand-lightsecondary;
+
+                            &.dropdown-toggle {
+                                background-color: lighten(@odoo-brand-primary, 15%);
+                                pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+                            }
+                        }
+                        > ul { // remove dropdown-menu default style as it is nested in another one
+                            position: static;
+                            float: none;
+                            display: block;
+                            border: none;
+                            box-shadow: none;
+                            max-height: none;
+                        }
+                    }
                 }
             }
         }
@@ -71,12 +119,9 @@
         }
     }
 
-    .o_menu_brand {
-        display: none;
-    }
-
     .open .dropdown-menu {
         max-height: 90vh; // the dropdown should not overstep the viewport
+        min-width: 100%;
         overflow: auto;
         margin-top: 0;
 
@@ -87,6 +132,22 @@
             .o-menu-indentation(@index + 1);
         }
         .o-menu-indentation(3);
+    }
+
+    .open .dropdown-toggle {
+        background-color: @odoo-navbar-inverse-link-hover-bg;
+    }
+    .o_user_menu {
+        margin-left: 6px;
+
+        > a {
+            padding-right: @odoo-horizontal-padding;
+        }
+
+        .oe_topbar_avatar {
+            height: 17px;
+            .o-transform(translateY(-2px));
+        }
     }
 
     @media (max-width: @screen-xs-max) {
@@ -127,8 +188,8 @@
             }
 
             &.o_menu_systray {
-                .o-position-absolute(0px, @odoo-navbar-height - 2, auto, @odoo-navbar-height - 2);
-                height: @odoo-navbar-height - 2;
+                .o-position-absolute(0px, @odoo-navbar-height, auto, @odoo-navbar-height);
+                height: @odoo-navbar-height;
                 text-align: right;
 
                 > li {
@@ -161,3 +222,12 @@
         }
     }
 }
+
+@media (max-width: @screen-xs-max) {
+     .o_switch_company_menu > .dropdown-menu {
+         padding-top: 0px;
+         li.bg-info {
+             padding: 10px;
+         }
+     }
+ }

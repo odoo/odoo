@@ -12,7 +12,7 @@ If you consider introducing new exceptions, check out the test_exceptions addon.
 
 import logging
 from inspect import currentframe
-from tools.func import frame_codeinfo
+from .tools.func import frame_codeinfo
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class except_orm(Exception):
 
 class UserError(except_orm):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg)
+        super(UserError, self).__init__(msg, value='')
 
 
 # deprecated due to collision with builtins, kept for compatibility

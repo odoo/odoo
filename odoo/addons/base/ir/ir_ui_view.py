@@ -8,6 +8,8 @@ import logging
 import os
 import re
 import time
+
+import itertools
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
@@ -22,12 +24,12 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.osv import orm
-from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES
+from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, pycompat
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
-from odoo.tools.translate import encode, xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 
 _logger = logging.getLogger(__name__)
 
@@ -49,7 +51,7 @@ def keep_query(*keep_params, **additional_params):
     if not keep_params and not additional_params:
         keep_params = ('*',)
     params = additional_params.copy()
-    qs_keys = request.httprequest.args.keys()
+    qs_keys = list(request.httprequest.args)
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
@@ -108,7 +110,7 @@ def get_view_arch_from_file(filename, xmlid):
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
             _fix_multiple_roots(field)
-            inner = ''.join([etree.tostring(child) for child in field.iterchildren()])
+            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
             return field.text + inner
         elif node.tag == 'template':
             # The following dom operations has been copied from convert.py's _tag_template()
@@ -118,7 +120,7 @@ def get_view_arch_from_file(filename, xmlid):
             else:
                 node.tag = 'data'
             node.attrib.pop('id', None)
-            return etree.tostring(node)
+            return etree.tostring(node, encoding='unicode')
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
     return None
 
@@ -151,14 +153,12 @@ xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
+WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 
 class View(models.Model):
     _name = 'ir.ui.view'
     _order = "priority,name,id"
-
-    # Holds the RNG schema
-    _relaxng_validator = None
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -231,7 +231,7 @@ actual arch.
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
                     arch_fs = False
-            view.arch = arch_fs or view.arch_db
+            view.arch = pycompat.to_text(arch_fs or view.arch_db)
 
     def _inverse_arch(self):
         for view in self:
@@ -251,11 +251,11 @@ actual arch.
     @api.depends('arch')
     def _compute_arch_base(self):
         # 'arch_base' is the same as 'arch' without translation
-        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
             view.arch_base = view_wo_lang.arch
 
     def _inverse_arch_base(self):
-        for view, view_wo_lang in zip(self, self.with_context(lang=None)):
+        for view, view_wo_lang in pycompat.izip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
     @api.depends('write_date')
@@ -267,7 +267,7 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
-        name = 'name' if isinstance(value, basestring) else 'id'
+        name = 'name' if isinstance(value, pycompat.string_types) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         data = self.env['ir.model.data'].sudo().search(domain)
         return [('id', 'in', data.mapped('res_id'))]
@@ -280,16 +280,6 @@ actual arch.
         for view in self:
             view.xml_id = xml_ids.get(view.id, [''])[0]
 
-    def _relaxng(self):
-        if not self._relaxng_validator:
-            with tools.file_open(os.path.join('base', 'rng', 'view.rng')) as frng:
-                try:
-                    relaxng_doc = etree.parse(frng)
-                    self._relaxng_validator = etree.RelaxNG(relaxng_doc)
-                except Exception:
-                    _logger.exception('Failed to load RelaxNG XML schema for views validation')
-        return self._relaxng_validator
-
     def _valid_inheritance(self, arch):
         """ Check whether view inheritance is based on translated attribute. """
         for node in arch.xpath('//*[@position]'):
@@ -299,6 +289,12 @@ actual arch.
                 if match:
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
+                if WRONGCLASS.search(node.get('expr', '')):
+                    _logger.warn(
+                        "Error-prone use of @class in view %s (%s): use the "
+                        "hasclass(*classes) function to filter elements by "
+                        "their classes", self.name, self.xml_id
+                    )
             else:
                 for attr in TRANSLATED_ATTRS:
                     if node.get(attr):
@@ -311,7 +307,7 @@ actual arch.
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self:
-            view_arch = etree.fromstring(encode(view.arch))
+            view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
             view_def = view.read_combined(['arch'])
             view_arch_utf8 = view_def['arch']
@@ -324,13 +320,7 @@ actual arch.
                 if view_docs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
-                validator = self._relaxng()
                 for view_arch in view_docs:
-                    version = view_arch.get('version', '7.0')
-                    if parse_version(version) < parse_version('7.0') and validator and not validator.validate(view_arch):
-                        for error in validator.error_log:
-                            _logger.error(tools.ustr(error))
-                        raise ValidationError(_('Invalid view definition'))
                     if not valid_view(view_arch):
                         raise ValidationError(_('Invalid view definition'))
         return True
@@ -375,6 +365,8 @@ actual arch.
             else:
 
                 try:
+                    if not values.get('arch') and not values.get('arch_base'):
+                        raise ValidationError(_('Missing view architecture.'))
                     values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
                 except LxmlError:
                     # don't raise here, the constraint that runs `self._check_xml` will
@@ -428,6 +420,15 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        return [
+            ['inherit_id', '=', view_id],
+            ['model', '=', model],
+            ['mode', '=', 'extension'],
+            ['active', '=', True],
+        ]
+
+    @api.model
     def get_inheriting_views_arch(self, view_id, model):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
@@ -442,13 +443,8 @@ actual arch.
            :return: [(view_arch,view_id), ...]
         """
         user_groups = self.env.user.groups_id
+        conditions = self._get_inheriting_views_arch_domain(view_id, model)
 
-        conditions = [
-            ['inherit_id', '=', view_id],
-            ['model', '=', model],
-            ['mode', '=', 'extension'],
-            ['active', '=', True],
-        ]
         if self.pool._init and not self._context.get('load_all_views'):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
@@ -457,8 +453,9 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            views = self.search(conditions + [('model_ids.module', 'in', tuple(self.pool._init_modules))])
-            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + map(int, views))])
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
+            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)])
         else:
             views = self.search(conditions)
 
@@ -581,10 +578,16 @@ actual arch.
                             separator = child.get('separator', ',')
                             if separator == ' ':
                                 separator = None    # squash spaces
-                            to_add = filter(bool, map(str.strip, child.get('add', '').split(separator)))
-                            to_remove = map(str.strip, child.get('remove', '').split(separator))
-                            values = map(str.strip, node.get(attribute, '').split(separator))
-                            value = (separator or ' ').join(filter(lambda s: s not in to_remove, values) + to_add)
+                            to_add = (
+                                s for s in (s.strip() for s in child.get('add', '').split(separator))
+                                if s
+                            )
+                            to_remove = {s.strip() for s in child.get('remove', '').split(separator)}
+                            values = (s.strip() for s in node.get(attribute, '').split(separator))
+                            value = (separator or ' ').join(itertools.chain(
+                                (v for v in values if v not in to_remove),
+                                to_add
+                            ))
                         if value:
                             node.set(attribute, value)
                         elif attribute in node.attrib:
@@ -691,7 +694,7 @@ actual arch.
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
 
-        return dict(view_data, arch=etree.tostring(arch, encoding='utf-8'))
+        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
 
     def _apply_group(self, model, node, modifiers, fields):
         """Apply group restrictions,  may be set at view level or model level::
@@ -834,7 +837,7 @@ actual arch.
 
         collect(arch, self.env[model_name])
 
-        for field, nodes in field_nodes.iteritems():
+        for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.env[field.model_name]
@@ -899,8 +902,8 @@ actual arch.
                                 not self._context.get(action, True) and is_base_model):
                             node.set(action, 'false')
 
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-        for k in fields.keys():
+        arch = etree.tostring(node, encoding="unicode").replace('\t', '')
+        for k in list(fields):
             if k not in fields_def:
                 del fields[k]
         for field in fields_def:
@@ -917,21 +920,21 @@ actual arch.
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
         tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'view_id',
-                       'tuple(map(self._context.get, self._read_template_keys()))'),
+                       'tuple(self._context.get(k) for k in self._read_template_keys())'),
     )
     def _read_template(self, view_id):
         arch = self.browse(view_id).read_combined(['arch'])['arch']
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
         root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+        arch = etree.tostring(root, encoding='unicode')
         return arch
 
     @api.model
@@ -944,7 +947,7 @@ actual arch.
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
         """
-        if isinstance(template, (int, long)):
+        if isinstance(template, pycompat.integer_types):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
@@ -1045,12 +1048,24 @@ actual arch.
 
     @api.multi
     def render(self, values=None, engine='ir.qweb'):
-        assert isinstance(self.id, (int, long))
+        assert isinstance(self.id, pycompat.integer_types)
 
+        qcontext = self._prepare_qcontext()
+        qcontext.update(values or {})
+
+        return self.env[engine].render(self.id, qcontext)
+
+    @api.model
+    def _prepare_qcontext(self):
+        """ Returns the qcontext : rendering context with website specific value (required
+            to render website layout template)
+        """
         qcontext = dict(
             env=self.env,
+            user_id=self.env["res.users"].browse(self.env.user.id),
+            res_company=self.env.user.company_id.sudo(),
             keep_query=keep_query,
-            request=request, # might be unbound if we're not in an httprequest context
+            request=request,  # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,
             json=json,
             quote_plus=werkzeug.url_quote_plus,
@@ -1059,9 +1074,7 @@ actual arch.
             relativedelta=relativedelta,
             xmlid=self.key,
         )
-        qcontext.update(values or {})
-
-        return self.env[engine].render(self.id, qcontext)
+        return qcontext
 
     #------------------------------------------------------
     # Misc
@@ -1091,12 +1104,12 @@ actual arch.
         Model = self.env[model]
         Node = self.env[node_obj]
 
-        for model_key, model_value in Model._fields.iteritems():
+        for model_key, model_value in Model._fields.items():
             if model_value.type == 'one2many':
                 if model_value.comodel_name == node_obj:
                     _Node_Field = model_key
                     _Model_Field = model_value.inverse_name
-                for node_key, node_value in Node._fields.iteritems():
+                for node_key, node_value in Node._fields.items():
                     if node_value.type == 'one2many':
                         if node_value.comodel_name == conn_obj:
                              # _Source_Field = "Incoming Arrows" (connected via des_node)
@@ -1159,7 +1172,7 @@ actual arch.
                  GROUP BY coalesce(v.inherit_id, v.id)"""
         self._cr.execute(query, [model])
 
-        rec = self.browse(map(itemgetter(0), self._cr.fetchall()))
+        rec = self.browse(it[0] for it in self._cr.fetchall())
         return rec.with_context({'load_all_views': True})._check_xml()
 
     @api.model
@@ -1192,4 +1205,4 @@ actual arch.
             try:
                 self.browse(vid)._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view:\n%s" % (e.message or repr(e)), vid)
+                self.raise_view_error("Can't validate view:\n%s" % e, vid)

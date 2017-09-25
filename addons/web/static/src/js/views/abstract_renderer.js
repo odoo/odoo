@@ -9,17 +9,22 @@ odoo.define('web.AbstractRenderer', function (require) {
 
 var Widget = require('web.Widget');
 
+/**
+ * @class AbstractRenderer
+ */
 return Widget.extend({
     /**
      * @constructor
      * @param {Widget} parent
      * @param {any} state
      * @param {Object} params
+     * @param {string} [params.noContentHelp]
      */
     init: function (parent, state, params) {
         this._super(parent);
         this.state = state;
         this.arch = params.arch;
+        this.noContentHelp = params.noContentHelp;
     },
     /**
      * The rendering can be asynchronous (but it is not encouraged). The start
@@ -65,15 +70,18 @@ return Widget.extend({
     setLocalState: function (localState) {
     },
     /**
-     * update the state of the view.  It always retrigger a full rerender.
+     * Updates the state of the view. It retriggers a full rerender, unless told
+     * otherwise (for optimization for example).
      *
      * @param {any} state
      * @param {Object} params
+     * @param {boolean} [params.noRender=false]
+     *        if true, the method only updates the state without rerendering
      * @returns {Deferred}
      */
     updateState: function (state, params) {
         this.state = state;
-        return this._render();
+        return params.noRender ? $.when() : this._render();
     },
 
     //--------------------------------------------------------------------------
@@ -93,4 +101,3 @@ return Widget.extend({
 });
 
 });
-

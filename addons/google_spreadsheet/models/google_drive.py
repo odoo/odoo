@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cgi
 import json
 import logging
+
+import requests
 from lxml import etree
 import re
 import werkzeug.urls
-import urllib2
 
 from odoo import api, models
+from odoo.tools import misc
 from odoo.addons.google_account import TIMEOUT
 
 _logger = logging.getLogger(__name__)
@@ -69,15 +70,16 @@ class GoogleDrive(models.Model):
       href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15"/>
     <gs:cell row="60" col="15" inputValue="{config}"/>
   </entry>
-</feed>''' .format(key=spreadsheet_key, formula=cgi.escape(formula, quote=True), config=cgi.escape(config_formula, quote=True))
+</feed>''' .format(key=spreadsheet_key, formula=misc.html_escape(formula), config=misc.html_escape(config_formula))
 
         try:
-            req = urllib2.Request(
+            req = requests.post(
                 'https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?%s' % (spreadsheet_key, werkzeug.url_encode({'v': 3, 'access_token': access_token})),
                 data=request,
-                headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
-            urllib2.urlopen(req, timeout=TIMEOUT)
-        except (urllib2.HTTPError, urllib2.URLError):
+                headers={'content-type': 'application/atom+xml', 'If-Match': '*'},
+                timeout=TIMEOUT,
+            )
+        except IOError:
             _logger.warning("An error occured while writting the formula on the Google Spreadsheet.")
 
         description = '''

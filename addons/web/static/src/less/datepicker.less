@@ -28,6 +28,13 @@
     }
 }
 
+// Need to put datetimepicker widget above everything else
+// The '.dropdown-menu' part is needed to override default bootstrap rule as
+// this file is unfortunately placed in common assets.
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    z-index: @zindex-modal + 1;
+}
+
 .datepicker {
     .table-condensed {
         > thead {
@@ -66,5 +73,5 @@
                 }
             }
         }
-    } 
+    }
 }

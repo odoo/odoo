@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -166,7 +167,7 @@ class Forum(models.Model):
         post_tags = []
         existing_keep = []
         user = self.env.user
-        for tag in filter(None, tags.split(',')):
+        for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
@@ -208,11 +209,7 @@ class Post(models.Model):
         ('link', 'Article'),
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])],
-        string='Post Messages', help="Comments on forum post",
-    )
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -379,7 +376,7 @@ class Post(models.Model):
         is_admin = user.id == SUPERUSER_ID
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
-        for post, post_sudo in itertools.izip(self, self.sudo()):
+        for post, post_sudo in pycompat.izip(self, self.sudo()):
             is_creator = post.create_uid == user
 
             post.karma_accept = post.forum_id.karma_answer_accept_own if post.parent_id.create_uid == user else post.forum_id.karma_answer_accept_all
@@ -399,7 +396,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid.id == user))
+            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
@@ -492,7 +489,7 @@ class Post(models.Model):
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
             if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals.keys()) and any(not post.can_edit for post in self):
+        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)
@@ -779,13 +776,14 @@ class Post(models.Model):
         return True
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
             'target': 'self',
+            'target_type': 'public',
             'res_id': self.id,
         }
 

@@ -57,11 +57,12 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         it will default to all the modules installed in the current database.
         @param {Object} [lang] lang The language. If not specified it will default to the language
         of the current user.
+        @param {string} [url='/web/webclient/translations']
         @returns {jQuery.Deferred}
     */
-    load_translations: function(session, modules, lang) {
+    load_translations: function(session, modules, lang, url) {
         var self = this;
-        return session.rpc('/web/webclient/translations', {
+        return session.rpc(url || '/web/webclient/translations', {
             "mods": modules || null,
             "lang": lang || null
         }).done(function(trans) {
@@ -70,6 +71,16 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     }
 });
 
+/**
+ * Eager translation function, performs translation immediately at call
+ * site. Beware using this outside of method bodies (before the
+ * translation database is loaded), you probably want :func:`_lt`
+ * instead.
+ *
+ * @function _t
+ * @param {String} source string to translate
+ * @returns {String} source translated into the current locale
+ */
 var _t = new TranslationDataBase().build_translation_function();
 /**
  * Lazy translation function, only performs the translation when actually

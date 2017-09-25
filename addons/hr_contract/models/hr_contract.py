@@ -54,29 +54,38 @@ class Contract(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char('Contract Reference', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
     type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
-    job_id = fields.Many2one('hr.job', string='Job Title')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today)
-    date_end = fields.Date('End Date')
-    trial_date_start = fields.Date('Trial Start Date')
-    trial_date_end = fields.Date('Trial End Date')
+    job_id = fields.Many2one('hr.job', string='Job Position')
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
+        help="Start date of the contract.")
+    date_end = fields.Date('End Date',
+        help="End date of the contract (if it's a fixed-term contract).")
+    trial_date_end = fields.Date('End of Trial Period',
+        help="End date of the trial period (if there is one).")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Schedule',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
-    wage = fields.Float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee")
+    wage = fields.Monetary('Wage', digits=(16, 2), required=True, help="Employee's monthly gross wage.")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
-    permit_no = fields.Char('Work Permit No')
-    visa_no = fields.Char('Visa No')
-    visa_expire = fields.Date('Visa Expire Date')
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Running'),
         ('pending', 'To Renew'),
         ('close', 'Expired'),
-    ], string='Status', track_visibility='onchange', help='Status of the contract', default='draft')
+        ('cancel', 'Cancelled')
+    ], string='Status', group_expand='_expand_states',
+       track_visibility='onchange', help='Status of the contract', default='draft')
+    company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
+    currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
+    permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
+    visa_no = fields.Char('Visa No', related="employee_id.visa_no")
+    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
+
+    def _expand_states(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -91,27 +100,30 @@ class Contract(models.Model):
             raise ValidationError(_('Contract start date must be less than contract end date.'))
 
     @api.model
-    def update_to_pending(self):
-        soon_expired_contracts = self.search([
+    def update_state(self):
+        self.search([
             ('state', '=', 'open'),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=-7))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=-60)))
-        ])
-        return soon_expired_contracts.write({
+            '&',
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=7))),
+            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            '&',
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60))),
+            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+        ]).write({
             'state': 'pending'
         })
 
-    @api.model
-    def update_to_close(self):
-        expired_contracts = self.search([
+        self.search([
+            ('state', 'in', ('open', 'pending')),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1)))
-        ])
-        return expired_contracts.write({
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+        ]).write({
             'state': 'close'
         })
+
+        return True
 
     @api.multi
     def _track_subtype(self, init_values):

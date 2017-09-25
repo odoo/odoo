@@ -14,14 +14,14 @@ odoo.define('web.relational_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var ControlPanel = require('web.ControlPanel');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
+var dom = require('web.dom');
 var Dialog = require('web.Dialog');
-var field_utils = require('web.field_utils');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
@@ -75,39 +75,46 @@ var M2ODialog = Dialog.extend({
 });
 
 var FieldMany2One = AbstractField.extend({
+    supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         'quick_create': '_onQuickCreate',
         'search_create_popup': '_onSearchCreatePopup',
-    },
+    }),
     events: _.extend({}, AbstractField.prototype.events, {
-        'click .o_form_input': '_onInputClick',
-        'focusout .o_form_input': '_onInputFocusout',
-        'keyup .o_form_input': '_onInputKeyup',
+        'click input': '_onInputClick',
+        'focusout input': '_onInputFocusout',
+        'keyup input': '_onInputKeyup',
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
     }),
-    supported_field_types: ['many2one'],
+    AUTOCOMPLETE_DELAY: 200,
 
     init: function () {
         this._super.apply(this, arguments);
         this.limit = 7;
         this.orderer = new concurrency.DropMisordered();
-        this.can_create = 'can_create' in this.attrs ? this.attrs.can_create : true;
-        this.can_write = 'can_write' in this.attrs ? this.attrs.can_write : true;
+
+        // should normally also be set, except in standalone M20
+        this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
+            !this.nodeOptions.no_create;
+        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
     },
     start: function () {
-        // what is 'this.floating' for? add a comment!
+        // booleean indicating that the content of the input isn't synchronized
+        // with the current m2o value (for instance, the user is currently
+        // typing something in the input, and hasn't selected a value yet).
         this.floating = false;
 
-        this.$input = this.$('.o_form_input');
+        this.$input = this.$('input');
         this.$external_button = this.$('.o_external_button');
         return this._super.apply(this, arguments);
     },
@@ -116,18 +123,16 @@ var FieldMany2One = AbstractField.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    activate: function () {
-        this.$input.focus();
-        setTimeout(this.$input.select.bind(this.$input), 0);
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.mode === 'edit' && this.$input || this.$el;
     },
     /**
-     * Focuses the input.
+     * TODO
      */
-    focus: function () {
-        if (this.mode === "edit") {
-            this.$input.focus();
-        }
-    },
     reinitialize: function (value) {
         this.floating = false;
         this._setValue(value);
@@ -149,6 +154,11 @@ var FieldMany2One = AbstractField.extend({
                 });
             },
             select: function (event, ui) {
+                // we do not want the select event to trigger any additional
+                // effect, such as navigating to another field.
+                event.stopImmediatePropagation();
+                event.preventDefault();
+
                 var item = ui.item;
                 self.floating = false;
                 if (item.id) {
@@ -161,10 +171,17 @@ var FieldMany2One = AbstractField.extend({
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
             },
+            close: function (event) {
+                // it is necessary to prevent ESC key from propagating to field
+                // root, to prevent unwanted discard operations.
+                if (event.which === $.ui.keyCode.ESCAPE) {
+                    event.stopPropagation();
+                }
+            },
             autoFocus: true,
             html: true,
             minLength: 0,
-            delay: 200,
+            delay: this.AUTOCOMPLETE_DELAY,
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;
@@ -193,27 +210,51 @@ var FieldMany2One = AbstractField.extend({
         return [];
     },
     /**
+    * Returns the display_name from a string which contains it but was altered
+    * as a result of the show_address option using a horrible hack.
+    *
+    * @private
+    * @param {string} value
+    * @returns {string} display_name without show_address mess
+    */
+    _getDisplayName: function (value) {
+        return value.split('\n')[0];
+    },
+    /**
      * @private
      * @param {string} name
+     * @returns {Deferred} resolved after the name_create or when the slowcreate
+     *                     modal is closed.
      */
     _quickCreate: function (name) {
         var self = this;
-        var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
+        var def = $.Deferred();
+        var slowCreate = function () {
+            var dialog = self._searchCreatePopup("form", false, self._createContext(name));
+            dialog.on('closed', self, def.resolve.bind(def));
+        };
         if (this.nodeOptions.quick_create) {
-            return this._rpc({
-                    model: this.field.relation,
-                    method: 'name_create',
-                    args: [name],
-                    context: this.record.getContext(this.recordParams),
-                })
-                .then(function (result) {
-                    if (self.mode === "edit") {
-                        self.reinitialize({id: result[0], display_name: result[1]});
-                    }
-                }, slowCreate);
+            this.trigger_up('mutexify', {
+                action: function () {
+                    return self._rpc({
+                        model: self.field.relation,
+                        method: 'name_create',
+                        args: [name],
+                        context: self.record.getContext(self.recordParams),
+                    }).then(function (result) {
+                        if (self.mode === "edit") {
+                            self.reinitialize({id: result[0], display_name: result[1]});
+                        }
+                        def.resolve();
+                    }).fail(function () {
+                        slowCreate();
+                    });
+                },
+            });
         } else {
             slowCreate();
         }
+        return def;
     },
     /**
      * @private
@@ -228,7 +269,7 @@ var FieldMany2One = AbstractField.extend({
         // and hope for the best that noone tries to uses this mechanism to do
         // something else.
         if (this.nodeOptions.always_reload) {
-            value = value.split('\n')[0];
+            value = this._getDisplayName(value);
         }
         this.$input.val(value);
         if (!this.autocomplete_bound) {
@@ -252,7 +293,8 @@ var FieldMany2One = AbstractField.extend({
      */
     _reset: function () {
         this._super.apply(this, arguments);
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.floating = false;
+        this.m2o_value = this._formatValue(this.value);
     },
     /**
      * @private
@@ -285,7 +327,7 @@ var FieldMany2One = AbstractField.extend({
             .then(function (result) {
                 // possible selections for the m2o
                 var values = _.map(result, function (x) {
-                    x[1] = x[1].split("\n")[0];
+                    x[1] = self._getDisplayName(x[1]);
                     return {
                         label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
                         value: x[1],
@@ -356,7 +398,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _searchCreatePopup: function (view, ids, context) {
         var self = this;
-        new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
+        return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, {
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
@@ -364,9 +406,9 @@ var FieldMany2One = AbstractField.extend({
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,
             disable_multiple_selection: true,
-            on_selected: function (element_ids) {
-                self.reinitialize({id: element_ids[0]});
-                self.focus();
+            on_selected: function (records) {
+                self.reinitialize(records[0]);
+                self.activate();
             }
         })).open();
     },
@@ -409,7 +451,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _onExternalButtonClick: function () {
         if (!this.value) {
-            this.focus();
+            this.activate();
             return;
         }
         var self = this;
@@ -429,6 +471,7 @@ var FieldMany2One = AbstractField.extend({
                     view_id: view_id,
                     readonly: !self.can_write,
                     on_saved: function () {
+                        self._setValue(self.value.data, {forceChange: true});
                         self.trigger_up('reload', {db_id: self.value.id});
                     },
                 }).open();
@@ -440,8 +483,10 @@ var FieldMany2One = AbstractField.extend({
     _onInputClick: function () {
         if (this.$input.autocomplete("widget").is(":visible")) {
             this.$input.autocomplete("close");
+        } else if (this.floating) {
+            this.$input.autocomplete("search"); // search with the input's content
         } else {
-            this.$input.autocomplete("search", "");
+            this.$input.autocomplete("search", ''); // search with the empty string
         }
     },
     /**
@@ -454,14 +499,50 @@ var FieldMany2One = AbstractField.extend({
     },
     /**
      * @private
+     *
+     * @param {OdooEvent} ev
      */
-    _onInputKeyup: function () {
+    _onInputKeyup: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            // If we pressed enter, we want to prevent _onInputFocusout from
+            // executing since it would open a M2O dialog to request
+            // confirmation that the many2one is not properly set.
+            return;
+        }
         if (this.$input.val() === "") {
             this.reinitialize(false);
-        } else if (this.m2o_value !== this.$input.val()) {
+        } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
             this.floating = true;
             this._updateExternalButton();
         }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _onKeydown: function () {
+        this.floating = false;
+        this._super.apply(this, arguments);
+    },
+    /**
+     * Stops the left/right navigation move event if the cursor is not at the
+     * start/end of the input element. Stops any navigation move event if the
+     * user is selecting text.
+     *
+     * TODO this is a duplicate of InputField._onNavigationMove, maybe this
+     * should be done in a mixin or, better, the m2o field should be an
+     * InputField (but this requires some refactoring).
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove: basicFields.InputField.prototype._onNavigationMove,
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onQuickCreate: function (event) {
+        this._quickCreate(event.data.value);
     },
     /**
      * @private
@@ -490,7 +571,7 @@ var KanbanFieldMany2One = AbstractField.extend({
     tagName: 'span',
     init: function () {
         this._super.apply(this, arguments);
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.m2o_value = this._formatValue(this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -512,11 +593,15 @@ var KanbanFieldMany2One = AbstractField.extend({
 var FieldX2Many = AbstractField.extend({
     tagName: 'div',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
+        add_record: '_onAddRecord',
+        discard_changes: '_onDiscardChanges',
+        edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
         kanban_record_delete: '_onDeleteRecord',
         list_record_delete: '_onDeleteRecord',
-        add_record: '_onAddRecord',
         open_record: '_onOpenRecord',
+        save_line: '_onSaveLine',
+        resequence: '_onResequence',
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
@@ -532,13 +617,16 @@ var FieldX2Many = AbstractField.extend({
         this._super.apply(this, arguments);
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
-        this.view = this.attrs.views.list || this.attrs.views.kanban;
+        this.view = this.attrs.views[this.attrs.mode];
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
         var arch = this.view && this.view.arch;
         if (arch) {
             this.activeActions.create = arch.attrs.create ?
                                             JSON.parse(arch.attrs.create) :
+                                            true;
+            this.activeActions.delete = arch.attrs.delete ?
+                                            JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
         }
@@ -555,33 +643,59 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * A x2m field can only be saved if it finished the edition of all its rows.
+     * On parent view saving, we have to ask the x2m fields to commit their
+     * changes, that is confirming the save of the in-edition row or asking the
+     * user if he wants to discard it if necessary.
+     *
+     * @override
+     * @returns {Deferred}
+     */
+    commitChanges: function () {
+        var self = this;
+        var inEditionRecordID =
+            this.renderer
+            && this.renderer.viewType === "list"
+            && this.renderer.getEditableRecordID();
+        if (inEditionRecordID) {
+            return this.renderer.commitChanges(inEditionRecordID).then(function () {
+                return self._saveLine(inEditionRecordID);
+            });
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
      * @override
      */
     isSet: function () {
         return true;
     },
     /**
-     * This is a tricky override.  For relational fields, we don't just need to
-     * know if the field is valid.  We also need to discard some invalid lines,
-     * if the user is ok with it (or automatically if the invalid line is not
-     * dirty). This is the reason why we need to change the signature of the
-     * AbstractField isValid method to optionally return a deferred.
-     *
      * @override
-     * @returns {boolean|Deferred} if there is a renderer (sub list or kanban
-     *   view), we may need to ask the user => it will return a deferred.
-     *   Otherwise, it returns a boolean
+     * @param {Object} record
+     * @param {OdooEvent} [ev] an event that triggered the reset action
+     * @returns {Deferred}
      */
-    isValid: function () {
-        if (!this.renderer) {
-            return this._super.apply(this, arguments);
+    reset: function (record, ev) {
+        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
+            var command = ev.data.changes[this.name];
+            // Here, we only consider 'UPDATE' commands with data, which occur
+            // with editable list view. In order to keep the current line in
+            // edition, we call confirmUpdate which will try to reset the widgets
+            // of the line being edited, and rerender the rest of the list.
+            // 'UPDATE' commands with no data can be ignored: they occur in
+            // one2manys when the record is updated from a dialog and in this
+            // case, we can re-render the whole subview.
+            if (command.operation === 'UPDATE' && command.data) {
+                var state = record.data[this.name];
+                var fieldNames = state.getFieldNames();
+                this._reset(record, ev);
+                return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
+            }
         }
-        var def = $.Deferred();
-        this.renderer.canBeSaved()
-            .then(def.resolve.bind(def, true))
-            .fail(def.resolve.bind(def, false));
-        return def;
+        return this._super.apply(this, arguments);
     },
+
 
     //--------------------------------------------------------------------------
     // Private
@@ -592,27 +706,31 @@ var FieldX2Many = AbstractField.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _render: function () {
         if (!this.view) {
             return this._super();
         }
         if (this.renderer) {
-            this.renderer.updateState(this.value);
+            this.renderer.updateState(this.value, {});
             this.pager.updateState({ size: this.value.count });
             return $.when();
         }
         var arch = this.view.arch;
+        var viewType;
         if (arch.tag === 'tree') {
+            viewType = 'list';
             this.renderer = new ListRenderer(this, this.value, {
                 arch: arch,
                 mode: this.mode,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
-                addTrashIcon: !this.isReadonly,
+                addTrashIcon: !this.isReadonly && this.activeActions.delete,
+                viewType: viewType,
             });
         }
         if (arch.tag === 'kanban') {
+            viewType = 'kanban';
             var record_options = {
                 editable: false,
                 deletable: false,
@@ -620,9 +738,11 @@ var FieldX2Many = AbstractField.extend({
             };
             this.renderer = new KanbanRenderer(this, this.value, {
                 arch: arch,
-                record_options: record_options
+                record_options: record_options,
+                viewType: viewType,
             });
         }
+        this.$el.addClass('o_field_x2many o_field_x2many_' + viewType);
         return this.renderer ? this.renderer.appendTo(this.$el) : this._super();
     },
     /**
@@ -678,6 +798,35 @@ var FieldX2Many = AbstractField.extend({
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
         }
     },
+    /**
+     * Saves the line associated to the given recordID. If the line is valid,
+     * it only has to be switched to readonly mode as all the line changes have
+     * already been notified to the model so that they can be saved in db if the
+     * parent view is actually saved. If the line is not valid, the line is to
+     * be discarded if the user agrees (this behavior is not a list editable
+     * one but a x2m one as it is made to replace the "discard" button which
+     * exists for list editable views).
+     *
+     * @private
+     * @param {string} recordID
+     * @returns {Deferred} resolved if the line was properly saved or discarded.
+     *                     rejected if the line could not be saved and the user
+     *                     did not agree to discard.
+     */
+    _saveLine: function (recordID) {
+        var def = $.Deferred();
+        var fieldNames = this.renderer.canBeSaved(recordID);
+        if (fieldNames.length) {
+            this.trigger_up('discard_changes', {
+                recordID: recordID,
+                onSuccess: def.resolve.bind(def),
+                onFailure: def.reject.bind(def),
+            });
+        } else {
+            this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
+        }
+        return def;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -699,34 +848,90 @@ var FieldX2Many = AbstractField.extend({
      * by the parent controller.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onDeleteRecord: function (event) {
-        event.stopPropagation();
+    _onDeleteRecord: function (ev) {
+        ev.stopPropagation();
+        var shouldForget = this.attrs.widget === 'many2many' || this.field.type === 'many2many';
+        var operation = shouldForget ? 'FORGET' : 'DELETE';
         this._setValue({
-            operation: 'REMOVE',
-            id: event.data.id
+            operation: operation,
+            ids: [ev.data.id],
         });
+    },
+    /**
+     * When the discard_change event go through this field, we can just decorate
+     * the data with the name of the field.  The origin field ignore this
+     * information (it is a subfield in a o2m), and the controller will need to
+     * know which field needs to be handled.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardChanges: function (ev) {
+        ev.data.fieldName = this.name;
+    },
+    /**
+     * Called when the renderer asks to edit a line, in that case simply tells
+     * him back to toggle the mode of this row.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditLine: function (ev) {
+        ev.stopPropagation();
+        var editedRecord = this.value.data[ev.data.index];
+        this.renderer.setRowMode(editedRecord.id, 'edit')
+            .done(ev.data.onSuccess);
     },
     /**
      * Updates the given record with the changes.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        if (event.target === this) {
+    _onFieldChanged: function (ev) {
+        if (ev.target === this) {
+            ev.initialEvent = this.lastInitialEvent;
             return;
         }
-        event.stopPropagation();
+        ev.stopPropagation();
         // changes occured in an editable list
-        var changes = event.data.changes;
+        var changes = ev.data.changes;
+        // save the initial event triggering the field_changed, as it will be
+        // necessary when the field triggering this event will be reset (to
+        // prevent it from re-rendering itself, formatting its value, loosing
+        // the focus... while still being edited)
+        this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
-            this._setValue({
+            this.lastInitialEvent = ev;
+            // store the cursor position to restore it once potential onchanges have been applied
+            var self = this;
+            var editableID =  this.renderer.getEditableRecordID();
+            var datapoint = _.find(this.value.data, {id: editableID});
+
+            var ref = datapoint && datapoint.ref;
+            var cursor = ref && dom.getCursor(ev.target.getFocusableElement());
+            var fieldName = ev.target.name;
+
+            var def = this._setValue({
                 operation: 'UPDATE',
-                id: event.data.dataPointID,
-                data: changes
+                id: ev.data.dataPointID,
+                data: changes,
             });
+
+            if (ref) {
+                def.then(function () {
+                    var nextEditableRecordID = self.renderer.getEditableRecordID();
+                    if (nextEditableRecordID && editableID !== nextEditableRecordID) {
+                        return;
+                    }
+                    var datapoint = _.find(self.value.data, {ref: ref});
+                    if (datapoint) {
+                        self.renderer.focusField(datapoint.id, fieldName, cursor && cursor.offset);
+                    }
+                });
+            }
         }
     },
     /**
@@ -739,20 +944,85 @@ var FieldX2Many = AbstractField.extend({
         // to implement
     },
     /**
+     * Called when the renderer ask to save a line (the user tries to leave it)
+     * -> Nothing is to "save" here, the model was already notified of the line
+     * changes; if the row could be saved, we make the row readonly. Otherwise,
+     * we trigger a new event for the view to tell it to discard the changes
+     * made to that row.
+     * Note that we do that in the controller mutex to ensure that the check on
+     * the row (whether or not it can be saved) is done once all potential
+     * onchange RPCs are done (those RPCs being executed in the same mutex).
+     * This particular handling is done in this handler, instead of in the
+     * _saveLine function directly, because _saveLine is also called from
+     * the controller (via commitChanges), and in this case, it is already
+     * executed in the mutex.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.recordID
+     * @param {function} ev.onSuccess success callback (see '_saveLine')
+     * @param {function} ev.onFailure fail callback (see '_saveLine')
+     */
+    _onSaveLine: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        this.trigger_up('mutexify', {
+            action: function () {
+                return self.renderer.commitChanges(ev.data.recordID).then(function () {
+                    self.trigger_up('mutexify', {
+                        action: function () {
+                            return self._saveLine(ev.data.recordID)
+                                .done(ev.data.onSuccess)
+                                .fail(ev.data.onFailure);
+                        },
+                    });
+                });
+            },
+        });
+    },
+    /**
+     * Forces a resequencing of the records.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onResequence: function (event) {
+        var self = this;
+        _.each(event.data.rowIDs, function (rowID, index) {
+            var data = {};
+            data[event.data.handleField] = event.data.offset + index;
+            self._setValue({
+                operation: 'UPDATE',
+                id: rowID,
+                data: data,
+            });
+        });
+    },
+    /**
      * Adds field name information to the event, so that the view upstream is
      * aware of which widgets it has to redraw.
      *
      * @private
-     * @param   {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onToggleColumnOrder: function (event) {
-        event.data.field = this.name;
+    _onToggleColumnOrder: function (ev) {
+        ev.data.field = this.name;
     },
 });
 
 var FieldOne2Many = FieldX2Many.extend({
-    className: 'o_form_field_one2many',
+    className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // boolean used to prevent concurrent record creation
+        this.creatingRecord = false;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -760,23 +1030,14 @@ var FieldOne2Many = FieldX2Many.extend({
     /**
      * @override
      * @param {Object} record
-     * @param {OdooEvent} [event] an event that triggered the reset action
+     * @param {OdooEvent} [ev] an event that triggered the reset action
      * @returns {Deferred}
      */
-    reset: function (record, event) {
+    reset: function (record, ev) {
         var self = this;
-        if (event && event.target === this && self.view.arch.tag === 'tree' && this.editable) {
-            var command = event.data.changes[this.name];
-            if (command.operation === 'UPDATE') {
-                var state = record.data[this.name];
-                var fieldNames = state.getFieldNames();
-                this.renderer.confirmChange(state, command.id, fieldNames);
-                return $.when();
-            }
-        }
         return this._super.apply(this, arguments).then(function () {
-            if (event && event.target === self && self.view.arch.tag === 'tree') {
-                if (event.data.changes[self.name].operation === 'CREATE') {
+            if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
+                if (ev.data.changes[self.name].operation === 'CREATE') {
                     var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
@@ -824,21 +1085,30 @@ var FieldOne2Many = FieldX2Many.extend({
      *
      * @override
      * @private
-     * @param {OdooEvent|MouseEvent} event this event comes either from the 'Add
+     * @param {OdooEvent|MouseEvent} ev this event comes either from the 'Add
      *   record' link in the list editable renderer, or from the 'Create' button
      *   in the kanban view
      */
-    _onAddRecord: function (event) {
+    _onAddRecord: function (ev) {
+        var self = this;
         // we don't want interference with the components upstream.
-        event.stopPropagation();
+        ev.stopPropagation();
 
         if (this.editable) {
-            this._setValue({
-                operation: 'CREATE',
-                position: this.editable,
-            });
+            if (!this.activeActions.create) {
+                if (ev.data.onFail) {
+                    ev.data.onFail();
+                }
+            } else if (!this.creatingRecord) {
+                this.creatingRecord = true;
+                this._setValue({
+                    operation: 'CREATE',
+                    position: this.editable,
+                }).always(function () {
+                    self.creatingRecord = false;
+                });
+            }
         } else {
-            var self = this;
             this._openFormDialog({
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
@@ -854,22 +1124,28 @@ var FieldOne2Many = FieldX2Many.extend({
      * form view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onOpenRecord: function (event) {
+    _onOpenRecord: function (ev) {
         // we don't want interference with the components upstream.
-        event.stopPropagation();
+        ev.stopPropagation();
 
+        var id = ev.data.id;
+        // trigger an empty 'UPDATE' operation when the user clicks on 'Save' in
+        // the dialog, to notify the main record that a subrecord of this
+        // relational field has changed (those changes will be already stored on
+        // that subrecord, thanks to the 'Save').
+        var onSaved = this._setValue.bind(this, { operation: 'UPDATE', id: id }, {});
         this._openFormDialog({
-            id: event.data.id,
-            on_saved: this._setValue.bind(this, { operation: 'NOOP' }),
+            id: id,
+            on_saved: onSaved,
             readonly: this.mode === 'readonly',
         });
     },
 });
 
 var FieldMany2Many = FieldX2Many.extend({
-    className: 'o_form_field_many2many',
+    className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
 
     /**
@@ -904,15 +1180,16 @@ var FieldMany2Many = FieldX2Many.extend({
             title: _t("Add: ") + this.string,
             no_create: this.nodeOptions.no_create || !this.activeActions.create,
             fields_view: this.attrs.views.form,
-            on_selected: function (res_ids) {
-                var new_ids = _.difference(res_ids, self.value.res_ids);
-                if (new_ids.length) {
-                    var values = _.map(new_ids, function (id) {
+            on_selected: function (records) {
+                var resIDs = _.pluck(records, 'id');
+                var newIDs = _.difference(resIDs, self.value.res_ids);
+                if (newIDs.length) {
+                    var values = _.map(newIDs, function (id) {
                         return {id: id};
                     });
                     self._setValue({
                         operation: 'ADD_M2M',
-                        ids: values
+                        ids: values,
                     });
                 }
             }
@@ -923,43 +1200,266 @@ var FieldMany2Many = FieldX2Many.extend({
      * to the form view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onOpenRecord: function (event) {
-        _.extend(event.data, {
+    _onOpenRecord: function (ev) {
+        var self = this;
+        _.extend(ev.data, {
             context: this.record.getContext(this.recordParams),
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
-            on_saved: this.trigger_up.bind(this, 'reload', {db_id: event.data.id}),
+            on_saved: function () {
+                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
+                self.trigger_up('reload', {db_id: ev.data.id});
+            },
             readonly: this.mode === 'readonly',
             string: this.string,
         });
     },
 });
 
+/**
+ * Widget to upload or delete one or more files at the same time.
+ */
+var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
+    template: "FieldBinaryFileUploader",
+    supportedFieldTypes: ['many2many'],
+    fieldsToFetch: {
+        name: {type: 'char'},
+        datas_fname: {type: 'char'},
+        mimetype: {type: 'char'},
+    },
+    events: {
+        'click .o_attach': '_onAttach',
+        'click .oe_delete': '_onDelete',
+        'change .o_input_file': '_onFileChanged',
+    },
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.field.type !== 'many2many' || this.field.relation !== 'ir.attachment') {
+            var msg = _t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model.");
+            throw _.str.sprintf(msg, this.field.string);
+        }
+
+        this.uploadingFiles = [];
+        this.fileupload_id = _.uniqueId('oe_fileupload_temp');
+        $(window).on(this.fileupload_id, this._onFileLoaded.bind(this));
+
+        this.metadata = {};
+        this._generatedMetadata();
+    },
+
+    destroy: function () {
+        this._super();
+        $(window).off(this.fileupload_id);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Compute the URL of an attachment.
+     *
+     * @private
+     * @param {Object} attachment
+     * @returns {string} URL of the attachment
+     */
+    _getFileUrl: function (attachment) {
+        return '/web/content/' + attachment.id + '?download=true';
+    },
+    /**
+     * Process the field data to add some information (url, etc.).
+     *
+     * @private
+     */
+    _generatedMetadata: function () {
+        var self = this;
+        _.each(this.value.data, function (record) {
+            // attachments are tagged `allowUnlink` because only new attachments
+            // will be unlinked after deletion
+            self.metadata[record.id] = {
+                allowUnlink: false,
+                url: self._getFileUrl(record.data),
+            };
+        });
+    },
+    /**
+     * @private
+     * @override
+     */
+    _render: function () {
+        // render the attachments ; as the attachments will changes after each
+        // _setValue, we put the rendering here to ensure they will be updated
+        this.$('.oe_placeholder_files, .oe_attachments')
+            .replaceWith($(qweb.render('FieldBinaryFileUploader.files', {
+                widget: this,
+            })));
+        this.$('.oe_fileupload').show();
+
+        // display image thumbnail
+        this.$('.o_image[data-mimetype^="image"]').each(function () {
+            var $img = $(this);
+            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                $img.css('background-image', "url('" + $img.data('src') + "')");
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAttach: function () {
+        // This widget uses a hidden form to upload files. Clicking on 'Attach'
+        // will simulate a click on the related input.
+        this.$('.o_input_file').click();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDelete: function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        var fileID = $(ev.currentTarget).data('id');
+        var record = _.findWhere(this.value.data, {res_id: fileID});
+        if (record) {
+            this._setValue({
+                operation: 'FORGET',
+                ids: [record.id],
+            });
+            var metadata = this.metadata[record.id];
+            if (!metadata || metadata.allowUnlink) {
+                this._rpc({
+                    model: 'ir.attachment',
+                    method: 'unlink',
+                    args: [record.res_id],
+                });
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileChanged: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+
+        var files = ev.target.files;
+        var attachment_ids = this.value.res_ids;
+
+        _.each(files, function (file) {
+            var record = _.find(self.value.data, function (attachment) {
+                return attachment.data.name === file.name;
+            });
+            if (record) {
+                var metadata = self.metadata[record.id];
+                if (!metadata || metadata.allowUnlink) {
+                    // there is a existing attachment with the same name so we
+                    // replace it
+                    attachment_ids = _.without(attachment_ids, record.res_id);
+                    self._rpc({
+                        model: 'ir.attachment',
+                        method: 'unlink',
+                        args: [record.res_id],
+                    });
+                }
+            }
+            self.uploadingFiles.push(file);
+        });
+
+        this._setValue({
+            operation: 'REPLACE_WITH',
+            ids: attachment_ids,
+        });
+
+        this.$('form.o_form_binary_form').submit();
+        this.$('.oe_fileupload').hide();
+    },
+    /**
+     * @private
+     */
+    _onFileLoaded: function () {
+        var self = this;
+        // the first argument isn't a file but the jQuery.Event
+        var files = Array.prototype.slice.call(arguments, 1);
+        // files has been uploaded, clear uploading
+        this.uploadingFiles = [];
+
+        var attachment_ids = this.value.res_ids;
+        _.each(files, function (file) {
+            if (file.error) {
+                self.do_warn(_t('Uploading Error'), file.error);
+            } else {
+                attachment_ids.push(file.id);
+            }
+        });
+
+        this._setValue({
+            operation: 'REPLACE_WITH',
+            ids: attachment_ids,
+        });
+    },
+});
+
 var FieldMany2ManyTags = AbstractField.extend({
     tag_template: "FieldMany2ManyTag",
-    className: "o_form_field o_form_field_many2manytags",
-    replace_element: true,
+    className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
-    custom_events: {
+    custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         field_changed: '_onFieldChanged',
-        move_next: '_onMoveNext',
-    },
+    }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click .o_delete': '_onDeleteTag',
-        'keydown .o_form_field_many2one input': '_onKeyDown',
     }),
+    fieldsToFetch: {
+        display_name: {type: 'char'},
+    },
 
-    fetchSubFields: true,
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.mode === 'edit') {
+            this.className += ' o_input';
+        }
+
+        this.colorField = this.nodeOptions.color_field;
+    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
     activate: function () {
-        this.many2one.focus();
+        return this.many2one ? this.many2one.activate() : false;
     },
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.many2one ? this.many2one.getFocusableElement() : $();
+    },
+    /**
+     * @override
+     * @returns {boolean}
+     */
     isSet: function () {
         return !!this.value && this.value.count;
     },
@@ -992,14 +1492,29 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
     },
     /**
+     * Get the QWeb rendering context used by the tag template; this computation
+     * is placed in a separate function for other tags to override it.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getRenderTagsContext: function () {
+        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
+        return {
+            colorField: this.colorField,
+            elements: elements,
+            readonly: this.mode === "readonly",
+        };
+    },
+    /**
      * @private
      * @param {any} id
      */
     _removeTag: function (id) {
         var record = _.findWhere(this.value.data, {res_id: id});
         this._setValue({
-            operation: 'REMOVE',
-            id: record.id
+            operation: 'FORGET',
+            ids: [record.id],
         });
     },
     /**
@@ -1012,7 +1527,6 @@ var FieldMany2ManyTags = AbstractField.extend({
             this.many2one.destroy();
         }
         this.many2one = new FieldMany2One(this, this.name, this.record, {
-            idForLabel: this.idForLabel,
             mode: 'edit',
             viewType: this.viewType,
         });
@@ -1025,7 +1539,7 @@ var FieldMany2ManyTags = AbstractField.extend({
         this.many2one._getSearchBlacklist = function () {
             return self.value.res_ids;
         };
-        this.many2one.appendTo(this.$el);
+        return this.many2one.appendTo(this.$el);
     },
     /**
      * @private
@@ -1037,11 +1551,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @private
      */
     _renderTags: function () {
-        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
-        this.$el.html(qweb.render(this.tag_template, {
-            elements: elements,
-            readonly: this.mode === "readonly",
-        }));
+        this.$el.html(qweb.render(this.tag_template, this._getRenderTagsContext()));
     },
 
     //--------------------------------------------------------------------------
@@ -1056,42 +1566,35 @@ var FieldMany2ManyTags = AbstractField.extend({
         this._removeTag($(event.target).parent().data('id'));
     },
     /**
+     * Controls the changes made in the internal m2o field.
+     *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onFieldChanged: function (event) {
-        if (event.target === this) {
+    _onFieldChanged: function (ev) {
+        if (ev.target !== this.many2one) {
             return;
         }
-        event.stopPropagation();
-        var new_value = event.data.changes[this.name];
-        if (new_value) {
-            this._addTag(new_value);
+        ev.stopPropagation();
+        var newValue = ev.data.changes[this.name];
+        if (newValue) {
+            this._addTag(newValue);
             this.many2one.reinitialize(false);
         }
     },
     /**
      * @private
-     * @param {KeyboardEvent} event
+     * @param {KeyboardEvent} ev
      */
-    _onKeyDown: function (event) {
-        if($(event.target).val() === "" && event.which === $.ui.keyCode.BACKSPACE) {
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.BACKSPACE && this.$('input').val() === "") {
             var $badges = this.$('.badge');
-            if($badges.length) {
+            if ($badges.length) {
                 this._removeTag($badges.last().data('id'));
+                return;
             }
         }
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onMoveNext: function (event) {
-        if (event.target === this) {
-            return;
-        }
-        // Intercept event triggered up by the many2one, to prevent triggering it twice
-        event.stopPropagation();
+        this._super.apply(this, arguments);
     },
     /**
      * @private
@@ -1126,7 +1629,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _onOpenColorPicker: function (event) {
         var tag_id = $(event.currentTarget).data('id');
         var tag = _.findWhere(this.value.data, { res_id: tag_id });
-        if (tag && 'color' in tag.data) { // if there is a color field on the related model
+        if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
                 'widget': this,
                 'tag_id': tag_id,
@@ -1151,30 +1654,69 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
         if (color === current_color) { return; }
 
+        var changes = {};
+        changes[this.colorField] = color;
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
-            changes: {
-                color: color,
-            },
+            changes: changes,
             force_save: true,
         });
     },
 });
 
-var KanbanFieldMany2ManyTags = FieldMany2Many.extend({
+var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
+    events: _.extend({}, FieldMany2ManyTags.prototype.events, {
+        'click .o_tag': '_onTagClicked',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
     _render: function () {
         var self = this;
-        this.$el.addClass('o_form_field_many2manytags o_kanban_tags');
+        this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
-            // 10th color is invisible
-            if ('color' in m2m.data && m2m.data.color !== 10) {
-                $('<span>')
-                    .addClass('o_tag o_tag_color_' + m2m.data.color)
-                    .attr('title', _.str.escapeHTML(m2m.data.display_name))
+            var $tag = $('<span>')
+                    .text(m2m.data.display_name)
+                    .data('res_id', m2m.res_id)
+                    .prepend('<span>')
                     .appendTo(self.$el);
+            if (self.colorField in m2m.data) {
+                if (m2m.data[self.colorField] === 10) {
+                    // 10th color is invisible
+                    $tag.hide();
+                } else {
+                    $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
+                }
+            } else {
+                // display tags in grey by default
+                $tag.addClass('o_tag o_tag_color_0');
             }
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onTagClicked: function (e) {
+        var resID = $(e.currentTarget).data('res_id');
+        var record = _.findWhere(this.value.data, {res_id: resID});
+        var displayName = record.data.display_name;
+        this.trigger_up('add_filter', {
+            domain: "[['" + this.name + "','=','" + displayName + "']]",
+            help: displayName,
+        });
+    }
 });
 
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
@@ -1207,7 +1749,7 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     _render: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(this.value, function (id) {
+        _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
@@ -1298,22 +1840,14 @@ var FieldStatus = AbstractField.extend({
      * @private
      */
     _render: function () {
-        if (config.device.size_class > config.device.SIZES.XS) {
-            var selections = _.partition(this.status_information, function (info) {
-                return (info.selected || !info.fold);
-            });
-            this.$el.html(qweb.render("FieldStatus.content.desktop", {
-                selection_unfolded: selections[0],
-                selection_folded: selections[1],
-                clickable: !!this.attrs.clickable,
-            }));
-        } else {
-            this.$el.html(qweb.render("FieldStatus.content.mobile", {
-                selection: this.status_information,
-                value: _.findWhere(this.status_information, {selected: true}).display_name,
-                clickable: !!this.attrs.clickable,
-            }));
-        }
+        var selections = _.partition(this.status_information, function (info) {
+            return (info.selected || !info.fold);
+        });
+        this.$el.html(qweb.render("FieldStatus.content", {
+            selection_unfolded: selections[0],
+            selection_folded: selections[1],
+            clickable: !!this.attrs.clickable,
+        }));
     },
 
     //--------------------------------------------------------------------------
@@ -1343,20 +1877,30 @@ var FieldSelection = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'change': '_onChange',
     }),
-    replace_element: true,
     /**
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'many2one') {
-            this.values = this.record.specialData[this.name];
-        } else {
-            this.values = _.reject(this.field.selection, function (v) {
-                return v[0] === false && v[1] === '';
-            });
-        }
-        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        this._setValues();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.$el.is('select') ? this.$el : $();
+    },
+    /**
+     * @override
+     */
+    isSet: function () {
+        return this.value !== false;
     },
 
     //--------------------------------------------------------------------------
@@ -1368,13 +1912,12 @@ var FieldSelection = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (!this.$el.children().length) {
-            for (var i = 0 ; i < this.values.length ; i++) {
-                this.$el.append($('<option/>', {
-                    value: JSON.stringify(this.values[i][0]),
-                    html: this.values[i][1]
-                }));
-            }
+        this.$el.empty();
+        for (var i = 0 ; i < this.values.length ; i++) {
+            this.$el.append($('<option/>', {
+                value: JSON.stringify(this.values[i][0]),
+                html: this.values[i][1]
+            }));
         }
         var value = this.value;
         if (this.field.type === 'many2one' && value) {
@@ -1387,7 +1930,32 @@ var FieldSelection = AbstractField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.empty().html(this._formatValue(this.value));
+        this.$el.empty().text(this._formatValue(this.value));
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'many2one') {
+            this.values = this.record.specialData[this.name];
+            this.formatType = 'many2one';
+        } else {
+            this.values = _.reject(this.field.selection, function (v) {
+                return v[0] === false && v[1] === '';
+            });
+        }
+        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
     },
 
     //--------------------------------------------------------------------------
@@ -1414,7 +1982,9 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
-    template: 'FieldRadio',
+    template: null,
+    className: 'o_field_radio',
+    tagName: 'span',
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
@@ -1425,14 +1995,12 @@ var FieldRadio = FieldSelection.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'selection') {
-            this.values = this.field.selection || [];
-        } else if (this.field.type === 'many2one') {
-            this.values = _.map(this.record.specialData[this.name], function (val) {
-                return [val.id, val.display_name];
-            });
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += this.nodeOptions.horizontal ? ' o_horizontal' : ' o_vertical';
         }
         this.unique_id = _.uniqueId("radio");
+        this._setValues();
     },
 
     //--------------------------------------------------------------------------
@@ -1456,14 +2024,45 @@ var FieldRadio = FieldSelection.extend({
      * @override
      */
     _renderEdit: function () {
-        this.$("input").prop("checked", false);
-        var key;
+        var self = this;
+        var currentValue;
         if (this.field.type === 'many2one') {
-            key = this.value && this.value.data.id;
+            currentValue = this.value && this.value.data.id;
         } else {
-            key = this.value;
+            currentValue = this.value;
         }
-        this.$('input[data-value="' + key + '"]').prop('checked', true);
+        this.$el.empty();
+        _.each(this.values, function (value, index) {
+            self.$el.append(qweb.render('FieldRadio.button', {
+                checked: value[0] === currentValue,
+                id: self.unique_id + '_' + value[0],
+                index: index,
+                value: value,
+            }));
+        });
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'selection') {
+            this.values = this.field.selection || [];
+        } else if (this.field.type === 'many2one') {
+            this.values = _.map(this.record.specialData[this.name], function (val) {
+                return [val.id, val.display_name];
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1475,15 +2074,143 @@ var FieldRadio = FieldSelection.extend({
      * @param {MouseEvent} event
      */
     _onInputClick: function (event) {
-        var res_id = $(event.target).data('value');
+        var index = $(event.target).data('index');
+        var value = this.values[index];
         if (this.field.type === 'many2one') {
-            var value = _.find(this.values, function (val) {
-                return val[0] === res_id;
-            });
-            this._setValue({id: res_id, display_name: value[1]});
+            this._setValue({id: value[0], display_name: value[1]});
         } else {
-            this._setValue(res_id);
+            this._setValue(value[0]);
         }
+    },
+});
+
+/**
+ * The FieldReference is a combination of a select (for the model) and
+ * a FieldMany2one for its value.
+ * Its intern representation is similar to the many2one (a datapoint with a
+ * `name_get` as data).
+ */
+var FieldReference = FieldMany2One.extend({
+    specialData: "_fetchSpecialReference",
+    supportedFieldTypes: ['char', 'reference'],
+    template: 'FieldReference',
+    events: _.extend({}, FieldMany2One.prototype.events, {
+        'change select': '_onSelectionChange',
+    }),
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // needs to be copied as it is an unmutable object
+        this.field = _.extend({}, this.field);
+
+        this._setState();
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$('select').val(this.field.relation);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Get the encompassing record's display_name
+     *
+     * @override
+     */
+    _formatValue: function () {
+        var value;
+        if (this.field.type === 'char') {
+            value = this.record.specialData[this.name];
+        } else {
+            value = this.value;
+        }
+        return value && value.data && value.data.display_name || '';
+    },
+
+    /**
+     * Add a select in edit mode (for the model).
+     *
+     * @override
+     */
+    _renderEdit: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$('select').val()) {
+            this.$('.o_input_dropdown').show();
+            this.$el.addClass('o_row'); // this class is used to display the two
+                                        // components (select & input) on the same line
+        } else {
+            // hide the many2one if the selection is empty
+            this.$('.o_input_dropdown').hide();
+        }
+
+    },
+    /**
+     * @override
+     * @private
+     */
+    _reset: function () {
+        var value = this.$('select').val();
+        this._setState();
+        this._super.apply(this, arguments);
+        this.$('select').val(this.value && this.value.model || value);
+    },
+    /**
+     * Set `relation` key in field properties.
+     *
+     * @private
+     * @param {string} model
+     */
+    _setRelation: function (model) {
+        // used to generate the search in many2one
+        this.field.relation = model;
+    },
+    /**
+     * @private
+     */
+    _setState: function () {
+        if (this.field.type === 'char') {
+            // in this case, the value is stored in specialData instead
+            this.value = this.record.specialData[this.name];
+        }
+
+        if (this.value) {
+            this._setRelation(this.value.model);
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        value = value || {};
+        // we need to specify the model for the change in basic_model
+        // the value is then now a dict with id, display_name and model
+        value.model = this.$('select').val();
+        return this._super(value, options);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * When the selection (model) changes, the many2one is reset.
+     *
+     * @private
+     */
+    _onSelectionChange: function () {
+        var value = this.$('select').val();
+        this.reinitialize(false);
+        this._setRelation(value);
     },
 });
 
@@ -1495,6 +2222,7 @@ return {
     FieldOne2Many: FieldOne2Many,
 
     FieldMany2Many: FieldMany2Many,
+    FieldMany2ManyBinaryMultiFiles: FieldMany2ManyBinaryMultiFiles,
     FieldMany2ManyCheckBoxes: FieldMany2ManyCheckBoxes,
     FieldMany2ManyTags: FieldMany2ManyTags,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
@@ -1503,6 +2231,8 @@ return {
     FieldRadio: FieldRadio,
     FieldSelection: FieldSelection,
     FieldStatus: FieldStatus,
+
+    FieldReference: FieldReference,
 };
 
 });

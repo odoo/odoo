@@ -67,7 +67,7 @@ var Action = core.Class.extend({
     },
     /**
      * Stores the DOM fragment of the action
-     * @param {jQuery} [fragment] the DOM fragment
+     * @param {jQuery} [$fragment] the DOM fragment
      */
     set_fragment: function($fragment) {
         this.$fragment = $fragment;
@@ -182,19 +182,35 @@ var ViewManagerAction = WidgetAction.extend({
     },
     /**
      * Sets the scroll position of the widgets's active_view
-     * @param {int} [scrollTop] the number of pixels to scroll
+     * @todo: replace this with a generic get/set local state mechanism.
+     * @see getScrollTop
+     *
+     * @override
+     * @param {integer} [scrollTop] the number of pixels to scroll
      */
-    setScrollTop: function(scrollTop) {
-        var viewController = this.widget.active_view.controller;
+    setScrollTop: function (scrollTop) {
+        var activeView = this.widget.active_view;
+        var viewController = activeView && activeView.controller;
         if (viewController) {
             viewController.setScrollTop(scrollTop);
         }
     },
     /**
-     * @return {int} the number of pixels the webclient is scrolled when leaving the action
+     * Returns the current scrolling offset for the current action.  We have to
+     * ask nicely the question to the active view, because the answer depends
+     * on the view.
+     *
+     * @todo: replace this mechanism with a generic getLocalState and
+     * getLocalState.  Scrolling behaviour is only a part of what we might want
+     * to restore.
+     *
+     * @override
+     * @returns {integer} the number of pixels the webclient is currently
+     *  scrolled
      */
-    getScrollTop: function() {
-        var viewController = this.widget.active_view.controller;
+    getScrollTop: function () {
+        var activeView = this.widget.active_view;
+        var viewController = activeView && activeView.controller;
         return viewController ? viewController.getScrollTop() : 0;
     },
     /**
@@ -284,11 +300,11 @@ var ActionManager = Widget.extend({
     /**
      * Add a new action to the action manager
      *
-     * widget: typically, widgets added are openerp.web.ViewManager. The action manager
-     *      uses the stack of actions to handle the breadcrumbs.
-     * action_descr: new action description
-     * options.on_reverse_breadcrumb: will be called when breadcrumb is clicked on
-     * options.clear_breadcrumbs: boolean, if true, action stack is destroyed
+     * @param {Widget} widget typically, widgets added are openerp.web.ViewManager. The action manager uses the stack of actions to handle the breadcrumbs.
+     * @param {Object} action_descr new action description
+     * @param {Object} options
+     * @param options.on_reverse_breadcrumb will be called when breadcrumb is clicked on
+     * @param options.clear_breadcrumbs: boolean, if true, action stack is destroyed
      */
     push_action: function(widget, action_descr, options) {
         var self = this;
@@ -404,16 +420,20 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
-        var nb_views = this.inner_action.get_nb_views();
-        if (nb_views > 1) {
+        var nbViews = this.inner_action.get_nb_views();
+        if (nbViews > 1) {
             // Stay on this action, but select the previous view
-            return this.select_action(this.inner_action, nb_views - 2);
+            return this.select_action(this.inner_action, nbViews - 2);
         }
-        if (this.action_stack.length > 1) {
+        var nbActions = this.action_stack.length;
+        if (nbActions > 1) {
             // Select the previous action
-            var action = this.action_stack[this.action_stack.length - 2];
-            nb_views = action.get_nb_views();
-            return this.select_action(action, nb_views - 1);
+            var action = this.action_stack[nbActions - 2];
+            nbViews = action.get_nb_views();
+            return this.select_action(action, nbViews - 1);
+        }
+        else if (nbActions === 1 && nbViews === 1) {
+            return this.select_action(this.action_stack[0], 0);
         }
         return $.Deferred().reject();
     },
@@ -593,7 +613,7 @@ var ActionManager = Widget.extend({
     /**
      * Execute an OpenERP action
      *
-     * @param {Number|String|String|Object} Can be either an action id, an action XML id, a client action tag or an action descriptor.
+     * @param {Number|String|String|Object} action Can be either an action id, an action XML id, a client action tag or an action descriptor.
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Boolean} [options.replace_breadcrumb=false] Replace the current breadcrumb with the action
@@ -711,7 +731,7 @@ var ActionManager = Widget.extend({
      * @param {String} executor.klass CSS class to add on the dialog root, if action.target=new
      * @param {Function<instance.web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
      * @param {Object} options
-     * @return {*}
+     * @return {Deferred<*>}
      */
     ir_actions_common: function(executor, options) {
         var self = this;
@@ -752,10 +772,13 @@ var ActionManager = Widget.extend({
             };
             this.dialog.on("closed", null, this.dialog.on_close);
             this.dialog_widget = executor.widget();
+            var $dialogFooter;
             if (this.dialog_widget instanceof ViewManager) {
                 executor.action.viewManager = this.dialog_widget;
+                $dialogFooter = $('<div/>'); // fake dialog footer in which view
+                                             // manager buttons will be put
                 _.defaults(this.dialog_widget.flags, {
-                    $buttons: this.dialog.$footer,
+                    $buttons: $dialogFooter,
                     footer_to_buttons: true,
                 });
                 if (this.dialog_widget.action.view_mode === 'form') {
@@ -770,15 +793,24 @@ var ActionManager = Widget.extend({
             this.dialog_widget.setParent(this.dialog);
 
             var fragment = document.createDocumentFragment();
-            return this.dialog_widget.appendTo(fragment).then(function() {
+            return this.dialog_widget.appendTo(fragment).then(function () {
+                var def = $.Deferred();
+                self.dialog.opened().then(function () {
+                    dom.append(self.dialog.$el, fragment, {
+                        in_DOM: true,
+                        callbacks: [{widget: self.dialog_widget}],
+                    });
+                    if ($dialogFooter) {
+                        self.dialog.$footer.empty().append($dialogFooter.contents());
+                    }
+                    if (options.state && self.dialog_widget.do_load_state) {
+                        return self.dialog_widget.do_load_state(options.state);
+                    }
+                })
+                .done(def.resolve.bind(def))
+                .fail(def.reject.bind(def));
                 self.dialog.open();
-                dom.append(self.dialog.$el, fragment, {
-                    in_DOM: true,
-                    callbacks: [{widget: self.dialog_widget}],
-                });
-                if(options.state && self.dialog_widget.do_load_state) {
-                    return self.dialog_widget.do_load_state(options.state);
-                }
+                return def;
             }).then(function () {
                 return executor.action;
             });
@@ -846,6 +878,11 @@ var ActionManager = Widget.extend({
             options.on_close();
         }
         this.dialog_stop();
+        // Display rainbowman on appropriate actions
+        if (action.effect) {
+            this.trigger_up('show_effect', action.effect);
+        }
+
         return $.when();
     },
     ir_actions_server: function (action, options) {
@@ -861,7 +898,7 @@ var ActionManager = Widget.extend({
                 return self.do_action(action, options);
             });
     },
-    ir_actions_report_xml: function(action, options) {
+    ir_actions_report: function(action, options) {
         var self = this;
         framework.blockUI();
         action = _.clone(action);

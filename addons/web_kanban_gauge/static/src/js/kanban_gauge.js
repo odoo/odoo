@@ -6,27 +6,42 @@ var field_registry = require('web.field_registry');
 var utils = require('web.utils');
 
 /**
- * Kanban widgets: GaugeWidget
  * options
+ *
  * - max_value: maximum value of the gauge [default: 100]
  * - max_field: get the max_value from the field that must be present in the
- *              view; takes over max_value
+ *   view; takes over max_value
  * - gauge_value_field: if set, the value displayed below the gauge is taken
-                        from this field instead of the base field used for
-                        the gauge. This allows to display a number different
-                        from the gauge.
+ *   from this field instead of the base field used for
+ *   the gauge. This allows to display a number different
+ *   from the gauge.
  * - label: lable of the gauge, displayed below the gauge value
  * - label_field: get the label from the field that must be present in the
-                  view; takes over label
+ *   view; takes over label
  * - title: title of the gauge, displayed on top of the gauge
  * - style: custom style
- *
  */
 
 var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
 
-    render: function() {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
         // parameters
         var max_value = this.nodeOptions.max_value || 100;
         if (this.nodeOptions.max_field) {
@@ -123,5 +138,7 @@ var GaugeWidget = AbstractField.extend({
 });
 
 field_registry.add("gauge", GaugeWidget);
+
+return GaugeWidget;
 
 });

@@ -16,6 +16,7 @@ var AbstractQuickCreate = Widget.extend({
         'keypress input': '_onKeypress',
         'mousedown .o_kanban_add': '_onMousedown',
         'mousedown .o_kanban_cancel': '_onMousedown',
+        'focusout': '_onFocusOut',
     },
 
     //--------------------------------------------------------------------------
@@ -27,14 +28,15 @@ var AbstractQuickCreate = Widget.extend({
      * has been done
      *
      * @private
+     * @param {Object} [options] dict of options to pass to call to '_notifyAdd'
      */
-    _add: function () {
+    _add: function (options) {
         var value = this.$input.val();
         this.$input.val('');
         if (/^\s*$/.test(value)) {
             return;
         }
-        this._notifyAdd(value);
+        this._notifyAdd(value, options);
         this.$input.focus();
     },
     /**
@@ -52,7 +54,7 @@ var AbstractQuickCreate = Widget.extend({
      * @abstract
      * @private
      */
-    _notifyAdd: function (name) {
+    _notifyAdd: function (name, options) {
     },
 
     //--------------------------------------------------------------------------
@@ -72,6 +74,17 @@ var AbstractQuickCreate = Widget.extend({
      */
     _onCancelClicked: function () {
         this._cancel();
+    },
+    /**
+     * Cancels quick creation on focusout input event
+     *
+     * @private
+     * @param {KeyEvent} ev
+     */
+    _onFocusOut: function (ev) {
+        if (!this.$input.val()) {
+            this._cancel();
+        }
     },
     /**
      * Cancels quick creation on escape keydown event
@@ -114,12 +127,21 @@ var AbstractQuickCreate = Widget.extend({
 
 var RecordQuickCreate = AbstractQuickCreate.extend({
     template: "KanbanView.QuickCreate",
+    events: _.extend({}, AbstractQuickCreate.prototype.events, {
+        'click .o_kanban_edit': '_onEditClicked',
+        'mousedown .o_kanban_edit': '_onMousedown',
+    }),
     /**
      * @override
+     * @param {Widget} parent
+     * @param {Object} options
+     * @param {string|number} options.width defines the element's width
+     * @param {string} [options.defaultName] the record's default name
      */
-    init: function (parent, width) {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.width = width;
+        this.width = options.width;
+        this.defaultName = options.defaultName;
     },
     /**
      * @override
@@ -127,6 +149,7 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     start: function () {
         this.$el.css({width: this.width});
         this.$input = this.$('input');
+        this._addDefaultName();
         this.$input.focus();
         return this._super.apply(this, arguments);
     },
@@ -135,6 +158,16 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Set the default value for the record name.
+     *
+     * @private
+     */
+    _addDefaultName: function () {
+        if (this.defaultName) {
+            this.$input.val(this.defaultName);
+        }
+    },
     /**
      * Triggers up an event to cancel the quick creation
      *
@@ -150,16 +183,49 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
      * @override
      * @private
      * @param {string} value
+     * @param {Object} [options]
+     * @param {boolean} [options.openRecord] set to true to directly open the
+     *   newly created record in a form view (in edit mode)
      */
-    _notifyAdd: function (value) {
-        this.trigger_up('quick_create_add_record', {value: value});
+    _notifyAdd: function (value, options) {
+        this.trigger_up('quick_create_add_record', {
+            value: value,
+            openRecord: options && options.openRecord || false,
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add the default value for the record name again after creating
+     * the previous record.
+     *
+     * @override
+     * @private
+     */
+    _onAddClicked: function () {
+        this._super.apply(this, arguments);
+        this._addDefaultName();
+    },
+    /**
+     * Validates the quick creation and directly opens the record in a form
+     * view in edit mode.
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onEditClicked: function (event) {
+        event.stopPropagation();
+        this._add({openRecord: true});
     },
 });
 
 var ColumnQuickCreate = AbstractQuickCreate.extend({
     template: 'KanbanView.ColumnQuickCreate',
     events: _.extend({}, AbstractQuickCreate.prototype.events, {
-        'click': '_onClick',
+        'click': 'toggleFold',
         'click input': '_onInputClicked',
         'focusout': '_onFocusout',
     }),
@@ -181,17 +247,25 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     * @private
+     * Toggle fold/unfold the Column quick create widget
      */
-    _cancel: function () {
-        this.folded = true;
+    toggleFold: function () {
+        this.folded = !this.folded;
         this._update();
+        if (!this.folded) {
+            this.$input.focus();
+            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
+        }
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Triggers up an event to quick create a column with the given value
      *
@@ -216,18 +290,6 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onClick: function () {
-        this.folded = !this.folded;
-        this._update();
-        if (!this.folded) {
-            this.$input.focus();
-            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
-        }
-    },
     /**
      * @private
      */

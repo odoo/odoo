@@ -23,12 +23,28 @@ var Context = Class.extend({
         this.__contexts.push(context);
         return this;
     },
-    set_eval_context: function (eval_context) {
-        this.__eval_context = eval_context;
-        return this;
-    },
     eval: function () {
         return pyeval.eval('context', this);
+    },
+    /**
+     * Set the evaluation context to be used when we actually eval.
+     *
+     * @param {Object} evalContext
+     * @returns {Context}
+     */
+    set_eval_context: function (evalContext) {
+        // a special case needs to be done for moment objects.  Dates are
+        // internally represented by a moment object, but they need to be
+        // converted to the server format before being sent. We call the toJSON
+        // method, because it returns the date with the format required by the
+        // server
+        for (var key in evalContext) {
+            if (evalContext[key] instanceof moment) {
+                evalContext[key] = evalContext[key].toJSON();
+            }
+        }
+        this.__eval_context = evalContext;
+        return this;
     },
 });
 

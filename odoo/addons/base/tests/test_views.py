@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
-from itertools import izip_longest
 
 from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
+from odoo.osv.orm import modifiers_tests
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger
@@ -24,21 +24,7 @@ class ViewXMLID(common.TransactionCase):
 class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
-        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.View = self.env['ir.ui.view']
-
-    def assertTreesEqual(self, n1, n2, msg=None):
-        self.assertEqual(n1.tag, n2.tag, msg)
-        self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
-        self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip(), msg)
-
-        # Because lxml uses ordereddicts in which order is important to
-        # equality (!?!?!?!)
-        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
-
-        for c1, c2 in izip_longest(n1, n2):
-            self.assertEqual(c1, c2, msg)
-
 
 class TestNodeLocator(common.TransactionCase):
     """
@@ -158,7 +144,7 @@ class TestViewInheritance(ViewCase):
                 E.attribute(name, name='string'),
                 position='attributes'
             )
-        return etree.tostring(element)
+        return etree.tostring(element, encoding='unicode')
 
     def makeView(self, name, parent=None, arch=None):
         """ Generates a basic ir.ui.view with the provided name, parent and arch.
@@ -637,7 +623,7 @@ class TestViews(ViewCase):
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
         kw.setdefault('active', True)
 
-        keys = sorted(kw.keys())
+        keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
         params = ','.join('%%(%s)s' % (k,) for k in keys)
 
@@ -695,7 +681,7 @@ class TestViews(ViewCase):
             'name': "bob",
             'model': 'ir.ui.view',
             'arch': """
-                <form string="Base title" version="7.0">
+                <form string="Base title">
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
@@ -710,7 +696,7 @@ class TestViews(ViewCase):
             'inherit_id': view1.id,
             'arch': """
                 <data>
-                    <form position="attributes" version="7.0">
+                    <form position="attributes">
                         <attribute name="string">Replacement title</attribute>
                     </form>
                     <footer position="replace">
@@ -753,7 +739,7 @@ class TestViews(ViewCase):
                     E.button(name="action_next", type="object", string="New button"),
                     thing="bob lolo bibi and co", otherthing="lolo"
                 ),
-                string="Replacement title", version="7.0"))
+                string="Replacement title"))
 
     def test_view_inheritance_text_inside(self):
         """ Test view inheritance when adding elements and text. """
@@ -820,7 +806,7 @@ class TestViews(ViewCase):
             'name': "bob",
             'model': 'ir.ui.view.custom',
             'arch': """
-                <form string="Base title" version="7.0">
+                <form string="Base title">
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
@@ -835,7 +821,7 @@ class TestViews(ViewCase):
             'inherit_id': view1.id,
             'arch': """
                 <data>
-                    <form position="attributes" version="7.0">
+                    <form position="attributes">
                         <attribute name="string">Replacement title</attribute>
                     </form>
                     <footer position="replace">
@@ -873,8 +859,12 @@ class TestViews(ViewCase):
                 E.p("Replacement data"),
                 E.footer(
                     E.button(name="action_next", type="object", string="New button")),
-                string="Replacement title", version="7.0"
+                string="Replacement title"
             ))
+
+    def test_modifiers(self):
+        # implemeted elsewhere...
+        modifiers_tests()
 
 
 class ViewModeField(ViewCase):

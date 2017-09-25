@@ -1,635 +1,718 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Account Tags -->
-    <record id="st_tag_in_01" model="account.account.tag">
-        <field name="name">Tax to Pay</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_02" model="account.account.tag">
-        <field name="name">Excise Duty</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_03" model="account.account.tag">
-        <field name="name">Excise Duty 12.5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_04" model="account.account.tag">
-        <field name="name">Excise Duty Collected on Sales</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_05" model="account.account.tag">
-        <field name="name">Excise Duty Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_06" model="account.account.tag">
-        <field name="name">Sales Tax</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_07" model="account.account.tag">
-        <field name="name">Sales Tax 4%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_08" model="account.account.tag">
-        <field name="name">Sales Tax 4% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_09" model="account.account.tag">
-        <field name="name">Sales Tax 4% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_10" model="account.account.tag">
-        <field name="name">Sales Tax 12%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_11" model="account.account.tag">
-        <field name="name">Sales Tax 12% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_12" model="account.account.tag">
-        <field name="name">Sales Tax 12% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_13" model="account.account.tag">
-        <field name="name">Sales Tax 15%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_14" model="account.account.tag">
-        <field name="name">Sales Tax 15% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_15" model="account.account.tag">
-        <field name="name">Sales Tax 15% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_16" model="account.account.tag">
-        <field name="name">Service Tax</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_17" model="account.account.tag">
-        <field name="name">Service Tax 14%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_18" model="account.account.tag">
-        <field name="name">Service Tax Collected on Sales of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_19" model="account.account.tag">
-        <field name="name">Swachh Bharat Cess 0.5% Service Tax Collected on Sales of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_20" model="account.account.tag">
-        <field name="name">Krishi Kalayan Cess 0.5% Service Tax Collected on Sales of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_21" model="account.account.tag">
-        <field name="name">Service Tax Paid on Purchase of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_22" model="account.account.tag">
-        <field name="name">Swachh Bharat Cess 0.5% Service Tax Paid on Purchase of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_23" model="account.account.tag">
-        <field name="name">Krishi Kalayan Cess 0.5% Service Tax Paid on Purchase of Services</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_24" model="account.account.tag">
-        <field name="name">VAT</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_25" model="account.account.tag">
-        <field name="name">VAT 4%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_26" model="account.account.tag">
-        <field name="name">VAT 4% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_27" model="account.account.tag">
-        <field name="name">VAT 4% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_28" model="account.account.tag">
-        <field name="name">VAT 12.5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_29" model="account.account.tag">
-        <field name="name">VAT 12.5% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_30" model="account.account.tag">
-        <field name="name">VAT 12.5% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_31" model="account.account.tag">
-        <field name="name">Additional VAT 1%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_32" model="account.account.tag">
-        <field name="name">Additional VAT 1% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_33" model="account.account.tag">
-        <field name="name">Additional VAT 1% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_34" model="account.account.tag">
-        <field name="name">Additional VAT 2.5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_35" model="account.account.tag">
-        <field name="name">Additional VAT 2.5% Collected on Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_36" model="account.account.tag">
-        <field name="name">Additional VAT 2.5% Paid on Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_37" model="account.account.tag">
-        <field name="name">Tax Bases</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_38" model="account.account.tag">
-        <field name="name">Base Excise Duty</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_39" model="account.account.tag">
-        <field name="name">Base Excise Duty 12.5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_40" model="account.account.tag">
-        <field name="name">Base of  Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_41" model="account.account.tag">
-        <field name="name">Base of  Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_42" model="account.account.tag">
-        <field name="name">Base Sales Tax</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_43" model="account.account.tag">
-        <field name="name">Base Sales Tax 4%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_44" model="account.account.tag">
-        <field name="name">Base of  Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_45" model="account.account.tag">
-        <field name="name">Base of  Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_46" model="account.account.tag">
-        <field name="name">Base Sales Tax 12%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_47" model="account.account.tag">
-        <field name="name">Base of  Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_48" model="account.account.tag">
-        <field name="name">Base of  Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_49" model="account.account.tag">
-        <field name="name">Base Sales Tax 15%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_50" model="account.account.tag">
-        <field name="name">Base of  Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_51" model="account.account.tag">
-        <field name="name">Base of  Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_52" model="account.account.tag">
-        <field name="name">Base Service Tax</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_53" model="account.account.tag">
-        <field name="name">Base Service Tax 15%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_54" model="account.account.tag">
-        <field name="name">Base of  Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_55" model="account.account.tag">
-        <field name="name">Base of  Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_56" model="account.account.tag">
-        <field name="name">Base VAT</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_57" model="account.account.tag">
-        <field name="name">Base VAT 4%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_58" model="account.account.tag">
-        <field name="name">Base of Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_59" model="account.account.tag">
-        <field name="name">Base of Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_60" model="account.account.tag">
-        <field name="name">Base VAT 12.5%</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_61" model="account.account.tag">
-        <field name="name">Base of Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
-
-    <record id="st_tag_in_62" model="account.account.tag">
-        <field name="name">Base of Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
 
-    <record id="st_tag_in_63" model="account.account.tag">
-        <field name="name">Base Additional VAT 1%</field>
+    <record id="sgst_tag_tax" model="account.account.tag">
+        <field name="name">SGST</field>
         <field name="applicability">taxes</field>
     </record>
-
-    <record id="st_tag_in_64" model="account.account.tag">
-        <field name="name">Base of Sale</field>
+    <record id="cgst_tag_tax" model="account.account.tag">
+        <field name="name">CGST</field>
         <field name="applicability">taxes</field>
     </record>
-
-    <record id="st_tag_in_65" model="account.account.tag">
-        <field name="name">Base of Purchase</field>
+    <record id="igst_tag_tax" model="account.account.tag">
+        <field name="name">IGST</field>
         <field name="applicability">taxes</field>
     </record>
-
-    <record id="st_tag_in_66" model="account.account.tag">
-        <field name="name">Base Additional VAT 2.5%</field>
+    <record id="cess_tag_tax" model="account.account.tag">
+        <field name="name">CESS</field>
         <field name="applicability">taxes</field>
     </record>
 
-    <record id="st_tag_in_67" model="account.account.tag">
-        <field name="name">Base of Sale</field>
-        <field name="applicability">taxes</field>
-    </record>
+    <!-- GST TAXES-->
 
-    <record id="st_tag_in_68" model="account.account.tag">
-        <field name="name">Base of Purchase</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <!-- Account Tax Templates -->
+    <!-- CESS Tax -->
 
-    <record id="input_tax_15" model="account.tax.template">
-        <field name="name">(standard)Input Sales Tax @ 15%</field>
-        <field name="description">(standard)Input Sales Tax @ 15%</field>
-        <field name="type_tax_use">sale</field>
+    <record id="cess_sale_5" model="account.tax.template">
+        <field name="name">CESS Sale 5%</field>
+        <field name="description">CESS 5%</field>
+        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">15</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p11235"/>
-        <field name="refund_account_id" ref="p20011"/>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_14'), ref('st_tag_in_50')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
     </record>
-    <record id="input_tax_12" model="account.tax.template">
-        <field name="name">(standard)Input Sales Tax @ 12%</field>
-        <field name="description">(standard)Input Sales Tax @ 12%</field>
+
+    <record id="cess_sale_1591" model="account.tax.template">
+        <field name="name">CESS Sale 1591 Per Thousand</field>
+        <field name="description">1591 PER THOUSAND</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">1.591</field>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
+    </record>
+
+    <record id="cess_5_plus_1591_sale" model="account.tax.template">
+        <field name="name">CESS 5% + RS.1591/THOUSAND </field>
+        <field name="description">CESS 5% + RS.1591/THOUSAND</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">12</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p11235"/>
-        <field name="refund_account_id" ref="p20011"/>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_11'), ref('st_tag_in_47')])]"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('cess_sale_5'),ref('cess_sale_1591'),])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
     </record>
-    <record id="input_tax_4" model="account.tax.template">
-        <field name="name">(standard)Input Sales Tax @ 4%</field>
-        <field name="description">(standard)Input Sales Tax @ 4%</field>
+
+    <record id="cess_21_4170_higer_sale" model="account.tax.template">
+        <field name="name">CESS 21% or RS.4170/THOUSAND </field>
+        <field name="description">CESS 21% or RS.4170/THOUSAND</field>
         <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">4</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p11235"/>
-        <field name="refund_account_id" ref="p20011"/>
+        <field name="amount_type">code</field>
+        <field name="amount">0</field>
+        <field name="python_compute">result=base_amount * 0.21
+tax=quantity * 4.17
+if tax > result:result=tax</field>
+        <field name="tax_group_id" ref="cess_group"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_08'), ref('st_tag_in_44')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
     </record>
-    <record id="add_input_vat_1" model="account.tax.template">
-        <field name="name">(standard)Additional Input VAT @ 1%</field>
-        <field name="description">(standard)Additional Input VAT @ 1%</field>
+
+    <!-- IGST -->
+
+    <record id="igst_sale_1" model="account.tax.template">
+        <field name="name">IGST 1%</field>
+        <field name="description">IGST 1%</field>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="sequence">15</field>
-        <field name="account_id" ref="p11232"/>
+        <field name="account_id" ref="p11234"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_64'), ref('st_tag_in_32')])]"/>
-    </record>
-    <record id="input_vat_12" model="account.tax.template">
-        <field name="name">(standard)Input VAT @ 12.5%</field>
-        <field name="description">(standard)Input VAT @ 12.5%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">12.5</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p11232"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_61'), ref('st_tag_in_29')])]"/>
-    </record>
-    <record id="add_input_vat_2" model="account.tax.template">
-        <field name="name">(standard)Additional Input VAT @ 2.5%</field>
-        <field name="description">(standard)Additional Input VAT @ 2.5%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">2.5</field>
-        <field name="sequence">15</field>
-        <field name="account_id" ref="p11232"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_67'), ref('st_tag_in_35')])]"/>
-    </record>
-    <record id="sale_Excise_Duty_12_5" model="account.tax.template">
-        <field name="name">(standard)Input Excise Duty @ 12.5%</field>
-        <field name="description">(standard)Input Excise Duty @ 12.5%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">12.5</field>
-        <field name="sequence">1</field>
-        <field name="account_id" ref="p112331"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_04'), ref('st_tag_in_40')])]"/>
-    </record>
-    <record id="sale_service_tax14" model="account.tax.template">
-        <field name="name">(standard)Input Service Tax 14%</field>
-        <field name="description">(standard)Input Service Tax 14%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="sequence">13</field>
-        <field name="account_id" ref="p112341"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_18')])]"/>
-    </record>
-    <record id="sale_sb_cess_service_tax_0_5" model="account.tax.template">
-        <field name="name">(standard)Swachh Bharat Cess @ 0.5% On Input Service</field>
-        <field name="description">(standard)Swacha Bharat Cess @ 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="sequence">14</field>
-        <field name="account_id" ref="p112342"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_19')])]"/>
-    </record>
-    <record id="sale_kk_cess_service_tax_0_5" model="account.tax.template">
-        <field name="name">(standard)Krishi Kalyan Cess @ 0.5% On Input Service</field>
-        <field name="description">(standard)Input Higher Education Cess @ 0.5% On Service Tax</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="sequence">15</field>
-        <field name="account_id" ref="p112343"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_20')])]"/>
-    </record>
-    <record id="sale_service_tax_15" model="account.tax.template">
-        <field name="name">(standard)Input Service Tax @ 15%</field>
-        <field name="description">(standard)Input Service Tax @ 15%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount_type">group</field>
-        <field name="amount">14</field>
-        <field name="include_base_amount">True</field>
-        <field name="sequence">8</field>
-        <field name="account_id" ref="p112341"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('sale_service_tax14'),ref('sale_sb_cess_service_tax_0_5'),ref('sale_kk_cess_service_tax_0_5')])]"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_54')])]"/>
-    </record>
-    <record id="input_vat_4" model="account.tax.template">
-        <field name="name">(standard)Input VAT @ 4%</field>
-        <field name="description">(standard)Input VAT @ 4%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">4</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p11232"/>
-        <field name="refund_account_id" ref="p20011"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_26'), ref('st_tag_in_58')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
     </record>
 
-    <!--output purchase tax-->
-    <record id="output_tax_15" model="account.tax.template">
-        <field name="name">(standard)Output Purchase Tax @ 15%</field>
-        <field name="description">(standard)Output Purchase Tax @ 15%</field>
-        <field name="type_tax_use">purchase</field>
+    <record id="igst_sale_2" model="account.tax.template">
+        <field name="name">IGST 2%</field>
+        <field name="description">IGST 2%</field>
+        <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-        <field name="amount">15</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p10050"/>
-        <field name="refund_account_id" ref="p2107"/>
+        <field name="amount">2</field>
+        <field name="account_id" ref="p11234"/>
+        <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_51'), ref('st_tag_in_15')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
     </record>
-    <record id="output_tax_12" model="account.tax.template">
-        <field name="name">(standard)Output Purchase Tax @ 12%</field>
-        <field name="description">(standard)Output Purchase Tax @ 12%</field>
-        <field name="type_tax_use">purchase</field>
+
+    <record id="igst_sale_28" model="account.tax.template">
+        <field name="name">IGST 28%</field>
+        <field name="description">IGST 28%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">28</field>
+        <field name="account_id" ref="p11234"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_sale_18" model="account.tax.template">
+        <field name="name">IGST 18%</field>
+        <field name="description">IGST 18%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">18</field>
+        <field name="account_id" ref="p11234"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_sale_12" model="account.tax.template">
+        <field name="name">IGST 12%</field>
+        <field name="description">IGST 12%</field>
+        <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
         <field name="amount">12</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p10050"/>
-        <field name="refund_account_id" ref="p2107"/>
+        <field name="account_id" ref="p11234"/>
+        <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6, 0, [ref('st_tag_in_12'), ref('st_tag_in_48')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
     </record>
-    <record id="output_tax_4" model="account.tax.template">
-        <field name="name">(standard)Output Purchase Tax @ 4%</field>
-        <field name="description">(standard)Output Purchase Tax @ 4%</field>
-        <field name="type_tax_use">purchase</field>
+
+    <record id="igst_sale_5" model="account.tax.template">
+        <field name="name">IGST 5%</field>
+        <field name="description">IGST 5%</field>
+        <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
-        <field name="amount">4</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p10050"/>
-        <field name="refund_account_id" ref="p2107"/>
+        <field name="amount">5</field>
+        <field name="account_id" ref="p11234"/>
+        <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_45'), ref('st_tag_in_09')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
     </record>
-    <record id="add_output_vat_1" model="account.tax.template">
-        <field name="name">(standard)Additional Output VAT @ 1%</field>
-        <field name="description">(standard)Additional Output VAT @ 1%</field>
+
+    <!-- SGST & CGST Sales Group Tax -->
+
+    <record id="sgst_sale_0_5" model="account.tax.template">
+        <field name="name">SGST Sale 0.5%</field>
+        <field name="description">SGST 0.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.5</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_0_5" model="account.tax.template">
+        <field name="name">CGST Sale 0.5%</field>
+        <field name="description">CGST 0.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.5</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_1" model="account.tax.template">
+        <field name="name">GST 1%</field>
+        <field name="description">GST 1%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_0_5'), ref('cgst_sale_0_5'),])]"/>
+    </record>
+
+    <record id="sgst_sale_1_2" model="account.tax.template">
+        <field name="name">SGST Sale 1%</field>
+        <field name="description">SGST 1%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_1_2" model="account.tax.template">
+        <field name="name">CGST Sale 1%</field>
+        <field name="description">CGST 1%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_2" model="account.tax.template">
+        <field name="name">GST 2%</field>
+        <field name="description">GST 2%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_1_2'), ref('cgst_sale_1_2'),])]"/>
+    </record>
+
+    <record id="sgst_sale_14" model="account.tax.template">
+        <field name="name">SGST Sale 14%</field>
+        <field name="description">SGST 14%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_14" model="account.tax.template">
+        <field name="name">CGST Sale 14%</field>
+        <field name="description">CGST 14%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_28" model="account.tax.template">
+        <field name="name">GST 28%</field>
+        <field name="description">GST 28%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_14'),ref('cgst_sale_14'),])]"/>
+    </record>
+
+        <record id="sgst_sale_9" model="account.tax.template">
+        <field name="name">SGST Sale 9%</field>
+        <field name="description">SGST 9%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">9</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_9" model="account.tax.template">
+        <field name="name">CGST Sale 9%</field>
+        <field name="description">CGST 9%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">9</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_18" model="account.tax.template">
+        <field name="name">GST 18%</field>
+        <field name="description">GST 18%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_9'),ref('cgst_sale_9'),])]"/>
+    </record>
+
+    <record id="sgst_sale_6" model="account.tax.template">
+        <field name="name">SGST Sale 6%</field>
+        <field name="description">SGST 6%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">6</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_6" model="account.tax.template">
+        <field name="name">CGST Sale 6%</field>
+        <field name="description">CGST 6%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">6</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_12" model="account.tax.template">
+        <field name="name">GST 12%</field>
+        <field name="description">GST 12%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_6'),ref('cgst_sale_6'),])]"/>
+    </record>
+
+        <record id="sgst_sale_2_5" model="account.tax.template">
+        <field name="name">SGST Sale 2.5%</field>
+        <field name="description">SGST 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="account_id" ref="p11232"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_sale_2_5" model="account.tax.template">
+        <field name="name">CGST Sale 2.5%</field>
+        <field name="description">CGST 2.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">2.5</field>
+        <field name="account_id" ref="p11233"/>
+        <field name="refund_account_id" ref="p20011"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_sale_5" model="account.tax.template">
+        <field name="name">GST 5%</field>
+        <field name="description">GST 5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_sale_2_5'), ref('cgst_sale_2_5'),])]"/>
+    </record>
+
+    <!-- Purchase Taxes-->
+
+    <!-- CESS Taxes -->
+
+    <record id="cess_purchase_5" model="account.tax.template">
+        <field name="name">CESS Purchase 5%</field>
+        <field name="description">CESS 5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
+    </record>
+
+    <record id="cess_purchase_1591" model="account.tax.template">
+        <field name="name">CESS Purchase 1591 Per Thousand</field>
+        <field name="description">1591 PER THOUSAND</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">fixed</field>
+        <field name="amount">1.591</field>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
+    </record>
+
+    <record id="cess_5_plus_1591_purchase" model="account.tax.template">
+        <field name="name">CESS 5% + RS.1591/THOUSAND </field>
+        <field name="description">CESS 5% + RS.1591/THOUSAND</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('cess_purchase_5'),ref('cess_purchase_1591'),])]"/>
+    </record>
+
+    <record id="cess_21_4170_higer_purchase" model="account.tax.template">
+        <field name="name">CESS 21% or RS.4170/THOUSAND </field>
+        <field name="description">CESS 21% or RS.4170/THOUSAND</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">code</field>
+        <field name="amount">0</field>
+        <field name="python_compute">result=base_amount * 0.21
+tax=quantity * 4.17
+if tax > result:result=tax</field>
+        <field name="tax_group_id" ref="cess_group"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cess_tag_tax'),])]"/>
+    </record>
+
+    <!-- IGST -->
+
+    <record id="igst_purchase_1" model="account.tax.template">
+        <field name="name">IGST 1%</field>
+        <field name="description">IGST 1%</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
         <field name="amount">1</field>
-        <field name="sequence">15</field>
-        <field name="account_id" ref="p10051"/>
+        <field name="account_id" ref="p10053"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_65'), ref('st_tag_in_33')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
     </record>
-    <record id="output_vat_12" model="account.tax.template">
-        <field name="name">(standard)Output VAT @ 12.5%</field>
-        <field name="description">(standard)Output VAT @ 12.5%</field>
+
+    <record id="igst_purchase_2" model="account.tax.template">
+        <field name="name">IGST 2%</field>
+        <field name="description">IGST 2%</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">percent</field>
-        <field name="amount">12.5</field>
-        <field name="sequence">10</field>
+        <field name="amount">2</field>
+        <field name="account_id" ref="p10053"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_purchase_28" model="account.tax.template">
+        <field name="name">IGST 28%</field>
+        <field name="description">IGST 28%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">28</field>
+        <field name="account_id" ref="p10053"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_purchase_18" model="account.tax.template">
+        <field name="name">IGST 18%</field>
+        <field name="description">IGST 18%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">18</field>
+        <field name="account_id" ref="p10053"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_purchase_12" model="account.tax.template">
+        <field name="name">IGST 12%</field>
+        <field name="description">IGST 12%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12</field>
+        <field name="account_id" ref="p10053"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <record id="igst_purchase_5" model="account.tax.template">
+        <field name="name">IGST 5%</field>
+        <field name="description">IGST 5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="account_id" ref="p10053"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('igst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="igst_group"/>
+    </record>
+
+    <!-- SGST & CGST -->
+
+    <record id="sgst_purchase_0_5" model="account.tax.template">
+        <field name="name">SGST Purchase 0.5%</field>
+        <field name="description">SGST 0.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.5</field>
         <field name="account_id" ref="p10051"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_30'), ref('st_tag_in_62')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
     </record>
-    <record id="add_output_vat_2" model="account.tax.template">
-        <field name="name">(standard)Additional Output VAT @ 2.5%</field>
-        <field name="description">(standard)Additional Output VAT @ 2.5%</field>
+
+    <record id="cgst_purchase_0_5" model="account.tax.template">
+        <field name="name">CGST Purchase 0.5%</field>
+        <field name="description">CGST 0.5%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.5</field>
+        <field name="account_id" ref="p10052"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_purchase_1" model="account.tax.template">
+        <field name="name">GST 1%</field>
+        <field name="description">GST 1%</field>
         <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_0_5'),ref('cgst_purchase_0_5'),])]"/>
+    </record>
+
+    <record id="sgst_purchase_1_2" model="account.tax.template">
+        <field name="name">SGST Purchase 1%</field>
+        <field name="description">SGST 1%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_purchase_1_2" model="account.tax.template">
+        <field name="name">CGST Purchase 1%</field>
+        <field name="description">CGST 1%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">1</field>
+        <field name="account_id" ref="p10052"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_purchase_2" model="account.tax.template">
+        <field name="name">GST 2%</field>
+        <field name="description">GST 2%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_1_2'),ref('cgst_purchase_1_2'),])]"/>
+    </record>
+
+    <record id="sgst_purchase_14" model="account.tax.template">
+        <field name="name">SGST Purchase 14%</field>
+        <field name="description">SGST 14%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_purchase_14" model="account.tax.template">
+        <field name="name">CGST Purchase 14%</field>
+        <field name="description">CGST 14%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">14</field>
+        <field name="account_id" ref="p10052"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_purchase_28" model="account.tax.template">
+        <field name="name">GST 28%</field>
+        <field name="description">GST 28%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_14'),ref('cgst_purchase_14'),])]"/>
+    </record>
+
+        <record id="sgst_purchase_9" model="account.tax.template">
+        <field name="name">SGST Purchase 9%</field>
+        <field name="description">SGST 9%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">9</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_purchase_9" model="account.tax.template">
+        <field name="name">CGST Purchase 9%</field>
+        <field name="description">CGST 9%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">9</field>
+        <field name="account_id" ref="p10052"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_purchase_18" model="account.tax.template">
+        <field name="name">GST 18%</field>
+        <field name="description">GST 18%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_9'),ref('cgst_purchase_9'),])]"/>
+    </record>
+
+    <record id="sgst_purchase_6" model="account.tax.template">
+        <field name="name">SGST Purchase 6%</field>
+        <field name="description">SGST 6%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">6</field>
+        <field name="account_id" ref="p10051"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
+    </record>
+
+    <record id="cgst_purchase_6" model="account.tax.template">
+        <field name="name">CGST Purchase 6%</field>
+        <field name="description">CGST 6%</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">6</field>
+        <field name="account_id" ref="p10052"/>
+        <field name="refund_account_id" ref="p2107"/>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
+    </record>
+
+    <record id="sgst_purchase_12" model="account.tax.template">
+        <field name="name">GST 12%</field>
+        <field name="description">GST 12%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">group</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_6'),ref('cgst_purchase_6'),])]"/>
+    </record>
+
+    <record id="sgst_purchase_2_5" model="account.tax.template">
+        <field name="name">SGST Purchase 2.5%</field>
+        <field name="description">SGST 2.5%</field>
+        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
         <field name="amount">2.5</field>
-        <field name="sequence">15</field>
         <field name="account_id" ref="p10051"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_68'), ref('st_tag_in_36')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="sgst_group"/>
     </record>
-    <record id="purchase_Excise_Duty_12_5" model="account.tax.template">
-        <field name="name">(standard)Output Excise Duty @ 12.5%</field>
-        <field name="description">(standard)Output Excise Duty @ 12.5%</field>
-        <field name="type_tax_use">purchase</field>
+
+    <record id="cgst_purchase_2_5" model="account.tax.template">
+        <field name="name">CGST Purchase 2.5%</field>
+        <field name="description">CGST 2.5%</field>
+        <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">12.5</field>
-        <field name="sequence">1</field>
-        <field name="account_id" ref="p100521"/>
+        <field name="amount">2.5</field>
+        <field name="account_id" ref="p10052"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_05'), ref('st_tag_in_41')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_tax'),])]"/>
+        <field name="tax_group_id" ref="cgst_group"/>
     </record>
-    <record id="purchase_service_tax14" model="account.tax.template">
-        <field name="name">(standard)Output Serivce Tax 14%</field>
-        <field name="description">(standard)Output Serivce Tax 14%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">14</field>
-        <field name="sequence">9</field>
-        <field name="account_id" ref="p100531"/>
-        <field name="refund_account_id" ref="p2107"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_21')])]"/>
-    </record>
-    <record id="purchase_sb_cess_service_tax0_5" model="account.tax.template">
-        <field name="name">(standard)Swachh Bharat Cess @ 0.5% On Output Service</field>
-        <field name="description">(standard)Swachh Bharat Cess @ 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p100532"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_22')])]"/>
-    </record>
-    <record id="purchase_kk_cess_service_tax0_5" model="account.tax.template">
-        <field name="name">(standard)Krishi Kalyan Cess @ 0.5% On Output Service</field>
-        <field name="description">(standard)Krishi Kalyan Cess @ 0.5%</field>
-        <field name="type_tax_use">none</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0.5</field>
-        <field name="sequence">11</field>
-        <field name="account_id" ref="p100533"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_23')])]"/>
-    </record>
-    <record id="purchase_service_tax_15" model="account.tax.template">
-        <field name="name">(standard)Output Service Tax @ 15%</field>
-        <field name="description">(standard)Output Service Tax @ 15%</field>
+
+    <record id="sgst_purchase_5" model="account.tax.template">
+        <field name="name">GST 5%</field>
+        <field name="description">GST 5%</field>
         <field name="type_tax_use">purchase</field>
-        <field name="include_base_amount">True</field>
         <field name="amount_type">group</field>
-        <field name="amount">14</field>
-        <field name="sequence">8</field>
-        <field name="account_id" ref="p100531"/>
-        <field name="refund_account_id" ref="p2107"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('purchase_service_tax14'),ref('purchase_sb_cess_service_tax0_5'),ref('purchase_kk_cess_service_tax0_5')])]"/>
+        <field name="amount">0</field>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_55')])]"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('sgst_purchase_2_5'),ref('cgst_purchase_2_5'),])]"/>
     </record>
-    <record id="output_vat_4" model="account.tax.template">
-        <field name="name">(standard)Output VAT @ 4%</field>
-        <field name="description">(standard)Output VAT @ 4%</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">4</field>
-        <field name="sequence">10</field>
-        <field name="account_id" ref="p10051"/>
-        <field name="refund_account_id" ref="p2107"/>
-        <field name="chart_template_id" ref="indian_chart_template_standard"/>
-        <field name="tag_ids" eval="[(6,0,[ref('st_tag_in_27'), ref('st_tag_in_59')])]"/>
-    </record>
+
 </odoo>

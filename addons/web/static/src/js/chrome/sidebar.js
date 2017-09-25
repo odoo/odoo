@@ -3,9 +3,6 @@ odoo.define('web.Sidebar', function (require) {
 
 var Context = require('web.Context');
 var core = require('web.core');
-var data = require('web.data');
-var Dialog = require('web.Dialog');
-var framework = require('web.framework');
 var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 
@@ -13,12 +10,25 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var Sidebar = Widget.extend({
-    init: function(parent, options) {
-        var self = this;
-        this._super(parent);
+    events: {
+        "click .dropdown-menu li a": "_onDropdownClicked"
+    },
+    /**
+     * @override
+     *
+     * @param {Object} options
+     * @param {Object} options.items
+     * @param {Object} options.sections
+     * @param {Object} options.env
+     * @param {Object} options.actions
+     *
+     */
+    init: function (parent, options) {
+        this._super.apply(this, arguments);
         this.options = _.defaults(options || {}, {
             'editable': true
         });
+        this.env = options.env;
         this.sections = options.sections || [
             {name: 'print', label: _t('Print')},
             {name: 'other', label: _t('Action')},
@@ -27,51 +37,37 @@ var Sidebar = Widget.extend({
             print: [],
             other: [],
         };
-        this.fileupload_id = _.uniqueId('oe_fileupload');
-        $(window).on(this.fileupload_id, function() {
-            var args = [].slice.call(arguments).slice(1);
-            self.do_attachement_update(self.dataset, self.model_id,args);
-            framework.unblockUI();
-        });
+        if (options.actions) {
+            this._addToolbarActions(options.actions);
+        }
     },
-    start: function() {
-        var self = this;
-        this._super(this);
+    /**
+     * @override
+     */
+    start: function () {
+        this._super.apply(this, arguments);
         this.$el.addClass('btn-group');
-        this.redraw();
-        this.$el.on('click','.dropdown-menu li a', function(event) {
-            var section = $(this).data('section');
-            var index = $(this).data('index');
-            var item = self.items[section][index];
-            if (item.callback) {
-                item.callback.apply(self, [item]);
-            } else if (item.action) {
-                self.on_item_action_clicked(item);
-            } else if (item.url) {
-                return true;
-            }
-            event.preventDefault();
-        });
+        this._redraw();
     },
-    destroy: function() {
-        $(window).off(this.fileupload_id);
-        return this._super.apply(this, arguments);
-    },
-    redraw: function() {
-        this.$el.html(QWeb.render('Sidebar', {widget: this}));
 
-        // Hides Sidebar sections when item list is empty
-        this.$('.o_dropdown').each(function() {
-            if (!$(this).find('li').length) {
-                $(this).hide();
-            }
-        });
-        this.$("[title]").tooltip({
-            delay: { show: 500, hide: 0}
-        });
-        this.$('.o_sidebar_add_attachment .o_form_binary_form').change(this.on_attachment_changed);
-        this.$('.o_sidebar_delete_attachment').click(this.on_attachment_delete);
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Update the env for the sidebar then rerender it.
+     *
+     * @param  {Object} env
+     */
+    updateEnv: function (env) {
+        this.env = env;
+        this._redraw();
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * For each item added to the section:
      *
@@ -86,7 +82,7 @@ var Sidebar = Widget.extend({
      *     function to call when the item is clicked in the sidebar, called
      *     with the item descriptor as its first argument (so information
      *     can be stored as additional keys on the object passed to
-     *     ``add_items``)
+     *     ``_addItems``)
      *
      * ``classname`` (optional)
      *     ``@class`` set on the sidebar serialization of the item
@@ -94,135 +90,126 @@ var Sidebar = Widget.extend({
      * ``title`` (optional)
      *     will be set as the item's ``@title`` (tooltip)
      *
-     * @param {String} section_code
+     * @private
+     * @param {String} sectionCode
      * @param {Array<{label, action | callback[, classname][, title]}>} items
      */
-    add_items: function(section_code, items) {
+    _addItems: function (sectionCode, items) {
         if (items) {
-            this.items[section_code].unshift.apply(this.items[section_code],items);
-            this.redraw();
+            this.items[sectionCode].unshift.apply(this.items[sectionCode], items);
         }
     },
-    add_toolbar: function(toolbar) {
+    /**
+     * Method that will add the custom actions to the toolbar
+     *
+     * @private
+     * @param {Object} toolbarActions
+     */
+    _addToolbarActions: function (toolbarActions) {
         var self = this;
-        _.each(['print','action','relate'], function(type) {
-            var items = toolbar[type];
-            if (items) {
-                var actions = _.map(items, function (item) {
-                    return {
-                        label: item.name,
-                        action: item,
-                    };
-                });
-                self.add_items(type === 'print' ? 'print' : 'other', actions);
-            }
-        });
-    },
-    on_item_action_clicked: function(item) {
-        var self = this;
-        self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
-            var ids = self.getParent().getSelectedIds();
-            var domain;
-            if (self.getParent().getActiveDomain) {
-                domain = self.getParent().getActiveDomain();
-            }
-            else {
-                domain = $.Deferred().resolve(undefined);
-            }
-            if (ids.length === 0) {
-                new Dialog(this, {title: _t("Warning"), size: 'medium', $content: $("<div/>").html(_t("You must choose at least one record."))}).open();
-                return false;
-            }
-            var dataset = self.getParent().dataset;
-            var active_ids_context = {
-                active_id: ids[0],
-                active_ids: ids,
-                active_model: dataset.model,
-            };
-
-            $.when(domain).done(function (domain) {
-                if (domain !== undefined) {
-                    active_ids_context.active_domain = domain;
+        _.each(['print','action','relate'], function (type) {
+            if (type in toolbarActions) {
+                var actions = toolbarActions[type];
+                if (actions && actions.length) {
+                    var items = _.map(actions, function (action) {
+                        return {
+                            label: action.name,
+                            action: action,
+                        };
+                    });
+                    self._addItems(type === 'print' ? 'print' : 'other', items);
                 }
-                var c = pyeval.eval('context',
-                new Context(
-                    sidebar_eval_context, active_ids_context));
-
-                self._rpc({
-                        route: '/web/action/load',
-                        params: {
-                            action_id: item.action.id,
-                            context: new Context(
-                                dataset.get_context(), active_ids_context).eval()
-                        },
-                    })
-                    .done(function(result) {
-                        result.context = new Context(
-                            result.context || {}, active_ids_context)
-                                .set_eval_context(c);
-                        result.flags = result.flags || {};
-                        result.flags.new_window = true;
-                        self.do_action(result, {
-                            on_close: function() {
-                                // reload view
-                                self.getParent().reload();
-                            },
-                        });
-                    });
-            });
-        });
-    },
-    do_attachement_update: function(dataset, model_id, args) {
-        this.dataset = dataset;
-        this.model_id = model_id;
-        var upload_error = _.filter(args, function(attachment) {return attachment.error;});
-        if (upload_error.length) {
-            this.do_warn(_t('Uploading Error'), upload_error[0].error);
-        }
-        if (!model_id) {
-            this.on_attachments_loaded([]);
-        } else {
-            var dom = [ ['res_model', '=', dataset.model], ['res_id', '=', model_id], ['type', 'in', ['binary', 'url']] ];
-            var ds = new data.DataSetSearch(this, 'ir.attachment', dataset.get_context(), dom);
-            ds.read_slice(['name', 'url', 'type', 'create_uid', 'create_date', 'write_uid', 'write_date'], {}).done(this.on_attachments_loaded);
-        }
-    },
-    on_attachments_loaded: function(attachments) {
-        _.each(attachments,function(a) {
-            a.label = a.name;
-            if(a.type === "binary") {
-                a.url = '/web/content/'  + a.id + '?download=true';
             }
         });
-        this.items.files = attachments;
-        this.redraw();
-    },
-    on_attachment_changed: function(e) {
-        var $e = $(e.target);
-        if ($e.val() !== '') {
-            this.$('form.o_form_binary_form').submit();
-            $e.parent().find('input[type=file]').prop('disabled', true);
-            $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
-            this.$('.o_sidebar_add_attachment a').text(_t('Uploading...'));
-            framework.blockUI();
+        if ('other' in toolbarActions) {
+            this._addItems('other', toolbarActions.other);
         }
     },
-    on_attachment_delete: function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    /**
+     * Performs the action for the item clicked after getting the data
+     * necessary with a trigger up
+     *
+     * @private
+     * @param  {Object} item
+     */
+    _onItemActionClicked: function (item) {
         var self = this;
-        var $e = $(e.currentTarget);
-        var options = {
-            confirm_callback: function () {
-                new data.DataSet(this, 'ir.attachment')
-                    .unlink([parseInt($e.attr('data-id'), 10)])
-                    .done(function() {
-                        self.do_attachement_update(self.dataset, self.model_id);
+        this.trigger_up('sidebar_data_asked', {
+            callback: function (env) {
+                self.env = env;
+                var activeIdsContext = {
+                    active_id: env.activeIds[0],
+                    active_ids: env.activeIds,
+                    active_model: env.model,
+                };
+                if (env.domain) {
+                    activeIdsContext.active_domain = env.domain;
+                }
+
+                var context = pyeval.eval('context', new Context(env.context, activeIdsContext));
+                self._rpc({
+                    route: '/web/action/load',
+                    params: {
+                        action_id: item.action.id,
+                        context: context,
+                    },
+                }).done(function (result) {
+                    result.context = new Context(
+                        result.context || {}, activeIdsContext)
+                            .set_eval_context(context);
+                    result.flags = result.flags || {};
+                    result.flags.new_window = true;
+                    self.do_action(result, {
+                        on_close: function () {
+                            self.trigger_up('reload');
+                        },
                     });
+                });
             }
-        };
-        Dialog.confirm(this, _t("Do you really want to delete this attachment ?"), options);
-    }
+        });
+    },
+    /**
+     * Method that renders the sidebar when there is a data update
+     *
+     * @private
+     */
+    _redraw: function () {
+        this.$el.html(QWeb.render('Sidebar', {widget: this}));
+
+        // Hides Sidebar sections when item list is empty
+        this.$('.o_dropdown').each(function () {
+            if (!$(this).find('li').length) {
+                $(this).hide();
+            }
+        });
+        this.$("[title]").tooltip({
+            delay: { show: 500, hide: 0}
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Method triggered when the user clicks on a toolbar dropdown
+     *
+     * @private
+     * @param  {MouseEvent} event
+     */
+    _onDropdownClicked: function (event) {
+        var section = $(event.currentTarget).data('section');
+        var index = $(event.currentTarget).data('index');
+        var item = this.items[section][index];
+        if (item.callback) {
+            item.callback.apply(this, [item]);
+        } else if (item.action) {
+            this._onItemActionClicked(item);
+        } else if (item.url) {
+            return true;
+        }
+        event.preventDefault();
+    },
 });
 
 return Sidebar;

@@ -4,6 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.mail.tests.common import TestMail
+from odoo.tools.misc import mute_logger
 
 
 class TestMailFollowers(TestMail):
@@ -29,14 +30,15 @@ class TestMailFollowers(TestMail):
         self.assertFalse(specific)
         self.assertEqual(len(generic), 2)
 
-        self.assertEqual(set([generic[0][2]['res_model_id'], generic[1][2]['res_model_id']]),
-                         set([mail_channel_model_id]))
-        self.assertEqual(set(filter(None, [generic[0][2].get('channel_id'), generic[1][2].get('channel_id')])),
-                         set([test_channel.id]))
-        self.assertEqual(set(filter(None, [generic[0][2].get('partner_id'), generic[1][2].get('partner_id')])),
-                         set([self.user_employee.partner_id.id]))
-        self.assertEqual(set(generic[0][2]['subtype_ids'][0][2] + generic[1][2]['subtype_ids'][0][2]),
-                         set([self.mt_mg_nodef.id, self.mt_al_nodef.id]))
+        items = [it[2] for it in generic]
+        self.assertEqual({item['res_model_id'] for item in items},
+                         {mail_channel_model_id})
+        self.assertEqual({item['channel_id'] for item in items if item.get('channel_id')},
+                         {test_channel.id})
+        self.assertEqual({item['partner_id'] for item in items if item.get('partner_id')},
+                         {self.user_employee.partner_id.id})
+        self.assertEqual(set(items[0]['subtype_ids'][0][2] + items[1]['subtype_ids'][0][2]),
+                         {self.mt_mg_nodef.id, self.mt_al_nodef.id})
 
     def test_m2o_command_update_selective(self):
         test_channel = self.env['mail.channel'].create({'name': 'Test'})
@@ -55,7 +57,7 @@ class TestMailFollowers(TestMail):
         self.assertEqual(generic[0][2]['channel_id'], test_channel.id)
         self.assertEqual(set(generic[0][2]['subtype_ids'][0][2]), set(self.default_group_subtypes.ids))
 
-        self.assertEqual(specific.keys(), [self.test_public.id])
+        self.assertEqual(list(specific), [self.test_public.id])
         self.assertEqual(specific[self.test_public.id][0][2]['res_model_id'], mail_channel_model_id)
         self.assertEqual(specific[self.test_public.id][0][2]['partner_id'], self.user_employee.partner_id.id)
         self.assertEqual(set(specific[self.test_public.id][0][2]['subtype_ids'][0][2]), set([self.mt_mg_nodef.id]))
@@ -135,7 +137,7 @@ class TestMailFollowers(TestMail):
             'name': 'I used to be schizo, but now we are alright.'
         })
         test_channel = self.env['mail.channel'].create({'name': 'Follower Channel'})
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.env['mail.followers'].create({
                 'res_model_id': self.env['ir.model']._get('mail.test').id,
                 'res_id': test_record.id,

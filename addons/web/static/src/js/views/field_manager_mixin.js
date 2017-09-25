@@ -9,12 +9,13 @@ odoo.define('web.FieldManagerMixin', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
+var concurrency = require('web.concurrency');
 
 var FieldManagerMixin = {
     custom_events: {
-        discard_line: '_onDiscardLine',
         field_changed: '_onFieldChanged',
         load: '_onLoad',
+        mutexify: '_onMutexify',
     },
     /**
      * A FieldManagerMixin can be initialized with an instance of a basicModel.
@@ -24,12 +25,39 @@ var FieldManagerMixin = {
      */
     init: function (model) {
         this.model = model || new BasicModel(this);
+        this.mutex = new concurrency.Mutex();
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Apply changes by notifying the basic model, then saving the data if
+     * necessary, and finally, confirming the changes to the UI.
+     *
+     * @todo find a way to remove ugly 3rd argument...
+     *
+     * @param {string} dataPointID
+     * @param {Object} changes
+     * @param {OdooEvent} event
+     * @returns {Deferred} resolves when the change has been done, and the UI
+     *   updated
+     */
+    _applyChanges: function (dataPointID, changes, event) {
+        var self = this;
+        var options = _.pick(event.data, 'viewType', 'doNotSetDirty');
+        return this.model.notifyChanges(dataPointID, changes, options)
+            .then(function (result) {
+                if (event.data.force_save) {
+                    return self.model.save(dataPointID).then(function () {
+                        return self._confirmSave(dataPointID);
+                    });
+                } else {
+                    return self._confirmChange(dataPointID, result, event);
+                }
+            });
+    },
     /**
      * This method will be called whenever a field value has changed (and has
      * been confirmed by the model).
@@ -38,9 +66,10 @@ var FieldManagerMixin = {
      * @param {string} id basicModel Id for the changed record
      * @param {string[]} fields the fields (names) that have been changed
      * @param {OdooEvent} event the event that triggered the change
+     * @returns {Deferred}
      */
     _confirmChange: function (id, fields, event) {
-        // to be implemented
+        return $.when();
     },
     /**
      * This method will be called whenever a save has been triggered by a change
@@ -50,28 +79,16 @@ var FieldManagerMixin = {
      * @see _onFieldChanged
      * @abstract
      * @param {string} id The basicModel ID for the saved record
+     * @returns {Deferred}
      */
     _confirmSave: function (id) {
-        // to be implemented, if necessary
+        return $.when();
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * In some case, we may need to remove an element from a list, without going
-     * through the notifyChanges machinery.  The motivation for this is when the
-     * user click on 'Add an item' in a field one2many with a required field,
-     * then clicks somewhere else.  The new line need to be discarded, but we
-     * don't want to trigger a real notifyChanges (no need for that, and also,
-     * we don't want to rerender the UI).
-     *
-     * @param {OdooEvent} event
-     */
-    _onDiscardLine: function (event) {
-        this.model.removeLine(event.data.id);
-    },
     /**
      * This is the main job of the FMM: deciding what to do when a controlled
      * field changes.  Most of the time, it notifies the model that a change
@@ -80,22 +97,15 @@ var FieldManagerMixin = {
      * @param {OdooEvent} event
      */
     _onFieldChanged: function (event) {
-        var self = this;
-        // in case of field changed in relational record (e.g. in the form view of a one2many
-        // subrecord), the field_changed event must be stopped as soon as is it handled by a
-        // field_manager (i.e. the one of the subrecord's form view), otherwise it bubbles up to
-        // the main form view but its model doesn't have any data related to the given dataPointID
+        // in case of field changed in relational record (e.g. in the form view
+        // of a one2many subrecord), the field_changed event must be stopped as
+        // soon as is it handled by a field_manager (i.e. the one of the
+        // subrecord's form view), otherwise it bubbles up to the main form view
+        // but its model doesn't have any data related to the given dataPointID
         event.stopPropagation();
-        var dataPointID = event.data.dataPointID;
-        this.model.notifyChanges(dataPointID, event.data.changes).then(function (result) { // FIXME if datamodel is not a BasicModel, notifyChanges does not exists
-            if (event.data.force_save) {
-                self.model.save(dataPointID).then(function () {
-                    self._confirmSave(dataPointID);
-                });
-            } else {
-                self._confirmChange(dataPointID, result, event);
-            }
-        });
+        this._applyChanges(event.data.dataPointID, event.data.changes, event)
+            .done(event.data.onSuccess || function () {})
+            .fail(event.data.onFailure || function () {});
     },
     /**
      * Some widgets need to trigger a reload of their data.  For example, a
@@ -110,6 +120,7 @@ var FieldManagerMixin = {
      */
     _onLoad: function (event) {
         var self = this;
+        event.stopPropagation(); // prevent other field managers from handling this request
         var data = event.data;
         if (!data.on_success) { return; }
         var params = {};
@@ -122,6 +133,15 @@ var FieldManagerMixin = {
         this.model.reload(data.id, params).then(function (db_id) {
             data.on_success(self.model.get(db_id));
         });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.action the function to execute in the mutex
+     */
+    _onMutexify: function (ev) {
+        ev.stopPropagation(); // prevent other field managers from handling this request
+        this.mutex.exec(ev.data.action);
     },
 };
 

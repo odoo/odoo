@@ -19,7 +19,7 @@
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                        <span class="fa fa-bars fa-lg"/>
+                                        <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <li><a t-att-href="record.website_url.value">View Track</a></li>
@@ -29,24 +29,25 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <field name="tag_ids"/>
-                                    <h4><field name="name"/></h4>
-                                    <div>
+                                    <div class="o_kanban_record_top">
+                                        <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                    </div>
+                                    <div class="o_kanban_record_body">
                                         <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
-                                    <div class="oe_kanban_bottom_left">
-                                        <field name="priority" widget="priority"/>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)"
-                                            t-att-title="record.partner_id.value" width="24" height="24"
-                                            class="oe_kanban_avatar pull-right"/>
-                                        <div class="pull-left mr4">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
                                             <field name="activity_ids" widget="kanban_activity"/>
-                                            <field name="kanban_state" widget="kanban_state_selection" groups="base.group_user"/>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)"
+                                                t-att-title="record.partner_id.value" width="24" height="24"
+                                                class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
-                                    <div class="oe_clear"/>
                                 </div>
                             </div>
                         </t>
@@ -83,15 +84,15 @@
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                    <filter string="Overdue Activities" name="activities_overdue"
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
@@ -121,6 +122,7 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                             </button>
                         </div>
+                        <field name="kanban_state" widget="state_selection"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -146,14 +148,14 @@
                                     <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
                                 <field name="location_id"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
                     </div>
                 </form>
             </field>
@@ -261,7 +263,7 @@
                 <form string="Event Sponsor Types">
                     <sheet>
                         <group>
-                            <field name="sequence" widget="handle"/>
+                            <field name="sequence"/>
                             <field name="name"/>
                         </group>
                     </sheet>
@@ -404,10 +406,31 @@
             </field>
         </record>
 
+        <record id="view_event_track_stage_kanban" model="ir.ui.view">
+            <field name="name">event.track.stage.kanban</field>
+            <field name="model">event.track.stage</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="fold"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="event_track_stage_action" model="ir.actions.act_window">
             <field name="name">Track Stages</field>
             <field name="res_model">event.track.stage</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="event_track_stage_view_tree"/>
             <field name="help" type="html">
 <p class="oe_view_nocontent_create">
@@ -423,6 +446,7 @@
         <menuitem name="Track Stages"
             id="event_track_stage_menu"
             action="event_track_stage_action"
-            parent="event.menu_event_configuration"/>
+            parent="event.menu_event_configuration"
+            groups="base.group_no_one"/>
 
 </odoo>

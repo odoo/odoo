@@ -37,16 +37,16 @@
             <div id="sale_security_lead" position="replace">
                 <div class="col-xs-12 col-md-6 o_setting_box" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
                     <div class="o_setting_left_pane">
-                        <field name="default_new_security_lead"/>
+                        <field name="use_security_lead"/>
                     </div>
                     <div class="o_setting_right_pane">
-                        <label for="default_new_security_lead"/>
+                        <label for="use_security_lead"/>
                         <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                         <div class="text-muted">
                             Schedule deliveries earlier to avoid delays
                         </div>
                         <div class="content-group">
-                            <div class="mt16" attrs="{'invisible': [('default_new_security_lead','=',False)]}">
+                            <div class="mt16" attrs="{'invisible': [('use_security_lead','=',False)]}">
                                 <span>Move forward expected delivery dates by <field name="security_lead" class="oe_inline"/> days</span>
                             </div>
                         </div>

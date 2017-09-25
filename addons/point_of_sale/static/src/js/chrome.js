@@ -11,6 +11,7 @@ var CrashManager = require('web.CrashManager');
 
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
 /* -------- The Order Selector -------- */
@@ -106,7 +107,7 @@ var UsernameWidget = PosBaseWidget.extend({
         });
     },
     get_name: function(){
-        var user = this.pos.cashier || this.pos.user;
+        var user = this.pos.get_cashier();
         if(user){
             return user.name;
         }else{
@@ -269,7 +270,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Unpaid Orders ?'),
-                'body':  _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                'body':  _t('This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_unpaid_orders();
                     window.location = '/';
@@ -821,7 +822,7 @@ var Chrome = PosBaseWidget.extend({
             'widget': HeaderButtonWidget,
             'append':  '.pos-rightheader',
             'args': {
-                label: _t('Close'),
+                label: _lt('Close'),
                 action: function(){ 
                     var self = this;
                     if (!this.confirmed) {

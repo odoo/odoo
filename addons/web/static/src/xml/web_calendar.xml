@@ -20,7 +20,11 @@
                 <t t-foreach="widget.displayFields" t-as="name">
                     <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
                         <t t-if="widget.displayFields[name].avatar_field">
-                            <t t-esc="fields[name].string"/>: <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,5)" t-as="image"><t t-raw="image"/></t>
+                            <t t-esc="fields[name].string"/>:
+                            <div class="o_calendar_avatars pull-right">
+                                 <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
+                                <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
+                            </div>
                         </t>
                         <t t-else="">
                             <t t-esc="format(record, name)"/>
@@ -43,7 +47,7 @@
                         <span><i class="fa fa-users fa-fw o_cal_avatar"/></span>
                     </t>
                     <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
-                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field || 'image_small'}" class="o_cal_avatar"/>
+                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar"/>
                     </t>
                     <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
                     <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
@@ -74,7 +78,7 @@
     <div t-name="CalendarView.quick_create" class="o_calendar_quick_create">
         <div class="form-group">
             <label for='name' class='control-label'>Summary:</label>
-            <input type='text' name='name'/>
+            <input type='text' name='name' class="o_input" t-att-value="widget.dataTemplate.name or None"/>
         </div>
     </div>
 </template>

@@ -3,7 +3,7 @@
 
 
 from odoo import fields, models, api, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -82,7 +82,7 @@ class AccountVoucher(models.Model):
 
     @api.model
     def _get_currency(self):
-        journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
+        journal = self.env['account.journal'].browse(self.env.context.get('default_journal_id', False))
         if journal.currency_id:
             return journal.currency_id.id
         return self.env.user.company_id.currency_id.id
@@ -134,8 +134,10 @@ class AccountVoucher(models.Model):
                 self.account_id = self.partner_id.property_account_receivable_id \
                     if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
             else:
-                self.account_id = self.journal_id.default_debit_account_id \
-                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
+                account_type = self.voucher_type == 'purchase' and 'payable' or 'receivable'
+                domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
+
+                self.account_id = self.env['account.account'].search(domain, limit=1)
 
     @api.multi
     def proforma_voucher(self):
@@ -357,7 +359,7 @@ class AccountVoucherLine(models.Model):
             self.company_id.id,
             self.voucher_id.currency_id.id,
             self.voucher_id.voucher_type)
-        for fname, fvalue in onchange_res['value'].iteritems():
+        for fname, fvalue in onchange_res['value'].items():
             setattr(self, fname, fvalue)
 
     def _get_account(self, product, fpos, type):
@@ -393,7 +395,7 @@ class AccountVoucherLine(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = price_unit or product.lst_price
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -403,7 +405,7 @@ class AccountVoucherLine(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = product.standard_price
+                    values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}

@@ -415,14 +415,16 @@ At a deeper level than the previous helper is the ``render`` method on
 
 .. _reference/qweb/javascript:
 
-API
----
+.. todo:: the members below are no longer relevant, section to rewrite
 
-It is also possible to use the ``ir.qweb`` model directly (and extend it, and
-inherit from it):
+.. API
+.. ---
 
-.. automodule:: odoo.addons.base.ir.ir_qweb
-    :members: QWeb, QWebContext, FieldConverter, QwebWidget
+.. It is also possible to use the ``ir.qweb`` model directly (and extend it, and
+.. inherit from it):
+
+.. .. automodule:: odoo.addons.base.ir.ir_qweb
+..     :members: QWeb, QWebContext, FieldConverter, QwebWidget
 
 Javascript
 ==========

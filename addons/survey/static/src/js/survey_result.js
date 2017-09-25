@@ -1,7 +1,7 @@
 odoo.define('survey.result', function (require) {
 'use strict';
 
-var website = require('website.website');
+require('web.dom_ready');
 
 if(!$('.js_surveyresult').length) {
     return $.Deferred().reject("DOM doesn't contain '.js_surveyresult'");

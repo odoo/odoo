@@ -75,18 +75,19 @@ tour.register('event_buy_tickets', {
             trigger: 'a[href="/shop/confirm_order"]:contains("Confirm")',
         },
         {
-            content: "Check that the subtotal is 5,500.00",
+            content: "Check that the subtotal is 5,500.00 USD", // this test will fail if the currency of the main company is not USD
             trigger: '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
             run: function () {}, // it's a check
         },
         {
             content: "Select `Wire Transfer` payment method",
-            trigger: '#payment_method label:contains(Wire Transfer) input',
+            trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
             content: "Pay",
-            extra_trigger: '#payment_method label:contains(Wire Transfer) input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[id="o_payment_form_pay"]:visible',
         },
         {
             content: "Last step",

@@ -265,13 +265,11 @@ var TableWidget = PosBaseWidget.extend({
                         }
                         self.renderElement();
                     });
-            }, function(err,event) {
+            }, function(type,err) {
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
     },
     // destroy the table.  We do not really destroy it, we set it
@@ -306,13 +304,11 @@ var TableWidget = PosBaseWidget.extend({
                 }
                 floorplan.update_toolbar();
                 self.destroy();
-            }, function(err, event) {
+            }, function(type, err) {
                 self.gui.show_popup('error', {
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
     },
     get_notifications: function(){  //FIXME : Make this faster
@@ -424,13 +420,11 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
                 method: 'write',
                 args: [[this.floor.id], {'background_color': background}],
             })
-            .fail(function (err, event){
+            .fail(function (type, err){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
                     'body': _t('You must be connected to the internet to save your changes.'),
                 });
-                event.stopPropagation();
-                event.preventDefault();
             });
         this.$('.floor-map').css({"background-color": _.escape(background)});
     },
@@ -646,6 +640,14 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             this.table_widgets.push(tw);
         }
 
+        $('body').on('keyup', function (event) {
+            if (event.which === $.ui.keyCode.ESCAPE) {
+                if(self.editing) {
+                    self.toggle_editing();
+                }
+            }
+        });
+
         this.$('.floor-selector .button').click(function(event){
             self.click_floor_button(event,$(this));
         });
@@ -858,12 +860,13 @@ models.PosModel = models.PosModel.extend({
     add_new_order: function() {
         if (this.config.iface_floorplan) {
             if (this.table) {
-                _super_posmodel.add_new_order.call(this);
+                return _super_posmodel.add_new_order.call(this);
             } else {
                 console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                return undefined;
             }
         } else {
-            _super_posmodel.add_new_order.apply(this,arguments);
+            return _super_posmodel.add_new_order.apply(this,arguments);
         }
     },
 
@@ -984,5 +987,12 @@ screens.define_action_button({
         return this.pos.config.iface_floorplan;
     },
 });
+
+return {
+    TableGuestsButton: TableGuestsButton,
+    TransferOrderButton:TransferOrderButton,
+    TableWidget: TableWidget,
+    FloorScreenWidget: FloorScreenWidget,
+};
 
 });

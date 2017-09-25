@@ -27,7 +27,7 @@ FormRenderer.include({
      *
      * @override
      */
-    updateWidgets: function (fields, state) {
+    confirmChange: function (state, id, fields) {
         if (this.chatter) {
             var updatedMailFields = _.intersection(fields, _.values(this.mailFields));
             if (updatedMailFields.length) {
@@ -53,7 +53,9 @@ FormRenderer.include({
         if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
             if (this.mode === 'edit' && !this.state.data.id) {
                 // there is no chatter in create mode
-                return $('<div>');
+                var $div = $('<div>');
+                this._handleAttributes($div, node);
+                return $div;
             } else {
                 if (!this.chatter) {
                     this.chatter = new Chatter(this, this.state, this.mailFields, {
@@ -69,6 +71,22 @@ FormRenderer.include({
         } else {
             return this._super.apply(this, arguments);
         }
+    },
+    /**
+     * Detaches the chatter before updating the $el. This is important because
+     * if the view is now in create mode (edit mode with no res_id), the chatter
+     * will be removed from the DOM, and its handlers will be unbound. By
+     * detaching it beforehand, we ensure to keep its handlers alive so that if
+     * it is re-appended later, everything will still work properly.
+     *
+     * @override
+     * @private
+     */
+    _updateView: function () {
+        if (this.chatter) {
+            this.chatter.$el.detach();
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

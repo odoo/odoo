@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from __future__ import print_function
 import code
 import logging
 import os
@@ -14,6 +15,25 @@ from . import Command
 _logger = logging.getLogger(__name__)
 
 
+"""
+    Shell exit behaviors
+    ====================
+
+    Legend:
+        stop = The REPL main loop stop.
+        raise = Exception raised.
+        loop = Stay in REPL.
+
+   Shell  | ^D    | exit() | quit() | sys.exit() | raise SystemExit()
+----------------------------------------------------------------------
+ python   | stop  | raise  | raise  | raise      | raise
+ ipython  | stop  | stop   | stop   | loop       | loop
+ ptpython | stop  | raise  | raise  | raise      | raise
+ bpython  | stop  | stop   | stop   | stop       | stop
+
+"""
+
+
 def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()
 
@@ -25,7 +45,7 @@ class Console(code.InteractiveConsole):
             import readline
             import rlcompleter
         except ImportError:
-            print 'readline or rlcompleter not available, autocomplete disabled.'
+            print('readline or rlcompleter not available, autocomplete disabled.')
         else:
             readline.set_completer(rlcompleter.Completer(locals).complete)
             readline.parse_and_bind("tab: complete")
@@ -43,12 +63,12 @@ class Shell(Command):
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
-            exec sys.stdin in local_vars
+            exec(sys.stdin.read(), local_vars)
         else:
             if 'env' not in local_vars:
-                print 'No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0]
+                print('No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0])
             for i in sorted(local_vars):
-                print '%s: %s' % (i, local_vars[i])
+                print('%s: %s' % (i, local_vars[i]))
 
             preferred_interface = config.options.get('shell_interface')
             if preferred_interface:
@@ -95,6 +115,7 @@ class Shell(Command):
                     local_vars['env'] = env
                     local_vars['self'] = env.user
                     self.console(local_vars)
+                    cr.rollback()
             else:
                 self.console(local_vars)
 

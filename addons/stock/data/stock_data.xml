@@ -111,11 +111,6 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
-        <record forcecreate="True" id="property_stock_procurement" model="ir.property">
-            <field name="name">property_stock_procurement</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
-            <field eval="'stock.location,'+str(location_procurement)" name="value"/>
-        </record>
         <record forcecreate="True" id="property_stock_inventory" model="ir.property">
             <field name="name">property_stock_inventory</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_inventory')]"/>

@@ -2,7 +2,7 @@ odoo.define('crm.partner_assign', function (require) {
 'use strict';
 
 var rpc = require('web.rpc');
-var website = require('website.website');
+require('web.dom_ready');
 /*
  * This file is intended to add interactivity to survey forms rendered by
  * the website engine.

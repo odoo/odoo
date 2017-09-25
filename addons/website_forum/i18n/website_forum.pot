@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,14 +58,9 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:21
+#: code:addons/website_forum/static/src/js/website_forum.js:24
 #, python-format
 msgid " karma is required to perform this action. You can earn karma by having your answers upvoted by the community."
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_task_count
-msgid "# Tasks"
 msgstr ""
 
 #. module: website_forum
@@ -385,7 +380,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:25
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
 #, python-format
 msgid "Add page in menu"
 msgstr ""
@@ -396,7 +391,7 @@ msgid "After posting the user will be proposed to share its question or answer o
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:188
+#: code:addons/website_forum/controllers/main.py:187
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -413,7 +408,7 @@ msgid "Answer"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:504
+#: code:addons/website_forum/models/forum.py:501
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -597,8 +592,8 @@ msgid "Back to"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:394
+#: code:addons/website_forum/controllers/main.py:324
+#: code:addons/website_forum/controllers/main.py:395
 #, python-format
 msgid "Bad Request"
 msgstr ""
@@ -782,8 +777,14 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
 msgstr ""
 
 #. module: website_forum
@@ -794,6 +795,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
 msgstr ""
 
 #. module: website_forum
@@ -851,11 +857,6 @@ msgid "Comments"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,help:website_forum.field_forum_post_website_message_ids
-msgid "Comments on forum post"
-msgstr ""
-
-#. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
 msgstr ""
@@ -881,6 +882,16 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_all
 msgid "Convert all answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
 msgstr ""
 
 #. module: website_forum
@@ -969,6 +980,12 @@ msgid "Default Post"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
 msgid "Delete all posts"
 msgstr ""
@@ -1038,6 +1055,8 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr ""
 
@@ -1185,6 +1204,12 @@ msgid "First upvote"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
@@ -1193,6 +1218,8 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr ""
 
@@ -1384,6 +1411,11 @@ msgid "Help"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "How to create a physical inventory at an anterior date?, How is the 'remaining hours' field computed on tasks?, How to configure TPS and TVQ's canadian taxes?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
@@ -1431,6 +1463,11 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Inventory Date Problem, Task remaining hours, Can you help solve solve my tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
@@ -1556,6 +1593,11 @@ msgid "Links"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
 msgid "Moderate posts"
 msgstr ""
@@ -1617,7 +1659,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:14
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
 #: model:ir.ui.view,arch_db:website_forum.content_new_forum
 #, python-format
 msgid "New Forum"
@@ -1666,20 +1708,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:871
-#: code:addons/website_forum/models/forum.py:891
+#: code:addons/website_forum/models/forum.py:870
+#: code:addons/website_forum/models/forum.py:890
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:935
+#: code:addons/website_forum/models/forum.py:934
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:494
+#: code:addons/website_forum/models/forum.py:491
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -1719,6 +1761,11 @@ msgstr ""
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
 msgstr ""
 
 #. module: website_forum
@@ -1807,7 +1854,6 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_post_id
-#: model:ir.ui.view,arch_db:website_forum.close_post
 #: model:ir.ui.view,arch_db:website_forum.new_link
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -1829,11 +1875,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
-msgid "Post Messages"
 msgstr ""
 
 #. module: website_forum
@@ -1872,7 +1913,7 @@ msgid "Posted 100 comments"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:438
+#: code:addons/website_forum/models/forum.py:435
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -1929,7 +1970,7 @@ msgid "Question"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:507
+#: code:addons/website_forum/models/forum.py:504
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2000,9 +2041,14 @@ msgid "Questions"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:525
+#: code:addons/website_forum/models/forum.py:522
 #, python-format
 msgid "Re: %s"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
 msgstr ""
 
 #. module: website_forum
@@ -2055,6 +2101,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
 msgstr ""
 
 #. module: website_forum
@@ -2169,28 +2220,28 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:23
+#: code:addons/website_forum/static/src/js/website_forum.js:26
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:97
+#: code:addons/website_forum/static/src/js/website_forum.js:100
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:145
+#: code:addons/website_forum/static/src/js/website_forum.js:149
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:195
+#: code:addons/website_forum/static/src/js/website_forum.js:199
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
@@ -2202,7 +2253,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:140
+#: code:addons/website_forum/static/src/js/website_forum.js:144
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr ""
@@ -2272,11 +2323,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.new_question
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "Tags"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_task_ids
-msgid "Tasks"
 msgstr ""
 
 #. module: website_forum
@@ -2358,21 +2404,21 @@ msgid "This formula is used in order to sort by relevance. The variable 'votes' 
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:414
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:107
+#: code:addons/website_forum/static/src/js/website_forum.js:110
 #, python-format
 msgid "This post can not be flagged"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:102
+#: code:addons/website_forum/static/src/js/website_forum.js:105
 #, python-format
 msgid "This post is already flagged"
 msgstr ""
@@ -2404,8 +2450,8 @@ msgid "Title must not be empty"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:323
-#: code:addons/website_forum/controllers/main.py:394
+#: code:addons/website_forum/controllers/main.py:324
+#: code:addons/website_forum/controllers/main.py:395
 #, python-format
 msgid "Title should not be empty."
 msgstr ""
@@ -2579,6 +2625,16 @@ msgid "Website"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
 msgid "Welcome Message"
 msgstr ""
@@ -2623,7 +2679,7 @@ msgid "You already have one pending post.<br/>\n"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:139
+#: code:addons/website_forum/models/forum.py:140
 #, python-format
 msgid "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""

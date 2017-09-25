@@ -21,11 +21,22 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+def existing_tables(cr, tablenames):
+    """ Return the names of existing tables among ``tablenames``. """
+    query = """
+        SELECT c.relname
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname IN %s
+           AND c.relkind IN ('r', 'v', 'm')
+           AND n.nspname = 'public'
+    """
+    cr.execute(query, [tuple(tablenames)])
+    return [row[0] for row in cr.fetchall()]
+
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s"
-    cr.execute(query, (tablename,))
-    return cr.rowcount
+    return len(existing_tables(cr, {tablename})) == 1
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
@@ -46,7 +57,11 @@ def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
     """
-    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
+    # Do not select the field `character_octet_length` from `information_schema.columns`
+    # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
+    # might prevent a postgres user to read this field.
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+               FROM information_schema.columns WHERE table_name=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
@@ -77,12 +92,14 @@ def convert_column(cr, tablename, columnname, columntype):
                        log_exceptions=False)
     except psycopg2.NotSupportedError:
         # can't do inplace change -> use a casted temp column
-        query = 'ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast; ' \
-                'ALTER TABLE "{0}" ADD COLUMN "{1}" {2}; ' \
-                'UPDATE "{0}" SET "{1}"= __temp_type_cast::{2}' \
-                'ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE'
-        cr.execute(query.format(tablename, columntype, columntype))
-    _schema.debug("Table %r: column %r changed to type %s", tablename, columntype, columntype)
+        query = '''
+            ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
+            ALTER TABLE "{0}" ADD COLUMN "{1}" {2};
+            UPDATE "{0}" SET "{1}"= __temp_type_cast::{2};
+            ALTER TABLE "{0}" DROP COLUMN  __temp_type_cast CASCADE;
+        '''
+        cr.execute(query.format(tablename, columnname, columntype))
+    _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
@@ -187,7 +204,6 @@ def drop_index(cr, indexname, tablename):
 
 def drop_view_if_exists(cr, viewname):
     cr.execute("DROP view IF EXISTS %s CASCADE" % (viewname,))
-    cr.commit()
 
 def escape_psql(to_escape):
     return to_escape.replace('\\', r'\\').replace('%', '\%').replace('_', '\_')

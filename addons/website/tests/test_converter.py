@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from odoo.addons.website.models.website import slugify, unslug
+from odoo.addons.http_routing.models.ir_http import slugify, unslug
 
 
 class TestUnslug(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestUnslug(unittest.TestCase):
             'foo1': (None, None),
         }
 
-        for slug, expected in tests.iteritems():
+        for slug, expected in tests.items():
             self.assertEqual(unslug(slug), expected)
 
 

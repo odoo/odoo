@@ -130,7 +130,6 @@ class MailMail(models.Model):
         attachment if the ``auto_delete`` flag of the mail was set.
         Overridden by subclasses for extra post-processing behaviors.
 
-        :param browse_record mail: the mail that was just sent
         :return: True
         """
         notif_emails = self.filtered(lambda email: email.notification)
@@ -169,7 +168,7 @@ class MailMail(models.Model):
           - else fallback on mail.email_to splitting """
         self.ensure_one()
         if partner:
-            email_to = [formataddr((partner.name, partner.email))]
+            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         return email_to
@@ -179,8 +178,7 @@ class MailMail(models.Model):
         """Return a dictionary for specific email values, depending on a
         partner, or generic to the whole recipients given by mail.email_to.
 
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
+            :param Model partner: specific recipient partner
         """
         self.ensure_one()
         body = self.send_get_mail_body(partner=partner)
@@ -206,7 +204,7 @@ class MailMail(models.Model):
             groups[mail.mail_server_id.id].append(mail.id)
         sys_params = self.env['ir.config_parameter'].sudo()
         batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))
-        for server_id, record_ids in groups.iteritems():
+        for server_id, record_ids in groups.items():
             for mail_batch in tools.split_every(batch_size, record_ids):
                 yield server_id, mail_batch
 
@@ -270,8 +268,8 @@ class MailMail(models.Model):
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
-                attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
-                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
+                attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
+                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []
@@ -327,7 +325,7 @@ class MailMail(models.Model):
                         res = IrMailServer.send_email(
                             msg, mail_server_id=mail.mail_server_id.id, smtp_session=smtp_session)
                     except AssertionError as error:
-                        if error.message == IrMailServer.NO_VALID_RECIPIENT:
+                        if str(error) == IrMailServer.NO_VALID_RECIPIENT:
                             # No valid recipient found for this particular
                             # mail item -> ignore error to avoid blocking
                             # delivery to next recipients, if any. If this is

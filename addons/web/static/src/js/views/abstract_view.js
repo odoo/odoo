@@ -23,8 +23,9 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
-var Class = require('web.Class');
 var ajax = require('web.ajax');
+var Class = require('web.Class');
+var Context = require('web.Context');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
@@ -49,8 +50,6 @@ var AbstractView = Class.extend({
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-        js_libs: [],
-        css_libs: [],
     },
 
     /**
@@ -77,6 +76,7 @@ var AbstractView = Class.extend({
     init: function (viewInfo, params) {
         this.rendererParams = {
             arch: viewInfo.arch,
+            noContentHelp: params.action && params.action.help,
         };
 
         this.controllerParams = {
@@ -85,8 +85,8 @@ var AbstractView = Class.extend({
                 edit: viewInfo.arch.attrs.edit ? JSON.parse(viewInfo.arch.attrs.edit) : true,
                 create: viewInfo.arch.attrs.create ? JSON.parse(viewInfo.arch.attrs.create) : true,
                 delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
+                duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
             },
-            noContentHelp: params.action && params.action.help,
         };
 
         this.loadParams = {
@@ -102,6 +102,19 @@ var AbstractView = Class.extend({
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;
         }
+        // default_order is like:
+        //   'name,id desc'
+        // but we need it like:
+        //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
+        var defaultOrder = viewInfo.arch.attrs.default_order;
+        if (defaultOrder) {
+            this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
+                order = order.trim().split(' ');
+                return {name: order[0], asc: order[1] !== 'desc'};
+            });
+        }
+
+        this.userContext = params.userContext;
     },
 
     //--------------------------------------------------------------------------
@@ -109,7 +122,15 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Main method of the view class.
+     * Main method of the view class. Create a controller, and make sure that
+     * data and libraries are loaded.
+     *
+     * There is a unusual thing going in this method with parents: we create
+     * renderer/model with parent as parent, then we have to reassign them at
+     * the end to make sure that we have the proper relationships.  This is
+     * necessary to solve the problem that the controller need the model and the
+     * renderer to be instantiated, but the model need a parent to be able to
+     * load itself, and the renderer needs the data in its constructor.
      *
      * @param {Widget} parent The parent of the resulting Controller (most
      *      likely a view manager)
@@ -117,7 +138,7 @@ var AbstractView = Class.extend({
      */
     getController: function (parent) {
         var self = this;
-        return $.when(this._loadData(parent), this._loadLibs()).then(function () {
+        return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
             var model = self.getModel();
             var state = model.get(arguments[0]);
             var renderer = self.getRenderer(parent, state);
@@ -136,6 +157,12 @@ var AbstractView = Class.extend({
             return controller;
         });
     },
+    /**
+     * Returns the view model or create an instance of it if none
+     *
+     * @param {Widget} parent the parent of the model, if it has to be created
+     * @return {Object} instance of the view model
+     */
     getModel: function (parent) {
         if (!this.model) {
             var Model = this.config.Model;
@@ -143,6 +170,13 @@ var AbstractView = Class.extend({
         }
         return this.model;
     },
+    /**
+     * Returns the a new view renderer instance
+     *
+     * @param {Widget} parent the parent of the model, if it has to be created
+     * @param {Object} state the information related to the rendered view
+     * @return {Object} instance of the view renderer
+     */
     getRenderer: function (parent, state) {
         var Renderer = this.config.Renderer;
         return new Renderer(parent, state, this.rendererParams);
@@ -165,7 +199,7 @@ var AbstractView = Class.extend({
      * Load initial data from the model
      *
      * @private
-     * @param {Widget} parent the parent of the model, if it has to be created
+     * @param {Widget} parent the parent of the model
      * @returns {Deferred<*>} a deferred that resolves to whatever the model
      *   decide to return
      */
@@ -174,23 +208,47 @@ var AbstractView = Class.extend({
         return model.load(this.loadParams);
     },
     /**
-     * Makes sure that the js_libs and css_libs are properly loaded. Note that
-     * the ajax loadJS and loadCSS methods don't do anything if the given file
-     * is already loaded.
+     * Loads the subviews for x2many fields when they are not inline
      *
      * @private
+     * @param {Widget} parent the parent of the model, if it has to be created
      * @returns {Deferred}
      */
-    _loadLibs: function () {
+    _loadSubviews: function (parent) {
+        var self = this;
         var defs = [];
-        _.each(this.config.js_libs, function (url) {
-            defs.push(ajax.loadJS(url));
-        });
-        _.each(this.config.css_libs, function (url) {
-            defs.push(ajax.loadCSS(url));
-        });
+        if (this.loadParams && this.loadParams.fieldsInfo) {
+            var fields = this.loadParams.fields;
+
+            _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
+                var field = fields[fieldName];
+                if (field.type !== 'one2many' && field.type !== 'many2many') {
+                    return;
+                }
+
+                attrs.limit = attrs.mode === "tree" ? 80 : 40;
+
+                if (attrs.Widget.prototype.useSubview && !attrs.__no_fetch && !attrs.views[attrs.mode]) {
+                    var context = {};
+                    var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
+                    var matches;
+                    while (matches = regex.exec(attrs.context)) {
+                        context[matches[1]] = matches[2];
+                    }
+                    defs.push(parent.loadViews(
+                            field.relation,
+                            new Context(context, self.userContext, self.loadParams.context),
+                            [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
+                        .then(function (views) {
+                            for (var viewName in views) {
+                                attrs.views[viewName] = views[viewName];
+                            }
+                        }));
+                }
+            });
+        }
         return $.when.apply($, defs);
-    },
+    }
 });
 
 return AbstractView;

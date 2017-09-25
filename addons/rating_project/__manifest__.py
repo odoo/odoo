@@ -13,7 +13,7 @@ This module Allows a customer to give rating on Project.
     ],
     'data': [
         'data/project_data.xml',
-        'views/project_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/project_view.xml',
     ],
     'demo': ['data/project_demo.xml'],

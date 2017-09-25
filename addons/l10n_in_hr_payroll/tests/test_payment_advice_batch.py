@@ -14,7 +14,7 @@ class TestPaymentAdviceBatch(TestPaymentAdviceBase):
 
         # I create record for generating the Payslip for Payslip Batch.
         payslip_employee = self.PayslipEmployee.create({
-            'employee_ids': [(4, self.rahul_emp.ids)]
+            'employee_ids': [(4, self.rahul_emp.id)]
         })
 
         # I generate the payslip by clicking on Generate button wizard.

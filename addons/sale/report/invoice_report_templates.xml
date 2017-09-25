@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+    <xpath expr="//table/tbody/tr/td[@id='subtotal']" position="attributes">
+        <attribute name="groups">!sale.group_show_price_total</attribute>
+    </xpath>
+    <xpath expr="//table/tbody/tr/td[@id='subtotal']" position="after">
+        <td class="text-right" groups="sale.group_show_price_total">
+            <span t-field="l.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+        </td>
+    </xpath>
     <xpath expr="//table" position="attributes">
         <attribute name="groups">!sale.group_sale_layout</attribute>
     </xpath>
     <xpath expr="//table" position="after">
-        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page">
+        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="lines_layouted">
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -14,7 +22,7 @@
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
-                        <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                        <th class="text-right">Price</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -47,6 +55,10 @@
                                 </td>
                                 <td class="text-right" groups="sale.group_show_price_subtotal">
                                     <span t-field="l.price_subtotal"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                                <td class="text-right" groups="sale.group_show_price_total">
+                                    <span t-field="l.price_total"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
                             </tr>
@@ -88,7 +100,7 @@
             <div class="col-xs-5 col-xs-offset-1" groups="sale.group_delivery_invoice_address">
                 <div t-field="o.partner_id"
                     t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                <div t-if="o.partner_id.vat" class="mt16">VAT: <span t-field="o.partner_id.vat"/></div>
+                <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></div>
             </div>
         </xpath>
     </template>

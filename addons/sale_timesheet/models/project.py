@@ -5,11 +5,68 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
+class Project(models.Model):
+    _inherit = 'project.project'
+
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
+
+    @api.multi
+    def action_view_timesheet(self):
+        self.ensure_one()
+        if self.allow_timesheets:
+            return self.action_view_timesheet_plan()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Timesheets of %s') % self.name,
+            'domain': [('project_id', '!=', False)],
+            'res_model': 'account.analytic.line',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'help': _("""
+                <p class="oe_view_nocontent_create">
+                    Click to record timesheets.
+                </p><p>
+                    You can register and track your workings hours by project every
+                    day. Every time spent on a project will become a cost and can be re-invoiced to
+                    customers if required.
+                </p>
+            """),
+            'limit': 80,
+            'context': {
+                'default_project_id': self.id,
+                'search_default_project_id': [self.id]
+            }
+        }
+
+    @api.multi
+    def action_view_timesheet_plan(self):
+        return {
+            'name': _('Overview'),
+            'type': 'ir.actions.client',
+            'tag': 'timesheet.plan',
+            'context': {
+                'active_id': self.id,
+                'active_ids': self.ids,
+                'search_default_project_id': self.id,
+            }
+        }
+
+
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    procurement_id = fields.Many2one('procurement.order', 'Assign to Order', ondelete='set null', help="Procurement of the sale order line on which the timesheets should be assigned")
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', related='procurement_id.sale_line_id', store=True)
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain=[('is_service', '=', True)])
+
+    @api.multi
+    def write(self, values):
+        result = super(ProjectTask, self).write(values)
+        # reassign SO line on related timesheet lines
+        if 'sale_line_id' in values:
+            self.sudo().mapped('timesheet_ids').write({
+                'so_line': values['sale_line_id']
+            })
+        return result
 
     @api.multi
     def unlink(self):
@@ -30,5 +87,4 @@ class ProjectTask(models.Model):
 
     @api.onchange('parent_id')
     def onchange_parent_id(self):
-        self.procurement_id = self.parent_id.procurement_id.id
         self.sale_line_id = self.parent_id.sale_line_id.id

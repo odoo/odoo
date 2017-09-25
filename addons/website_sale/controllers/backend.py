@@ -86,9 +86,8 @@ class WebsiteSaleBackend(WebsiteBackend):
                 ('invoice_status', '=', 'to invoice'),
             ]),
             order_carts_abandoned_count=request.env['sale.order'].search_count(sale_order_domain + [
-                ('state', '=', 'draft'),
-                ('order_line', '!=', 'False'),
-                ('date_order', '<=', fields.Datetime.to_string(datetime.now() - timedelta(hours=1))),
+                ('is_abandoned_cart', '=', True),
+                ('cart_recovery_email_sent', '=', False)
             ]),
             payment_to_capture_count=request.env['payment.transaction'].search_count([
                 ('state', '=', 'authorized'),

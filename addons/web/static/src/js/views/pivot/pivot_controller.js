@@ -45,13 +45,15 @@ var PivotController = AbstractController.extend({
         this.groupableFields = params.groupableFields;
         this.title = params.title;
         this.enableLinking = params.enableLinking;
+        // views to use in the action triggered when a data cell is clicked
+        this.views = params.views;
         this.lastHeaderSelected = null;
     },
     /**
      * @override
      */
     start: function () {
-        this.$el.toggleClass('o_enableLinking', this.enableLinking);
+        this.$el.toggleClass('o_enable_linking', this.enableLinking);
         this.$fieldSelection = this.$('.o_field_selection');
         core.bus.on('click', this, function () {
             this.$fieldSelection.empty();
@@ -74,22 +76,20 @@ var PivotController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * We save the current measure and group bys, so we can restore the view
-     * when we save the current state in the search view.
+     * Returns the current measures and groupbys, so we can restore the view
+     * when we save the current state in the search view, or when we add it to
+     * the dashboard.
      *
      * @override method from AbstractController
      * @returns {Object}
      */
     getContext: function () {
-        if (this.handle) {
-            var state = this.model.get(this.handle);
-            return {
-                pivot_measures: state.measures,
-                pivot_column_groupby: state.data.main_col.groupbys,
-                pivot_row_groupby: state.data.main_row.groupbys,
-            };
-        }
-        return {};
+        var state = this.model.get();
+        return {
+            pivot_measures: state.measures,
+            pivot_column_groupby: state.colGroupBys,
+            pivot_row_groupby: state.rowGroupBys,
+        };
     },
     /**
      * Render the buttons according to the PivotView.buttons template and
@@ -129,6 +129,7 @@ var PivotController = AbstractController.extend({
             return;
         }
         framework.blockUI();
+        table.title = this.title;
         session.get_file({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
@@ -169,21 +170,8 @@ var PivotController = AbstractController.extend({
     /**
      * @private
      */
-    _update: function (state) {
+    _update: function () {
         this._updateButtons();
-        var hasNoContent = !state.has_data || !state.measures.length;
-
-        if (hasNoContent) {
-            if (!this.$('.oe_view_nocontent').length) {
-                this.renderer.$el.detach();
-                this.$el.append(QWeb.render('PivotView.nodata'));
-            }
-        } else {
-            if (!document.contains(this.renderer.el)) {
-                this.$('div.oe_view_nocontent').remove();
-                this.$el.append(this.renderer.$el);
-            }
-        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -217,13 +205,13 @@ var PivotController = AbstractController.extend({
     _onButtonClick: function (event) {
         var $target = $(event.target);
         if ($target.hasClass('o_pivot_flip_button')) {
-            this.model.flip(this.handle);
-            this.update(null, {reload: false});
+            this.model.flip();
+            this.update({}, {reload: false});
         }
         if ($target.hasClass('o_pivot_expand_button')) {
             this.model
-                    .expandAll(this.handle)
-                    .then(this.update_state.bind(this));
+                    .expandAll()
+                    .then(this.update.bind(this, {}, {reload: false}));
         }
         if ($target.parents('.o_pivot_measures_list').length) {
             var parent = $target.parent();
@@ -254,33 +242,23 @@ var PivotController = AbstractController.extend({
             !this.enableLinking) {
             return;
         }
-        var row_id = $target.data('id');
-        var col_id = $target.data('col_id');
         var state = this.model.get(this.handle);
-        var row_domain = state.data.headers[row_id].domain;
-        var col_domain = state.data.headers[col_id].domain;
-        var context = _.omit(_.clone(state.context), 'group_by');
-
-        function _find_view_info (views, view_type) {
-            return _.find(views, function (view) {
-                return view[1] === view_type;
-            }) || [false, view_type];
-        }
-        var views = [
-            _find_view_info(this.options.action.views, "list"),
-            _find_view_info(this.options.action.views, "form"),
-        ];
+        var colDomain = this.model.getHeader($target.data('col_id')).domain;
+        var rowDomain = this.model.getHeader($target.data('id')).domain;
+        var context = _.omit(state.context, function (val, key) {
+            return key === 'group_by' || _.str.startsWith(key, 'search_default_');
+        });
 
         this.do_action({
             type: 'ir.actions.act_window',
             name: this.title,
-            res_model: this.model,
-            views: views,
-            view_type : "list",
-            view_mode : "list",
+            res_model: this.modelName,
+            views: this.views,
+            view_type: 'list',
+            view_mode: 'list',
             target: 'current',
             context: context,
-            domain: state.domain.concat(row_domain, col_domain),
+            domain: state.domain.concat(rowDomain, colDomain),
         });
     },
     /**
@@ -344,9 +322,8 @@ var PivotController = AbstractController.extend({
         var col_id = $target.data('id');
         var measure = $target.data('measure');
         var isAscending = $target.hasClass('o_pivot_measure_row_sorted_asc');
-        this.model
-            .sortRows(this.handle, col_id, measure, isAscending)
-            .then(this.update.bind(this, {}, {reload: false}));
+        this.model.sortRows(col_id, measure, isAscending);
+        this.update({}, {reload: false});
     },
     /**
      * This method is called when someone clicks on an open header.  When that
@@ -359,7 +336,7 @@ var PivotController = AbstractController.extend({
         event.preventDefault();
         event.stopImmediatePropagation();
         var headerID = $(event.target).data('id');
-        this.model.closeHeader(headerID)
+        this.model.closeHeader(headerID);
         this.update({}, {reload: false});
     },
 

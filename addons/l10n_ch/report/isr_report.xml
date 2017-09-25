@@ -25,26 +25,20 @@
             attachment_use="True"
             attachment="'ISR-' + object.number + '.pdf'"
             menu="False"
-            />
+            print_report_name="'ISR-%s' % object.number"
+            paperformat="paperformat_euro_no_margin"/>
+        <!--No additional condition in report name on invoice state or type as this
+            report is only available to be printed for out invoices after
+            'draft' state, if the fields required by the ISR have been set.-->
 
-        <record id="l10n_ch_isr_report" model ="ir.actions.report.xml">
-            <field name="print_report_name">
-                'ISR-' + object.number
-                <!--No additional condition on invoice state or type as this
-                report is only available to be printed for out invoices after
-                'draft' state, if the fields required by the ISR have been set.-->
-            </field>
-            <field name="paperformat_id" ref="paperformat_euro_no_margin"/>
-        </record>
-
-        <template id="assets_common" name="l10n_ch_isr_report" inherit_id="report.assets_common">
+        <template id="assets_common" name="l10n_ch_isr_report" inherit_id="web.assets_common">
             <xpath expr="." position="inside">
                 <link href="/l10n_ch/static/src/less/report_isr.less" rel="stylesheet"/>
             </xpath>
         </template>
 
         <template id="l10n_ch_isr_report_template">
-            <t t-call="report.external_layout">
+            <t t-call="web.external_layout">
                 <t t-set="split_total_amount" t-value="invoice.split_total_amount()"/>
                 <t t-set="print_bank" t-value="invoice.company_id.l10n_ch_isr_print_bank_location"/>
 
@@ -157,7 +151,7 @@
         </template>
 
         <template id="l10n_ch.isr_report_main">
-            <t t-call="report.html_container">
+            <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="invoice">
                     <t t-call="l10n_ch.l10n_ch_isr_report_template"/>
                 </t>

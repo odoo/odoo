@@ -11,7 +11,7 @@
   !python {model: purchase.order, id: purchase_order_1}: |
     try:
         self.unlink()
-    except Exception,e:
+    except Exception:
         pass
 -
   I delete a cancelled order.

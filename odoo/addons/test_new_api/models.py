@@ -5,6 +5,7 @@ import datetime
 
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import pycompat
 
 
 class Category(models.Model):
@@ -45,7 +46,7 @@ class Category(models.Model):
             categories.append(category[0])
         categories.append(self)
         # assign parents following sequence
-        for parent, child in zip(categories, categories[1:]):
+        for parent, child in pycompat.izip(categories, categories[1:]):
             if parent and child:
                 child.parent = parent
         # assign name of last category, and reassign display_name (to normalize it)
@@ -211,6 +212,13 @@ class MultiLine(models.Model):
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
     partner = fields.Many2one('res.partner')
+    tags = fields.Many2many('test_new_api.multi.tag')
+
+
+class MultiTag(models.Model):
+    _name = 'test_new_api.multi.tag'
+
+    name = fields.Char()
 
 
 class Edition(models.Model):
@@ -286,7 +294,7 @@ class Foo(models.Model):
     _name = 'test_new_api.foo'
 
     name = fields.Char()
-    value1 = fields.Integer()
+    value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
 
 
@@ -349,3 +357,19 @@ class CompanyDependentAttribute(models.Model):
     def _compute_bar(self):
         for record in self:
             record.bar = (record.company.foo or '') * record.quantity
+
+
+class ComputeRecursive(models.Model):
+    _name = 'test_new_api.recursive'
+
+    name = fields.Char(required=True)
+    parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.display_name = rec.parent.display_name + " / " + rec.name
+            else:
+                rec.display_name = rec.name

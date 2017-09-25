@@ -42,7 +42,7 @@
         <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_balancesheet0')}"/>
     </record>
 
-    <menuitem id="menu_account_report_bs" name="Balance Sheet" action="action_account_report_bs" parent="menu_finance_legal_statement"/>
+    <menuitem id="menu_account_report_bs" name="Balance Sheet" action="action_account_report_bs" parent="menu_finance_legal_statement" groups="account.group_account_user"/>
 
     <record id="action_account_report_pl" model="ir.actions.act_window">
         <field name="name">Profit and Loss</field>
@@ -55,7 +55,7 @@
         <field name="context" eval="{'default_account_report_id':ref('account.account_financial_report_profitandloss0')}"/>
     </record>
 
-    <menuitem id="menu_account_report_pl" name="Profit and Loss" action="action_account_report_pl" parent="menu_finance_legal_statement"/>
+    <menuitem id="menu_account_report_pl" name="Profit and Loss" action="action_account_report_pl" parent="menu_finance_legal_statement" groups="account.group_account_user"/>
 
     <record id="action_account_report" model="ir.actions.act_window">
         <field name="name">Financial Reports</field>
@@ -67,6 +67,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem id="menu_account_report" name="Financial Report" action="action_account_report" parent="menu_finance_legal_statement" sequence="100"/>
+    <menuitem id="menu_account_report" name="Financial Report" action="action_account_report" parent="menu_finance_legal_statement" sequence="100" groups="account.group_account_user"/>
 
 </odoo>

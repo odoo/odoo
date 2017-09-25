@@ -2,8 +2,10 @@ odoo.define('mail.composer', function (require) {
 "use strict";
 
 var chat_mixin = require('mail.chat_mixin');
+var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
+var config = require('web.config');
 var core = require('web.core');
 var data = require('web.data');
 var dom = require('web.dom');
@@ -347,15 +349,22 @@ var MentionManager = Widget.extend({
 
 var BasicComposer = Widget.extend(chat_mixin, {
     template: "mail.ChatComposer",
-
     events: {
         "keydown .o_composer_input textarea": "on_keydown",
         "keyup .o_composer_input": "on_keyup",
-        "change input.o_form_input_file": "on_attachment_change",
+        "change input.o_input_file": "on_attachment_change",
         "click .o_composer_button_send": "send_message",
         "click .o_composer_button_add_attachment": "on_click_add_attachment",
         "click .o_attachment_delete": "on_attachment_delete",
+        "click .o_attachment_download": "_onAttachmentDownload",
+        "click .o_attachment_view": "_onAttachmentView",
+        'click .o_composer_button_emoji': '_onEmojiButtonClick',
+        'focusout .o_composer_button_emoji': '_onEmojiButtonFocusout',
+        'focus .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageFocus',
+        'click .o_mail_emoji_container .o_mail_emoji': '_onEmojiImageClick',
     },
+    // RPCs done to fetch the mention suggestions are throttled with the following value
+    MENTION_THROTTLE: 200,
 
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -370,6 +379,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             send_text: _t('Send'),
             default_body: '',
             default_mention_selections: {},
+            isMobile: config.isMobile
         });
         this.context = this.options.context;
 
@@ -414,8 +424,13 @@ var BasicComposer = Widget.extend(chat_mixin, {
             });
         }
 
-        // Emojis
-        this.emoji_container_classname = 'o_composer_emoji';
+        this.isMini = options.isMini;
+
+        this.avatarURL = session.uid > 0 ? session.url('/web/image', {
+            model: 'res.users',
+            field: 'image_small',
+            id: session.uid,
+        }) : '/web/static/src/img/user_menu_avatar.png';
     },
 
     start: function () {
@@ -434,23 +449,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.on("change:attachment_ids", this, this.render_attachments);
 
-        // Emoji
-        this.$('.o_composer_button_emoji').popover({
-            placement: 'top',
-            content: function() {
-                if (!self.$emojis) { // lazy rendering
-                    self.$emojis = $(QWeb.render('mail.ChatComposer.emojis', {
-                        emojis: self._getEmojis(),
-                    }));
-                    self.$emojis.filter('.o_mail_emoji').on('click', self, self.on_click_emoji_img);
-                }
-                return self.$emojis;
-            },
-            html: true,
-            container: '.' + self.emoji_container_classname,
-            trigger: 'focus',
-        });
-
         // Mention
         this.mention_manager.prependTo(this.$('.o_composer'));
 
@@ -460,10 +458,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
     destroy: function () {
         $(window).off(this.fileupload_id);
         return this._super.apply(this, arguments);
-    },
-
-    toggle: function(state) {
-        this.$el.toggle(state);
     },
 
     preprocess_message: function () {
@@ -506,15 +500,22 @@ var BasicComposer = Widget.extend(chat_mixin, {
         this.clear_composer();
     },
 
+    getState: function () {
+        return {
+            attachments: this.get('attachment_ids'),
+            text: this.$input.val(),
+        };
+    },
+
     // Events
     on_click_add_attachment: function () {
-        this.$('input.o_form_input_file').click();
+        this.$('input.o_input_file').click();
         this.$input.focus();
     },
 
-    on_click_emoji_img: function(event) {
-        this.$input.val(this.$input.val() + " " + $(event.currentTarget).data('emoji') + " ");
-        this.$input.focus();
+    setState: function (state) {
+        this.set('attachment_ids', state.attachments);
+        this.$input.val(state.text);
     },
 
     /**
@@ -557,8 +558,12 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 break;
             // ESCAPE: close mention propositions
             case $.ui.keyCode.ESCAPE:
-                event.stopPropagation();
-                this.mention_manager.reset_suggestions();
+                if (this.mention_manager.is_open()) {
+                    event.stopPropagation();
+                    this.mention_manager.reset_suggestions();
+                } else {
+                    this.trigger_up("escape_pressed");
+                }
                 break;
             // ENTER, UP, DOWN: check if navigation in mention propositions
             case $.ui.keyCode.ENTER:
@@ -670,7 +675,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 .then(function (results) {
                     def.resolve(results);
                 });
-        }, 200);
+        }, this.MENTION_THROTTLE);
         return def;
     },
     mention_fetch_channels: function (search) {
@@ -704,7 +709,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             });
             if (!suggestions.length && !self.options.mention_partners_restricted) {
                 // no result found among prefetched partners, fetch other suggestions
-                suggestions = mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
+                suggestions = self.mention_fetch_throttled('res.partner', 'get_mention_suggestions', {
                     limit: limit,
                     search: search,
                 });
@@ -749,6 +754,93 @@ var BasicComposer = Widget.extend(chat_mixin, {
     focus: function () {
         this.$input.focus();
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Hides the emojis container.
+     *
+     * @private
+     */
+    _hideEmojis: function () {
+        this.$emojisContainer.remove();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentDownload: function (event) {
+        event.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentView: function (event) {
+        var activeAttachmentID = $(event.currentTarget).data('id');
+        var attachments = this.get('attachment_ids');
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
+    },
+    /**
+     * Called when the emoji button is clicked -> opens/hides the emoji panel.
+     * Also, this method is in charge of the rendering of this panel the first
+     * time it is opened.
+     *
+     * @private
+     */
+    _onEmojiButtonClick: function () {
+        if (!this.$emojisContainer) { // lazy rendering
+            this.$emojisContainer = $(QWeb.render('mail.ChatComposer.emojis', {
+                emojis: this._getEmojis(),
+            }));
+        }
+        if (this.$emojisContainer.parent().length) {
+            this._hideEmojis();
+        } else {
+            this.$emojisContainer.appendTo(this.$('.o_composer'));
+        }
+    },
+    /**
+     * Called when the emoji button is blurred -> closes the emoji panel. The
+     * closing is scheduled to be done at the end of the current execution
+     * stack to allow stoping this closing if the button was focusout to select
+     * an emoji (for example).
+     *
+     * @private
+     */
+    _onEmojiButtonFocusout: function () {
+        this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+    },
+    /**
+     * Called when an emoji is focused -> @see _onEmojiButtonFocusout
+     *
+     * @private
+     */
+    _onEmojiImageFocus: function () {
+        clearTimeout(this._hideEmojisTimeout);
+    },
+    /**
+     * Called when an emoji is clicked -> adds it in the <input/>, focuses the
+     * <input/> and closes the emoji panel.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onEmojiImageClick: function (ev) {
+        this.$input.val(this.$input.val() + " " + $(ev.currentTarget).data('emoji') + " ");
+        this.$input.focus();
+        this._hideEmojis();
+    },
 });
 
 var ExtendedComposer = BasicComposer.extend({
@@ -758,7 +850,6 @@ var ExtendedComposer = BasicComposer.extend({
         });
         this._super(parent, options);
         this.extended = true;
-        this.emoji_container_classname = 'o_extended_composer_emoji';
     },
 
     start: function () {
@@ -775,7 +866,15 @@ var ExtendedComposer = BasicComposer.extend({
             return message;
         });
     },
-
+    clear_composer: function () {
+        this._super.apply(this, arguments);
+        this.$subject_input.val('');
+    },
+    getState: function () {
+        var state = this._super.apply(this, arguments);
+        state.subject = this.$subject_input.val();
+        return state;
+    },
     should_send: function () {
         return false;
     },
@@ -788,6 +887,10 @@ var ExtendedComposer = BasicComposer.extend({
     },
     set_subject: function(subject) {
         this.$('.o_composer_subject input').val(subject);
+    },
+    setState: function (state) {
+        this._super.apply(this, arguments);
+        this.set_subject(state.subject);
     },
 });
 

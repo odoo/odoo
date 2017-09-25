@@ -44,7 +44,7 @@ class Location(models.Model):
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
              "\n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running."
              "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
-             "\n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations")
+             "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
@@ -69,7 +69,7 @@ class Location(models.Model):
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id')
+    @api.depends('name', 'location_id.name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
         name = self.name
@@ -79,7 +79,6 @@ class Location(models.Model):
             name = '%s/%s' % (current.name, name)
         self.complete_name = name
 
-    @api.multi
     def name_get(self):
         ret_list = []
         for location in self:
@@ -91,6 +90,14 @@ class Location(models.Model):
             ret_list.append((orig_location.id, name))
         return ret_list
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        """ search full name and barcode """
+        if args is None:
+            args = []
+        recs = self.search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit)
+        return recs.name_get()
+
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
         current_location = self
@@ -101,13 +108,16 @@ class Location(models.Model):
             current_location = current_location.location_id
         return putaway_location
 
-    @api.multi
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
         return self.env['stock.warehouse'].search([
             ('view_location_id.parent_left', '<=', self.parent_left),
             ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
+
+    def should_bypass_reservation(self):
+        self.ensure_one()
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
 
 class Route(models.Model):
@@ -137,7 +147,6 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    @api.multi
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)
@@ -146,7 +155,6 @@ class Route(models.Model):
             self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
         return res
 
-    @api.multi
     def view_product_ids(self):
         return {
             'name': _('Products'),
@@ -157,7 +165,6 @@ class Route(models.Model):
             'domain': [('route_ids', 'in', self.ids)],
         }
 
-    @api.multi
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
@@ -177,7 +184,7 @@ class PushedFlow(models.Model):
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
+        default=lambda self: self.env['res.company']._company_default_get('stock.location.path'), index=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
@@ -213,9 +220,15 @@ class PushedFlow(models.Model):
                 # TDE FIXME: should probably be done in the move model IMO
                 move._push_apply()
         else:
-            new_move = move.copy({
-                'origin': move.origin or move.picking_id.name or "/",
-                'location_id': move.location_dest_id.id,
+            new_move_vals = self._prepare_move_copy_values(move, new_date)
+            new_move = move.copy(new_move_vals)
+            move.write({'move_dest_ids': [(4, new_move.id)]})
+            new_move._action_confirm()
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = {
+                'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+                'location_id': move_to_copy.location_dest_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'date': new_date,
                 'date_expected': new_date,
@@ -225,7 +238,6 @@ class PushedFlow(models.Model):
                 'propagate': self.propagate,
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
-                'procurement_id': False,
-            })
-            move.write({'move_dest_id': new_move.id})
-            new_move.action_confirm()
+            }
+
+        return new_move_vals

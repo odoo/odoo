@@ -10,13 +10,13 @@
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
-  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]/div" position="attributes">
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
     <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
   </xpath>
-  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]" position="inside">
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]" position="inside">
     <t t-if="line.linked_line_id">
       <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
@@ -42,7 +42,7 @@
               </tr>
           </thead>
           <tbody>
-              <tr id="product_confirmation">
+              <tr id="product_confirmation" class="js_product">
                 <td class='td-img'>
                   <span t-field="product.image_medium" t-options='{"widget": "image" }'/>
                 </td>
@@ -58,23 +58,25 @@
                       <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
                           <i class="fa fa-minus"></i>
                       </a>
-                      <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
+                      <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" value="1"/>
                       <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
                           <i class="fa fa-plus"></i>
                       </a>
                   </div>
                 </td>
                 <td class="text-center td-price" name="price">
-                  <span t-attf-class="text-danger oe_default_price" t-att-style="'text-decoration: line-through; white-space: nowrap;' + '' if (compute_currency(product.lst_price) - product.with_context(quantity=1).website_price ) &gt; 0.01 else 'display: none;'"
+                  <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="main_product_attr_ids"></ul>
+                  <div class="hidden oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
+                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
                     t-field="product.lst_price"
                     t-options='{
                       "widget": "monetary",
                       "from_currency": product.currency_id,
                       "display_currency": website.currency_id
                    }'/>
-                  <span class="oe_price" style="white-space: nowrap;"
+                  <span class="oe_price product_id" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
-                    t-field="product.with_context(quantity=1).website_price"
+                    t-esc="product.website_price / quantity"
                     t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id
@@ -139,10 +141,10 @@
 </template>
 
 <template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
-  <xpath expr="//div[@class='product_price']/t[1]" position="attributes">
+  <xpath expr="//div[hasclass('product_price')]/t[1]" position="attributes">
     <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
   </xpath>
-  <xpath expr="//div[@class='product_price']/t[2]" position="attributes">
+  <xpath expr="//div[hasclass('product_price')]/t[2]" position="attributes">
     <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
   </xpath>
 </template>

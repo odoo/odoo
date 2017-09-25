@@ -11,7 +11,6 @@
                         data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-user"></i>
                     <span class="o_followers_count"/>
-                    <span class="caret"/>
                 </button>
                 <ul class="dropdown-menu o_followers_list" role="menu"></ul>
             </div>
@@ -24,7 +23,7 @@
                         <span class="fa fa-check o_followers_following"/>
                         <span class="o_followers_following"> Following</span>
                     </button><button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="fa fa-volume-up"/>
+                        <span class="fa fa-bell"/>
                     </button>
                     <ul class="dropdown-menu" role="menu"/>
                 </div>
@@ -73,9 +72,12 @@
     -->
     <t t-name="mail.Followers.subtype">
         <li class="o_subtype">
-            <input type="checkbox" t-att-checked="record.followed"
-                   t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
-                   t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
+            <div class="o_checkbox">
+                <input type="checkbox" t-att-checked="record.followed"
+                       t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
+                       t-att-data-id="record.id" t-att-name="record.name" class="o_subtype_checkbox"/>
+                <span/>
+            </div>
             <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
                 <t t-esc="record.name"/>
             </span>

@@ -348,7 +348,7 @@ PaymentScreenWidget.include({
 
         if (! decodedMagtek) {
             this.gui.show_popup('error',{
-                'title': 'Could not read card',
+                'title': _t('Could not read card'),
                 'body':  _t('This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International).'),
             });
             return;
@@ -481,8 +481,7 @@ PaymentScreenWidget.include({
                     }
                 }
 
-            }).fail(function (error, event) {
-                event.preventDefault();
+            }).fail(function (type, error) {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.credit_code_transaction, [parsed_result, def, retry_nr + 1]);
             });
     },
@@ -597,8 +596,7 @@ PaymentScreenWidget.include({
                         });
                     }
                 }
-            }).fail(function (error, event) {
-                event.preventDefault();
+            }).fail(function (type, error) {
                 self.retry_mercury_transaction(def, null, retry_nr, false, self.do_reversal, [line, is_voidsale, def, retry_nr + 1]);
             });
     },
@@ -640,7 +638,7 @@ PaymentScreenWidget.include({
 
             if (already_swipe_pending) {
                 this.gui.show_popup('error',{
-                    'title': 'Error',
+                    'title': _t('Error'),
                     'body':  _t('One credit card swipe already pending.'),
                 });
             } else {

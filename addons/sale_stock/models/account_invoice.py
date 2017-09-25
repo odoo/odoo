@@ -26,8 +26,7 @@ class AccountInvoiceLine(models.Model):
                 quantity = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = self.env['stock.move']
-                for procurement in s_line.procurement_ids:
-                    moves |= procurement.move_ids
+                moves |=_line.move_ids
                 moves.sorted(lambda x: x.date)
                 # Go through all the moves and do nothing until you get to qty_done
                 # Beyond qty_done we need to calculate the average of the price_unit

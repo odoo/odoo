@@ -35,16 +35,6 @@
         }
     }
 
-    .done_message {
-        padding: 70px 20% 10px 20%;
-        text-align: center;
-        position: relative;
-        .fa {
-            position: absolute;
-            right: 20%;
-        }
-    }
-
     .notification_area {
         clear: both;
     }
@@ -176,7 +166,6 @@
                 vertical-align: top;
                 padding-right: 10px;
                 font-weight: bold;
-                white-space: nowrap;
             }
         }
 
@@ -219,7 +208,7 @@
             .o-transition(max-height, 250ms);
         }
         &[data-mode="match"] > .match {
-            max-height: 130px;
+            max-height: none;
             .o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {

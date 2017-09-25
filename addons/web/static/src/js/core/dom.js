@@ -1,3 +1,13 @@
+odoo.define('web.dom_ready', function (require) {
+'use strict';
+
+var def = $.Deferred();
+$(def.resolve.bind(def));
+return def;
+});
+
+//==============================================================================
+
 odoo.define('web.dom', function (require) {
 "use strict";
 
@@ -19,8 +29,8 @@ var core = require('web.core');
  * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
  * that on_attach_callback() will be called on each w with arguments args
  */
-function _notify (content, callbacks) {
-    _.each(callbacks, function(c) {
+function _notify(content, callbacks) {
+    _.each(callbacks, function (c) {
         if (c.widget && c.widget.on_attach_callback) {
             c.widget.on_attach_callback(c.callback_args);
         }
@@ -56,7 +66,12 @@ return {
         if ($textarea.data("auto_resize")) {
             return;
         }
-        function resize () {
+
+        var $fixedTextarea;
+        var minHeight;
+
+        function resize() {
+            $fixedTextarea.insertAfter($textarea);
             var heightOffset;
             var style = window.getComputedStyle($textarea[0], null);
             if (style.boxSizing === 'content-box') {
@@ -64,28 +79,25 @@ return {
             } else {
                 heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
             }
-            $fixed_text_area.width($textarea.width());
-            $fixed_text_area.val($textarea.val());
-            var height = $fixed_text_area[0].scrollHeight;
-            $textarea.css({height: Math.max(height + heightOffset, min_height)});
+            $fixedTextarea.width($textarea.width());
+            $fixedTextarea.val($textarea.val());
+            var height = $fixedTextarea[0].scrollHeight;
+            $textarea.css({height: Math.max(height + heightOffset, minHeight)});
         }
 
         options = options || {};
+        minHeight = (options && options.min_height) || 50;
 
-        var $fixed_text_area;
-        var min_height = (options && options.min_height) || 50;
-        if (!$fixed_text_area) {
-            $fixed_text_area = $('<textarea disabled>').css({
-                position: 'absolute',
-                opacity: 0,
-                height: 10,
-                top: -10000,
-                left: -10000,
-            });
-            $fixed_text_area.addClass($textarea[0].className);
-            $fixed_text_area.insertAfter($textarea);
-            $fixed_text_area.data("auto_resize", true);
-        }
+        $fixedTextarea = $('<textarea disabled>', {
+            class: $textarea[0].className,
+        }).css({
+            position: 'absolute',
+            opacity: 0,
+            height: 10,
+            top: -10000,
+            left: -10000,
+        });
+        $fixedTextarea.data("auto_resize", true);
 
         var style = window.getComputedStyle($textarea[0], null);
         if (style.resize === 'vertical') {
@@ -101,7 +113,24 @@ return {
             core.bus.on('DOM_updated', options.parent, resize);
             core.bus.on('view_shown', options.parent, resize);
         }
-
+    },
+    /**
+     * jQuery find function behavior is::
+     *
+     *      $('A').find('A B') <=> $('A A B')
+     *
+     * The searches behavior to find options' DOM needs to be::
+     *
+     *      $('A').find('A B') <=> $('A B')
+     *
+     * This is what this function does.
+     *
+     * @param {jQuery} $from - the jQuery element(s) from which to search
+     * @param {string} selector - the CSS selector to match
+     * @returns {jQuery}
+     */
+    cssFind: function ($from, selector) {
+        return $from.find('*').filter(selector);
     },
     /**
      * Detaches widgets from the DOM and performs their on_detach_callback()
@@ -114,24 +143,46 @@ return {
      * @return {jQuery} the detached elements
      */
     detach: function (to_detach, options) {
-        _.each(to_detach, function(d) {
+        _.each(to_detach, function (d) {
             if (d.widget.on_detach_callback) {
                 d.widget.on_detach_callback(d.callback_args);
             }
         });
         var $to_detach = options && options.$to_detach;
         if (!$to_detach) {
-            $to_detach = $(_.map(to_detach, function(d) {
+            $to_detach = $(_.map(to_detach, function (d) {
                 return d.widget.el;
             }));
         }
         return $to_detach.detach();
     },
     /**
+     * Returns the input or textarea cursor offset
+     *
+     * @param {Object} DOM item input or texteara
+     * @returns {Object}
+     */
+    getCursor: function (node) {
+        node = $(node)[0];
+        var offset = 0;
+        var length = 0;
+        if ('selectionStart' in node) {
+            offset = node.selectionStart;
+            length = node.selectionEnd - offset;
+        } else if ('selection' in document) {
+            node.focus();
+            var sel = document.selection.createRange();
+            length = document.selection.createRange().text.length;
+            sel.moveStart('character', -node.value.length);
+            offset = sel.text.length - length;
+        }
+        return { offset: offset, length: length };
+    },
+    /**
      * Returns the distance between a DOM element and the top-left corner of the
      * window
      *
-     * @param {element} [e] the DOM element
+     * @param {Object} node DOM element (input or texteara)
      * @return {Object} the left and top distances in pixels
      */
     getPosition: function (e) {
@@ -159,6 +210,93 @@ return {
             _notify(content, options.callbacks);
         }
     },
+    /**
+     * Renders a button with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple button.
+     *
+     * @param {Object} options
+     * @param {Object} [options.attrs] - Attributes to put on the button element
+     * @param {string} [options.attrs.type="button"]
+     * @param {string} [options.attrs.class="btn-default"]
+     *        Note: automatically completed with "btn btn-X" (@see options.size
+     *        for the value of X)
+     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.icon]
+     *        The specific fa icon class (for example "fa-home") or an URL for
+     *        an image to use as icon.
+     * @param {string} [options.text] - the button's text
+     * @returns {jQuery}
+     */
+    renderButton: function (options) {
+        var params = options.attrs || {};
+        params.type = params.type || 'button';
+        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
+        var $button = $('<button/>', params);
+        if (options.icon) {
+            if (options.icon.substr(0, 3) === 'fa-') {
+                $button.append($('<i/>', {
+                    class: 'fa fa-fw o_button_icon ' + options.icon,
+                }));
+            } else {
+                $button.append($('<img/>', {
+                    src: options.icon,
+                }));
+            }
+        }
+        if (options.text) {
+            $button.append($('<span/>', {
+                text: options.text,
+            }));
+        }
+        return $button;
+    },
+    /**
+     * Renders a checkbox with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple checkbox.
+     *
+     * @param {Object} [options]
+     * @param {Object} [options.prop]
+     *        Allows to set the input properties (disabled and checked states).
+     * @param {string} [options.text]
+     *        The checkbox's associated text. If none is given then a simple
+     *        checkbox without label structure is rendered.
+     * @returns {jQuery}
+     */
+    renderCheckbox: function (options) {
+        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        if (options && options.prop) {
+            $container.children('input').prop(options.prop);
+        }
+        if (options && options.text) {
+            $container = $('<label/>').append(
+                $container,
+                $('<span/>', {
+                    class: 'ml8',
+                    text: options.text,
+                })
+            );
+        }
+        return $container;
+    },
+    /**
+     * Moves the cursor position in a DOM element (input or texteara)
+     *
+     * @param {Object} node DOM element (input or textarea)
+     * @param {Int} pos cursor position
+     */
+    setCursor: function (node, pos) {
+        node = $(node).first().focus()[0];
+        if ('createTextRange' in node) {
+            var textRange = node.createTextRange();
+            textRange.collapse(true);
+            textRange.moveEnd(pos);
+            textRange.moveStart(pos);
+            textRange.select();
+        } else if ('setSelectionRange' in node) {
+            node.setSelectionRange(pos, pos);
+        }
+    },
 };
-
 });

@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
-import urlparse
+
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -48,7 +49,7 @@ class PaymentAcquirerPayumoney(models.Model):
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
             sign = self.payumoney_merchant_salt + sign + self.payumoney_merchant_key
 
-        shasign = hashlib.sha512(sign).hexdigest()
+        shasign = hashlib.sha512(sign.encode('utf-8')).hexdigest()
         return shasign
 
     @api.multi
@@ -64,9 +65,9 @@ class PaymentAcquirerPayumoney(models.Model):
                                 email=values.get('partner_email'),
                                 phone=values.get('partner_phone'),
                                 service_provider='payu_paisa',
-                                surl='%s' % urlparse.urljoin(base_url, '/payment/payumoney/return'),
-                                furl='%s' % urlparse.urljoin(base_url, '/payment/payumoney/error'),
-                                curl='%s' % urlparse.urljoin(base_url, '/payment/payumoney/cancel')
+                                surl=urls.url_join(base_url, '/payment/payumoney/return'),
+                                furl=urls.url_join(base_url, '/payment/payumoney/error'),
+                                curl=urls.url_join(base_url, '/payment/payumoney/cancel')
                                 )
 
         payumoney_values['udf1'] = payumoney_values.pop('return_url', '/')

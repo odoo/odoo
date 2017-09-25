@@ -37,7 +37,7 @@ class IrUiMenu(models.Model):
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
     complete_name = fields.Char(compute='_compute_complete_name', string='Full Path')
     web_icon = fields.Char(string='Web Icon File')
-    action = fields.Reference(selection=[('ir.actions.report.xml', 'ir.actions.report.xml'),
+    action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
                                          ('ir.actions.act_window', 'ir.actions.act_window'),
                                          ('ir.actions.act_url', 'ir.actions.act_url'),
                                          ('ir.actions.server', 'ir.actions.server'),
@@ -99,7 +99,7 @@ class IrUiMenu(models.Model):
         access = self.env['ir.model.access']
         MODEL_GETTER = {
             'ir.actions.act_window': lambda action: action.res_model,
-            'ir.actions.report.xml': lambda action: action.model,
+            'ir.actions.report': lambda action: action.model,
             'ir.actions.server': lambda action: action.model_id.model,
         }
         for menu in action_menus:
@@ -133,9 +133,9 @@ class IrUiMenu(models.Model):
             if not self._context.get('ir.ui.menu.full_list'):
                 menus = menus._filter_visible_menus()
             if offset:
-                menus = menus[long(offset):]
+                menus = menus[offset:]
             if limit:
-                menus = menus[:long(limit)]
+                menus = menus[:limit]
         return len(menus) if count else menus
 
     @api.multi
@@ -206,13 +206,18 @@ class IrUiMenu(models.Model):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
-        return {
+
+        menu_root = {
             'id': False,
             'name': 'root',
             'parent_id': [-1, ''],
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
+        menu_roots._set_menuitems_xmlids(menu_root)
+
+        return menu_root
 
     @api.model
     @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
@@ -232,6 +237,7 @@ class IrUiMenu(models.Model):
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
         if not menu_roots_data:
             return menu_root
 
@@ -258,4 +264,25 @@ class IrUiMenu(models.Model):
         for menu_item in menu_items:
             menu_item.setdefault('children', []).sort(key=operator.itemgetter('sequence'))
 
+        (menu_roots + menus)._set_menuitems_xmlids(menu_root)
+
         return menu_root
+
+    def _set_menuitems_xmlids(self, menu_root):
+        menuitems = self.env['ir.model.data'].sudo().search([
+                ('res_id', 'in', self.ids),
+                ('model', '=', 'ir.ui.menu')
+            ])
+
+        xmlids = {
+            menu.res_id: menu.complete_name
+            for menu in menuitems
+        }
+
+        def _set_xmlids(tree, xmlids):
+            tree['xmlid'] = xmlids.get(tree['id'], '')
+            if 'children' in tree:
+                for child in tree['children']:
+                    _set_xmlids(child, xmlids)
+
+        _set_xmlids(menu_root, xmlids)

@@ -14,4 +14,18 @@
             </data>
             </field>
         </record>
+
+        <record id="res_partner_form_l10n_fr" model="ir.ui.view">
+            <field name="name">res.partner.form.l10n.fr</field>
+            <field name="model">res.partner</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//field[@name='ref']" position="after">
+                    <field name="siret" attrs="{'invisible': [('is_company', '=', False)]}"/>
+                 </xpath>
+            </data>
+            </field>
+        </record>
 </odoo>

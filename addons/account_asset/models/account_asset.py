@@ -30,9 +30,9 @@ class AccountAssetCategory(models.Model):
     method_number = fields.Integer(string='Number of Depreciations', default=5, help="The number of depreciations needed to depreciate your asset")
     method_period = fields.Integer(string='Period Length', default=1, help="State here the time between 2 depreciations, in months", required=True)
     method_progress_factor = fields.Float('Degressive Factor', default=0.3)
-    method_time = fields.Selection([('number', 'Number of Depreciations'), ('end', 'Ending Date')], string='Time Method', required=True, default='number',
-        help="Choose the method to use to compute the dates and number of depreciation lines.\n"
-           "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+    method_time = fields.Selection([('number', 'Number of Entries'), ('end', 'Ending Date')], string='Time Method', required=True, default='number',
+        help="Choose the method to use to compute the dates and number of entries.\n"
+           "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
            "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     method_end = fields.Date('Ending date')
     prorata = fields.Boolean(string='Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first of January')
@@ -92,9 +92,9 @@ class AccountAssetAsset(models.Model):
     method_end = fields.Date(string='Ending Date', readonly=True, states={'draft': [('readonly', False)]})
     method_progress_factor = fields.Float(string='Degressive Factor', readonly=True, default=0.3, states={'draft': [('readonly', False)]})
     value_residual = fields.Float(compute='_amount_residual', method=True, digits=0, string='Residual Value')
-    method_time = fields.Selection([('number', 'Number of Depreciations'), ('end', 'Ending Date')], string='Time Method', required=True, readonly=True, default='number', states={'draft': [('readonly', False)]},
-        help="Choose the method to use to compute the dates and number of depreciation lines.\n"
-             "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
+    method_time = fields.Selection([('number', 'Number of Entries'), ('end', 'Ending Date')], string='Time Method', required=True, readonly=True, default='number', states={'draft': [('readonly', False)]},
+        help="Choose the method to use to compute the dates and number of entries.\n"
+             "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
              "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     prorata = fields.Boolean(string='Prorata Temporis', readonly=True, states={'draft': [('readonly', False)]},
         help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January / Start date of fiscal year')
@@ -285,8 +285,7 @@ class AccountAssetAsset(models.Model):
             dummy, tracking_value_ids = asset._message_track(tracked_fields, dict.fromkeys(fields))
             asset.message_post(subject=_('Asset created'), tracking_value_ids=tracking_value_ids)
 
-    @api.multi
-    def set_to_close(self):
+    def _get_disposal_moves(self):
         move_ids = []
         for asset in self:
             unposted_depreciation_line_ids = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
@@ -318,6 +317,12 @@ class AccountAssetAsset(models.Model):
                 if changes:
                     asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
                 move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
+
+        return move_ids
+
+    @api.multi
+    def set_to_close(self):
+        move_ids = self._get_disposal_moves()
         if move_ids:
             name = _('Disposal Move')
             view_mode = 'form'
@@ -369,7 +374,7 @@ class AccountAssetAsset(models.Model):
         vals = self.onchange_category_id_values(self.category_id.id)
         # We cannot use 'write' on an object that doesn't exist yet
         if vals:
-            for k, v in vals['value'].iteritems():
+            for k, v in vals['value'].items():
                 setattr(self, k, v)
 
     def onchange_category_id_values(self, category_id):
@@ -471,15 +476,14 @@ class AccountAssetDepreciationLine(models.Model):
     @api.multi
     def create_move(self, post_move=True):
         created_moves = self.env['account.move']
+        prec = self.env['decimal.precision'].precision_get('Account')
         for line in self:
             category_id = line.asset_id.category_id
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount = current_currency.compute(line.amount, company_currency)
-            sign = (category_id.journal_id.type == 'purchase' or category_id.journal_id.type == 'sale' and 1) or -1
+            amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
-            prec = self.env['decimal.precision'].precision_get('Account')
             move_line_1 = {
                 'name': asset_name,
                 'account_id': category_id.account_depreciation_id.id,
@@ -489,7 +493,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'sale' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
-                'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
+                'amount_currency': company_currency != current_currency and - 1.0 * line.amount or 0.0,
             }
             move_line_2 = {
                 'name': asset_name,
@@ -500,7 +504,7 @@ class AccountAssetDepreciationLine(models.Model):
                 'partner_id': line.asset_id.partner_id.id,
                 'analytic_account_id': category_id.account_analytic_id.id if category_id.type == 'purchase' else False,
                 'currency_id': company_currency != current_currency and current_currency.id or False,
-                'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
+                'amount_currency': company_currency != current_currency and line.amount or 0.0,
             }
             move_vals = {
                 'ref': line.asset_id.code,
@@ -579,7 +583,7 @@ class AccountAssetDepreciationLine(models.Model):
             message = ''
             if message_description:
                 message = '<span>%s</span>' % message_description
-            for name, values in tracked_values.iteritems():
+            for name, values in tracked_values.items():
                 message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % name
                 message += '%s</div>' % values
             return message

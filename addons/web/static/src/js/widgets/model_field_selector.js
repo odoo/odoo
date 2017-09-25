@@ -16,6 +16,11 @@ var modelFieldsCache = {
     cacheDefs: {},
 };
 
+core.bus.on('clear_cache', null, function () {
+    modelFieldsCache.cache = {};
+    modelFieldsCache.cacheDefs = {};
+});
+
 /**
  * The ModelFieldSelector widget can be used to display/select a particular
  * field chain from a given model.

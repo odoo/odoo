@@ -276,9 +276,11 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.$el.toggleClass(
             'oe_import_noheaders',
             !this.$('input.oe_import_has_header').prop('checked'));
-        this.Import.call(
-            'parse_preview', [this.id, this.import_options()])
-            .done(function (result) {
+        this._rpc({
+                model: 'base_import.import',
+                method: 'parse_preview',
+                args: [this.id, this.import_options()],
+            }).done(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);
             });
@@ -457,8 +459,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             {}, this.parent_context,
             {tracking_disable: tracking_disable}
         );
-        return this.Import.call('do', [this.id, fields, this.import_options()], kwargs)
-            .then(undefined, function (error, event) {
+        return this._rpc({
+                model: 'base_import.import',
+                method: 'do',
+                args: [this.id, fields, this.import_options()],
+                kwargs : kwargs,
+            }).fail(function (error, event) {
                 // In case of unexpected exception, convert
                 // "JSON-RPC error" to an import failure, and
                 // prevent default handling (warning dialog)

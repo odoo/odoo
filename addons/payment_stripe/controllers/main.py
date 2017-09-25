@@ -15,7 +15,7 @@ class StripeController(http.Controller):
     def stripe_s2s_create_json(self, **kwargs):
         acquirer_id = int(kwargs.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        return acquirer.s2s_process(kwargs)
+        return acquirer.s2s_process(kwargs).id
 
     @http.route(['/payment/stripe/s2s/create'], type='http', auth='public')
     def stripe_s2s_create(self, **post):
@@ -23,6 +23,30 @@ class StripeController(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         acquirer.s2s_process(post)
         return werkzeug.utils.redirect(post.get('return_url', '/'))
+
+    @http.route(['/payment/stripe/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
+    def stripe_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+
+        if not token:
+            res = {
+                'result': False,
+            }
+            return res
+
+        res = {
+            'result': True,
+            'id': token.id,
+            'short_name': token.short_name,
+            '3d_secure': False,
+            'verified': False,
+        }
+
+        if verify_validity != False:
+            token.validate()
+            res['verified'] = token.verified
+
+        return res
 
     @http.route(['/payment/stripe/create_charge'], type='json', auth='public')
     def stripe_create_charge(self, **post):

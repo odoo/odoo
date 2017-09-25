@@ -54,19 +54,17 @@ if ($.blockUI) {
 
 var throbbers = [];
 
-function blockUI () {
+function blockUI() {
     var tmp = $.blockUI.apply($, arguments);
     var throbber = new Throbber();
     throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
-    $('body').addClass('o_ui_blocked');
     return tmp;
 }
 
-function unblockUI () {
+function unblockUI() {
     _.invoke(throbbers, 'destroy');
     throbbers = [];
-    $('body').removeClass('o_ui_blocked');
     return $.unblockUI.apply($, arguments);
 }
 
@@ -104,7 +102,7 @@ function redirect (url, wait) {
 //  * Client action to reload the whole interface.
 //  * If params.menu_id, it opens the given menu entry.
 //  * If params.wait, reload will wait the openerp server to be reachable before reloading
- 
+
 function Reload(parent, action) {
     var params = action.params || {};
     var menu_id = params.menu_id || false;
@@ -121,6 +119,9 @@ function Reload(parent, action) {
         hash = "#menu_id=" + menu_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+
+    // Clear cache
+    core.bus.trigger('clear_cache');
 
     redirect(url, params.wait);
 }

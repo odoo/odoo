@@ -164,6 +164,7 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.displayFields = params.displayFields;
+        this.model = params.model;
         this.filters = [];
         this.color_map = {};
 
@@ -190,6 +191,7 @@ return AbstractRenderer.extend({
         }
         if (this.$small_calendar) {
             this.$small_calendar.datepicker('destroy');
+            $('#ui-datepicker-div:empty').remove();
         }
         this._super.apply(this, arguments);
     },
@@ -250,6 +252,24 @@ return AbstractRenderer.extend({
         this.color_map[key] = index;
         return index;
     },
+    /**
+     * @override
+     */
+    getLocalState: function () {
+        var $fcScroller = this.$calendar.find('.fc-scroller');
+        return {
+            scrollPosition: $fcScroller.scrollTop(),
+        };
+    },
+    /**
+     * @override
+     */
+    setLocalState: function (localState) {
+        if (localState.scrollPosition) {
+            var $fcScroller = this.$calendar.find('.fc-scroller');
+            $fcScroller.scrollTop(localState.scrollPosition);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -283,7 +303,11 @@ return AbstractRenderer.extend({
      */
     _format: function (record, fieldName) {
         var field = this.state.fields[fieldName];
-        return field_utils.format[field.type](record[fieldName], field);
+        if (field.type === "one2many" || field.type === "many2many") {
+            return field_utils.format[field.type]({data: record[fieldName]}, field);
+        } else {
+            return field_utils.format[field.type](record[fieldName], field, {forceString: true});
+        }
     },
     /**
      * Initialize the main calendar
@@ -306,7 +330,11 @@ return AbstractRenderer.extend({
                 self.$calendar.fullCalendar('unselect');
             },
             select: function (target_date, end_date, event, _js_event, _view) {
-                self.trigger_up('openCreate', {'start': target_date, 'end': end_date});
+                var data = {'start': target_date, 'end': end_date};
+                if (self.state.context.default_name) {
+                    data.title = self.state.context.default_name;
+                }
+                self.trigger_up('openCreate', data);
                 self.$calendar.fullCalendar('unselect');
             },
             eventRender: function (event, element) {
@@ -316,15 +344,20 @@ return AbstractRenderer.extend({
                 element.addClass($render.attr('class'));
                 var display_hour = '';
                 if (!event.allDay) {
-                    display_hour = (event.start.format('HH:mm') === '00:00' ? event.r_start.format('HH:mm') : event.start.format('HH:mm')) + ' - ' +
-                        (event.end && event.end.format('HH:mm') !== '00:00' ? event.end.format('HH:mm') : event.r_end.format('HH:mm'));
+                    var start = event.r_start || event.start;
+                    var end = event.r_end || event.end;
+                    display_hour = start.format('HH:mm') + ' - ' + end.format('HH:mm');
                     if (display_hour === '00:00 - 00:00') {
-                        display_hour = _t('All the day');
+                        display_hour = _t('All day');
                     }
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
-
+            // Dirty hack to ensure a correct first render
+            eventAfterAllRender: function (view) {
+                window.dispatchEvent(new Event('resize'));
+            },
+            height: 'parent',
             unselectAuto: false,
         });
 
@@ -365,6 +398,7 @@ return AbstractRenderer.extend({
         var $calendar = this.$calendar;
         var $fc_view = $calendar.find('.fc-view');
         var scrollPosition = $fc_view.scrollLeft();
+        var scrollTop = this.$calendar.find('.fc-scroller').scrollTop();
 
         $fc_view.scrollLeft(0);
         $calendar.fullCalendar('unselect');
@@ -409,7 +443,11 @@ return AbstractRenderer.extend({
 
         this._renderFilters();
         this.$calendar.appendTo('body');
-        this.$calendar.fullCalendar('render');
+        if (scrollTop) {
+            this.$calendar.fullCalendar('reinitView');
+        } else {
+            this.$calendar.fullCalendar('render');
+        }
         this._renderEvents();
         this.$calendar.prependTo(this.$('.o_calendar_view'));
 

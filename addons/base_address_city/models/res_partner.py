@@ -20,6 +20,8 @@ class Partner(models.Model):
     @api.model
     def _fields_view_get_address(self, arch):
         arch = super(Partner, self)._fields_view_get_address(arch)
+        if not self._context.get('no_address_format'):
+            return arch
         # render the partner address accordingly to address_view_id
         doc = etree.fromstring(arch)
         for city_node in doc.xpath("//field[@name='city']"):
@@ -33,5 +35,5 @@ class Partner(models.Model):
             city_id_node = etree.fromstring(replacement_xml)
             city_node.getparent().replace(city_node, city_id_node)
 
-        arch = etree.tostring(doc)
+        arch = etree.tostring(doc, encoding='unicode')
         return arch

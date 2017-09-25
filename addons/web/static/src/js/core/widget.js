@@ -1,55 +1,57 @@
 odoo.define('web.Widget', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 
 /**
- * Base class for all visual components. Provides a lot of functionalities helpful
+ * Base class for all visual components. Provides a lot of functions helpful
  * for the management of a part of the DOM.
  *
  * Widget handles:
+ *
  * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
+ * - Life-cycle management and parenting (when a parent is destroyed, all its
+ *   children are destroyed too).
  * - Insertion in DOM.
  *
- * Guide to create implementations of the Widget class:
- * ==============================================
+ * **Guide to create implementations of the Widget class**
  *
- * Here is a sample child class:
+ * Here is a sample child class::
  *
- * MyWidget = openerp.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
+ *     var MyWidget = openerp.base.Widget.extend({
+ *         // the name of the QWeb template to use for rendering
+ *         template: "MyQWebTemplate",
  *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         // stuff you want to make after the rendering, `this.$el` holds a correct value
- *         this.$(".my_button").click(/* an example of event binding * /);
+ *         init: function(parent) {
+ *             this._super(parent);
+ *             // stuff that you want to init before the rendering
+ *         },
+ *         start: function() {
+ *             // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *             this.$(".my_button").click(/* an example of event binding * /);
  *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this._rpc(...);
- *         return promise;
- *     }
- * });
+ *             // if you have some asynchronous operations, it's a good idea to return
+ *             // a promise in start()
+ *             var promise = this._rpc(...);
+ *             return promise;
+ *         }
+ *     });
  *
- * Now this class can simply be used with the following syntax:
+ * Now this class can simply be used with the following syntax::
  *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
+ *     var my_widget = new MyWidget(this);
+ *     my_widget.appendTo($(".some-div"));
  *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
+ * With these two lines, the MyWidget instance was initialized, rendered,
+ * inserted into the DOM inside the ``.some-div`` div and its events were
+ * bound.
  *
- * And of course, when you don't need that widget anymore, just do:
+ * And of course, when you don't need that widget anymore, just do::
  *
- * my_widget.destroy();
+ *     my_widget.destroy();
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
@@ -66,13 +68,20 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
      *
-     * @type string
+     * @type {String}
      */
     template: null,
     /**
-     * Constructs the widget and sets its parent if a parent is given.
+     * List of paths to xml files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
      *
-     * @constructs openerp.Widget
+     * @type {string[]}
+     */
+    xmlDependencies: null,
+
+    /**
+     * Constructs the widget and sets its parent if a parent is given.
      *
      * @param {openerp.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
@@ -94,13 +103,21 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
         this.setElement(this._make_descriptive());
     },
     /**
-     * Method called between init and start. Performs asynchronous calls required by start.
+     * Method called between @see init and @see start. Performs asynchronous
+     * calls required by the rendering and the start method.
      *
-     * This method should return a Deferred which is resolved when start can be executed.
+     * This method should return a Deferred which is resolved when start can be
+     * executed.
      *
-     * @return {jQuery.Deferred}
+     * @returns {Deferred}
      */
     willStart: function () {
+        if (this.xmlDependencies) {
+            var defs = _.map(this.xmlDependencies, function (xmlPath) {
+                return ajax.loadXML(xmlPath, core.qweb);
+            });
+            return $.when.apply($, defs);
+        }
         return $.when();
     },
     /**
@@ -220,7 +237,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * (if any) by the new one in the DOM.
      *
      * @param {HTMLElement | jQuery} $el
-     * @returns {*} this
+     * @returns {Widget} this
      */
     replaceElement: function ($el) {
         var $oldel = this.$el;
@@ -239,13 +256,14 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * Re-sets the widget's root element (el/$el/$el).
      *
      * Includes:
+     *
      * * re-delegating events
      * * re-binding sub-elements
      * * if the widget already had a root element, replacing the pre-existing
      *   element in the DOM
      *
      * @param {HTMLElement | jQuery} element new root element for the widget
-     * @return {*} this
+     * @return {Widget} this
      */
     setElement: function (element) {
         // NB: completely useless, as WidgetMixin#init creates a $el

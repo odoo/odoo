@@ -5,6 +5,7 @@ import time
 
 from odoo import api, fields, models
 
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
@@ -67,8 +68,8 @@ class ProductProduct(models.Model):
                         prod_re[prod.id] = re_ind
                 re_ind += 1
             res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
-            for key in res_val.keys():
-                for l in res_val[key].keys():
+            for key in res_val:
+                for l in res_val[key]:
                     re = res[prod_re[key]]
                     if re.get(l):
                         re[l] += res_val[key][l]
@@ -104,7 +105,7 @@ class ProductProduct(models.Model):
             #Cost price is calculated afterwards as it is a property
             sqlstr = """
                 select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
                     sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected

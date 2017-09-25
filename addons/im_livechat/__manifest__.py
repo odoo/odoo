@@ -21,6 +21,7 @@ Help your customers with this chat, and analyse their feedback.
     'data': [
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
+        "views/rating_views.xml",
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
@@ -33,9 +34,7 @@ Help your customers with this chat, and analyse their feedback.
         'data/mail_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating"],
-    'qweb': [
-        'static/src/xml/im_livechat_backend.xml',
-    ],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,

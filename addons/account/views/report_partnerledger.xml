@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_partnerledger">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-set="data_report_margin_top" t-value="12"/>
         <t t-set="data_report_header_spacing" t-value="9"/>
         <t t-set="data_report_dpi" t-value="110"/>
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.internal_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <h2>Partner Ledger</h2>
 
@@ -36,7 +36,7 @@
                                 <th>Debit</th>
                                 <th>Credit</th>
                                 <th>Balance</th>
-                                <th t-if="amount_currency">Currency</th>
+                                <th t-if="data['form']['amount_currency']">Currency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,8 +77,10 @@
                                 <td class="text-right">
                                     <span t-esc="line['progress']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
-                                <td t-if="amount_currency">
-                                    <span t-esc="line['amount_currency']" t-options="{'widget': 'monetary', 'display_currency': line['currency_id']}"/>
+                                <td class="text-right" t-if="data['form']['amount_currency']">
+                                    <t t-if="line['currency_id']">
+                                      <span t-esc="line['amount_currency']" t-options="{'widget': 'monetary', 'display_currency': line['currency_id']}"/>
+                                    </t>
                                 </td>
                             </tr>
                         </tbody>

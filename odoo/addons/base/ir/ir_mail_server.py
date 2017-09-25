@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from email import Encoders
+from email import encoders
 from email.charset import Charset
 from email.header import Header
 from email.mime.base import MIMEBase
@@ -13,9 +13,11 @@ import re
 import smtplib
 import threading
 
+import html2text
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import html2text, ustr
+from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -26,31 +28,19 @@ class MailDeliveryException(except_orm):
     def __init__(self, name, value):
         super(MailDeliveryException, self).__init__(name, value)
 
+# Python 3: patch SMTP's internal printer/debugger
+def _print_debug(self, *args):
+    _logger.debug(' '.join(str(a) for a in args))
+smtplib.SMTP._print_debug = _print_debug
 
+# Python 2: replace smtplib's stderr
 class WriteToLogger(object):
-    """debugging helper: behave as a fd and pipe to logger at the given level"""
-    def __init__(self, logger, level=logging.DEBUG):
-        self.logger = logger
-        self.level = level
-
     def write(self, s):
-        self.logger.log(self.level, s)
+        _logger.debug(s)
+smtplib.stderr = WriteToLogger()
 
-
-def try_coerce_ascii(string_utf8):
-    """Attempts to decode the given utf8-encoded string
-       as ASCII after coercing it to UTF-8, then return
-       the confirmed 7-bit ASCII string.
-
-       If the process fails (because the string
-       contains non-ASCII characters) returns ``None``.
-    """
-    try:
-        string_utf8.decode('ascii')
-    except UnicodeDecodeError:
-        return
-    return string_utf8
-
+def is_ascii(s):
+    return all(ord(cp) < 128 for cp in s)
 
 def encode_header(header_text):
     """Returns an appropriate representation of the given header value,
@@ -68,16 +58,10 @@ def encode_header(header_text):
     """
     if not header_text:
         return ""
-    # convert anything to utf-8, suitable for testing ASCIIness, as 7-bit chars are
-    # encoded as ASCII in utf-8
-    header_text_utf8 = ustr(header_text).encode('utf-8')
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    # if this header contains non-ASCII characters,
-    # we'll need to wrap it up in a message.header.Header
-    # that will take care of RFC2047-encoding it as
-    # 7-bit string.
-    return header_text_ascii or Header(header_text_utf8, 'utf-8')
-
+    header_text = ustr(header_text) # FIXME: require unicode higher up?
+    if is_ascii(header_text):
+        return pycompat.to_native(header_text)
+    Header(header_text, 'utf-8')
 
 def encode_header_param(param_text):
     """Returns an appropriate RFC2047 encoded representation of the given
@@ -95,10 +79,10 @@ def encode_header_param(param_text):
     # For details see the encode_header() method that uses the same logic
     if not param_text:
         return ""
-    param_text_utf8 = ustr(param_text).encode('utf-8')
-    param_text_ascii = try_coerce_ascii(param_text_utf8)
-    return param_text_ascii or Charset('utf8').header_encode(param_text_utf8)
-
+    param_text = ustr(param_text) # FIXME: require unicode higher up?
+    if is_ascii(param_text):
+        return pycompat.to_native(param_text) # TODO: is that actually necessary?
+    return Charset("utf-8").header_encode(param_text)
 
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 
@@ -109,8 +93,8 @@ def extract_rfc2822_addresses(text):
     """
     if not text:
         return []
-    candidates = address_pattern.findall(ustr(text).encode('utf-8'))
-    return filter(try_coerce_ascii, candidates)
+    candidates = address_pattern.findall(ustr(text))
+    return [c for c in candidates if is_ascii(c)]
 
 
 def encode_rfc2822_address_header(header_text):
@@ -122,12 +106,21 @@ def encode_rfc2822_address_header(header_text):
     """
     def encode_addr(addr):
         name, email = addr
-        if not try_coerce_ascii(name):
-            name = str(Header(name, 'utf-8'))
+        # If s is a <text string>, then charset is a hint specifying the
+        # character set of the characters in the string. The Unicode string
+        # will be encoded using the following charsets in order: us-ascii,
+        # the charset hint, utf-8. The first character set to not provoke a
+        # UnicodeError is used.
+        # -> always pass a text string to Header
+
+        # also Header.__str__ in Python 3 "Returns an approximation of the
+        # Header as a string, using an unlimited line length.", the old one
+        # was "A synonym for Header.encode()." so call encode() directly?
+        name = Header(pycompat.to_text(name)).encode()
         return formataddr((name, email))
 
-    addresses = getaddresses([ustr(header_text).encode('utf-8')])
-    return COMMASPACE.join(map(encode_addr, addresses))
+    addresses = getaddresses([pycompat.to_native(ustr(header_text))])
+    return COMMASPACE.join(encode_addr(a) for a in addresses)
 
 
 class IrMailServer(models.Model):
@@ -140,8 +133,8 @@ class IrMailServer(models.Model):
     name = fields.Char(string='Description', required=True, index=True)
     smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', size=5, required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
-    smtp_user = fields.Char(string='Username', size=64, help="Optional username for SMTP authentication")
-    smtp_pass = fields.Char(string='Password', size=64, help="Optional password for SMTP authentication")
+    smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication")
+    smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication")
     smtp_encryption = fields.Selection([('none', 'None'),
                                         ('starttls', 'TLS (STARTTLS)'),
                                         ('ssl', 'SSL/TLS')],
@@ -156,14 +149,6 @@ class IrMailServer(models.Model):
     sequence = fields.Integer(string='Priority', default=10, help="When no specific mail server is requested for a mail, the highest priority one "
                                                                   "is used. Default priority is 10 (smaller number = higher priority)")
     active = fields.Boolean(default=True)
-
-    def __init__(self, *args, **kwargs):
-        # Make sure we pipe the smtplib outputs to our own DEBUG logger
-        if not isinstance(smtplib.stderr, WriteToLogger):
-            logpiper = WriteToLogger(_logger)
-            smtplib.stderr = logpiper
-            smtplib.stdout = logpiper
-        super(IrMailServer, self).__init__(*args, **kwargs)
 
     @api.multi
     def name_get(self):
@@ -258,8 +243,8 @@ class IrMailServer(models.Model):
             # The user/password must be converted to bytestrings in order to be usable for
             # certain hashing schemes, like HMAC.
             # See also bug #597143 and python issue #5285
-            smtp_user = ustr(smtp_user).encode('utf-8')
-            smtp_password = ustr(smtp_password).encode('utf-8')
+            smtp_user = pycompat.to_native(ustr(smtp_user))
+            smtp_password = pycompat.to_native(ustr(smtp_password))
             connection.login(smtp_user, smtp_password)
         return connection
 
@@ -307,8 +292,8 @@ class IrMailServer(models.Model):
         email_bcc = email_bcc or []
         body = body or u''
 
-        email_body_utf8 = ustr(body).encode('utf-8')
-        email_text_part = MIMEText(email_body_utf8, _subtype=subtype, _charset='utf-8')
+        email_body = ustr(body)
+        email_text_part = MIMEText(email_body, _subtype=subtype, _charset='utf-8')
         msg = MIMEMultipart()
 
         if not message_id:
@@ -333,21 +318,21 @@ class IrMailServer(models.Model):
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
-        for key, value in headers.iteritems():
-            msg[ustr(key).encode('utf-8')] = encode_header(value)
+        for key, value in headers.items():
+            msg[pycompat.to_native(ustr(key))] = encode_header(value)
 
-        if subtype == 'html' and not body_alternative and html2text:
+        if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
+            text = html2text.html2text(email_body_utf8)
             alternative_part = MIMEMultipart(_subtype="alternative")
-            alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
+            alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
         elif body_alternative:
             # Include both alternatives, as specified, within a multipart/alternative part
             alternative_part = MIMEMultipart(_subtype="alternative")
-            body_alternative_utf8 = ustr(body_alternative).encode('utf-8')
-            alternative_body_part = MIMEText(body_alternative_utf8, _subtype=subtype_alternative, _charset='utf-8')
+            body_alternative_ = ustr(body_alternative)
+            alternative_body_part = MIMEText(body_alternative_, _subtype=subtype_alternative, _charset='utf-8')
             alternative_part.attach(alternative_body_part)
             alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
@@ -355,9 +340,13 @@ class IrMailServer(models.Model):
             msg.attach(email_text_part)
 
         if attachments:
-            for (fname, fcontent) in attachments:
+            for (fname, fcontent, mime) in attachments:
                 filename_rfc2047 = encode_header_param(fname)
-                part = MIMEBase('application', "octet-stream")
+                if mime and '/' in mime:
+                    maintype, subtype = mime.split('/', 1)
+                    part = MIMEBase(maintype, subtype)
+                else:
+                    part = MIMEBase('application', "octet-stream")
 
                 # The default RFC2231 encoding of Message.add_header() works in Thunderbird but not GMail
                 # so we fix it by using RFC2047 encoding for the filename instead.
@@ -365,7 +354,7 @@ class IrMailServer(models.Model):
                 part.add_header('Content-Disposition', 'attachment', filename=filename_rfc2047)
 
                 part.set_payload(fcontent)
-                Encoders.encode_base64(part)
+                encoders.encode_base64(part)
                 msg.attach(part)
         return msg
 
@@ -438,7 +427,12 @@ class IrMailServer(models.Model):
         email_cc = message['Cc']
         email_bcc = message['Bcc']
 
-        smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses, [email_to, email_cc, email_bcc])))
+        smtp_to_list = [
+            address
+            for base in [email_to, email_cc, email_bcc]
+            for address in extract_rfc2822_addresses(base)
+            if address
+        ]
         assert smtp_to_list, self.NO_VALID_RECIPIENT
 
         x_forge_to = message['X-Forge-To']

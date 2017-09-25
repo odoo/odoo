@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class EventType(models.Model):
@@ -10,6 +10,12 @@ class EventType(models.Model):
 
     website_track = fields.Boolean('Tracks on Website')
     website_track_proposal = fields.Boolean('Tracks Proposals on Website')
+
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
 
 
 class Event(models.Model):
@@ -64,9 +70,30 @@ class Event(models.Model):
     @api.onchange('event_type_id')
     def _onchange_type(self):
         super(Event, self)._onchange_type()
-        if self.event_type_id:
+        if self.event_type_id and self.website_menu:
             self.website_track = self.event_type_id.website_track
             self.website_track_proposal = self.event_type_id.website_track_proposal
+
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        if not self.website_menu:
+            self.website_track = False
+            self.website_track_proposal = False
+
+    @api.onchange('website_track')
+    def _onchange_website_track(self):
+        if not self.website_track:
+            self.website_track_proposal = False
+
+    @api.onchange('website_track_proposal')
+    def _onchange_website_track_proposal(self):
+        if self.website_track_proposal:
+            self.website_track = True
+
+    def _get_standard_menu_entries_names(self):
+        res = super(Event, self)._get_standard_menu_entries_names()
+        res += [_('Talks'), _('Agenda'), _('Talk Proposals')]
+        return res
 
     def _get_menu_entries(self):
         self.ensure_one()

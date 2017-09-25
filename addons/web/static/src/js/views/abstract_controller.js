@@ -19,6 +19,9 @@ var AbstractController = Widget.extend({
     custom_events: {
         open_record: '_onOpenRecord',
     },
+    events: {
+        'click a[type="action"]': '_onActionClicked',
+    },
 
     /**
      * @constructor
@@ -29,7 +32,6 @@ var AbstractController = Widget.extend({
      * @param {string} params.modelName
      * @param {any} [params.handle] a handle that will be given to the model (some id)
      * @param {any} params.initialState the initialState
-     * @param {string} [params.noContentHelp]
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
@@ -39,7 +41,6 @@ var AbstractController = Widget.extend({
         this.handle = params.handle;
         this.activeActions = params.activeActions;
         this.initialState = params.initialState;
-        this.noContentHelp = params.noContentHelp;
     },
     /**
      * Simply renders and updates the url.
@@ -67,19 +68,20 @@ var AbstractController = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Determines if we can discard the current state.  For example, when the
-     * user open the 'home' screen, the view manager will call this method on
-     * the active view to make sure it is ok to open the home screen (and
-     * potentially loose all current state).
+     * Discards the changes made on the record associated to the given ID, or
+     * all changes made by the current controller if no recordID is given. For
+     * example, when the user open the 'home' screen, the view manager will call
+     * this method on the active view to make sure it is ok to open the home
+     * screen (and lose all current state).
      *
      * Note that it returns a deferred, because the view could choose to ask the
      * user if he agrees to discard.
      *
-     * @override
-     * @returns {Deferred} If the deferred is resolved, we assume the changes
-     *   can be discarded.  If it is rejected, then we cannot discard.
+     * @param {string} [recordID]
+     *        if not given, we consider all the changes made by the controller
+     * @returns {Deferred} resolved if properly discarded, rejected otherwise
      */
-    canBeDiscarded: function () {
+    discardChanges: function (recordID) {
         return $.when();
     },
     /**
@@ -220,31 +222,6 @@ var AbstractController = Widget.extend({
         this.trigger_up('push_state', state || {});
     },
     /**
-     * Hide or show the nocontent helper.  For this, it also remove the renderer
-     * from the dom, and reattach it when necessary.
-     *
-     * This method is a helper for controllers that want to display a help
-     * message when no content is available.  It is suggested to override
-     * _update to call this method.
-     *
-     * @private
-     * @param {boolean} hasNoContent
-     */
-    _toggleNoContentHelper: function (hasNoContent) {
-        if (hasNoContent && this.noContentHelp) {
-            this.renderer.$el.detach();
-            var $msg = $('<div>')
-                .addClass('oe_view_nocontent')
-                .html(this.noContentHelp);
-            this.$el.html($msg);
-        } else {
-            if (!document.contains(this.renderer.el)) {
-                this.$('div.oe_view_nocontent').remove();
-                this.$el.append(this.renderer.$el);
-            }
-        }
-    },
-    /**
      * This method is called after each update or when the start method is
      * completed.
      *
@@ -290,10 +267,20 @@ var AbstractController = Widget.extend({
             model: this.modelName,
         });
     },
+    /**
+     * When a user clicks on an <a> link with type="action", we need to actually
+     * do the action. This kind of links is used a lot in no-content helpers.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onActionClicked: function (event) {
+        event.preventDefault();
+        this.do_action(event.target.name);
+    },
 
 });
 
 return AbstractController;
 
 });
-

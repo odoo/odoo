@@ -75,8 +75,14 @@ class MailTracking(models.Model):
         assert type in ('new', 'old')
         result = []
         for record in self:
-            if record.field_type in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+            if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
                 result.append(getattr(record, '%s_value_%s' % (type, record.field_type)))
+            elif record.field_type == 'datetime':
+                if record['%s_value_datetime' % type]:
+                    new_datetime = getattr(record, '%s_value_datetime' % type)
+                    result.append('%sZ' % new_datetime)
+                else:
+                    result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'date':
                 if record['%s_value_datetime' % type]:
                     new_date = datetime.strptime(record['%s_value_datetime' % type], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import controllers
-import models
-import tests
+from . import controllers
+from . import models

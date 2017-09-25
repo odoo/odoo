@@ -6,8 +6,8 @@
     <a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
     <a class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
 </t>
-<t t-name="website.TranslatorDialog">
-    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+<t t-name="web_editor.TranslatorInfoDialog">
+    <div class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -21,7 +21,7 @@
                             Here are the visuals used to help you translate efficiently:
                             <ul class="oe_translate_examples">
                                 <li style="background:#ffffb6;">
-                                    Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
+                                    Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation.
                                 </li>
                                 <li data-oe-translation-state="inprogress">
                                     Translation in process (Gengo)
@@ -54,7 +54,7 @@
 </t>
 
 <t t-name="website.GengoTranslatorPostDialog">
-    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+    <div class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,7 +81,7 @@
 </t>
 
 <t t-name="website.GengoTranslatorStatisticDialog">
-    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+    <div class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -106,7 +106,7 @@
     </div>
 </t>
 <t t-name="website.GengoApiConfigDialog">
-    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+    <div class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -123,7 +123,7 @@
                                     <label  class="control-label">Public key</label>
                                 </h4>
                                 <input type="text" class="form-control url url-source" id="gengo_public_key" placeholder="Paste public key here"/>
-                
+
                             </li>
                             <li class="list-group-item form-group gengo_group_private">
                                 <h4 class="list-group-item-heading">

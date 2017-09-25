@@ -33,3 +33,9 @@ class ProductWishlist(models.Model):
             'product_id': product_id,
         })
         return wish
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    wishlist_ids = fields.One2many('product.wishlist', 'partner_id', string='Wishlist', domain=[('active', '=', True)])

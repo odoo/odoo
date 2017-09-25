@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+import base64
 import re
 from collections import OrderedDict
+from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
-from cStringIO import StringIO
 import babel
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
-from .qweb import unicodifier
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def nl2br(string):
     :param str string:
     :rtype: unicode
     """
-    return unicodifier(string).replace(u'\n', u'<br>\n')
+    return pycompat.to_text(string).replace(u'\n', u'<br>\n')
 
 def html_escape(string, options):
     """ Automatically escapes content unless options['html-escape']
@@ -88,13 +88,14 @@ class FieldConverter(models.AbstractModel):
         Converts a single value to its HTML version/output
         :rtype: unicode
         """
-        return html_escape(unicodifier(value) or u'', options)
+        return html_escape(pycompat.to_text(value), options)
 
     @api.model
     def record_to_html(self, record, field_name, options):
         """ record_to_html(record, field_name, options)
 
-        Converts the specified field of the browse_record ``record`` to HTML
+        Converts the specified field of the ``record`` to HTML
+
         :rtype: unicode
         """
         if not record:
@@ -110,7 +111,7 @@ class FieldConverter(models.AbstractModel):
         in the user's context. Fallbacks to en_US if no lang is present in the
         context *or the language code is not valid*.
 
-        :returns: res.lang browse_record
+        :returns: Model[res.lang]
         """
         lang_code = self._context.get('lang') or 'en_US'
         return self.env['res.lang']._lang_get(lang_code)
@@ -122,7 +123,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
+        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
 
 
 class FloatConverter(models.AbstractModel):
@@ -151,7 +152,7 @@ class FloatConverter(models.AbstractModel):
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
 
-        return unicodifier(formatted)
+        return pycompat.to_text(formatted)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -181,7 +182,7 @@ class DateTimeConverter(models.AbstractModel):
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
 
         value = fields.Datetime.context_timestamp(self, value)
@@ -199,7 +200,7 @@ class DateTimeConverter(models.AbstractModel):
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
-        return unicodifier(babel.dates.format_datetime(value, format=pattern, locale=locale))
+        return pycompat.to_text(babel.dates.format_datetime(value, format=pattern, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -222,7 +223,7 @@ class SelectionConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return html_escape(unicodifier(options['selection'][value]) or u'', options)
+        return html_escape(pycompat.to_text(options['selection'][value]) or u'', options)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -251,7 +252,7 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(value) or u''
+        return pycompat.to_text(value)
 
 
 class ImageConverter(models.AbstractModel):
@@ -268,15 +269,15 @@ class ImageConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        try:
-            image = Image.open(StringIO(value.decode('base64')))
+        try: # FIXME: maaaaaybe it could also take raw bytes?
+            image = Image.open(BytesIO(base64.b64decode(value)))
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return unicodifier('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+        return u'<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii'))
 
 
 class MonetaryConverter(models.AbstractModel):
@@ -330,7 +331,7 @@ class MonetaryConverter(models.AbstractModel):
         if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
             options['display_currency'] = record[field.currency_field]
 
-        return self.value_to_html(record[field_name], options)
+        return super(MonetaryConverter, self).record_to_html(record, field_name, options)
 
 TIMEDELTA_UNITS = (
     ('year',   3600 * 24 * 365),
@@ -397,19 +398,41 @@ class RelativeDatetimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         locale = babel.Locale.parse(self.user_lang().code)
 
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
         reference = fields.Datetime.from_string(options['now'])
 
-        return unicodifier(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
+        return pycompat.to_text(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
 
     @api.model
     def record_to_html(self, record, field_name, options):
         if 'now' not in options:
             options = dict(options, now=record._fields[field_name].now())
         return super(RelativeDatetimeConverter, self).record_to_html(record, field_name, options)
+
+
+class BarcodeConverter(models.AbstractModel):
+    """ ``barcode`` widget rendering, inserts a data:uri-using image tag in the
+    document. May be overridden by e.g. the website module to generate links
+    instead.
+    """
+    _name = 'ir.qweb.field.barcode'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def value_to_html(self, value, options=None):
+        barcode_type = options.get('type', 'Code128')
+        barcode = self.env['ir.actions.report'].barcode(
+            barcode_type,
+            value,
+            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
+        return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
+
+    @api.model
+    def from_html(self, model, field, element):
+        return None
 
 
 class Contact(models.AbstractModel):
@@ -421,7 +444,7 @@ class Contact(models.AbstractModel):
         if not value.exists():
             return False
 
-        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]
 
@@ -430,7 +453,6 @@ class Contact(models.AbstractModel):
             'address': escape("\n".join(name_get.split("\n")[1:])).strip(),
             'phone': value.phone,
             'mobile': value.mobile,
-            'fax': value.fax,
             'city': value.city,
             'country_id': value.country_id.display_name,
             'website': value.website,
@@ -459,4 +481,4 @@ class QwebView(models.AbstractModel):
 
         view = view.with_context(object=record)
 
-        return unicodifier(view.render(view._context, engine='ir.qweb'))
+        return pycompat.to_text(view.render(view._context, engine='ir.qweb'))

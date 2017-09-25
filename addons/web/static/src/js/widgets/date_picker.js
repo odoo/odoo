@@ -12,10 +12,13 @@ var DateWidget = Widget.extend({
     template: "web.datepicker",
     type_of_date: "date",
     events: {
-        'dp.change': 'change_datetime',
-        'dp.show': 'set_datetime_default',
-        'change .o_datepicker_input': 'change_datetime',
+        'dp.change': 'changeDatetime',
+        'dp.show': '_onShow',
+        'change .o_datepicker_input': 'changeDatetime',
     },
+    /**
+     * @override
+     */
     init: function(parent, options) {
         this._super.apply(this, arguments);
 
@@ -39,8 +42,13 @@ var DateWidget = Widget.extend({
             locale : moment.locale(),
             allowInputToggle: true,
             keyBinds: null,
+            widgetParent: 'body',
+            useCurrent: false,
         });
     },
+    /**
+     * @override
+     */
     start: function() {
         this.$input = this.$('input.o_datepicker_input');
         this.$input.focus(function(e) {
@@ -49,65 +57,126 @@ var DateWidget = Widget.extend({
         this.$input.datetimepicker(this.options);
         this.picker = this.$input.data('DateTimePicker');
         this.$input.click(this.picker.toggle.bind(this.picker));
-        this.set_readonly(false);
+        this._setReadonly(false);
     },
-    set_value: function(value) {
-        this.set({'value': value});
-        var formatted_value = value ? this.format_client(value) : null;
-        this.$input.val(formatted_value);
-        if (this.picker) {
-            this.picker.date(formatted_value);
+    /**
+     * @override
+     */
+    destroy: function() {
+        this.picker.destroy();
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * set datetime value
+     */
+    changeDatetime: function () {
+        if (this.isValid()) {
+            var oldValue = this.getValue();
+            this._setValueFromUi();
+            var newValue = this.getValue();
+
+            if (!oldValue !== !newValue || oldValue && newValue && !oldValue.isSame(newValue)) {
+                // The condition is strangely written; this is because the
+                // values can be false/undefined
+                this.trigger("datetime_changed");
+            }
         }
     },
-    get_value: function() {
-        return this.get('value').clone();
+    /**
+     * @returns {Moment|false}
+     */
+    getValue: function () {
+        var value = this.get('value');
+        return value && value.clone();
     },
-    set_value_from_ui: function() {
-        var value = this.$input.val() || false;
-        this.set_value(this.parse_client(value));
-    },
-    set_readonly: function(readonly) {
-        this.readonly = readonly;
-        this.$input.prop('readonly', this.readonly);
-    },
-    is_valid: function() {
+    /**
+     * @returns {boolean}
+     */
+    isValid: function () {
         var value = this.$input.val();
         if(value === "") {
             return true;
         } else {
             try {
-                this.parse_client(value);
+                this._parseClient(value);
                 return true;
             } catch(e) {
                 return false;
             }
         }
     },
-    parse_client: function(v) {
-        return field_utils.parse[this.type_of_date](v, {timezone: false});
+    /**
+     * @param {Moment|false} value
+     */
+    setValue: function (value) {
+        this.set({'value': value});
+        var formatted_value = value ? this._formatClient(value) : null;
+        this.$input.val(formatted_value);
+        if (this.picker) {
+            this.picker.date(value || null);
+        }
     },
-    format_client: function(v) {
-        return field_utils.format[this.type_of_date](v, {timezone: false});
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Moment} v
+     * @returns {string}
+     */
+    _formatClient: function (v) {
+        return field_utils.format[this.type_of_date](v, null, {timezone: false});
     },
-    set_datetime_default: function() {
+    /**
+     * @private
+     * @param {string|false} v
+     * @returns {Moment}
+     */
+    _parseClient: function (v) {
+        return field_utils.parse[this.type_of_date](v, null, {timezone: false});
+    },
+    /**
+     * @private
+     * @param {boolean} readonly
+     */
+    _setReadonly: function (readonly) {
+        this.readonly = readonly;
+        this.$input.prop('readonly', this.readonly);
+    },
+    /**
+     * set the value from the input value
+     *
+     * @private
+     */
+    _setValueFromUi: function() {
+        var value = this.$input.val() || false;
+        this.setValue(this._parseClient(value));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * set the date of the picker by the current date or the today date
+     *
+     * @private
+     */
+    _onShow: function () {
         //when opening datetimepicker the date and time by default should be the one from
         //the input field if any or the current day otherwise
-        var value = moment().second(0);
-        if(this.$input.val().length !== 0 && this.is_valid()) {
-            value = this.$input.val();
+        if(this.$input.val().length !== 0 && this.isValid()) {
+            var value = this._parseClient(this.$input.val());
+            this.picker.date(value);
+            this.$input.select();
         }
-
-        this.picker.date(value);
-    },
-    change_datetime: function() {
-        if(this.is_valid()) {
-            this.set_value_from_ui();
-            this.trigger("datetime_changed");
-        }
-    },
-    destroy: function() {
-        this.picker.destroy();
-        this._super.apply(this, arguments);
     },
 });
 

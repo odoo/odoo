@@ -1,3 +1,4 @@
+(function() {var define = ace.define, require = ace.require;
 define("ace/mode/less", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/tokenizer", "ace/mode/less_highlight_rules", "ace/mode/matching_brace_outdent", "ace/mode/folding/cstyle"], function(e, t) {
     var r = e("../lib/oop"),
         o = e("./text").Mode,
@@ -204,3 +205,4 @@ define("ace/mode/less", ["require", "exports", "module", "ace/lib/oop", "ace/mod
         }
     }).call(o.prototype)
 });
+})();

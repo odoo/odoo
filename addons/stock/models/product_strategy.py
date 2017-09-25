@@ -17,26 +17,17 @@ class PutAwayStrategy(models.Model):
     _description = 'Put Away Strategy'
 
     name = fields.Char('Name', required=True)
-    method = fields.Selection('_get_putaway_options', "Method", default='fixed', required=True)
     fixed_location_ids = fields.One2many(
         'stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', copy=True,
         help="When the method is fixed, this location will be used to store the products")
 
-    def _get_putaway_options(self):
-        return [('fixed', 'Fixed Location')]
-
-    def _putaway_apply_fixed(self, product):
+    def putaway_apply(self, product):
         for strat in self.fixed_location_ids:
             categ = product.categ_id
             while categ:
                 if strat.category_id.id == categ.id:
-                    return strat.fixed_location_id.id
+                    return strat.fixed_location_id
                 categ = categ.parent_id
-        return self.env['stock.location']
-
-    def putaway_apply(self, product):
-        if hasattr(self, '_putaway_apply_%s' % (self.method)):
-            return getattr(self, '_putaway_apply_%s' % (self.method))(product)
         return self.env['stock.location']
 
 

@@ -2,6 +2,7 @@ odoo.define('web.CalendarModel', function (require) {
 "use strict";
 
 var AbstractModel = require('web.AbstractModel');
+var Context = require('web.Context');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
@@ -16,7 +17,7 @@ var scales = [
 ];
 
 function dateToServer (date) {
-    return date.clone().utc().format('YYYY-MM-DD HH:mm:ss');
+    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
 
 return AbstractModel.extend({
@@ -38,39 +39,47 @@ return AbstractModel.extend({
         var start = event.start.clone();
         var end = event.end && event.end.clone();
 
-        if (!end || end.diff(start) < 0) {
-            end = start.clone().add(1, 'h');
+        // Detects allDay events (86400000 = 1 day in ms)
+        if (event.allDay || (end && end.diff(start) % 86400000 === 0)) {
+            event.allDay = true;
         }
 
-        if (event.allDay || end.diff(start) % 86400000 === 0) {
-            event.allDay = true;
+        // Set end date if not existing
+        if (!end || end.diff(start) < 0) { // undefined or invalid end date
+            if (event.allDay) {
+                end = start.clone();
+            } else {
+                // in week mode or day mode, convert allday event to event
+                end = start.clone().add(2, 'h');
+            }
+        } else if (event.allDay) {
+            // For an "allDay", FullCalendar gives the end day as the
+            // next day at midnight (instead of 23h59).
+            end.add(-1, 'days');
+        }
 
-            if (this.scale === 'month') {
+        // An "allDay" event without the "all_day" option is not considered
+        // as a 24h day. It's just a part of the day (by default: 7h-19h).
+        if (event.allDay) {
+            if (!this.mapping.all_day) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
                          .seconds(event.r_start.seconds())
                          .utc();
-                    end.add(-1, 'days')
-                       .hours(event.r_end.hours())
+                    end.hours(event.r_end.hours())
                        .minutes(event.r_end.minutes())
                        .seconds(event.r_end.seconds())
                        .utc();
                 } else {
-                    start.utc();
-                    end.utc();
+                    // default hours in the user's timezone
+                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
+                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
                 }
-            } else if (this.mapping.all_day) {
-                start.startOf('day');
-                end.startOf('day').add(-1, 'days');
-            } else {
-                // default hours in the user's timezone
-                start.hours(7).add(-this.getSession().tzOffset, 'minutes');
-                end.hours(19).add(-this.getSession().tzOffset, 'minutes');
             }
         } else {
-            start.add(-this.getSession().tzOffset, 'minutes');
-            end.add(-this.getSession().tzOffset, 'minutes');
+            start.add(-this.getSession().getTZOffset(start), 'minutes');
+            end.add(-this.getSession().getTZOffset(end), 'minutes');
         }
 
         if (this.mapping.all_day) {
@@ -136,7 +145,7 @@ return AbstractModel.extend({
                 model: this.modelName,
                 method: 'create',
                 args: [data],
-                context: _.pick(event.data.options, 'context'),
+                context: event.data.options.context,
             });
     },
     /**
@@ -187,7 +196,7 @@ return AbstractModel.extend({
         this.eventLimit = params.eventLimit;
 
         // fields to display color, e.g.: user_id.partner_id
-        this.field_color = params.field_color;
+        this.fieldColor = params.fieldColor;
         if (!this.preload_def) {
             this.preload_def = $.Deferred();
             $.when(
@@ -207,7 +216,7 @@ return AbstractModel.extend({
             filters: params.filters,
         };
 
-        // Use scale_zoom attribute in xml file to specify zoom timeline (day,week,month)
+        // Use mode attribute in xml file to specify zoom timeline (day,week,month)
         // by default month.
         this.setDate(params.initialDate, true);
         this.setScale(params.mode);
@@ -280,6 +289,7 @@ return AbstractModel.extend({
     /**
      * @param {Object} record
      * @param {integer} record.id
+     * @returns {Deferred}
      */
     updateRecord: function (record) {
         // Cannot modify actual name yet
@@ -289,10 +299,12 @@ return AbstractModel.extend({
                 data[k] = dateToServer(data[k]);
             }
         }
+        var context = new Context(this.data.context, {from_ui: true});
         return this._rpc({
             model: this.modelName,
             method: 'write',
-            args: [record.id, data],
+            args: [[record.id], data],
+            context: context
         });
     },
 
@@ -300,44 +312,38 @@ return AbstractModel.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Converts this.data.filters into a domain
+     *
+     * @private
+     * @returns {Array}
+     */
     _getFilterDomain: function () {
-        var domain = [];
-        _.each(this.data.filters, function (filter) {
-            if (filter.all) return;
-            var nb = {};
-            var not = {};
-            var contains = {};
-            _.each(filter.filters, function (f) {
-                if (!contains[filter.fieldName]) {
-                    contains[filter.fieldName] = [];
-                    not[filter.fieldName] = [];
-                    nb[filter.fieldName] = 0;
-                }
-                if (f.value === 'all' && f.active) {
-                    contains[filter.fieldName].all = true;
-                } else {
-                    nb[filter.fieldName]++;
-                }
+        // List authorized values for every field
+        // fields with an active 'all' filter are skipped
+        var authorizedValues = {};
 
-                if (f.active && contains[filter.fieldName].indexOf(f.value) === -1) {
-                    contains[filter.fieldName].push(f.value);
-                }
-                if (!f.active && not[filter.fieldName].indexOf(f.value) === -1) {
-                    not[filter.fieldName].push(f.value);
+        _.each(this.data.filters, function (filter) {
+            // Skip 'all' filters because they do not affect the domain
+            if (filter.all) return;
+
+            // Loop over subfilters to complete authorizedValues
+            _.each(filter.filters, function (f) {
+                if (!authorizedValues[filter.fieldName])
+                    authorizedValues[filter.fieldName] = [];
+
+                if (f.active) {
+                    authorizedValues[filter.fieldName].push(f.value);
                 }
             });
-
-            for (var field in contains) {
-                if (contains[field].all || contains[field].length === nb[field]) {
-                    continue;
-                }
-                if (contains[field].length) {
-                    domain.push([field, 'in', contains[field]]);
-                } else if (not[field].length && not[field].length !== nb[field]) {
-                    domain.push([field, 'not in', not[field]]);
-                }
-            }
         });
+
+        // Compute the domain
+        var domain = [];
+        for (var field in authorizedValues) {
+            domain.push([field, 'in', authorizedValues[field]]);
+        }
+
         return domain;
     },
     /**
@@ -354,21 +360,22 @@ return AbstractModel.extend({
             navLinks: false,
             eventLimit: this.eventLimit, // allow "more" link when too many events
             snapMinutes: 15,
+            longPressDelay: 500,
             eventResizableFromStart: true,
-            weekNumberCalculation: function (date) {
-                return moment(date).week();
-            },
+            weekNumbers: true,
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
             views: {
                 week: {
                     columnFormat: 'ddd ' + time.strftime_to_moment_format(_t.database.parameters.date_format),
+                    titleFormat: time.strftime_to_moment_format(_t.database.parameters.time_format),
                 }
             },
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
+            firstDay: moment().startOf('week').isoWeekday(),
         };
     },
     _getRangeDomain: function () {
@@ -399,14 +406,15 @@ return AbstractModel.extend({
                     context: self.data.context,
                     fields: self.fieldNames,
                     domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain())
-                })
-                .then(function (events) {
-                    self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
-                    return $.when(
-                        self._loadColors(self.data, self.data.data),
-                        self._loadRecordsToFilters(self.data, self.data.data)
-                    );
-                });
+            })
+            .then(function (events) {
+                self._parseServerData(events);
+                self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
+                return $.when(
+                    self._loadColors(self.data, self.data.data),
+                    self._loadRecordsToFilters(self.data, self.data.data)
+                );
+            });
         });
     },
     /**
@@ -415,8 +423,8 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadColors: function (element, events) {
-        if (this.field_color) {
-            var fieldName = this.field_color;
+        if (this.fieldColor) {
+            var fieldName = this.fieldColor;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
                 event.color_index = _.isArray(value) ? value[0] : value;
@@ -561,8 +569,21 @@ return AbstractModel.extend({
                 if (filter.filters.length && (filter.filters[0].avatar_model in to_read)) {
                     _.each(filter.filters, function (f) {
                         f.label = to_read[f.avatar_model][f.value];
-                    });   
+                    });
                 }
+            });
+        });
+    },
+    /**
+     * parse the server values to javascript framwork
+     *
+     * @param {Object} data the server data to parse
+     */
+    _parseServerData: function (data) {
+        var self = this;
+        _.each(data, function(event) {
+            _.each(self.fieldNames, function (fieldName) {
+                event[fieldName] = self._parseServerValue(self.fields[fieldName], event[fieldName]);
             });
         });
     },
@@ -578,32 +599,33 @@ return AbstractModel.extend({
             attendees = [];
 
         if (!all_day) {
-            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start]);
-            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop]) : null;
+            date_start = evt[this.mapping.date_start].clone();
+            date_stop = this.mapping.date_stop ? evt[this.mapping.date_stop].clone() : null;
         } else {
-            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start].split(' ')[0]);
-            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop].split(' ')[0]) : null;
+            date_start = evt[this.mapping.date_start].clone().startOf('day');
+            date_stop = this.mapping.date_stop ? evt[this.mapping.date_stop].clone().startOf('day') : null;
         }
 
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
-        date_start.add(this.getSession().tzOffset, 'minutes');
-        date_stop.add(this.getSession().tzOffset, 'minutes');
+        date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
+        date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
 
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');
         }
-
+        var isAllDay = this.fields[this.mapping.date_start].type === 'date' ||
+                        this.mapping.all_day && evt[this.mapping.all_day] || false;
         var r = {
             'record': evt,
             'start': date_start,
             'end': date_stop,
-            'r_start':date_start.clone(),
-            'r_end':date_stop.clone(),
+            'r_start': date_start,
+            'r_end': date_stop,
             'title': the_title,
-            'allDay': this.mapping.all_day && evt[this.mapping.all_day] || false,
+            'allDay': isAllDay,
             'id': evt.id,
             'attendees':attendees,
         };
@@ -612,6 +634,10 @@ return AbstractModel.extend({
             // r.start = date_start.format('YYYY-MM-DD');
             // r.end = date_stop.format('YYYY-MM-DD');
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
+            // In month, FullCalendar gives the end day as the
+            // next day at midnight (instead of 23h59).
+            date_stop.add(1, 'days');
+
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;

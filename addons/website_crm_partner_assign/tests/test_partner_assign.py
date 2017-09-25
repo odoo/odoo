@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from mock import patch
 from odoo.exceptions import AccessError
 
 from odoo.tests.common import TransactionCase
@@ -8,6 +9,24 @@ from odoo.addons.crm.tests.common import TestCrmCases
 
 
 class TestPartnerAssign(TransactionCase):
+
+    def setUp(self):
+        super(TestPartnerAssign, self).setUp()
+
+        def geo_find(addr):
+            return {
+                'Wavre, Belgium': (50.7158956, 4.6128075),
+                'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
+            }.get(addr)
+
+        patcher = patch('odoo.addons.base_geolocalize.models.res_partner.geo_find', wraps=geo_find)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+        patcher = patch('odoo.addons.website_crm_partner_assign.models.crm_lead.geo_find',
+                        wraps=geo_find)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
@@ -78,11 +97,14 @@ class TestPartnerLeadPortal(TestCrmCases):
 
     def test_partner_lead_accept(self):
         """ Test an integrating partner accepting the lead """
+        team_before = self.lead.team_id
+        user_before = self.lead.user_id
+
         self.lead.sudo(self.portal_user.id).partner_interested(comment="Oh yeah, I take that lead !")
 
         self.assertEqual(self.lead.type, 'opportunity', 'Bad Type: accepted lead by portal user should become an opportunity.')
-        self.assertFalse(self.lead.team_id, 'Accepting lead does not change the sales team.')
-        self.assertFalse(self.lead.user_id, 'Accepting lead does not change the salesman.')
+        self.assertEqual(self.lead.team_id, team_before, 'Accepting lead does not change the sales team.')
+        self.assertEqual(self.lead.user_id, user_before, 'Accepting lead does not change the salesman.')
 
     def test_partner_lead_decline(self):
         """ Test an integrating partner decline the lead """

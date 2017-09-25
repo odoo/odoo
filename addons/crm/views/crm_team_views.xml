@@ -5,7 +5,7 @@
         <record id="crm_case_form_view_salesteams_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
@@ -59,7 +59,7 @@
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.opportunity.report</field>
            <field name="context">{"search_default_month":1}</field>
-           <field name="view_mode">pivot,graph</field>
+           <field name="view_mode">graph,pivot</field>
            <field name="view_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
            <field name="domain">[('type', '=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="context">{'active_test': True}</field>
@@ -69,7 +69,7 @@
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.opportunity.report</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="crm.crm_opportunity_report_view_pivot"/>
             <field name="domain">[('type', '=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="context">{'active_test': True}</field>
@@ -108,6 +108,18 @@
                             string="Accept Emails From"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
+                    <field name="dashboard_graph_period" position="attributes">
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
+                    </field>
+                    <field name="dashboard_graph_period" position="after">
+                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
+                    </field>
+                    <field name="dashboard_graph_group" position="attributes">
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
+                    </field>
+                    <field name="dashboard_graph_group" position="after">
+                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
+                    </field>
                 </field>
             </record>
 
@@ -172,7 +184,7 @@
                         <field name="use_opportunities"/>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_primary')]" position="after">
+                    <xpath expr="//div[hasclass('o_primary')]" position="after">
                         <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
                             <small><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
@@ -200,7 +212,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -213,7 +225,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
                         <div t-if="record.use_opportunities.raw_value">
                             <a  name="%(action_opportunity_form)d" type="action">
                                 Opportunity
@@ -221,7 +233,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads

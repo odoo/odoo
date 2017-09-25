@@ -6,6 +6,7 @@ odoo.define('web.upgrade_widgets', function (require) {
  *  When checked, an upgrade popup is showed to the user.
  */
 
+var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -51,13 +52,14 @@ var AbstractFieldUpgrade = {
      *
      * @abstract
      * @private
-     * @param {JQuery} the 'Enterprise' label to insert
+     * @param {jQuery} $enterpriseLabel the 'Enterprise' label to insert
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {},
+    _insertEnterpriseLabel: function ($enterpriseLabel) {},
     /**
      * Opens the Upgrade dialog.
      *
      * @private
+     * @returns {Dialog} the instance of the opened Dialog
      */
     _openDialog: function () {
         var message = $(QWeb.render('EnterpriseUpgrade'));
@@ -75,7 +77,7 @@ var AbstractFieldUpgrade = {
             },
         ];
 
-        new Dialog(this, {
+        return new Dialog(this, {
             size: 'medium',
             buttons: buttons,
             $content: $('<div>', {
@@ -92,7 +94,7 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this._insertEnterpriseLabel($("<span>", {
             text: "Enterprise",
-            'class': "label label-primary oe_inline"
+            'class': "label label-primary oe_inline o_enterprise_label"
         }));
     },
     /**
@@ -110,7 +112,7 @@ var AbstractFieldUpgrade = {
 
     /**
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} event
      */
     _onInputClicked: function (event) {
         if ($(event.currentTarget).prop("checked")) {
@@ -121,10 +123,19 @@ var AbstractFieldUpgrade = {
 };
 
 var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
-    events: _.extend({}, FieldBoolean.prototype.events, {
+    supportedFieldTypes: [],
+    events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClicked',
     }),
-    supported_field_types: [],
+    /**
+     * Re-renders the widget with the label
+     *
+     * @param {jQuery} $label
+     */
+    renderWithLabel: function ($label) {
+        this.$label = $label;
+        this._render();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -134,8 +145,9 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
      * @override
      * @private
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {
-        this.$el.append('&nbsp;').append($enterprise_label);
+    _insertEnterpriseLabel: function ($enterpriseLabel) {
+        var $el = this.$label || this.$el;
+        $el.append('&nbsp;').append($enterpriseLabel);
     },
     /**
      * @override
@@ -147,10 +159,10 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
 });
 
 var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
+    supportedFieldTypes: [],
     events: _.extend({}, FieldRadio.prototype.events, {
         'click input:last': '_onInputClicked',
     }),
-    supported_field_types: [],
 
     //--------------------------------------------------------------------------
     // Public
@@ -168,8 +180,8 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
      * @override
      * @private
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {
-        this.$('label').last().append('&nbsp;').append($enterprise_label);
+    _insertEnterpriseLabel: function ($enterpriseLabel) {
+        this.$('label').last().append('&nbsp;').append($enterpriseLabel);
     },
     /**
      * @override
@@ -179,7 +191,6 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
         this.$('input').first().prop("checked", true).click();
     },
 });
-
 
 field_registry
     .add('upgrade_boolean', UpgradeBoolean)

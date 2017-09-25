@@ -3,13 +3,6 @@
 
     .o_website_dashboard {
         background-color: #ececec;
-        padding: 16px;
-
-        > div {
-            margin-right: 0px;
-            margin-left: 0px;
-        }
-
         div.o_box {
             .clearfix();
             color: @odoo-main-color-muted;
@@ -28,7 +21,7 @@
             h4 { margin: 0 0 0 8px; }
 
             h2, h4 { color: @odoo-brand-primary; }
-            
+
             .col-md-5, .col-md-7 {
                 padding: 15px;
 
@@ -51,7 +44,7 @@
 
                     th {
                         text-transform: uppercase;
-                        color: @odoo-brand-optional;
+                        color: @odoo-main-text-color;
                         border-top-width: 0px;
                     }
                     td, th {
@@ -90,7 +83,7 @@
                     }
 
                     .nv-groups .nv-point, g circle {
-                        fill: @odoo-brand-optional;                        
+                        fill: @odoo-brand-optional;
                     }
 
                     .nv-groups .nv-point {
@@ -144,6 +137,7 @@
                 height: 80px;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
                 &.o_main {
                     background-color: @odoo-brand-optional;
                     &:hover {
@@ -282,6 +276,7 @@
 
         tr.o_product_template {
             cursor: pointer;
+            color: @odoo-main-text-color;
         }
 
         .o_loader {

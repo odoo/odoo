@@ -12,12 +12,14 @@
                     </div>
                     <group>
                         <group>
+                            <field name="category" invisible="1"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
+                            <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="days"/>
                         </group>
                         <group>
-                            <field name="summary"/>
+                            <field name="next_type_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                 </sheet>
@@ -60,10 +62,24 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
-                    <group>
+                    <group invisible="1">
+                        <field name="activity_category" invisible="1" />
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="previous_activity_type_id"/>
+                        <field name="has_recommended_activities"/>
+                    </group>
+                    <group attrs="{'invisible': [('has_recommended_activities','=',False)]}">
+                        <div>
+                            <p><strong>Recommended Activities</strong></p>
+                            <field name="recommended_activity_type_id" widget="radio"
+                                domain="[('previous_type_ids', '=', previous_activity_type_id)]"
+                                options="{'horizontal':true}"
+                                nolabel="1"/>
+                        </div>
+                    </group>
+                    <group>
                         <group>
                             <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
                             <field name="summary" placeholder="e.g. Discuss proposal"/>
@@ -97,15 +113,15 @@
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                         domain="[('create_uid', '=', uid)]"/>
-                <filter string="Today Activities" name="activities_today"
-                        domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                <filter string="Overdue Activities" name="activities_overdue"
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Deadline" context="{'group_by': 'date_deadline'}"/>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_hryearlysalary">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
     <t t-foreach="docs" t-as="o">
       <t t-foreach="get_employee(data['form'])" t-as="employee">
-        <t t-call="report.internal_layout">
+        <t t-call="web.internal_layout">
             <div class="page">
                     <h2><span t-field="employee.company_id"/></h2>
                     <p> From 

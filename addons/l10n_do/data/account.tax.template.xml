@@ -23,6 +23,7 @@
             <field name="type_tax_use">sale</field>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_V_EXENTA')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_0_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -34,6 +35,7 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_EXENTA')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_18_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -47,6 +49,7 @@
             <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_sale_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -60,6 +63,7 @@
             <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -73,6 +77,7 @@
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_18_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -86,6 +91,7 @@
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_purch_serv" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -99,6 +105,7 @@
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_purch_serv_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -112,6 +119,7 @@
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_importation" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -125,6 +133,7 @@
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_IMP_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_18"/>
         </record>
         <record id="tax_18_of_10" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -137,6 +146,7 @@
             <field name="account_id" ref="do_niif_11080101"/>
             <field name="refund_account_id" ref="do_niif_11080302"/>
             <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_0015_bank" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -149,6 +159,7 @@
             <field name="account_id" ref="do_niif_52070200"/>
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="1" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_itbis_00015"/>
         </record>
         <record id="tax_10_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -162,6 +173,7 @@
             <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_TELE_ISC')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_2_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -175,6 +187,7 @@
             <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_TELE_CDT')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_group_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -184,6 +197,7 @@
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_10_telco'), ref('tax_2_telco')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -197,6 +211,7 @@
             <field name="refund_account_id" ref="do_niif_21030203"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_retencion_18"/>
         </record>
         <record id="ret_100_tax_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -210,6 +225,7 @@
             <field name="refund_account_id" ref="do_niif_21030202"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ITBIS_18')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="ret_30_tax_moral" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -222,6 +238,7 @@
             <field name="account_id" ref="do_niif_21030201"/>
             <field name="refund_account_id" ref="do_niif_21030201"/>
             <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="ret_30_tax_freelance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -234,6 +251,7 @@
             <field name="account_id" ref="do_niif_21030204"/>
             <field name="refund_account_id" ref="do_niif_21030204"/>
             <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_retencion_54"/>
         </record>
         <record id="ret_75_tax_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -246,6 +264,7 @@
             <field name="account_id" ref="do_niif_21030205"/>
             <field name="refund_account_id" ref="do_niif_21030205"/>
             <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="ret_10_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -259,6 +278,7 @@
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_10_income_rent" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -272,6 +292,7 @@
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_10_income_dividend" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -285,6 +306,7 @@
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_2_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -298,6 +320,7 @@
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="ret_2_income_transfer" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -311,6 +334,7 @@
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
+            <field name="tax_group_id" ref="tax_group_retencion_2"/>
         </record>
         <record id="ret_27_income_remittance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -323,6 +347,7 @@
             <field name="account_id" ref="do_niif_21030307"/>
             <field name="refund_account_id" ref="do_niif_11080303"/>
             <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_retencion_27"/>
         </record>
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -332,6 +357,7 @@
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('ret_75_tax_nonformal'), ref('tax_18_purch')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_group_person_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -341,6 +367,7 @@
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_of_10'), ref('ret_2_income_person'), ref('ret_100_tax_person')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_group_moral_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -350,6 +377,7 @@
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('ret_30_tax_moral'), ref('tax_18_of_10')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -359,6 +387,7 @@
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('ret_2_income_person'), ref('ret_100_tax_person')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="tax_group_itbis_0"/>
         </record>
     </data>
 </odoo>

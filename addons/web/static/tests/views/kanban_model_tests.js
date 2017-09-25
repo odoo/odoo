@@ -55,6 +55,7 @@ QUnit.module('Views', {
             limit: 40,
             modelName: 'partner',
             openGroupByDefault: true,
+            viewType: 'kanban',
         };
     }
 }, function () {
@@ -62,7 +63,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanModel');
 
     QUnit.test('load grouped + add a new group', function (assert) {
-        assert.expect(20);
+        assert.expect(22);
 
         var calledRoutes = {};
         var model = createModel({
@@ -87,7 +88,8 @@ QUnit.module('Views', {
             // various checks on the load result
             var state = model.get(resultID);
             assert.ok(_.isEqual(state.groupedBy, ['product_id']), 'should be grouped by "product_id"');
-            assert.strictEqual(state.count, 2, 'should have found 2 groups');
+            assert.strictEqual(state.data.length, 2, 'should have found 2 groups');
+            assert.strictEqual(state.count, 2, 'both groups contain one record');
             var xphoneGroup = _.findWhere(state.data, {res_id: 37});
             assert.strictEqual(xphoneGroup.model, 'partner', 'group should have correct model');
             assert.ok(xphoneGroup, 'should have a group for res_id 37');
@@ -102,7 +104,8 @@ QUnit.module('Views', {
             // add a new group
             model.createGroup('xpod', resultID);
             state = model.get(resultID);
-            assert.strictEqual(state.count, 3, 'should now have 3 groups');
+            assert.strictEqual(state.data.length, 3, 'should now have 3 groups');
+            assert.strictEqual(state.count, 2, 'there are still 2 records');
             var xpodGroup = _.findWhere(state.data, {value: 'xpod'});
             assert.strictEqual(xpodGroup.model, 'partner', 'new group should have correct model');
             assert.ok(xpodGroup, 'should have an "xpod" group');
@@ -246,7 +249,48 @@ QUnit.module('Views', {
                 model.destroy();
                 done();
             });
+    });
 
+    QUnit.test('add record to group', function (assert) {
+        assert.expect(8);
+
+        var self = this;
+        var model = createModel({
+            Model: KanbanModel,
+            data: this.data,
+        });
+        var params = _.extend(this.params, {
+            groupedBy: ['product_id'],
+            fieldNames: ['foo'],
+        });
+
+        model.load(params).then(function (stateID) {
+            self.data.partner.records.push({id: 3, foo: 'new record', product_id: 37});
+
+            var state = model.get(stateID);
+            assert.deepEqual(state.res_ids, [1, 2],
+                "state should have the correct res_ids");
+            assert.strictEqual(state.count, 2,
+                "state should have the correct count");
+            assert.strictEqual(state.data[0].count, 1,
+                "first group should contain one record");
+
+            return model.addRecordToGroup(state.data[0].id, 3).then(function () {
+                var state = model.get(stateID);
+                assert.deepEqual(state.res_ids, [3, 1, 2],
+                    "state should have the correct res_ids");
+                assert.strictEqual(state.count, 3,
+                    "state should have the correct count");
+                assert.deepEqual(state.data[0].res_ids, [3, 1],
+                    "new record's id should have been added to the res_ids");
+                assert.strictEqual(state.data[0].count, 2,
+                    "first group should now contain two records");
+                assert.strictEqual(state.data[0].data[0].data.foo, 'new record',
+                    "new record should have been fetched");
+            });
+        });
+
+        model.destroy();
     });
 });
 

@@ -30,7 +30,7 @@ var GraphController = AbstractController.extend({
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off();
+            this.$buttons.find('button').off().tooltip('destroy');
         }
         this._super.apply(this, arguments);
     },
@@ -39,6 +39,22 @@ var GraphController = AbstractController.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns the current mode, measure and groupbys, so we can restore the
+     * view when we save the current state in the search view, or when we add it
+     * to the dashboard.
+     *
+     * @override
+     * @returns {Object}
+     */
+    getContext: function () {
+        var state = this.model.get();
+        return {
+            graph_measure: state.measure,
+            graph_mode: state.mode,
+            graph_groupbys: state.groupedBy,
+        };
+    },
     /**
      * Render the buttons according to the GraphView.buttons and
      * add listeners on it.
@@ -86,10 +102,20 @@ var GraphController = AbstractController.extend({
         });
     },
     /**
+     * @private
+     */
+    _update: function () {
+        this._updateButtons();
+        return this._super.apply(this, arguments);
+    },
+    /**
      * makes sure that the buttons in the control panel matches the current
      * state (so, correct active buttons and stuff like that)
      */
     _updateButtons: function () {
+        if (!this.$buttons) {
+            return;
+        }
         var state = this.model.get();
         this.$buttons.find('.o_graph_button').removeClass('active');
         this.$buttons

@@ -23,7 +23,7 @@ class MailComposeMessage(models.TransientModel):
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.model in [item[0] for item in self.env['mail.mass_mailing']._get_mailing_model()]:
+                self.env['ir.model'].sudo().search([('model', '=', self.model), ('is_mail_thread', '=', True)], limit=1):
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
                 reply_to_mode = 'email' if self.no_auto_thread else 'thread'
@@ -37,14 +37,32 @@ class MailComposeMessage(models.TransientModel):
                         'reply_to': reply_to,
                         'sent_date': fields.Datetime.now(),
                         'body_html': self.body,
-                        'mailing_model': self.model,
+                        'mailing_model_id': self.env['ir.model']._get(self.model).id,
                         'mailing_domain': self.active_domain,
                 })
+
+            # Preprocess res.partners to batch-fetch from db
+            # if recipient_ids is present, it means they are partners
+            # (the only object to fill get_default_recipient this way)
+            recipient_partners_ids = []
+            read_partners = {}
+            for res_id in res_ids:
+                mail_values = res[res_id]
+                if mail_values.get('recipient_ids'):
+                    # recipient_ids is a list of x2m command tuples at this point
+                    recipient_partners_ids.append(mail_values.get('recipient_ids')[0][1])
+            read_partners = self.env['res.partner'].browse(recipient_partners_ids)
+
+            partners_email = {p.id: p.email for p in read_partners}
+
             blacklist = self._context.get('mass_mailing_blacklist')
             seen_list = self._context.get('mass_mailing_seen_list')
             for res_id in res_ids:
                 mail_values = res[res_id]
-                recips = tools.email_split(mail_values.get('email_to'))
+                if mail_values.get('email_to'):
+                    recips = tools.email_split(mail_values['email_to'])
+                else:
+                    recips = tools.email_split(partners_email.get(res_id))
                 mail_to = recips[0].lower() if recips else False
                 if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
                     # prevent sending to blocked addresses that were included by mistake

@@ -96,6 +96,17 @@ var PivotView = AbstractView.extend({
         this.controllerParams.enableLinking = !arch.attrs.disable_linking;
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
+        // retrieve form and list view ids from the action to open those views
+        // when a data cell of the pivot view is clicked
+        this.controllerParams.views = [
+            _findView(params.action && params.action.views, 'list'),
+            _findView(params.action && params.action.views, 'form'),
+        ];
+        function _findView(views, viewType) {
+            return _.find(views, function (view) {
+                return view[1] === viewType;
+            }) || [false, viewType];
+        }
     },
 });
 

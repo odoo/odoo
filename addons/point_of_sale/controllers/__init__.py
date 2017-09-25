@@ -1,2 +1,2 @@
-import main
-import web_editor
+from . import main
+from . import web_editor

@@ -3,7 +3,7 @@
     <data noupdate="1">
 
          <function id="purchase_default_set"
-            model="ir.values" name="set_default"
+            model="ir.default" name="set"
             eval="('purchase.requisition', 'warehouse_id', ref('stock.warehouse0'))"/>
 
         <record id="type_single" model="purchase.requisition.type">

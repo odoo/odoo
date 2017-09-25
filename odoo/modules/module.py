@@ -23,6 +23,7 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
+from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -78,7 +79,7 @@ class AddonsHook(object):
 
         # execute source in context of module *after* putting everything in
         # sys.modules, so recursive import works
-        execfile(modfile, new_mod.__dict__)
+        exec(open(modfile, 'rb').read(), new_mod.__dict__)
 
         # people import openerp.addons and expect openerp.addons.<module> to work
         setattr(odoo.addons, addon_name, new_mod)
@@ -148,8 +149,8 @@ def initialize_sys_path():
             ad_paths.append(ad)
 
     if not hooked:
-        sys.meta_path.append(AddonsHook())
-        sys.meta_path.append(OdooHook())
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -302,7 +303,7 @@ def load_information_from_description_file(module, mod_path=None):
     :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
     """
     if not mod_path:
-        mod_path = get_module_path(module)
+        mod_path = get_module_path(module, downloaded=True)
     manifest_file = module_manifest(mod_path)
     if manifest_file:
         # default values for descriptor
@@ -323,7 +324,7 @@ def load_information_from_description_file(module, mod_path=None):
             'sequence': 100,
             'summary': '',
         }
-        info.update(itertools.izip(
+        info.update(pycompat.izip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
@@ -395,7 +396,11 @@ def get_modules():
             for mname in MANIFEST_NAMES:
                 if os.path.isfile(opj(dir, name, mname)):
                     return True
-        return map(clean, filter(is_really_module, os.listdir(dir)))
+        return [
+            clean(it)
+            for it in os.listdir(dir)
+            if is_really_module(it)
+        ]
 
     plist = []
     initialize_sys_path()
@@ -429,7 +434,7 @@ def get_test_modules(module):
         mod = importlib.import_module('.tests', modpath)
     except Exception as e:
         # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
+        if not pycompat.text_type(e).startswith(u'No module named'):
             _logger.exception('Can not `import %s`.', module)
         return []
 
@@ -492,7 +497,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(itertools.ifilter(position, tests))
+        suite = unittest.TestSuite(t for t in tests if position(t))
 
         if suite.countTestCases():
             t0 = time.time()
@@ -532,5 +537,5 @@ def unwrap_suite(test):
         return
 
     for item in itertools.chain.from_iterable(
-            itertools.imap(unwrap_suite, subtests)):
+            unwrap_suite(t) for t in subtests):
         yield item

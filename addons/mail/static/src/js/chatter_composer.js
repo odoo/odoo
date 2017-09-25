@@ -33,6 +33,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
         });
+        this.notInline = true;
     },
 
     should_send: function () {
@@ -88,7 +89,7 @@ var ChatterComposer = composer.BasicComposer.extend({
 
     /**
      * Get the list of selected suggested partners
-     * @returns Array() : list of 'recipient' selected partners (may not be created in db)
+     * @returns {Array} list of 'recipient' selected partners (may not be created in db)
      **/
     get_checked_suggested_partners: function () {
         var self = this;
@@ -105,8 +106,8 @@ var ChatterComposer = composer.BasicComposer.extend({
     /**
      * Check the additional partners (not necessary registered partners), and open a popup form view
      * for the ones who informations is missing.
-     * @param Array : list of 'recipient' partners to complete informations or validate
-     * @returns Deferred resolved with the list of checked suggested partners (real partner)
+     * @param {Array} checked_suggested_partners list of 'recipient' partners to complete informations or validate
+     * @returns {Deferred} resolved with the list of checked suggested partners (real partner)
      **/
     check_suggested_partners: function (checked_suggested_partners) {
         var self = this;
@@ -173,7 +174,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                 var new_names_to_find = _.difference(names_to_find, names_to_remove);
                 var def;
                 if (new_names_to_find.length > 0) {
-                    self._rpc({
+                    def = self._rpc({
                             model: self.model,
                             method: 'message_partner_info_from_emails',
                             args: [[self.context.default_res_id], new_names_to_find, true],

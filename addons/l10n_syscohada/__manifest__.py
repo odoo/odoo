@@ -23,8 +23,11 @@ Countries that use OHADA are the following:
     Replica of Democratic Congo, Senegal, Chad, Togo.
     """,
     'website': 'http://www.baamtu.com',
-    'depends' : ['account', 'base_vat'],
+    'depends' : [
+        'account',
+    ],
     'data': [
+        'data/account_data.xml',
         'data/l10n_syscohada_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],

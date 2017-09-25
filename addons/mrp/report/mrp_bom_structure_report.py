@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class BomStructureReport(models.AbstractModel):
-    _name = 'report.mrp.report_mrpbomstructure'
+    _name = 'report.mrp.mrp_bom_structure_report'
 
     def get_children(self, object, level=0):
         result = []
@@ -41,12 +41,11 @@ class BomStructureReport(models.AbstractModel):
         return children
 
     @api.multi
-    def render_html(self, docids, data=None):
-        docargs = {
+    def get_report_values(self, docids, data=None):
+        return {
             'doc_ids': docids,
             'doc_model': 'mrp.bom',
             'docs': self.env['mrp.bom'].browse(docids),
             'get_children': self.get_children,
             'data': data,
         }
-        return self.env['report'].render('mrp.mrp_bom_structure_report', docargs)

@@ -51,4 +51,23 @@
         </field>
     </record>
 
+    <record id="view_res_company_extended_form" model="ir.ui.view">
+        <field name="name">view_res_company_extended_form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="replace">
+                <field name="street" invisible="1"/>
+                <field name="street_name" placeholder="Street Name..."/>
+                <div class="o_row">
+                    <label for="street_number" class="oe_edit_only"/>
+                    <span> </span>
+                    <field name="street_number"/>
+                    <label for="street_number2" class="oe_edit_only"/>
+                    <field name="street_number2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

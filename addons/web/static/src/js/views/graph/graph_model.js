@@ -46,33 +46,28 @@ return AbstractModel.extend({
      * should be done by the graphView I think.
      *
      * @param {Object} params
-     * @param {string[]} params.groupedBy
-     * @param {string} params.initialMode one of 'pie', 'bar', 'line
-     * @param {string} params.initialMeasure a valid field name
-     * @param {string[]} params.initialGroupBys a list of valid field names
+     * @param {string} params.mode one of 'pie', 'bar', 'line
+     * @param {string} params.measure a valid field name
+     * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
      * @param {string[]} params.domain
      * @returns {Deferred} The deferred does not return a handle, we don't need
      *   to keep track of various entities.
      */
     load: function (params) {
-        this.initialGroupBys = params.initialGroupBys;
+        var groupBys = params.context.graph_groupbys || params.groupBys;
+        this.initialGroupBys = groupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
-        if (!params.groupedBy.length) {
-            var groupedBy = params.context.graph_groupbys ||
-                             (params.groupedBy.length && params.groupedBy) ||
-                             this.initialGroupBys;
-            params.groupedBy = groupedBy.slice(0);
-        }
         this.chart = {
             data: [],
-            groupedBy: params.groupedBy,
-            measure: params.initialMeasure,
-            mode: params.initialMode,
+            groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+            measure: params.context.graph_measure || params.measure,
+            mode: params.context.graph_mode || params.mode,
             domain: params.domain,
             context: params.context,
         };
+        this.defaultGroupedBy = params.groupedBy;
         return this._loadGraph();
     },
     /**
@@ -91,15 +86,17 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     reload: function (handle, params) {
+        if ('context' in params) {
+            this.chart.context = params.context;
+            this.chart.groupedBy = params.context.graph_groupbys || this.chart.groupedBy;
+            this.chart.measure = params.context.graph_measure || this.chart.measure;
+            this.chart.mode = params.context.graph_mode || this.chart.mode;
+        }
         if ('domain' in params) {
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            if (!params.groupBy.length) {
-                this.chart.groupedBy = this.initialGroupBys;
-            } else {
-                this.chart.groupedBy = params.groupBy;
-            }
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
@@ -124,7 +121,8 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadGraph: function () {
-        var fields = _.map(this.chart.groupedBy, function (groupBy) {
+        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
+        var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
         if (this.chart.measure !== '__count__') {
@@ -136,7 +134,7 @@ return AbstractModel.extend({
                 context: this.chart.context,
                 domain: this.chart.domain,
                 fields: fields,
-                groupBy: this.chart.groupedBy,
+                groupBy: groupedBy,
                 lazy: false,
             })
             .then(this._processData.bind(this));

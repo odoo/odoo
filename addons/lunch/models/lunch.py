@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import OrderedDict
+
 import json
 import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class LunchOrder(models.Model):
@@ -22,10 +24,10 @@ class LunchOrder(models.Model):
         prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
         # If we return return prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        return {
+        return list({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }.values()
+        }.values())
 
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
@@ -81,13 +83,13 @@ class LunchOrder(models.Model):
         self.ensure_one()
         self.previous_order_widget = json.dumps(False)
 
-        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
+        prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='date desc, id desc')
         # If we use prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        self.previous_order_ids = {
+        self.previous_order_ids = list({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }.values()
+        }.values())
 
         if self.previous_order_ids:
             lunch_data = {}
@@ -99,10 +101,11 @@ class LunchOrder(models.Model):
                     'supplier': line.supplier.name,
                     'note': line.note,
                     'price': line.price,
-                    'currency': line.currency_id.symbol,
-                    'digits': [69, line.currency_id.decimal_places],
-                    'position': line.currency_id.position,
+                    'date': line.date,
+                    'currency_id': line.currency_id.id,
                 }
+            # sort the old lunch orders by (date, id)
+            lunch_data = OrderedDict(sorted(lunch_data.items(), key=lambda t: (t[1]['date'], t[0]), reverse=True))
             self.previous_order_widget = json.dumps(lunch_data)
 
     @api.one
@@ -157,7 +160,7 @@ class LunchOrder(models.Model):
 class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
-    _order = 'date desc'
+    _order = 'date desc, id desc'
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
@@ -205,8 +208,8 @@ class LunchOrderLine(models.Model):
                     'state': 'order',
                     'date': self.date,
                 }
-            self.env['lunch.cashmove'].create(values)
-            self.state = 'confirmed'
+                self.env['lunch.cashmove'].create(values)
+                self.state = 'confirmed'
         else:
             raise AccessError(_("Only your lunch manager sets the orders as received."))
 

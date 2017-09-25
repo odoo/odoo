@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 from email.utils import formataddr
 
 import re
@@ -41,7 +41,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     @api.model
     def default_get(self, fields):
@@ -302,6 +302,8 @@ class Channel(models.Model):
             of the received message indicates on wich mail channel the message should be displayed.
             :param : mail.message to broadcast
         """
+        if not self:
+            return
         message.ensure_one()
         notifications = self._channel_message_notifications(message)
         self.env['bus.bus'].sendmany(notifications)
@@ -354,6 +356,13 @@ class Channel(models.Model):
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
                                           .read(['id', 'name', 'im_status']))
+
+            # add last message preview (only used in mobile)
+            if self._context.get('isMobile', False):
+                last_message = channel.channel_fetch_preview()
+                if last_message:
+                    info['last_message'] = last_message[0].get('last_message')
+
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
@@ -572,9 +581,9 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        channel_info = new_channel.channel_info('creation')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
 
@@ -614,12 +623,12 @@ class Channel(models.Model):
             GROUP BY mail_channel_id
             """, (tuple(self.ids),))
         channels_preview = dict((r['message_id'], r) for r in self._cr.dictfetchall())
-        last_messages = self.env['mail.message'].browse(channels_preview.keys()).message_format()
+        last_messages = self.env['mail.message'].browse(channels_preview).message_format()
         for message in last_messages:
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
-        return channels_preview.values()
+        return list(channels_preview.values())
 
     #------------------------------------------------------
     # Commands

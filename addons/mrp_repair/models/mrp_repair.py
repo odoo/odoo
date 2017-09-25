@@ -8,14 +8,21 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    repair_id = fields.Many2one('mrp.repair')
+
+
 class Repair(models.Model):
     _name = 'mrp.repair'
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'create_date desc'
 
     @api.model
     def _default_stock_location(self):
-        warehouse = self.env.ref('stock.warehouse0', raise_if_not_found=False)
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
         return False
@@ -246,14 +253,15 @@ class Repair(models.Model):
 
     @api.multi
     def print_repair_order(self):
-        return self.env['report'].get_action(self, 'mrp_repair.report_mrprepairorder')
+        return self.env.ref('mrp_repair.action_report_mrp_repair_order').report_action(self)
 
     def action_repair_invoice_create(self):
-        self.action_invoice_create()
-        if self.invoice_method == 'b4repair':
-            self.action_repair_ready()
-        elif self.invoice_method == 'after_repair':
-            self.write({'state': 'done'})
+        for repair in self:
+            repair.action_invoice_create()
+            if repair.invoice_method == 'b4repair':
+                repair.action_repair_ready()
+            elif repair.invoice_method == 'after_repair':
+                repair.write({'state': 'done'})
         return True
 
     @api.multi
@@ -411,14 +419,24 @@ class Repair(models.Model):
             moves = self.env['stock.move']
             for operation in repair.operations:
                 move = Move.create({
-                    'name': operation.name,
+                    'name': repair.name,
                     'product_id': operation.product_id.id,
-                    'restrict_lot_id': operation.lot_id.id,
                     'product_uom_qty': operation.product_uom_qty,
                     'product_uom': operation.product_uom.id,
                     'partner_id': repair.address_id.id,
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
+                    'move_line_ids': [(0, 0, {'product_id': operation.product_id.id,
+                                           'lot_id': operation.lot_id.id, 
+                                           'product_uom_qty': 0,  # bypass reservation here
+                                           'product_uom_id': operation.product_uom.id,
+                                           'qty_done': operation.product_uom_qty,
+                                           'package_id': False,
+                                           'result_package_id': False,
+                                           'location_id': operation.location_id.id, #TODO: owner stuff
+                                           'location_dest_id': operation.location_dest_id.id,})],
+                    'repair_id': repair.id,
+                    'origin': repair.name,
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
@@ -430,10 +448,23 @@ class Repair(models.Model):
                 'partner_id': repair.address_id.id,
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_dest_id.id,
-                'restrict_lot_id': repair.lot_id.id,
+                'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
+                                           'lot_id': repair.lot_id.id, 
+                                           'product_uom_qty': 0,  # bypass reservation here
+                                           'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
+                                           'qty_done': repair.product_qty,
+                                           'package_id': False,
+                                           'result_package_id': False,
+                                           'location_id': repair.location_id.id, #TODO: owner stuff
+                                           'location_dest_id': repair.location_dest_id.id,})],
+                'repair_id': repair.id,
+                'origin': repair.name,
             })
+            consumed_lines = moves.mapped('move_line_ids')
+            produced_lines = move.move_line_ids
             moves |= move
-            moves.action_done()
+            moves._action_done()
+            produced_lines.write({'consume_line_ids': [(6, 0, consumed_lines.ids)]})
             res[repair.id] = move.id
         return res
 
@@ -520,7 +551,10 @@ class RepairLine(models.Model):
         if not self.product_id or not self.product_uom_qty:
             return
         if self.product_id:
-            self.name = self.product_id.display_name
+            if partner:
+                self.name = self.product_id.with_context(lang=partner.lang).display_name
+            else:
+                self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:

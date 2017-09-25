@@ -14,7 +14,7 @@ var Dashboard = Widget.extend({
     template: 'DashboardMain',
 
     init: function(){
-        this.all_dashboards = ['apps', 'invitations', 'planner', 'share'];
+        this.all_dashboards = ['apps', 'invitations', 'planner', 'share', 'translations', 'company'];
         return this._super.apply(this, arguments);
     },
 
@@ -59,6 +59,14 @@ var Dashboard = Widget.extend({
     load_planner: function(data){
         return  new DashboardPlanner(this, data.planner).replace(this.$('.o_web_settings_dashboard_planner'));
     },
+
+    load_translations: function (data) {
+        return new DashboardTranslations(this, data.translations).replace(this.$('.o_web_settings_dashboard_translations'));
+    },
+
+    load_company: function (data) {
+        return new DashboardCompany(this, data.company).replace(this.$('.o_web_settings_dashboard_company'));
+    }
 });
 
 var DashboardInvitations = Widget.extend({
@@ -287,6 +295,52 @@ var DashboardShare = Widget.extend({
     }
 });
 
+var DashboardTranslations = Widget.extend({
+    template: 'DashboardTranslations',
+
+    events: {
+        'click .o_load_translations': 'on_load_translations'
+    },
+
+    on_load_translations: function () {
+        this.do_action('base.action_view_base_language_install');
+    }
+
+});
+
+var DashboardCompany = Widget.extend({
+    template: 'DashboardCompany',
+
+    events: {
+        'click .o_setup_company': 'on_setup_company'
+    },
+
+    init: function (parent, data) {
+        this.data = data;
+        this.parent = parent;
+        this._super.apply(this, arguments);
+    },
+
+    on_setup_company: function () {
+        var self = this;
+        var action = {
+            type: 'ir.actions.act_window',
+            res_model: 'res.company',
+            view_mode: 'form',
+            view_type: 'form',
+            views: [[false, 'form']],
+            res_id: this.data.company_id
+        };
+        this.do_action(action, {
+            on_reverse_breadcrumb: function () { return self.reload(); }
+        });
+    },
+
+    reload: function () {
+        return this.parent.load(['company']);
+    }
+});
+
 core.action_registry.add('web_settings_dashboard.main', Dashboard);
 
 return {
@@ -294,6 +348,8 @@ return {
     DashboardInvitations: DashboardInvitations,
     DashboardPlanner: DashboardPlanner,
     DashboardShare: DashboardShare,
+    DashboardTranslations: DashboardTranslations,
+    DashboardCompany: DashboardCompany
 };
 
 });

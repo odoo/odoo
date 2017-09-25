@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class EventType(models.Model):
@@ -53,6 +53,12 @@ class Event(models.Model):
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
 
+    @api.multi
+    def _is_event_registrable(self):
+        self.ensure_one()
+        if not self.event_ticket_ids:
+            return True
+        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'

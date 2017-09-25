@@ -10,7 +10,7 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
     payment_transaction_id = fields.Many2one('payment.transaction', string="Payment Transaction")
-    payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.auto_confirm', '!=', 'authorize')],
+    payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.capture_manually', '=', False)],
                                        help="Note that tokens from acquirers set to only authorize transactions (instead of capturing the amount) are not available.")
 
     @api.onchange('partner_id')
@@ -18,14 +18,14 @@ class AccountPayment(models.Model):
         res = {}
         if self.partner_id:
             partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
-            res['domain'] = {'payment_token_id': [('partner_id', 'in', partners.ids), ('acquirer_id.auto_confirm', '!=', 'authorize')]}
+            res['domain'] = {'payment_token_id': [('partner_id', 'in', partners.ids), ('acquirer_id.capture_manually', '=', False)]}
 
         return res
 
     @api.onchange('payment_method_id', 'journal_id')
     def _onchange_payment_method(self):
         if self.payment_method_code == 'electronic':
-            self.payment_token_id = self.env['payment.token'].search([('partner_id', '=', self.partner_id.id), ('acquirer_id.auto_confirm', '!=', 'authorize')], limit=1)
+            self.payment_token_id = self.env['payment.token'].search([('partner_id', '=', self.partner_id.id), ('acquirer_id.capture_manually', '=', False)], limit=1)
         else:
             self.payment_token_id = False
 
@@ -38,9 +38,9 @@ class AccountPayment(models.Model):
         return account_payment
 
     def _do_payment(self):
-        if self.payment_token_id.acquirer_id.auto_confirm == 'authorize':
-            raise ValidationError('This feature is not available for payment acquirers set to the "Authorize" mode.\n'
-                                  'Please use a token from another provider than %s.' % self.payment_token_id.acquirer_id.name)
+        if self.payment_token_id.acquirer_id.capture_manually:
+            raise ValidationError(_('This feature is not available for payment acquirers set to the "Authorize" mode.\n'
+                                  'Please use a token from another provider than %s.') % self.payment_token_id.acquirer_id.name)
         reference = "P-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].create({
             'amount': self.amount,

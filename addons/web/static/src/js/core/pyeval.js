@@ -435,6 +435,22 @@ datetime.datetime = py.type('datetime', null, {
             this.second,
             this.microsecond / 1000);
     },
+    __add__: function (other) {
+        if (!py.PY_isInstance(other, datetime.timedelta)) {
+            return py.NotImplemented;
+        }
+        var s = tmxxx(this.year, this.month, this.day + other.days, this.hour, this.minute, this.second + other.seconds);
+        return datetime.datetime.fromJSON(s.year, s.month, s.day, s.hour, s.minute, s.second);
+    },
+    __sub__: function (other) {
+        if (py.PY_isInstance(other, datetime.timedelta)) {
+            return py.PY_add(this, py.PY_negative(other));
+        }
+        return py.NotImplemented;
+    },
+    fromJSON: function (year, month, day, hour, minute, second) {
+        return py.PY_call(datetime.datetime, [year, month, day, hour, minute, second]);
+    },
 });
 
 datetime.date = py.type('date', null, {
@@ -514,11 +530,11 @@ datetime.date = py.type('date', null, {
     }),
 });
 /**
-    Returns the current local date, which means the date on the client (which can be different
-    compared to the date of the server).
-
-    @return {datetime.date}
-*/
+ * Returns the current local date, which means the date on the client (which can be different
+ * compared to the date of the server).
+ *
+ * @return {datetime.date}
+ */
 function context_today() {
     var d = new Date();
     return py.PY_call(

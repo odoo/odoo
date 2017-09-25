@@ -232,7 +232,7 @@ var SearchView = Widget.extend({
         'click .o_searchview_more': function (e) {
             $(e.target).toggleClass('fa-search-plus fa-search-minus');
             var visibleSearchMenu = this.call('local_storage', 'getItem', 'visible_search_menu');
-            this.call('local_storage', 'setItem', visibleSearchMenu !== 'true');
+            this.call('local_storage', 'setItem', 'visible_search_menu', visibleSearchMenu !== 'true');
             this.toggle_buttons();
         },
         'keydown .o_searchview_input, .o_searchview_facet': function (e) {
@@ -265,7 +265,7 @@ var SearchView = Widget.extend({
      *
      * @param parent
      * @param dataset
-     * @param fields_view
+     * @param fvg
      * @param {Object} [options]
      * @param {Boolean} [options.hidden=false] hide the search view
      * @param {Boolean} [options.disable_custom_filters=false] do not load custom filters from ir.filters
@@ -499,8 +499,8 @@ var SearchView = Widget.extend({
                 .$el.focus();
     },
     /**
-     * @param {openerp.web.search.SearchQuery | undefined} Undefined if event is change
-     * @param {openerp.web.search.Facet}
+     * @param {openerp.web.search.SearchQuery | undefined} collection Undefined if event is change
+     * @param {openerp.web.search.Facet} model
      * @param {Object} [options]
      */
     renderFacets: function (collection, model, options) {
@@ -602,6 +602,34 @@ var SearchView = Widget.extend({
             }
             current_category = filter.category;
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Activates a filter for a given domain.
+     * FIXME: the way it is done could be improved, but the actual state of the
+     * searchview doesn't allow to do much better. For instance, if the same
+     * filter is added twice, it appears twice in the facets. This should be
+     * improved when the searchview will be rewrote.
+
+     * @param {string} domain the domain to filter on
+     * @param {string} help the text to display in the facet
+     */
+    addFilter: function (domain, help) {
+        var filter = {
+            attrs: {
+                domain: domain,
+                help: help,
+            },
+        };
+        var filterWidget = new search_inputs.Filter(filter);
+        var filterGroup = new search_inputs.FilterGroup([filterWidget], this);
+        var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
+        this.query.add([facet], {silent: true});
+        this.query.trigger('reset');
     },
 });
 

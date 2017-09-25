@@ -2,6 +2,7 @@ odoo.define('barcodes.FormView', function (require) {
 "use strict";
 
 var BarcodeEvents = require('barcodes.BarcodeEvents'); // handle to trigger barcode on bus
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FormController = require('web.FormController');
@@ -15,22 +16,33 @@ FormController.include({
         activeBarcode: '_barcodeActivated',
     }),
 
+    /**
+     * add default barcode commands for from view
+     *
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.activeBarcode = {
             form_view: {
                 commands: {
-                    'O-CMD.NEW': 'createRecord',
-                    'O-CMD.EDIT': 'toEditMode',
-                    'O-CMD.CANCEL': 'discardChange',
-                    'O-CMD.SAVE': 'saveRecord',
-                    // 'O-CMD.PAGER-PREV':
-                    // 'O-CMD.PAGER-NEXT':
-                }
-            }
+                    'O-CMD.EDIT': this._barcodeEdit.bind(this),
+                    'O-CMD.CANCEL': this._barcodeDiscard.bind(this),
+                    'O-CMD.SAVE': this._barcodeSave.bind(this),
+                    'O-CMD.PAGER-PREV': this._barcodePagerPrevious.bind(this),
+                    'O-CMD.PAGER-NEXT': this._barcodePagerNext.bind(this),
+                    'O-CMD.PAGER-FIRST': this._barcodePagerFirst.bind(this),
+                    'O-CMD.PAGER-LAST': this._barcodePagerLast.bind(this),
+                },
+            },
         };
+
+        this.barcodeMutex = new concurrency.Mutex();
         this._barcodeStartListening();
     },
+    /**
+     * @override
+     */
     destroy: function () {
         this._barcodeStopListening();
         this._super();
@@ -42,9 +54,9 @@ FormController.include({
 
     /**
      * @private
-     * @param {any} barcode
-     * @param {any} activeBarcode
-     * @returns {any}
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
+     * @returns {Deferred}
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
@@ -63,26 +75,87 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
-     * @returns {boolean}
      */
-    _barcodeRecordFilter: function (record, barcode, activeBarcode) {
-        return record.data.product_barcode === barcode;
+    _barcodeDiscard: function () {
+        return this.discardChanges();
     },
     /**
      * @private
-     * @param {any} candidate
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     */
+    _barcodeEdit: function () {
+        return this._setMode('edit');
+    },
+    /**
+     * @private
+     */
+    _barcodePagerFirst: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            self.pager.updateState({
+                current_min: 1,
+            }, {notifyChange: true});
+        });
+    },
+    /**
+     * @private
+     */
+    _barcodePagerLast: function () {
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            var state = self.model.get(self.handle, {raw: true});
+            self.pager.updateState({
+                current_min: state.count,
+            }, {notifyChange: true});
+        });
+    },
+    /**
+     * @private
+     */
+    _barcodePagerNext: function () {
+        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
+    },
+    /**
+     * @private
+     */
+    _barcodePagerPrevious: function () {
+        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
+    },
+    /**
+     * Returns true iff the given barcode matches the given record (candidate).
+     *
+     * @private
+     * @param {Object} candidate: record in the x2m
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
+     * @returns {boolean}
+     */
+    _barcodeRecordFilter: function (candidate, barcode, activeBarcode) {
+        return candidate.data.product_barcode === barcode;
+    },
+    /**
+     * @private
+     */
+    _barcodeSave: function () {
+        return this.saveRecord();
+    },
+    /**
+     * @private
+     * @param {Object} candidate: record in the x2m
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode) {
         var changes = {};
-        changes[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
-        return this.model.notifyChanges(candidate.id, changes);
+        var candidateChanges = {};
+        candidateChanges[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
+        changes[activeBarcode.fieldName] = {
+            operation: 'UPDATE',
+            id: candidate.id,
+            data: candidateChanges,
+        };
+        return this.model.notifyChanges(this.handle, changes);
     },
     /**
      * @private
@@ -91,7 +164,6 @@ FormController.include({
         core.bus.on('barcode_scanned', this, this._barcodeScanned);
         core.bus.on('keypress', this, this._quantityListener);
     },
-
     /**
      * @private
      */
@@ -101,28 +173,26 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeWithoutCandidate: function (record, barcode, activeBarcode) {
         var changes = {};
         changes[activeBarcode.name] = barcode;
-        return this.model.notifyChanges(record.id, changes).then(function () {
-            return new $.Deferred().reject();
-        });
+        return this.model.notifyChanges(record.id, changes);
     },
     /**
      * @private
-     * @param {any} record
-     * @param {any} barcode
-     * @param {any} activeBarcode
-     * @returns {any}
+     * @param {Object} current record
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
+     * @returns {Object|undefined}
      */
     _getBarCodeRecord: function (record, barcode, activeBarcode) {
         var self = this;
-        if (!activeBarcode.fieldName) {
+        if (!activeBarcode.fieldName || !record.data[activeBarcode.fieldName]) {
             return;
         }
         return _.find(record.data[activeBarcode.fieldName].data, function (record) {
@@ -139,6 +209,13 @@ FormController.include({
      * with the widget option
      *
      * @param {OdooEvent} event
+     * @param {string} event.data.name: the current field name
+     * @param {string} [event.data.fieldName] optional for x2many sub field
+     * @param {string} [event.data.quantity] optional field to increase quantity
+     * @param {Object} [event.data.commands] optional added methods
+     *     can use comand with specific barcode (with ReservedBarcodePrefixes)
+     *     or change 'barcode' for all other received barcodes
+     *     (e.g.: 'O-CMD.MAIN-MENU': function ..., barcode: function () {...})
      */
     _barcodeActivated: function (event) {
         event.stopPropagation();
@@ -154,12 +231,16 @@ FormController.include({
             candidate: this.activeBarcode[name] && this.activeBarcode[name].handle === this.handle ?
                 this.activeBarcode[name].candidate : null,
         };
+
+        // we want to disable autofocus when activating the barcode to avoid
+        // putting the scanned value in the focused field
+        this.disableAutofocus = true;
     },
     /**
      * @private
-     * @param {any} method
-     * @param {any} barcode
-     * @param {any} activeBarcode
+     * @param {string|function} method defined by the commands options
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
     _barcodeActiveScanned: function (method, barcode, activeBarcode) {
@@ -171,12 +252,15 @@ FormController.include({
         } else {
             methodDef = method.call(this, barcode, activeBarcode);
         }
-        methodDef.always(function () {
-            var record = self.model.get(self.handle);
-            var candidate = self._getBarCodeRecord(record, barcode, activeBarcode);
-            activeBarcode.candidate = candidate;
-            def.resolve();
-        });
+        methodDef
+            .done(function () {
+                var record = self.model.get(self.handle);
+                var candidate = self._getBarCodeRecord(record, barcode, activeBarcode);
+                activeBarcode.candidate = candidate;
+            })
+            .always(function () {
+                def.resolve();
+            });
         return def;
     },
     /**
@@ -184,43 +268,51 @@ FormController.include({
      * widget options then update the renderer
      *
      * @private
-     * @param {string} barcode
+     * @param {string} barcode sent by the scanner (string generate from keypress series)
+     * @param {DOM Object} target
      * @returns {Deferred}
      */
     _barcodeScanned: function (barcode, target) {
-        var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
-                function (reserved) {return barcode.indexOf(reserved) === 0;});
-        var hasCommand = false;
         var self = this;
-        var defs = [];
-        for (var k in this.activeBarcode) {
-            var activeBarcode = this.activeBarcode[k];
-            // Handle the case where there are several barcode widgets on the same page. Since the
-            // event is global on the page, all barcode widgets will be triggered. However, we only
-            // want to keep the event on the target widget.
-            if (self.target && !$.contains(target, self.target.el)) {
-                continue;
-            }
-
-            var methods = this.activeBarcode[k].commands;
-            var method = prefixed ? methods[barcode] : methods.barcode;
-            if (method) {
-                if (prefixed) {
-                    hasCommand = true;
+        return this.barcodeMutex.exec(function () {
+            var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
+                    function (reserved) {return barcode.indexOf(reserved) === 0;});
+            var hasCommand = false;
+            var defs = [];
+            for (var k in self.activeBarcode) {
+                var activeBarcode = self.activeBarcode[k];
+                // Handle the case where there are several barcode widgets on the same page. Since the
+                // event is global on the page, all barcode widgets will be triggered. However, we only
+                // want to keep the event on the target widget.
+                if (self.target && !$.contains(target, self.target.el)) {
+                    continue;
                 }
-                defs.push(this._barcodeActiveScanned(method, barcode, activeBarcode));
+
+                var methods = self.activeBarcode[k].commands;
+                var method = prefixed ? methods[barcode] : methods.barcode;
+                if (method) {
+                    if (prefixed) {
+                        hasCommand = true;
+                    }
+                    defs.push(self._barcodeActiveScanned(method, barcode, activeBarcode));
+                }
             }
-        }
-        if (prefixed && !hasCommand) {
-            return this.do_warn(_t('Error : Barcode command is undefined'), barcode);
-        }
-        return $.when.apply($, defs).then(function () {
-            self.update({}, {reload: false});
+            if (prefixed && !hasCommand) {
+                self.do_warn(_t('Error : Barcode command is undefined'), barcode);
+            }
+            return self.alive($.when.apply($, defs)).then(function () {
+                if (!prefixed) {
+                    // redraw the view if we scanned a real barcode (required if
+                    // we manually apply the change in JS, e.g. incrementing the
+                    // quantity)
+                    self.update({}, {reload: false});
+                }
+            });
         });
     },
     /**
      * @private
-     * @param {any} event
+     * @param {KeyEvent} event
      */
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.which);
@@ -231,7 +323,12 @@ FormController.include({
             return;
         }
 
-        if (!_.compact(_.pluck(this.activeBarcode, 'candidate')).length) {
+        var barcodeInfos = _.filter(this.activeBarcode, 'setQuantityWithKeypress');
+        if (!barcodeInfos.length) {
+            return;
+        }
+
+        if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
             return this.do_warn(_t('Error : No last scanned barcode'),
                 _t('To set the quantity please scan a barcode first.'));
         }
@@ -244,8 +341,8 @@ FormController.include({
     },
     /**
      * @private
-     * @param {any} character
-     * @param {any} activeBarcode
+     * @param {string} character
+     * @param {Object} activeBarcode: options sent by the field who use barcode features
      */
     _quantityOpenDialog: function (character, activeBarcode) {
         var self = this;
@@ -261,18 +358,20 @@ FormController.include({
                 });
             }}, {text: _t('Discard'), close: true}],
             $content: $content,
-        }).open();
-        // This line set the value of the key which triggered the _set_quantity in the input
-        var $input = this.dialog.$content.find('.o_set_qty_input').focus().val(character);
-
-        var $selectBtn = this.dialog.$footer.find('.btn-primary');
-        $input.on('keypress', function (event){
-            if (event.which === 13) {
-                event.preventDefault();
-                $input.off();
-                $selectBtn.click();
-            }
         });
+        this.dialog.opened().then(function () {
+            // This line set the value of the key which triggered the _set_quantity in the input
+            var $input = self.dialog.$('.o_set_qty_input').focus().val(character);
+            var $selectBtn = self.dialog.$footer.find('.btn-primary');
+            $input.on('keypress', function (event){
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $input.off();
+                    $selectBtn.click();
+                }
+            });
+        });
+        this.dialog.open();
     },
 });
 
@@ -293,7 +392,7 @@ FormRenderer.include({
         var commands = {};
         commands.barcode = function () {return $.when();};
         commands['O-BTN.' + node.attrs.barcode_trigger] = function () {
-            if (!$button.hasClass('o_form_invisible')) {
+            if (!$button.hasClass('o_invisible_modifier')) {
                 $button.click();
             }
             return $.when();
@@ -333,6 +432,21 @@ FormRenderer.include({
         }
         return $button;
     },
+    /**
+     * Add barcode event handler
+     *
+     * @override
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderTagButton: function (node) {
+        var $button = this._super.apply(this, arguments);
+        if (node.attrs.barcode_trigger) {
+            this._barcodeButtonHandler($button, node);
+        }
+        return $button;
+    }
 });
 
 BarcodeEvents.ReservedBarcodePrefixes.push('O-BTN');

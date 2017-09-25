@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from psycopg2 import IntegrityError
+
+import odoo
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
-import odoo.tests.common as common
+from odoo.tests import common
 
 
 class TestServerActionsBase(common.TransactionCase):
@@ -57,19 +60,11 @@ class TestServerActions(TestServerActionsBase):
 
         # Do: create contextual action
         self.action.create_action()
-
-        # Test: ir_values created
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
-        self.assertEqual(ir_values.value, 'ir.actions.server,%s' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
-        self.assertEqual(ir_values.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
+        self.assertEqual(self.action.binding_model_id.model, 'res.partner')
 
         # Do: remove contextual action
         self.action.unlink_action()
-
-        # Test: ir_values removed
-        ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
-        self.assertEqual(len(ir_values), 0, 'ir_actions_server: unlink_action should remove the ir_values record')
+        self.assertFalse(self.action.binding_model_id)
 
     def test_10_code(self):
         self.action.write({
@@ -181,3 +176,158 @@ class TestServerActions(TestServerActionsBase):
             self.action.write({
                 'child_ids': [(6, 0, [self.action.id])]
             })
+
+
+class TestActionBindings(common.TransactionCase):
+
+    def test_bindings(self):
+        """ check the action bindings on models """
+        Actions = self.env['ir.actions.actions']
+
+        # first make sure there is no bound action
+        bindings = Actions.get_bindings('res.partner')
+        self.assertFalse(bindings['action'])
+        self.assertFalse(bindings['report'])
+
+        # create action bindings, and check the returned bindings
+        action1 = self.env.ref('base.action_attachment')
+        action2 = self.env.ref('base.ir_default_menu_action')
+        action3 = self.env['ir.actions.report'].search([('groups_id', '=', False)], limit=1)
+        action1.binding_model_id = action2.binding_model_id \
+                                 = action3.binding_model_id \
+                                 = self.env['ir.model']._get('res.partner')
+
+        bindings = Actions.get_bindings('res.partner')
+        self.assertItemsEqual(
+            bindings['action'],
+            (action1 + action2).read(),
+            "Wrong action bindings",
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            action3.read(),
+            "Wrong action bindings",
+        )
+
+        # add a group on an action, and check that it is not returned
+        group = self.env.ref('base.group_user')
+        action2.groups_id += group
+        self.env.user.groups_id -= group
+
+        bindings = Actions.get_bindings('res.partner')
+        self.assertItemsEqual(
+            bindings['action'],
+            action1.read(),
+            "Wrong action bindings",
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            action3.read(),
+            "Wrong action bindings",
+        )
+
+
+class TestCustomFields(common.TransactionCase):
+    MODEL = 'res.partner'
+
+    def setUp(self):
+        # check that the registry is properly reset
+        registry = odoo.registry()
+        fnames = set(registry[self.MODEL]._fields)
+        @self.addCleanup
+        def check_registry():
+            assert set(registry[self.MODEL]._fields) == fnames
+
+        super(TestCustomFields, self).setUp()
+
+        # use a test cursor instead of a real cursor
+        self.registry.enter_test_mode()
+        self.addCleanup(self.registry.leave_test_mode)
+
+        # do not reload the registry after removing a field
+        self.env = self.env(context={'_force_unlink': True})
+
+    def create_field(self, name):
+        """ create a custom field and return it """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': name,
+            'field_description': name,
+            'ttype': 'char',
+        })
+        self.assertIn(name, self.env[self.MODEL]._fields)
+        return field
+
+    def create_view(self, name):
+        """ create a view with the given field name """
+        return self.env['ir.ui.view'].create({
+            'name': 'yet another view',
+            'model': self.MODEL,
+            'arch': '<tree string="X"><field name="%s"/></tree>' % name,
+        })
+
+    def test_create_custom(self):
+        """ custom field names must be start with 'x_' """
+        with self.assertRaises(ValidationError):
+            self.create_field('foo')
+
+    def test_rename_custom(self):
+        """ custom field names must be start with 'x_' """
+        field = self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            field.name = 'foo'
+
+    def test_create_valid(self):
+        """ field names must be valid pg identifiers """
+        with self.assertRaises(ValidationError):
+            self.create_field('x_foo bar')
+
+    def test_rename_valid(self):
+        """ field names must be valid pg identifiers """
+        field = self.create_field('x_foo')
+        with self.assertRaises(ValidationError):
+            field.name = 'x_foo bar'
+
+    def test_create_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        self.create_field('x_foo')
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            self.create_field('x_foo')
+
+    def test_rename_unique(self):
+        """ one cannot create two fields with the same name on a given model """
+        field1 = self.create_field('x_foo')
+        field2 = self.create_field('x_bar')
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            field2.name = field1.name
+
+    def test_remove_without_view(self):
+        """ try removing a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.unlink()
+
+    def test_rename_without_view(self):
+        """ try renaming a custom field that does not occur in views """
+        field = self.create_field('x_foo')
+        field.name = 'x_bar'
+
+    def test_remove_with_view(self):
+        """ try removing a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.unlink()
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)
+
+    def test_rename_with_view(self):
+        """ try renaming a custom field that occurs in a view """
+        field = self.create_field('x_foo')
+        self.create_view('x_foo')
+
+        # try to delete the field, this should fail but not modify the registry
+        with self.assertRaises(UserError):
+            field.name = 'x_bar'
+        self.assertIn('x_foo', self.env[self.MODEL]._fields)

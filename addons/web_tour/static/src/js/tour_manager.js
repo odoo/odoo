@@ -4,6 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
+var RainbowMan = require('web.rainbow_man');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
@@ -11,34 +12,6 @@ var Tip = require('web_tour.Tip');
 var _t = core._t;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
-
-$.extend($.expr[':'],{
-    containsExact: function(element, index, matches){
-        return $.trim(element.innerHTML.toLowerCase()) === matches[3].toLowerCase();
-    },
-    containsExactCase: function(element, index, matches){
-        return $.trim(element.innerHTML) === matches[3];
-    },
-    // Note all escaped characters need to be double escaped
-    // inside of the containsRegex, so "\(" needs to be "\\("
-    containsRegex: function(element, index, matches){
-        var regreg =  /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})$/,
-        reg = regreg.exec(matches[3]);
-        return reg ? new RegExp(reg[1], reg[2]).test($.trim(element.innerHTML)) : false;
-    },
-    propChecked: function(element, index, matches) {
-        return $(element).prop("checked") === true;
-    },
-    propSelected: function(element, index, matches) {
-        return $(element).prop("selected") === true;
-    },
-    propValue: function(element, index, matches) {
-        return $(element).prop("value") === matches[3];
-    },
-    propValueContains: function(element, index, matches) {
-        return $(element).prop("value") && $(element).prop("value").indexOf(matches[3]) !== -1;
-    },
-});
 
 function get_step_key(name) {
     return 'tour_' + name + '_step';
@@ -53,21 +26,11 @@ function get_running_delay_key() {
 function get_first_visible_element($elements) {
     for (var i = 0 ; i < $elements.length ; i++) {
         var $i = $elements.eq(i);
-        if ($i.is(":visible") && _has_visibility($i)) {
+        if ($i.is(':visible:hasVisibility')) {
             return $i;
         }
     }
     return $();
-
-    function _has_visibility($elem) {
-        if ($elem.css("visibility") === "hidden") {
-            return false;
-        }
-        if ($elem.is("html")) {
-            return true;
-        }
-        return _has_visibility($elem.parent());
-    }
 }
 
 function do_before_unload(if_unload_callback, if_not_unload_callback) {
@@ -146,18 +109,18 @@ var RunningTourActionHelper = core.Class.extend({
         if (values.consume_event === "input") {
             values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
         } else if (values.$element.is("select")) {
-            values.$element.children("option")
-                .prop("selected", false).removeProp("selected")
-                .filter(function () { return $(this).val() === text; })
-                .prop("selected", true);
+            var $options = values.$element.children("option");
+            $options.prop("selected", false).removeProp("selected");
+            var $selectedOption = $options.filter(function () { return $(this).val() === text; });
+            if ($selectedOption.length === 0) {
+                $selectedOption = $options.filter(function () { return $(this).text() === text; });
+            }
+            $selectedOption.prop("selected", true);
             this._click(values);
         } else {
             values.$element.text(text);
         }
         values.$element.trigger("change");
-        if (values.$element.is('.o_field_widget.o_form_input.o_form_field')) {
-            values.$element.focusout();
-        }
     },
     _drag_and_drop: function (values, to) {
         var $to = $(to || document.body);
@@ -300,7 +263,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this.update();
             }).bind(this));
 
-            window.location.href = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
+            var url = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
+            window.location.href = window.location.origin + url;
         } else {
             this.update();
         }
@@ -433,6 +397,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
+        //display rainbow at the end of any tour
+        if (this.tours[tour_name].current_step === this.tours[tour_name].steps.length){
+            var $rainbow_message = $('<strong>' +
+                                '<b>Good job!</b>' +
+                                ' You went through all steps of this tour.' +
+                                '</strong>');
+            new RainbowMan({message: $rainbow_message, click_close: false}).appendTo(this.$body);
+        };
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
         if (this.running_tour === tour_name) {
@@ -468,7 +440,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
             this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
-        }).bind(this), RUNNING_TOUR_TIMEOUT + this.running_step_delay);
+        }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
         clearTimeout(this.running_tour_timeout);
@@ -515,11 +487,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         },
 
         WEBSITE_NEW_PAGE: {
-            trigger: "#oe_main_menu_navbar a[data-action=new_page]",
+            trigger: "#new-content-menu > a",
             auto: true,
             position: "bottom",
         },
     },
 });
-
 });

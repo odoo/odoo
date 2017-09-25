@@ -17,13 +17,12 @@ We suggest you to install this module, if you installed both the sale and the cr
 modules.
     """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['sale', 'crm'],
+    'depends': ['sale_management', 'crm'],
     'data': [
         'security/ir.model.access.csv',
         'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
-        'views/sale_crm_template.xml',
     ],
     'auto_install': True,
 }

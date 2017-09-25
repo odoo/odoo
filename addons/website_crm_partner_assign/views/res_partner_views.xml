@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <menuitem id="crm_menu_resellers" name="Resellers" parent="crm.crm_menu_config" sequence="16"/>
+
         <!--Partner Activation -->
 
         <record model="ir.ui.view" id="res_partner_activation_form">
@@ -32,7 +34,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="res_partner_activation_config_mi" parent="sales_team.menu_localisation" action="res_partner_activation_act" groups="base.group_no_one"
+        <menuitem id="res_partner_activation_config_mi" parent="crm_menu_resellers" action="res_partner_activation_act"
             sequence="6"/>
 
     <!--Partner Level -->
@@ -80,8 +82,7 @@
         <field name="view_type">form</field>
     </record>
     <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
-        groups="base.group_no_one"
-        parent="sales_team.menu_localisation"
+        parent="crm_menu_resellers"
         sequence="5" />
 
     <!-- Partner form -->

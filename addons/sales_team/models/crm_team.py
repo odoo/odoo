@@ -24,9 +24,11 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        team_id = self.env['crm.team'].sudo().search(
-            ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)],
-            limit=1)
+        company_id = self.sudo(user_id).company_id.id
+        team_id = self.env['crm.team'].sudo().search([
+            '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
+            '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
+        ], limit=1)
         if not team_id and 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         if not team_id:
@@ -34,6 +36,9 @@ class CrmTeam(models.Model):
             if default_team_id and (self.env.context.get('default_type') != 'lead' or default_team_id.use_leads):
                 team_id = default_team_id
         return team_id
+
+    def _get_default_favorite_user_ids(self):
+        return [(6, 0, [self.env.uid])]
 
     name = fields.Char('Sales Channel', required=True, translate=True)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the sales channel without removing it.")
@@ -44,6 +49,14 @@ class CrmTeam(models.Model):
         string="Currency", readonly=True)
     user_id = fields.Many2one('res.users', string='Channel Leader')
     member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members')
+    favorite_user_ids = fields.Many2many(
+        'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
+        string='Favorite Members',
+        default=_get_default_favorite_user_ids)
+    is_favorite = fields.Boolean(
+        string='Show on dashboard',
+        compute='_compute_is_favorite', inverse='_inverse_is_favorite',
+        help="Favorite teams to display them in the dashboard and access them easily.")
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales channel")
     color = fields.Integer(string='Color Index', help="The color of the channel")
@@ -63,10 +76,10 @@ class CrmTeam(models.Model):
         ('user', 'Salesperson'),
     ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
     dashboard_graph_period = fields.Selection([
-        ('week', 'This Week'),
-        ('month', 'This Month'),
-        ('year', 'This Year'),
-    ], string='Period', default='month', help="The time period this channel's dashboard graph will consider.")
+        ('week', 'Last Week'),
+        ('month', 'Last Month'),
+        ('year', 'Last Year'),
+    ], string='Scale', default='month', help="The time period this channel's dashboard graph will consider.")
 
     @api.depends('dashboard_graph_group', 'dashboard_graph_model', 'dashboard_graph_period')
     def _compute_dashboard_graph(self):
@@ -77,6 +90,17 @@ class CrmTeam(models.Model):
             else:
                 team.dashboard_graph_type = 'line'
             team.dashboard_graph_data = json.dumps(team._get_graph())
+
+    def _compute_is_favorite(self):
+        for team in self:
+            team.is_favorite = self.env.user in team.favorite_user_ids
+
+    def _inverse_is_favorite(self):
+        sudoed_self = self.sudo()
+        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
+        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
+        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
+        return True
 
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph according to the graph settings.
@@ -121,9 +145,6 @@ class CrmTeam(models.Model):
     def _graph_y_query(self):
         raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
 
-    def _graph_sql_table(self):
-        raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
-
     def _extra_sql_conditions(self):
         return ''
 
@@ -146,17 +167,30 @@ class CrmTeam(models.Model):
                       AND DATE(%(date_column)s) <= %(end_date)s
                       %(extra_conditions)s
                     GROUP BY x_value;"""
+
+        # apply rules
+        if not self.dashboard_graph_model:
+            raise UserError(_('Undefined graph model for Sales Channel: %s') % self.name)
+        GraphModel = self.env[self.dashboard_graph_model]
+        graph_table = GraphModel._table
+        extra_conditions = self._extra_sql_conditions()
+        where_query = GraphModel._where_calc([])
+        GraphModel._apply_ir_rules(where_query, 'read')
+        from_clause, where_clause, where_clause_params = where_query.get_sql()
+        if where_clause:
+            extra_conditions += " AND " + where_clause
+
         query = query % {
             'x_query': self._graph_x_query(),
             'y_query': self._graph_y_query(),
-            'table': self._graph_sql_table(),
+            'table': graph_table,
             'team_id': "%s",
             'date_column': self._graph_date_column(),
             'start_date': "%s",
             'end_date': "%s",
-            'extra_conditions': self._extra_sql_conditions(),
+            'extra_conditions': extra_conditions
         }
-        self._cr.execute(query, [self.id, start_date, end_date])
+        self._cr.execute(query, [self.id, start_date, end_date] + where_clause_params)
         return self.env.cr.dictfetchall()
 
     def _get_graph(self):
@@ -188,7 +222,7 @@ class CrmTeam(models.Model):
             y_field = 'value'
 
         # generate all required x_fields and update the y_values where we have data for them
-        locale = self._context.get('lang', 'en_US')
+        locale = self._context.get('lang') or 'en_US'
         if self.dashboard_graph_group == 'day':
             for day in range(0, (end_date - start_date).days + 1):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
@@ -205,7 +239,7 @@ class CrmTeam(models.Model):
 
             for data_item in graph_data:
                 index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
-                values[index][y_field] = int(data_item.get('y_value'))
+                values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'month':
             for month in range(0, (end_date.month - start_date.month) % 12 + 1):
@@ -218,7 +252,7 @@ class CrmTeam(models.Model):
 
         elif self.dashboard_graph_group == 'user':
             for data_item in graph_data:
-                values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name, y_field: data_item.get('y_value')})
+                values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name or _('Not Defined'), y_field: data_item.get('y_value')})
 
         else:
             for data_item in graph_data:
@@ -247,4 +281,18 @@ class CrmTeam(models.Model):
 
     @api.model
     def create(self, values):
-        return super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
+        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
+        if values.get('member_ids'):
+            team._add_members_to_favorites()
+        return team
+
+    @api.multi
+    def write(self, values):
+        res = super(CrmTeam, self).write(values)
+        if values.get('member_ids'):
+            self._add_members_to_favorites()
+        return res
+
+    def _add_members_to_favorites(self):
+        for team in self:
+            team.favorite_user_ids = [(4, member.id) for member in team.member_ids]

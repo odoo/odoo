@@ -14,7 +14,7 @@ class MailActivityType(models.Model):
     _name = 'mail.activity.type'
     _description = 'Activity Type'
     _rec_name = 'name'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     name = fields.Char('Name', required=True, translate=True)
     summary = fields.Char('Summary', translate=True)
@@ -27,6 +27,16 @@ class MailActivityType(models.Model):
         'ir.model', 'Model', index=True,
         help='Specify a model if the activity should be specific to a model'
              'and not available when managing activities for other models.')
+    next_type_ids = fields.Many2many(
+        'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
+        string='Recommended Next Activities')
+    previous_type_ids = fields.Many2many(
+        'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
+        string='Preceding Activities')
+    category = fields.Selection([
+        ('default', 'Other')], default='default',
+        string='Category',
+        help='Categories may trigger specific behavior like opening calendar view')
 
 
 class MailActivity(models.Model):
@@ -62,11 +72,12 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
+    activity_category = fields.Selection(related='activity_type_id.category')
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
-    date_deadline = fields.Date('Deadline', index=True, required=True, default=fields.Date.today)
+    date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
@@ -77,6 +88,18 @@ class MailActivity(models.Model):
         ('today', 'Today'),
         ('planned', 'Planned')], 'State',
         compute='_compute_state')
+    recommended_activity_type_id = fields.Many2one('mail.activity.type', string="Recommended Activity Type")
+    previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type')
+    has_recommended_activities = fields.Boolean(
+        'Next activities available',
+        compute='_compute_has_recommended_activities',
+        help='Technical field for UX purpose')
+
+    @api.multi
+    @api.onchange('previous_activity_type_id')
+    def _compute_has_recommended_activities(self):
+        for record in self:
+            record.has_recommended_activities = bool(record.previous_activity_type_id.next_type_ids)
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
@@ -99,26 +122,64 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            if not self.summary:
-                self.summary = self.activity_type_id.summary
+            self.summary = self.activity_type_id.summary
             self.date_deadline = (datetime.now() + timedelta(days=self.activity_type_id.days))
+
+    @api.onchange('previous_activity_type_id')
+    def _onchange_previous_activity_type_id(self):
+        if self.previous_activity_type_id.next_type_ids:
+            self.recommended_activity_type_id = self.previous_activity_type_id.next_type_ids[0]
+
+    @api.onchange('recommended_activity_type_id')
+    def _onchange_recommended_activity_type_id(self):
+        self.activity_type_id = self.recommended_activity_type_id
 
     @api.model
     def create(self, values):
         activity = super(MailActivity, self).create(values)
         self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+        if activity.date_deadline <= fields.Date.today():
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                {'type': 'activity_updated', 'activity_created': True})
         return activity
 
     @api.multi
     def write(self, values):
+        if values.get('user_id'):
+            pre_responsibles = self.mapped('user_id.partner_id')
         res = super(MailActivity, self).write(values)
         if values.get('user_id'):
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+                if activity.date_deadline <= fields.Date.today():
+                    self.env['bus.bus'].sendone(
+                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                        {'type': 'activity_updated', 'activity_created': True})
+            for activity in self:
+                if activity.date_deadline <= fields.Date.today():
+                    for partner in pre_responsibles:
+                        self.env['bus.bus'].sendone(
+                            (self._cr.dbname, 'res.partner', partner.id),
+                            {'type': 'activity_updated', 'activity_deleted': True})
         return res
 
     @api.multi
-    def action_done(self, feedback=False):
+    def unlink(self):
+        for activity in self:
+            if activity.date_deadline <= fields.Date.today():
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    {'type': 'activity_updated', 'activity_deleted': True})
+        return super(MailActivity, self).unlink()
+
+    @api.multi
+    def action_done(self):
+        """ Wrapper without feedback because web button add context as
+        parameter, therefore setting context to feedback """
+        return self.action_feedback()
+
+    def action_feedback(self, feedback=False):
         message = self.env['mail.message']
         if feedback:
             self.write(dict(feedback=feedback))

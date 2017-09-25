@@ -142,7 +142,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
+                data['custom'] += u"%s : %s\n" % (field_name, field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
@@ -164,14 +164,14 @@ class WebsiteForm(http.Controller):
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in authorized_fields.iteritems() if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in authorized_fields.items() if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 
         return data
 
     def insert_record(self, request, model, values, custom, meta=None):
-        record = request.env[model.model].sudo().create(values)
+        record = request.env[model.model].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
             default_field = model.website_form_default_field_id

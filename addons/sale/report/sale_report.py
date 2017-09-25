@@ -26,6 +26,8 @@ class SaleReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
+    amt_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    amt_invoiced = fields.Float('Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
@@ -56,6 +58,8 @@ class SaleReport(models.Model):
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
+                    sum(l.amt_to_invoice / COALESCE(cr.rate, 1.0)) as amt_to_invoice,
+                    sum(l.amt_invoiced / COALESCE(cr.rate, 1.0)) as amt_invoiced,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
@@ -67,7 +71,7 @@ class SaleReport(models.Model):
                     extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
-                    s.project_id as analytic_account_id,
+                    s.analytic_account_id as analytic_account_id,
                     s.team_id as team_id,
                     p.product_tmpl_id,
                     partner.country_id as country_id,
@@ -108,7 +112,7 @@ class SaleReport(models.Model):
                     s.state,
                     s.company_id,
                     s.pricelist_id,
-                    s.project_id,
+                    s.analytic_account_id,
                     s.team_id,
                     p.product_tmpl_id,
                     partner.country_id,
@@ -130,12 +134,11 @@ class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
 
     @api.multi
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         docs = self.env['sale.order'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docs.ids,
             'doc_model': 'sale.order',
             'docs': docs,
             'proforma': True
         }
-        return self.env['report'].render('sale.report_saleorder', docargs)

@@ -10,16 +10,17 @@
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="report_sale_order"/>
+            <field name="report_template" ref="action_report_saleorder"/>
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
-% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_name = is_online and object.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
-% set access_url = is_online and access_action['url'] or ''
+% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
+% set pay_sign_name =  object.get_portal_confirmation_action()
+% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name
+% set access_url = is_online and object.get_mail_url() or ''
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
@@ -28,7 +29,7 @@
 <p>
 Here is
 % if ctx.get('proforma')
-in attachment, your pro-forma
+in attachment, your pro-forma invoice
 % else
 the ${doc_name} <strong>${object.name}</strong>
 % endif

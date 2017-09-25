@@ -112,5 +112,5 @@ class CrmTeam(models.Model):
 
     def _graph_title_and_key(self):
         if self.team_type == 'pos':
-            return ['', _('Untaxed Amount')] # no more title
+            return ['', _('Sales: Untaxed Amount')] # no more title
         return super(CrmTeam, self)._graph_title_and_key()

@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class IrModel(models.Model):
@@ -23,11 +24,10 @@ class IrModel(models.Model):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
             # setup models; this reloads custom models in registry
-            self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+            self.pool.setup_models(self._cr)
             # update database schema of models
             models = self.pool.descendants(self.mapped('model'), '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-            self.pool.signal_registry_change()
         else:
             res = super(IrModel, self).write(vals)
         return res
@@ -42,7 +42,7 @@ class IrModel(models.Model):
         model_class = super(IrModel, self)._instanciate(model_data)
         if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
-            parents = [parents] if isinstance(parents, basestring) else parents
+            parents = [parents] if isinstance(parents, pycompat.string_types) else parents
             model_class._inherit = parents + ['mail.thread']
         return model_class
 
@@ -60,8 +60,8 @@ class IrModelField(models.Model):
         vals['track_visibility'] = getattr(field, 'track_visibility', None)
         return vals
 
-    def _instanciate_attrs(self, field_data, partial):
-        attrs = super(IrModelField, self)._instanciate_attrs(field_data, partial)
+    def _instanciate_attrs(self, field_data):
+        attrs = super(IrModelField, self)._instanciate_attrs(field_data)
         if field_data.get('track_visibility'):
             attrs['track_visibility'] = field_data['track_visibility']
         return attrs

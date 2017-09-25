@@ -8,6 +8,7 @@ from difflib import get_close_matches
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -105,8 +106,8 @@ class IrTranslationImport(object):
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute(""" UPDATE %s AS ti
-                       SET res_id = imd.res_id,
-                           noupdate = imd.noupdate
+                          SET res_id = imd.res_id,
+                              noupdate = imd.noupdate
                        FROM ir_model_data AS imd
                        WHERE ti.res_id IS NULL
                        AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
@@ -152,10 +153,10 @@ class IrTranslationImport(object):
                                src = ti.src,
                                state = 'translated'
                            FROM %s AS ti
-                           WHERE %s
-                           AND ti.value IS NOT NULL
-                           AND ti.value != ''
-                           AND noupdate IS NOT TRUE
+                          WHERE %s
+                            AND ti.value IS NOT NULL
+                            AND ti.value != ''
+                            AND noupdate IS NOT TRUE
                        """ % (self._model_table, self._table, find_expr),
                        (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
@@ -240,18 +241,19 @@ class IrTranslation(models.Model):
         ''' When changing source term of a translation, change its value in db
         for the associated object, and the src field.
         '''
-        for record in self:
-            if record.type == 'model':
-                model_name, field_name = record.name.split(',')
-                model = self.env[model_name]
-                field = model._fields[field_name]
-                if not callable(field.translate):
-                    # Make a context without language information, because we want
-                    # to write on the value stored in db and not on the one
-                    # associated with the current language. Also not removing lang
-                    # from context trigger an error when lang is different.
-                    model.browse(record.res_id).with_context(lang=None).write({field_name: record.source})
-        return self.write({'src': self.source})
+        self.ensure_one()
+        if self.type == 'model':
+            model_name, field_name = self.name.split(',')
+            model = self.env[model_name]
+            field = model._fields[field_name]
+            if not callable(field.translate):
+                # Make a context without language information, because we want
+                # to write on the value stored in db and not on the one
+                # associated with the current language. Also not removing lang
+                # from context trigger an error when lang is different.
+                model.browse(self.res_id).with_context(lang=None).write({field_name: self.source})
+        if self.src != self.source:
+            self.write({'src': self.source})
 
     def _search_source(self, operator, value):
         ''' the source term is stored on 'src' field '''
@@ -392,10 +394,10 @@ class IrTranslation(models.Model):
         # always pass unicode so we can remove the string encoding/decoding.
         if not lang:
             return tools.ustr(source or '')
-        if isinstance(types, basestring):
+        if isinstance(types, pycompat.string_types):
             types = (types,)
         if res_id:
-            if isinstance(res_id, (int, long)):
+            if isinstance(res_id, pycompat.integer_types):
                 res_id = (res_id,)
             else:
                 res_id = tuple(res_id)
@@ -529,7 +531,7 @@ class IrTranslation(models.Model):
 
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
-        for mname, ids in model_ids.iteritems():
+        for mname, ids in model_ids.items():
             records = self.env[mname].browse(ids)
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
@@ -543,13 +545,18 @@ class IrTranslation(models.Model):
                 record = trans.env[mname].browse(trans.res_id)
                 field = record._fields[fname]
                 if callable(field.translate):
-                    # check whether applying (trans.src -> trans.value) then
-                    # (trans.value -> trans.src) gives the original value back
+                    src = trans.src
+                    val = trans.value.strip()
+                    # check whether applying (src -> val) then (val -> src)
+                    # gives the original value back
                     value0 = field.translate(lambda term: None, record[fname])
-                    value1 = field.translate({trans.src: trans.value}.get, value0)
-                    value2 = field.translate({trans.value: trans.src}.get, value1)
+                    value1 = field.translate({src: val}.get, value0)
+                    # don't check the reverse if no translation happened
+                    if value0 == value1:
+                        continue
+                    value2 = field.translate({val: src}.get, value1)
                     if value2 != value0:
-                        raise ValidationError(_("Translation is not valid:\n%s") % trans.value)
+                        raise ValidationError(_("Translation is not valid:\n%s") % val)
 
     @api.model
     def create(self, vals):

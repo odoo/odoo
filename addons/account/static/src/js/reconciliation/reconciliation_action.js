@@ -29,6 +29,8 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         validate: '_onValidate',
         validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
+        close_statement: '_onCloseStatement',
+        load_more: '_onLoadMore',
     },
     config: {
         // used to instanciate the model
@@ -70,6 +72,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                     'bank_statement_id': self.model.bank_statement_id,
                     'valuenow': self.model.valuenow,
                     'valuemax': self.model.valuemax,
+                    'defaultDisplayQty': self.model.defaultDisplayQty,
                     'title': self.title,
                 });
             });
@@ -88,12 +91,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
-        _.each(this.model.lines, function (line, handle) {
-            var widget = new self.config.LineRenderer(self, self.model, line);
-            widget.handle = handle;
-            self.widgets.push(widget);
-            widget.appendTo(self.$('.o_reconciliation_lines'));
-        });
+        this._renderLines();
         this._openFirstLine();
     },
 
@@ -134,6 +132,15 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     },
 
     /**
+     *
+     */
+    _loadMore: function(qty) {
+        var self = this;
+        return this.model.loadMore(qty).then(function () {
+            self._renderLines();
+        });
+    },
+    /**
      * sitch to 'match' the first available line
      *
      * @private
@@ -151,6 +158,24 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
         }
         return handle;
+    },
+    /**
+     * render line widget and append to view
+     *
+     * @private
+     */
+    _renderLines: function () {
+        var self = this;
+        var linesToDisplay = this.model.getStatementLines();
+        _.each(linesToDisplay, function (line, handle) {
+            var widget = new self.config.LineRenderer(self, self.model, line);
+            widget.handle = handle;
+            self.widgets.push(widget);
+            widget.appendTo(self.$('.o_reconciliation_lines'));
+        });
+        if (this.model.hasMoreLines() === false) {
+            this.renderer.hideLoadMoreButton();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -176,7 +201,10 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                 _.each(self.model.lines, function (line, _handle) {
                     if (line.mode !== 'inactive' && _handle !== handle) {
                         self.model.changeMode(_handle, 'inactive');
-                        self._getWidget(_handle).update(line);
+                        var widget = self._getWidget(_handle);
+                        if (widget) {
+                            widget.update(line);
+                        }
                     }
                 });
             }
@@ -202,7 +230,34 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
         });
     },
-
+    /**
+     * call 'closeStatement' model method
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onCloseStatement: function (event) {
+        var self = this;
+        return this.model.closeStatement().then(function (result) {
+            self.do_action({
+                name: 'Bank Statements',
+                res_model: 'account.bank.statement',
+                res_id: result,
+                views: [[false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+            });
+        });
+    },
+    /**
+     * Load more statement and render them
+     *
+     * @param {OdooEvent} event
+     */
+    _onLoadMore: function (event) {
+        return this._loadMore(this.model.defaultDisplayQty);
+    },
     /**
      * call 'validate' or 'autoReconciliation' model method then destroy the
      * validated lines and update the action renderer with the new status bar 
@@ -222,10 +277,19 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                 'title': self.title,
                 'time': Date.now()-self.time,
                 'notifications': result.notifications,
+                'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
                 self._getWidget(handle).destroy();
+                var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                self.widgets.splice(index, 1);
             });
+            // Get number of widget and if less than constant and if there are more to laod, load until constant
+            if (self.widgets.length < self.model.defaultDisplayQty 
+                && self.model.valuemax - self.model.valuenow >= self.model.defaultDisplayQty) {
+                var toLoad = self.model.defaultDisplayQty - self.widgets.length;
+                self._loadMore(toLoad);
+            }
             self._openFirstLine();
         });
     },
@@ -257,18 +321,17 @@ var ManualAction = StatementAction.extend({
         var handle = event.target.handle;
         var method = event.name.indexOf('auto_reconciliation') === -1 ? 'validate' : 'autoReconciliation';
         this.model[method](handle).then(function (result) {
-            self.renderer.update({
-                'valuenow': self.model.valuenow,
-                'valuemax': self.model.valuemax,
-                'title': self.title,
-                'time': Date.now()-self.time,
-                'notifications': result.notifications,
-            });
             _.each(result.reconciled, function (handle) {
                 self._getWidget(handle).destroy();
             });
             _.each(result.updated, function (handle) {
                 self._getWidget(handle).update(self.model.getLine(handle));
+            });
+            self.renderer.update({
+                valuenow: _.compact(_.invoke(self.widgets, 'isDestroyed')).length,
+                valuemax: self.widgets.length,
+                title: self.title,
+                time: Date.now()-self.time,
             });
             self._openFirstLine();
         });

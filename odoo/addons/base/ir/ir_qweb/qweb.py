@@ -1,29 +1,51 @@
 # -*- coding: utf-8 -*-
 import ast
-from collections import OrderedDict, Sized, Mapping, defaultdict
-from lxml import etree, html
+import logging
+import os.path
 import re
 import traceback
-from itertools import count
+
+from collections import OrderedDict, Sized, Mapping, defaultdict
+from functools import reduce
+from itertools import tee, count
 from textwrap import dedent
+
+import itertools
+from lxml import etree, html
 import werkzeug
 from werkzeug.utils import escape as _escape
-from itertools import chain, izip, tee
-import __builtin__
-from functools import reduce
-builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
+
+from odoo.tools import pycompat, freehash
+
+try:
+    import builtins
+    builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import __builtin__
+    builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
 try:
     import astor
 except ImportError:
     astor = None
 
-import logging
-
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
 
+# in Python 2, arguments (within the ast.arguments structure) are expressions
+# (since they can be tuples), generally
+# ast.Name(id: identifyer, ctx=ast.Param()), whereas in Python 3 they are
+# ast.arg(arg: identifier, annotation: expr?) provide a toplevel arg()
+# function which matches ast.arg producing the relevant ast.Name in Python 2.
+arg = getattr(ast, 'arg', lambda arg, annotation: ast.Name(id=arg, ctx=ast.Param()))
+# also Python 3's arguments has grown *2* new mandatory arguments, kwonlyargs
+# and kw_defaults for keyword-only arguments and their default values (if any)
+# so add a shim for *that* based on the signature of Python 3 I guess?
+arguments = ast.arguments
+if pycompat.PY2:
+    arguments = lambda args, vararg, kwonlyargs, kw_defaults, kwarg, defaults: ast.arguments(args=args, vararg=vararg, kwarg=kwarg, defaults=defaults)
 ####################################
 ###          qweb tools          ###
 ####################################
@@ -67,16 +89,23 @@ class Contextifier(ast.NodeTransformer):
     def visit_Lambda(self, node):
         args = node.args
         # assume we don't have any tuple parameter, just names
-        names = [arg.id for arg in args.args]
+        if pycompat.PY2:
+            names = [arg.id for arg in args.args]
+        else:
+            names = [arg.arg for arg in args.args]
         if args.vararg: names.append(args.vararg)
         if args.kwarg: names.append(args.kwarg)
         # remap defaults in case there's any
         return ast.copy_location(ast.Lambda(
-            args=ast.arguments(
+            args=arguments(
                 args=args.args,
-                defaults=map(self.visit, args.defaults),
+                defaults=[self.visit(default) for default in args.defaults],
                 vararg=args.vararg,
                 kwarg=args.kwarg,
+                # assume we don't have any, not sure it's even possible to
+                # handle that cross-version
+                kwonlyargs=[],
+                kw_defaults=[],
             ),
             body=Contextifier(self._safe_names + tuple(names)).visit(node.body)
         ), node)
@@ -101,7 +130,7 @@ class Contextifier(ast.NodeTransformer):
         for field, value in ast.iter_fields(node):
             # map transformation of comprehensions
             if isinstance(value, list):
-                setattr(newnode, field, map(transformer.visit, value))
+                setattr(newnode, field, [transformer.visit(v) for v in value])
             else: # set transformation of key/value/expr fields
                 setattr(newnode, field, transformer.visit(value))
         return newnode
@@ -148,26 +177,19 @@ class QWebException(Exception):
 # Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
 escape = (lambda text: _escape(text, quote=True)) if getattr(werkzeug, '__version__', '0.0') < '0.9.0' else _escape
 
-def unicodifier(val):
-    if val is None or val is False:
-        return u''
-    if isinstance(val, str):
-        return val.decode('utf-8')
-    return unicode(val)
-
 def foreach_iterator(base_ctx, enum, name):
     ctx = base_ctx.copy()
     if not enum:
         return
     if isinstance(enum, int):
-        enum = xrange(enum)
+        enum = range(enum)
     size = None
     if isinstance(enum, Sized):
         ctx["%s_size" % name] = size = len(enum)
     if isinstance(enum, Mapping):
-        enum = enum.iteritems()
+        enum = enum.items()
     else:
-        enum = izip(*tee(enum))
+        enum = pycompat.izip(*tee(enum))
     value_key = '%s_value' % name
     index_key = '%s_index' % name
     first_key = '%s_first' % name
@@ -193,7 +215,7 @@ def foreach_iterator(base_ctx, enum, name):
         yield ctx
     # copy changed items back into source context (?)
     # FIXME: maybe values could provide a ChainMap-style clone?
-    for k in base_ctx.keys():
+    for k in list(base_ctx):
         base_ctx[k] = ctx[k]
 
 _FORMAT_REGEX = re.compile(
@@ -218,7 +240,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
 ####################################
@@ -287,7 +309,7 @@ class QWeb(object):
         except Exception as e:
             path = _options['last_path_node']
             node = element.getroottree().xpath(path)
-            raise QWebException("Error when compiling AST", e, path, etree.tostring(node[0]), name)
+            raise QWebException("Error when compiling AST", e, path, etree.tostring(node[0], encoding='unicode'), name)
         astmod.body.extend(_options['ast_calls'])
 
         if 'profile' in options:
@@ -307,28 +329,29 @@ class QWeb(object):
         except Exception as e:
             path = _options['last_path_node']
             node = element.getroottree().xpath(path)
-            raise QWebException("Error when compiling AST", e, path, node and etree.tostring(node[0]), name)
+            raise QWebException("Error when compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
         # return the wrapped function
 
         def _compiled_fn(self, append, values):
             log = {'last_path_node': None}
-            values = dict(self.default_values(), **values)
+            new = self.default_values()
+            new.update(values)
             try:
-                return compiled(self, append, values, options, log)
+                return compiled(self, append, new, options, log)
             except QWebException as e:
                 raise e
             except Exception as e:
                 path = log['last_path_node']
                 element, document = self.get_template(template, options)
                 node = element.getroottree().xpath(path)
-                raise QWebException("Error to render compiling AST", e, path, node and etree.tostring(node[0]), name)
+                raise QWebException("Error to render compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
         return _compiled_fn
 
     def default_values(self):
         """ Return attributes added to the values for each computed template. """
-        return dict(format=self.format)
+        return {'format': self.format}
 
     def get_template(self, template, options):
         """ Retrieve the given template, and return it as a pair ``(element,
@@ -351,10 +374,11 @@ class QWeb(object):
             if isinstance(document, etree._Element):
                 element = document
                 document = etree.tostring(document)
-            elif document.startswith("<?xml"):
-                element = etree.fromstring(document)
-            else:
+            elif os.path.exists(document):
                 element = etree.parse(document).getroot()
+            else:
+                element = etree.fromstring(document)
+
             for node in element:
                 if node.get('t-name') == str(template):
                     return (node, document)
@@ -498,11 +522,13 @@ class QWeb(object):
         * itertools
         Define:
         * escape
-        * unicodifier (empty string for a None or False, otherwise unicode string)
+        * to_text (empty string for a None or False, otherwise unicode string)
+        * string_types (replacement for basestring)
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
-            from odoo.addons.base.ir.ir_qweb.qweb import escape, unicodifier, foreach_iterator
+            from odoo.tools.pycompat import to_text, string_types
+            from odoo.addons.base.ir.ir_qweb.qweb import escape, foreach_iterator
             """))
 
     def _create_def(self, options, body, prefix='fn', lineno=None):
@@ -518,13 +544,13 @@ class QWeb(object):
         # def $name(self, append, values, options, log)
         fn = ast.FunctionDef(
             name=name,
-            args=ast.arguments(args=[
-                ast.Name(id='self', ctx=ast.Param()),
-                ast.Name(id='append', ctx=ast.Param()),
-                ast.Name(id='values', ctx=ast.Param()),
-                ast.Name(id='options', ctx=ast.Param()),
-                ast.Name(id='log', ctx=ast.Param()),
-            ], defaults=[], vararg=None, kwarg=None),
+            args=arguments(args=[
+                arg(arg='self', annotation=None),
+                arg(arg='append', annotation=None),
+                arg(arg='values', annotation=None),
+                arg(arg='options', annotation=None),
+                arg(arg='log', annotation=None),
+            ], defaults=[], vararg=None, kwarg=None, kwonlyargs=[], kw_defaults=[]),
             body=body or [ast.Return()],
             decorator_list=[])
         if lineno is not None:
@@ -591,7 +617,7 @@ class QWeb(object):
                     ]
                 ),
                 # append(escape($content))
-                body=body,
+                body=body or [ast.Pass()],
                 # append(body default value)
                 orelse=orelse,
             )
@@ -657,7 +683,7 @@ class QWeb(object):
 
         # all directives have been compiled, there should be none left
         if any(att.startswith('t-') for att in el.attrib):
-            raise "Unknown directive on %s" % ("', '".join(directives), etree.tostring(el))
+            raise NameError("Unknown directive on %s" % etree.tostring(el, encoding='unicode'))
         return []
 
     def _values_var(self, varname, ctx):
@@ -727,7 +753,8 @@ class QWeb(object):
             # Etree will also remove the ns prefixes indirection in the attributes. As we only have
             # the namespace definition, we'll use an nsmap where the keys are the definitions and
             # the values the prefixes in order to get back the right prefix and restore it.
-            nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
+            ns = itertools.chain(options['nsmap'].items(), el.nsmap.items())
+            nsprefixmap = {v: k for k, v in ns}
             for key, value in el.attrib.items():
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
@@ -739,14 +766,14 @@ class QWeb(object):
             # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
             # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
             # a copy before continuing the recursion and restore the original afterwards.
-            original_nsmap = options['nsmap']
-            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
+            original_nsmap = dict(options['nsmap'])
+            options['nsmap'].update(el.nsmap)
             content = self._compile_directive_content(el, options)
             options['nsmap'] = original_nsmap
 
         if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in attrib.iteritems()]))
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in attrib.items()]))
         if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
@@ -758,10 +785,10 @@ class QWeb(object):
         # Etree will also remove the ns prefixes indirection in the attributes. As we only have
         # the namespace definition, we'll use an nsmap where the keys are the definitions and
         # the values the prefixes in order to get back the right prefix and restore it.
-        nsprefixmap = {v: k for k, v in options['nsmap'].items() + el.nsmap.items()}
+        nsprefixmap = {v: k for k, v in itertools.chain(options['nsmap'].items(), el.nsmap.items())}
 
         nodes = []
-        for key, value in el.attrib.iteritems():
+        for key, value in el.attrib.items():
             if not key.startswith('t-'):
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
@@ -776,7 +803,7 @@ class QWeb(object):
         We do not support namespaced dynamic attributes.
         """
         nodes = []
-        for name, value in el.attrib.iteritems():
+        for name, value in el.attrib.items():
             if name.startswith('t-attf-'):
                 nodes.append((name[7:], self._compile_format(value)))
             elif name.startswith('t-att-'):
@@ -802,7 +829,7 @@ class QWeb(object):
     def _compile_all_attributes(self, el, options, attr_already_created=False):
         """ Compile the attributes of the given elements into a list of AST nodes. """
         body = []
-        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in el.attrib.iteritems()):
+        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in el.attrib.items()):
             if not attr_already_created:
                 attr_already_created = True
                 body.append(
@@ -843,19 +870,19 @@ class QWeb(object):
                     )))
 
         if attr_already_created:
-            # for name, value in t_attrs.iteritems():
+            # for name, value in t_attrs.items():
             #     if value or isinstance(value, basestring)):
             #         append(u' ')
             #         append(name)
             #         append(u'="')
-            #         append(escape(unicodifier((value)))
+            #         append(escape(to_text((value)))
             #         append(u'"')
             body.append(ast.For(
                 target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
                 iter=ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id='t_attrs', ctx=ast.Load()),
-                        attr='iteritems',
+                        attr='items',
                         ctx=ast.Load()
                         ),
                     args=[], keywords=[],
@@ -870,7 +897,7 @@ class QWeb(object):
                                 func=ast.Name(id='isinstance', ctx=ast.Load()),
                                 args=[
                                     ast.Name(id='value', ctx=ast.Load()),
-                                    ast.Name(id='basestring', ctx=ast.Load())
+                                    ast.Name(id='string_types', ctx=ast.Load())
                                 ],
                                 keywords=[],
                                 starargs=None, kwargs=None
@@ -884,7 +911,7 @@ class QWeb(object):
                         self._append(ast.Call(
                             func=ast.Name(id='escape', ctx=ast.Load()),
                             args=[ast.Call(
-                                func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                                func=ast.Name(id='to_text', ctx=ast.Load()),
                                 args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
                                 starargs=None, kwargs=None
                             )], keywords=[],
@@ -924,7 +951,7 @@ class QWeb(object):
         if unqualified_el_tag == 't':
             return content
 
-        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in extra_attrib.iteritems()]))))]
+        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in extra_attrib.items()]))))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if unqualified_el_tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
@@ -953,9 +980,9 @@ class QWeb(object):
         # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
         # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
         # a copy before continuing the recursion and restore the original afterwards.
+        original_nsmap = dict(options['nsmap'])
         if el.nsmap:
-            original_nsmap = options['nsmap']
-            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
+            options['nsmap'].update(el.nsmap)
         content = self._compile_directives(el, options)
         if el.nsmap:
             options['nsmap'] = original_nsmap
@@ -1013,7 +1040,7 @@ class QWeb(object):
     def _compile_directive_content(self, el, options):
         body = []
         if el.text is not None:
-            body.append(self._append(ast.Str(unicodifier(el.text))))
+            body.append(self._append(ast.Str(pycompat.to_text(el.text))))
         if el.getchildren():
             for item in el:
                 # ignore comments & processing instructions
@@ -1046,7 +1073,7 @@ class QWeb(object):
     def _compile_directive_if(self, el, options):
         orelse = []
         next_el = el.getnext()
-        if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib.keys()):
+        if next_el is not None and {'t-else', 't-elif'} & set(next_el.attrib):
             if el.tail and not el.tail.isspace():
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
@@ -1058,7 +1085,7 @@ class QWeb(object):
             #    $t-else
             ast.If(
                 test=self._compile_expr(el.attrib.pop('t-if')),
-                body=self._compile_directives(el, options),
+                body=self._compile_directives(el, options) or [ast.Pass()],
                 orelse=orelse
             )
         ]
@@ -1077,7 +1104,7 @@ class QWeb(object):
                     args=[ast.Str(el.attrib.pop('t-groups'))], keywords=[],
                     starargs=None, kwargs=None
                 ),
-                body=self._compile_directives(el, options),
+                body=self._compile_directives(el, options) or [ast.Pass()],
                 orelse=[]
             )
         ]
@@ -1104,7 +1131,7 @@ class QWeb(object):
         )]
 
     def _compile_tail(self, el):
-        return el.tail is not None and [self._append(ast.Str(unicodifier(el.tail)))] or []
+        return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
 
     def _compile_directive_esc(self, el, options):
         field_options = self._compile_widget_options(el, 'esc')
@@ -1117,14 +1144,14 @@ class QWeb(object):
         return content + self._compile_widget_value(el, options)
 
     def _compile_widget(self, el, expression, field_options, escape=None):
-        # if isinstance(value, basestring):
-        #   value = escape(unicodifier(value))
+        # if isinstance(value, string_types):
+        #   value = escape(to_text(value))
         escaped = ast.If(
             test=ast.Call(
                 func=ast.Name(id='isinstance', ctx=ast.Load()),
                 args=[
                     ast.Name(id='content', ctx=ast.Load()),
-                    ast.Name(id='basestring', ctx=ast.Load())
+                    ast.Name(id='string_types', ctx=ast.Load())
                 ], keywords=[],
                 starargs=None, kwargs=None
             ),
@@ -1133,7 +1160,7 @@ class QWeb(object):
                 value=ast.Call(
                     func=ast.Name(id=escape, ctx=ast.Load()),
                     args=[ast.Call(
-                        func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                        func=ast.Name(id='to_text', ctx=ast.Load()),
                         args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
                         starargs=None, kwargs=None
                     )], keywords=[],
@@ -1251,7 +1278,7 @@ class QWeb(object):
         #    display the tag without content
         orelse = [ast.If(
             test=ast.Name(id='force_display', ctx=ast.Load()),
-            body=self._compile_tag(el, [], options, True),
+            body=self._compile_tag(el, [], options, True) or [ast.Pass()],
             orelse=[],
         )]
 
@@ -1295,13 +1322,13 @@ class QWeb(object):
                 #    display the tag without content
                 ast.If(
                     test=ast.Name(id=default_content, ctx=ast.Load()),
-                    body=self._compile_tag(el, [self._append(ast.Name(id=default_content, ctx=ast.Load()))], options, True),
+                    body=self._compile_tag(el, [self._append(ast.Name(id=default_content, ctx=ast.Load()))], options, True) or [ast.Pass()],
                     orelse=orelse,
                 )
             ]
 
         # if content is not None:
-        #    display the tag (unicodifier(content))
+        #    display the tag (to_text(content))
         # else
         #    if default_content:
         #       display the tag with default content
@@ -1310,7 +1337,7 @@ class QWeb(object):
         return [self._if_content_is_not_Falsy(
             body=self._compile_tag(el, [self._append(
                 ast.Call(
-                    func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                    func=ast.Name(id='to_text', ctx=ast.Load()),
                     args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
                     starargs=None, kwargs=None
                 )
@@ -1430,7 +1457,7 @@ class QWeb(object):
                 keys = []
                 values = []
                 for key, value in options['nsmap'].items():
-                    if isinstance(key, basestring):
+                    if isinstance(key, pycompat.string_types):
                         keys.append(ast.Str(s=key))
                     elif key is None:
                         keys.append(ast.Name(id='None', ctx=ast.Load()))
@@ -1467,7 +1494,7 @@ class QWeb(object):
                         ctx=ast.Load()
                     ),
                     args=[
-                        ast.Str(str(tmpl)),
+                        self._compile_format(str(tmpl)),
                         ast.Name(id=name_options, ctx=ast.Load()),
                     ],
                     keywords=[], starargs=None, kwargs=None
@@ -1516,7 +1543,7 @@ class QWeb(object):
     def _compile_strexpr(self, expr):
         # ensure result is unicode
         return ast.Call(
-            func=ast.Name(id='unicodifier', ctx=ast.Load()),
+            func=ast.Name(id='to_text', ctx=ast.Load()),
             args=[self._compile_expr(expr)], keywords=[],
             starargs=None, kwargs=None
         )
@@ -1560,7 +1587,7 @@ class QWeb(object):
         for m in _FORMAT_REGEX.finditer(f):
             literal = f[base_idx:m.start()]
             if literal:
-                elts.append(ast.Str(literal if isinstance(literal, unicode) else literal.decode('utf-8')))
+                elts.append(ast.Str(literal if isinstance(literal, pycompat.text_type) else literal.decode('utf-8')))
 
             expr = m.group(1) or m.group(2)
             elts.append(self._compile_strexpr(expr))
@@ -1568,7 +1595,7 @@ class QWeb(object):
         # string past last regex match
         literal = f[base_idx:]
         if literal:
-            elts.append(ast.Str(literal if isinstance(literal, unicode) else literal.decode('utf-8')))
+            elts.append(ast.Str(literal if isinstance(literal, pycompat.text_type) else literal.decode('utf-8')))
 
         return reduce(lambda acc, it: ast.BinOp(
             left=acc,

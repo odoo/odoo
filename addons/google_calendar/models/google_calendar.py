@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+
+import requests
 from dateutil import parser
 import json
 import logging
 import operator
 import pytz
-import urllib2
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import exception_to_unicode
@@ -23,15 +25,13 @@ class Meta(type):
     """ This Meta class allow to define class as a structure, and so instancied variable
         in __init__ to avoid to have side effect alike 'static' variable """
     def __new__(typ, name, parents, attrs):
-        methods = dict((k, v) for k, v in attrs.iteritems()
-                       if callable(v))
-        attrs = dict((k, v) for k, v in attrs.iteritems()
-                     if not callable(v))
+        methods = {k: v for k, v in attrs.items() if callable(v)}
+        attrs = {k: v for k, v in attrs.items() if not callable(v)}
 
         def init(self, **kw):
-            for key, val in attrs.iteritems():
+            for key, val in attrs.items():
                 setattr(self, key, val)
-            for key, val in kw.iteritems():
+            for key, val in kw.items():
                 assert key in attrs
                 setattr(self, key, val)
 
@@ -40,9 +40,7 @@ class Meta(type):
         return type.__new__(typ, name, parents, methods)
 
 
-class Struct(object):
-    __metaclass__ = Meta
-
+Struct = Meta('Struct', (object,), {})
 
 class OdooEvent(Struct):
     event = False
@@ -249,7 +247,8 @@ class GoogleCalendar(models.AbstractModel):
         if not self.get_need_synchro_attendee():
             data.pop("attendees")
         if isCreating:
-            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids
+                                if other_att.google_internal_event_id and not other_att.google_internal_event_id.startswith('_')]
             if other_google_ids:
                 data["id"] = other_google_ids[0]
         return data
@@ -260,7 +259,7 @@ class GoogleCalendar(models.AbstractModel):
         """
         data = self.generate_data(event, isCreating=True)
 
-        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urllib2.quote('id,updated'), self.get_token())
+        url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urls.url_quote('id,updated'), self.get_token())
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = json.dumps(data)
         return self.env['google.service']._do_request(url, data_json, headers, type='POST')
@@ -291,8 +290,8 @@ class GoogleCalendar(models.AbstractModel):
 
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        except urllib2.HTTPError as e:
-            if e.code == 401:  # Token invalid / Acces unauthorized
+        except requests.HTTPError as e:
+            if e.response.status_code == 401:  # Token invalid / Acces unauthorized
                 error_msg = _("Your token is invalid or has been revoked !")
 
                 self.env.user.write({'google_calendar_token': False, 'google_calendar_token_validity': False})
@@ -513,7 +512,7 @@ class GoogleCalendar(models.AbstractModel):
         if type == "write":
             res = CalendarEvent.browse(event['id']).write(result)
         elif type == "copy":
-            result['recurrence'] = True
+            result['recurrency'] = True
             res = CalendarEvent.browse([event['id']]).write(result)
         elif type == "create":
             res = CalendarEvent.create(result).id
@@ -610,7 +609,8 @@ class GoogleCalendar(models.AbstractModel):
             ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
         ])
         for att in my_attendees:
-            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if other_att.google_internal_event_id and other_att.id != att.id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
+                                other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_')]
             for other_google_id in other_google_ids:
                 if self.get_one_event_synchro(other_google_id):
                     att.write({'google_internal_event_id': other_google_id})
@@ -676,13 +676,13 @@ class GoogleCalendar(models.AbstractModel):
         if lastSync:
             try:
                 all_event_from_google = self.get_event_synchro_dict(lastSync=lastSync)
-            except urllib2.HTTPError as e:
-                if e.code == 410:  # GONE, Google is lost.
+            except requests.HTTPError as e:
+                if e.response.code == 410:  # GONE, Google is lost.
                     # we need to force the rollback from this cursor, because it locks my res_users but I need to write in this tuple before to raise.
                     self.env.cr.rollback()
                     self.env.user.write({'google_calendar_last_sync_date': False})
                     self.env.cr.commit()
-                error_key = json.loads(str(e))
+                error_key = e.response.json()
                 error_key = error_key.get('error', {}).get('message', 'nc')
                 error_msg = _("Google is lost... the next synchro will be a full synchro. \n\n %s") % error_key
                 raise self.env['res.config.settings'].get_config_warning(error_msg)
@@ -788,7 +788,7 @@ class GoogleCalendar(models.AbstractModel):
         #      DO ACTION     #
         ######################
         for base_event in event_to_synchronize:
-            event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].iteritems(), key=operator.itemgetter(0))
+            event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].items(), key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
                 self.env.cr.commit()
                 event = current_event[1]  # event is an Sync Event !
@@ -804,7 +804,7 @@ class GoogleCalendar(models.AbstractModel):
                     if actSrc == 'GG':
                         self.create_from_google(event, my_partner_id)
                     elif actSrc == 'OE':
-                        raise "Should be never here, creation for OE is done before update !"
+                        raise AssertionError("Should be never here, creation for OE is done before update !")
                     #TODO Add to batch
                 elif isinstance(actToDo, Update):
                     if actSrc == 'GG':

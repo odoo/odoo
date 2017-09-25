@@ -43,7 +43,7 @@
         <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
         <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
     </t>
-    <script type="text/javascript" src="/web_editor/static/src/js/summernote.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote.js" />
     <script type="text/javascript">
         window.define = odoo.__define__;
         delete odoo.__define__;
@@ -61,9 +61,8 @@
 <template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-        <script type="text/javascript" src="/web_editor/static/src/js/ace.js" />
-        <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
-        <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/widgets/ace.js"/>
     </xpath>
 </template>
 
@@ -73,13 +72,17 @@
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.backend.less"/>
     </xpath>
     <xpath expr="script[last()]" position="after">
-        <script type="text/javascript" src="/web_editor/static/src/js/backend.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/fields.js" />
     </xpath>
 </template>
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
     </xpath>
 </template>
 
@@ -90,15 +93,15 @@
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
 
     <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/rte.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/rte.summernote.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/widgets.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/snippets.editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/snippets.options.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/tour.rte.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/transcoder.js"></script>
-    <script type="text/javascript" src="/web_editor/static/src/js/translator.js"></script>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/transcoder.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/translator.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/tours/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/widgets/widgets.js"/>
 </template>
 
 <template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">

@@ -22,7 +22,7 @@ class ChangeProductionQty(models.TransientModel):
         if 'mo_id' in fields and not res.get('mo_id') and self._context.get('active_model') == 'mrp.production' and self._context.get('active_id'):
             res['mo_id'] = self._context['active_id']
         if 'product_qty' in fields and not res.get('product_qty') and res.get('mo_id'):
-            res['product_qty'] = self.env['mrp.production'].browse(res.get['mo_id']).product_qty
+            res['product_qty'] = self.env['mrp.production'].browse(res['mo_id']).product_qty
         return res
 
     @api.model
@@ -55,8 +55,7 @@ class ChangeProductionQty(models.TransientModel):
                     operation_bom_qty[operation.id] = bom_data['qty']
             self._update_product_to_produce(production, production.product_qty - qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves.do_unreserve()
-            moves.action_assign()
+            moves._action_assign()
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):
@@ -79,8 +78,8 @@ class ChangeProductionQty(models.TransientModel):
                 if wo == production.workorder_ids[-1]:
                     moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
-                moves_raw.mapped('move_lot_ids').write({'workorder_id': wo.id})
+                moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
-                if wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
+                if wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_line_ids:
                     wo._generate_lot_ids()
         return {}

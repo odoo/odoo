@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_mrporder">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.internal_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-xs-7">
+                        <div class="col-xs-12">
                             <h2>Production Order # : <span t-field="o.name"/></h2>
-                        </div>
-                        <div class="col-xs-5">
-                            <span class="text-right">
-                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:350px;height:60px"/>
-                            </span>
                         </div>
                     </div>
                     <div class="row mt32 mb32">
@@ -40,15 +35,8 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Printing date:</strong><br/>
-                            <span t-esc="time.strftime('%Y-%m-%d')"/>
-                        </div>
-                        <div class="col-xs-3" t-if="'sale_ref' in o">
-                            <strong>Partner Ref:</strong><br/>
-                            <span t-esc="'sale_ref' in o and o.sale_ref"/>
-                        </div>
-                        <div class="col-xs-3" t-if="'sale_name' in o">
-                            <strong>SO Number:</strong><br/>
-                            <span t-esc="'sale_name' in o and o.sale_name"/>
+                            <span t-esc="time.strftime('%Y-%m-%d')"
+                                  t-options='{"widget": "date"}'/>
                         </div>
                     </div>
 
@@ -75,15 +63,6 @@
                             <tr>
                                 <th><strong>Product</strong></th>
                                 <th class="text-right"><strong>Quantity</strong></th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Source Location</strong>
-                                </th>
-                                <th class="text-center" groups="stock.group_stock_multi_locations">
-                                    <strong>Destination Location</strong>
-                                </th>
-                                <th class="text-center">
-                                    <strong>Barcode</strong>
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,17 +78,6 @@
                                     <td class="text-right">
                                         <span t-field="line.product_uom_qty"/>
                                         <span t-field="line.product_uom.name" groups="product.group_uom"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_id.name"/>
-                                    </td>
-                                    <td class="text-center" groups="stock.group_stock_multi_locations">
-                                        <span t-field="line.location_dest_id.name"/>
-                                    </td>
-                                    <td class="text-center">
-                                        <span t-if="line.product_id.barcode">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
-                                        </span>
                                     </td>
                                 </tr>
                             </t>

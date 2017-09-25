@@ -2,24 +2,47 @@ odoo.define('web.PivotRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
+var core = require('web.core');
 var field_utils = require('web.field_utils');
+
+var QWeb = core.qweb;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
     className: 'table-hover table-condensed table-bordered',
+    events: _.extend({}, AbstractRenderer.prototype.events, {
+        'hover td': '_onTdHover',
+    }),
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
+     * Used to determine whether or not to display the no content helper.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasContent: function () {
+        return this.state.has_data && this.state.measures.length;
+    },
+    /**
      * @override
      * @private
      * @returns {Deferred}
      */
     _render: function () {
-        if (!this.state.has_data) {
+        if (!this._hasContent()) {
+            // display the nocontent helper
+            this.replaceElement(QWeb.render('PivotView.nodata'));
             return this._super.apply(this, arguments);
+        }
+
+        if (!this.$el.is('table')) {
+            // coming from the no content helper, so the root element has to be
+            // re-rendered before rendering and appending its content
+            this.renderElement();
         }
         var $fragment = $(document.createDocumentFragment());
         var $table = $('<table>').appendTo($fragment);
@@ -34,9 +57,6 @@ var PivotRenderer = AbstractRenderer.extend({
         }
         this._renderHeaders($thead, this.state.headers);
         this._renderRows($tbody, this.state.rows);
-        $table.on('hover', 'td', function () {
-            $table.find('col:eq(' + $(this).index()+')').toggleClass('hover');
-        });
         // todo: make sure the next line does something
         $table.find('.o_pivot_header_cell_opened,.o_pivot_header_cell_closed').tooltip();
         this.$el.html($table.contents());
@@ -138,6 +158,19 @@ var PivotRenderer = AbstractRenderer.extend({
             $tbody.append($row);
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onTdHover: function (event) {
+        var $td = $(event.target);
+        $td.closest('table').find('col:eq(' + $td.index()+')').toggleClass('hover');
+    }
 
 });
 

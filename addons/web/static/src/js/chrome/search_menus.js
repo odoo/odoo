@@ -100,7 +100,7 @@ return Widget.extend({
                 // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
                 return 'active_view' in a;
             });
-        var view_context = view_manager ? view_manager.active_view.controller.get_context() : {};
+        var view_context = view_manager ? view_manager.active_view.controller.getContext() : {};
         var results = pyeval.eval_domains_and_contexts({
                 domains: search.domains,
                 contexts: [user_context].concat(search.contexts.concat(view_context || [])),
@@ -122,6 +122,7 @@ return Widget.extend({
             model_id: this.target_model,
             context: results.context,
             domain: results.domain,
+            sort: JSON.stringify(this.searchview.dataset._sort),
             is_default: default_filter,
             action_id: this.action_id,
         };
@@ -243,6 +244,13 @@ return Widget.extend({
         }
         this.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
+
+        // Load sort settings on view
+        if (!_.isUndefined(filter.sort)){
+            var sort_items = JSON.parse(filter.sort);
+            this.searchview.dataset.set_sort(sort_items);
+        }
+
         this.$filters[this.key_for(filter)].addClass('selected');
     },
     remove_filter: function (filter, $filter, key) {

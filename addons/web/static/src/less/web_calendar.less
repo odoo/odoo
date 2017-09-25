@@ -39,9 +39,9 @@
     .o_calendar_view {
         .o-flex(1, 1, auto);
         min-width: 0;
-        height: 100%;
 
         .o_calendar_widget {
+            height: 100%;
             background-color: @odoo-view-background-color;
             * {
                 z-index: 0; // FIXME
@@ -64,11 +64,11 @@
             .o_field_type_char:first-child {
                 font-weight: bold;
             }
-            .o_field_type_many2many:last-child img {
-                float: right;
-            }
             .fc-view {
                 overflow-x: auto;
+                > table {
+                    min-width: 600px;
+                }
             }
         }
 
@@ -191,7 +191,7 @@
         .o_calendar_filter {
             padding: 8px;
             border-top: 1px solid lightgray;
-            .o_form_field_many2one {
+            .o_field_many2one {
                 width: 100%;
             }
         }
@@ -199,6 +199,12 @@
 
     .fc-time-grid-event.fc-short .fc-time:before {
         content: '';
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .o_calendar_container {
+        padding: 0;
     }
 }
 

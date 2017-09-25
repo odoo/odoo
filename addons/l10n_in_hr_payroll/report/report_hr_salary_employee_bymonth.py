@@ -3,7 +3,8 @@
 
 from datetime import date
 
-from odoo import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 
 class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
@@ -92,14 +93,17 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
         return self.total
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
+        if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
         get_periods, months, total_mnths = self.get_periods(data['form'])
         get_employee = self.get_employee(data['form'], months, total_mnths)
         get_months_tol = self.get_months_tol()
         get_total = self.get_total(get_months_tol)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': model,
             'data': data,
@@ -110,4 +114,3 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
             'get_total': get_total,
             'month_len': len(total_mnths) + 1
         }
-        return self.env['report'].render('l10n_in_hr_payroll.report_hrsalarybymonth', docargs)

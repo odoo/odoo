@@ -20,14 +20,15 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     custom_events: {
         execute_action: function(event) {
             var data = event.data;
-            this.do_execute_action(data.action_data, data.model, data.record_id, data.on_closed)
+            this.do_execute_action(data.action_data, data.env, data.on_closed)
                 .then(data.on_success, data.on_fail);
         },
         search: function(event) {
             var d = event.data;
             _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys));
-            this.active_view.controller.reload(this.env);
+            this.active_view.controller.reload(_.extend({offset: 0}, this.env));
         },
+        add_filter: '_onAddFilter',
         switch_view: function(event) {
             if ('res_id' in event.data) {
                 this.env.currentId = event.data.res_id;
@@ -46,13 +47,15 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         push_state: function(event) {
             this.do_push_state(event.data);
         },
+        switch_to_previous_view: '_onSwitchToPreviousView',
     },
     /**
      * Called each time the view manager is attached into the DOM
      */
     on_attach_callback: function() {
         this.is_in_DOM = true;
-        if (this.active_view && this.active_view.controller.on_attach_callback) {
+        var controller = this.active_view && this.active_view.controller;
+        if (controller && this.active_view.controller.on_attach_callback) {
             this.active_view.controller.on_attach_callback();
         }
     },
@@ -182,7 +185,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             core.bus.on('clear_uncommitted_changes', self, function(chain_callbacks) {
                 chain_callbacks(function() {
                     if (self.active_view.controller) {
-                        return self.active_view.controller.canBeDiscarded();
+                        return self.active_view.controller.discardChanges(undefined, {
+                            readonlyIfRealDiscard: true,
+                        });
                     }
                 });
             });
@@ -227,8 +232,9 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     },
     /**
      * Returns the default view with the following fallbacks:
-     *  - use the default_view defined in the flags, if any
-     *  - use the first view in the view_order
+     *
+     * - use the default_view defined in the flags, if any
+     * - use the first view in the view_order
      *
      * @returns {Object} the default view
      */
@@ -288,9 +294,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }).fail(view.loaded.reject.bind(view.loaded));
             } else {
                 view.loaded = view.loaded.then(function() {
-                    // By default, the view will be loaded in readonly mode
-                    // Returns to this default mode if you load action from breadcrumb
-                    view_options = _.extend({mode: 'readonly'}, view_options, self.env);
+                    view_options = _.extend({}, view_options, self.env);
                     return view.controller.reload(view_options);
                 });
             }
@@ -301,7 +305,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                     self.trigger('switch_mode', view_type, view_options);
                 }).fail(function(e) {
                     if (!(e && e.code === 200 && e.data.exception_type)) {
-                        self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+                        self.do_warn(_t("Error"), view.label + _t(" view couldn't be loaded"));
                     }
                     // Restore internal state
                     self.active_view = old_view;
@@ -323,7 +327,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             cp_content: _.extend({}, this.searchview_elements, view_control_elements),
             hidden: this.flags.headless,
             searchview: this.searchview,
-            search_view_hidden: !this.active_view.searchable,
+            search_view_hidden: !this.active_view.searchable || this.active_view.searchview_hidden,
         };
         this.update_control_panel(cp_status);
 
@@ -350,17 +354,17 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             callbacks: [{widget: view_controller}],
         });
     },
-    create_view: function(view, view_options) {
+    create_view: function(view_descr, view_options) {
         var self = this;
-        var arch = view.fields_view.arch;
-        var View = this.registry.get(arch.attrs.js_class || view.type);
-        var params = _.extend({}, view_options);
-        if (view.type === "form" && ((this.action.target === 'new' || this.action.target === 'inline') ||
-            (view_options && view_options.mode === 'edit'))) {
+        var arch = view_descr.fields_view.arch;
+        var View = this.registry.get(arch.attrs.js_class || view_descr.type);
+        var params = _.extend({}, view_options, {userContext: this.getSession().user_context});
+        if (view_descr.type === "form" && ((this.action.target === 'new' || this.action.target === 'inline') ||
+            (view_options && (view_options.mode === 'edit' || view_options.context.form_view_initial_mode)))) {
             params.mode = params.initial_mode || 'edit';
         }
-
-        view = new View(view.fields_view, params);
+        view_descr.searchview_hidden = View.prototype.searchview_hidden;
+        var view = new View(view_descr.fields_view, params);
         return view.getController(this).then(function(controller) {
             controller.on('history_back', this, function() {
                 if (self.action_manager) self.action_manager.trigger('history_back');
@@ -375,8 +379,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         });
     },
     select_view: function (index) {
-        var view_type = this.view_stack[index].type;
-        return this.switch_mode(view_type);
+        var viewType = this.view_stack[index].type;
+        var viewOptions = {};
+        if (viewType === 'form') {
+            // reload form views in readonly, except for inline actions (i.e.
+            // settings views) that stay in edit
+            viewOptions.mode = this.action.target === 'inline' ? 'edit' : 'readonly';
+        }
+        return this.switch_mode(viewType, viewOptions);
     },
     /**
      * Renders the switch buttons for multi- and mono-record views and adds
@@ -541,20 +551,36 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      *
      * @param {Object} action_data the action descriptor data
      * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
-     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
+     * @param {String} [action_data.special=null] special action handlers, closes the dialog if set
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
-     * @param {DataSet} dataset a dataset object used to communicate with the server
-     * @param {Object} [record_id] the identifier of the object on which the action is to be applied
+     * @param {string} [action_data.effect] if given, a visual effect (a
+     *   rainbowman by default) will be displayed when the action is complete,
+     *   with the string (evaluated) given as options.
+     * @param {Object} env
+     * @param {string} env.model the model of the record(s) triggering the action
+     * @param {integer[]} [env.resIDs] the current ids in the environment where the action is triggered
+     * @param {integer} [env.currentID] the id of the record triggering the action
+     * @param {Object} [env.context] a context to pass to the action
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    do_execute_action: function (action_data, model, record_id, on_closed) {
+    do_execute_action: function (action_data, env, on_closed) {
         var self = this;
         var result_handler = on_closed || function () {};
-        var context = new Context(this.env.context, action_data.context || {});
+        var context = new Context(env.context, action_data.context || {});
+        // OR NULL hereunder: pyeval waits specifically for a null value, different from undefined
+        var recordID = env.currentID || null;
 
         // response handler
         var handler = function (action) {
+            // show effect if button have effect attribute
+            // Rainbowman can be displayed from two places : from attribute on a button, or from python.
+            // Code below handles the first case i.e 'effect' attribute on button.
+            var effect = false;
+            if (action_data.effect) {
+                effect = pyeval.py_eval(action_data.effect);
+            };
+
             if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
@@ -565,28 +591,33 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                     }))
                 );
                 ncontext.add(action_data.context || {});
-                ncontext.add({active_model: self.env.modelName});
-                if (record_id) {
+                ncontext.add({active_model: env.model});
+                if (recordID) {
                     ncontext.add({
-                        active_id: record_id,
-                        active_ids: [record_id],
+                        active_id: recordID,
+                        active_ids: [recordID],
                     });
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
+                // In case effect data is returned from python and also there is rainbow
+                // attribute on button, priority is given to button attribute
+                action.effect = effect || action.effect;
                 return self.do_action(action, {
                     on_close: result_handler,
                 });
             } else {
-                self.do_action({"type":"ir.actions.act_window_close"});
+                // If action doesn't return anything, but have effect
+                // attribute on button, display rainbowman
+                self.do_action({"type":"ir.actions.act_window_close", 'effect': effect});
                 return result_handler();
             }
         };
 
-        if (action_data.special === 'cancel') {
+        if (action_data.special) {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type === "object") {
-            var args = record_id ? [[record_id]] : [this.env.ids];
+            var args = recordID ? [[recordID]] : [env.resIDs];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
@@ -598,13 +629,13 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }
             }
             args.push(context);
-            var dataset = new data.DataSet(this, model, this.env.context);
+            var dataset = new data.DataSet(this, env.model, env.context);
             return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type === "action") {
             return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
-                active_model: this.env.modelName,
-                active_ids: this.env.ids,
-                active_id: record_id
+                active_model: env.model,
+                active_ids: env.resIDs,
+                active_id: recordID,
             })).then(handler);
         }
     },
@@ -616,6 +647,32 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddFilter: function (event) {
+        if (this.searchview) {
+            this.searchview.addFilter(event.data.domain, event.data.help);
+        }
+    },
+    /**
+     * This handler is probably called by a sub form view when the user discards
+     * its value.  The usual result of this is that we switch back to the
+     * previous view (the first in our action stack).  We do this in a really
+     * stupid way: we trigger a 'history_back' event, and the action manager
+     * will call this very view manager to activate the previous view.
+     * @todo: directly switch to previous view
+     *
+     * @private
+     */
+    _onSwitchToPreviousView: function () {
+        this.trigger_up('history_back');
+    }
 });
 
 return ViewManager;

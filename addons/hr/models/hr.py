@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
 from odoo.exceptions import ValidationError
 from odoo.modules.module import get_module_resource
-
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +31,7 @@ class Job(models.Model):
     _description = "Job Position"
     _inherit = ['mail.thread']
 
-    name = fields.Char(string='Job Title', required=True, index=True, translate=True)
+    name = fields.Char(string='Job Position', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')
     no_of_employee = fields.Integer(compute='_compute_employees', string="Current Number of Employees", store=True,
@@ -103,7 +102,7 @@ class Employee(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     # resource and user
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
@@ -111,20 +110,24 @@ class Employee(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Home Address')
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+    is_address_home_a_company = fields.Boolean(
+        'The employee adress has a company linked',
+        compute='_compute_is_address_home_a_company',
+    )
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)')
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ], groups="hr.group_hr_user")
+    ], groups="hr.group_hr_user", default="male")
     marital = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married'),
+        ('married', 'Married (or similar)'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status', groups="hr.group_hr_user")
+    ], string='Marital Status', groups="hr.group_hr_user", default='single')
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
     ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user")
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user")
@@ -135,6 +138,10 @@ class Employee(models.Model):
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
         help='Employee bank salary account')
+    permit_no = fields.Char('Work Permit No')
+    visa_no = fields.Char('Visa No')
+    visa_expire = fields.Date('Visa Expire Date')
+
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
         "Photo", default=_default_image, attachment=True,
@@ -157,7 +164,7 @@ class Employee(models.Model):
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     # employee in company
-    job_id = fields.Many2one('hr.job', 'Job Title')
+    job_id = fields.Many2one('hr.job', 'Job Position')
     department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
@@ -256,15 +263,22 @@ class Employee(models.Model):
         # Do not notify user it has been marked as follower of its employee.
         return
 
+    @api.depends('address_home_id.parent_id')
+    def _compute_is_address_home_a_company(self):
+        """Checks that choosen address (res.partner) is not linked to a company.
+        """
+        for employee in self:
+            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
 
 class Department(models.Model):
-
     _name = "hr.department"
     _description = "HR Department"
     _inherit = ['mail.thread']
     _order = "name"
+    _rec_name = 'complete_name'
 
     name = fields.Char('Department Name', required=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
@@ -275,20 +289,18 @@ class Department(models.Model):
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
 
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for department in self:
+            if department.parent_id:
+                department.complete_name = '%s / %s' % (department.parent_id.complete_name, department.name)
+            else:
+                department.complete_name = department.name
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create recursive departments.'))
-
-    @api.multi
-    def name_get(self):
-        result = []
-        for record in self:
-            name = record.name
-            if record.parent_id:
-                name = "%s / %s" % (record.parent_id.name_get()[0][1], name)
-            result.append((record.id, name))
-        return result
 
     @api.model
     def create(self, vals):
@@ -316,12 +328,16 @@ class Department(models.Model):
                 # subscribe the manager user
                 if manager.user_id:
                     self.message_subscribe_users(user_ids=manager.user_id.ids)
-            employees = self.env['hr.employee']
-            for department in self:
-                employees = employees | self.env['hr.employee'].search([
-                    ('id', '!=', manager_id),
-                    ('department_id', '=', department.id),
-                    ('parent_id', '=', department.manager_id.id)
-                ])
-            employees.write({'parent_id': manager_id})
+            # set the employees's parent to the new manager
+            self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)
+
+    def _update_employee_manager(self, manager_id):
+        employees = self.env['hr.employee']
+        for department in self:
+            employees = employees | self.env['hr.employee'].search([
+                ('id', '!=', manager_id),
+                ('department_id', '=', department.id),
+                ('parent_id', '=', department.manager_id.id)
+            ])
+        employees.write({'parent_id': manager_id})

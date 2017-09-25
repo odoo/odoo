@@ -1,7 +1,9 @@
 odoo.define('account.reconciliation_tests.data', function () {
 "use strict";
 
-var data = {
+var Datas = {};
+
+var db = {
     'res.partner': {
         fields: {
             id: {string: "ID", type: 'integer'},
@@ -9,6 +11,9 @@ var data = {
             image: {string: "image", type: 'integer'},
             customer: {string: "customer", type: 'boolean'},
             supplier: {string: "supplier", type: 'boolean'},
+            parent_id: {string: "Parent", type: 'boolean'},
+            property_account_receivable_id: {string: 'Account receivable', type: 'many2one', relation: 'account.account'},
+            property_account_payable_id: {string: 'Account payable', type: 'many2one', relation: 'account.account'},
         },
         records: [
             {id: 1, display_name: "partner 1", image: 'AAA', customer: true},
@@ -16,7 +21,10 @@ var data = {
             {id: 3, display_name: "partner 3", image: 'CCC', customer: true},
             {id: 4, display_name: "partner 4", image: 'DDD', customer: true},
             {id: 8, display_name: "Agrolait", image: 'EEE', customer: true},
-            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true},
+            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true, property_account_receivable_id: 287, property_account_payable_id: 287},
+            // add more to have 'Search More' option
+            {id: 98, display_name: "partner 98", image: 'YYY', customer: true},
+            {id: 99, display_name: "partner 99", image: 'ZZZ', customer: true},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -55,7 +63,7 @@ var data = {
             {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288},
         ],
         json_friendly_compute_all: function (args) {
-            var tax = _.find(data['account.tax'].records, {'id': args[0][0]});
+            var tax = _.find(db['account.tax'].records, {'id': args[0][0]});
             var amount = args[1];
             var tax_base = tax.price_include ? amount*100/(100+tax.amount) : amount;
             return $.when({
@@ -100,7 +108,7 @@ var data = {
     'account.bank.statement': {
         fields: {},
         reconciliation_widget_preprocess: function () {
-            return $.when(data_preprocess);
+            return $.when(Datas.used.data_preprocess);
         },
     },
     'account.bank.statement.line': {
@@ -119,19 +127,19 @@ var data = {
             var partner_id = args.splice(1, 1)[0];
             var excluded_ids = args.splice(1, 1)[0];
             var key = JSON.stringify(args);
-            if (!mv_lines[key]) {
+            if (!Datas.used.mv_lines[key]) {
                 throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
             }
-            return $.when(_.filter(mv_lines[key], function (line) {
+            return $.when(_.filter(Datas.used.mv_lines[key], function (line) {
                 return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
             }));
         },
         get_data_for_reconciliation_widget: function (args) {
             var ids = args[0];
-            return $.when(_.filter(data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+            return $.when(_.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
         },
         reconciliation_widget_auto_reconcile: function () {
-            return $.when(auto_reconciliation);
+            return $.when(Datas.used.auto_reconciliation);
         },
         process_reconciliations: function (args) {
             var datas = args[1];
@@ -139,8 +147,8 @@ var data = {
             ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
             ids = _.compact(ids);
 
-            for (var key in move_lines_for_manual_reconciliation) {
-                move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+            for (var key in Datas.used.move_lines_for_manual_reconciliation) {
+                Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
                     return ids.indexOf(mv_line.id) === -1;
                 });
             }
@@ -151,18 +159,18 @@ var data = {
         fields: {},
         get_data_for_manual_reconciliation_widget: function (args) {
             var key = JSON.stringify(args);
-            if (!data_for_manual_reconciliation_widget[key]) {
+            if (!Datas.used.data_for_manual_reconciliation_widget[key]) {
                 throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
             }
-            return $.when(data_for_manual_reconciliation_widget[key]);
+            return $.when(Datas.used.data_for_manual_reconciliation_widget[key]);
         },
         get_move_lines_for_manual_reconciliation: function (args) {
             var excluded_ids = args.splice(2, 1)[0];
             var key = JSON.stringify(args);
-            if (!move_lines_for_manual_reconciliation[key]) {
+            if (!Datas.used.move_lines_for_manual_reconciliation[key]) {
                 throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
             }
-            return $.when(_.filter(move_lines_for_manual_reconciliation[key], function (line) {
+            return $.when(_.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (line) {
                 return excluded_ids.indexOf(line.id) === -1;
             }));
         },
@@ -171,8 +179,8 @@ var data = {
             var datas = args[0];
             for (var i in datas) {
                 var data = datas[i];
-                for (var key in move_lines_for_manual_reconciliation) {
-                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                for (var key in Datas.used.move_lines_for_manual_reconciliation) {
+                    Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
                         return data.mv_line_ids.indexOf(mv_line.id) === -1;
                     });
                 }
@@ -339,7 +347,10 @@ var mv_lines = {
     '[]': [],
     '[5,"",0,6]': [
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
-        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 112, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false}
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 112, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 134, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false}
     ],
     '[5,"b",0,6]': [
         {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
@@ -361,7 +372,12 @@ var mv_lines = {
     '[7,"",0,6]': [
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 133, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
-        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false}
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 376.00", 'partner_id': 7, 'account_name': "Bank", 'name': "BNK1/2017/0002: SUPP.OUT/2017/0002", 'partner_name': "ASUSTeK", 'total_amount_currency_str': "", 'id': 392, 'credit': 376.0, 'journal_id': "Bank", 'amount_str': "$ 376.00", 'debit': 0.0, 'account_code': "101401", 'ref': "BILL/2017/0003", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
+        {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 525.50", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0004: CUST.IN/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 396, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 525.50", 'debit': 525.5, 'account_code': "101401", 'ref': "INV/2017/0003", 'already_paid': true},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-22", 'date': "2017-01-23", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 399, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
     ],
     '[8,"",0,6]': [],
 };
@@ -462,23 +478,22 @@ var options = {
     }
 };
 
-return {
-    params: {
-        data: data,
-        data_preprocess: data_preprocess,
-        data_widget: data_widget,
-        mv_lines: mv_lines,
-        auto_reconciliation: auto_reconciliation,
-        data_for_manual_reconciliation_widget: data_for_manual_reconciliation_widget,
-        move_lines_for_manual_reconciliation: move_lines_for_manual_reconciliation,
-        session: session,
-        options: options,
-    },
-    // this is the main function for this module. Its job is to export (and clone) all data for a test.
-    getParams: function () {
-        return $.extend(true, {}, this.params);
-    }
+Datas.params = {
+    data: db,
+    data_preprocess: data_preprocess,
+    data_widget: data_widget,
+    mv_lines: mv_lines,
+    auto_reconciliation: auto_reconciliation,
+    data_for_manual_reconciliation_widget: data_for_manual_reconciliation_widget,
+    move_lines_for_manual_reconciliation: move_lines_for_manual_reconciliation,
+    session: session,
+    options: options,
 };
+    // this is the main function for this module. Its job is to export (and clone) all data for a test.
+Datas.getParams = function () {
+    return (this.used = $.extend(true, {}, this.params));
+};
+return Datas;
 });
 
 odoo.define('account.reconciliation_tests', function (require) {
@@ -512,7 +527,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.create').length, 1, "should have 'create' panel");
 
         assert.strictEqual(widget.$('thead').text().replace(/[\n\r\s]+/g, ' '), " 101401 2017-01-01 SAJ/2014/002 and SAJ/2014/003 $ 1,175.00 ", "should display the line information");
-        assert.ok(widget.$('caption .o_form_field.o_form_field_many2one').length, "should display the many2one with to select a partner");
+        assert.ok(widget.$('caption .o_field_many2one').length, "should display the many2one with to select a partner");
 
         assert.strictEqual(clientAction.$('[data-mode="inactive"]').length, 3, "should be as 'inactive' mode by default");
         assert.strictEqual(widget.$el.data('mode'), 'match', "the first one should automatically switch to match mode");
@@ -528,7 +543,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation fields', function (assert) {
         assert.expect(6);
 
@@ -540,12 +554,12 @@ QUnit.module('account', {
 
         var widget = clientAction.widgets[0];
 
-        assert.strictEqual(widget.$('.o_form_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
-        assert.strictEqual(clientAction.widgets[2].$('.o_form_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
+        assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create .o_form_input').length, 6,
+        assert.strictEqual(widget.$('.create .o_input').length, 6,
             "create panel should display 5 fields (account_id, tax_id, analytic_account_id, label, amount)");
-        assert.strictEqual(widget.$('.create .create_account_id .o_form_required, .create .create_label .o_form_required, .create .create_amount .o_form_required').length, 3,
+        assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
             "should use the name of the reconciliation line for the default label value");
@@ -555,9 +569,8 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation basic data', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -594,12 +607,38 @@ QUnit.module('account', {
         clientAction.widgets[3].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[3].$el.data('mode'), 'create', "should switch to 'create' mode instead 'match' mode when 'match' mode is empty");
 
+        // open the first line
+        widget.$('.accounting_view thead td:first').trigger('click');
+        // select propositions
+        widget.$('.match .cell_account_code:first').trigger('click');
+        widget.$('.match .cell_account_code:first').trigger('click');
+
+        testUtils.intercept(clientAction, 'call_service', function (event) {
+            assert.deepEqual(event.data.args[1].args,
+                [[5],[{partner_id: 8, counterpart_aml_dicts: [{
+                                                                  "counterpart_aml_id": 109,
+                                                                  "credit": 650,
+                                                                  "debit": 0,
+                                                                  "name": "INV/2017/0002"
+                                                                },
+                                                                {
+                                                                  "counterpart_aml_id": 112,
+                                                                  "credit": 525,
+                                                                  "debit": 0,
+                                                                  "name": "INV/2017/0003"
+                                                                }], 
+                                    payment_aml_ids: [], new_aml_dicts: []}]],
+                "Should call process_reconciliations with ids");
+        });
+
+        // click on reconcile button
+        widget.$('button.o_reconcile:not(:hidden)').trigger('click');
+
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation partial', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -610,13 +649,8 @@ QUnit.module('account', {
                         [6],
                         [{
                             partner_id: false,
-                            counterpart_aml_dicts:[{
-                                name: "BNK1/2017/0002: SUPP.OUT/2017/0002",
-                                debit: 32.58,
-                                credit: 0,
-                                counterpart_aml_id: 392
-                            }],
-                            payment_aml_ids: [],
+                            counterpart_aml_dicts:[],
+                            payment_aml_ids: [392],
                             new_aml_dicts: []
                         }]
                     ], "should call process_reconciliations with partial reconcile values");
@@ -627,19 +661,24 @@ QUnit.module('account', {
 
         clientAction.appendTo($('body'));
 
-        var widget = clientAction.widgets[1];
+        var widget = clientAction.widgets[0];
+
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.notOk( widget.$('.cell_right .line_info_button').length, "should not display the partial reconciliation alert");
+
+        widget = clientAction.widgets[1];
 
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 0, "should not display the partial reconciliation alert");
         assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
         assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
-        assert.ok(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should display the partial reconciliation information");
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
+        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
         assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
+        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
         widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
@@ -667,7 +706,6 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
-
 
     QUnit.test('Reconciliation currencies', function (assert) {
         assert.expect(2);
@@ -702,6 +740,72 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
+    QUnit.test('Reconciliation change partner', function (assert) {
+        assert.expect(17);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            archs: {
+                'res.partner,false,list': '<tree string="Partners"><field name="display_name"/></tree>',
+                'res.partner,false,search': '<search string="Partners">' +
+                                            '<field name="display_name" string="Name"/>' +
+                                        '</search>',
+            },
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+        var widget = clientAction.widgets[0];
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
+        assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
+        
+        // Adding the two propositions
+        // This is in order to try that after changing partner the propositions are emptied
+        widget.$('.match .cell_account_code:first').trigger('click');
+        widget.$('.match .cell_account_code:first').trigger('click');
+        assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "Both proposition should be selected");
+
+        // Similate changing partner to one that does not have propositions to see if create mode is open after
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(partner 1)').trigger('mouseenter').trigger('click');
+        clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'partner 1', id: 1}}, stopped: false});
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "partner 1", "the partner many2one should display partner 1");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 0, "partner 1 should have 0 propositions for reconciliation");
+        assert.strictEqual(widget.$el.data('mode'), 'create', "widget should be in create mode");
+
+        // Simulate changing partner
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(Camptocamp)').trigger('mouseenter').trigger('click');
+        clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 3, "camptocamp should have 3 propositions for reconciliation");
+
+        // Simulate changing partner with SelectCreateDialog
+        widget = clientAction.widgets[1];
+        assert.strictEqual($('.modal').length, 0, "shouldn't have any opened modal");
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(Search More):eq(1)').trigger('mouseenter').trigger('click');
+        assert.strictEqual($('.modal').length, 1, "should open a SelectCreateDialog");
+        $('.modal table.o_list_view td:contains(Camptocamp)').click();
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
+
+        widget = clientAction.widgets[2];
+        widget.$('.accounting_view thead td:first').trigger('click');
+        widget.$('.accounting_view .mv_line .cell_label').trigger('click');
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display agrolait");
+        assert.strictEqual(widget.$('.match table tr').length, 3, "Camptocamp should have 3 propositions for reconciliation");
+        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 0, "should not display the right arrow");
+
+        // Simulate remove partner
+        widget.$('.o_input_dropdown input').trigger('click');
+        widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
+        assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
+        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 1, "should not display the right arrow");
+
+        clientAction.destroy();
+    });
 
     QUnit.test('Reconciliation create line', function (assert) {
         assert.expect(23);
@@ -783,7 +887,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation create line with taxes', function (assert) {
         assert.expect(13);
 
@@ -827,7 +930,6 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation create line from reconciliation model', function (assert) {
         assert.expect(6);
 
@@ -844,7 +946,7 @@ QUnit.module('account', {
         widget.$('.create .quick_add button:contains(ATOS)').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            "ATOS Banque1145.62Tax 20.00%229.12ATOS Frais26.71Tax 10.00% include2.67", "should display 4 lines");
+            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Create Write-off229.12", "should display the 'Create Write-off' line with value in left column");
 
@@ -869,7 +971,6 @@ QUnit.module('account', {
 
         clientAction.destroy();
     });
-
 
     QUnit.test('Reconciliation auto reconciliation', function (assert) {
         assert.expect(6);
@@ -902,9 +1003,8 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
     QUnit.test('Reconciliation manual', function (assert) {
-        assert.expect(9);
+        assert.expect(8);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
@@ -923,15 +1023,13 @@ QUnit.module('account', {
 
         clientAction.$('.accounting_view:first .o_reconcile:visible').trigger('click');
 
-        assert.strictEqual(clientAction.$('.progress .progress-bar').attr('aria-valuenow'), "1", "should display a progress bar with 1 reconciled line");
-
         assert.strictEqual(clientAction.$('.accounting_view:first thead').text().replace(/[\n\r\s]+/g, ' '),
             " Agrolait 101200 ",
             "should display the partner and the account code as title");
 
-        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_left').text(),
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right').text(),
             "$ 11,000.00", "sould display the line in $");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_left .o_multi_currency').data('content'),
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right .o_multi_currency').data('content'),
             "10,222.00 €", "sould display the monetary information in €");
 
         assert.strictEqual(clientAction.$('.accounting_view:first .o_no_valid:visible').length, 1, "should display the skip button");
@@ -939,31 +1037,227 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
-
-    QUnit.test('Reconciliation manual validate all', function (assert) {
+    QUnit.test('Reconciliation pager', function (assert) {
         assert.expect(6);
 
-        var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
+        this.params.data['account.bank.statement.line'].records.push(
+            {id: 9, display_name: "add 9"},
+            {id: 10, display_name: "add 10"},
+            {id: 11, display_name: "add 11"},
+            {id: 12, display_name: "add 12"},
+            {id: 13, display_name: "add 13"},
+            {id: 14, display_name: "add 14"},
+            {id: 15, display_name: "add 15"},
+            {id: 16, display_name: "add 16"}
+        );
 
+        var data_preprocess = this.params.data_preprocess;
+        data_preprocess.st_lines_ids.push(9, 10, 11, 12, 13, 14, 15, 16);
+
+        this.params.data_widget.push(
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 9",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 9,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 10",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 10,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 11",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 11,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 12",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 12,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 13",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 13,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 14",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 14,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 15",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 15,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            },
+            {
+                'st_line': {
+                    'currency_id': 3,
+                    'communication_partner_name': false,
+                    'open_balance_account_id': 287,
+                    'name': "add 16",
+                    'partner_name': "Camptocamp",
+                    'partner_id': 12,
+                    'has_no_partner': false,
+                    'journal_id': 84,
+                    'account_name': "Bank",
+                    'note': "",
+                    'amount': 650.0,
+                    'amount_str': "$ 650.00",
+                    'amount_currency_str': "",
+                    'date': "2017-01-01",
+                    'account_code': "101401",
+                    'ref': "",
+                    'id': 16,
+                    'statement_id': 2
+                },
+                'reconciliation_proposition': []
+            }
+        );
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
             'data': this.params.data,
-            session: this.params.session,
         });
 
-        clientAction.prependTo($('#qunit-fixture'));
+        clientAction.appendTo($('#qunit-fixture'));
 
-        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode="match"]').length, 0, "should have every widgets in 'inactive' mode");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 5, "should have 5 widgets to reconciled");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line button.o_reconcile:visible').length, 3, "should have 3 widgets who display 'reconcile' button");
-
-        var e = $.Event("keyup");
-        e.which = 13;       // # Enter code value
-        e.ctrlKey = true;     // Ctrl key pressed
-        $("body").trigger(e);
-
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 3, "should have 2 already reconciled widgets");
-        assert.strictEqual(clientAction.$('.progress .progress-bar').attr('aria-valuenow'), "2", "should display a progress bar with 2 reconciled line");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode="match"]').length, 1, "should display the 'match' mode for the first line");
+        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should display 10 lines");
+        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 1, "should display the load more button");
+        clientAction.$('.accounting_view:has(.o_reconcile:visible) thead .cell_action').click();
+        clientAction.$('.o_reconcile:visible').click();
+        assert.strictEqual(clientAction.$('.o_reconcile:visible').length, 0, "should remove the reconciled line");
+        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should load one line to complete the 10");
+        clientAction.$('thead .cell_action:eq(1)').click();
+        clientAction.$('.js_load_more').click();
+        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 11, "should load the last record");
+        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 0, "should hide the load more button");
 
         clientAction.destroy();
     });

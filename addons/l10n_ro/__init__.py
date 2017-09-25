@@ -7,4 +7,4 @@
 # Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.erpsystems.ro).
 # Copyright (C) 2009 (<http://www.filsystem.ro>)
 
-import models
+from . import models

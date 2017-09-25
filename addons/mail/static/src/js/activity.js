@@ -6,13 +6,14 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
+var utils = require('mail.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 /**
  * Set the 'label_delay' entry in activity data according to the deadline date
- * @param {Array} list of activity Object
+ * @param {Array} activities list of activity Object
  * @return {Array} : list of modified activity Object
  */
 var setDelayLabel = function(activities){
@@ -54,7 +55,7 @@ var AbstractActivityField = AbstractField.extend({
     _markActivityDone: function (id, feedback) {
         return this._rpc({
                 model: 'mail.activity',
-                method: 'action_done',
+                method: 'action_feedback',
                 args: [[id]],
                 kwargs: {feedback: feedback},
             });
@@ -79,7 +80,7 @@ var AbstractActivityField = AbstractField.extend({
             self.activities = _.sortBy(self.activities, 'date_deadline');
         });
     },
-    _scheduleActivity: function (id, callback) {
+    _scheduleActivity: function (id, previous_activity_type_id, callback) {
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
@@ -90,6 +91,7 @@ var AbstractActivityField = AbstractField.extend({
             context: {
                 default_res_id: this.res_id,
                 default_res_model: this.model,
+                default_previous_activity_type_id: previous_activity_type_id,
             },
             res_id: id || false,
         };
@@ -121,10 +123,22 @@ var Activity = AbstractActivityField.extend({
         return fetch_def.then(function () {
             _.each(self.activities, function (activity) {
                 activity.time_ago = moment(time.auto_str_to_date(activity.create_date)).fromNow();
+                if (activity.note) {
+                    activity.note = utils.parse_and_transform(activity.note, utils.add_link);
+                }
             });
-            self.$el.html(QWeb.render('mail.activity_items', {
-                activities: setDelayLabel(self.activities),
-            }));
+            var activities = setDelayLabel(self.activities);
+            if (activities.length) {
+                var nbActivities = _.countBy(activities, 'state');
+                self.$el.html(QWeb.render('mail.activity_items', {
+                    activities: activities,
+                    nbPlannedActivities: nbActivities.planned,
+                    nbTodayActivities: nbActivities.today,
+                    nbOverdueActivities: nbActivities.overdue,
+                }));
+            } else {
+                self.$el.empty();
+            }
         });
     },
     _reset: function (record) {
@@ -134,9 +148,9 @@ var Activity = AbstractActivityField.extend({
     },
 
     // public
-    scheduleActivity: function () {
+    scheduleActivity: function (previous_activity_type_id) {
         var callback = this._reload.bind(this, {activity: true, thread: true});
-        return this._scheduleActivity(false, callback);
+        return this._scheduleActivity(false, previous_activity_type_id, callback);
     },
     // private
     _reload: function (fieldsToReload) {
@@ -144,11 +158,11 @@ var Activity = AbstractActivityField.extend({
     },
 
     // handlers
-    _onEditActivity: function (event) {
+    _onEditActivity: function (event, options) {
         event.preventDefault();
         var self = this;
         var activity_id = $(event.currentTarget).data('activity-id');
-        var action = {
+        var action = _.defaults(options || {}, {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
             view_mode: 'form',
@@ -160,7 +174,7 @@ var Activity = AbstractActivityField.extend({
                 default_res_model: this.model,
             },
             res_id: activity_id,
-        };
+        });
         return this.do_action(action, {
             on_close: function () {
                 // remove the edited activity from the array of fetched activities to
@@ -170,13 +184,17 @@ var Activity = AbstractActivityField.extend({
             },
         });
     },
-    _onUnlinkActivity: function (event) {
+    _onUnlinkActivity: function (event, options) {
         event.preventDefault();
         var activity_id = $(event.currentTarget).data('activity-id');
+        options = _.defaults(options || {}, {
+            model: 'mail.activity',
+            args: [[activity_id]],
+        });
         return this._rpc({
-                model: 'mail.activity',
+                model: options.model,
                 method: 'unlink',
-                args: [[activity_id]],
+                args: options.args,
             })
             .then(this._reload.bind(this, {activity: true}));
     },
@@ -185,17 +203,19 @@ var Activity = AbstractActivityField.extend({
         var self = this;
         var $popover_el = $(event.currentTarget);
         var activity_id = $popover_el.data('activity-id');
+        var previous_activity_type_id = $popover_el.data('previous-activity-type-id');
         if (!$popover_el.data('bs.popover')) {
             $popover_el.popover({
                 title : _t('Feedback'),
                 html: 'true',
                 trigger:'click',
                 content : function() {
-                    var $popover = $(QWeb.render("mail.activity_feedback_form", {}));
+                    var $popover = $(QWeb.render("mail.activity_feedback_form", {'previous_activity_type_id': previous_activity_type_id}));
                     $popover.on('click', '.o_activity_popover_done_next', function () {
                         var feedback = _.escape($popover.find('#activity_feedback').val());
+                        var previous_activity_type_id = $popover_el.data('previous-activity-type-id');
                         self._markActivityDone(activity_id, feedback)
-                            .then(self.scheduleActivity.bind(self));
+                            .then(self.scheduleActivity.bind(self, previous_activity_type_id));
                     });
                     $popover.on('click', '.o_activity_popover_done', function () {
                         var feedback = _.escape($popover.find('#activity_feedback').val());
@@ -298,7 +318,7 @@ var KanbanActivity = AbstractActivityField.extend({
     },
     _onScheduleActivity: function (event) {
         var activity_id = $(event.currentTarget).data('activity-id') || false;
-        return this._scheduleActivity(activity_id, this._reload.bind(this));
+        return this._scheduleActivity(activity_id, false, this._reload.bind(this));
     },
 });
 

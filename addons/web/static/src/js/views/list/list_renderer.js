@@ -4,10 +4,9 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var Domain = require('web.Domain');
+var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
-var session = require('web.session');
 var utils = require('web.utils');
 
 var _t = core._t;
@@ -32,7 +31,6 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
-    className: 'table-responsive',
     events: {
         'click tbody tr': '_onRowClicked',
         'click tbody .o_list_record_selector': '_onSelectRecord',
@@ -51,19 +49,13 @@ var ListRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
         var self = this;
         this.hasHandle = false;
-        this._processModifiers();
+        this.handleField = 'sequence';
         this.columns = _.reject(this.arch.children, function (c) {
-            if (c.attrs.invisible === '1') {
-                return true;
-            }
-            if (c.modifiers.tree_invisible) {
-                return true;
-            }
             if (c.attrs.widget === 'handle') {
                 self.hasHandle = true;
+                self.handleField = c.attrs.name;
             }
-            c.name = c.attrs.name;
-            return false;
+            return !!JSON.parse(c.attrs.modifiers || "{}").tree_invisible;
         });
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
@@ -156,50 +148,6 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
-     *
-     * @private
-     * @param {Object} record a basic model record
-     * @returns {string[]} a list of css classes
-     */
-    _computeDecorationClassNames: function (record) {
-        var data = JSON.parse(JSON.stringify(record.data));
-        var context = _.extend({}, data, {
-            uid: session.uid,
-            current_date: moment().format('YYYY-MM-DD')
-            // TODO: time, datetime, relativedelta
-        });
-        return _.chain(this.rowDecorations)
-            .pick(function (expr) {
-                return py.PY_isTrue(py.evaluate(expr, context));
-            }).map(function (expr, decoration) {
-                return decoration.replace('decoration', 'text');
-            }).value();
-    },
-    /**
-     * When a list view is grouped, we need to display the name of each group in
-     * the 'title' row.  This is the purpose of this method.
-     *
-     * @private
-     * @param {any} value
-     * @param {Object} field a field description
-     * @returns {string}
-     */
-    _formatValue: function (value, field) {
-        if (field && field.type === 'selection') {
-            var choice = _.find(field.selection, function (c) {
-                return c[0] === value;
-            });
-            return choice[1];
-        }
-        return value || _t('Undefined');
-    },
-    /**
      * return the number of visible columns.  Note that this number depends on
      * the state of the renderer.  For example, in editable mode, it could be
      * one more that in non editable mode, because there may be a visible 'trash
@@ -211,22 +159,6 @@ var ListRenderer = BasicRenderer.extend({
     _getNumberOfCols: function () {
         var n = this.columns.length;
         return this.hasSelectors ? n+1 : n;
-    },
-    /**
-     * Determine if a given cell is invisible.  A cell is considered invisible
-     * if there is an 'invisible' attr, with a matching domain.
-     *
-     * @private
-     * @param {Object} record a basic model record
-     * @param {Object} node a node object (from the arch)
-     * @returns {boolean}
-     */
-    _isInvisible: function (record, node) {
-        if ('invisible' in node.modifiers) {
-            var fieldValues = record.getEvalContext();
-            return new Domain(node.modifiers.invisible).compute(fieldValues);
-        }
-        return false;
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
@@ -244,7 +176,9 @@ var ListRenderer = BasicRenderer.extend({
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
                 var help = aggregateValues[column.attrs.name].help;
-                var formattedValue = field_utils.format[field.type](value, field, {});
+                var formattedValue = field_utils.format[field.type](value, field, {
+                    escape: true,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -267,56 +201,104 @@ var ListRenderer = BasicRenderer.extend({
         return $('<tbody>').append($rows);
     },
     /**
-     * Render a cell for the table.  For most cells, we only want to display the
-     * formatted value, with some appropriate css class.  However, when the
+     * Render a cell for the table. For most cells, we only want to display the
+     * formatted value, with some appropriate css class. However, when the
      * node was explicitely defined with a 'widget' attribute, then we
      * instantiate the corresponding widget.
      *
      * @private
      * @param {Object} record
      * @param {Object} node
+     * @param {integer} colIndex
+     * @param {Object} [options]
+     * @param {Object} [options.mode]
+     * @param {Object} [options.renderInvisible=false]
+     *        force the rendering of invisible cell content
+     * @param {Object} [options.renderWidgets=false]
+     *        force the rendering of the cell value thanks to a widget
      * @returns {jQueryElement} a <td> element
      */
-    _renderBodyCell: function (record, node) {
-        var self = this;
-        var $td = $('<td>');
-        if (this._isInvisible(record, node)) {
+    _renderBodyCell: function (record, node, colIndex, options) {
+        var tdClassName = 'o_data_cell';
+        if (node.tag === 'button') {
+            tdClassName += ' o_list_button';
+        } else if (node.tag === 'field') {
+            var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
+            if (typeClass) {
+                tdClassName += (' ' + typeClass);
+            }
+            if (node.attrs.widget) {
+                tdClassName += (' o_' + node.attrs.widget + '_cell');
+            }
+        }
+        var $td = $('<td>', {class: tdClassName});
+
+        // We register modifiers on the <td> element so that it gets the correct
+        // modifiers classes (for styling)
+        var modifiers = this._registerModifiers(node, record, $td);
+        // If the invisible modifiers is true, the <td> element is left empty.
+        // Indeed, if the modifiers was to change the whole cell would be
+        // rerendered anyway.
+        if (modifiers.invisible && !(options && options.renderInvisible)) {
             return $td;
+        }
+
+        if (node.tag === 'button') {
+            return $td.append(this._renderButton(record, node));
+        } else if (node.tag === 'widget') {
+            return $td.append(this._renderWidget(record, node));
+        }
+        if (node.attrs.widget || (options && options.renderWidgets)) {
+            var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            return $td.append(widget.$el);
         }
         var name = node.attrs.name;
-        if (node.attrs.widget) {
-            var Widget = this.state.fieldsInfo.list[name].Widget;
-            var widget = new Widget(this, name, record, {
-                mode: 'readonly',
-                viewType: 'list',
-            });
-            widget.appendTo($td);
-            $td.addClass('o_' + node.attrs.widget + '_cell');
-            return $td;
-        }
-        if (node.tag === 'button') {
-            var $button = $('<button type="button">').addClass('o_icon_button');
-            $button.append($('<i>').addClass('fa').addClass(node.attrs.icon))
-                .prop('title', node.attrs.string)
-                .click(function (e) {
-                    e.stopPropagation();
-                    self.trigger_up('button_clicked', {
-                        attrs: node.attrs,
-                        record: record,
-                    });
-                });
-            $td.append($button);
-            $td.addClass('o_list_button').click(function (e) {
-                // prevent opening or editing the record on cell click
-                e.stopPropagation();
-            });
-            return $td;
-        }
         var field = this.state.fields[name];
         var value = record.data[name];
-        $td.addClass(FIELD_CLASSES[field.type]);
-        var formatted_value = field_utils.format[field.type](value, field, { data: record.data });
-        return $td.html(formatted_value);
+        var formattedValue = field_utils.format[field.type](value, field, {
+            data: record.data,
+            escape: true,
+            isPassword: 'password' in node.attrs,
+        });
+        return $td.html(formattedValue);
+    },
+    /**
+     * Renders the button element associated to the given node and record.
+     *
+     * @private
+     * @param {Object} record
+     * @param {Object} node
+     * @returns {jQuery} a <button> element
+     */
+    _renderButton: function (record, node) {
+        var $button = $('<button>', {
+            type: 'button',
+            title: node.attrs.string,
+        });
+        if (node.attrs.icon) {
+            $button.addClass('o_icon_button');
+            $button.append($('<i>', {class: 'fa ' + node.attrs.icon}));
+        } else {
+            $button.text(node.attrs.string);
+        }
+
+        this._registerModifiers(node, record, $button);
+
+        if (record.res_id) {
+            // TODO this should be moved to a handler
+            var self = this;
+            $button.on("click", function (e) {
+                e.stopPropagation();
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: record,
+                });
+            });
+        } else {
+            $button.prop('disabled', true);
+        }
+
+        return $button;
     },
     /**
      * Render a complete empty row.  This is used to fill in the blanks when we
@@ -400,20 +382,23 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
-        var field = this.state.fields[group.groupedBy[0]];
-        var name = this._formatValue(group.value, field);
+        var name = group.value === undefined ? _t('Undefined') : group.value;
+        var groupBy = this.state.groupedBy[groupLevel];
+        if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
+            name = name || _t('Undefined');
+        }
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
-        if (group.count > 0) {
-            var $arrow = $('<span>')
+        var $arrow = $('<span>')
                             .css('padding-left', (groupLevel * 20) + 'px')
                             .css('padding-right', '5px')
-                            .addClass('fa')
-                            .toggleClass('fa-caret-right', !group.isOpen)
-                            .toggleClass('fa-caret-down', group.isOpen);
-            $th.prepend($arrow);
+                            .addClass('fa');
+        if (group.count > 0) {
+            $arrow.toggleClass('fa-caret-right', !group.isOpen)
+                    .toggleClass('fa-caret-down', group.isOpen);
         }
+        $th.prepend($arrow);
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
             var $pager = this._renderGroupPager(group);
             var $lastCell = $cells[$cells.length-1];
@@ -421,6 +406,8 @@ var ListRenderer = BasicRenderer.extend({
         }
         return $('<tr>')
                     .addClass('o_group_header')
+                    .toggleClass('o_group_open', group.isOpen)
+                    .toggleClass('o_group_has_content', group.count > 0)
                     .data('group', group)
                     .append($th)
                     .append($cells);
@@ -543,15 +530,20 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement} a <tr> element
      */
     _renderRow: function (record) {
-        var decorations = this._computeDecorationClassNames(record);
-        var $cells = _.map(this.columns, this._renderBodyCell.bind(this, record));
-        var $tr = $('<tr class="o_data_row">')
+        var self = this;
+        this.defs = []; // TODO maybe wait for those somewhere ?
+        var $cells = _.map(this.columns, function (node, index) {
+            return self._renderBodyCell(record, node, index, {mode: 'readonly'});
+        });
+        delete this.defs;
+
+        var $tr = $('<tr/>', {class: 'o_data_row'})
                     .data('id', record.id)
-                    .addClass(decorations.length && decorations.join(' '))
                     .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td'));
         }
+        this._setDecorationClasses(record, $tr);
         return $tr;
     },
     /**
@@ -577,7 +569,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderSelector: function (tag) {
-        var $content = $('<div class="o_checkbox"><input type="checkbox"><span/></div>');
+        var $content = dom.renderCheckbox();
         return $('<' + tag + ' width="1">')
                     .addClass('o_list_record_selector')
                     .append($content);
@@ -593,12 +585,24 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
+        this.$el
+            .removeClass('table-responsive')
+            .empty();
+
         // destroy the previously instantiated pagers, if any
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        // display the no content helper if there is no data to display
+        if (!this._hasContent() && this.noContentHelp) {
+            this._renderNoContentHelper();
+            return this._super();
+        }
+
         var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
-        this.$el.empty().append($table);
+        this.$el
+            .addClass('table-responsive')
+            .append($table);
         var is_grouped = !!this.state.groupedBy.length;
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', is_grouped);
@@ -623,14 +627,21 @@ var ListRenderer = BasicRenderer.extend({
         return this._super();
     },
     /**
-     * Process the modifiers by setting their parsed version on the
-     * corresponding nodes.
+     * Each line can be decorated according to a few simple rules. The arch
+     * description of the list may have one of the decoration-X attribute with
+     * a domain as value.  Then, for each record, we check if the domain matches
+     * the record, and add the text-X css class to the element.  This method is
+     * concerned with the computation of the list of css classes for a given
+     * record.
      *
      * @private
+     * @param {Object} record a basic model record
+     * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
      */
-    _processModifiers: function () {
-        _.each(this.arch.children, function (c) {
-            c.modifiers = JSON.parse(c.attrs.modifiers || '{}');
+    _setDecorationClasses: function (record, $tr) {
+        _.each(this.rowDecorations, function (expr, decoration) {
+            var cssClass = decoration.replace('decoration', 'text');
+            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
         });
     },
     /**
@@ -713,5 +724,4 @@ var ListRenderer = BasicRenderer.extend({
 });
 
 return ListRenderer;
-
 });

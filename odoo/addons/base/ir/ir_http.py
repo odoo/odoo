@@ -10,7 +10,6 @@ import mimetypes
 import os
 import re
 import sys
-import urllib2
 
 import werkzeug
 import werkzeug.exceptions
@@ -22,12 +21,16 @@ import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
+from odoo.tools import pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
 
-UID_PLACEHOLDER = object()
+
+class RequestUID(object):
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
 
 
 class ModelConverter(werkzeug.routing.BaseConverter):
@@ -38,7 +41,8 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         self.regex = r'([0-9]+)'
 
     def to_python(self, value):
-        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
+        _uid = RequestUID(value=value, converter=self)
+        env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(value))
 
     def to_url(self, value):
@@ -54,8 +58,9 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         self.regex = r'([0-9,]+)'
 
     def to_python(self, value):
-        env = api.Environment(request.cr, UID_PLACEHOLDER, request.context)
-        return env[self.model].browse(map(int, value.split(',')))
+        _uid = RequestUID(value=value, converter=self)
+        env = api.Environment(request.cr, _uid, request.context)
+        return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value):
         return ",".join(value.ids)
@@ -125,7 +130,7 @@ class IrHttp(models.AbstractModel):
         attach = env['ir.attachment'].search_read(domain, fields)
         if attach:
             wdate = attach[0]['__last_update']
-            datas = attach[0]['datas'] or ''
+            datas = attach[0]['datas'] or b''
             name = attach[0]['name']
             checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
 
@@ -148,8 +153,16 @@ class IrHttp(models.AbstractModel):
                 return response
 
             response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
-            response.data = datas.decode('base64')
+            response.data = base64.b64decode(datas)
             return response
+
+    @classmethod
+    def _serve_fallback(cls, exception):
+        # serve attachment
+        attach = cls._serve_attachment()
+        if attach:
+            return attach
+        return False
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -158,9 +171,9 @@ class IrHttp(models.AbstractModel):
         # This is done first as the attachment path may
         # not match any HTTP controller
         if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
-            attach = cls._serve_attachment()
-            if attach:
-                return attach
+            serve = cls._serve_fallback(exception)
+            if serve:
+                return serve
 
         # Don't handle exception but use werkeug debugger if server in --dev mode
         if 'werkzeug' in tools.config['dev_mode']:
@@ -203,10 +216,11 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
-        for name, arg in arguments.items():
-            if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
-                arguments[name] = arg.sudo(request.uid)
-                if not arg.exists():
+        for key, val in list(arguments.items()):
+            # Replace uid placeholder by the current request.uid
+            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
+                arguments[key] = val.sudo(request.uid)
+                if not val.exists():
                     return cls._handle_exception(werkzeug.exceptions.NotFound())
 
     @classmethod
@@ -214,7 +228,7 @@ class IrHttp(models.AbstractModel):
         if not hasattr(cls, '_routing_map'):
             _logger.info("Generating routing map")
             installed = request.registry._init_modules - {'web'}
-            if tools.config['test_enable']:
+            if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
             mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
@@ -288,7 +302,7 @@ class IrHttp(models.AbstractModel):
                     if module_resource_path.startswith(module_path):
                         with open(module_resource_path, 'rb') as f:
                             content = base64.b64encode(f.read())
-                        last_update = str(os.path.getmtime(module_resource_path))
+                        last_update = pycompat.text_type(os.path.getmtime(module_resource_path))
 
             if not module_resource_path:
                 module_resource_path = obj.url
@@ -323,8 +337,8 @@ class IrHttp(models.AbstractModel):
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
-        etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
-        retag = '"%s"' % hashlib.md5(last_update).hexdigest()
+        etag = bool(request) and request.httprequest.headers.get('If-None-Match')
+        retag = '"%s"' % hashlib.md5(last_update.encode('utf-8')).hexdigest()
         status = status or (304 if etag == retag else 200)
         headers.append(('ETag', retag))
         headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
@@ -356,6 +370,6 @@ def convert_exception_to(to_type, with_message=False):
         else:
             message = str(with_message)
 
-        raise to_type, message, tb
+        raise pycompat.reraise(to_type, to_type(message), tb)
     except to_type as e:
         return e

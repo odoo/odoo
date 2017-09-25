@@ -10,7 +10,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         self.ensure_one()
         res = super(SaleOrder, self).action_confirm()
-        self.order_line._update_registrations(confirm=False, cancel_to_draft=False)
+        # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+        self.order_line._update_registrations(confirm=self.amount_total == 0, cancel_to_draft=False)
         if any(self.order_line.filtered(lambda line: line.event_id)):
             return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res

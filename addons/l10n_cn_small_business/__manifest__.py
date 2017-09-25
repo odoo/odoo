@@ -27,5 +27,5 @@
         'data/l10n_cn_small_business_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'license': 'GPL-3',
+    'auto_install': True
 }

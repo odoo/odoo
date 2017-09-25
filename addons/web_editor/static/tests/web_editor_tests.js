@@ -3,6 +3,9 @@ odoo.define('web_editor.web_editor_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var core = require('web.core');
+
+var _t = core._t;
 
 QUnit.module('web_editor', {
     beforeEach: function() {
@@ -87,6 +90,43 @@ QUnit.test('field html widget (with options inline-style)', function (assert) {
     }, 0);
 });
 
+QUnit.test('field html translatable', function (assert) {
+    assert.expect(3);
+
+    var multiLang = _t.database.multi_lang;
+    _t.database.multi_lang = true;
+
+    this.data['mass.mailing'].fields.body.translate = true;
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<field name="body" widget="html"/>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
+                assert.deepEqual(args.args, ['mass.mailing',1,'body',{}], "should call 'call_button' route");
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_form_field_html_text .o_field_translate').length, 0,
+        "should not have a translate button in readonly mode");
+
+    form.$buttons.find('.o_form_button_edit').click();
+    var $button = form.$('.oe_form_field_html_text .o_field_translate');
+    assert.strictEqual($button.length, 1, "should have a translate button");
+    $button.click();
+
+    form.destroy();
+    _t.database.multi_lang = multiLang;
+});
+
 QUnit.test('field html_frame widget', function (assert) {
     assert.expect(6);
 
@@ -118,6 +158,63 @@ QUnit.test('field html_frame widget', function (assert) {
 
     assert.strictEqual(form.$('iframe').length, 1, "should have rendered an iframe without crashing");
 
+    form.destroy();
+});
+
+QUnit.test('field htmlsimple does not crash when commitChanges is called in mode=readonly', function (assert) {
+    assert.expect(1);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<header>' +
+                    '<button name="some_method" class="s" string="Do it" type="object"/>' +
+                '</header>' +
+                '<sheet>' +
+                    '<field name="body"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        intercepts: {
+            execute_action: function () {
+                assert.step('execute_action');
+            }
+        },
+    });
+
+    form.$('button:contains(Do it)').click();
+    form.destroy();
+});
+
+QUnit.test('html_frame does not crash when saving in readonly', function (assert) {
+    // The 'Save' action may be triggered even in readonly (e.g. when clicking
+    // on a button in the form view)
+    assert.expect(0);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route) {
+            if (_.str.startsWith(route, '/test')) {
+                // manually call the callback to simulate that the iframe has
+                // been correctly loaded
+                window.odoo[$.deparam(route).callback + '_content'].call();
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.saveRecord(); // before the fix done in this commit, it crashed here
     form.destroy();
 });
 

@@ -5,12 +5,13 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
+
 class WebsiteSaleOptions(WebsiteSale):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
         r = super(WebsiteSaleOptions, self).product(product, category, search, **kwargs)
-        r.qcontext['optional_product_ids'] = map(lambda p: p.with_context({'active_id': p.id}), product.optional_product_ids)
+        r.qcontext['optional_product_ids'] = [p.with_context({'active_id': p.id}) for p in product.optional_product_ids]
         return r
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
@@ -54,6 +55,7 @@ class WebsiteSaleOptions(WebsiteSale):
     def modal(self, product_id, **kw):
         pricelist = request.website.get_current_pricelist()
         product_context = dict(request.context)
+        quantity = kw['kwargs']['context']['quantity']
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
         # fetch quantity from custom context
@@ -63,8 +65,18 @@ class WebsiteSaleOptions(WebsiteSale):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
         product = request.env['product.product'].with_context(product_context).browse(int(product_id))
+
+        main_product_attr_ids = self.get_attribute_value_ids(product)
+        for variant in main_product_attr_ids:
+            if variant[0] == product.id:
+                # We indeed need a list of lists (even with only 1 element)
+                main_product_attr_ids = [variant]
+                break
+
         return request.env['ir.ui.view'].render_template("website_sale_options.modal", {
             'product': product,
+            'quantity': quantity,
             'compute_currency': compute_currency,
             'get_attribute_value_ids': self.get_attribute_value_ids,
+            'main_product_attr_ids': main_product_attr_ids,
         })

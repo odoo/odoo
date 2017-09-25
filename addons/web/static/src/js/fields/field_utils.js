@@ -16,6 +16,7 @@ odoo.define('web.field_utils', function (require) {
  */
 
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -27,21 +28,28 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
- * @todo Really? it returns a jqueryElement...  We should try to move this to a
- * module with dom helpers functions, such as web.dom, maybe. And replace this
- * with a function that returns a string
+ * @todo Really? it returns a jQuery element...  We should try to avoid this and
+ * let DOM utility functions handle this directly. And replace this with a
+ * function that returns a string so we can get rid of the forceString.
  *
  * @param {boolean} value
- * @returns {jQueryElement}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.forceString=false] if true, returns a string
+*    representation of the boolean rather than a jQueryElement
+ * @returns {jQuery|string}
  */
-function formatBoolean(value) {
-    var $input = $('<input type="checkbox">')
-                .prop('checked', value)
-                .prop('disabled', true);
-    return $('<div>')
-                .addClass('o_checkbox')
-                .append($input)
-                .append($('<span>'));
+function formatBoolean(value, field, options) {
+    if (options && options.forceString) {
+        return value ? _t('True') : _t('False');
+    }
+    return dom.renderCheckbox({
+        prop: {
+            checked: value,
+            disabled: true,
+        },
+    });
 }
 
 /**
@@ -49,22 +57,45 @@ function formatBoolean(value) {
  * an empty string.
  *
  * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
+ *   instead of the formatted value
  * @returns {string}
  */
-function formatChar(value) {
-    return typeof value === 'string' ? value : '';
+function formatChar(value, field, options) {
+    value = typeof value === 'string' ? value : '';
+    if (options && options.isPassword) {
+        return _.str.repeat('*', value ? value.length : 0);
+    }
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
  * Returns a string representing a date.  If the value is false, then we return
  * an empty string. Note that this is dependant on the localization settings
  *
- * @param {Moment|false}
+ * @param {Moment|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.timezone=true] use the user timezone when formating the
+ *        date
  * @returns {string}
  */
-function formatDate(value) {
-    if (!value) {
+function formatDate(value, field, options) {
+    if (value === false) {
         return "";
+    }
+    if (field && field.type === 'datetime') {
+        if (!options || !('timezone' in options) || options.timezone) {
+            value = value.clone().add(session.getTZOffset(value), 'minutes');
+        }
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
@@ -77,14 +108,19 @@ function formatDate(value) {
  * settings
  *
  * @params {Moment|false}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.timezone=true] use the user timezone when formating the
+ *        date
  * @returns {string}
  */
-function formatDateTime(value, options) {
-    if (!value) {
+function formatDateTime(value, field, options) {
+    if (value === false) {
         return "";
     }
     if (!options || !('timezone' in options) || options.timezone) {
-        value = value.clone().add(session.tzOffset, 'minutes');
+        value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
@@ -97,7 +133,7 @@ function formatDateTime(value, options) {
  * Returns a string representing a float.  The result takes into account the
  * user settings (to display the correct decimal separator).
  *
- * @param {float} value the value that should be formatted
+ * @param {float|false} value the value that should be formatted
  * @param {Object} [field] a description of the field (returned by fields_get
  *   for example).  It may contain a description of the number of digits that
  *   should be used.
@@ -108,6 +144,9 @@ function formatDateTime(value, options) {
  * @returns {string}
  */
 function formatFloat(value, field, options) {
+    if (value === false) {
+        return "";
+    }
     var l10n = core._t.database.parameters;
     var precision;
     if (options && options.digits) {
@@ -150,9 +189,16 @@ function formatFloatTime(value) {
  * return an empty string.
  *
  * @param {integer|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
  * @returns {string}
  */
-function formatInteger(value) {
+function formatInteger(value, field, options) {
+    if (options && options.isPassword) {
+        return _.str.repeat('*', String(value).length);
+    }
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
         // view, I want to display the concept of 'no value' with an empty
@@ -170,21 +216,28 @@ function formatInteger(value) {
  * case, we assume that it is a record from a BasicModel.
  *
  * @param {Array|Object|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */
-function formatMany2one(value) {
-    return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+function formatMany2one(value, field, options) {
+    value = value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
- * Returns a string representing an many2one.  That is a string containing all
- * the display_name, concatenated.
+ * Returns a string indicating the number of records in the relation.
  *
  * @param {Object} value a valid element from a BasicModel, that represents a
  *   list of values
  * @returns {string}
  */
-function formatMany2Many(value) {
+function formatX2Many(value) {
     if (value.data.length === 0) {
         return _t('No records');
     } else if (value.data.length === 1) {
@@ -198,14 +251,14 @@ function formatMany2Many(value) {
  * Returns a string representing a monetary value. The result takes into account
  * the user settings (to display the correct decimal separator, currency, ...).
  *
- * @param {float} value the value that should be formatted
+ * @param {float|false} value the value that should be formatted
  * @param {Object} [field]
  *        a description of the field (returned by fields_get for example). It
  *        may contain a description of the number of digits that should be used.
  * @param {Object} [options]
  *        additional options to override the values in the python description of
  *        the field.
- * @param {Object} [options.currency] - the description of the currency to use
+ * @param {Object} [options.currency] the description of the currency to use
  * @param {integer} [options.currency_id]
  *        the id of the 'res.currency' to use (ignored if options.currency)
  * @param {string} [options.currency_field]
@@ -223,6 +276,9 @@ function formatMany2Many(value) {
  * @returns {string}
  */
 function formatMonetary(value, field, options) {
+    if (value === false) {
+        return "";
+    }
     options = options || {};
 
     var currency = options.currency;
@@ -249,14 +305,27 @@ function formatMonetary(value, field, options) {
     }
 }
 
-function formatSelection(value, field) {
-    if (!value) {
-        return '';
-    }
+/**
+ * Returns a string representing the value of the selection.
+ *
+ * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ */
+function formatSelection(value, field, options) {
     var val = _.find(field.selection, function (option) {
         return option[0] === value;
     });
-    return val[1];
+    if (!val) {
+        return '';
+    }
+    value = val[1];
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -264,31 +333,37 @@ function formatSelection(value, field) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * create an Date object
+ * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @params {string}
+ * @param {string} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isUTC] the formatted date is utc
+ * @param {boolean} [options.timezone=false] format the date after apply the timezone
+ *        offset
  * @returns {Moment|false} Moment date object
  */
 function parseDate(value, field, options) {
     if (!value) {
         return false;
     }
-    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
-    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D');
+    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
     var date;
     if (options && options.isUTC) {
         date = moment.utc(value);
     } else {
-        date = moment.utc(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
     }
-    if (date.isValid() && date.year() >= 1900) {
+    if (date.isValid()) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
         if (date.year() >= 1900) {
             date.toJSON = function () {
-                return this.format('YYYY-MM-DD');
+                return this.clone().locale('en').format('YYYY-MM-DD');
             };
             return date;
         }
@@ -297,30 +372,36 @@ function parseDate(value, field, options) {
 }
 
 /**
- * create an Date object
+ * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @params {string}
+ * @param {string} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isUTC] the formatted date is utc
+ * @param {boolean} [options.timezone=false] format the date after apply the timezone
+ *        offset
  * @returns {Moment|false} Moment date object
  */
 function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var date_pattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
-        time_pattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
-    var date_pattern_wo_zero = date_pattern.replace('MM','M').replace('DD','D'),
-        time_pattern_wo_zero = time_pattern.replace('HH','H').replace('mm','m').replace('ss','s');
-    var pattern1 = date_pattern + ' ' + time_pattern;
-    var pattern2 = date_pattern_wo_zero + ' ' + time_pattern_wo_zero;
+    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
+        timePattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
+        timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
+    var pattern1 = datePattern + ' ' + timePattern;
+    var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
     if (options && options.isUTC) {
-        // phatomjs crash if we don't use this format 
+        // phatomjs crash if we don't use this format
         datetime = moment.utc(value.replace(' ', 'T') + 'Z');
     } else {
         datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);
         if (options && options.timezone) {
-            datetime.add(-session.tzOffset, 'minutes');
+            datetime.add(-session.getTZOffset(datetime), 'minutes');
         }
     }
     if (datetime.isValid()) {
@@ -329,7 +410,7 @@ function parseDateTime(value, field, options) {
         }
         if (datetime.year() >= 1900) {
             datetime.toJSON = function () {
-                return this.format('YYYY-MM-DD HH:mm:ss');
+                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
             };
             return datetime;
         }
@@ -338,13 +419,62 @@ function parseDateTime(value, field, options) {
 }
 
 function parseFloat(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    if (core._t.database.parameters.thousands_sep) {
+        var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+        value = value.replace(new RegExp(escapedSep, 'g'), '');
+    }
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
     if (isNaN(parsed)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
     }
     return parsed;
+}
+
+/**
+ * Parse a String containing currency symbol and returns amount
+ *
+ * @param {string} value
+ *                The string to be parsed
+ *                We assume that a monetary is always a pair (symbol, amount) separated
+ *                by a non breaking space. A simple float can also be accepted as value
+ * @param {Object} [field]
+ *        a description of the field (returned by fields_get for example).
+ * @param {Object} [options] additional options.
+ * @param {Object} [options.currency] - the description of the currency to use
+ * @param {integer} [options.currency_id]
+ *        the id of the 'res.currency' to use (ignored if options.currency)
+ * @param {string} [options.currency_field]
+ *        the name of the field whose value is the currency id
+ *        (ignore if options.currency or options.currency_id)
+ *        Note: if not given it will default to the field currency_field value
+ *        or to 'currency_id'.
+ * @param {Object} [options.data]
+ *        a mapping of field name to field value, required with
+ *        options.currency_field
+ *
+ * @returns {float} the float value contained in the string representation
+ * @throws {Error} if no float is found or if parameter does not respect monetary condition
+ */
+function parseMonetary(value, field, options) {
+    var values = value.split('&nbsp;');
+    if (values.length === 1) {
+        return parseFloat(value);
+    }
+    else if (values.length !== 2) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
+    options = options || {};
+    var currency = options.currency;
+    if (!currency) {
+        var currency_id = options.currency_id;
+        if (!currency_id && options.data) {
+            var currency_field = options.currency_field || field.currency_field || 'currency_id';
+            currency_id = options.data[currency_field] && options.data[currency_field].res_id;
+        }
+        currency = session.get_currency(currency_id);
+    }
+    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
 }
 
 function parseFloatTime(value) {
@@ -365,18 +495,10 @@ function parseInteger(value) {
     value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
     var parsed = Number(value);
     // do not accept not numbers or float values
-    if (isNaN(parsed) || parsed % 1) {
+    if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
     }
     return parsed;
-}
-
-function parseMonetary(formatted_value) {
-    var l10n = core._t.database.parameters;
-    var value = formatted_value.replace(l10n.thousands_sep, '')
-        .replace(l10n.decimal_point, '.')
-        .match(/([0-9]+(\.[0-9]*)?)/)[1];
-    return parseFloat(value);
 }
 
 /**
@@ -418,11 +540,11 @@ return {
         float_time: formatFloatTime,
         html: _.identity, // todo
         integer: formatInteger,
-        many2many: formatMany2Many,
+        many2many: formatX2Many,
         many2one: formatMany2one,
         monetary: formatMonetary,
-        one2many: _.identity, // todo
-        reference: _.identity, // todo
+        one2many: formatX2Many,
+        reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
     },
@@ -440,7 +562,7 @@ return {
         many2one: parseMany2one,
         monetary: parseMonetary,
         one2many: _.identity,
-        reference: _.identity, // todo
+        reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo
     },

@@ -65,6 +65,48 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_contact_kanban" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.contact.kanban</field>
+            <field name="model">mail.mass_mailing.contact</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="company_name"/>
+                    <field name="email"/>
+                    <field name="message_bounce"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <t t-esc="record.name.value"/>
+                                        </strong>
+                                    </div>
+                                    <span class="badge" title="Number of bounced email.">
+                                        <i class="fa fa-exclamation-triangle"/> <t t-esc="record.message_bounce.value" title=""/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <strong>
+                                            <t t-esc="record.email.value"/>
+                                        </strong>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <t t-esc="record.company_name.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_form">
             <field name="name">mail.mass_mailing.contact.form</field>
             <field name="model">mail.mass_mailing.contact</field>
@@ -132,7 +174,7 @@
             <field name="name">Contacts</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
@@ -142,7 +184,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
-            <field name="context">{'search_default_not_opt_out': 1}</field>
+            <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a recipient.
@@ -184,6 +226,32 @@
             </field>
         </record>
 
+        <record id="view_mail_mass_mailing_list_kanban" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.list.kanban</field>
+            <field name="model">mail.mass_mailing.list</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="contact_nbr"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb0">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                    <span class="badge">
+                                        <i class="fa fa-user"/>
+                                        <t t-esc="record.contact_nbr.value"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
@@ -216,7 +284,7 @@
             <field name="name">Mailing Lists</field>
             <field name="res_model">mail.mass_mailing.list</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click here to create a new mailing list.
@@ -242,10 +310,10 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state"
                             context="{'group_by': 'state'}"/>
-                        <filter string="Sent By" domain="[]"
+                        <filter string="Sent By" name="sent_by" domain="[]"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Sent Month"
+                        <filter string="Sent Month" name="sent_month"
                             domain="[]" context="{'group_by':'sent_date:month'}"/>
                     </group>
                 </search>
@@ -308,7 +376,7 @@
                                 attrs="{'invisible': [('sent', '=', 0)]}" >
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     context="{'search_default_filter_received': True}"
                                     type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
@@ -327,7 +395,7 @@
                                 type="action" class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicks" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing)d"
+                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
                                 context="{'search_default_filter_bounced': True}"
                                 type="action" class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
@@ -345,15 +413,16 @@
                             <div>
                                 <field name="name" nolabel="1"/>
                             </div>
-                            <label for="mailing_model" string="Recipients"/>
+                            <label for="mailing_model_id" string="Recipients"/>
                             <div>
-                                <field name="mailing_model" widget="radio" options="{'horizontal': true}"/>
+                                <field name="mailing_model_id"/>
+                                <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
-                                    attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.list')]}"
+                                    attrs="{'invisible': [('mailing_model_name', '=', 'mail.mass_mailing.list')]}"
                                     options="{'model': 'mailing_model_real'}"
                                     context="{'search_default_not_opt_out':1}"/>
-                                <div attrs="{'invisible': [('mailing_model', '!=', 'mail.mass_mailing.list')]}">
+                                <div attrs="{'invisible': [('mailing_model_name', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                     <field name="contact_list_ids" widget="many2many_tags"
                                         placeholder="Select mailing lists..." class="oe_inline"/>
@@ -375,7 +444,7 @@
                                         <label for="reply_to"/>
                                         <div>
                                             <field name="reply_to_mode" widget="radio"
-                                                attrs="{'invisible': [('mailing_model', 'in', ['mail.mass_mailing.contact', 'res.partner'])]}"/>
+                                                attrs="{'invisible': [('mailing_model_name', 'in', ['mail.mass_mailing.contact', 'res.partner'])]}"/>
                                             <field name="reply_to"
                                                 attrs="{'required': [('reply_to_mode', '=', 'email')]}"/>
                                         </div>
@@ -412,7 +481,7 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown">
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                        <span class="fa fa-bars fa-lg"/>
+                                        <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -422,14 +491,16 @@
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">
-                                    <div class="o_title">
-                                        <h3 class="mt4 mb4"><field name="name"/></h3>
-                                        <div attrs="{'invisible': [('sent_date', '=', False)]}">
-                                            <h4 style="display: inline;"><field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h4>
-                                            <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <h3 class="mt4 mb4"><field name="name"/></h3>
+                                            <div class="o_kanban_record_subtitle" attrs="{'invisible': [('sent_date', '=', False)]}">
+                                                <h5 style="display: inline;"><field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h5>
+                                                <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div attrs="{'invisible': [('sent_date', '=', False)]}">
+                                    <div class="o_kanban_record_body" attrs="{'invisible': [('sent_date', '=', False)]}">
                                         <t t-if="record.sent_date">
                                             <div class="row">
                                                 <div class="col-xs-8">
@@ -585,7 +656,7 @@
 
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
             parent="menu_mass_mailing_configuration" sequence="1"
-            groups="mass_mailing.group_mass_mailing_campaign"
+            groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
         <!--  MASS MAILING CAMPAIGN TAGS !-->
@@ -690,7 +761,8 @@
                         <group>
                             <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="unique_ab_testing" groups="base.group_no_one"/>
                         </group>
                         <notebook>
                             <page string="Tracking">
@@ -735,7 +807,7 @@
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                        <span class="fa fa-bars fa-lg"/>
+                                        <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <t t-if="widget.editable">
@@ -744,29 +816,35 @@
                                         <t t-if="widget.deletable">
                                             <li><a type="delete">Delete</a></li>
                                         </t>
+                                        <li class="divider"/>
+                                        <li class="dropdown-header">Colour</li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">
-                                    <div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
-                                            t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                         <h3 class="oe_margin_bottom_8"><field name="name"/></h3>
-                                        <field name="tag_ids"/>
-                                        <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                                            class="oe_mailings">
-                                            <h4 class="oe_margin_top_8"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
-                                        </a>
-                                    </div>
-                                    <div class="oe_clear"></div>
-                                    <div>
-                                        <div style="display: inline-block">
-                                            <field name="delivered" widget="gauge" options="{'max_field': 'total', 'style': 'width:120px; height: 90px;'}"/>
+                                    <div class="o_kanban_record_top mb16">
+                                        <div class="o_kanban_record_headings">
+                                            <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
+                                            <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
+                                                class="oe_mailings o_kanban_record_subtitle">
+                                                <t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings
+                                            </a>
                                         </div>
-                                        <div style="display: inline-block; vertical-align: top;">
-                                            <strong>Opened</strong> <field name="opened_ratio"/> %<br />
-                                            <strong>Replied</strong> <field name="replied_ratio"/> % <br />
-                                            <strong>Clicks</strong> <field name="clicks_ratio"/> % <br />
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom mt16" style="height:90px">
+                                        <div class="oe_kanban_bottom_left" style="height:90px">
+                                            <field name="delivered" widget="gauge" options="{'max_field': 'total', 'style': 'width:120px; height: 90px;'}"/>
+                                            <div>
+                                                <strong>Opened</strong> <field name="opened_ratio"/> %<br />
+                                                <strong>Replied</strong> <field name="replied_ratio"/> % <br />
+                                                <strong>Clicks</strong> <field name="clicks_ratio"/> % <br />
+                                            </div>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right" style="height:90px">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>
@@ -790,19 +868,6 @@
     Create a campaign to structure mass mailing and get analysis from email status.
   </p>
 </field>
-        </record>
-
-        <!-- Cron that process the mass mailing queue -->
-        <record id="ir_cron_mass_mailing_queue" model="ir.cron">
-            <field name="name">Mass Mailing: Process queue</field>
-            <field name="model_id" ref="model_mail_mass_mailing"/>
-            <field name="state">code</field>
-            <field name="code">model._process_mass_mailing_queue()</field>
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">60</field>
-            <field name="interval_type">minutes</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
         </record>
 
         <menuitem name="Campaigns" id="menu_email_campaigns"

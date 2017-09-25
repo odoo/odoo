@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class MrpBomCost(models.AbstractModel):
-    _name = 'report.mrp_bom_cost'
+    _name = 'report.mrp.mrp_bom_cost_report'
 
     @api.multi
     def get_lines(self, boms):
@@ -41,7 +41,7 @@ class MrpBomCost(models.AbstractModel):
         return product_lines
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         boms = self.env['mrp.bom'].browse(docids)
         res = self.get_lines(boms)
-        return self.env['report'].render('mrp.mrp_bom_cost_report', {'lines': res})
+        return {'lines': res}

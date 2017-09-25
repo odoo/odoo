@@ -2,53 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from email.utils import parseaddr
 import functools
-import htmlentitydefs
 import itertools
 import logging
-import operator
 import psycopg2
-import re
-
-# Validation Library https://pypi.python.org/pypi/validate_email/1.1
-from .validate_email import validate_email
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
 
-
 _logger = logging.getLogger('base.partner.merge')
-
-
-# http://www.php2python.com/wiki/function.html-entity-decode/
-def html_entity_decode_char(m, defs=htmlentitydefs.entitydefs):
-    try:
-        return defs[m.group(1)]
-    except KeyError:
-        return m.group(0)
-
-
-def html_entity_decode(string):
-    pattern = re.compile("&(\w+?);")
-    return pattern.sub(html_entity_decode_char, string)
-
-
-def sanitize_email(email):
-    assert isinstance(email, basestring) and email
-
-    result = re.subn(r';|/|:', ',', html_entity_decode(email or ''))[0].split(',')
-
-    emails = [parseaddr(email)[1]
-              for item in result
-              for email in item.split()]
-
-    return [email.lower()
-            for email in emails
-            if validate_email(email)]
-
 
 class MergePartnerLine(models.TransientModel):
 
@@ -199,7 +163,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
-                    query = 'DELETE FROM %(table)s WHERE %(column)s IN %%s' % query_dic
+                    query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self._cr.execute(query, (tuple(src_partners.ids),))
 
     @api.model
@@ -269,7 +233,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item
         # get all fields that are not computed or x2many
         values = dict()
-        for column, field in model_fields.iteritems():
+        for column, field in model_fields.items():
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
@@ -407,7 +371,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         return any(
             self.env[model].search_count([(field, 'in', aggr_ids)])
-            for model, field in models.iteritems()
+            for model, field in models.items()
         )
 
     @api.model
@@ -489,13 +453,19 @@ class MergePartnerAutomatic(models.TransientModel):
 
         counter = 0
         for min_id, aggr_ids in self._cr.fetchall():
-            # exclude partner according to options
-            if model_mapping and self._partner_use_in(aggr_ids, model_mapping):
+            # To ensure that the used partners are accessible by the user
+            partners = self.env['res.partner'].search([('id', 'in', aggr_ids)])
+            if len(partners) < 2:
                 continue
+
+            # exclude partner according to options
+            if model_mapping and self._partner_use_in(partners.ids, model_mapping):
+                continue
+
             self.env['base.partner.merge.line'].create({
                 'wizard_id': self.id,
                 'min_id': min_id,
-                'aggr_ids': aggr_ids,
+                'aggr_ids': partners.ids,
             })
             counter += 1
 

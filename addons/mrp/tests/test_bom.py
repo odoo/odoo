@@ -131,7 +131,30 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(set((test_bom_2 | self.bom_2).ids), set([b[0].id for b in boms]))
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | self.bom_2.bom_line_ids).ids), set([l[0].id for l in lines]))
 
-        # check recursion
-        test_bom_2_l3.write({'attribute_value_ids': [(6, 0, [self.prod_attr1_v1.id])]})
+        #check recursion
+        test_bom_3 = self.env['mrp.bom'].create({
+            'product_id': self.product_9.id,
+            'product_tmpl_id': self.product_9.product_tmpl_id.id,
+            'product_uom_id': self.product_9.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal'
+        })
+        test_bom_4 = self.env['mrp.bom'].create({
+            'product_id': self.product_10.id,
+            'product_tmpl_id': self.product_10.product_tmpl_id.id,
+            'product_uom_id': self.product_10.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        test_bom_3_l1 = self.env['mrp.bom.line'].create({
+            'bom_id': test_bom_3.id,
+            'product_id': self.product_10.id,
+            'product_qty': 1.0,
+        })
+        test_bom_4_l1 = self.env['mrp.bom.line'].create({
+            'bom_id': test_bom_4.id,
+            'product_id': self.product_9.id,
+            'product_qty': 1.0,
+        })
         with self.assertRaises(exceptions.UserError):
-            test_bom_2.explode(self.product_7_1, 4)
+            test_bom_3.explode(self.product_9, 1)

@@ -4,6 +4,13 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/calendar/static/src/less/calendar.less"/>
             <script type="text/javascript" src="/calendar/static/src/js/base_calendar.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/mail_activity.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" inherit_id="web.qunit_suite">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/calendar/static/tests/calendar_tests.js"/>
         </xpath>
     </template>
 

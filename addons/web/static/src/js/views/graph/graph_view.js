@@ -19,6 +19,14 @@ var _lt = core._lt;
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
     config: {
         Model: GraphModel,
         Controller: Controller,
@@ -30,8 +38,8 @@ var GraphView = AbstractView.extend({
     init: function (viewInfo) {
         this._super.apply(this, arguments);
 
-        var initialMeasure = '__count__';
-        var initialGroupBys = [];
+        var measure;
+        var groupBys = [];
         viewInfo.fields = _.defaults({__count__: {string: _t("Count"), type: "integer"}}, viewInfo.fields);
         viewInfo.arch.children.forEach(function (field) {
             var name = field.attrs.name;
@@ -39,9 +47,9 @@ var GraphView = AbstractView.extend({
                 name += ':' + field.attrs.interval;
             }
             if (field.attrs.type === 'measure') {
-                initialMeasure = name;
+                measure = name;
             } else {
-                initialGroupBys.push(name);
+                groupBys.push(name);
             }
         });
 
@@ -57,9 +65,9 @@ var GraphView = AbstractView.extend({
         this.controllerParams.measures = measures;
         this.rendererParams.stacked = viewInfo.arch.attrs.stacked !== "False";
 
-        this.loadParams.initialMode = viewInfo.arch.attrs.type || 'bar';
-        this.loadParams.initialMeasure = initialMeasure;
-        this.loadParams.initialGroupBys = initialGroupBys;
+        this.loadParams.mode = viewInfo.arch.attrs.type || 'bar';
+        this.loadParams.measure = measure || '__count__';
+        this.loadParams.groupBys = groupBys || [];
         this.loadParams.fields = viewInfo.fields;
     },
 });

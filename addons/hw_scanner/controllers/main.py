@@ -5,13 +5,16 @@ import logging
 import time
 from os import listdir
 from os.path import join
-from Queue import Queue, Empty
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty # pylint: disable=deprecated-module
 from select import select
 from threading import Thread, Lock
 
 from odoo import http
 
-import odoo.addons.hw_proxy.controllers.main as hw_proxy
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -119,7 +122,10 @@ class Scanner(Thread):
     def get_devices(self):
         try:
             if not evdev:
-                return None
+                return []
+
+            if not os.path.isdir(self.input_dir):
+                return []
 
             new_devices = [device for device in listdir(self.input_dir)
                            if join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]

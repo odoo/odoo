@@ -1,9 +1,12 @@
 # coding: utf-8
 
+# Copyright 2015 Eezee-It
+
 import json
 import logging
 from hashlib import sha256
-import urlparse
+
+from werkzeug import urls
 
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_compare
@@ -37,16 +40,11 @@ class AcquirerSips(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(selection_add=[('sips', 'Sips')])
-    sips_merchant_id = fields.Char('SIPS API User Password', required_if_provider='sips', groups='base.group_user')
-    sips_secret = fields.Char('SIPS Secret', size=64, required_if_provider='sips', groups='base.group_user')
-
-    def _get_sips_urls(self, environment):
-        """ Worldline SIPS URLS """
-        url = {
-            'prod': 'https://payment-webinit.sips-atos.com/paymentInit',
-            'test': 'https://payment-webinit.simu.sips-atos.com/paymentInit', }
-
-        return {'sips_form_url': url.get(environment, url['test']), }
+    sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
+    sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
+    sips_test_url = fields.Char("Test's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.sips-atos.com/paymentInit')
+    sips_prod_url = fields.Char("Prod's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
+    sips_version = fields.Char("Interface Version", required_if_provider='sips', groups='base.group_no_one', default='HP_2.3')
 
     def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
@@ -63,7 +61,7 @@ class AcquirerSips(models.Model):
         if self.environment == 'prod':
             key = getattr(self, 'sips_secret')
 
-        shasign = sha256(data + key)
+        shasign = sha256((data + key).encode('utf-8'))
         return shasign.hexdigest()
 
     @api.multi
@@ -89,12 +87,12 @@ class AcquirerSips(models.Model):
             'Data': u'amount=%s|' % amount +
                     u'currencyCode=%s|' % currency_code +
                     u'merchantId=%s|' % merchant_id +
-                    u'normalReturnUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
-                    u'automaticResponseUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
+                    u'normalReturnUrl=%s|' % urls.url_join(base_url, SipsController._return_url) +
+                    u'automaticResponseUrl=%s|' % urls.url_join(base_url, SipsController._return_url) +
                     u'transactionReference=%s|' % values['reference'] +
                     u'statementReference=%s|' % values['reference'] +
                     u'keyVersion=%s' % key_version,
-            'InterfaceVersion': 'HP_2.3',
+            'InterfaceVersion': self.sips_version,
         })
 
         return_context = {}
@@ -110,7 +108,7 @@ class AcquirerSips(models.Model):
     @api.multi
     def sips_get_form_action_url(self):
         self.ensure_one()
-        return self._get_sips_urls(self.environment)['sips_form_url']
+        return self.environment == 'prod' and self.sips_prod_url or self.sips_test_url
 
 
 class TxSips(models.Model):
@@ -169,8 +167,6 @@ class TxSips(models.Model):
         # check what is bought
         if float_compare(float(data.get('amount', '0.0')) / 100, self.amount, 2) != 0:
             invalid_parameters.append(('amount', data.get('amount'), '%.2f' % self.amount))
-        if self.partner_reference and data.get('customerId') != self.partner_reference:
-            invalid_parameters.append(('customerId', data.get('customerId'), self.partner_reference))
 
         return invalid_parameters
 
