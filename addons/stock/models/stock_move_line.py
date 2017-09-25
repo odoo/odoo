@@ -103,9 +103,7 @@ class StockMoveLine(models.Model):
         res = {}
         if self.product_id.tracking == 'serial':
             self.qty_done = 1
-            # we remove the record with _origin, because _get_move_lines will find the record which is the same than
-            # self but with the origin id
-            move_lines_to_check = self._get_similar_move_lines() - self._origin
+            move_lines_to_check = self._get_similar_move_lines() - self
             message = move_lines_to_check._check_for_duplicated_serial_numbers()
             if message:
                 res['warning'] = {'title': _('Warning'), 'message': message}
