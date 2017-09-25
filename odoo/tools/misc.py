@@ -904,16 +904,15 @@ def dumpstacks(sig=None, frame=None):
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    threads_info = {th.ident: {'name': th.name,
+    threads_info = {th.ident: {'repr': repr(th),
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a'),
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
-                    (thread_info.get('name', 'n/a'),
-                     threadId,
+        code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
+                    (thread_info.get('repr', threadId),
                      thread_info.get('dbname', 'n/a'),
                      thread_info.get('uid', 'n/a'),
                      thread_info.get('url', 'n/a')))
