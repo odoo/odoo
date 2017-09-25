@@ -58,7 +58,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         trigger: ".js_publish_management .js_publish_btn .css_publish",
         extra_trigger: "body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
-        position: "top",
+        position: "bottom",
     }, {
         trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown.full",
         content: _t("Let's now take a look at your administration dashboard to get your eCommerce website ready in no time."),
