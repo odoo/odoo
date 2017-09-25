@@ -208,7 +208,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     
     # Installing winpython
     SetOutPath "$INSTDIR\WinPython"
-    File /r "..\..\..\WinPython\*"
+    File /r /x "__pycache__" "..\..\..\WinPython\*"
 
     SetOutPath "$INSTDIR\server"
     File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
@@ -241,8 +241,9 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
         WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec '"$INSTDIR\WinPython\python-3.6.2 "$INSTDIR\server\odoo-bin.exe" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    #nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
+    DetailPrint "Installing Windows service"
+    nsExec::ExecTOLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecToLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\service\win32_service.py" install'
 
     #nsExec::Exec "net stop ${SERVICENAME}"
     #sleep 2
