@@ -54,7 +54,7 @@
                         <tr t-foreach="projects" t-as="project">
                             <td>
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
-                                <t t-if="shared_doc[project.id]"><span class="label label-info">Shared</span></t>
+                                <t t-if="shared_doc[project.id]['shared']"><span class="label label-info">Shared</span></t>
                             </td>
                             <td>
                                 <a t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
@@ -81,6 +81,7 @@
                             <h4>
                                 <t t-call='portal.record_pager'/>
                                 Project - <span t-field="project.name"/>
+                                <t t-if="shared_doc[project.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[project.id]['shared_by'].sudo().name"/></span></t>
                             </h4>
                         </div>
                     </div>
@@ -149,7 +150,7 @@
                             <tr>
                                 <td>
                                     <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
-                                    <t t-if="shared_doc[task.id]"><span class="label label-info">Shared</span></t>
+                                    <t t-if="shared_doc[task.id]['shared']"><span class="label label-info">Shared</span></t>
                                 </td>
                                 <td>
                                     <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
@@ -176,6 +177,7 @@
                                 Task - <span t-field="task.name"/>
                                 <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                 <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>
+                                <t t-if="shared_doc[task.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[task.id]['shared_by'].sudo().name"/></span></t>
                             </h4>
                         </div>
                     </div>

@@ -72,7 +72,8 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/project/<int:project_id>'], type='http', auth="user", website=True)
     def portal_my_project(self, project_id=None, **kw):
         project = request.env['project.project'].browse(project_id)
-        vals = {'project': project}
+        shared_doc = self._check_shared_document(project)
+        vals = {'project': project, 'shared_doc': shared_doc}
         history = request.session.get('my_projects_history', [])
         vals.update(get_records_pager(history, project))
         return request.render("project.portal_my_project", vals)
@@ -171,9 +172,11 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
     def portal_my_task(self, task_id=None, **kw):
         task = request.env['project.task'].browse(task_id)
+        shared_doc = self._check_shared_document(task)
         vals = {
             'task': task,
-            'user': request.env.user
+            'user': request.env.user,
+            'shared_doc': shared_doc
         }
         history = request.session.get('my_tasks_history', [])
         vals.update(get_records_pager(history, task))

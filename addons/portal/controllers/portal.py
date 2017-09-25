@@ -141,14 +141,16 @@ class CustomerPortal(Controller):
         }
 
     def _check_shared_document(self, model_records):
-        shared_doc = {}
+        shared_doc = dict.fromkeys(model_records.ids, False)
         partner = request.env.user.partner_id
         is_portal = request.env.user.has_group('base.group_portal')
-        for reocrd in model_records:
-            if partner in reocrd.message_follower_ids.mapped('partner_id') and (partner != reocrd.partner_id) and (reocrd.create_uid != request.env.user) and is_portal:
-                shared_doc.update({reocrd.id: True})
-            else:
-                shared_doc.update({reocrd.id: False})
+        for record in model_records:
+            shared_doc[record.id] = {'shared': False, 'shared_by': False}
+
+            if partner in record.message_follower_ids.mapped('partner_id') and (partner != record.partner_id) and (record.create_uid != request.env.user) and is_portal:
+                data = request.env['mail.followers'].search([('res_model', '=', record._name), ('res_id', '=', record.id), ('partner_id', '=', partner.id)])
+                shared_doc[record.id]['shared'] = True
+                shared_doc[record.id]['shared_by'] = data.user_id
         return shared_doc
 
     @route(['/my', '/my/home'], type='http', auth="user", website=True)

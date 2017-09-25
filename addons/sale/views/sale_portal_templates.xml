@@ -101,7 +101,7 @@
                     <tr>
                         <td>
                             <a t-attf-href="/my/orders/{{order.id}}?{{keep_query()}}"><t t-esc="order.name"/></a>&amp;nbsp;
-                            <t t-if="shared_doc[order.id]"><span class="label label-info">shared</span></t>
+                            <t t-if="shared_doc[order.id]['shared']"><span class="label label-info">shared</span></t>
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
@@ -145,7 +145,7 @@
                         <t t-if="order.state in ('sent', 'cancel')">Quotation</t>
                         <t t-else="">Order</t>
                         <span t-esc="order.name"/>
-                        <t t-if="shared_doc[order.id]"><span class="label label-info">Shared by <t t-esc="order.user_id.name"/></span></t>
+                        <t t-if="shared_doc[order.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[order.id]['shared_by'].sudo().name"/></span></t>
                         <t t-if="order.state == 'cancel'">
                             <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                         </t>

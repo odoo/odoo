@@ -43,7 +43,7 @@
                     <tr>
                         <td>
                             <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>&amp;nbsp;
-                            <t t-if="shared_doc[invoice.id]"><span class="label label-info">Shared</span></t>
+                            <t t-if="shared_doc[invoice.id]['shared']"><span class="label label-info">Shared</span></t>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
@@ -85,7 +85,7 @@
                                     <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
                                     <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
                                     <span t-field="invoice.number"/>
-                                    <t t-if="shared_doc[invoice.id]"><span class="label label-info">Shared by <t t-esc="invoice.user_id.name"/></span></t>
+                                    <t t-if="shared_doc[invoice.id]['shared']"><span class="label label-info">Shared by <t t-esc="shared_doc[invoice.id]['shared_by'].sudo().name"/></span></t>
                                 </h4>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
