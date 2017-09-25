@@ -59,7 +59,8 @@ var BaseSettingRenderer = FormRenderer.extend({
         this.modules = [];
         _.each(this.$('.app_settings_block'), function (settingView, index) {
             var group = !$(settingView).hasClass('o_invisible_modifier');
-            if (group) {
+            var isNotApp = $(settingView).hasClass('o_not_app');
+            if(group && !isNotApp) {
                 var data = $(settingView).data();
                 self.modules.push({
                     key: data.key,
