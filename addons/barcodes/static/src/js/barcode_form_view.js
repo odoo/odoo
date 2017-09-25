@@ -27,7 +27,7 @@ FormController.include({
             form_view: {
                 commands: {
                     'O-CMD.EDIT': this._barcodeEdit.bind(this),
-                    'O-CMD.CANCEL': this._barcodeDiscard.bind(this),
+                    'O-CMD.DISCARD': this._barcodeDiscard.bind(this),
                     'O-CMD.SAVE': this._barcodeSave.bind(this),
                     'O-CMD.PAGER-PREV': this._barcodePagerPrevious.bind(this),
                     'O-CMD.PAGER-NEXT': this._barcodePagerNext.bind(this),

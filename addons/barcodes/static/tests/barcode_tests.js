@@ -119,7 +119,7 @@ QUnit.test('edit, save and cancel buttons', function (assert) {
     // dummy change to check that it correctly discards
     form.$('.o_field_widget').val('test').trigger('input');
     // O-CMD.CANCEL
-    _.each(["O","-","C","M","D",".","C","A","N","C","E","L","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","D","I","S","C","A","R","D","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$(".o_form_readonly").length, 1,
         "should have switched to 'readonly' mode");
     assert.verifySteps(['save'], 'should not have saved');

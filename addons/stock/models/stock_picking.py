@@ -297,6 +297,9 @@ class Picking(models.Model):
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
         for picking in self:
+            if self.env.context.get('force_detailed_view'):
+                picking.show_operations = True
+                break
             if picking.picking_type_id.show_operations:
                 if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
                     picking.show_operations = True
