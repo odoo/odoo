@@ -193,9 +193,8 @@ class MrpProductProduceLine(models.TransientModel):
 
     def _check_for_duplicated_serial_numbers(self):
         if self.mapped('lot_id'):
-            lot_names = [ml.lot_id.name for ml in self]
-            recorded_serials_counter = Counter(lot_names)
-            for lot_id, occurrences in recorded_serials_counter.items():
+            lots_map = [(ml.product_id.id, ml.lot_id.name) for ml in self]
+            recorded_serials_counter = Counter(lots_map)
+            for (product_id, lot_id), occurrences in recorded_serials_counter.items():
                 if occurrences > 1 and lot_id is not False:
-                    return _(
-                        'You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
+                    return _('You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
