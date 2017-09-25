@@ -148,7 +148,7 @@ class Users(models.Model):
             if activity['states'] in ('today','overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
-        return user_activities.values()
+        return list(user_activities.values())
 
 
 class res_groups_mail_channel(models.Model):
