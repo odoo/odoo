@@ -128,6 +128,35 @@
       </t>
     </template>
 
+    <template id="payment_confirmation_status">
+        <div t-att-class="'panel %s' % (
+                (order.payment_tx_id.state == 'pending' and 'panel-info') or
+                (order.payment_tx_id.state == 'done' and 'panel-success') or
+                'panel-danger')">
+            <a groups="base.group_system" class="btn btn-primary pull-right" target="_blank"
+                    t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
+                <i class="fa fa-cog"></i>
+            </a>
+            <div class="panel-heading">
+                <t t-if="order.payment_tx_id.state == 'pending'">
+                    <t t-raw="order.payment_acquirer_id.pending_msg"/>
+                </t>
+                <t t-if="order.payment_tx_id.state == 'done'">
+                    <t t-raw="order.payment_acquirer_id.done_msg"/>
+                </t>
+                <t t-if="order.payment_tx_id.state == 'cancel'">
+                    <t t-raw="order.payment_acquirer_id.cancel_msg"/>
+                </t>
+                <t t-if="order.payment_tx_id.state == 'error'">
+                    <t t-raw="order.payment_acquirer_id.error_msg"/>
+                </t>
+            </div>
+            <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
+                <t t-raw="order.payment_acquirer_id.post_msg" />
+            </div>
+        </div>
+    </template>
+
     <template id="portal_order_page" name="Sales Order">
       <t t-call="portal.portal_layout">
         <t t-set="sales_order" t-value="order"/> <!-- rename to ensure breadcrumb compatibility (differentiate with purchase orders) -->
@@ -173,6 +202,7 @@
             <div class="panel-body">
               <t t-if="error or warning" t-call="sale.portal_order_error"/>
               <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
+              <div id="optional_container"></div>
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.create_date" t-options='{"widget": "date"}'/>
               </div>
