@@ -2013,6 +2013,36 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars on quick create properly update counter', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        var initialCount = $(kanban.$('.o_kanban_counter_side')[1]).html();
+        kanban.$('.o_kanban_quick_add')[1].click();
+        kanban.$('.o_input').val('Test');
+        kanban.$('.o_kanban_add').click();
+        var LastCount = $(kanban.$('.o_kanban_counter_side')[1]).html();
+        assert.strictEqual(parseInt(initialCount)+1, parseInt(LastCount),
+            "kanban counters should have updated on quick create");
+
+        kanban.destroy();
+    });
+
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
         assert.expect(2);
 

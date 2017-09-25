@@ -239,7 +239,7 @@ var KanbanColumn = Widget.extend({
         this.$header.find('.o-kanban-count').text(this.records.length);
 
         this.$el.toggleClass('o_column_folded', this.folded);
-        var tooltip = this.size + _t(' records');
+        var tooltip = this.records.length + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
         this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
@@ -247,6 +247,7 @@ var KanbanColumn = Widget.extend({
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
         }
+        this.data.data = this.records;
         this.updateProgressBar(this.data);
     },
 
