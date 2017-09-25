@@ -93,7 +93,7 @@ class MrpProductProduce(models.TransientModel):
             raise UserError(_('You should at least produce some quantity'))
         for move in self.production_id.move_raw_ids:
             # TODO currently not possible to guess if the user updated quantity by hand or automatically by the produce wizard.
-            if move.product_id.tracking == 'none' and move.quantity_done < move.product_uom_qty and move.state not in ('done', 'cancel') and move.unit_factor:
+            if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel') and move.unit_factor:
                 rounding = move.product_uom.rounding
                 move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         for move in self.production_id.move_finished_ids:
