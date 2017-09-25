@@ -3,6 +3,7 @@ odoo.define('web.KanbanView', function (require) {
 
 var BasicView = require('web.BasicView');
 var core = require('web.core');
+var config = require('web.config');
 var KanbanModel = require('web.KanbanModel');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanController = require('web.KanbanController');
@@ -21,6 +22,7 @@ var KanbanView = BasicView.extend({
         Controller: KanbanController,
         Renderer: KanbanRenderer,
     },
+    jsLibs: [],
     viewType: 'kanban',
 
     /**
@@ -32,7 +34,9 @@ var KanbanView = BasicView.extend({
         var arch = viewInfo.arch;
 
         this.loadParams.limit = this.loadParams.limit || 40;
-        this.loadParams.openGroupByDefault = true;
+        // in mobile, columns are lazy-loaded, so set 'openGroupByDefault' to
+        // false so that they will won't be loaded by the initial load
+        this.loadParams.openGroupByDefault = config.isMobile ? false : true;
         this.loadParams.type = 'list';
         this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
         var progressBar;
@@ -59,7 +63,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            group_creatable: activeActions.group_create,
+            group_creatable: activeActions.group_create && !config.isMobile,
             quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
             hasProgressBar: !!progressBar,
         };
@@ -73,6 +77,10 @@ var KanbanView = BasicView.extend({
 
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
+
+        if (config.isMobile) {
+            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -96,7 +104,9 @@ var KanbanView = BasicView.extend({
             return JSON.parse(viewInfo.arch.attrs.quick_create);
         }
         return true;
-    }
+    },
 });
+
 return KanbanView;
+
 });
