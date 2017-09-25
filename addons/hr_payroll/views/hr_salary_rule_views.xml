@@ -40,19 +40,6 @@
         </field>
     </record>
 
-    <record id="view_hr_payroll_structure_tree" model="ir.ui.view">
-        <field name="name">hr.payroll.structure.tree</field>
-        <field name="model">hr.payroll.structure</field>
-        <field name="field_parent">children_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Salary Structure">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
         <field name="name">hr.payroll.structure.select</field>
         <field name="model">hr.payroll.structure</field>
@@ -103,19 +90,6 @@
         parent="menu_hr_payroll_configuration"
         sequence="2"
     />
-    <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
-        <field name="name">Salary Structures Hierarchy</field>
-        <field name="res_model">hr.payroll.structure</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_hr_payroll_structure_tree"/>
-    </record>
-    <menuitem
-        id="menu_hr_payroll_structure_tree"
-        action="action_view_hr_payroll_structure_tree"
-        parent="menu_hr_payroll_configuration"
-        sequence="2"
-    />
     <!-- Salary Category-->
     <record id="hr_salary_rule_category_form" model="ir.ui.view">
         <field name="name">hr.salary.rule.category.form</field>
@@ -137,18 +111,6 @@
     <record id="hr_salary_rule_category_tree" model="ir.ui.view">
         <field name="name">hr.salary.rule.category.tree</field>
         <field name="model">hr.salary.rule.category</field>
-        <field name="arch" type="xml">
-            <tree string="Salary Rule Categories">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="parent_id" invisible="1"/>
-            </tree>
-        </field>
-    </record>
-    <record id="hr_salary_rule_category_tree_view" model="ir.ui.view">
-        <field name="name">hr.salary.rule.category.tree.view</field>
-        <field name="model">hr.salary.rule.category</field>
-        <field name="field_parent">children_ids</field>
         <field name="arch" type="xml">
             <tree string="Salary Rule Categories">
                 <field name="name"/>
@@ -180,20 +142,6 @@
         action="action_hr_salary_rule_category"
         parent="menu_hr_payroll_configuration"
         sequence="11"
-        groups="base.group_no_one"
-    />
-    <record id="action_hr_salary_rule_category_tree_view" model="ir.actions.act_window">
-        <field name="name">Salary Rule Categories Hierarchy</field>
-        <field name="res_model">hr.salary.rule.category</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="hr_salary_rule_category_tree_view"/>
-    </record>
-    <menuitem
-        id="menu_hr_salary_rule_category_tree_view"
-        action="action_hr_salary_rule_category_tree_view"
-        parent="menu_hr_payroll_configuration"
-        sequence="12"
         groups="base.group_no_one"
     />
 
