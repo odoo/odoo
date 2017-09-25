@@ -295,9 +295,12 @@ class MrpWorkorder(models.Model):
         # (the new workorder tablet view allows registering consumed quantities for untracked components)
         # we assume that only the theoretical quantity was used
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
-        for move in raw_moves:
-            if move.unit_factor and not move.move_line_ids.filtered(lambda m: not m.done_wo):
-                rounding = move.product_uom.rounding
+        for move in raw_moves.filtered(lambda m: m.unit_factor and not m.move_line_ids.filtered(lambda ml: not ml.done_wo)):
+            rounding = move.product_uom.rounding
+            if move.raw_material_production_id.product_id.tracking != 'none':
+                qty_to_add = float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
+                move._set_consume_qty(qty_to_add, self.final_lot_id)
+            else:
                 move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
         # Transfer quantities from temporary to final move lots or make them final

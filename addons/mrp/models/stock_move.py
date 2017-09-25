@@ -178,6 +178,35 @@ class StockMove(models.Model):
             })
         return self.env['stock.move']
 
+    def _set_consume_qty(self, qty_to_add, final_lot, lot=False):
+        ml = self.move_line_ids.filtered(lambda x: x.lot_id == lot and not x.lot_produced_id)
+        if ml:
+            ml = ml[0] 
+            qty_todo = qty_to_add + ml.qty_done
+            if qty_todo >= ml.product_uom_qty:
+                ml.write({'qty_done': qty_todo, 'lot_produced_id': final_lot.id})
+            else:
+                new_qty_todo = ml.product_uom_qty - qty_todo
+                default = {'product_uom_qty': qty_todo,
+                           'qty_done': qty_todo,
+                           'lot_produced_id': final_lot.id}
+                ml.copy(default=default)
+                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_todo, 'qty_done': 0})
+        else:
+            vals = {
+                'move_id': self.id,
+                'product_id': self.product_id.id,
+                'location_id': self.location_id.id,
+                'location_dest_id': self.location_dest_id.id,
+                'product_uom_qty': 0,
+                'product_uom_id': self.product_uom.id,
+                'qty_done': qty_to_add,
+                'lot_produced_id': final_lot.id,
+            }
+            if lot:
+                vals.update({'lot_id': lot.id})
+            self.env['stock.move.line'].create(vals)
+
 
 class PushedFlow(models.Model):
     _inherit = "stock.location.path"
