@@ -921,6 +921,25 @@ class StockMove(models.Model):
                 rounding_method ='UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals)._action_confirm()
+
+            # link it to some move lines. We don't need to do it for move since they should be merged.
+            if self.exists() and not self.picking_id:
+                for move_line in self.move_line_ids.filtered(lambda ml: ml.qty_done):
+                    if float_compare(move_line.qty_done, extra_move_quantity, precision_rounding=rounding) <= 0:
+                        # move this move line to our extra move
+                        move_line.move_id = extra_move.id
+                        extra_move_quantity -= move_line.qty_done
+                    else:
+                        # split this move line and assign the new part to our extra move
+                        quantity_split = float_round(
+                            move_line.qty_done - extra_move_quantity,
+                            precision_rounding=self.product_uom.rounding,
+                            rounding_method='UP')
+                        move_line.qty_done = quantity_split
+                        move_line.copy(default={'move_id': extra_move.id, 'qty_done': extra_move_quantity, 'product_uom_qty': 0})
+                        extra_move_quantity -= extra_move_quantity
+                    if extra_move_quantity == 0.0:
+                        break
         return extra_move
 
     def _action_done(self):
