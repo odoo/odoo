@@ -137,7 +137,9 @@ class MrpProductProduce(models.TransientModel):
                 self.env['stock.move.line'].create(vals)
 
         for pl in self.produce_line_ids:
-            if pl.qty_done and pl.lot_id:
+            if pl.qty_done:
+                if not pl.lot_id:
+                    raise UserError(_('Please enter a lot or serial number for %s !' % pl.product_id.name))
                 if not pl.move_id:
                     # Find move_id that would match
                     move_id = self.production_id.move_raw_ids.filtered(lambda x: x.product_id == pl.product_id and x.state not in ('done', 'cancel'))
