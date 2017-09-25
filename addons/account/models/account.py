@@ -684,6 +684,15 @@ class AccountJournal(models.Model):
             journal.at_least_one_inbound = bool(len(journal.inbound_payment_method_ids))
             journal.at_least_one_outbound = bool(len(journal.outbound_payment_method_ids))
 
+    def setup_save_journal_and_create_more(self):
+        """ This function is triggered by the button allowing to create more
+        bank accounts, displayed in the "Bank Accounts" wizard of the setup bar.
+
+        Button execution is done in Python, so that the model is validated and saved
+        before executing the action.
+        """
+        return self.env.ref('account.action_account_bank_journal_form').read()[0]
+
 
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
@@ -994,6 +1003,7 @@ class AccountTax(models.Model):
             prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
             line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
         return self._fix_tax_included_price(price, prod_taxes, line_taxes)
+
 
 class AccountReconcileModel(models.Model):
     _name = "account.reconcile.model"
