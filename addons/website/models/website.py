@@ -119,7 +119,6 @@ class Website(models.Model):
         })
         if ispage:
             page = self.env['website.page'].create({
-                'name': name,
                 'url': page_url,
                 'website_ids': [(6, None, [self.get_current_website().id])],
                 'ir_ui_view_id': view.id
@@ -502,13 +501,12 @@ class Page(models.Model):
     _inherit = 'website.published.mixin'
     _description = 'Page'
 
-    name = fields.Char('Page Name')
     url = fields.Char('Page URL')
     website_ids = fields.Many2many('website', string='Websites')
     ir_ui_view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
-    # This is needed to be able to display if page is a menu in /website/page_management
+    # This is needed to be able to display if page is a menu in /website/pages
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_homepage = fields.Boolean(compute='_compute_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
@@ -565,7 +563,9 @@ class Page(models.Model):
                 })
 
         page.write({
-            'name': data['name'], 'url': url,
+            'key': 'website.' + slugify(data['name'], 50),
+            'name': data['name'],
+            'url': url,
             'website_published': data['website_published'],
             'website_indexed': data['website_indexed'],
             'date_publish': data['date_publish'] or None
@@ -585,9 +585,13 @@ class Page(models.Model):
     @api.multi
     def copy(self, default=None):
         view = self.env['ir.ui.view'].browse(self.ir_ui_view_id.id)
-        new_view = view.copy()
+        # website.page's ir.ui.view should have a different key than the one it
+        # is copied from.
+        # (eg: website_version: an ir.ui.view record with the same key is
+        # expected to be the same ir.ui.view but from another version)
+        new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name,  _('(copy)'))})
         default = {
-            'name': self.name + ' (copy)',
+            'name': '%s %s' % (self.name,  _('(copy)')),
             'url': self.env['website'].get_unique_path(self.url),
             'ir_ui_view_id': new_view.id,
         }
@@ -605,7 +609,7 @@ class Page(models.Model):
             if menu:
                 # If the page being cloned has a menu, clone it too
                 new_menu = menu.copy()
-                new_menu.write({'url': new_page.url, 'name': menu.name + ' (copy)', 'page_id': new_page.id})
+                new_menu.write({'url': new_page.url, 'name': '%s %s' % (menu.name,  _('(copy)')), 'page_id': new_page.id})
 
         return new_page.url + '?enable_editor=1'
 
@@ -617,7 +621,7 @@ class Page(models.Model):
         # Handle it's ir_ui_view
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
-            pages_linked_to_iruiview = self.env['website.page'].search(
+            pages_linked_to_iruiview = self.search(
                 [('ir_ui_view_id', '=', self.ir_ui_view_id.id), ('id', '!=', self.id)]
             )
             if len(pages_linked_to_iruiview) == 0:
@@ -628,8 +632,8 @@ class Page(models.Model):
 
     @api.model
     def delete_page(self, page_id):
-        """ Delete a page or a link, given its identifier
-            :param object_id : object identifier eg: menu-5
+        """ Delete a page, given its identifier
+            :param page_id : website.page identifier
         """
         # If we are deleting a page (that could possibly be a menu with a page)
         page = self.env['website.page'].browse(int(page_id))
