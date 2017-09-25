@@ -28,9 +28,10 @@ var BaseSettingRenderer = FormRenderer.extend({
         var self = this;
         this.modules = [];
 
-        _.each(this.$('.app_settings_block'),function(settingView, index) {
+        _.each(this.$('.app_settings_block'), function (settingView, index) {
             var group = !$(settingView).hasClass('o_invisible_modifier');
-            if(group) {
+            var isNotApp = $(settingView).hasClass('o_not_app');
+            if(group && !isNotApp) {
                 var string = $(settingView).attr('data-string');
                 var key = $(settingView).attr('data-key');
                 var imgurl = self._getAppIconUrl(key);
