@@ -385,7 +385,9 @@
     </section>
 </template>
 
-<record id="thankyou" model="ir.ui.view">
+<record id="thankyou" model="website.page">
+    <field name="url">/job-thank-you</field>
+    <field name="website_published">True</field>
     <field name="name">Thank you (Recruitment)</field>
     <field name="type">qweb</field>
     <field name="key">website_hr_recruitment.thankyou</field>
@@ -444,11 +446,6 @@
             </t>
         </t>
     </field>
-</record>
-<record id="thankyou_page" model="website.page">
-    <field name="url">/job-thank-you</field>
-    <field name="website_published">True</field>
-    <field name="ir_ui_view_id" ref="thankyou" />
 </record>
 
 <template id="job_countries" inherit_id="website_hr_recruitment.index" active="False" customize_show="True" name="Filter by Countries">
