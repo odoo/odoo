@@ -203,12 +203,29 @@ class KVM(object):
         l=['ssh','-o','UserKnownHostsFile=/dev/null','-o','StrictHostKeyChecking=no','-p','10022','-i',self.ssh_key,'%s@127.0.0.1'%self.login,cmd]
         system(l)
 
-    def rsync(self,args,options='--delete --exclude .bzrignore'):
+    def rsync(self,args,options='--delete --exclude .git --exclude .tx --exclude __pycache__'):
         cmd ='rsync -rt -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 -i %s" %s %s' % (self.ssh_key, options, args)
         system(cmd)
 
     def run(self):
         pass
+
+def generate_start_stop_files(options):
+    actions = {
+        'start': ['stop', 'start'],
+        'stop': ['stop'],
+    }
+
+    gen_files = []
+    for action, steps in actions.items():
+        fname = action + '.bat'
+        fpath = join(options.build_dir, 'setup/win32/', fname)
+        gen_files.append(fpath)
+        with open(fpath, 'w') as fp:
+            fp.write('@PATH=%WINDIR%\system32;%WINDIR%;%WINDIR%\System32\Wbem;.\r\n')
+            for step in steps:
+                fp.write('@net %s %s\r\n' % (step, nt_service_name))
+    return gen_files
 
 class KVMWinBuildExe(KVM):
     def run(self):
@@ -219,10 +236,17 @@ class KVMWinBuildExe(KVM):
         with open(join(self.o.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
             f.write("SERVICENAME=%s\n" % nt_service_name)
 
+        generated_files = generate_start_stop_files(self.o)
+        remote_build_dir = '/cygdrive/c/odoobuild/server/'
+
         self.ssh("mkdir -p build")
-        self.rsync('%s/ %s@127.0.0.1:build/server/' % (self.o.build_dir, self.login))
-        self.ssh("cd build/server/setup/win32;time make allinone;")
-        self.rsync('%s@127.0.0.1:build/server/setup/win32/release/ %s/' % (self.login, self.o.build_dir), '')
+        print("Syncing Odoo files to virtual machine...", file=stderr)
+        self.rsync('%s/ %s@127.0.0.1:%s' % (self.o.build_dir, self.login, remote_build_dir))
+        self.ssh("cd {}setup/win32;time make allinone;".format(remote_build_dir))
+        self.rsync('%s@127.0.0.1:%ssetup/win32/release/ %s/' % (self.login, remote_build_dir, self.o.build_dir), '')
+        for fp in generated_files:
+            print("Removing generated file: '{}''".format(fp), file=stderr)
+            os.remove(fp)
         print("KVMWinBuildExe.run(): done")
 
 class KVMWinTestExe(KVM):

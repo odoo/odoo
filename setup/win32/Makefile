@@ -27,8 +27,8 @@ server_clean:
 	rm -rf $(SERVER_DIRECTORY)/.cyg*
 
 allinone: server_clean
-	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_PY2EXE_SERVICE))
-	(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
+	#(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_PY2EXE_SERVICE))
+	#(cd $(SERVER_DIRECTORY) && $(LAUNCH_PY2EXE))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && mkdir -p $(FILES_DIRECTORY))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && cp openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe)

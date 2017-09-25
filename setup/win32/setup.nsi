@@ -205,12 +205,16 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     SectionIn 1 2
 
     # TODO: install in a temp dir before
+    
+    # Installing winpython
+    SetOutPath "$INSTDIR\WinPython"
+    File /r "..\..\..\WinPython\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r "..\..\dist\*"
+    File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
 
     SetOutPath "$INSTDIR\service"
-    File /r "dist\*"
+    File "win32_service.py"
     File "start.bat"
     File "stop.bat"
 
@@ -237,14 +241,14 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
         WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec '"$INSTDIR\server\odoo-bin.exe" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
+    nsExec::Exec '"$INSTDIR\WinPython\python-3.6.2 "$INSTDIR\server\odoo-bin.exe" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    #nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
 
-    nsExec::Exec "net stop ${SERVICENAME}"
-    sleep 2
+    #nsExec::Exec "net stop ${SERVICENAME}"
+    #sleep 2
 
-    nsExec::Exec "net start ${SERVICENAME}"
-    sleep 2
+    #nsExec::Exec "net start ${SERVICENAME}"
+    #sleep 2
 
 SectionEnd
     
@@ -302,12 +306,12 @@ Section "Uninstall"
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
 
-    nsExec::Exec "net stop ${SERVICENAME}"
-    nsExec::Exec "sc delete ${SERVICENAME}"
-    sleep 2
+    #nsExec::Exec "net stop ${SERVICENAME}"
+    #nsExec::Exec "sc delete ${SERVICENAME}"
+    #sleep 2
 
     Rmdir /r "$INSTDIR\server"
-    Rmdir /r "$INSTDIR\service"
+    #Rmdir /r "$INSTDIR\service"
     Rmdir /r "$INSTDIR\thirdparty"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
