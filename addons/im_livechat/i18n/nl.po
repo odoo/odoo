@@ -3,18 +3,18 @@
 # * im_livechat
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +76,7 @@ msgstr "Bent u in de matrix?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#: code:addons/im_livechat/static/src/js/im_livechat.js:48
 #, python-format
 msgid "Ask something ..."
 msgstr "Vraag iets ..."
@@ -135,7 +135,7 @@ msgid ""
 "                it before sending."
 msgstr ""
 "Met standaard antwoorden kunt u voorgeschreven reacties toevoegen in uw\n"
-"uw berichten door te typen <i>:snelkoppeling</i>. De snelkoppeling is\n"
+"berichten door te typen <i>:snelkoppeling</i>. De snelkoppeling is\n"
 "direct vervangen in uw bericht, zodat u het nog kan bewerken\n"
 "voordat het verzonden wordt."
 
@@ -178,7 +178,7 @@ msgstr "Chat invoerveld"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#: code:addons/im_livechat/static/src/js/im_livechat.js:50
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Chat met een van onze medewerkers"
@@ -202,13 +202,28 @@ msgstr "Code"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
 msgid "Configuration"
-msgstr "Instellingen"
+msgstr "Configuratie"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_channel_id
 msgid "Conversation"
 msgstr "Conversatie"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/copy_clipboard.js:32
+#, python-format
+msgid "Copied !"
+msgstr "Gekopieerd!"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:6
+#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
+#, python-format
+msgid "Copy Text"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -266,6 +281,17 @@ msgstr "Aanmaakdatum (week)"
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Creation date (year)"
 msgstr "Aanmaakdatum (jaar)"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
+#: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
+msgid "Customer Ratings"
+msgstr "Klantenbeoordelingen"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
+msgid "Customer ratings on livechat session."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
@@ -362,11 +388,6 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
-msgid "Has a Rating"
-msgstr "Heeft een beoordeling"
-
-#. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Hide the button"
 msgstr "Verberg de knop"
@@ -385,7 +406,7 @@ msgstr "Uur van de startdatum van de sessie"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:30
+#: code:addons/im_livechat/static/src/js/im_livechat.js:51
 #, python-format
 msgid "How may I help you?"
 msgstr "Hoe kan ik u helpen?"
@@ -432,6 +453,11 @@ msgid "Last 24h"
 msgstr "Laatste 24u"
 
 #. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+msgid "Last 7 days"
+msgstr "Laatste 7 dagen"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
@@ -460,7 +486,7 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last Week"
-msgstr "Laatste week"
+msgstr "Vorige week"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -485,12 +511,14 @@ msgstr "Live Support"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:21
 #, python-format
 msgid "Livechat"
 msgstr "Livechat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
+#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
 msgstr "Livechat kanaal"
 
@@ -530,7 +558,7 @@ msgstr "Livechart ondersteuning statistieken"
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Manager"
-msgstr "Beheerder"
+msgstr "Manager"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_sequence
@@ -540,7 +568,7 @@ msgstr "Overeenkomende order"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
 msgid "Medium"
-msgstr "Kanaal"
+msgstr "Gemiddeld"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_medium
@@ -564,8 +592,14 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:125
+#, python-format
+msgid "No history found"
+msgstr "Geen geschiedenis gevonden"
+
+#. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:117
+#: code:addons/im_livechat/static/src/js/im_livechat.js:150
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
@@ -648,15 +682,37 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
 msgstr "Beoordeling"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:311
+#: code:addons/im_livechat/static/src/js/im_livechat.js:344
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr "Beoordeling: :rating_%d"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Bad"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Great"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Okay"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
+msgid "Ratings for livechat channel"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
@@ -669,7 +725,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
 msgid "Report"
-msgstr "Rapport"
+msgstr "Rapportage"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_ids
@@ -691,7 +747,13 @@ msgstr "Geschiedenis doorzoeken"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Search report"
-msgstr "Zoek rapport"
+msgstr "Zoek rapportage"
+
+#. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:113
+#, python-format
+msgid "See 15 last visited pages"
+msgstr "Bekijk 15 laatst bekeken pagina's"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -785,6 +847,11 @@ msgid "The user will be able to join support channels."
 msgstr "De gebruiker heeft de optie om aan te melden op support kanalen"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
+msgid "There is no rating for this channel at the moment."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
@@ -844,7 +911,7 @@ msgstr "Gebruiker"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#: code:addons/im_livechat/static/src/js/im_livechat.js:49
 #, python-format
 msgid "Visitor"
 msgstr "Bezoeker"
@@ -882,7 +949,7 @@ msgid ""
 "up your history."
 msgstr ""
 "Uw chat geschiedenis is leeg. Maak een kanaal aan en start met chatten om uw"
-" historiek op te vullen."
+" historie op te bouwen."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -893,6 +960,13 @@ msgstr "bijv. Hallo, hoe kan u helpen?"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "bijv. Uwwebsite.nl"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:10
+#, python-format
+msgid "fa-comments"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_autovacuum

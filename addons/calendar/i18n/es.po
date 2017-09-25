@@ -3,30 +3,33 @@
 # * calendar
 # 
 # Translators:
-# oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Angel Catanzariti <angel@exor.com.ar>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Kiko <kiko@comunitea.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Antonio Trueba <atgayol@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
+# Gustavo Valverde <g.valverde02@gmail.com>, 2017
+# Alejandro Die Sanchis <marketing@domatix.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# Kiko <kiko@comunitea.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Angel Catanzariti <angel@exor.com.ar>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Kiko <kiko@comunitea.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +93,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -161,7 +164,7 @@ msgid ""
 "                    ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.</p>\n"
 "                <table style=\"margin-top: 20px;\"><tr>\n"
 "                    <td>\n"
-"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;\">\n"
+"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;border:1px solid #875A7B;\">\n"
 "                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "                        </div>\n"
 "                        <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;\">\n"
@@ -176,7 +179,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -263,7 +266,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -295,13 +298,6 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:95
-#, python-format
-msgid " [Me]"
-msgstr " [Yo]"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
 msgid "# Meetings Highlight"
 msgstr ""
@@ -314,15 +310,15 @@ msgstr "${object.event_id.name} - Recordatorio"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} invitación"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Fecha actualizada"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:644
+#: code:addons/calendar/models/calendar.py:695
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -332,19 +328,19 @@ msgstr ""
 "%s a las %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:642
+#: code:addons/calendar/models/calendar.py:693
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s a las (%s hasta %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:196
+#: code:addons/calendar/models/calendar.py:208
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s ha aceptado la invitación"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:204
+#: code:addons/calendar/models/calendar.py:216
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s ha rechazado la invitación"
@@ -373,11 +369,19 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:75
-#, python-format
-msgid "Add Favorite Calendar"
-msgstr "Añadir calendario favorito"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity
+msgid "Activity"
+msgstr "Actividad"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipo de actividad"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
@@ -385,7 +389,7 @@ msgid "All Day"
 msgstr "Todo el día"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:639
+#: code:addons/calendar/models/calendar.py:690
 #, python-format
 msgid "AllDay , %s"
 msgstr "Todo el día , %s"
@@ -424,7 +428,7 @@ msgid "Availability"
 msgstr "Disponibilidad"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1481
+#: code:addons/calendar/models/calendar.py:1569
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -456,6 +460,11 @@ msgid "Calendar Invitation"
 msgstr "Invitación de calendario"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
+msgid "Calendar Meeting"
+msgstr ""
+
+#. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
@@ -474,11 +483,6 @@ msgid "Click to schedule a new meeting."
 msgstr "Pulse para planificar una nueva reunión."
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
-msgid "Color index of creator"
-msgstr "Índice de color del creador"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
 msgid "Common name"
 msgstr "Nombre común"
@@ -489,6 +493,7 @@ msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
 msgid "Contact"
 msgstr "Contacto"
@@ -569,14 +574,28 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_name
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre a Mostrar"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:156
-#, python-format
-msgid "Do you really want to delete this filter from favorites ?"
-msgstr "¿Desea borrar realmente este filtro de los favoritos?"
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+msgid "Document"
+msgstr "Documento"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
+msgid "Document ID"
+msgstr "ID del documento"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
+msgid "Document Model"
+msgstr "Modelo de documento"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model
+msgid "Document Model Name"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
@@ -610,7 +629,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Fecha finalización"
+msgstr "Fecha Finalización"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
@@ -620,7 +639,7 @@ msgstr "Fecha y hora de finalización"
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr "Fecha de fin"
+msgstr "Fecha final"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -628,13 +647,13 @@ msgid "Ending at"
 msgstr "Terminando a las"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:834
+#: code:addons/calendar/models/calendar.py:884
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "La fecha de fin no puede ser anterior a la fecha de inicio."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:832
+#: code:addons/calendar/models/calendar.py:882
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr "La fecha de fin no puede ser anterior a la fecha de inicio."
@@ -655,22 +674,21 @@ msgid "Event alarm"
 msgstr "Alarma del evento"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1072
+#: code:addons/calendar/models/calendar.py:1127
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "El intervalo de recurrencia del evento no puede ser negativo."
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:96
-#, python-format
-msgid "Everybody's calendars"
-msgstr "Calendarios de todos"
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "Todos"
+
+#. module: calendar
+#: code:addons/calendar/models/mail_activity.py:38
+#, python-format
+msgid "Feedback: "
+msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -683,7 +701,7 @@ msgid "First"
 msgstr "Primera"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:874
+#: code:addons/calendar/models/calendar.py:924
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Primero debe especificar la fecha de la invitación."
@@ -717,10 +735,10 @@ msgstr "Viernes"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "Agrupar por"
+msgstr "Agrupar Por"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1428
+#: code:addons/calendar/models/calendar.py:1514
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -773,7 +791,7 @@ msgstr "Detalles de la invitación"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "Invitación para"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -798,7 +816,7 @@ msgstr "Última"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event___last_update
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última Modificación en"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_uid
@@ -807,7 +825,7 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Última Actualización por"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_date
@@ -816,12 +834,13 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Última Actualización el"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Última notificación marcada como leída desde el calendario base"
+msgstr "Última notificación marcada como leída desde la base del calendario"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
@@ -991,12 +1010,12 @@ msgid "Participant"
 msgstr "Participante"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
+#: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
+msgid "Partner-related data of the user"
+msgstr "Datos del usuario relativos a la empresa"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1085
+#: code:addons/calendar/models/calendar.py:1140
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Seleccione un día del mes correcto."
@@ -1053,13 +1072,6 @@ msgid "Reminders"
 msgstr "Recordatorios"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:26
-#, python-format
-msgid "Remove this favorite from the list"
-msgstr "Eliminar este favorito de la lista"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
 msgid "Repeat"
 msgstr "Repetir"
@@ -1085,6 +1097,7 @@ msgid "Repeat x times"
 msgstr "Repetir x veces"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
@@ -1099,6 +1112,11 @@ msgstr "Sáb"
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
 msgstr "Sábado"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Schedule a meeting"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1141,7 +1159,7 @@ msgstr "Iniciar"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr "Fecha de inicio"
+msgstr "Fecha de Inicio"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
@@ -1211,15 +1229,21 @@ msgid "The"
 msgstr "El"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/js/mail_activity.js:42
+#, python-format
+msgid ""
+"The activity is linked to a meeting. Deleting it will remove the meeting as "
+"well. Do you want to proceed ?"
+msgstr ""
+
+#. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid ""
 "The calendar is shared between employees and fully integrated with\n"
-"            other applications such as the employee holidays or the business\n"
+"            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"El calendario se comparte entre los empleados y está completamente integrado"
-" con otras aplicaciones como las vacaciones de los empleados o las "
-"oportunidades de negocio."
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1276,7 +1300,7 @@ msgstr "Unidad"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
-msgstr "Mensajes por leer"
+msgstr "Mensajes sin leer"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1319,7 +1343,7 @@ msgid "Yes I'm going."
 msgstr "Sí, asistiré"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:128
+#: code:addons/calendar/models/calendar.py:138
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "No puede duplicar un asistente calendario"
@@ -1340,7 +1364,7 @@ msgid "e.g. Business Lunch"
 msgstr "por ejemplo, Comida de trabajo"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1070
+#: code:addons/calendar/models/calendar.py:1125
 #, python-format
 msgid "interval cannot be negative."
 msgstr "El intervalo no puede ser negativo."
