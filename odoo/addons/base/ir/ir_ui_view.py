@@ -179,7 +179,7 @@ class View(models.Model):
     arch_db = fields.Text(string='Arch Blob', translate=xml_translate, oldname='arch')
     arch_fs = fields.Char(string='Arch Filename')
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
-    inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
+    inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one') # TODO this field should be ordered by priority,id
     field_parent = fields.Char(string='Child Field')
     model_data_id = fields.Many2one('ir.model.data', string="Model Data",
                                     compute='_compute_model_data_id', search='_search_model_data_id')
@@ -455,9 +455,9 @@ actual arch.
             # used to implement it.
             modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
             views = self.search(conditions + [('model_ids.module', 'in', modules)])
-            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)])
+            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)], order='priority,id')
         else:
-            views = self.search(conditions)
+            views = self.search(conditions, order='priority,id')
 
         return [(view.arch, view.id)
                 for view in views.sudo()
