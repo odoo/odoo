@@ -225,6 +225,7 @@ class SaleOrder(models.Model):
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
                 'default_template_id': template_id,
+                'website_sale_send_recovery_email': True,
                 'active_ids': self.ids,
             },
         }
