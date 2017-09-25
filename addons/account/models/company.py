@@ -62,13 +62,14 @@ Best Regards,''')
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
 
-    @api.constrains('fiscalyear_last_month', 'fiscalyear_last_day')
-    def _fiscalyear_last_day_in_month(self):
+    @api.model
+    def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
+        company = self.browse(company_id)
+        last_day = last_day or company.fiscalyear_last_day
+        last_month = last_month or company.fiscalyear_last_month
         current_year = datetime.now().year
-        for company in self:
-            if company.fiscalyear_last_day > calendar.monthrange(current_year, company.fiscalyear_last_month)[1]:
-                raise ValidationError(_('The day %s does not exist for the month %s when setting the fiscal year on company %s')
-                    % (company.fiscalyear_last_day, company.fiscalyear_last_month, company.name))
+        last_day_of_month = calendar.monthrange(current_year, last_month)[1]
+        return last_day > last_day_of_month and last_day_of_month or last_day
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
