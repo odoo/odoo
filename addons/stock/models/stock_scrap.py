@@ -119,7 +119,7 @@ class StockScrap(models.Model):
         action['domain'] = [('id', '=', self.picking_id.id)]
         return action
 
-    def action_get_stock_move(self):
-        action = self.env.ref('stock.stock_move_action').read([])[0]
-        action['domain'] = [('id', '=', self.move_id.id)]
+    def action_get_stock_move_lines(self):
+        action = self.env.ref('stock.stock_move_line_action').read([])[0]
+        action['domain'] = [('move_id', '=', self.move_id.id)]
         return action
