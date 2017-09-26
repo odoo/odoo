@@ -444,7 +444,7 @@ var AbstractField = Widget.extend({
                 this.trigger_up('navigation_move', {direction: 'next_line'});
                 break;
             case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel'});
+                this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
                 break;
             case $.ui.keyCode.UP:
                 ev.stopPropagation();
