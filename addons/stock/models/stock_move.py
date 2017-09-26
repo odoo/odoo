@@ -996,6 +996,11 @@ class StockMove(models.Model):
         picking = self and self[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()
+
+        # We don't want to create back order for scrap moves
+        if all(move_todo.scrapped for move_todo in moves_todo):
+            return moves_todo
+
         if picking:
             moves_to_backorder = picking.move_lines.filtered(lambda x: x.state not in ('done', 'cancel'))
             if moves_to_backorder:
