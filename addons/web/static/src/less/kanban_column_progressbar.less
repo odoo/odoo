@@ -47,12 +47,19 @@
         height: @o-kanban-counter-header-height;
         margin-top: 5px;
     }
+
+    &.o_kanban_no_records {
+        .o_kanban_counter {
+            opacity: 0.3;
+        }
+    }
 }
 
 .o_kanban_counter {
     position: relative;
     .o-flex-display();
     .o-align-items(center);
+    .o-transition(opacity, 0.3s);
     margin-bottom: @o-kanban-record-margin*2;
 
     > .o_kanban_counter_progress {
