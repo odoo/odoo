@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-09 09:04+0000\n"
+"PO-Revision-Date: 2017-09-22 08:21+0000\n"
 "Last-Translator: Eric Antones <eantones@users.noreply.github.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr ""
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr ""
+msgstr "Entitat"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
@@ -137,7 +137,7 @@ msgstr "Correu electrònic"
 #. module: payment
 #: field:payment.acquirer,environment:0
 msgid "Environment"
-msgstr ""
+msgstr "Entorn"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -152,22 +152,22 @@ msgstr "Càrrecs"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Import de les comissions; establert pel sistema perquè depèn de l'entitat"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Camp utilitzat per guardar els missatges d'error/o validació com informació"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Comissions nacionals fixes"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Comissions internacionals fixes"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
@@ -182,7 +182,7 @@ msgstr "Formulari"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "Plantilla del botó del formulari"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -234,7 +234,7 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Fer disponible aquest mètode de pagament (factures de client, etc.)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -269,12 +269,12 @@ msgstr "Missatge"
 #. module: payment
 #: help:payment.acquirer,post_msg:0
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Missatge mostrat després d'haver realitzat el procés de pagament."
 
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Missatge mostrat per explicar i ajudar en el procés de pagament."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -328,7 +328,7 @@ msgstr "Pagament de compradors"
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: view:payment.acquirer:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Mètodes de pagament"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -372,12 +372,12 @@ msgstr "Producció"
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr ""
+msgstr "Proveïdor"
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Referència de la transferència com es guarda a la base de dades de l'entitat"
 
 #. module: payment
 #: help:payment.transaction,partner_reference:0
@@ -387,7 +387,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Camps requerits no emplenats"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -397,7 +397,7 @@ msgstr "Enviar un missatge al grup"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Servidor a servidor"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
@@ -427,7 +427,7 @@ msgstr "Missatge d'Agraïment"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "La referència de la transacció de pagament ha de ser única"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -454,17 +454,17 @@ msgstr "Data de validació"
 #. module: payment
 #: field:payment.acquirer,fees_dom_var:0
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Comissions nacionals variables"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_var:0
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Comissions internacionals variables (en percentatge)"
 
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Visible en el portal / lloc web"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
@@ -484,51 +484,51 @@ msgstr "C.P."
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "acquirer: registre del model payment.acquirer"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "amount: l'import de la transacció, un float"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "context: el diccionari de context actual"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "currency: el registre de la moneda de la transacció"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "partner: el registre del client que compra, no necessàriament establert"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values: valors específics sobre el comprador, per exemple, procedent d'un formulari d'enviament"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "referencia: el número de referència de la transacció"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: URL de la transacció per evitar el formulari"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: valors de la transacció"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "usuari: registre de l'usuari actual"
