@@ -1,0 +1,2165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data noupdate="1">
+      <record id="do_niif_11010301" model="account.account.template">
+         <field name="name">Depósitos a corto plazo en RD$</field>
+         <field name="code">11010301</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1101'), ref('account_tag_110103')])]"/>
+      </record>
+      <record id="do_niif_11010302" model="account.account.template">
+         <field name="name">Depósitos a corto plazo en USD$</field>
+         <field name="code">11010302</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1101'), ref('account_tag_110103')])]"/>
+      </record>
+      <record id="do_niif_11020100" model="account.account.template">
+         <field name="name">Bonos y Acciones Temporales</field>
+         <field name="code">11020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1102')])]"/>
+      </record>
+      <record id="do_niif_11020200" model="account.account.template">
+         <field name="name">Operaciones en Bolsa</field>
+         <field name="code">11020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1102')])]"/>
+      </record>
+      <record id="do_niif_11020300" model="account.account.template">
+         <field name="name">Otros Valores Negociables</field>
+         <field name="code">11020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1102')])]"/>
+      </record>
+      <record id="do_niif_11030101" model="account.account.template">
+         <field name="name">Cheques Devueltos por Cobrar</field>
+         <field name="code">11030101</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110301')])]"/>
+      </record>
+      <record id="do_niif_11030102" model="account.account.template">
+         <field name="name">Intereses por Cobrar</field>
+         <field name="code">11030102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110301')])]"/>
+      </record>
+      <record id="do_niif_11030201" model="account.account.template">
+         <field name="name">Cuenta por Cobrar a Clientes</field>
+         <field name="code">11030201</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110302')])]"/>
+      </record>
+      <record id="do_niif_11030202" model="account.account.template">
+         <field name="name">Cuenta por Cobrar a Funcionarios y Empleados</field>
+         <field name="code">11030202</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110302')])]"/>
+      </record>
+      <record id="do_niif_11030203" model="account.account.template">
+         <field name="name">Cuenta por Cobrar a Afiliadas</field>
+         <field name="code">11030203</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110302')])]"/>
+      </record>
+      <record id="do_niif_11030204" model="account.account.template">
+         <field name="name">Cuenta por Cobrar a Accionistas</field>
+         <field name="code">11030204</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110302')])]"/>
+      </record>
+      <record id="do_niif_11030205" model="account.account.template">
+         <field name="name">Otras Cuentas por Cobrar</field>
+         <field name="code">11030205</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_receivable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1103'), ref('account_tag_110302')])]"/>
+      </record>
+      <record id="do_niif_11040100" model="account.account.template">
+         <field name="name">Provisión Incobrables a Clientes</field>
+         <field name="code">11040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1104')])]"/>
+      </record>
+      <record id="do_niif_11040200" model="account.account.template">
+         <field name="name">Provisión  Incobrables a Funcionarios y Empleados</field>
+         <field name="code">11040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1104')])]"/>
+      </record>
+      <record id="do_niif_11040300" model="account.account.template">
+         <field name="name">Provisión Incobrables a Afiliadas</field>
+         <field name="code">11040300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1104')])]"/>
+      </record>
+      <record id="do_niif_11040400" model="account.account.template">
+         <field name="name">Provisión Incobrables a Accionistas</field>
+         <field name="code">11040400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1104')])]"/>
+      </record>
+      <record id="do_niif_11040500" model="account.account.template">
+         <field name="name">Provisión Otras Cuentas Incobrables</field>
+         <field name="code">11040500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1104')])]"/>
+      </record>
+      <record id="do_niif_11050100" model="account.account.template">
+         <field name="name">Inventario de Mercancías o Productos Terminados</field>
+         <field name="code">11050100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11050200" model="account.account.template">
+         <field name="name">Inventario de Materia Prima</field>
+         <field name="code">11050200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11050300" model="account.account.template">
+         <field name="name">Inventario en Tránsito</field>
+         <field name="code">11050300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11050400" model="account.account.template">
+         <field name="name">Materiales y Suministros en Inventario</field>
+         <field name="code">11050400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11050500" model="account.account.template">
+         <field name="name">Combustibles en Inventario</field>
+         <field name="code">11050500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11050600" model="account.account.template">
+         <field name="name">Bienes Enviados No Facturados</field>
+         <field name="code">11050600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1105')])]"/>
+      </record>
+      <record id="do_niif_11060100" model="account.account.template">
+         <field name="name">Deterioro Acum. de Inventario en Almacen</field>
+         <field name="code">11060100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1106')])]"/>
+      </record>
+      <record id="do_niif_11060200" model="account.account.template">
+         <field name="name">Deterioro Acum. de Materiales y Suministros</field>
+         <field name="code">11060200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1106')])]"/>
+      </record>
+      <record id="do_niif_11060300" model="account.account.template">
+         <field name="name">Deterioro Acum. de Combustibles</field>
+         <field name="code">11060300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1106')])]"/>
+      </record>
+      <record id="do_niif_11070100" model="account.account.template">
+         <field name="name">Obsolescencia Inventario en Almacen</field>
+         <field name="code">11070100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1107')])]"/>
+      </record>
+      <record id="do_niif_11070200" model="account.account.template">
+         <field name="name">Obsolescencia Materiales y Suministros</field>
+         <field name="code">11070200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1107')])]"/>
+      </record>
+      <record id="do_niif_11070300" model="account.account.template">
+         <field name="name">Obsolescencia Combustibles</field>
+         <field name="code">11070300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1107')])]"/>
+      </record>
+      <record id="do_niif_11080101" model="account.account.template">
+         <field name="name">ITBIS Pagado en Compras Locales</field>
+         <field name="code">11080101</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110801')])]"/>
+      </record>
+      <record id="do_niif_11080102" model="account.account.template">
+         <field name="name">ITBIS Pagado en Servicios Locales</field>
+         <field name="code">11080102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110801')])]"/>
+      </record>
+      <record id="do_niif_11080103" model="account.account.template">
+         <field name="name">ITBIS Pagado por Importaciones</field>
+         <field name="code">11080103</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110801')])]"/>
+      </record>
+      <record id="do_niif_11080301" model="account.account.template">
+         <field name="name">ITBIS Pagado en Ventas con Tarjeta de Crédito (Norma 08-04)</field>
+         <field name="code">11080301</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110803')])]"/>
+      </record>
+      <record id="do_niif_11080302" model="account.account.template">
+         <field name="name">Saldo a Favor ITBIS</field>
+         <field name="code">11080302</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110803')])]"/>
+      </record>
+      <record id="do_niif_11080303" model="account.account.template">
+         <field name="name">Saldo a Favor ISR</field>
+         <field name="code">11080303</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1108'), ref('account_tag_110803')])]"/>
+      </record>
+      <record id="do_niif_11090100" model="account.account.template">
+         <field name="name">Acciones Temporales</field>
+         <field name="code">11090100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1109')])]"/>
+      </record>
+      <record id="do_niif_11090200" model="account.account.template">
+         <field name="name">Depósitos a Plazo Temporales</field>
+         <field name="code">11090200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1109')])]"/>
+      </record>
+      <record id="do_niif_11090300" model="account.account.template">
+         <field name="name">Bonos Temporales</field>
+         <field name="code">11090300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1109')])]"/>
+      </record>
+      <record id="do_niif_11090400" model="account.account.template">
+         <field name="name">Fianzas y Depósitos</field>
+         <field name="code">11090400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1109')])]"/>
+      </record>
+      <record id="do_niif_11100100" model="account.account.template">
+         <field name="name">Gastos Pagados por Anticipado</field>
+         <field name="code">11100100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_11100200" model="account.account.template">
+         <field name="name">Renta Pagada por Anticipado</field>
+         <field name="code">11100200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_11100300" model="account.account.template">
+         <field name="name">Seguros Pagados por Anticipado</field>
+         <field name="code">11100300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_11100400" model="account.account.template">
+         <field name="name">Anticipos ISR</field>
+         <field name="code">11100400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_11100500" model="account.account.template">
+         <field name="name">Anticipos Gastos</field>
+         <field name="code">11100500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_11100600" model="account.account.template">
+         <field name="name">Anticipos 1% Activos</field>
+         <field name="code">11100600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_11'), ref('account_tag_1110')])]"/>
+      </record>
+      <record id="do_niif_12010101" model="account.account.template">
+         <field name="name">Terrenos</field>
+         <field name="code">12010101</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120101')])]"/>
+      </record>
+      <record id="do_niif_12010102" model="account.account.template">
+         <field name="name">Edificaciones</field>
+         <field name="code">12010102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120101')])]"/>
+      </record>
+      <record id="do_niif_12010103" model="account.account.template">
+         <field name="name">Mejoras en Edificaciones</field>
+         <field name="code">12010103</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120101')])]"/>
+      </record>
+      <record id="do_niif_12010201" model="account.account.template">
+         <field name="name">Equipo de Transporte</field>
+         <field name="code">12010201</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120102')])]"/>
+      </record>
+      <record id="do_niif_12010202" model="account.account.template">
+         <field name="name">Mobiliario y Equipos</field>
+         <field name="code">12010202</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120102')])]"/>
+      </record>
+      <record id="do_niif_12010301" model="account.account.template">
+         <field name="name">Maquinaria</field>
+         <field name="code">12010301</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120103')])]"/>
+      </record>
+      <record id="do_niif_12010302" model="account.account.template">
+         <field name="name">Herramientas</field>
+         <field name="code">12010302</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120103')])]"/>
+      </record>
+      <record id="do_niif_12010303" model="account.account.template">
+         <field name="name">Instalaciones</field>
+         <field name="code">12010303</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120103')])]"/>
+      </record>
+      <record id="do_niif_12010304" model="account.account.template">
+         <field name="name">Misceláneos u otros activos</field>
+         <field name="code">12010304</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1201'), ref('account_tag_120103')])]"/>
+      </record>
+      <record id="do_niif_12020100" model="account.account.template">
+         <field name="name">Depreciación Acum. de Edificios</field>
+         <field name="code">12020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12020200" model="account.account.template">
+         <field name="name">Depreciación Acum. de Equipo de Transporte</field>
+         <field name="code">12020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12020300" model="account.account.template">
+         <field name="name">Depreciación Acum. de Mobiliario y Equipos</field>
+         <field name="code">12020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12020400" model="account.account.template">
+         <field name="name">Depreciación Acum. de Maquinaria</field>
+         <field name="code">12020400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12020500" model="account.account.template">
+         <field name="name">Depreciación Acum. de Herramientas</field>
+         <field name="code">12020500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12020600" model="account.account.template">
+         <field name="name">Depreciación Acum. de Instalaciones</field>
+         <field name="code">12020600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1202')])]"/>
+      </record>
+      <record id="do_niif_12040100" model="account.account.template">
+         <field name="name">Marcas y Patentes</field>
+         <field name="code">12040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1204')])]"/>
+      </record>
+      <record id="do_niif_12040200" model="account.account.template">
+         <field name="name">Programas Informáticos</field>
+         <field name="code">12040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1204')])]"/>
+      </record>
+      <record id="do_niif_12050100" model="account.account.template">
+         <field name="name">Edificios y Locales Arrendados</field>
+         <field name="code">12050100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1205')])]"/>
+      </record>
+      <record id="do_niif_12050200" model="account.account.template">
+         <field name="name">Maquinaria y Equipo Arrendados</field>
+         <field name="code">12050200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1205')])]"/>
+      </record>
+      <record id="do_niif_12050300" model="account.account.template">
+         <field name="name">Instalaciones Arrendadas</field>
+         <field name="code">12050300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1205')])]"/>
+      </record>
+      <record id="do_niif_12060100" model="account.account.template">
+         <field name="name">Depreciación Acum. Edificios y Locales Arrendados</field>
+         <field name="code">12060100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1206')])]"/>
+      </record>
+      <record id="do_niif_12060200" model="account.account.template">
+         <field name="name">Depreciación Acum. Maquinaria y Equipo Arrendados</field>
+         <field name="code">12060200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1206')])]"/>
+      </record>
+      <record id="do_niif_12060300" model="account.account.template">
+         <field name="name">Depreciación Acum. Instalaciones Arrendadas</field>
+         <field name="code">12060300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1206')])]"/>
+      </record>
+      <record id="do_niif_12070100" model="account.account.template">
+         <field name="name">Deterioro Valor Acum. Edificios y Locales Arrendados</field>
+         <field name="code">12070100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1207')])]"/>
+      </record>
+      <record id="do_niif_12070200" model="account.account.template">
+         <field name="name">Deterioro Valor Acum. Maquinaria y Equipo Arrendado</field>
+         <field name="code">12070200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1207')])]"/>
+      </record>
+      <record id="do_niif_12070300" model="account.account.template">
+         <field name="name">Deterioro Valor Acum. Instalaciones Arrendadas</field>
+         <field name="code">12070300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1207')])]"/>
+      </record>
+      <record id="do_niif_12080100" model="account.account.template">
+         <field name="name">Acciones en otras sociedades</field>
+         <field name="code">12080100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1208')])]"/>
+      </record>
+      <record id="do_niif_12090100" model="account.account.template">
+         <field name="name">Diferencias temporales deducibles</field>
+         <field name="code">12090100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1209')])]"/>
+      </record>
+      <record id="do_niif_12090200" model="account.account.template">
+         <field name="name">Gastos Organizacionales Diferidos</field>
+         <field name="code">12090200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1209')])]"/>
+      </record>
+      <record id="do_niif_12090300" model="account.account.template">
+         <field name="name">ISR Deducible</field>
+         <field name="code">12090300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_1'), ref('account_tag_12'), ref('account_tag_1209')])]"/>
+      </record>
+      <record id="do_niif_21010100" model="account.account.template">
+         <field name="name">Préstamos Bancarios por Pagar</field>
+         <field name="code">21010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010200" model="account.account.template">
+         <field name="name">Cuenta por Pagar Proveedores Locales</field>
+         <field name="code">21010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010300" model="account.account.template">
+         <field name="name">Cuenta por Pagar Proveedores del Exterior</field>
+         <field name="code">21010300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010400" model="account.account.template">
+         <field name="name">Cuenta por Pagar a Afiliadas</field>
+         <field name="code">21010400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010500" model="account.account.template">
+         <field name="name">Cuenta por Pagar a Accionistas</field>
+         <field name="code">21010500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010600" model="account.account.template">
+         <field name="name">Nóminas por Pagar</field>
+         <field name="code">21010600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010700" model="account.account.template">
+         <field name="name">Intereses por Pagar</field>
+         <field name="code">21010700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21010800" model="account.account.template">
+         <field name="name">Otras Cuentas por Pagar</field>
+         <field name="code">21010800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_payable"/>
+         <field name="reconcile" eval="True"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2101')])]"/>
+      </record>
+      <record id="do_niif_21020100" model="account.account.template">
+         <field name="name">Dividendos por Pagar</field>
+         <field name="code">21020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020200" model="account.account.template">
+         <field name="name">Comisiones por Pagar</field>
+         <field name="code">21020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020300" model="account.account.template">
+         <field name="name">Vacaciones por Pagar</field>
+         <field name="code">21020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020400" model="account.account.template">
+         <field name="name">Bonificaciones por Pagar</field>
+         <field name="code">21020400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020500" model="account.account.template">
+         <field name="name">Regalía Pascual por Pagar</field>
+         <field name="code">21020500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020600" model="account.account.template">
+         <field name="name">Seguro Médico por Pagar</field>
+         <field name="code">21020600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020700" model="account.account.template">
+         <field name="name">Seguro Familiar de Salud (SFS) por Pagar</field>
+         <field name="code">21020700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020800" model="account.account.template">
+         <field name="name">Aporte a Fondo de Pensiones (AFP) por Pagar</field>
+         <field name="code">21020800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21020900" model="account.account.template">
+         <field name="name">Seguro de Riesgo Laboral (SRL) por Pagar</field>
+         <field name="code">21020900</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21021000" model="account.account.template">
+         <field name="name">INFOTEP por Pagar</field>
+         <field name="code">21021000</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21021100" model="account.account.template">
+         <field name="name">Otras Remuneraciones por Pagar</field>
+         <field name="code">21021100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21021200" model="account.account.template">
+         <field name="name">Bienes Recibidos no Pagados</field>
+         <field name="code">21021200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2102')])]"/>
+      </record>
+      <record id="do_niif_21030101" model="account.account.template">
+         <field name="name">ITBIS por Venta Servicios</field>
+         <field name="code">21030101</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210301')])]"/>
+      </record>
+      <record id="do_niif_21030102" model="account.account.template">
+         <field name="name">ITBIS por Venta Bienes</field>
+         <field name="code">21030102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210301')])]"/>
+      </record>
+      <record id="do_niif_21030103" model="account.account.template">
+         <field name="name">ITBIS por Venta Bienes - al Exterior</field>
+         <field name="code">21030103</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210301')])]"/>
+      </record>
+      <record id="do_niif_21030201" model="account.account.template">
+         <field name="name">ITBIS Retenido Persona Jurídica (N 02-05)</field>
+         <field name="code">21030201</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210302')])]"/>
+      </record>
+      <record id="do_niif_21030202" model="account.account.template">
+         <field name="name">ITBIS Retenido Persona Física (R 293-11)</field>
+         <field name="code">21030202</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210302')])]"/>
+      </record>
+      <record id="do_niif_21030203" model="account.account.template">
+         <field name="name">ITBIS Retenido a Entidades No Lucrativas (N 01-2011)</field>
+         <field name="code">21030203</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210302')])]"/>
+      </record>
+      <record id="do_niif_21030204" model="account.account.template">
+         <field name="name">ITBIS Retenido por Servicios Profesionales Liberales (N 02-05)</field>
+         <field name="code">21030204</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210302')])]"/>
+      </record>
+      <record id="do_niif_21030205" model="account.account.template">
+         <field name="name">ITBIS Retenido a Proveedores Informales de Bienes (N 08-10)</field>
+         <field name="code">21030205</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210302')])]"/>
+      </record>
+      <record id="do_niif_21030301" model="account.account.template">
+         <field name="name">ISR Retenido por Honorarios Profesionales de Personas Físicas</field>
+         <field name="code">21030301</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030302" model="account.account.template">
+         <field name="name">ISR Retenido por Alquileres Pagados a Personas Físicas</field>
+         <field name="code">21030302</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030303" model="account.account.template">
+         <field name="name">ISR Retenido por Dividendos Pagados</field>
+         <field name="code">21030303</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030304" model="account.account.template">
+         <field name="name">ISR Retenido por Intereses Pagados al Exterior</field>
+         <field name="code">21030304</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030305" model="account.account.template">
+         <field name="name">ISR Retenido por Intereses Pagados</field>
+         <field name="code">21030305</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030306" model="account.account.template">
+         <field name="name">ISR Retenido por Transferencias de Títulos y Propiedades</field>
+         <field name="code">21030306</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030307" model="account.account.template">
+         <field name="name">ISR Retenido por Remesas al Exterior (Ley 253-12)</field>
+         <field name="code">21030307</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030308" model="account.account.template">
+         <field name="name">Otras Retenciones (N 07-07)</field>
+         <field name="code">21030308</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030309" model="account.account.template">
+         <field name="name">Otras Retenciones</field>
+         <field name="code">21030309</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210303')])]"/>
+      </record>
+      <record id="do_niif_21030401" model="account.account.template">
+         <field name="name">Impuesto al Salario (ISR)</field>
+         <field name="code">21030401</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210304')])]"/>
+      </record>
+      <record id="do_niif_21030402" model="account.account.template">
+         <field name="name">Retención de Seguro Familiar de Salud (SFS)</field>
+         <field name="code">21030402</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210304')])]"/>
+      </record>
+      <record id="do_niif_21030403" model="account.account.template">
+         <field name="name">Retención de Fondo de Pensiones (AFP)</field>
+         <field name="code">21030403</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210304')])]"/>
+      </record>
+      <record id="do_niif_21030404" model="account.account.template">
+         <field name="name">Retención de INFOTEP (0.5%)</field>
+         <field name="code">21030404</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210304')])]"/>
+      </record>
+      <record id="do_niif_21030501" model="account.account.template">
+         <field name="name">ISR por Pagar</field>
+         <field name="code">21030501</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210305')])]"/>
+      </record>
+      <record id="do_niif_21030502" model="account.account.template">
+         <field name="name">Anticipos ISR por Pagar</field>
+         <field name="code">21030502</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210305')])]"/>
+      </record>
+      <record id="do_niif_21030503" model="account.account.template">
+         <field name="name">Propina por Pagar (Ley 16-92)</field>
+         <field name="code">21030503</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210305')])]"/>
+      </record>
+      <record id="do_niif_21030504" model="account.account.template">
+         <field name="name">Otros Impuestos por Pagar</field>
+         <field name="code">21030504</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2103'), ref('account_tag_210305')])]"/>
+      </record>
+      <record id="do_niif_21040100" model="account.account.template">
+         <field name="name">Provisión Pago Alquileres</field>
+         <field name="code">21040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2104')])]"/>
+      </record>
+      <record id="do_niif_21040200" model="account.account.template">
+         <field name="name">Provisión Arrendamiento Financiero</field>
+         <field name="code">21040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2104')])]"/>
+      </record>
+      <record id="do_niif_21040300" model="account.account.template">
+         <field name="name">Provisión Gastos Fijos</field>
+         <field name="code">21040300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2104')])]"/>
+      </record>
+      <record id="do_niif_21050100" model="account.account.template">
+         <field name="name">Tarjeta de Crédito Empresarial</field>
+         <field name="code">21050100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2105')])]"/>
+      </record>
+      <record id="do_niif_21050200" model="account.account.template">
+         <field name="name">Prima de Tarjetas de Crédito</field>
+         <field name="code">21050200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_21'), ref('account_tag_2105')])]"/>
+      </record>
+      <record id="do_niif_22010100" model="account.account.template">
+         <field name="name">Préstamos Bancarios Largo Plazo</field>
+         <field name="code">22010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2201')])]"/>
+      </record>
+      <record id="do_niif_22010200" model="account.account.template">
+         <field name="name">Préstamos Hipotecarios LP</field>
+         <field name="code">22010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2201')])]"/>
+      </record>
+      <record id="do_niif_22012300" model="account.account.template">
+         <field name="name">Préstamos Accionistas / Particulares</field>
+         <field name="code">22012300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2201')])]"/>
+      </record>
+      <record id="do_niif_22020100" model="account.account.template">
+         <field name="name">Provisión Beneficios de Empleados LP</field>
+         <field name="code">22020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2202')])]"/>
+      </record>
+      <record id="do_niif_22020200" model="account.account.template">
+         <field name="name">Provisión Prestaciones Laborales</field>
+         <field name="code">22020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2202')])]"/>
+      </record>
+      <record id="do_niif_22020300" model="account.account.template">
+         <field name="name">Provisión Indemnizaciones</field>
+         <field name="code">22020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2202')])]"/>
+      </record>
+      <record id="do_niif_22030100" model="account.account.template">
+         <field name="name">Anticipos de Clientes</field>
+         <field name="code">22030100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2203')])]"/>
+      </record>
+      <record id="do_niif_22030200" model="account.account.template">
+         <field name="name">Garantías de Clientes</field>
+         <field name="code">22030200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2203')])]"/>
+      </record>
+      <record id="do_niif_22040100" model="account.account.template">
+         <field name="name">Provisión Arrendamiento Financiero LP</field>
+         <field name="code">22040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_2'), ref('account_tag_22'), ref('account_tag_2204')])]"/>
+      </record>
+      <record id="do_niif_31010100" model="account.account.template">
+         <field name="name">Capital Social Autorizado</field>
+         <field name="code">31010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3101')])]"/>
+      </record>
+      <record id="do_niif_31010200" model="account.account.template">
+         <field name="name">Capital Social en Acciones no Emitidas</field>
+         <field name="code">31010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3101')])]"/>
+      </record>
+      <record id="do_niif_31010300" model="account.account.template">
+         <field name="name">Capital Social Pagado</field>
+         <field name="code">31010300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3101')])]"/>
+      </record>
+      <record id="do_niif_31010400" model="account.account.template">
+         <field name="name">Capital Social No Pagado</field>
+         <field name="code">31010400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3101')])]"/>
+      </record>
+      <record id="do_niif_31010500" model="account.account.template">
+         <field name="name">Acciones o Participaciones en Tesorería</field>
+         <field name="code">31010500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3101')])]"/>
+      </record>
+      <record id="do_niif_31020100" model="account.account.template">
+         <field name="name">Superávit por Revaluación de Terrenos</field>
+         <field name="code">31020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3102')])]"/>
+      </record>
+      <record id="do_niif_31020200" model="account.account.template">
+         <field name="name">Superávit por Revaluación de Edificaciones</field>
+         <field name="code">31020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3102')])]"/>
+      </record>
+      <record id="do_niif_31020300" model="account.account.template">
+         <field name="name">Superávit por Revaluación de Instalaciones</field>
+         <field name="code">31020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3102')])]"/>
+      </record>
+      <record id="do_niif_31020400" model="account.account.template">
+         <field name="name">Superávit por Revaluación de Mobiliario y Equipo</field>
+         <field name="code">31020400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_31'), ref('account_tag_3102')])]"/>
+      </record>
+      <record id="do_niif_32010100" model="account.account.template">
+         <field name="name">Reserva Legal</field>
+         <field name="code">32010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_32'), ref('account_tag_3201')])]"/>
+      </record>
+      <record id="do_niif_33010100" model="account.account.template">
+         <field name="name">Utilidades de Ejercicios Anteriores</field>
+         <field name="code">33010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3301')])]"/>
+      </record>
+      <record id="do_niif_33010200" model="account.account.template">
+         <field name="name">Pérdidas de Ejercicios Anteriores</field>
+         <field name="code">33010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3301')])]"/>
+      </record>
+      <record id="do_niif_33020100" model="account.account.template">
+         <field name="name">Utilidad del Ejercicio</field>
+         <field name="code">33020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3302')])]"/>
+      </record>
+      <record id="do_niif_33020200" model="account.account.template">
+         <field name="name">Pérdidas del Ejercicio</field>
+         <field name="code">33020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3302')])]"/>
+      </record>
+      <record id="do_niif_33040100" model="account.account.template">
+         <field name="name">Superávit en Reserva</field>
+         <field name="code">33040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3304')])]"/>
+      </record>
+      <record id="do_niif_33040200" model="account.account.template">
+         <field name="name">Déficit en Reserva</field>
+         <field name="code">33040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_equity"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_3'), ref('account_tag_33'), ref('account_tag_3304')])]"/>
+      </record>
+      <record id="do_niif_41010100" model="account.account.template">
+         <field name="name">Ventas Bienes</field>
+         <field name="code">41010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4101')])]"/>
+      </record>
+      <record id="do_niif_41010200" model="account.account.template">
+         <field name="name">Ventas Bienes - Al Exterior</field>
+         <field name="code">41010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4101')])]"/>
+      </record>
+      <record id="do_niif_41020100" model="account.account.template">
+         <field name="name">Ventas Servicios</field>
+         <field name="code">41020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4102')])]"/>
+      </record>
+      <record id="do_niif_41020200" model="account.account.template">
+         <field name="name">Ventas Servicios - Al Exterior</field>
+         <field name="code">41020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4102')])]"/>
+      </record>
+      <record id="do_niif_41030100" model="account.account.template">
+         <field name="name">Devoluciones de Bienes</field>
+         <field name="code">41030100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4103')])]"/>
+      </record>
+      <record id="do_niif_41030200" model="account.account.template">
+         <field name="name">Devoluciones por Servicios</field>
+         <field name="code">41030200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4103')])]"/>
+      </record>
+      <record id="do_niif_41040100" model="account.account.template">
+         <field name="name">Descuentos por Ventas (por NC)</field>
+         <field name="code">41040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_41'), ref('account_tag_4104')])]"/>
+      </record>
+      <record id="do_niif_42010100" model="account.account.template">
+         <field name="name">Intereses sobre Certificados</field>
+         <field name="code">42010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4201')])]"/>
+      </record>
+      <record id="do_niif_42010200" model="account.account.template">
+         <field name="name">Intereses en Cuentas Bancarias</field>
+         <field name="code">42010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4201')])]"/>
+      </record>
+      <record id="do_niif_42010300" model="account.account.template">
+         <field name="name">Intereses por Financiamientos</field>
+         <field name="code">42010300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4201')])]"/>
+      </record>
+      <record id="do_niif_42020100" model="account.account.template">
+         <field name="name">Ingresos por Ventas de Activos</field>
+         <field name="code">42020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4202')])]"/>
+      </record>
+      <record id="do_niif_42030100" model="account.account.template">
+         <field name="name">Ingresos por Dividendos Ganados</field>
+         <field name="code">42030100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_revenue"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4203')])]"/>
+      </record>
+      <record id="do_niif_42040100" model="account.account.template">
+         <field name="name">Ingresos por Diferencia Cambiaria</field>
+         <field name="code">42040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_other_income"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4204')])]"/>
+      </record>
+      <record id="do_niif_42040200" model="account.account.template">
+         <field name="name">Cobro de Cuentas Incobrables</field>
+         <field name="code">42040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_other_income"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4204')])]"/>
+      </record>
+      <record id="do_niif_42040300" model="account.account.template">
+         <field name="name">Otros Ingresos</field>
+         <field name="code">42040300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_other_income"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_4'), ref('account_tag_42'), ref('account_tag_4204')])]"/>
+      </record>
+      <record id="do_niif_51010100" model="account.account.template">
+         <field name="name">Costos de Bienes</field>
+         <field name="code">51010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5101')])]"/>
+      </record>
+      <record id="do_niif_51010200" model="account.account.template">
+         <field name="name">Costos de Servicios</field>
+         <field name="code">51010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5101')])]"/>
+      </record>
+      <record id="do_niif_51010300" model="account.account.template">
+         <field name="name">Diferencia de Precio</field>
+         <field name="code">51010300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5101')])]"/>
+      </record>
+      <record id="do_niif_51020100" model="account.account.template">
+         <field name="name">Costos de Materia Prima</field>
+         <field name="code">51020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5102')])]"/>
+      </record>
+      <record id="do_niif_51020200" model="account.account.template">
+         <field name="name">Costos de Mano de Obra</field>
+         <field name="code">51020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5102')])]"/>
+      </record>
+      <record id="do_niif_51020300" model="account.account.template">
+         <field name="name">Costos Indirectos</field>
+         <field name="code">51020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_51'), ref('account_tag_5102')])]"/>
+      </record>
+      <record id="do_niif_52010100" model="account.account.template">
+         <field name="name">Sueldos y Salarios</field>
+         <field name="code">52010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010200" model="account.account.template">
+         <field name="name">Regalía Pascual</field>
+         <field name="code">52010200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010300" model="account.account.template">
+         <field name="name">Retribuciones Complementarias</field>
+         <field name="code">52010300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010400" model="account.account.template">
+         <field name="name">Bono Vacacional</field>
+         <field name="code">52010400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010500" model="account.account.template">
+         <field name="name">Bono por Desempeño</field>
+         <field name="code">52010500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010600" model="account.account.template">
+         <field name="name">Comisiones</field>
+         <field name="code">52010600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010700" model="account.account.template">
+         <field name="name">Indemnizaciones</field>
+         <field name="code">52010700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010800" model="account.account.template">
+         <field name="name">Bonificaciones y Gratificaciones</field>
+         <field name="code">52010800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010900" model="account.account.template">
+         <field name="name">Dietas al Personal</field>
+         <field name="code">52010900</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52011000" model="account.account.template">
+         <field name="name">Cursos y Entrenamientos</field>
+         <field name="code">52011000</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52011100" model="account.account.template">
+         <field name="name">Prestaciones Laborales (Preaviso y Cesantia)</field>
+         <field name="code">52011100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52011200" model="account.account.template">
+         <field name="name">Incentivos</field>
+         <field name="code">52011200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52011300" model="account.account.template">
+         <field name="name">Horas Extras</field>
+         <field name="code">52011300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52011400" model="account.account.template">
+         <field name="name">Otros Gastos de Personal</field>
+         <field name="code">52011400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201')])]"/>
+      </record>
+      <record id="do_niif_52010102" model="account.account.template">
+         <field name="name">Contribución a la Administradora de Fondos de Pensiones (AFP)</field>
+         <field name="code">52010102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520101')])]"/>
+      </record>
+      <record id="do_niif_52010103" model="account.account.template">
+         <field name="name">Contribución al Seguro Riesgo Laboral (SRL)</field>
+         <field name="code">52010103</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520101')])]"/>
+      </record>
+      <record id="do_niif_52010104" model="account.account.template">
+         <field name="name">Contribución al Seguro Familiar de Salud (SFS)</field>
+         <field name="code">52010104</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520101')])]"/>
+      </record>
+      <record id="do_niif_52010201" model="account.account.template">
+         <field name="name">Contribución a la Administradora de Riesgos de Salud (ARS)</field>
+         <field name="code">52010201</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520102')])]"/>
+      </record>
+      <record id="do_niif_52010202" model="account.account.template">
+         <field name="name">Contribución a Seguros del Personal</field>
+         <field name="code">52010202</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520102')])]"/>
+      </record>
+      <record id="do_niif_52010203" model="account.account.template">
+         <field name="name">Contribución a Planes Complementarios de Salud</field>
+         <field name="code">52010203</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520102')])]"/>
+      </record>
+      <record id="do_niif_52010204" model="account.account.template">
+         <field name="name">Contribución Seguros de Vida</field>
+         <field name="code">52010204</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520102')])]"/>
+      </record>
+      <record id="do_niif_52010205" model="account.account.template">
+         <field name="name">Contribución al INFOTEP</field>
+         <field name="code">52010205</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5201'), ref('account_tag_520102')])]"/>
+      </record>
+      <record id="do_niif_52020100" model="account.account.template">
+         <field name="name">Energía Eléctrica</field>
+         <field name="code">52020100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020200" model="account.account.template">
+         <field name="name">Comunicaciones</field>
+         <field name="code">52020200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020300" model="account.account.template">
+         <field name="name">Papelería y útiles</field>
+         <field name="code">52020300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020400" model="account.account.template">
+         <field name="name">Útiles de Aseo y Limpieza</field>
+         <field name="code">52020400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020500" model="account.account.template">
+         <field name="name">Agua y Basura</field>
+         <field name="code">52020500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020600" model="account.account.template">
+         <field name="name">Seguro de Edificio</field>
+         <field name="code">52020600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020700" model="account.account.template">
+         <field name="name">Combustibles y Lubricantes</field>
+         <field name="code">52020700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020800" model="account.account.template">
+         <field name="name">Alquileres</field>
+         <field name="code">52020800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52020900" model="account.account.template">
+         <field name="name">Franquicias</field>
+         <field name="code">52020900</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021000" model="account.account.template">
+         <field name="name">Eventos</field>
+         <field name="code">52021000</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021100" model="account.account.template">
+         <field name="name">Seguros</field>
+         <field name="code">52021100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021200" model="account.account.template">
+         <field name="name">Servicios de Mensajería</field>
+         <field name="code">52021200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021300" model="account.account.template">
+         <field name="name">Flete y Carga</field>
+         <field name="code">52021300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021400" model="account.account.template">
+         <field name="name">Cuotas y Suscripciones</field>
+         <field name="code">52021400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52021500" model="account.account.template">
+         <field name="name">Otros Gastos de Administración</field>
+         <field name="code">52021500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5202')])]"/>
+      </record>
+      <record id="do_niif_52030101" model="account.account.template">
+         <field name="name">Legales (P. Física)</field>
+         <field name="code">52030101</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030102" model="account.account.template">
+         <field name="name">Contabilidad y Auditoría (P. Física)</field>
+         <field name="code">52030102</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030103" model="account.account.template">
+         <field name="name">Tecnología (P. Física)</field>
+         <field name="code">52030103</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030104" model="account.account.template">
+         <field name="name">Mantenimiento de Planta (P. Física)</field>
+         <field name="code">52030104</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030105" model="account.account.template">
+         <field name="name">Mantenimiento del Local (P. Física)</field>
+         <field name="code">52030105</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030106" model="account.account.template">
+         <field name="name">Mantenimiento Mobiliario y Equipos (P. Física)</field>
+         <field name="code">52030106</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030107" model="account.account.template">
+         <field name="name">Asesorías (P. Física)</field>
+         <field name="code">52030107</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030108" model="account.account.template">
+         <field name="name">Fumigaciones (P. Física)</field>
+         <field name="code">52030108</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030109" model="account.account.template">
+         <field name="name">Copias y Escaneos (P. Física)</field>
+         <field name="code">52030109</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030110" model="account.account.template">
+         <field name="name">Servicios de Vigilancia (P. Física)</field>
+         <field name="code">52030110</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030111" model="account.account.template">
+         <field name="name">Otros Servicios Profesionales (P. Física)</field>
+         <field name="code">52030111</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520301')])]"/>
+      </record>
+      <record id="do_niif_52030201" model="account.account.template">
+         <field name="name">Legales (P. Jurídica)</field>
+         <field name="code">52030201</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030202" model="account.account.template">
+         <field name="name">Contabilidad y Auditoría (P. Jurídica)</field>
+         <field name="code">52030202</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030203" model="account.account.template">
+         <field name="name">Tecnología (P. Jurídica)</field>
+         <field name="code">52030203</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030204" model="account.account.template">
+         <field name="name">Mantenimiento de Planta (P. Jurídica)</field>
+         <field name="code">52030204</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030205" model="account.account.template">
+         <field name="name">Mantenimiento del Local (P. Jurídica)</field>
+         <field name="code">52030205</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030206" model="account.account.template">
+         <field name="name">Mantenimiento Mobiliario y Equipos (P. Jurídica)</field>
+         <field name="code">52030206</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030207" model="account.account.template">
+         <field name="name">Asesorías (P. Jurídica)</field>
+         <field name="code">52030207</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030208" model="account.account.template">
+         <field name="name">Fumigaciones (P. Jurídica)</field>
+         <field name="code">52030208</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030209" model="account.account.template">
+         <field name="name">Copias y Escaneos (P. Jurídica)</field>
+         <field name="code">52030209</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030210" model="account.account.template">
+         <field name="name">Servicios de Vigilancia (P. Jurídica)</field>
+         <field name="code">52030210</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030211" model="account.account.template">
+         <field name="name">Otros Servicios Profesionales  (P. Jurídica)</field>
+         <field name="code">52030211</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520302')])]"/>
+      </record>
+      <record id="do_niif_52030301" model="account.account.template">
+         <field name="name">Honorarios por Servicios del Exterior - Relacionadas</field>
+         <field name="code">52030301</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520303')])]"/>
+      </record>
+      <record id="do_niif_52030302" model="account.account.template">
+         <field name="name">Honorarios por Servicios del Exterior - Terceros</field>
+         <field name="code">52030302</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5203'), ref('account_tag_520303')])]"/>
+      </record>
+      <record id="do_niif_52040100" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Edificios</field>
+         <field name="code">52040100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52040200" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Equipo de Transporte</field>
+         <field name="code">52040200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52040300" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Mobiliario y Equipos</field>
+         <field name="code">52040300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52040400" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Maquinaria</field>
+         <field name="code">52040400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52040500" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Herramientas</field>
+         <field name="code">52040500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52040600" model="account.account.template">
+         <field name="name">Gastos por Depreciación de Instalaciones</field>
+         <field name="code">52040600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5204')])]"/>
+      </record>
+      <record id="do_niif_52050100" model="account.account.template">
+         <field name="name">Gastos por Reparación de Edificios</field>
+         <field name="code">52050100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52050200" model="account.account.template">
+         <field name="name">Gastos por Reparación de Equipo de Transporte</field>
+         <field name="code">52050200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52050300" model="account.account.template">
+         <field name="name">Gastos por Reparación de Mobiliario y Equipos</field>
+         <field name="code">52050300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52050400" model="account.account.template">
+         <field name="name">Gastos por Reparación de Maquinaria</field>
+         <field name="code">52050400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52050500" model="account.account.template">
+         <field name="name">Gastos por Reparación de Herramientas</field>
+         <field name="code">52050500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52050600" model="account.account.template">
+         <field name="name">Gastos por Reparación de Instalaciones</field>
+         <field name="code">52050600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5205')])]"/>
+      </record>
+      <record id="do_niif_52060100" model="account.account.template">
+         <field name="name">Relaciones Públicas</field>
+         <field name="code">52060100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060200" model="account.account.template">
+         <field name="name">Publicidad</field>
+         <field name="code">52060200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060300" model="account.account.template">
+         <field name="name">Viajes</field>
+         <field name="code">52060300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060400" model="account.account.template">
+         <field name="name">Donaciones</field>
+         <field name="code">52060400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060500" model="account.account.template">
+         <field name="name">Donaciones a ProIndustria (Ley 392-07)</field>
+         <field name="code">52060500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060600" model="account.account.template">
+         <field name="name">Promociones</field>
+         <field name="code">52060600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52060700" model="account.account.template">
+         <field name="name">Otros Gastos de Representación</field>
+         <field name="code">52060700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5206')])]"/>
+      </record>
+      <record id="do_niif_52070100" model="account.account.template">
+         <field name="name">Gastos por Préstamos Financieros</field>
+         <field name="code">52070100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070200" model="account.account.template">
+         <field name="name">Retención por Cheques y Transferencias Electrónicas (0.15%)</field>
+         <field name="code">52070200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070300" model="account.account.template">
+         <field name="name">Intereses Bancarios</field>
+         <field name="code">52070300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070400" model="account.account.template">
+         <field name="name">Comisiones Bancarias</field>
+         <field name="code">52070400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070500" model="account.account.template">
+         <field name="name">Comisión de Tarjeta de Crédito</field>
+         <field name="code">52070500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070600" model="account.account.template">
+         <field name="name">Nota de Cargos por Banco</field>
+         <field name="code">52070600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070700" model="account.account.template">
+         <field name="name">Seguro sobre Préstamos Bancarios</field>
+         <field name="code">52070700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070800" model="account.account.template">
+         <field name="name">Pérdidas por Diferencia Cambiaria</field>
+         <field name="code">52070800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52070900" model="account.account.template">
+         <field name="name">Otro Gastos Financieros</field>
+         <field name="code">52070900</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5207')])]"/>
+      </record>
+      <record id="do_niif_52080100" model="account.account.template">
+         <field name="name">Gastos por Siniestros</field>
+         <field name="code">52080100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080200" model="account.account.template">
+         <field name="name">Pérdidas por Ventas de Activos Fijos</field>
+         <field name="code">52080200</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080300" model="account.account.template">
+         <field name="name">Pérdidas por Cuentas Incobrables</field>
+         <field name="code">52080300</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080400" model="account.account.template">
+         <field name="name">Gastos por ISR</field>
+         <field name="code">52080400</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080500" model="account.account.template">
+         <field name="name">Impuestos a los Activos</field>
+         <field name="code">52080500</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080600" model="account.account.template">
+         <field name="name">Penalidades/Recargos de DGII</field>
+         <field name="code">52080600</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080700" model="account.account.template">
+         <field name="name">Penalidades/Recargos de TSS</field>
+         <field name="code">52080700</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080800" model="account.account.template">
+         <field name="name">Gastos Sin Comprobante</field>
+         <field name="code">52080800</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_52080900" model="account.account.template">
+         <field name="name">Gastos por Impuestos</field>
+         <field name="code">52080900</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_account_type_expenses"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_5'), ref('account_tag_52'), ref('account_tag_5208')])]"/>
+      </record>
+      <record id="do_niif_61010100" model="account.account.template">
+         <field name="name">Pérdidas y Ganancias</field>
+         <field name="code">61010100</field>
+         <field name="chart_template_id" ref="do_chart_template"/>
+         <field name="user_type_id" ref="account.data_unaffected_earnings"/>
+         <field name="reconcile" eval="False"/>
+         <field name="tag_ids" eval="[(6,0,[ref('account_tag_6'), ref('account_tag_61'), ref('account_tag_6101')])]"/>
+      </record>
+   </data>
+</odoo>
