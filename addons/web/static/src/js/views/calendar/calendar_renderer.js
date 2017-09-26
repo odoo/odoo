@@ -350,8 +350,18 @@ return AbstractRenderer.extend({
                 element.find('.fc-content .fc-time').text(display_hour);
             },
             // Dirty hack to ensure a correct first render
-            eventAfterAllRender: function (view) {
+            eventAfterAllRender: function () {
                 window.dispatchEvent(new Event('resize'));
+            },
+            viewRender: function (view) {
+                // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
+                var mode = view.name === 'month' ? 'month' : (view.name === 'agendaWeek' ? 'week' : 'day');
+                // compute title: in week mode, display the week number
+                var title = mode === 'week' ? view.intervalStart.week() : view.title;
+                self.trigger_up('viewUpdated', {
+                    mode: mode,
+                    title: title,
+                });
             },
             height: 'parent',
             unselectAuto: false,
