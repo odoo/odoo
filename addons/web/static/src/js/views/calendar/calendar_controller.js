@@ -28,6 +28,7 @@ var CalendarController = AbstractController.extend({
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
         toggleFullWidth: '_onToggleFullWidth',
+        viewUpdated: '_onViewUpdated',
     }),
     /**
      * @override
@@ -39,6 +40,7 @@ var CalendarController = AbstractController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.current_start = null;
+        this.displayName = params.displayName;
         this.quickAddPop = params.quickAddPop;
         this.disableQuickCreate = params.disableQuickCreate;
         this.eventOpenPopup = params.eventOpenPopup;
@@ -316,6 +318,21 @@ var CalendarController = AbstractController.extend({
      */
     _onUpdateRecord: function (event) {
         this._updateRecord(event.data);
+    },
+    /**
+     * The internal state of the calendar (mode, period displayed) has changed,
+     * so update the control panel buttons and breadcrumbs accordingly.
+     *
+     * @param {OdooEvent} event
+     */
+    _onViewUpdated: function (event) {
+        this.mode = event.data.mode;
+        if (this.$buttons) {
+            this.$buttons.find('.active').removeClass('active');
+            this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
+        }
+        var subtitle = (this.mode === 'week' ? _t('Week ') : '') + event.data.title;
+        this.set({title: this.displayName + ' (' + subtitle + ')'});
     },
 });
 
