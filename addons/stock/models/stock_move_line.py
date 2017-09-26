@@ -128,8 +128,9 @@ class StockMoveLine(models.Model):
     def _get_similar_move_lines(self):
         self.ensure_one()
         lines = self.env['stock.move.line']
-        if self.move_id.picking_id:
-            lines |= self.move_id.picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
+        picking_id = self.move_id.picking_id if self.move_id else self.picking_id
+        if picking_id:
+            lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
     def _check_for_duplicated_serial_numbers(self):

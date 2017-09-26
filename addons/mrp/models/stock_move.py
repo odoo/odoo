@@ -20,11 +20,14 @@ class StockMoveLine(models.Model):
     def _get_similar_move_lines(self):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
         if self.move_id.production_id:
-            lines |= self.move_id.production_id.move_finished_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
+            finished_moves = self.move_id.production_id.move_finished_ids
+            finished_move_lines = finished_moves.mapped('move_line_ids')
+            lines |= finished_move_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         if self.move_id.raw_material_production_id:
-            lines |= self.move_id.raw_material_production_id.move_raw_ids.mapped('move_line_ids').filtered(lambda l: l.lot_id)
-        if self.workorder_id:
-            lines |= self.workorder_id.active_move_line_ids
+            raw_moves = self.move_id.raw_material_production_id.move_raw_ids
+            raw_moves_lines = raw_moves.mapped('move_line_ids')
+            raw_moves_lines |= self.move_id.active_move_line_ids
+            lines |= raw_moves_lines.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
     @api.multi
