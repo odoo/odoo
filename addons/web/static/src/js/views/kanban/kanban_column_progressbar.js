@@ -89,7 +89,7 @@ var KanbanColumnProgressBar = Widget.extend({
         var subgroupCounts = {};
         _.each(self.colors, function (val, key) {
             var subgroupCount = columnState.progressBarValues.counts[key] || 0;
-            if (self.activeFilter === val && subgroupCount === 0) {
+            if (self.activeFilter === key && subgroupCount === 0) {
                 self.activeFilter = false;
             }
             subgroupCounts[key] = subgroupCount;
