@@ -200,13 +200,16 @@ class CustomerPortal(CustomerPortal):
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
+    def _portal_quote_user_can_accept(self, order_id):
+        return request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') in ('pay', 'sign')
+
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        if request.env['ir.config_parameter'].sudo().get_param(
-                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
+        if not self._portal_quote_user_can_accept(res_id):
             return {'error': _('Operation not allowed')}
         if not signature:
             return {'error': _('Signature is missing.')}
+
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)
         except AccessError:
