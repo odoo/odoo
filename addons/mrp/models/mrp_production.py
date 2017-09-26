@@ -526,7 +526,7 @@ class MrpProduction(models.Model):
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
 
-        self.write({'state': 'cancel'})
+        self.write({'state': 'cancel', 'is_locked': True})
         return True
 
     def _cal_price(self, consumed_moves):
