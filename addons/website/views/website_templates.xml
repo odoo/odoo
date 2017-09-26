@@ -861,7 +861,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                   </li>
               </ul>
           </div>
-          <h3 class="mt16">Manage your custom pages</h3>
+          <h3 class="mt16">Manage Your Pages</h3>
           <t t-if="not pages">
               <div t-if="search" class="alert alert-warning mt8" role="alert">
                   Your search '<t t-esc="search" />' did not match any pages.
@@ -892,7 +892,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-right">
                               <a class="mr4 fa fa-lg fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.ir_ui_view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit page content in backend"></a>
+                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.ir_ui_view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
                               <a class="mr4 fa fa-lg fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
                               <a class="fa fa-lg fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
                           </td>
