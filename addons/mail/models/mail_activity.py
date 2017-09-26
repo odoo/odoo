@@ -3,7 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class MailActivityType(models.Model):
@@ -187,7 +187,7 @@ class MailActivity(models.Model):
             record = self.env[activity.res_model].browse(activity.res_id)
             record.message_post_with_view(
                 'mail.message_activity_done',
-                values={'activity': activity},
+                values={'activity': activity ,'activity_feedback': tools.html2plaintext(activity.feedback)},
                 subtype_id=self.env.ref('mail.mt_activities').id,
                 mail_activity_type_id=activity.activity_type_id.id,
             )
