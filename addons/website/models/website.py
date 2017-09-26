@@ -121,7 +121,7 @@ class Website(models.Model):
             page = self.env['website.page'].create({
                 'url': page_url,
                 'website_ids': [(6, None, [self.get_current_website().id])],
-                'ir_ui_view_id': view.id
+                'view_id': view.id
             })
         if add_menu:
             self.env['website.menu'].create({
@@ -174,7 +174,7 @@ class Website(models.Model):
 
         # search for website_page with link
         website_page_search_dom = [
-            '|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('ir_ui_view_id.arch_db', 'ilike', url)
+            '|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('view_id.arch_db', 'ilike', url)
         ]
         pages = self.env['website.page'].search(website_page_search_dom)
         page_view_ids = []
@@ -184,7 +184,7 @@ class Website(models.Model):
                 'text': _('Page <b>%s</b> contains a link to this page') % page.url,
                 'link': page.url
             })
-            page_view_ids.append(page.ir_ui_view_id.id)
+            page_view_ids.append(page.view_id.id)
 
         # search for ir_ui_view (not from a website_page) with link
         page_search_dom = [
@@ -410,8 +410,8 @@ class Website(models.Model):
 
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
-            if page.ir_ui_view_id and page.ir_ui_view_id.priority != 16:
-                record['__priority'] = min(round(page.ir_ui_view_id.priority / 32.0, 1), 1)
+            if page.view_id and page.view_id.priority != 16:
+                record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
                 record['__lastmod'] = page['write_date'][:10]
             yield record
@@ -497,13 +497,13 @@ class WebsitePublishedMixin(models.AbstractModel):
 
 class Page(models.Model):
     _name = 'website.page'
-    _inherits = {'ir.ui.view': 'ir_ui_view_id'}
+    _inherits = {'ir.ui.view': 'view_id'}
     _inherit = 'website.published.mixin'
     _description = 'Page'
 
     url = fields.Char('Page URL')
     website_ids = fields.Many2many('website', string='Websites')
-    ir_ui_view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
+    view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     # This is needed to be able to display if page is a menu in /website/pages
@@ -584,7 +584,7 @@ class Page(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        view = self.env['ir.ui.view'].browse(self.ir_ui_view_id.id)
+        view = self.env['ir.ui.view'].browse(self.view_id.id)
         # website.page's ir.ui.view should have a different key than the one it
         # is copied from.
         # (eg: website_version: an ir.ui.view record with the same key is
@@ -593,7 +593,7 @@ class Page(models.Model):
         default = {
             'name': '%s %s' % (self.name,  _('(copy)')),
             'url': self.env['website'].get_unique_path(self.url),
-            'ir_ui_view_id': new_view.id,
+            'view_id': new_view.id,
         }
         return super(Page, self).copy(default=default)
 
@@ -622,11 +622,11 @@ class Page(models.Model):
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
             pages_linked_to_iruiview = self.search(
-                [('ir_ui_view_id', '=', self.ir_ui_view_id.id), ('id', '!=', self.id)]
+                [('view_id', '=', self.view_id.id), ('id', '!=', self.id)]
             )
             if len(pages_linked_to_iruiview) == 0:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
-                self.env['ir.ui.view'].search([('id', '=', self.ir_ui_view_id.id)]).unlink()
+                self.env['ir.ui.view'].search([('id', '=', self.view_id.id)]).unlink()
         # And then delete the website_page itself
         return super(Page, self).unlink()
 

@@ -100,7 +100,7 @@ class Http(models.AbstractModel):
         mypage = request.env['website.page'].search(domain, limit=1)
         _, ext = os.path.splitext(req_page)
         if mypage:
-            return request.render(mypage.ir_ui_view_id.id, {
+            return request.render(mypage.view_id.id, {
                 # 'path': req_page[1:],
                 'deletable': True,
                 'main_object': mypage,
