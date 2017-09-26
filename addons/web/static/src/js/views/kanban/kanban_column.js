@@ -99,6 +99,9 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
+        // Apply a specific class if the column has progressbars
+        this.$el.toggleClass('o_kanban_has_progressbar', self.hasOwnProperty('barOptions'));
+
         if (!config.isMobile && this.draggable !== false) {
             // deactivate sortable in mobile mode.  It does not work anyway,
             // and it breaks horizontal scrolling in kanban views.  Someday, we

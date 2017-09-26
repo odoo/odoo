@@ -1,3 +1,4 @@
+@o-kanban-counter-header-height: @o-kanban-header-title-height*0.6;
 
 .o-kanban-css-filter(@class, @accent-color) {
     // Provide CSS reordering and highlight
@@ -44,16 +45,23 @@
     }
 }
 
+// If columns has the progressbar, adapt the layout
+.o_kanban_view .o_kanban_group.o_kanban_has_progressbar {
+    > .o_kanban_header .o_kanban_header_title {
+        height: @o-kanban-counter-header-height;
+        margin-top: 5px;
+    }
+}
+
 .o_kanban_counter {
     position: relative;
     .o-flex-display();
     .o-align-items(center);
-    height: 30px;
     margin-bottom: @o-kanban-record-margin*2;
 
     > .o_kanban_counter_progress {
         width: 76%;
-        height: @font-size-base;
+        height: @font-size-small;
         margin-bottom: 0;
         background-color: @gray-lighter-dark;
         box-shadow: none;

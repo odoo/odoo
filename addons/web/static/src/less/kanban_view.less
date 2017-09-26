@@ -4,6 +4,8 @@
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
 
+@o-kanban-header-title-height: 50px;
+
 @o-kanban-image-width: 64px;
 @o-kanban-inside-vgutter: 8px;
 @o-kanban-inside-hgutter: 8px;
@@ -15,10 +17,10 @@
 // ------- Kanban grouped mixins -------
 .o-kanban-icon(@base-opacity: 0.5) {
     display: block;
-    line-height: 50px;
+    line-height: @o-kanban-header-title-height;
     text-align: center;
     color: @odoo-main-text-color;
-    font-size: 15px;
+    font-size: @font-size-small;
     cursor: pointer;
     .o-kanban-hover-effect(@base-opacity);
 }
@@ -49,7 +51,8 @@
 }
 .o-kanban-header-title() {
     .o-flex-display();
-    height: 50px;
+    .o-align-items(center);
+    height: @o-kanban-header-title-height;
     line-height: 2.2;
     color: @headings-color;
 }
@@ -460,7 +463,6 @@
 
             .o_column_title {
                 .o-flex(1, 1, auto);
-                padding-top: 5px;
                 .o-text-overflow();
                 font-size: 16px;
                 font-weight: 500;
