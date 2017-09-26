@@ -2548,7 +2548,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phoneLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $phoneLink = form.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 1,
             "should have a anchor with correct classes");
         assert.strictEqual($phoneLink.text(), 'y\u00ADop',
@@ -2568,7 +2568,7 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        $phoneLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $phoneLink = form.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.text(), 'n\u00ADew',
             "new value should be displayed properly as text with the skype obfuscation");
         assert.strictEqual($phoneLink.attr('href'), 'tel:new',
@@ -2598,7 +2598,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'y\u00ADop',
             "value should be displayed properly as text with the skype obfuscation");
 
-        var $phoneLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $phoneLink = list.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 5,
             "should have anchors with correct classes");
         assert.strictEqual($phoneLink.first().attr('href'), 'tel:yop',
@@ -2618,7 +2618,7 @@ QUnit.module('basic_fields', {
         assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'n\u00ADew',
             "value should be properly updated");
-        $phoneLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $phoneLink = list.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 5,
             "should still have anchors with correct classes");
         assert.strictEqual($phoneLink.first().attr('href'), 'tel:new',
@@ -2658,7 +2658,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phone = form.$('span.o_field_widget.o_text_overflow:not(.o_form_uri)');
+        var $phone = form.$('span.o_field_widget:not(.o_form_uri)');
         assert.strictEqual($phone.length, 1,
             "should have a simple span rather than a link");
         assert.strictEqual($phone.text(), 'yop',
@@ -2676,7 +2676,7 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('span.o_field_widget.o_text_overflow:not(.o_form_uri)').text(), 'new',
+        assert.strictEqual(form.$('span.o_field_widget:not(.o_form_uri)').text(), 'new',
             "new value should be displayed properly as text without skype obfuscation");
 
         form.destroy();
@@ -2711,7 +2711,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text without skype obfuscation");
 
-        assert.strictEqual(list.$('span.o_field_widget.o_text_overflow:not(.o_form_uri)').length, 5,
+        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
             "should have spans with correct classes");
 
         // Edit a line and check the result
@@ -2728,7 +2728,7 @@ QUnit.module('basic_fields', {
         assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
-        assert.strictEqual(list.$('span.o_field_widget.o_text_overflow:not(.o_form_uri)').length, 5,
+        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
             "should still have spans with correct classes");
 
         list.destroy();
