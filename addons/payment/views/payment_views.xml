@@ -81,7 +81,7 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
-                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
+                                    <field name="journal_id" context="{'default_type': 'bank'}" invisible="1"/>
                                     <field name="payment_icon_ids" widget="many2many_cards" options="{'image_field': 'image'}"/>
                                     <field name="payment_flow" widget="radio" attrs="{'invisible': [('provider', 'not in', ['stripe', 'ogone','authorize'])]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>

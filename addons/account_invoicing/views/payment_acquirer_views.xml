@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_form_view_account_invoicing" model="ir.ui.view">
+        <field name="name">payment.acquirer.form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="attributes">
+                <attribute name="invisible" eval="False"/>
+            </field>
+        </field>
+    </record>
+</odoo> 
