@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2017-04-19 05:02+0000\n"
+"PO-Revision-Date: 2017-09-23 21:14+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1840,7 +1840,7 @@ msgstr "当采用供应商直接送货时，我们要更精确的知道目的地
 #. module: stock
 #: field:product.product,incoming_qty:0 field:product.template,incoming_qty:0
 msgid "Incoming"
-msgstr "入向"
+msgstr "入库"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
@@ -1855,7 +1855,7 @@ msgstr "进货日期"
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
 msgid "Incoming Shipments"
-msgstr "入向送货"
+msgstr "采购入库"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -2416,7 +2416,7 @@ msgstr "管理批次和序列号"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr "管理多位置和仓库"
+msgstr "管理多库位和仓库"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -2446,7 +2446,7 @@ msgstr "管理Dropshipping（外贸术语类似阿里巴巴的工厂直销1件�
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
 msgid "Manage multiple locations and warehouses"
-msgstr "管理多位置和仓库"
+msgstr "管理多库位和仓库"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_owner:0
@@ -2591,7 +2591,7 @@ msgstr "补货引起(创建)的库存移动"
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr "已移动的源"
+msgstr "已移动量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2961,7 +2961,7 @@ msgstr "如果不是内部位置，则填写位置所有者"
 #: help:stock.pack.operation,owner_id:0
 #: help:stock.transfer_details_items,owner_id:0
 msgid "Owner of the quants"
-msgstr "源的所有者"
+msgstr "量化者"
 
 #. module: stock
 #: code:addons/stock/product.py:270
@@ -3739,7 +3739,7 @@ msgstr "已为这次移动保留的数量"
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr "源"
+msgstr "量化"
 
 #. module: stock
 #. openerp-web
@@ -3955,7 +3955,7 @@ msgstr "保留的份"
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr "保留的源"
+msgstr "预留量"
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
@@ -3965,7 +3965,7 @@ msgstr "保留给移动"
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr "保留的源"
+msgstr "预留量"
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
@@ -4593,14 +4593,14 @@ msgstr "本技术字段用于对属于此公司之间的仓库进行补给的路
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当多个源移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当多个量化移动标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当所有者的源移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当量化移动者标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -4672,7 +4672,7 @@ msgstr "序列号和内部参考组合必须是唯一的!"
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr "公司所属的源"
+msgstr "公司所属量化"
 
 #. module: stock
 #: help:stock.inventory,date:0
@@ -4955,7 +4955,7 @@ msgstr "这样您就可以得到一个归属于某个所有者的产品属性。
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr "这将显示位置，并且允许您定义多个拣货类型和仓库。"
+msgstr "勾选此项允许您定义多个拣货类型和仓库。如果这里没勾，母库位 调拨 到子库位就有问题（卓忆说的）要先勾选再做调拨操作就没问题。"
 
 #. module: stock
 #. openerp-web
@@ -5058,7 +5058,7 @@ msgstr "中转位置"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr "如果保留的源变化了，则为True，这意味着我们需要重新计算包裹作业"
+msgstr "如果预留量有变化，则为True，即意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: field:stock.picking.type,code:0

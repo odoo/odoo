@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:46+0000\n"
+"PO-Revision-Date: 2017-09-22 08:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "Идэвхитэй"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "Хөдөлгөөний мөрүүд нь баланслагдсан, нэг огноо ба мөчлөгтэй байгаа эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -66,7 +66,7 @@ msgstr ""
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "Банкны хуулга дээр Хаах Баланс = Эхлэх Баланс + хуулгын мөрүүдийн нийлбэр байгаа эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
@@ -83,14 +83,14 @@ msgstr "Төлсөн/тулгагсан нэхэмжлэлүүд 'Нээлттэ
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "Өглөг ба Авлагын дансыг тодорхойлогч тулгасан дансны хөдөлгөөнүүд нь тулгасан нэхэмжлэлд харьяалагдаж буй эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "Борлуулалт/Худалдан авалтын тулгасан нэхэмжлэл доторх Өглөг ба Авлагын дансын оролтуудыг тулгасан эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
@@ -130,7 +130,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "Код нь үргэлж `result` нэртэй хувьсагчид жагсаалт эсвэл толь бичиг төрлийн таны тестийн үр \nдүнг оноох ёстой. Хэрэв `result` нь хоосон жагсаалт байвал тест амжилттай болсон гэсэн үг. \nҮгүй бол `result` доторхийг орчуулж хэвлэх гэж оролдоно.\n\nХэрэв таны тестийн хариу толь бичиг бол `result`-н агуулгыг хэвлэх дарааллыг сонгохын тулд \n`column_order` хувьсагчид утга оноох боломжтой.\n\nШаардлагатай бол мөн дараах хувьсагчуудыг ашиглах боломжтой:\n    * cr: өгөгдлийн сан руу заах курсор\n    * uid: идэвхитэй хэрэглэгчийн ID\n\nЯмар ч байсан, код нь (шаардлагатай бол) зөв догол мөртэй албан ёсны python илэрхийлэл \nбайх ёстой.\n\nЖишээ: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
 
 #. module: account_test
 #: field:accounting.assert.test,create_uid:0
@@ -206,7 +206,7 @@ msgstr "Тэст 2:  Санхүүгийн жил нээх"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Тест 3: Хөдөлгөөний мөрүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
@@ -217,7 +217,7 @@ msgstr ""
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "Тест 5.1 : Тулгасан нэхэмжлэлүүдийн авлага ба өглөгийн нягтлан бодогчийн мөрүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2

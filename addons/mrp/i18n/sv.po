@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-03-07 10:25+0000\n"
+"PO-Revision-Date: 2017-09-23 21:14+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicka för att skapa en grupp av egenskaper\n              </p><p>\nDefiniera specifika egenskapsgrupper för att ansluta till sin materiallista och kundorder. Egenskaper används för att välja rätt materiallista för en såld produkt vald av en försäljare.\n              </p><p>\nTill exempel, i gruppen \"Garanti\", kan det finnas två varianter: 1 års garanti och 3 års garanti. Beroende på vilken som väljs på kundordern så kommer Odoo att välja passande materiallista vid produktion av produkten.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -271,12 +271,12 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Väntar på råmaterial"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Name"
-msgstr ""
+msgstr "Materiallistenamn"
 
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
@@ -286,7 +286,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Ref"
-msgstr ""
+msgstr "Referens materiallista"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
@@ -373,7 +373,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "Materiallisteradtyp"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -404,7 +404,7 @@ msgstr "Avbryt"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "Avbryt produktion"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -689,7 +689,7 @@ msgstr "Lagerställedestination"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Done"
-msgstr "Klar"
+msgstr "Färdig"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1459,7 +1459,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Produktionsplanerad produkt"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1583,12 +1583,12 @@ msgstr "Plats för råmaterial"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Ready"
-msgstr "Klar"
+msgstr "Redo"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr "Klar att producera"
+msgstr "Redo att producera"
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
@@ -1687,17 +1687,17 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_planned:0
 msgid "Scheduled Date"
-msgstr "Scheduled Date"
+msgstr "Planerat datum"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Planering per månad"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Planerat datum:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1709,12 +1709,12 @@ msgstr "Planerad månad"
 #: view:mrp.production.product.line:mrp.mrp_production_product_form_view
 #: view:mrp.production.product.line:mrp.mrp_production_product_tree_view
 msgid "Scheduled Products"
-msgstr "Schemalagda produkter"
+msgstr "Planerade produkter"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr "Schemalagt gods"
+msgstr "Planerat gods"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2017-04-19 12:34+0000\n"
+"PO-Revision-Date: 2017-09-23 21:13+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgid ""
 "<br/>\n"
 "</div>\n"
 "            "
-msgstr "\n<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; dimensiune-font: 12px; color: rgb(34, 34, 34); culoare-fundal: rgb(255, 255, 255); \">\n    \n    <p>Stimate ${object.name},</p>\n    <p>\n    Exceptand faptul ca a fost o greseala din partea noastra, se pare ca urmatoarea suma este neplatita. Va rugam sa\nluati masurile necesare pentru a efectua plata in urmatoarele 8 zile.\nDaca ati efectuat plata dupa ce acest email a fost trimis, va rugam sa nu luati in considerare acest mesaj. Nu ezitati sa\ncontactati departamentul nostru contabil.\n    </p>\n<br/>\nCu stima,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n<br/>\n</div>\n            "
+msgstr "\n<div stil=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; dimensiune-font: 12px; color: rgb(34, 34, 34); culoare-fundal: rgb(255, 255, 255); \">\n    \n    <p>Stimate ${object.name},</p>\n    <p>\n    Exceptând faptul că a fost o greșeala din partea noastră, se pare ca următoarea suma este neplătită. Vă rugăm să\nluati măsurile necesare pentru a efectua plata in următoarele 8 zile.\nDaca ati efectuat plata după ce acest email a fost trimis, va rugam sa nu luati in considerare acest mesaj. Nu ezitați sa\ncontactati departamentul nostru contabil.\n    </p>\n<br/>\nCu stima,\n<br/>\n<br/>\n${user.name}\n<br/>\n<br/>\n\n${object.get_followup_table_html() | safe}\n\n<br/>\n</div>\n            "
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -326,7 +326,7 @@ msgstr "<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n                Fac
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr "Cont Urmarire"
+msgstr "Urmărire plăți"
 
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
@@ -346,7 +346,7 @@ msgstr "Actiune de Efectuat"
 #. module: account_followup
 #: view:res.partner:account_followup.view_partner_inherit_followup_form
 msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
-msgstr "Se vor lua masuri, de exemplu Apel telefonic, Verificati daca este platit, ..."
+msgstr "Se vor lua măsuri, de exemplu Apel telefonic, Verificați dacă este plătit, ..."
 
 #. module: account_followup
 #: view:account_followup.followup.line:account_followup.view_account_followup_followup_line_form
@@ -368,7 +368,7 @@ msgstr "Valoare datorată"
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr "Suma Restanta"
+msgstr "Suma Restantă"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:281
@@ -404,7 +404,7 @@ msgid ""
 "Below is the history of the transactions of this\n"
 "                            customer. You can check \"No Follow-up\" in\n"
 "                            order to exclude it from the next follow-up actions."
-msgstr "Aveti mai jos istoricul tranzactiilor acestui\n                            client. Puteti selecta \"Fara Urmarire\" pentru\n                            a-l exclude din actiunile urmatoare de urmarire."
+msgstr "Aveți mai jos istoricul tranzacțiilor acestui client. Puteți selecta \"Fără Urmărire\" pentru a-l exclude din acțiunile următoare de urmărire."
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -530,7 +530,7 @@ msgstr "Descarca Scrisorile"
 #: code:addons/account_followup/account_followup.py:259
 #, python-format
 msgid "Due Date"
-msgstr "Data scadentei"
+msgstr "Data scadenței"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0

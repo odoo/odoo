@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:47+0000\n"
+"PO-Revision-Date: 2017-09-22 08:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-8/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -185,20 +185,20 @@ msgstr ""
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: view:account.config.settings:portal_sale.portal_sale_payment_option_config
@@ -251,7 +251,7 @@ msgstr "Quotations"
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Sale Orders"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
@@ -268,32 +268,32 @@ msgstr "Sales Orders"
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
-msgstr ""
+msgstr "Show online payment options on Sale Orders and Customer Invoices to employees. If not checked, these options are only visible to portal users."
 
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
 msgid "Show payment buttons to employees too"
-msgstr ""
+msgstr "Show payment buttons to employees too"
 
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
 msgid "View Online Payment Options"
-msgstr ""
+msgstr "View Online Payment Options"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "We haven't sent you any invoice."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "We haven't sent you any quotation."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "We haven't sent you any sales order."
 
 #. module: portal_sale
 #: view:account.invoice:portal_sale.view_account_invoice_filter_share
