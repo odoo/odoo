@@ -4,6 +4,8 @@
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
 
+@o-kanban-header-title-height: 50px;
+
 @o-kanban-image-width: 64px;
 @o-kanban-inside-vgutter: 8px;
 @o-kanban-inside-hgutter: 8px;
@@ -15,18 +17,12 @@
 // ------- Kanban grouped mixins -------
 .o-kanban-icon(@base-opacity: 0.5) {
     display: block;
-    line-height: 50px;
+    line-height: @o-kanban-header-title-height;
     text-align: center;
     color: @odoo-main-text-color;
-    font-size: 15px;
+    font-size: @font-size-small;
     cursor: pointer;
-    .o-kanban-hover-effect(@base-opacity);
-}
-.o-kanban-hover-effect(@base-opacity) when (@base-opacity < 1) {
-    opacity: @base-opacity;
-    &:hover {
-        opacity: 1;
-    }
+    .o-hover-opacity(@base-opacity);
 }
 .o-kanban-tag-color(@size) when (@size >= 0) {
     .o-kanban-tag-color(@size - 1);
@@ -44,22 +40,23 @@
     position: relative;
     .o-flex(0, 0, auto);
     margin: 0;
-    padding: 0 @o-kanban-group-padding * 0.5;
+    padding: 0 floor(@o-kanban-group-padding * 0.7);
     cursor: pointer;
 }
 .o-kanban-header-title() {
     .o-flex-display();
-    height: 50px;
+    .o-align-items(center);
+    height: @o-kanban-header-title-height;
     line-height: 2.2;
     color: @headings-color;
 }
 .o-kanban-v-title() {
-    .o-position-absolute(@o-kanban-inside-vgutter * 2, @left: -@o-kanban-inside-vgutter * 1.3);
+    .o-position-absolute(@o-kanban-inside-vgutter * 2, @left: floor(-@o-kanban-inside-vgutter * 1.2));
     .o-transform-origin(left, bottom, @z: 0);
     .o-transform(rotate(90deg));
     overflow: visible;
     white-space: nowrap;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 // ------- Kanban records mixins -------
@@ -164,7 +161,7 @@
             margin: 2px 0 8px;
             padding: 3px 6px;
             color: @headings-color;
-            font-weight: bold;
+            font-weight: 500;
         }
     }
 
@@ -307,7 +304,7 @@
                 font-weight: 500;
                 background-color: transparent;
                 .o-kanban-tag-color(12);
-                .o-kanban-hover-effect(0.7);
+                .o-hover-opacity(0.7);
 
                 span {
                     display: inline-block;
@@ -449,18 +446,13 @@
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
         .o-flex(0, 0, auto);
-        padding: 0 @o-kanban-group-padding @o-kanban-group-padding;
-        border: 1px solid @gray-lighter-dark;
-        background-color: @gray-lighter;
-        border-width: 0 1px;
-        margin-left: -1px;
+        padding: 0 @o-kanban-group-padding*2 @o-kanban-group-padding @o-kanban-group-padding;
 
         .o_kanban_header > .o_kanban_header_title {
             .o-kanban-header-title();
 
             .o_column_title {
                 .o-flex(1, 1, auto);
-                padding-top: 5px;
                 .o-text-overflow();
                 font-size: 16px;
                 font-weight: 500;

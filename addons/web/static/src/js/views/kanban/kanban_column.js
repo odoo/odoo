@@ -140,6 +140,7 @@ var KanbanColumn = Widget.extend({
             }
         });
         if (this.barOptions) {
+            this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
             defs.push(this.progressBar.appendTo(this.$header));
         }

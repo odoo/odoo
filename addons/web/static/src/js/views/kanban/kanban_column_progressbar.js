@@ -174,18 +174,20 @@ var KanbanColumnProgressBar = Widget.extend({
         // Display and animate the counter number
         var start = this.prevTotalCounterValue;
         var end = this.totalCounterValue;
+        var animationClass = start > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge';
+
         if (start !== undefined && end > start && this.ANIMATE) {
             $({currentValue: start}).animate({currentValue: end}, {
                 duration: 1000,
                 start: function () {
-                    self.$counter.addClass('o_kanban_grow');
+                    self.$counter.addClass(animationClass);
                 },
                 step: function () {
                     self.$number.html(_getCounterHTML(this.currentValue));
                 },
                 complete: function () {
                     self.$number.html(_getCounterHTML(this.currentValue));
-                    self.$counter.removeClass('o_kanban_grow');
+                    self.$counter.removeClass(animationClass);
                 },
             });
         } else {
