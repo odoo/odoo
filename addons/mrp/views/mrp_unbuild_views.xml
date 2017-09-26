@@ -44,12 +44,12 @@
         </record>
 
        <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
-            <field name="name">Stock Moves</field>
+            <field name="name">Product Moves</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.move</field>
+            <field name="res_model">stock.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+            <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
         </record>
 
         <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
