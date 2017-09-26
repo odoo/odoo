@@ -22,13 +22,7 @@
     color: @odoo-main-text-color;
     font-size: @font-size-small;
     cursor: pointer;
-    .o-kanban-hover-effect(@base-opacity);
-}
-.o-kanban-hover-effect(@base-opacity) when (@base-opacity < 1) {
-    opacity: @base-opacity;
-    &:hover {
-        opacity: 1;
-    }
+    .o-hover-opacity(@base-opacity);
 }
 .o-kanban-tag-color(@size) when (@size >= 0) {
     .o-kanban-tag-color(@size - 1);
@@ -310,7 +304,7 @@
                 font-weight: 500;
                 background-color: transparent;
                 .o-kanban-tag-color(12);
-                .o-kanban-hover-effect(0.7);
+                .o-hover-opacity(0.7);
 
                 span {
                     display: inline-block;

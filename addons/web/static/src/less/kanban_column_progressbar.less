@@ -35,12 +35,8 @@
 
         .o_kanban_record:not(.oe_kanban_card_@{class}) {
             order: 3;
-            opacity: 0.5;
+            .o-hover-opacity(0.5);
             box-shadow: none;
-
-            &:hover {
-                opacity: 1;
-            }
         }
     }
 }
