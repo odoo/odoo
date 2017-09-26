@@ -65,8 +65,8 @@ Best Regards,''')
     @api.model
     def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
         company = self.browse(company_id)
-        last_day = last_day or company.fiscalyear_last_day
-        last_month = last_month or company.fiscalyear_last_month
+        last_day = last_day or (company and company.fiscalyear_last_day) or 31
+        last_month = last_month or (company and company.fiscalyear_last_month) or 12
         current_year = datetime.now().year
         last_day_of_month = calendar.monthrange(current_year, last_month)[1]
         return last_day > last_day_of_month and last_day_of_month or last_day
