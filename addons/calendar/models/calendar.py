@@ -724,6 +724,13 @@ class Meeting(models.Model):
     allday = fields.Boolean('All Day', states={'done': [('readonly', True)]}, default=False)
     start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+    # FIXME
+    # If you wonder why `start_datetime` is sometimes not properly recomputed
+    # and desperately returns `False`, this is due to the override of `read()`
+    # hereunder that pollutes the cache at recomputing time.
+    # According to RCO, fixing this should require a redesing of recurring
+    # events and is probably not trivial... Use `start` instead!
+
     stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})
