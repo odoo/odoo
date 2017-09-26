@@ -3204,6 +3204,54 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('pressing escape in editable o2m list in dialog', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "partner,false,form": '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal .o_data_row.o_selected_row').length, 1,
+            "there should be a row in edition in the dialog");
+
+        // trigger keydown ESCAPE in the edited row
+        $('.modal .o_data_cell input').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+
+        assert.strictEqual($('.modal').length, 1,
+            "dialog should still be open");
+        assert.strictEqual($('.modal .o_data_row').length, 0,
+            "the row should have been removed");
+
+        form.destroy();
+    });
+
     QUnit.test('editable o2m with onchange and required field: delete an invalid line', function (assert) {
         assert.expect(5);
 
@@ -5585,7 +5633,6 @@ QUnit.module('relational_fields', {
         assert.verifySteps(['read', 'default_get', 'onchange']);
         form.destroy();
     });
-
 
     QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
         assert.expect(11);

@@ -661,6 +661,9 @@ ListRenderer.include({
                 this._moveToNextLine();
                 break;
             case 'cancel':
+                // stop the original event (typically an ESCAPE keydown), to
+                // prevent from closing the potential dialog containing this list
+                ev.data.originalEvent.stopPropagation();
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                 });
