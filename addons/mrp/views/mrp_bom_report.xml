@@ -64,4 +64,77 @@
             </tr>
         </t>
     </template>
+
+    <template id="report_mrp_bom_pdf">
+        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+        <t t-call="web.html_container">
+            <t t-call-assets="mrp.assets_common" t-js="false"/>
+            <t t-if="datas">
+                <t t-foreach="datas" t-as="data">
+                    <div class="container o_mrp_bom_report_page">
+                        <span class="text-left">
+                            <h1>BoM Structure &amp; Cost</h1>
+                            <h4><b>Reference: </b><t t-esc="data['header']['bom'].code"/></h4>
+                            <h4><b>Product: </b><t t-esc="data['header']['bom_prod_name']"/></h4>
+                            <h4><b>Quantity: </b><t t-esc="data['header']['bom'].product_qty"/> <t t-esc="data['header']['bom'].product_uom_id.name"/></h4>
+                        </span>
+                        <t t-set="currency" t-value="data['header']['currency']"/>
+                        <div class="o_mrp_bom_report_table">
+                            <h4 class="mt32"><b>Components</b></h4>
+                            <table width='100%' class="table-responsive">
+                                <thead>
+                                    <tr class="o_report_header">
+                                        <th>Product</th>
+                                        <th class="text-right">Quantity</th>
+                                        <th class="o_uom" groups="product.group_uom">Unit of Measure</th>
+                                        <th class="text-right">Unit Cost</th>
+                                        <th class="text-right">Total Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="range(0, len(data['body']))" t-as="l">
+                                        <t t-set="row" t-value="data['body'][l]"/>
+                                        <t t-set="space_td" t-value="'margin-left: '+ str(row['level'] * 20) + 'px;'"/>
+                                        <tr class="o_mrp_bom_report_line">
+                                            <td>
+                                                <span t-att-style="space_td"/>
+                                                <t t-if="row['child_bom']">
+                                                    <t t-if="row['expanded']">
+                                                        <span class="o_mrp_bom_fold_unfold fa fa-fw fa-caret-down"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="o_mrp_bom_fold_unfold fa fa-fw fa-caret-right"/>
+                                                    </t>
+                                                </t>
+                                                <t t-esc="row['prod_name']"/>
+                                            </td>
+                                            <td class="text-right"><t t-esc="row['prod_qty']"/></td>
+                                            <td class="o_uom" groups="product.group_uom"><t t-esc="row['prod_uom']"/></td>
+                                            <td class="text-right"><span t-esc="row['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                            <td class="text-right"><span t-esc="row['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td groups="product.group_uom"></td>
+                                        <td class="text-right"><strong>Total Cost of Components</strong></td>
+                                        <td class="text-right"><t t-esc="data['header']['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <t t-if="data_index &lt; data_size - 1">
+                        <p style="page-break-before:always;"/>
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <span class="text-center"><h1>Not available.</h1></span>
+            </t>
+        </t>
+    </template>
 </odoo>

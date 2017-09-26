@@ -3,7 +3,13 @@ odoo.define('mrp.mrp_bom_generic', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var crash_manager = require('web.crash_manager');
+var framework = require('web.framework');
+var session = require('web.session');
 var Widget = require('web.Widget');
+
+var QWeb = core.qweb;
+var _t = core._t;
 
 var mrpBomReport = Widget.extend(ControlPanelMixin, {
     events: {
@@ -18,6 +24,7 @@ var mrpBomReport = Widget.extend(ControlPanelMixin, {
     init: function (parent, action) {
         this.actionManager = parent;
         this.given_context = action.context.context || {'active_id': action.context.active_id || action.params.active_id};
+        this.button = {'name': _t('Print')};
         return this._super.apply(this, arguments);
     },
     /**
@@ -44,11 +51,33 @@ var mrpBomReport = Widget.extend(ControlPanelMixin, {
     },
     update_cp: function () {
         // Updates the control panel and render the elements that have yet to be rendered
+        if (!this.$button) {
+            this.renderButton();
+        }
         var status = {
             breadcrumbs: this.actionManager.get_breadcrumbs(),
-            cp_content: {$buttons: this.$buttons},
+            cp_content: {$buttons: this.$button},
         };
         return this.update_control_panel(status);
+    },
+    renderButton: function () {
+        var self = this;
+        this.$button = $(QWeb.render("mrp.button", {button: this.button}));
+        // bind actions
+        $(this.$button).click(function () {
+            var child_bom_ids = _.map(self.$el.find('.o_mrp_bom_foldable').closest('tr'), function (ele) {
+                    return $(ele).data('id');
+                });
+            var bom_id = self.given_context['active_id'];
+            framework.blockUI();
+            session.get_file({
+                url: '/mrp/pdf/bom_report/'+bom_id,
+                data: {child_bom_ids: JSON.stringify(child_bom_ids)},
+                complete: framework.unblockUI,
+                error: crash_manager.rpc_error.bind(crash_manager),
+            });
+        });
+        return this.$button;
     },
 
     //--------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.tools import config
 
 
 class MrpBomReport(models.TransientModel):
@@ -73,3 +74,70 @@ class MrpBomReport(models.TransientModel):
             return self.env.ref('mrp.report_mrp_bom_line').render(rcontext)
         else:
             return self.env.ref('mrp.report_mrp_bom').render(rcontext)
+
+    @api.model
+    def get_pdf(self, bom_id, child_bom_ids):
+        if not config['test_enable']:
+            self = self.with_context(commit_assetsbundle=True)
+
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        datas = self.with_context(print_mode=True)._get_pdf_lines(bom_id, child_bom_ids)
+        rcontext = {
+            'mode': 'print',
+            'base_url': base_url,
+        }
+        body = self.env['ir.ui.view'].render_template(
+            "mrp.report_mrp_bom_pdf",
+            values=dict(rcontext, datas=datas, report=self, context=self),
+        )
+
+        header = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
+        header = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=header))
+
+        return self.env['ir.actions.report']._run_wkhtmltopdf(
+            [body], header=header, landscape=True,
+            specific_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+        )
+
+    def _get_pdf_lines(self, bom_id, child_bom_ids):
+        final_data = []
+        lines = self.get_lines(bom_id)
+
+        for line in lines:
+            data = {}
+            body = {}
+            counter = 0
+            data['header'] = {
+                'bom': line['bom'],
+                'bom_prod_name': line['bom_prod_name'],
+                'currency': line['currency'],
+                'total': line['total'],
+            }
+
+            for component in line['components']:
+                body[counter] = dict(component)
+                body[counter]['expanded'] = False
+
+                if component.get('child_bom') in child_bom_ids:
+                    body[counter]['expanded'] = True
+                    sub_lines, counter = self._get_pdf_child_lines(component['child_bom'], component['prod_qty'], component['level'], counter, child_bom_ids)
+                    body.update(sub_lines)
+                counter += 1
+            data['body'] = body
+            data['body'] and final_data.append(data)
+        return final_data
+
+    def _get_pdf_child_lines(self, bom_id, bom_qty, level, counter, child_bom_ids):
+        data = {}
+        lines = self.get_lines(bom_id, bom_qty, level+1)
+
+        for line in lines[0]['components']:
+            counter += 1
+            data[counter] = dict(line)
+            data[counter]['expanded'] = False
+
+            if line.get('child_bom') in child_bom_ids:
+                data[counter]['expanded'] = True
+                sub_lines, counter = self._get_pdf_child_lines(line['child_bom'], line['prod_qty'], line['level'], counter, child_bom_ids)
+                data.update(sub_lines)
+        return data, counter
