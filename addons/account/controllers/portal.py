@@ -21,6 +21,7 @@ class PortalAccount(CustomerPortal):
         ])
 
         values['invoice_count'] = invoice_count
+        values['is_documents'] = bool(invoice_count)
         return values
 
     # ------------------------------------------------------------
@@ -45,6 +46,7 @@ class PortalAccount(CustomerPortal):
         }
         if access_token:
             values['no_breadcrumbs'] = True
+            values['access_token'] = access_token
         if kwargs.get('error'):
             values['error'] = kwargs['error']
         if kwargs.get('warning'):

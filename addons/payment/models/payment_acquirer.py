@@ -52,7 +52,7 @@ class PaymentAcquirer(models.Model):
     _order = 'website_published desc, sequence, name'
 
     name = fields.Char('Name', required=True, translate=True)
-    description = fields.Html('Description')
+    description = fields.Html('Description', readonly=True)
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
         selection=[('manual', 'Manual Configuration')], string='Provider',
@@ -79,7 +79,8 @@ class PaymentAcquirer(models.Model):
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', '=', 'bank')],
         default=lambda self: self.env['account.journal'].search([('type', '=', 'bank')], limit=1),
-        help="""Payments will be registered into this journal. If you get paid straight on your bank account,
+        help="""Payments will be registered into this accounting journal in case of automatic invoicing 
+                (option available in Subscription & eCommerce apps). If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
                 the amount in a temporary transfer account of your books (created automatically when you create
@@ -120,9 +121,9 @@ class PaymentAcquirer(models.Model):
         ('ask', 'Let the customer decide'),
         ('always', 'Always')],
         string='Save Cards', default='none',
-        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
-             "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
-             "issue an invoice.")
+        help="""This option allows customers to save and reuse cards in later purchases thanks to payment tokens saved in Odoo.
+                Payment tokens are automatically saved if the customer pays from the website or if you sell Subscription products
+                (only available in Odoo Online & Enterprise).""")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
@@ -151,10 +152,13 @@ class PaymentAcquirer(models.Model):
              "Use this field anywhere a small image is required.")
 
     payment_icon_ids = fields.Many2many('payment.icon', string='Supported Payment Icons')
-    payment_flow = fields.Selection(selection=[('s2s','The customer encode his payment details on the website.'),
-        ('form', 'The customer is redirected to the website of the acquirer.')],
-        default='form', required=True, string='Payment flow',
-        help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    payment_flow = fields.Selection(selection=[('s2s','The customer pays from the website'),
+        ('form', 'The customer is redirected to the website of the payment acquirer')],
+        default='form', required=True, string='Payment Flow',
+        help="""Choose how to process payments. Paying straight from Odoo (S2S mode) is easier and
+                faster for the customer but usually requires more configuration acquirer-side.
+                Paying from the acquirer website (Form mode) might be useful if you want to benefit
+                from advanced features only available on the acquirer form.""")
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -500,7 +504,7 @@ class PaymentTransaction(models.Model):
         ('refunding', 'Refunding'),
         ('refunded', 'Refunded'),
         ('error', 'Error'),
-        ('cancel', 'Canceled')], 'Status',
+        ('cancel', 'Cancelled')], 'Status',
         copy=False, default='draft', required=True, track_visibility='onchange')
     state_message = fields.Text('Message', help='Field used to store error and/or validation messages for information')
     # payment

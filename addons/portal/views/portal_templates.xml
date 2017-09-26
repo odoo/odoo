@@ -2,6 +2,7 @@
 <odoo>
     <template id="frontend_layout" name="Main Frontend Layout">
         <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'lang': lang and lang.replace('_', '-')}"/>
             <t t-set="head_website">
                 <script type="text/javascript">
                     odoo.session_info = {
@@ -121,6 +122,7 @@
                 <div class="oe_structure"></div>
                 <h3 class="page-header">Your Documents</h3>
                 <ul class="o_portal_docs list-group">
+                    <div t-if="not is_documents">There are currently no documents for your account.</div>
                 </ul>
             </div>
             <div class="col-md-12 oe_structure"/>

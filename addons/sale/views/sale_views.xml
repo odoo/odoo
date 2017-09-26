@@ -186,10 +186,10 @@
                 <header>
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" class="btn-primary"
-                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}" groups="sales_team.group_sale_salesman"/>
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" context="{'default_advance_payment_method': 'percentage'}"
-                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}" groups="sales_team.group_sale_salesman"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', 'in', ['sent', 'sale']), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>

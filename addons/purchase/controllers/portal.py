@@ -21,6 +21,7 @@ class CustomerPortal(CustomerPortal):
             ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['purchase', 'done', 'cancel'])
         ])
+        values['is_documents'] = bool(values['purchase_count'])
         return values
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)

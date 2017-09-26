@@ -39,6 +39,7 @@ class WebsiteAccount(CustomerPortal):
             'lead_count': lead_count,
             'opp_count': opp_count,
         })
+        values['is_documents'] = bool(lead_count or opp_count)
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)

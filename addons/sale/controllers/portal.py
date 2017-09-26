@@ -31,6 +31,7 @@ class CustomerPortal(CustomerPortal):
             'quotation_count': quotation_count,
             'order_count': order_count,
         })
+        values['is_documents'] = bool(values['quotation_count'] or values['order_count'])
         return values
 
     #
@@ -85,6 +86,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
         # default sortby order
@@ -136,6 +138,7 @@ class CustomerPortal(CustomerPortal):
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
             'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
         }
         # default sortby order
         if not sortby:
@@ -201,7 +204,7 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
         if request.env['ir.config_parameter'].sudo().get_param(
-                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign'):
+                'sale.sale_portal_confirmation_options', default='none') not in ('pay', 'sign') and not signature:
             return False
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)

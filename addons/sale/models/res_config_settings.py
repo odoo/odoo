@@ -21,7 +21,7 @@ class ResConfigSettings(models.TransientModel):
         ('pay', 'Payment')], string="Online Signature & Payment options")
     module_sale_payment = fields.Boolean("Online Signature & Payment", help='Technical field implied by user choice of online_confirmation')
     module_website_quote = fields.Boolean("Quotations Templates")
-    group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
+    group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
     multi_sales_price = fields.Boolean("Multiple sales price per product")
     multi_sales_price_method = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
@@ -122,6 +122,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_portal_confirmation(self):
         if not self.portal_confirmation:
             self.portal_confirmation_options = False
+        elif not self.portal_confirmation_options:
+            self.portal_confirmation_options = 'sign'
 
     @api.onchange('portal_confirmation_options')
     def _onchange_portal_confirmation_options(self):
