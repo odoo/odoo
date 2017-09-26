@@ -87,6 +87,15 @@
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
     </record>
 
+    <record id="action_view_mail_mail_statistics_mailing_pivot" model="ir.actions.act_window">
+        <field name="name">Mail Statistics Pivot</field>
+        <field name="res_model">mail.mail.statistics</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
     <record id="action_view_mail_mail_statistics_mailing_list" model="ir.actions.act_window">
         <field name="name">EMails Sent</field>
         <field name="res_model">mail.mail.statistics</field>
@@ -104,6 +113,17 @@
                 <field name="state_update" type="row" interval="day"/>
                 <field name="state" type="row"/>
             </graph>
+        </field>
+    </record>
+
+    <record id="view_mail_mail_statistics_pivot" model="ir.ui.view">
+        <field name="name">Mail Statistics Pivot</field>
+        <field name="model">mail.mail.statistics</field>
+        <field name="arch" type="xml">
+            <pivot string="Mail Statistics"  type="bar" stacked="True" interval="day">
+                <field name="state_update" type="row" interval="day"/>
+                <field name="state" type="row"/>
+            </pivot>
         </field>
     </record>
 
