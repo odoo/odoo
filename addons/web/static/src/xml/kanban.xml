@@ -9,7 +9,7 @@
 </t>
 
 <t t-name="KanbanView.Group">
-    <div class="o_kanban_group" t-att-data-id="widget.id">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id">
         <div class="o_kanban_header">
             <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
                 <span class="o_column_title"><t t-esc="widget.title"/></span>
