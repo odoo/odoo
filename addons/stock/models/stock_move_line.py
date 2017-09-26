@@ -286,6 +286,12 @@ class StockMoveLine(models.Model):
 
         res = super(StockMoveLine, self).write(vals)
 
+        # Update scrap object linked to move_lines to the new quantity.
+        if 'qty_done' in vals:
+            for move in self.mapped('move_id'):
+                if move.scrapped:
+                    move.scrap_ids.write({'scrap_qty': move.quantity_done})
+
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
