@@ -150,6 +150,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
+                    <field name="journal_type"/>
                     <field name="number"/>
                     <field name="partner_id"/>
                     <field name="amount_total_signed"/>
@@ -766,6 +767,52 @@
 
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables_documents" sequence="1"/>
 
+        <record id="action_customer_invoice" model="ir.actions.act_window">
+             <field name="name">Invoice</field>
+             <field name="res_model">account.invoice</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field eval="False" name="view_id"/>
+             <field name="domain">[('type','=','out_invoice')]</field>
+             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+             <field name="help" type="html">
+               <p class="oe_view_nocontent_create">
+                 Click to create a credit note.
+               </p><p>
+                 Note that the easiest way to create a credit note is to do it directly form
+                 the customer invoice, to refund it totally or partially.
+               </p>
+             </field>
+         </record>
+
+         <record id="action_customer_invoice_form" model="ir.actions.act_window.view">
+             <field eval="2" name="sequence"/>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="invoice_form"/>
+             <field name="act_window_id" ref="action_customer_invoice"/>
+         </record>
+
+        <record id="action_vender_bill" model="ir.actions.act_window">
+             <field name="name">Vendor Bill</field>
+             <field name="res_model">account.invoice</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field eval="False" name="view_id"/>
+             <field name="domain">[('type','=','in_invoice')]</field>
+             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+             <field name="help" type="html">
+               <p class="oe_view_nocontent_create">
+                 Click to record a new vendor credit note.
+               </p>
+             </field>
+         </record>
+
+         <record id="action_vender_bill_form" model="ir.actions.act_window.view">
+             <field eval="2" name="sequence"/>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="invoice_supplier_form"/>
+             <field name="act_window_id" ref="action_vender_bill"/>
+         </record>
 
         <record id="action_invoice_in_refund" model="ir.actions.act_window">
             <field name="name">Vendor Credit Notes</field>
