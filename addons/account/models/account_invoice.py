@@ -1390,6 +1390,15 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    """Se crea metodo _group_filter_tax para poder modificar el filtro de impuestos en demas implementaciones, 
+    de modo que no se tenga que sobreescribir todo el metodo _compute_base_amount"""
+    def _group_filter_tax(self):
+        return {
+            'tax_id': self.tax_id.id,
+            'account_id': self.account_id.id,
+            'account_analytic_id': self.account_analytic_id.id,
+        }
+
     def _compute_base_amount(self):
         tax_grouped = {}
         for invoice in self.mapped('invoice_id'):
@@ -1397,11 +1406,7 @@ class AccountInvoiceTax(models.Model):
         for tax in self:
             tax.base = 0.0
             if tax.tax_id:
-                key = tax.tax_id.get_grouping_key({
-                    'tax_id': tax.tax_id.id,
-                    'account_id': tax.account_id.id,
-                    'account_analytic_id': tax.account_analytic_id.id,
-                })
+                key = tax.tax_id.get_grouping_key(tax._group_filter_tax())
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
                 else:
