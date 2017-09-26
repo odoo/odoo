@@ -47,7 +47,7 @@
         <record id="homepage_page" model="website.page">
             <field name="website_published">True</field>
             <field name="url">/</field>
-            <field name="ir_ui_view_id" ref="homepage" />
+            <field name="view_id" ref="homepage" />
         </record>
         <record id="default_website" model="website">
             <field name="homepage_id" ref="homepage_page" />
@@ -90,7 +90,7 @@
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
             <field name="website_published">True</field>
-            <field name="ir_ui_view_id" ref="contactus" />
+            <field name="view_id" ref="contactus" />
         </record>
 
         <record id="aboutus" model="ir.ui.view">
@@ -146,7 +146,7 @@
         <record id="aboutus_page" model="website.page">
             <field name="website_published">True</field>
             <field name="url">/aboutus</field>
-            <field name="ir_ui_view_id" ref="aboutus" />
+            <field name="view_id" ref="aboutus" />
         </record>
 
         <record id="menu_homepage" model="website.menu">
