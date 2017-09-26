@@ -31,7 +31,7 @@ class BaseGengoTranslations(models.TransientModel):
         res['authorized_credentials'], gengo = self.gengo_authentication()
         if 'lang_id' in fields:
             res['lang_id'] = self.env['res.lang'].search([
-                ('code', '=', self.env.context.get('lang', 'en_US'))
+                ('code', '=', self.env.context.get('lang') or 'en_US')
             ], limit=1).id
         return res
 
