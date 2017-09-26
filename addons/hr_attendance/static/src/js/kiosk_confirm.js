@@ -67,7 +67,7 @@ var KioskConfirm = Widget.extend({
 
     start: function () {
         var self = this;
-        self.session.user_has_group('hr_attendance.group_hr_attendance_use_pin').then(function(has_group){
+        this.getSession().user_has_group('hr_attendance.group_hr_attendance_use_pin').then(function(has_group){
             self.use_pin = has_group;
             self.$el.html(QWeb.render("HrAttendanceKioskConfirm", {widget: self}));
             self.start_clock();

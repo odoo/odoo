@@ -237,7 +237,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     },
     do_reload: function () {
         var self = this;
-        return this.session.session_reload().then(function () {
+        return session.session_reload().then(function () {
             session.load_modules(true).then(
                 self.menu.proxy('do_reload'));
         });
