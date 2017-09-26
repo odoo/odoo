@@ -426,6 +426,10 @@ class PaymentAcquirer(models.Model):
                 'context': context,
             }
 
+    def _get_cancel_url(self):
+        return ''
+
+
 class PaymentIcon(models.Model):
     _name = 'payment.icon'
     _description = 'Payment Icon'

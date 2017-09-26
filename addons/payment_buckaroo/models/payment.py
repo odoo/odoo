@@ -92,7 +92,7 @@ class AcquirerBuckaroo(models.Model):
             'Brq_invoicenumber': values['reference'],
             'brq_test': False if self.environment == 'prod' else True,
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
-            'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
+            'Brq_returncancel': urls.url_join(base_url, self._get_cancel_url() or BuckarooController._cancel_url),
             'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
             'Brq_returnreject': urls.url_join(base_url, BuckarooController._reject_url),
             'Brq_culture': (values.get('partner_lang') or 'en_US').replace('_', '-'),

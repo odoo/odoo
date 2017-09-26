@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -190,3 +191,11 @@ class PaymentTransaction(models.Model):
             order.pricelist_id.currency_id.id,
             values=values,
         )
+
+
+class PaymentAcquirer(models.Model):
+    _inherit = 'payment.acquirer'
+
+    def _get_cancel_url(self):
+        super(PaymentAcquirer, self)._get_cancel_url()
+        return request.httprequest.headers.get('Referer', '')

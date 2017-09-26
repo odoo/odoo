@@ -167,7 +167,7 @@ class PaymentAcquirerOgone(models.Model):
             'ACCEPTURL': urls.url_join(base_url, OgoneController._accept_url),
             'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
-            'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
+            'CANCELURL': urls.url_join(base_url, self._get_cancel_url() or OgoneController._cancel_url),
             'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
         }
         if self.save_token in ['ask', 'always']:
