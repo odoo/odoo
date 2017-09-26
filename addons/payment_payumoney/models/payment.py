@@ -67,7 +67,7 @@ class PaymentAcquirerPayumoney(models.Model):
                                 service_provider='payu_paisa',
                                 surl=urls.url_join(base_url, '/payment/payumoney/return'),
                                 furl=urls.url_join(base_url, '/payment/payumoney/error'),
-                                curl=urls.url_join(base_url, '/payment/payumoney/cancel')
+                                curl=urls.url_join(base_url, self._get_cancel_url() or '/payment/payumoney/cancel')
                                 )
 
         payumoney_values['udf1'] = payumoney_values.pop('return_url', '/')
