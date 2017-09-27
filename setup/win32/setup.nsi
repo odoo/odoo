@@ -243,8 +243,16 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
 
     DetailPrint "Installing Windows service"
     nsExec::ExecTOLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    nsExec::ExecToLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\service\win32_service.py" install'
-
+    #nsExec::ExecToLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\service\win32_service.py" install'
+    SimpleSC::InstallService "OdooServer" "Odoo Server" "16" "2" "$INSTDIR\WinPython\python-3.6.2\python.exe $INSTDIR\service\win32_service.py" "" "" ""
+    SimpleSC::StartService "OdooServer" "" 60
+    Pop $0
+    IntCmp $0 0 Done +1 +1 
+      Push $0
+      SimpleSC::GetErrorMessage
+      Pop $0
+      MessageBox MB_OK|MB_ICONSTOP "Start failed - Reason: $0"
+    Done:
     #nsExec::Exec "net stop ${SERVICENAME}"
     #sleep 2
 
