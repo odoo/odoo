@@ -50,6 +50,7 @@ class MrpWorkorder(models.Model):
         'Product Tracking', related='production_id.product_id.tracking',
         help='Technical: used in views only.')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
+    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits=dp.get_precision('Product Unit of Measure'))
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
@@ -111,6 +112,7 @@ class MrpWorkorder(models.Model):
     final_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    tracking = fields.Selection(related='production_id.product_id.tracking')
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(
@@ -283,15 +285,18 @@ class MrpWorkorder(models.Model):
     def record_production(self):
         self.ensure_one()
         if self.qty_producing <= 0:
-            raise UserError(_('Please set the quantity you produced in the Current Qty field. It can not be 0!'))
+            raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
         if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id:
             raise UserError(_('You should provide a lot/serial number for the final product'))
 
         # Update quantities done on each raw material line
+        # For each untracked component without any 'temporary' move lines,
+        # (the new workorder tablet view allows registering consumed quantities for untracked components)
+        # we assume that only the theoretical quantity was used
         raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
         for move in raw_moves:
-            if move.unit_factor:
+            if move.unit_factor and not move.move_line_ids.filtered(lambda m: not m.done_wo):
                 rounding = move.product_uom.rounding
                 move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
@@ -301,10 +306,10 @@ class MrpWorkorder(models.Model):
             if move_line.qty_done <= 0:  # rounding...
                 move_line.sudo().unlink()
                 continue
-            if not move_line.lot_id:
+            if move_line.product_id.tracking != 'none' and not move_line.lot_id:
                 raise UserError(_('You should provide a lot/serial number for a component'))
             # Search other move_line where it could be added:
-            lots = self.move_line_ids.filtered(lambda x: (x.lot_id.id == move_line.lot_id.id) and (not x.lot_produced_id) and (not x.done_move))
+            lots = self.move_line_ids.filtered(lambda x: (x.lot_id.id == move_line.lot_id.id) and (not x.lot_produced_id) and (not x.done_move) and (x.product_id == move_line.product_id))
             if lots:
                 lots[0].qty_done += move_line.qty_done
                 lots[0].lot_produced_id = self.final_lot_id.id
@@ -486,3 +491,9 @@ class MrpWorkorder(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('workorder_id', '=', self.id)]
         return action
+
+    @api.multi
+    @api.depends('qty_production', 'qty_produced')
+    def _compute_qty_remaining(self):
+        for wo in self:
+            wo.qty_remaining = wo.qty_production - wo.qty_produced

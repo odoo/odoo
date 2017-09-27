@@ -91,6 +91,9 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
+            <field name="is_user_working" invisible="1"/>
+            <field name="working_state" invisible="1"/>
+            <field name="production_state" invisible="1"/>
             <header>
                 <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
@@ -103,9 +106,6 @@
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', '|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
-                <field name="is_user_working" invisible="1"/>
-                <field name="working_state" invisible="1"/>
-                <field name="production_state" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -336,15 +336,13 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <span><strong class="o_kanban_record_title"><t t-esc="record.product_id.value"/></strong></span>
-                                </div>
+                                <strong><span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span></strong>
                                 <div class="row">
                                     <div class="col-xs-7 o_kanban_primary_left">
-                                        <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
+                                        <span><t t-esc="record.product_id.value"/></span>
                                     </div>
                                     <div class="col-xs-5 o_kanban_primary_right">
-                                        <span><t t-esc="record.production_id.value"/></span>
+                                        <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
                                     </div>
                                 </div>
                             </div>
