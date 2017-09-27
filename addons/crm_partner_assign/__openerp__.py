@@ -32,7 +32,6 @@ to an appropriate local partner, based on the distance and the weight that was a
         'res_partner_demo.xml',
         'crm_lead_demo.xml'
     ],
-    'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
 }
