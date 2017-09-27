@@ -396,7 +396,7 @@ class Website(models.Model):
                     query = i == len(convitems)-1 and query_string
                     if query:
                         r = "".join([x[1] for x in rule._trace[1:] if not x[0]])  # remove model converter from route
-                        query = sitemap_qs2dom(query, r)
+                        query = sitemap_qs2dom(query, r, self.env[converter.model]._rec_name)
                         if query == FALSE_DOMAIN:
                             continue
                     for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
