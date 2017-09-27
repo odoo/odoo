@@ -158,6 +158,22 @@ class StockMove(osv.osv):
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
                        consumed_for=False, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        move = self.browse(cr, uid, ids[0], context=context)
+        consume_data = {}
+        consume_data[move.id] = {
+            'move': move,
+            'product_qty': product_qty,
+            'location_id': location_id,
+            'restrict_lot_id': restrict_lot_id,
+            'restrict_partner_id': restrict_partner_id,
+            'consumed_for': consumed_for
+        }
+        return self._action_consume(cr, uid, consume_data, context=context)
+
+    def _action_consume(self, cr, uid, moves, context=None):
         """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed/produced product quantity (= in quantity of UoM of product)
         @param location_id: Source location
@@ -171,22 +187,25 @@ class StockMove(osv.osv):
         res = []
         production_obj = self.pool.get('mrp.production')
 
-        if product_qty <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
         #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
-        ids2 = []
-        for move in self.browse(cr, uid, ids, context=context):
+        ids2 = {}
+        for move_id, item in moves.iteritems():
+            if item['product_qty'] <= 0:
+                raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
+            move = item.pop('move')
             if move.state == 'draft':
-                ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
+                ids2.update(((id, item) for id in self.action_confirm(cr, uid, [move.id], context=context)))
             else:
-                ids2.append(move.id)
+                ids2[move_id] = item
 
         prod_orders = set()
-        for move in self.browse(cr, uid, ids2, context=context):
+        for move in self.browse(cr, uid, ids2.keys(), context=context):
+            vals = ids2[move.id]
             prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
             move_qty = move.product_qty
             if move_qty <= 0:
                 raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
+            product_qty = vals.pop('product_qty')
             quantity_rest = move_qty - product_qty
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
             quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
@@ -195,14 +214,9 @@ class StockMove(osv.osv):
                 if move.production_id:
                     self.write(cr, uid, [new_mov], {'production_id': move.production_id.id}, context=context)
                 res.append(new_mov)
-            vals = {'restrict_lot_id': restrict_lot_id,
-                    'restrict_partner_id': restrict_partner_id,
-                    'consumed_for': consumed_for}
-            if location_id:
-                vals.update({'location_id': location_id})
             self.write(cr, uid, [move.id], vals, context=context)
         # Original moves will be the quantities consumed, so they need to be done
-        self.action_done(cr, uid, ids2, context=context)
+        self.action_done(cr, uid, ids2.keys(), context=context)
         if res:
             self.action_assign(cr, uid, res, context=context)
         if prod_orders:
