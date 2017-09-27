@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from configparser import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    # python2 import
+    from ConfigParser import ConfigParser
 from os.path import join as opj
 import os
 import werkzeug
