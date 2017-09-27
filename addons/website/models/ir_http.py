@@ -3,8 +3,8 @@
 
 import logging
 import traceback
-import datetime
 import os
+import unittest
 
 import werkzeug
 import werkzeug.routing
@@ -17,10 +17,26 @@ from odoo.http import request
 from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
+from odoo.osv.expression import FALSE_DOMAIN
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 
 logger = logging.getLogger(__name__)
+
+
+def sitemap_qs2dom(qs, route, field='name'):
+    """ Convert a query_string (can contains a path) to a domain"""
+    dom = []
+    if qs and qs.lower() not in route:
+        needles = qs.strip('/').split('/')
+        # needles will be altered and keep only element which one is not in route
+        # diff(from=['shop', 'product'], to=['shop', 'product', 'product']) => to=['product']
+        unittest.util.unorderable_list_difference(route.strip('/').split('/'), needles)
+        if len(needles) == 1:
+            dom = [(field, 'ilike', needles[0])]
+        else:
+            dom = FALSE_DOMAIN
+    return dom
 
 
 class Http(models.AbstractModel):
@@ -68,7 +84,7 @@ class Http(models.AbstractModel):
         super(Http, cls)._add_dispatch_parameters(func)
 
         if request.is_frontend and request.routing_iteration == 1:
-            request.website = request.website.with_context(request.context)
+            request.website = request.website.with_context(context)
 
     @classmethod
     def _get_languages(cls):
@@ -133,7 +149,6 @@ class Http(models.AbstractModel):
             return request.redirect(redirect.url_to, code=redirect.type)
 
         return False
-
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -223,11 +238,11 @@ class Http(models.AbstractModel):
 
 class ModelConverter(ModelConverter):
 
-    def generate(self, uid, query=None, args=None):
+    def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].sudo(uid)
         domain = safe_eval(self.domain, (args or {}).copy())
-        if query:
-            domain.append((Model._rec_name, 'ilike', '%' + query + '%'))
+        if dom:
+            domain += dom
         for record in Model.search_read(domain=domain, fields=['write_date', Model._rec_name]):
             if record.get(Model._rec_name, False):
                 yield {'loc': (record['id'], record[Model._rec_name])}

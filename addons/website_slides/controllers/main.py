@@ -8,6 +8,8 @@ import werkzeug
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
+from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 
 _logger = logging.getLogger(__name__)
 
@@ -66,22 +68,30 @@ class WebsiteSlides(http.Controller):
             'is_public_user': request.env.user == request.website.user_id
         })
 
+    def sitemap_slide(env, rule, qs):
+        Channel = env['slide.channel']
+        dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
+        for channel in Channel.search(dom):
+            loc = '/slides/%s' % slug(channel)
+            if qs.lower() in loc:
+                yield {'loc': loc}
+
     @http.route([
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>''',
+        '''/slides/<model("slide.channel):channel>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/<string:slide_type>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/<string:slide_type>''',
+        '''/slides/<model("slide.channel"):channel>/<string:slide_type>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>''',
+        '''/slides/<model("slide.channel"):channel>/tag/<model("slide.tag"):tag>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/page/<int:page>''',
 
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>''',
-        '''/slides/<model("slide.channel", "[('can_see', '=', True)]"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
-        type='http', auth="public", website=True)
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>''',
+        '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
+        type='http', auth="public", website=True, sitemap=sitemap_slide)
     def channel(self, channel, category=None, tag=None, page=1, slide_type=None, sorting='creation', search=None, **kw):
         user = request.env.user
         Slide = request.env['slide.slide']
@@ -161,15 +171,16 @@ class WebsiteSlides(http.Controller):
             self._set_viewed_slide(slide, 'slide')
         return request.render('website_slides.slide_detail_view', values)
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
+                type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
         response.data = slide.datas and base64.b64decode(slide.datas) or b''
         response.mimetype = 'application/pdf'
         return response
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('download_security', '=', 'public')]"):slide>/download''', type='http', auth="public", website=True)
-    def slide_download(self, slide):
+    @http.route('''/slides/slide/<model("slide.slide"):slide>/download''', type='http', auth="public", website=True)
+    def slide_download(self, slide, sitemap=False):
         if slide.download_security == 'public' or (slide.download_security == 'user' and request.session.uid):
             filecontent = base64.b64decode(slide.datas)
             disposition = 'attachment; filename=%s.pdf' % werkzeug.urls.url_quote(slide.name)
@@ -279,7 +290,7 @@ class WebsiteSlides(http.Controller):
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
     # --------------------------------------------------
-    @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True)
+    @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
         # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
         # slide, the error will be the website.403 page instead of the one of the website_slides.embed_slide.

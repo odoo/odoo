@@ -5,16 +5,17 @@ import inspect
 import logging
 import hashlib
 import re
-import unicodedata
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.tools import pycompat
 from odoo.http import request
+from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
@@ -360,9 +361,25 @@ class Website(models.Model):
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
+
+        sitemap_endpoint_done = set()
+
         for rule in router.iter_rules():
+            if 'sitemap' in rule.endpoint.routing:
+                if rule.endpoint in sitemap_endpoint_done:
+                    continue
+                sitemap_endpoint_done.add(rule.endpoint)
+
+                func = rule.endpoint.routing['sitemap']
+                if func is False:
+                    continue
+                for loc in func(self.env, rule, query_string):
+                    yield loc
+                continue
+
             if not self.rule_is_enumerable(rule):
                 continue
+
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
@@ -370,12 +387,18 @@ class Website(models.Model):
             # converters with a domain are processed after the other ones
             convitems = sorted(
                 converters.items(),
-                key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
+                key=lambda x: (hasattr(x[1], 'domain') and (x[1].domain != '[]'), rule._trace.index((True, x[0]))))
+
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
                     query = i == len(convitems)-1 and query_string
-                    for value_dict in converter.generate(uid=self.env.uid, query=query, args=val):
+                    if query:
+                        r = "".join([x[1] for x in rule._trace[1:] if not x[0]])  # remove model converter from route
+                        query = sitemap_qs2dom(query, r)
+                        if query == FALSE_DOMAIN:
+                            continue
+                    for value_dict in converter.generate(uid=self.env.uid, dom=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
                         del value_dict['loc']
@@ -384,17 +407,18 @@ class Website(models.Model):
 
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
-                page = {'loc': url}
-                for key, val in value.items():
-                    if key.startswith('__'):
-                        page[key[2:]] = val
-                if url in ('/sitemap.xml',):
-                    continue
-                if url in url_set:
-                    continue
-                url_set.add(url)
+                if not query_string or query_string.lower() in url.lower():
+                    page = {'loc': url}
+                    for key, val in value.items():
+                        if key.startswith('__'):
+                            page[key[2:]] = val
+                    if url in ('/sitemap.xml',):
+                        continue
+                    if url in url_set:
+                        continue
+                    url_set.add(url)
 
-                yield page
+                    yield page
 
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
         domain = [('url', '!=', '/')]
