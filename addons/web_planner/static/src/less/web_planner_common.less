@@ -67,6 +67,10 @@
                 > .close {
                     color: inherit;
                     opacity: 1;
+
+                    &::after, &::before {
+                        content: none;
+                    }
                 }
 
                 > .modal-title {
