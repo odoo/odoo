@@ -714,8 +714,9 @@ class Menu(models.Model):
         else:
             url = self.url
             if not self.url.startswith('/'):
-                if '@' in self.url and not self.url.startswith('mailto'):
-                    url = 'mailto:%s' % self.url
+                if '@' in self.url:
+                    if not self.url.startswith('mailto'):
+                        url = 'mailto:%s' % self.url
                 elif not self.url.startswith('http'):
                     url = '/%s' % self.url
         return url

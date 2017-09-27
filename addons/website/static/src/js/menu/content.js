@@ -261,11 +261,11 @@ var MenuEntryDialog = widget.LinkDialog.extend({
      */
     start: function () {
         var self = this;
-        self.$('#o_link_dialog_url_input').closest('.form-group').hide();
         this.$('.o_link_dialog_preview').remove();
         this.$('.window-new, .link-style').closest('.form-group').remove();
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
         if (this.menu_link_options) { // add menu link option only when adding new menu
+            self.$('#o_link_dialog_url_input').closest('.form-group').hide();
             this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
             // remove the label that is automatically added before
             this.$('#o_link_dialog_url_input').parent().siblings().html('');
