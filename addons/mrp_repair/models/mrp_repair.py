@@ -5,7 +5,8 @@ from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_compare
 
 
 class StockMove(models.Model):
@@ -202,6 +203,28 @@ class Repair(models.Model):
             raise UserError(_("Repair must be canceled in order to reset it to draft."))
         self.mapped('operations').write({'state': 'draft'})
         return self.write({'state': 'draft'})
+
+    def action_validate(self):
+        self.ensure_one()
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+            return self.action_repair_confirm()
+        else:
+            return {
+                'name': _('Insufficient Quantity'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.warn.insufficient.qty.repair',
+                'view_id': self.env.ref('mrp_repair.stock_warn_insufficient_qty_repair_form_view').id,
+                'type': 'ir.actions.act_window',
+                'context': {
+                    'default_product_id': self.product_id.id,
+                    'default_location_id': self.location_id.id,
+                    'default_repair_id': self.id
+                    },
+                'target': 'new'
+            }
 
     @api.multi
     def action_repair_confirm(self):

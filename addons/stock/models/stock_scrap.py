@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockScrap(models.Model):
@@ -63,7 +64,6 @@ class StockScrap(models.Model):
         if 'name' not in vals or vals['name'] == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
         scrap = super(StockScrap, self).create(vals)
-        scrap.do_scrap()
         return scrap
 
     def unlink(self):
@@ -74,28 +74,11 @@ class StockScrap(models.Model):
     def _get_origin_moves(self):
         return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
 
-    def do_scrap(self):
-        for scrap in self:
-            move = self.env['stock.move'].create(scrap._prepare_move_values())
-            if self.product_id.type == 'product':
-                quantity_in_stock = sum(self.env['stock.quant'].search([
-                    ('product_id', '=', self.product_id.id),
-                    ('lot_id', '=', self.lot_id and self.lot_id.id or False),
-                    ('package_id', '=', self.package_id and self.package_id.id or False),
-                    ('owner_id', '=', self.owner_id and self.owner_id.id or False),
-                    ('location_id', 'child_of', self.location_id.id)
-                ]).mapped('quantity'))
-                if quantity_in_stock < move.product_qty:  # FIXME: float compare
-                    raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
-            move._action_done()
-            scrap.write({'move_id': move.id, 'state': 'done'})
-        return True
-
     def _prepare_move_values(self):
         self.ensure_one()
         return {
             'name': self.name,
-            'origin': self.origin or self.picking_id.name,
+            'origin': self.origin or self.picking_id.name or self.name,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.scrap_qty,
@@ -114,6 +97,14 @@ class StockScrap(models.Model):
             'picking_id': self.picking_id.id
         }
 
+    @api.multi
+    def do_scrap(self):
+        for scrap in self:
+            move = self.env['stock.move'].create(scrap._prepare_move_values())
+            move._action_done()
+            scrap.write({'move_id': move.id, 'state': 'done'})
+        return True
+
     def action_get_stock_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read([])[0]
         action['domain'] = [('id', '=', self.picking_id.id)]
@@ -123,3 +114,30 @@ class StockScrap(models.Model):
         action = self.env.ref('stock.stock_move_line_action').read([])[0]
         action['domain'] = [('move_id', '=', self.move_id.id)]
         return action
+
+    def action_validate(self):
+        self.ensure_one()
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id,
+                                                                        self.location_id,
+                                                                        self.lot_id,
+                                                                        self.package_id,
+                                                                        self.owner_id,
+                                                                        strict=True)
+        if float_compare(available_qty, self.scrap_qty, precision_digits=precision) >= 0:
+            return self.do_scrap()
+        else:
+            return {
+                'name': _('Insufficient Quantity'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.warn.insufficient.qty.scrap',
+                'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,
+                'type': 'ir.actions.act_window',
+                'context': {
+                    'default_product_id': self.product_id.id,
+                    'default_location_id': self.location_id.id,
+                    'default_scrap_id': self.id
+                },
+                'target': 'new'
+            }
