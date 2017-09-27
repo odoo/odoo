@@ -92,7 +92,7 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name" string="Product"/>
+                    <field name="display_name" string="Product"/>
                     <field name="qty_available" context="{'company_owned': True}" string="Quantity on Hand"/>
                     <field name="uom_id" groups="product.group_uom"/>
                     <field name="currency_id" invisible="1"/>
