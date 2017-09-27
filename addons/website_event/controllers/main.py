@@ -13,7 +13,11 @@ from odoo.http import request
 
 class WebsiteEventController(http.Controller):
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True)
+    def sitemap_event(env, rule, qs):
+        if not qs or qs.lower() in '/events':
+            yield {'loc': '/events'}
+
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
         Event = request.env['event.event']
         EventType = request.env['event.type']
@@ -133,7 +137,7 @@ class WebsiteEventController(http.Controller):
 
         return request.render("website_event.index", values)
 
-    @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True)
+    @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True, sitemap=False)
     def event_page(self, event, page, **post):
         values = {
             'event': event,
@@ -163,7 +167,7 @@ class WebsiteEventController(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url)
 
-    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
+    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, sitemap=False)
     def event_register(self, event, **post):
         values = {
             'event': event,
