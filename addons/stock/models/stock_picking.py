@@ -134,6 +134,11 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
+    @api.onchange('show_operations')
+    def onchange_show_operations(self):
+        if self.show_operations is True:
+            self.show_reserved = True
+
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]

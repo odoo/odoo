@@ -47,7 +47,7 @@
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
                                 <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="barcode_nomenclature_id" groups="base.group_no_one"/>
                                 <field name="show_operations"/>
-                                <field name="show_reserved"/>
+                                <field name="show_reserved" attrs="{'invisible': [('show_operations', '!=', False)]}"/>
                             </group>
                         </group>
                         <group>
