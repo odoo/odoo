@@ -73,7 +73,7 @@ class WebsiteSlides(http.Controller):
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
         for channel in Channel.search(dom):
             loc = '/slides/%s' % slug(channel)
-            if qs.lower() in loc:
+            if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
     @http.route([
