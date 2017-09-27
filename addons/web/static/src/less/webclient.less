@@ -86,37 +86,39 @@ div.o_boolean_toggle {
     width: 32px !important;
     height: 18px;
 
-    > input {
-        display: none;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #a0a0a0;
-        border-radius: 24px;
-
-        &:before {
-            position: absolute;
-            content: "";
-            height: 12px;
-            width: 12px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            border-radius: 50%;
+    & > label {
+        & > input {
+            display: none;
         }
-    }
 
-    > input:checked + .slider {
-        background-color: @odoo-brand-optional;
+        & > .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #a0a0a0;
+            border-radius: 24px;
 
-        &:before {
-            .translate(14px; 0px);
+            &:before {
+                position: absolute;
+                content: "";
+                height: 12px;
+                width: 12px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                border-radius: 50%;
+            }
+        }
+
+        & > input:checked + .slider {
+            background-color: @odoo-brand-optional;
+
+            &:before {
+                .translate(14px; 0px);
+            }
         }
     }
 }
