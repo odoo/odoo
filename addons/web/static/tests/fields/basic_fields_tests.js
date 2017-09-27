@@ -1048,7 +1048,7 @@ QUnit.module('basic_fields', {
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="foo" widget="url" text="kebeclibre">' +
+                    '<field name="foo" widget="url" text="kebeclibre"/>' +
                 '</form>',
             res_id: 1,
         });
