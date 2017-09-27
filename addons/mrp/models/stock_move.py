@@ -103,6 +103,17 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(StockMove, self).default_get(fields_list)
+        if self.env.context.get('default_raw_material_production_id'):
+            production_id = self.env['mrp.production'].browse(self.env.context['default_raw_material_production_id'])
+            if production_id.state == 'done':
+                defaults['state'] = 'done'
+                defaults['product_uom_qty'] = 0.0
+                defaults['additional'] = True
+        return defaults
+
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
@@ -166,6 +177,7 @@ class StockMove(models.Model):
                 'name': self.name,
             })
         return self.env['stock.move']
+
 
 class PushedFlow(models.Model):
     _inherit = "stock.location.path"
