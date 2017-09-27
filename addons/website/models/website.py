@@ -50,6 +50,7 @@ class Website(models.Model):
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
+    auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     social_twitter = fields.Char(related="company_id.social_twitter")
     social_facebook = fields.Char(related="company_id.social_facebook")
