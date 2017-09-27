@@ -15,7 +15,7 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form string="Lots">
-                    <field name="state" invisible="1"/>
+                    <field name="state" invisible="1" force_save="1"/>
                     <group>
                         <group>
                             <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
