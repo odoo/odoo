@@ -35,8 +35,8 @@
                     <t t-call="payment.payment_tokens_list">
                         <t t-set="mode" t-value="'payment'"/>
                         <t t-set="partner_id" t-value="invoice.partner_id.id"/>
-                        <t t-set="success_url" t-value="'/my/invoices/%s' % invoice.id"/>
-                        <t t-set="error_url" t-value="'/my/invoices/%s' % invoice.id"/>
+                        <t t-set="success_url" t-value="'/my/invoices/%s?%s' % (invoice.id, keep_query())"/>
+                        <t t-set="error_url" t-value="'/my/invoices/%s?%s' % (invoice.id, keep_query())"/>
                         <t t-set="access_token" t-value="access_token or ''"/>
                         <t t-set="callback_method" t-value="''"/>
                         <t t-set="form_action" t-value="'/invoice/pay/' + str(invoice.id) + '/s2s_token_tx/'"/>
