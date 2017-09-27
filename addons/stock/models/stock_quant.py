@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 import logging
 
@@ -87,7 +87,7 @@ class Quant(models.Model):
                 # if the company of the quant is different than the current user company, force the company in the context
                 # then re-do a browse to read the property fields for the good company.
                 quant = quant.with_context(force_company=quant.company_id.id)
-            quant.inventory_value = quant.product_id.standard_price * quant.qty
+                quant.inventory_value = quant.product_id.standard_price * quant.qty
 
     @api.model_cr
     def init(self):
@@ -114,7 +114,14 @@ class Quant(models.Model):
                     lines = self.search(line['__domain'])
                     inv_value = 0.0
                     for line2 in lines:
-                        inv_value += line2.inventory_value
+                        try:
+                            inv_value += line2.inventory_value
+                        except AccessError:
+                            line2 = line2.sudo()
+                            company_1 = line2.company_id.name
+                            company_2 = line2.product_id.company_id.name
+                            product_name = line2.product_id.name
+                            raise UserError(_("The product %s is set in company %s but there is some stock of this product in company %s. Please contact your system administrator." ) % (product_name, company_2, company_1))
                     line['inventory_value'] = inv_value
         return res
 
