@@ -705,7 +705,7 @@ class Menu(models.Model):
     def clean_url(self):
         # clean the url with heuristic
         if self.page_id:
-            url = self.page_id.url
+            url = self.page_id.sudo().url
         else:
             url = self.url
             if not self.url.startswith('/'):
