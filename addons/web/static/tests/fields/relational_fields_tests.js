@@ -5913,6 +5913,47 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange on a one2many containing a one2many', function (assert) {
+        // the purpose of this test is to ensure that the onchange specs are
+        // correctly and recursively computed
+        assert.expect(1);
+
+        this.data.partner.onchanges = {
+            p: function () {}
+        };
+        var checkOnchange = false;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree><field name="display_name"/></tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                            '<field name="p">' +
+                                '<tree editable="bottom"><field name="display_name"/></tree>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange' && checkOnchange) {
+                    assert.strictEqual(args.args[3]['p.p.display_name'], '',
+                        "onchange specs should be computed recursively");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal .o_data_cell input').val('new record').trigger('input');
+        checkOnchange = true;
+        $('.modal .modal-footer .btn-primary').click(); // save (should trigger the onchange)
+
+        form.destroy();
+    });
 
     QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
         assert.expect(12);
