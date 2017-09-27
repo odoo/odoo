@@ -170,7 +170,9 @@ def is_multilang_url(local_url, langs=None):
         func = router.match(path, method='POST', query_args=query_string)[0]
         return (func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
-    except Exception:
+    except werkzeug.exceptions.NotFound:
+        return True
+    except Exception as e:
         return False
 
 
@@ -331,7 +333,7 @@ class IrHttp(models.AbstractModel):
 
         request.is_frontend_multilang = (
             request.is_frontend and
-            func and func.routing.get('multilang', func.routing['type'] == 'http')
+            (not func or (func and func.routing.get('multilang', func.routing['type'] == 'http')))
         )
 
         cls._geoip_setup_resolver()
