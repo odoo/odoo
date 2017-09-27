@@ -265,9 +265,18 @@ odoo.define('payment.payment_form', function (require) {
         // event handler when clicking on 'and more' to show more payment icon
         showMorePaymentIcon: function (ev) {
             ev.preventDefault();
-            var data = $(ev.currentTarget).parents('.o_payment_acquirer').find('input[type="radio"]').data();
-            $('.o_payment_icon_button_' + data.acquirerId).addClass('hidden');
+            var $payment_acquirer = $(ev.currentTarget).parents('.o_payment_acquirer'),
+                data = $payment_acquirer.find('input[type="radio"]').data(),
+                $moreButton = $('.o_payment_icon_more_button_' + data.acquirerId);
+
+            $moreButton.addClass('hidden');
+            $moreButton.removeClass('o_more_icon');
             $('.o_show_payment_icon_' + data.acquirerId).removeClass('hidden');
+            if (!$('.o_more_icon').length) {
+                $('.o_payment_acquirer').removeClass('o_more_payment_icon');
+            } else {
+                $payment_acquirer.addClass('o_more_payment_icon');
+            }
         },
         // event handler when clicking on a button to delete a payment method
         deletePmEvent: function (ev) {
