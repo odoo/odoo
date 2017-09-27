@@ -3,7 +3,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 _INTERVALS = {
@@ -15,11 +15,39 @@ _INTERVALS = {
 }
 
 
+class EventTypeMail(models.Model):
+    """ Template of event.mail to attach to event.type. Those will be copied
+    upon all events created in that type to ease event creation. """
+    _name = 'event.type.mail'
+    _description = 'Mail Scheduling on Event Type'
+
+    event_type_id = fields.Many2one(
+        'event.type', string='Event Type',
+        ondelete='cascade', required=True)
+    interval_nbr = fields.Integer('Interval', default=1)
+    interval_unit = fields.Selection([
+        ('now', 'Immediately'),
+        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
+        ('weeks', 'Week(s)'), ('months', 'Month(s)')],
+        string='Unit', default='hours', required=True)
+    interval_type = fields.Selection([
+        ('after_sub', 'After each registration'),
+        ('before_event', 'Before the event'),
+        ('after_event', 'After the event')],
+        string='Trigger', default="before_event", required=True)
+    template_id = fields.Many2one(
+        'mail.template', string='Email Template',
+        domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
+        help='This field contains the template of the mail that will be automatically sent')
+
+
 class EventMailScheduler(models.Model):
     """ Event automated mailing. This model replaces all existing fields and
     configuration allowing to send emails on events since Odoo 9. A cron exists
     that periodically checks for mailing to run. """
     _name = 'event.mail'
+    _rec_name = 'event_id'
+    _description = 'Event Automated Mailing'
 
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
     sequence = fields.Integer('Display order')
@@ -30,12 +58,12 @@ class EventMailScheduler(models.Model):
         ('weeks', 'Week(s)'), ('months', 'Month(s)')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
-        ('after_sub', 'After each subscription'),
+        ('after_sub', 'After each registration'),
         ('before_event', 'Before the event'),
         ('after_event', 'After the event')],
-        string='When to Run ', default="before_event", required=True)
+        string='Trigger ', default="before_event", required=True)
     template_id = fields.Many2one(
-        'mail.template', string='Email to Send',
+        'mail.template', string='Email Template',
         domain=[('model', '=', 'event.registration')], required=True, ondelete='restrict',
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)
@@ -49,7 +77,7 @@ class EventMailScheduler(models.Model):
         if self.interval_type in ['before_event', 'after_event']:
             self.done = self.mail_sent
         else:
-            self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(filter(lambda line: line.mail_sent, self.mail_registration_ids))
+            self.done = len(self.mail_registration_ids) == len(self.event_id.registration_ids) and all(mail.mail_sent for mail in self.mail_registration_ids)
 
     @api.one
     @api.depends('event_id.state', 'event_id.date_begin', 'interval_type', 'interval_unit', 'interval_nbr')
@@ -70,9 +98,10 @@ class EventMailScheduler(models.Model):
     def execute(self):
         if self.interval_type == 'after_sub':
             # update registration lines
-            lines = []
-            for registration in filter(lambda item: item not in [mail_reg.registration_id for mail_reg in self.mail_registration_ids], self.event_id.registration_ids):
-                lines.append((0, 0, {'registration_id': registration.id}))
+            lines = [
+                (0, 0, {'registration_id': registration.id})
+                for registration in (self.event_id.registration_ids - self.mapped('mail_registration_ids.registration_id'))
+            ]
             if lines:
                 self.write({'mail_registration_ids': lines})
             # execute scheduler on registrations

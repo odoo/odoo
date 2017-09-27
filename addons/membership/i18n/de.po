@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-# 
+#
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2015
 # Wolfgang Taferner, 2016
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-01-21 11:39+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -39,7 +39,9 @@ msgstr "Wartend"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr "Mitglied, dem Sie eine Mitgliedschaft zuordnen wollen. Dies wird im Mitgliedsstatus berücksichtigt."
+msgstr ""
+"Mitglied, dem Sie eine Mitgliedschaft zuordnen wollen. Dies wird im "
+"Mitgliedsstatus berücksichtigt."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -79,12 +81,6 @@ msgid "Associated Partner"
 msgstr "Zugehöriger Partner"
 
 #. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Basismitgliedschaft"
-
-#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
 msgstr "Mitgliedschaft erwerben"
@@ -119,7 +115,8 @@ msgstr "Kategorie"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr "Überprüfen Sie, ob das Produkt als Mitgliedschaftsprodukt angelegt wurde."
+msgstr ""
+"Überprüfen Sie, ob das Produkt als Mitgliedschaftsprodukt angelegt wurde."
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -264,12 +261,6 @@ msgid "From Month"
 msgstr "Von Monat"
 
 #. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
-msgstr "Gold-Mitglied"
-
-#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
@@ -328,22 +319,50 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Zeigt den Mitgliedschaftsstatuts:\n- Kein Mitglied: Partner, der keine Mitgliedschaft beantragt hat.\n- Gekündigtes Mitglied: Mitglied, das seine Mitgliedschaft gekündigt hat.\n- Ehemaliges Mitglied: Mitglied, dessen Mitgliedschaft abgelaufen ist.\n- Wartendes Mitglied: Mitglied, der eine Mitgliedschaft beantragt hat und dessen Rechnung erzeugt wird.\n- Abgerechnetes Mitglied: Mitglied, dessen Rechnung angelegt wurde.\n- Zahlendes Mitglied: Mitglied, der seinen Mitgliedsbeitrag bezahlt hat."
+msgstr ""
+"Zeigt den Mitgliedschaftsstatuts:\n"
+"- Kein Mitglied: Partner, der keine Mitgliedschaft beantragt hat.\n"
+"- Gekündigtes Mitglied: Mitglied, das seine Mitgliedschaft gekündigt hat.\n"
+"- Ehemaliges Mitglied: Mitglied, dessen Mitgliedschaft abgelaufen ist.\n"
+"- Wartendes Mitglied: Mitglied, der eine Mitgliedschaft beantragt hat und "
+"dessen Rechnung erzeugt wird.\n"
+"- Abgerechnetes Mitglied: Mitglied, dessen Rechnung angelegt wurde.\n"
+"- Zahlendes Mitglied: Mitglied, der seinen Mitgliedsbeitrag bezahlt hat."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
-msgstr "Zeigt den Mitgliedschaftsstatuts:\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Kein Mitglied: Partner, der keine Mitgliedschaft beantragt hat.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Gekündigetes Mitglied: Mitglied, das seine Mitgliedschaft gekündigt hat.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Ehemaliges Mitglied: Mitglied, dessen Mitgliedschaft abgelaufen ist.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Wartendes Mitglied: Mitglied, der eine Mitgliedschaft beantragt hat und dessen Rechnung erzeugt wird.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Abgrechnetes Mitglied: Mitglied, dessen Rechnung angelegt wurde.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Zahlendes Mitglied: Mitglied, das seinen Mitgliedsbeitrag bezahlt hat."
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+"Zeigt den Mitgliedschaftsstatuts:\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Kein Mitglied: Partner, der keine "
+"Mitgliedschaft beantragt hat.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Gekündigetes Mitglied: Mitglied, das seine "
+"Mitgliedschaft gekündigt hat.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Ehemaliges Mitglied: Mitglied, dessen "
+"Mitgliedschaft abgelaufen ist.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Wartendes Mitglied: Mitglied, der eine "
+"Mitgliedschaft beantragt hat und dessen Rechnung erzeugt wird.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Abgrechnetes Mitglied: Mitglied, dessen "
+"Rechnung angelegt wurde.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t- Zahlendes Mitglied: Mitglied, das seinen "
+"Mitgliedsbeitrag bezahlt hat."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -503,8 +522,12 @@ msgstr "Kein/Storniert/Alt/Wartend"
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of Membership, etc."
-msgstr "Odoo unterstützt Sie, die Aktivitäten für ein Mitglied nachzuverfolgen:\nDerzeitiger Mitgliedsstatus,  Diskussionen, Rückblick für die Mitgliedschaft, etc. "
+"                 Current Membership Status, Discussions and History of "
+"Membership, etc."
+msgstr ""
+"Odoo unterstützt Sie, die Aktivitäten für ein Mitglied nachzuverfolgen:\n"
+"Derzeitiger Mitgliedsstatus,  Diskussionen, Rückblick für die "
+"Mitgliedschaft, etc. "
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -576,12 +599,6 @@ msgid "Select if you want to give free membership."
 msgstr "Zur Vergabe freier Mitgliedschaft aktivieren"
 
 #. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Silber-Mitgliedschaft"
-
-#. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
 msgid "Start Date"
 msgstr "Startdatum"
@@ -642,3 +659,12 @@ msgstr "Wartendes (neues) Mitglied"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr "membership.membership_line"
+
+#~ msgid "Basic Membership"
+#~ msgstr "Basismitgliedschaft"
+
+#~ msgid "Gold Membership"
+#~ msgstr "Gold-Mitglied"
+
+#~ msgid "Silver Membership"
+#~ msgstr "Silber-Mitgliedschaft"

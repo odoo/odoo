@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- This file must be loaded  _after_  account_demo.xml ! -->
         <record id="test_invoice_1" model="account.invoice">
@@ -44,7 +44,7 @@
             <test expr="sum([l.price_subtotal for l in invoice_line_ids]) == amount_untaxed"/>
         </assert>
 
-        <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
+        <function model="account.invoice" name="action_invoice_open" eval="[[ref('test_invoice_1')]]"/>
 
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
@@ -59,4 +59,4 @@
             <test expr="state">paid</test>
         </assert>
     </data>
-</openerp>
+</odoo>

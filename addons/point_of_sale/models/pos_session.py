@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
+
 
 class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
 
     POS_SESSION_STATE = [
-        ('opening_control', 'Opening Control'),  # Signal open
-        ('opened', 'In Progress'),               # Signal closing
-        ('closing_control', 'Closing Control'),  # Signal close
+        ('opening_control', 'Opening Control'),  # method action_pos_session_open
+        ('opened', 'In Progress'),               # method action_pos_session_closing_control
+        ('closing_control', 'Closing Control'),  # method action_pos_session_close
         ('closed', 'Closed & Posted'),
     ]
 
@@ -18,19 +20,32 @@ class PosSession(models.Model):
         for session in self:
             company_id = session.config_id.journal_id.company_id.id
             orders = session.order_ids.filtered(lambda order: order.state == 'paid')
-            move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, session.config_id.journal_id.id, company_id)
+            journal_id = self.env['ir.config_parameter'].sudo().get_param(
+                'pos.closing.journal_id_%s' % company_id, default=session.config_id.journal_id.id)
+            if not journal_id:
+                raise UserError(_("You have to set a Sale Journal for the POS:%s") % (session.config_id.name,))
+
+            move = self.env['pos.order'].with_context(force_company=company_id)._create_account_move(session.start_at, session.name, int(journal_id), company_id)
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
-            for order in session.order_ids.filtered(lambda o: o.state != 'done'):
-                if order.state not in ('paid', 'invoiced'):
-                    raise UserError(_("You cannot confirm all orders of this session, because they have not the 'paid' status"))
-                order.signal_workflow('done')
+            for order in session.order_ids.filtered(lambda o: o.state not in ['done', 'invoiced']):
+                if order.state not in ('paid'):
+                    raise UserError(
+                        _("You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
+                          "{reference} is in state {state}, total amount: {total}, paid: {paid}").format(
+                            reference=order.pos_reference or order.name,
+                            state=order.state,
+                            total=order.amount_total,
+                            paid=order.amount_paid,
+                        ))
+                order.action_pos_order_done()
+            orders = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'])
+            orders.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         help="The physical point of sale you will use.",
         required=True,
-        index=True,
-        domain="[('state', '=', 'active')]")
+        index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -46,12 +61,12 @@ class PosSession(models.Model):
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
-        index=True, copy=False, default='opening_control')        
+        index=True, copy=False, default='opening_control')
 
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
-    cash_control = fields.Boolean(compute='_compute_cash_all',    string='Has Cash Control')
+    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control')
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
     cash_register_id = fields.Many2one('account.bank.statement', compute='_compute_cash_all', string='Cash Register', store=True)
 
@@ -69,7 +84,7 @@ class PosSession(models.Model):
         related='cash_register_id.total_entry_encoding',
         string='Total Cash Transaction',
         readonly=True,
-        help="Total of all paid sale orders")
+        help="Total of all paid sales orders")
     cash_register_balance_end = fields.Monetary(
         related='cash_register_id.balance_end',
         digits=0,
@@ -89,10 +104,30 @@ class PosSession(models.Model):
         string='Available Payment Methods')
     order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
     statement_ids = fields.One2many('account.bank.statement', 'pos_session_id', string='Bank Statement', readonly=True)
+    picking_count = fields.Integer(compute='_compute_picking_count')
+    rescue = fields.Boolean(string='Recovery Session',
+        help="Auto-generated session for orphan orders, ignored in constraints",
+        readonly=True,
+        copy=False)
 
-    _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
+    _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique !")]
 
-    @api.depends('cash_control', 'cash_journal_id', 'config_id.cash_control')
+    @api.multi
+    def _compute_picking_count(self):
+        for pos in self:
+            pickings = pos.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+            pos.picking_count = len(pickings.ids)
+
+    @api.multi
+    def action_stock_picking(self):
+        pickings = self.order_ids.mapped('picking_id').filtered(lambda x: x.state != 'done')
+        action_picking = self.env.ref('stock.action_picking_tree_ready')
+        action = action_picking.read()[0]
+        action['context'] = {}
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
+
+    @api.depends('config_id', 'statement_ids')
     def _compute_cash_all(self):
         for session in self:
             session.cash_journal_id = session.cash_register_id = session.cash_control = False
@@ -102,19 +137,27 @@ class PosSession(models.Model):
                         session.cash_control = True
                         session.cash_journal_id = statement.journal_id.id
                         session.cash_register_id = statement.id
-                if not session.cash_control:
+                if not session.cash_control and session.state != 'closed':
                     raise UserError(_("Cash control can only be applied to cash journals."))
 
     @api.constrains('user_id', 'state')
     def _check_unicity(self):
         # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
-        if self.search_count([('state', 'not in', ('closed', 'closing_control')), ('user_id', '=', self.user_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions with the same responsible!"))
+        if self.search_count([
+                ('state', 'not in', ('closed', 'closing_control')),
+                ('user_id', '=', self.user_id.id),
+                ('rescue', '=', False)
+            ]) > 1:
+            raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
-        if self.search_count([('state', '!=', 'closed'), ('config_id', '=', self.config_id.id)]) > 1:
-            raise UserError(_("You cannot create two active sessions related to the same point of sale!"))
+        if self.search_count([
+                ('state', '!=', 'closed'),
+                ('config_id', '=', self.config_id.id),
+                ('rescue', '=', False)
+            ]) > 1:
+            raise ValidationError(_("Another session is already opened for this point of sale."))
 
     @api.model
     def create(self, values):
@@ -129,10 +172,13 @@ class PosSession(models.Model):
         pos_config = self.env['pos.config'].browse(config_id)
         ctx = dict(self.env.context, company_id=pos_config.company_id.id)
         if not pos_config.journal_id:
-            jid = pos_config.with_context(ctx).default_get(['journal_id'])['journal_id']
-            if not jid:
-                raise UserError(_("Unable to open the session. You have to assign a sale journal to your point of sale."))
-            pos_config.with_context(ctx).sudo().write({'journal_id': jid})
+            default_journals = pos_config.with_context(ctx).default_get(['journal_id', 'invoice_journal_id'])
+            if (not default_journals.get('journal_id') or
+                    not default_journals.get('invoice_journal_id')):
+                raise UserError(_("Unable to open the session. You have to assign a sales journal to your point of sale."))
+            pos_config.with_context(ctx).sudo().write({
+                'journal_id': default_journals['journal_id'],
+                'invoice_journal_id': default_journals['invoice_journal_id']})
         # define some cash journal if no payment method exists
         if not pos_config.journal_ids:
             Journal = self.env['account.journal']
@@ -143,22 +189,38 @@ class PosSession(models.Model):
                     journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
-        statements = [(0, 0, {
-            'journal_id': journal.id,
-            'user_id': self.env.uid,
-            'company_id': pos_config.company_id.id
-        }) for journal in pos_config.journal_ids]
+
+        pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+        if values.get('name'):
+            pos_name += ' ' + values['name']
+
+        statements = []
+        ABS = self.env['account.bank.statement']
+        uid = SUPERUSER_ID if self.env.user.has_group('point_of_sale.group_pos_user') else self.env.user.id
+        for journal in pos_config.journal_ids:
+            # set the journal_id which should be used by
+            # account.bank.statement to set the opening balance of the
+            # newly created bank statement
+            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            st_values = {
+                'journal_id': journal.id,
+                'user_id': self.env.user.id,
+                'name': pos_name
+            }
+
+            statements.append(ABS.with_context(ctx).sudo(uid).create(st_values).id)
+
         values.update({
-            'name': self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session'),
-            'statement_ids': statements,
+            'name': pos_name,
+            'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
-        # set the journal_id which should be used by
-        # account.bank.statement to set the opening balance of the newly created bank statement
-        if pos_config.cash_control:
-            for journal in pos_config.journal_ids.filtered(lambda j: j.type == 'cash'):
-                ctx.update({'journal_id': journal.id})
-        return super(PosSession, self.with_context(ctx)).create(values)
+
+        res = super(PosSession, self.with_context(ctx).sudo(uid)).create(values)
+        if not pos_config.cash_control:
+            res.action_pos_session_open()
+
+        return res
 
     @api.multi
     def unlink(self):
@@ -173,9 +235,11 @@ class PosSession(models.Model):
             'login_number': self.login_number + 1,
         })
 
-    def wkf_action_open(self):
+    @api.multi
+    def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
-        for session in self:
+        # we only open sessions that haven't already been opened
+        for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
@@ -184,17 +248,28 @@ class PosSession(models.Model):
             session.statement_ids.button_open()
         return True
 
-    def wkf_action_opening_control(self):
-        return self.write({'state': 'opening_control'})
+    @api.multi
+    def action_pos_session_closing_control(self):
+        self._check_pos_session_balance()
+        for session in self:
+            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+            if not session.config_id.cash_control:
+                session.action_pos_session_close()
 
-    def wkf_action_closing_control(self):
+    @api.multi
+    def _check_pos_session_balance(self):
         for session in self:
             for statement in session.statement_ids:
                 if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     statement.write({'balance_end_real': statement.balance_end})
-            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
 
-    def wkf_action_close(self):
+    @api.multi
+    def action_pos_session_validate(self):
+        self._check_pos_session_balance()
+        self.action_pos_session_close()
+
+    @api.multi
+    def action_pos_session_close(self):
         # Close CashBox
         for session in self:
             company_id = session.config_id.company_id.id
@@ -202,7 +277,7 @@ class PosSession(models.Model):
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
-                    if not self.env['ir.model.access'].check_groups("point_of_sale.group_pos_manager"):
+                    if not self.user_has_groups("point_of_sale.group_pos_manager"):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
@@ -221,10 +296,40 @@ class PosSession(models.Model):
         if not self.ids:
             return {}
         for session in self.filtered(lambda s: s.user_id.id != self.env.uid):
-            raise UserError(_("You cannot use the session of another users. This session is owned by %s. "
+            raise UserError(_("You cannot use the session of another user. This session is owned by %s. "
                               "Please first close this one to use this point of sale.") % session.user_id.name)
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
             'url':   '/pos/web/',
         }
+
+    @api.multi
+    def open_cashbox(self):
+        self.ensure_one()
+        context = dict(self._context)
+        balance_type = context.get('balance') or 'start'
+        context['bank_statement_id'] = self.cash_register_id.id
+        context['balance'] = balance_type
+        context['default_pos_id'] = self.config_id.id
+
+        action = {
+            'name': _('Cash Control'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.bank.statement.cashbox',
+            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new'
+        }
+
+        cashbox_id = None
+        if balance_type == 'start':
+            cashbox_id = self.cash_register_id.cashbox_start_id.id
+        else:
+            cashbox_id = self.cash_register_id.cashbox_end_id.id
+        if cashbox_id:
+            action['res_id'] = cashbox_id
+
+        return action

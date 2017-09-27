@@ -1,6 +1,5 @@
 """ ESC/POS Exceptions classes """
 
-import os
 
 class Error(Exception):
     """ Base class for ESC/POS errors """

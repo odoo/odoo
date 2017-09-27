@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="account_unreconcile_view" model="ir.ui.view">
@@ -22,18 +22,10 @@
             <field name="res_model">account.unreconcile</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-           <field name="view_id" ref="account_unreconcile_view"/>
-           <field name="target">new</field>
-        </record>
-
-        <record model="ir.values" id="account_unreconcile_values">
-            <field name="model_id" ref="account.model_account_move_line" />
-            <field name="name">Unreconcile Entries</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_unreconcile'))" />
-            <field name="key">action</field>
-            <field name="model">account.move.line</field>
+            <field name="view_id" ref="account_unreconcile_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account.model_account_move_line" />
         </record>
 
     </data>
-</openerp>
+</odoo>

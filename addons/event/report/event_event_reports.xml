@@ -24,7 +24,9 @@
         report_type="qweb-pdf"
         name="event.event_registration_report_template_badge"
         file="event.event_registration_report_template_badge"
-        paperformat="event.paperformat_euro_lowmargin"/>
+        paperformat="event.paperformat_euro_lowmargin"
+        print_report_name="'Registration Event - %s' % (object.name).replace('/','')"
+    />
 
      <report
         id="report_event_event_badge"

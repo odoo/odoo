@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
+msgid "API Key"
+msgstr ""
+
+#. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
-msgstr ""
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_create_date
-msgid "Created on"
 msgstr ""
 
 #. module: pad
@@ -37,11 +32,13 @@ msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company_pad_key
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_key
 msgid "Etherpad lite api key."
 msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr ""
 
@@ -56,13 +53,10 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: pad
-#: model:ir.model.fields,field_description:pad.field_pad_common_write_date
-msgid "Last Updated on"
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:147
+#, python-format
+msgid "Loading"
 msgstr ""
 
 #. module: pad
@@ -71,49 +65,64 @@ msgid "Pad Api Key"
 msgstr ""
 
 #. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_key
+msgid "Pad Api Key *"
+msgstr ""
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company_pad_server
 msgid "Pad Server"
 msgstr ""
 
 #. module: pad
-#: code:addons/pad/pad.py:53
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_server
+msgid "Pad Server *"
+msgstr ""
+
+#. module: pad
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid "Pad creation failed, either there is a problem with your pad server URL or with your connection."
 msgstr ""
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
-msgid "Pads"
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:6
+#, python-format
+msgid "Please enter your Etherpad credentials through the menu 'Settings > General Settings'."
+msgstr ""
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
+msgid "Server"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:53
+#: code:addons/pad/static/src/js/pad.js:166
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:50
+#: code:addons/pad/static/src/js/pad.js:160
 #, python-format
 msgid "Unable to load pad"
 msgstr ""
 
 #. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:7
-#, python-format
-msgid "You must configure the etherpad through the menu Settings > Companies > Companies, in the configuration tab of your company."
-msgstr ""
-
-#. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr ""
 
 #. module: pad
 #: model:ir.model,name:pad.model_pad_common
 msgid "pad.common"
+msgstr ""
+
+#. module: pad
+#: model:ir.model,name:pad.model_res_config_settings
+msgid "res.config.settings"
 msgstr ""
 

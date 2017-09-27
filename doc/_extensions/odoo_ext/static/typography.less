@@ -1,0 +1,58 @@
+// =============================================================================
+// Typography
+// =============================================================================
+
+// Font rendering
+// ----------------------------------------
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings
+// ----------------------------------------
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    text-rendering: geometricPrecision;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+
+    @media (min-width: @screen-lg-min) {
+        .has_code_col .doc-aside &{
+            color: white;
+        }
+    }
+}
+
+h1, h2, .h1, .h2 {
+    margin-top: @line-height-computed * 1.5;
+    font-weight: @fw_light;
+    b, strong, a {
+        font-weight: @fw_regular;
+    }
+}
+
+h3, .h3, h4, .h4, h5, h6, .h5, .h6 {
+    font-weight: @fw_regular;
+    b, strong, a {
+        font-weight: @fw_medium;
+    }
+}
+h4, .h4, h5, h6, .h5, .h6 {
+    margin-top: @line-height-computed;
+    margin-bottom: (@line-height-computed / 3);
+}
+
+// Lists
+// ----------------------------------------
+
+ul, ol {
+    &:not(:empty) {
+        margin-bottom: (@line-height-computed / 2);
+    }
+    ul, ol {
+        &:not(:empty) {
+            margin-bottom: (@line-height-computed / 3);
+        }
+    }
+}

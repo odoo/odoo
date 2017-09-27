@@ -1,27 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-# 
+#
 # Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-10-02 04:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-07-08 03:26+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:210
+#: code:addons/website_event/controllers/main.py:219
 #, python-format
 msgid "%(month)s %(start_day)s%(end_day)s"
-msgstr ""
+msgstr "%(month)s %(start_day)s%(end_day)s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -34,6 +35,8 @@ msgid ""
 "<br/>\n"
 "                    <i class=\"fa fa-clock-o\"/> To"
 msgstr ""
+"<br/>\n"
+"                    <i class=\"fa fa-clock-o\"/> ถึง"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -43,7 +46,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\"/> จาก"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -69,7 +72,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>ไม่จำกัด</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -84,7 +87,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>ชื่อ</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -104,20 +107,25 @@ msgid "Add Content"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:105
+#: code:addons/website_event/controllers/main.py:106
 #, python-format
 msgid "All Categories"
-msgstr ""
+msgstr "ทุกหมวด"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:116
+#: code:addons/website_event/controllers/main.py:117
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "ประเทศทั้งหมด"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.layout
 msgid "All Events"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Attendee #%s"
 msgstr ""
 
 #. module: website_event
@@ -141,14 +149,14 @@ msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:89
+#: code:addons/website_event/static/src/js/website.tour.event.js:82
 #, python-format
 msgid "Click here to customize your event further."
 msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:75
 #, python-format
 msgid "Click to publish your event."
 msgstr ""
@@ -207,7 +215,7 @@ msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:88
+#: code:addons/website_event/static/src/js/website.tour.event.js:81
 #, python-format
 msgid "Customize your event"
 msgstr ""
@@ -220,7 +228,6 @@ msgstr ""
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:59
-#: code:addons/website_event/static/src/js/website.tour.event.js:66
 #, python-format
 msgid "Drag & Drop a block"
 msgstr ""
@@ -230,13 +237,6 @@ msgstr ""
 #: code:addons/website_event/static/src/js/website.tour.event.js:60
 #, python-format
 msgid "Drag the 'Image-Text' block and drop it in your page."
-msgstr ""
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:67
-#, python-format
-msgid "Drag the 'Text Block' in your event page."
 msgstr ""
 
 #. module: website_event
@@ -310,7 +310,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
-msgstr ""
+msgstr "เหตการณ์ที่เกิดขึ้น"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_country_event
@@ -325,7 +325,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "Events:"
-msgstr ""
+msgstr "เหตุการณ์:"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -362,7 +362,7 @@ msgstr "สถานที่"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -371,7 +371,7 @@ msgstr "ชื่อ"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:192
+#: code:addons/website_event/controllers/main.py:201
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -387,19 +387,19 @@ msgid "New Event Created"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:37
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Next Events"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:46
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "Next Week"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:54
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Next month"
 msgstr ""
@@ -410,14 +410,14 @@ msgid "No event found"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:58
+#: code:addons/website_event/controllers/main.py:59
 #, python-format
 msgid "Old Events"
 msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:74
+#: code:addons/website_event/static/src/js/website.tour.event.js:67
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr ""
@@ -425,7 +425,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Online"
-msgstr ""
+msgstr "ออนไลน์"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -450,7 +450,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
-msgstr "โทร"
+msgstr "โทรศัพท์"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
@@ -464,7 +464,7 @@ msgstr "ราคา"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:81
+#: code:addons/website_event/static/src/js/website.tour.event.js:74
 #, python-format
 msgid "Publish your event"
 msgstr ""
@@ -483,7 +483,7 @@ msgstr "อ้างอิงถึง"
 #: code:addons/website_event/models/event.py:53
 #, python-format
 msgid "Register"
-msgstr ""
+msgstr "สมัคร"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -497,7 +497,7 @@ msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:73
+#: code:addons/website_event/static/src/js/website.tour.event.js:66
 #, python-format
 msgid "Save your modifications"
 msgstr ""
@@ -517,7 +517,7 @@ msgstr ""
 #: code:addons/website_event/static/src/js/website.tour.event.js:20
 #, python-format
 msgid "Skip It"
-msgstr ""
+msgstr "ข้าม"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -539,26 +539,19 @@ msgstr ""
 #: code:addons/website_event/static/src/js/website.tour.event.js:20
 #, python-format
 msgid "Start Tutorial"
+msgstr "เริ่มต้นการสอน"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:43
+#, python-format
+msgid "This Week"
 msgstr ""
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:26
 #, python-format
-msgid ""
-"The <em>Content</em> menu allows you to create new pages, events, menus, "
-"etc."
-msgstr ""
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:42
-#, python-format
-msgid "This Week"
+msgid "This button allows you to create new pages, events, menus, etc."
 msgstr ""
 
 #. module: website_event
@@ -569,10 +562,10 @@ msgid "This is your new event page. We will edit the event presentation page."
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:50
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "This month"
-msgstr ""
+msgstr "เดือนนี้"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -585,7 +578,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Today"
 msgstr "วันนี้"
@@ -608,7 +601,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "มองเห็นได้จากเว็บไซต์"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -621,39 +614,9 @@ msgid "Website Home"
 msgstr ""
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_url
-msgid "Website URL"
-msgstr ""
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารเว็บไซต์"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_description
-msgid "Website meta description"
-msgstr ""
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_keywords
-msgid "Website meta keywords"
-msgstr ""
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_title
-msgid "Website meta title"
-msgstr ""
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "When"
-msgstr ""
+msgstr "เมื่อ"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -686,9 +649,18 @@ msgstr "หรือ"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "pull-right"
-msgstr ""
+msgstr "pull-right"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
 msgstr "ถึง"
+
+#~ msgid "Website Messages"
+#~ msgstr "ข้อความเว็บไซต์"
+
+#~ msgid "Website URL"
+#~ msgstr "URL เว็บไซต์"
+
+#~ msgid "Website communication history"
+#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

@@ -1,0 +1,77 @@
+@odoo-datepicker-week-color: #8f8f8f;
+@odoo-datepicker-week-bg-color: lighten(@odoo-datepicker-week-color, 30%);
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.o_datepicker {
+    position: relative;
+
+    .o_datepicker_input {
+        width: 100%;
+    }
+
+    .o_datepicker_button {
+        .o-position-absolute(2px, 4px);
+        cursor: pointer;
+        &:after {
+            .o-caret-down;
+        }
+    }
+}
+
+// Need to put datetimepicker widget above everything else
+// The '.dropdown-menu' part is needed to override default bootstrap rule as
+// this file is unfortunately placed in common assets.
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    z-index: @zindex-modal + 1;
+}
+
+.datepicker {
+    .table-condensed {
+        > thead {
+            color: white;
+            background-color: @odoo-brand-primary;
+
+            > tr {
+                &:first-child {
+                    th:hover {
+                        color: white;
+                        background-color: darken(@odoo-brand-primary, 10%);
+                    }
+                }
+
+                &:last-child {
+                    color: @odoo-datepicker-week-color;
+                    background-color: @odoo-datepicker-week-bg-color;
+                }
+                > th {
+                    border-radius: 0;
+                }
+            }
+        }
+
+        > tbody {
+            > tr {
+                > td {
+                    &.active, .active {
+                        background-color: @odoo-brand-optional;
+                        border-radius: 100px;
+                    }
+
+                    &.today:before {
+                        border-bottom-color: @odoo-brand-optional;
+                    }
+                }
+            }
+        }
+    }
+}

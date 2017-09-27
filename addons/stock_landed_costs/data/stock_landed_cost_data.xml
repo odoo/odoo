@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Stock landed costs - related subtypes for messaging / Chatter -->
+        <record id="mt_stock_landed_cost_open" model="mail.message.subtype">
+            <field name="name">Done</field>
+            <field name="res_model">stock.landed.cost</field>
+            <field name="description">Landed cost validated</field>
+        </record>
+
+        <record id="seq_stock_landed_costs" model="ir.sequence">
+            <field name="name">Stock Landed Costs</field>
+            <field name="code">stock.landed.cost</field>
+            <field name="prefix">LC/%(year)s/</field>
+            <field name="padding">4</field>
+        </record>    
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="company_form_vat" model="ir.ui.view">
+        <field name="name">res.company.form.vat.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="vat_check_vies" help="If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service." />
+            </field>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string">VAT</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

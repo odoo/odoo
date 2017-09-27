@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import os
-from openerp import api, fields, models, _
+
+from odoo import api, fields, models
+
 
 class IrModuleModule(models.Model):
     _name = "ir.module.module"
@@ -37,15 +42,21 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def button_choose_theme(self):
-        theme_category_id = self.env.ref('base.module_category_theme').id
+        theme_category = self.env.ref('base.module_category_theme', False)
+        hidden_category = self.env.ref('base.module_category_hidden', False)
+        theme_hidden_category = self.env.ref('base.module_category_theme_hidden', False)
+
+        theme_category_id = theme_category.id if theme_category else 0
+        hidden_categories_ids = [hidden_category.id if hidden_category else 0, theme_hidden_category.id if theme_hidden_category else 0]
+
         self.search([ # Uninstall the theme(s) which is (are) installed
             ('state', '=', 'installed'),
-            '|', ('category_id', 'not in', [self.env.ref('base.module_category_hidden').id, self.env.ref('base.module_category_theme_hidden').id]), ('name', '=', 'theme_default'),
+            '|', ('category_id', 'not in', hidden_categories_ids), ('name', '=', 'theme_default'),
             '|', ('category_id', '=', theme_category_id), ('category_id.parent_id', '=', theme_category_id)
         ]).button_immediate_uninstall()
 
         next_action = self.button_immediate_install() # Then install the new chosen one
         if next_action.get('tag') == 'reload' and not next_action.get('params', {}).get('menu_id'):
-            next_action = self.env.ref('website.action_website_tutorial').read()[0]
+            next_action = self.env.ref('website.action_website').read()[0]
 
         return next_action

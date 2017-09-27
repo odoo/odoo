@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_salary_employee_month" model="ir.ui.view">
             <field name="name">Hr monthly Employee Salary</field>
             <field name="model">hr.salary.employee.month</field>
@@ -34,11 +33,9 @@
         <menuitem
             name="Yearly Salary by Head"
             parent="hr.menu_hr_reporting_timesheet"
-            sequence="200" icon="STOCK_PRINT"
+            sequence="200"
             action="action_salary_employee_month"
             id="menu_salary_employee_month"
-            groups="base.group_hr_manager,base.group_hr_user"
+            groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
            />
-
-    </data>
-</openerp>
+</odoo>

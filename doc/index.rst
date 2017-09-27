@@ -1,4 +1,4 @@
-:main-title: doc
+:main-title: Developer Documentation
 :banner: banners/index.jpg
 
 =====
@@ -17,7 +17,6 @@ Index
     api_integration
     setup
     reference
-    business
 
 .. ifconfig:: todo_include_todos
 

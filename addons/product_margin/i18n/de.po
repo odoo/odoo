@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_margin
-# 
+#
 # Translators:
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-01-18 07:14+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-02 16:24+0000\n"
+"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_margin
@@ -67,7 +68,8 @@ msgstr "Katalogpreis"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership
 msgid "Check if the product is eligible for membership."
-msgstr "Überprüfen Sie, ob das Produkt als Mitgliedschaftsprodukt angelegt wurde."
+msgstr ""
+"Überprüfen Sie, ob das Produkt als Mitgliedschaftsprodukt angelegt wurde."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
@@ -299,24 +301,27 @@ msgstr "Standardpreis"
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
+"Summe der Multiplikation von Beschaffungspreis mit Produktmenge bei einer "
+"Lieferantenrechnung. "
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "Betrag aus Multiplikation von Rechnungspreis mit Anzahl Kundenrechnungen"
+msgstr ""
+"Betrag aus Multiplikation von Rechnungspreis mit Anzahl Kundenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "Summe der Multiplikation von Rechnungspreis und Menge"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
-msgstr "Betrag aus Multiplikation von Listenpreis mit der Anzahl Kundenrechnungen"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+"Betrag aus Multiplikation von Listenpreis mit der Anzahl Kundenrechnungen"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
@@ -326,21 +331,25 @@ msgstr "Summe Mengen in Ausgangsrechnungen"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Summe der Menge in Lieferantenrechnung"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr "In der Faktura wird statt dem Standardkonto dieses Konto für die Spesen des vorliegenden Produktes benutzt."
+msgstr ""
+"In der Faktura wird statt dem Standardkonto dieses Konto für die Spesen des "
+"vorliegenden Produktes benutzt."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr "In der Faktura wird statt dem Standardkonto dieses Konto für den Verkaufsumsatz des vorliegenden Produktes benutzt."
+msgstr ""
+"In der Faktura wird statt dem Standardkonto dieses Konto für den "
+"Verkaufsumsatz des vorliegenden Produktes benutzt."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
@@ -388,6 +397,9 @@ msgstr "Steuern (Einkauf)"
 #: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
+"this template. The customer will receive an email for each product linked to "
+"an email template."
 msgstr ""
+"Bei Freigabe einer Rechnung, wird eine Email an den Kunden, an Hand dieser "
+"Vorlage, versandt. Der Kunde erhält eine Email für jedes an eine Email-"
+"Vorlage verknüpfte Produkt."

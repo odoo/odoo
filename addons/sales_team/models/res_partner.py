@@ -8,5 +8,5 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     team_id = fields.Many2one(
-        'crm.team', 'Sales Team',
-        help='If set, sale team used notably for sales and assignations related to this partner')
+        'crm.team', 'Sales Channel',
+        help='If set, this sales channel will be used for sales and assignations related to this partner')

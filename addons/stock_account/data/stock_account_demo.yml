@@ -1,0 +1,16 @@
+-
+  Setting property field
+-
+  !python {model: ir.model.data, id: False} : |
+      account_id = self.env['account.account'].search([('tag_ids', 'in', [ref('account.demo_stock_account')])], limit=1).id
+      fields_id = self.env['ir.model.fields'].search([('model','=','product.category'),('name','=','property_stock_valuation_account_id')], limit=1).id
+      if not account_id:
+          account_id = self.env['account.account'].search([('user_type_id', '=', ref('account.data_account_type_current_assets'))], limit=1).id
+      if account_id:
+          vals = {
+              'name': 'property_stock_valuation_account_id',
+              'fields_id': fields_id,
+              'value': 'account.account,'+str(account_id),
+              'company_id': ref('base.main_company'),
+          }
+          self._update('ir.property', 'stock_account', vals, 'property_stock_valuation_account_id')

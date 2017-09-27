@@ -4,6 +4,7 @@
         <field name="name">hr.department.kanban.inherit</field>
         <field name="model">hr.department</field>
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_user'))]"/>
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//templates" position="before">
@@ -12,7 +13,7 @@
                     <field name="expected_employee"/>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.new_applicant_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
                             <a name="%(hr_applicant_action_from_department)d" type="action">
@@ -25,7 +26,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_to_do')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_to_do')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(hr_applicant_action_from_department)d" type="action">
@@ -35,7 +36,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(action_hr_recruitment_report_filtered_department)d" type="action">
@@ -48,4 +49,14 @@
             </data>
         </field>
     </record>
+
+    <record id="action_hr_department" model="ir.actions.act_window">
+        <field name="name">Departments</field>
+        <field name="res_model">hr.department</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_hr_department" name="Departments"
+            parent="menu_hr_recruitment_configuration" action="action_hr_department"/>
 </odoo>

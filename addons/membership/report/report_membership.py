@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp import tools
-import openerp.addons.decimal_precision as dp
+from odoo import api, fields, models, tools
 
 STATE = [
     ('none', 'Non Member'),
@@ -15,35 +13,36 @@ STATE = [
     ('paid', 'Paid Member'),
 ]
 
-class report_membership(osv.osv):
+
+class ReportMembership(models.Model):
     '''Membership Analysis'''
 
     _name = 'report.membership'
     _description = __doc__
     _auto = False
     _rec_name = 'start_date'
-    _columns = {
-        'start_date': fields.date('Start Date', readonly=True),
-        'date_to': fields.date('End Date', readonly=True, help="End membership date"),
-        'num_waiting': fields.integer('# Waiting', readonly=True),
-        'num_invoiced': fields.integer('# Invoiced', readonly=True),
-        'num_paid': fields.integer('# Paid', readonly=True),
-        'tot_pending': fields.float('Pending Amount', digits=0, readonly=True),
-        'tot_earned': fields.float('Earned Amount', digits=0, readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Member', readonly=True),
-        'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
-        'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
-        'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'quantity': fields.integer("Quantity", readonly=True),
-        }
 
-    def init(self, cr):
+    start_date = fields.Date(string='Start Date', readonly=True)
+    date_to = fields.Date(string='End Date', readonly=True, help="End membership date")
+    num_waiting = fields.Integer(string='# Waiting', readonly=True)
+    num_invoiced = fields.Integer(string='# Invoiced', readonly=True)
+    num_paid = fields.Integer(string='# Paid', readonly=True)
+    tot_pending = fields.Float(string='Pending Amount', digits=0, readonly=True)
+    tot_earned = fields.Float(string='Earned Amount', digits=0, readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Member', readonly=True)
+    associate_member_id = fields.Many2one('res.partner', string='Associate Member', readonly=True)
+    membership_id = fields.Many2one('product.product', string='Membership Product', readonly=True)
+    membership_state = fields.Selection(STATE, string='Current Membership State', readonly=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    quantity = fields.Integer(readonly=True)
+
+    @api.model_cr
+    def init(self):
         '''Create the view'''
-        tools.drop_view_if_exists(cr, 'report_membership')
-        cr.execute("""
-        CREATE OR REPLACE VIEW report_membership AS (
+        tools.drop_view_if_exists(self._cr, self._table)
+        self._cr.execute("""
+        CREATE OR REPLACE VIEW %s AS (
         SELECT
         MIN(id) AS id,
         partner_id,
@@ -105,4 +104,4 @@ class report_membership(osv.osv):
             membership_state,
             associate_member_id,
             membership_amount
-        )""")
+        )""" % (self._table,))

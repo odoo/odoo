@@ -2,9 +2,9 @@
 
 import base64
 
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
-from openerp.addons.base.res.res_bank import sanitize_account_number
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.addons.base.res.res_bank import sanitize_account_number
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -26,6 +26,7 @@ class AccountBankStatementImport(models.TransientModel):
     _description = 'Import Bank Statement'
 
     data_file = fields.Binary(string='Bank Statement File', required=True, help='Get you bank statements in electronic format from your bank and select them here.')
+    filename = fields.Char()
 
     @api.multi
     def import_file(self):
@@ -42,6 +43,8 @@ class AccountBankStatementImport(models.TransientModel):
         if not journal:
             # The active_id is passed in context so the wizard can call import_file again once the journal is created
             return self.with_context(active_id=self.ids[0])._journal_creation_wizard(currency, account_number)
+        if not journal.default_debit_account_id or not journal.default_credit_account_id:
+            raise UserError(_('You have to set a Default Debit Account and a Default Credit Account for the journal: %s') % (journal.name,))
         # Prepare statement data to be used for bank statements creation
         stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
         # Create the bank statements
@@ -117,6 +120,9 @@ class AccountBankStatementImport(models.TransientModel):
         if no_st_line:
             raise UserError(_('This file doesn\'t contain any transaction.'))
 
+    def _check_journal_bank_account(self, journal, account_number):
+        return journal.bank_account_id.sanitized_acc_number == account_number
+
     def _find_additional_data(self, currency_code, account_number):
         """ Look for a res.currency and account.journal using values extracted from the
             statement and make sure it's consistent.
@@ -138,12 +144,13 @@ class AccountBankStatementImport(models.TransientModel):
             # No bank account on the journal : create one from the account number of the statement
             if journal and not journal.bank_account_id:
                 journal.set_bank_account(account_number)
-            # Already a bank account on the journal : check it's the same as on the statement
-            elif journal and journal.bank_account_id.sanitized_acc_number != sanitized_account_number:
-                raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
             # No journal passed to the wizard : try to find one using the account number of the statement
             elif not journal:
                 journal = journal_obj.search([('bank_account_id.sanitized_acc_number', '=', sanitized_account_number)])
+            # Already a bank account on the journal : check it's the same as on the statement
+            else:
+                if not self._check_journal_bank_account(journal, sanitized_account_number):
+                    raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
 
         # If importing into an existing journal, its currency must be the same as the bank statement
         if journal:
@@ -164,7 +171,12 @@ class AccountBankStatementImport(models.TransientModel):
     def _complete_stmts_vals(self, stmts_vals, journal, account_number):
         for st_vals in stmts_vals:
             st_vals['journal_id'] = journal.id
-
+            if not st_vals.get('reference'):
+                st_vals['reference'] = self.filename
+            if st_vals.get('number'):
+                #build the full name like BNK/2016/00135 by just giving the number '135'
+                st_vals['name'] = journal.sequence_id.with_context(ir_sequence_date=st_vals.get('date')).get_next_char(st_vals['number'])
+                del(st_vals['number'])
             for line_vals in st_vals['transactions']:
                 unique_import_id = line_vals.get('unique_import_id')
                 if unique_import_id:
@@ -206,6 +218,9 @@ class AccountBankStatementImport(models.TransientModel):
                     filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
+                    if 'balance_start' in st_vals:
+                        st_vals['balance_start'] += float(line_vals['amount'])
+
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)

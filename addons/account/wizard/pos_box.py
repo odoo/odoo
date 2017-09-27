@@ -1,5 +1,5 @@
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 class CashBox(models.TransientModel):
     _register = False
@@ -35,7 +35,7 @@ class CashBox(models.TransientModel):
         if record.state == 'confirm':
             raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
         values = self._calculate_values_for_statement_line(record)
-        return record.write({'line_ids': [(0, False, values[0])]})
+        return record.write({'line_ids': [(0, False, values)]})
 
 
 class CashBoxIn(CashBox):
@@ -43,7 +43,7 @@ class CashBoxIn(CashBox):
 
     ref = fields.Char('Reference')
 
-    @api.one
+    @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
@@ -61,7 +61,7 @@ class CashBoxIn(CashBox):
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
 
-    @api.one
+    @api.multi
     def _calculate_values_for_statement_line(self, record):
         if not record.journal_id.company_id.transfer_account_id:
             raise UserError(_("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))

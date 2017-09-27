@@ -2,12 +2,12 @@
 <odoo>
 
 <template id="report_generalledger">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-set="data_report_margin_top" t-value="12"/>
         <t t-set="data_report_header_spacing" t-value="9"/>
         <t t-set="data_report_dpi" t-value="110"/>
 
-        <t t-call="report.internal_layout">
+        <t t-call="web.internal_layout">
             <div class="page">
                 <h2><span t-esc="res_company.name"/>: General ledger</h2>
 
@@ -66,13 +66,13 @@
                                     <span t-esc="account['name']"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="account['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="account['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="account['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td groups="base.group_multi_currency"/>
                             </tr>
@@ -84,13 +84,13 @@
                                 <td><span t-esc="line['move_name']"/></td>
                                 <td><span t-esc="line['lname']"/></td>
                                 <td class="text-right">
-                                    <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                    <span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                 </td>
                                 <td class="text-right" groups="base.group_multi_currency">
                                     <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>

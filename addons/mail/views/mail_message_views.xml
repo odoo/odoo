@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
     <data>
         <!-- mail.message tree: short view !-->
         <record model="ir.ui.view" id="view_message_tree">
@@ -59,10 +59,24 @@
                             </page>
                             <page string="Recipients">
                                 <group>
-                                    <field name="partner_ids" widget="many2many_tags"/>
-                                    <field name="channel_ids" widget="many2many_tags"/>
-                                    <field name="needaction_partner_ids" widget="many2many_tags"/>
-                                    <field name="starred_partner_ids" widget="many2many_tags"/>
+                                    <group>
+                                        <field name="partner_ids" widget="many2many_tags"/>
+                                        <field name="channel_ids" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                        <field name="starred_partner_ids" widget="many2many_tags"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="notification_ids">
+                                        <tree>
+                                            <field name="res_partner_id"/>
+                                            <field name="is_read"/>
+                                            <field name="is_email"/>
+                                            <field name="email_status"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </page>
                             <page string="Tracking">
@@ -89,6 +103,10 @@
                     <field name="model"/>
                     <field name="res_id"/>
                     <field name="parent_id"/>
+                    <filter string="Has Mentions"
+                            name="filter_has_mentions"
+                            domain="[('partner_ids.user_ids', 'in', [uid])]"/>
+                    <separator/>
                     <filter string="Need Action"
                             name="message_needaction" help="Unread messages"
                             domain="[('needaction', '=', True)]"/>
@@ -130,11 +148,11 @@
                                             <field name="name"/>
                                         </div>
                                         <div t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                                <div t-if="webimage" class="o_kanban_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                                <div t-if="webimage" class="o_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
                                                 </div>
                                             </a>
                                         </div>
@@ -156,4 +174,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

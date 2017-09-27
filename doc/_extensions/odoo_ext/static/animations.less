@@ -1,0 +1,59 @@
+
+// Animations
+
+.keyframes(ripple; {
+  100% {
+    opacity: 0;
+    .scale(2.5);
+  }
+});
+
+.keyframes(fadeInUp; {
+  0% {
+    opacity: 0;
+    .translate(0; 60px);
+  }
+  40% { opacity: 1}
+  100% {
+    opacity: 1;
+    .translate(none; none);
+  }
+});
+
+.keyframes(fadeIn; {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+});
+
+
+.fadeInUp {
+  .animation(fadeInUp 1s);
+}
+
+.fadeIn {
+  .animation(fadeIn 1s);
+}
+
+
+// Ripple Buttons
+
+.ripple {
+  z-index: 2;
+}
+.inner-ripple {
+  display: block;
+  position: absolute;
+  border-radius: 100%;
+  opacity: 1;
+  z-index: -1;
+  background: rgba(0, 0, 0, .05);
+  pointer-events: none;
+  .scale(0);
+}
+.inner-ripple-animated {
+  .animation(ripple 0.35s ease-in);
+}

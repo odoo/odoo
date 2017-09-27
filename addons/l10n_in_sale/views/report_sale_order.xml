@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="gst_report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//span[@t-field='l.name']" position="after">
+            <t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-
-    <!-- Snippet loader -->
-    <t t-name="web_editor.snippets_style">
-        <li class="navbar-form">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Block style <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
-            </div>
-        </li>
-    </t>
-
     <t t-name="web_editor.snippet_overlay">
         <div class="oe_overlay">
             <div class="oe_handles">
@@ -21,13 +8,13 @@
                 <div class="oe_handle w readonly"/>
                 <div class="oe_handle s readonly"/>
                 <div class="oe_handle size readonly">
-                    <div class="oe_handle_button auto_size">Auto Resize</div>
-                    <div class="oe_handle_button size">Resize</div>
+                    <div class="oe_handle_button auto_size">Auto size</div>
+                    <div class="oe_handle_button size" title="Resize to force the height of this block">Fixed size</div>
                 </div>
             </div>
             <div class="oe_overlay_options" contentEditable="false">
                 <div class="btn-group">
-                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Container Block"><i class="fa fa-upload"/></a>
+                    <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Parent Container"><i class="fa fa-lg fa-level-up"/></a>
                     <div class="dropdown oe_options hidden btn-group">
                         <a href="#" data-toggle="dropdown" class="btn btn-primary btn-sm" title="Customize">Customize</a>
                         <ul class="dropdown-menu" role="menu"/>
@@ -38,10 +25,6 @@
                 </div>
             </div>
         </div>
-    </t>
-
-    <t t-name="web_editor.snippet_manipulator">
-        <div class='oe_snippet_manipulator'></div>
     </t>
 
     <!-- options -->
@@ -60,7 +43,7 @@
 
     <!-- t-field options -->
     <t t-name="web_editor.many2one.button">
-        <div class="dropdown">
+        <div class="btn-group">
             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
             <ul class="dropdown-menu contact_menu" role="menu">
                 <li><a><input href="#" type="email" placeholder="Search"/></a></li>

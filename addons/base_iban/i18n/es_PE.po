@@ -1,0 +1,62 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_iban
+#
+# Translators:
+# Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-20 21:19+0000\n"
+"Last-Translator: Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>\n"
+"Language-Team: Spanish (Peru) (http://www.transifex.com/odoo/odoo-9/language/"
+"es_PE/)\n"
+"Language: es_PE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Cuentas Bancarias"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:57
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "No se puede calcular el BBAN porque el número de cuenta no es un IBAN."
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:26
+#, python-format
+msgid "No IBAN !"
+msgstr "¡Sin IBAN!"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:34
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like "
+"this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check "
+"digit"
+msgstr ""
+"El IBAN no parece ser correcto. Debió ingresar algo como esto %s\n"
+"Donde B = Código de Banco Nacional, S = Código de Sucursal, C = Número de "
+"Cuenta, k = Dígito de Verificación"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:30
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "El IBAN es inválido, debería empezar con el con el código del país"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:40
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Este IBAN no pasó la prueba de validación, por favor verifíquelo."

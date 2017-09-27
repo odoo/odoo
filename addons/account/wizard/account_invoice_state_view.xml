@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
 
         <record id="account_invoice_confirm_view" model="ir.ui.view">
@@ -26,27 +26,5 @@
             res_model="account.invoice.confirm" src_model="account.invoice"
             view_mode="form" target="new" view_type="form" />
 
-        <record id="account_invoice_cancel_view" model="ir.ui.view">
-            <field name="name">account.invoice.cancel.form</field>
-            <field name="model">account.invoice.cancel</field>
-            <field name="arch" type="xml">
-                <form string="Cancel Selected Invoices">
-                    <footer>
-                        <button string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_account_invoice_cancel" model="ir.actions.act_window">
-            <field name="name">Cancel Selected Invoices</field>
-            <field name="res_model">account.invoice.cancel</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account_invoice_cancel_view"/>
-            <field name="target">new</field>
-        </record>
-
     </data>
-</openerp>
+</odoo>

@@ -1,90 +1,134 @@
 odoo.define('mail.many2manytags', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var core = require('web.core');
-var form_common = require('web.form_common');
-var form_relational = require('web.form_relational');
-var Model = require('web.DataModel');
+var form_common = require('web.view_dialogs');
+var field_registry = require('web.field_registry');
+var relational_fields = require('web.relational_fields');
 
+var M2MTags = relational_fields.FieldMany2ManyTags;
 var _t = core._t;
 
-/**
- * Extend of FieldMany2ManyTags widget method.
- * When the user add a partner and the partner don't have an email, open a popup to purpose to add an email.
- * The user can choose to add an email or cancel and close the popup.
- */
-var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
+BasicModel.include({
 
-    start: function() {
-        this.values = [];
-        this.values_checking = [];
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-        this.on("change:value", this, this.on_change_value_check);
-        this.trigger("change:value");
-
-        this._super.apply(this, arguments);
-    },
-
-    on_change_value_check : function () {
-        this.values = _.uniq(this.values);
-
-        // filter for removed values
-        var values_removed = _.difference(this.values, this.get('value'));
-        if (values_removed.length) {
-            this.values = _.difference(this.values, values_removed);
-            this.set({'value': this.values});
-            return false;
-        }
-
-        // find not checked values that are not currently on checking
-        var not_checked = _.difference(this.get('value'), this.values, this.values_checking);
-        if (not_checked.length) {
-            // remember values on checking for cheked only one time
-            this.values_checking = this.values_checking.concat(not_checked);
-            // check values
-            this._check_email_popup(not_checked);
-        }
-    },
-
-    _check_email_popup: function (ids) {
+    /**
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {string} fieldName
+     * @return {Deferred<Object>} the deferred is resolved with the
+     *                            invalidPartnerIds
+     */
+    _setInvalidMany2ManyTagsEmail: function (record, fieldName) {
         var self = this;
-        new Model('res.partner').call("search", [[
-                ["id", "in", ids], 
-                ["email", "=", false], 
-                ["notify_email", "=", 'always'] ]], 
-                {context: this.build_context()})
-            .then(function (record_ids) {
-                // valid partner
-                var valid_partner = _.difference(ids, record_ids);
-                self.values = self.values.concat(valid_partner);
-                self.values_checking = _.difference(self.values_checking, valid_partner);
-
-                // unvalid partner
-                _.each(record_ids, function (id) {
-                    var pop = new form_common.FormViewDialog(self, {
-                        res_model: 'res.partner',
-                        res_id: id,
-                        context: self.build_context(),
-                        title: _t("Please complete partner's informations and Email"),
-                    }).open();
-                    pop.on('write_completed', self, function () {
-                        this.values.push(id);
-                        this.values_checking = _.without(this.values_checking, id);
-                        this.set({'value': this.values});
-                    });
-                    pop.on('closed', self, function () {
-                        this.values_checking = _.without(this.values_checking, id);
-                        this.set({'value': this.values});
-                    });
-                });
+        var localID = (record._changes && fieldName in record._changes) ?
+                        record._changes[fieldName] :
+                        record.data[fieldName];
+        var list = this._applyX2ManyOperations(this.localData[localID]);
+        var invalidPartnerIds = [];
+        _.each(list.data, function (id) {
+            var record = self.localData[id];
+            if (!record.data.email) {
+                invalidPartnerIds.push(record);
+            }
+        });
+        var def;
+        if (invalidPartnerIds) {
+            // remove invalid partners
+            var changes = {operation: 'DELETE', ids: _.pluck(invalidPartnerIds, 'id')};
+            def = this._applyX2ManyChange(record, fieldName, changes);
+        }
+        return $.when(def).then(function () {
+            return $.when({
+                invalidPartnerIds: _.pluck(invalidPartnerIds, 'res_id'),
             });
+        });
     },
 });
 
+var FieldMany2ManyTagsEmail = M2MTags.extend({
+    fieldsToFetch: _.extend({}, M2MTags.prototype.fieldsToFetch, {
+        email: {type: 'char'},
+    }),
+    specialData: "_setInvalidMany2ManyTagsEmail",
 
-/**
- * Registry of form fields
- */
-core.form_widget_registry.add('many2many_tags_email', FieldMany2ManyTagsEmail);
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open a popup for each invalid partners (without email) to fill the email.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _checkEmailPopup: function () {
+        var self = this;
+
+        var popupDefs = [];
+        var validPartners = [];
+
+        // propose the user to correct invalid partners
+        _.each(this.record.specialData[this.name].invalidPartnerIds, function (resID) {
+            var def = $.Deferred();
+            popupDefs.push(def);
+
+            var pop = new form_common.FormViewDialog(self, {
+                res_model: self.field.relation,
+                res_id: resID,
+                context: self.record.context,
+                title: _t("Please complete partner's informations and Email"),
+                on_saved: function (record) {
+                    if (record.data.email) {
+                        validPartners.push(record.res_id);
+                    }
+                },
+            }).open();
+            pop.on('closed', self, function () {
+                def.resolve();
+            });
+        });
+        return $.when.apply($, popupDefs).then(function() {
+            // All popups have been processed for the given ids
+            // It is now time to set the final value with valid partners ids.
+            validPartners = _.uniq(validPartners);
+            if (validPartners.length) {
+                var values = _.map(validPartners, function (id) {
+                    return {id: id};
+                });
+                self._setValue({
+                    operation: 'ADD_M2M',
+                    ids: values,
+                });
+            }
+        });
+    },
+    /**
+     * Override to check if all many2many values have an email set before
+     * rendering the widget.
+     *
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        var def = $.Deferred();
+        var _super = this._super.bind(this);
+        if (this.record.specialData[this.name].invalidPartnerIds.length) {
+            def = this._checkEmailPopup();
+        } else {
+            def.resolve();
+        }
+        return def.then(function () {
+            return _super.apply(self, arguments);
+        });
+    },
+});
+
+field_registry.add('many2many_tags_email', FieldMany2ManyTagsEmail);
 
 });

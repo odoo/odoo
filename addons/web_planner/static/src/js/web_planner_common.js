@@ -3,163 +3,161 @@ odoo.define('web.planner.common', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var dom_utils = require('web.dom_utils');
-var Model = require('web.Model');
-var Widget = require('web.Widget');
+var dom = require('web.dom');
+var rpc = require('web.rpc');
 var session = require('web.session');
 var utils = require('web.utils');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 
 var _t = core._t;
 
+var MIN_PROGRESS = 7;
+
 var Page = core.Class.extend({
     init: function (dom, page_index) {
-        var $dom = $(dom);
-        this.dom = dom;
-        this.hide_from_menu = $dom.attr('hide-from-menu');
-        this.hide_mark_as_done = $dom.attr('hide-mark-as-done');
+        this.$dom = $(dom);
+        this.hide_from_menu = this.$dom.attr('hide-from-menu');
+        this.hide_mark_as_done = this.$dom.attr('hide-mark-as-done');
         this.done = false;
         this.menu_item = null;
-        this.title = $dom.find('[data-menutitle]').data('menutitle');
-
-        var page_id = this.title.replace(/\s/g, '') + page_index;
-        this.set_page_id(page_id);
+        this.title = this.$dom.find('[data-menutitle]').data('menutitle');
+        this.set_page_id(this.title.replace(/\s/g, '') + page_index);
     },
     set_page_id: function (id) {
         this.id = id;
-        $(this.dom).attr('id', id);
-    },
-    toggle_done: function () {
-        this.done = ! this.done;
+        this.$dom.attr('id', id);
     },
     get_category_name: function (category_selector) {
-        var $page = $(this.dom);
-
-        return $page.parents(category_selector).attr('menu-category-id');
+        return this.$dom.parents(category_selector).attr('menu-category-id');
     },
 });
 
-var PlannerDialog = Widget.extend({
+var PlannerDialog = Dialog.extend({
     template: "PlannerDialog",
-    pages: [],
-    menu_items: [],
-    currently_shown_page: null,
-    currently_active_menu_item: null,
-    category_selector: 'div[menu-category-id]',
+    category_selector: "div[menu-category-id]",
     events: {
-        'click li a[href^="#"]:not([data-toggle="collapse"])': 'change_page',
-        'click button.mark_as_done': 'click_on_done',
-        'click a.btn-next': 'change_to_next_page',
-        'click .o_planner_close_block span': 'close_modal',
+        "click li a[href^=\"#\"]:not([data-toggle=\"collapse\"])": function (e) {
+            e.preventDefault();
+            this._display_page($(e.currentTarget).attr("href").replace("#", ""));
+        },
+        "click a[href^=\"#show_enterprise\"]": function (e) {
+            e.preventDefault();
+            this.show_enterprise();
+        },
     },
-    init: function(parent, planner) {
-        this._super(parent);
+    init: function (parent, options, planner) {
+        this._super.apply(this, arguments);
+
         this.planner = planner;
         this.cookie_name = this.planner.planner_application + '_last_page';
         this.pages = [];
         this.menu_items = [];
+        this.currently_shown_page = null;
+        this.currently_active_menu_item = null,
+
+        this.on("change:progress", this, function () {
+            this.trigger('planner_progress_changed', this.get('progress'));
+        });
+        this.set("progress", this.planner.progress || MIN_PROGRESS);
     },
     /**
      * Fetch the planner's rendered template
      */
     willStart: function() {
-        var self = this;
-        var res = this._super.apply(this, arguments).then(function() {
-            return (new Model('web.planner')).call('render',
-                [self.planner.view_id[0], self.planner.planner_application],
-                {context: session.user_context});
-        }).then(function(template) {
-            self.$res = $(template);
-        });
-        return res;
+        var def = rpc.query({
+                model: 'web.planner',
+                method: 'render',
+                args: [this.planner.view_id[0], this.planner.planner_application],
+                context: session.user_context,
+            })
+            .then((function (template) {
+                this.$template = $(template);
+            }).bind(this));
+
+        return $.when(this._super.apply(this, arguments), def);
     },
     start: function() {
-        var self = this;
-        return this._super.apply(this, arguments).then(function() {
-            self.$res.find('.o_planner_page').andSelf().filter('.o_planner_page').each(function(index, dom_page) {
-                var page = new Page(dom_page, index);
-                self.pages.push(page);
-            });
+        this.$modal.addClass("o_planner_dialog");
+        this.$template.find(".o_planner_page").addBack(".o_planner_page").each((function (index, dom_page) {
+            this.pages.push(new Page(dom_page, index));
+        }).bind(this));
 
-            var $menu = self.render_menu();  // wil use self.$res
-            self.$('.o_planner_menu ul').html($menu);
-            self.menu_items = self.$('.o_planner_menu li');
+        this.$menu = this.$('> .o_planner_menu');
+        this.$menu.html(this._render_menu());
+        this.menu_items = this.$menu.find("li");
+        _.each(this.pages, (function (page) {
+            page.menu_item = this._find_menu_item_by_page_id(page.id);
+        }).bind(this));
 
-            self.pages.forEach(function(page) {
-                page.menu_item = self._find_menu_item_by_page_id(page.id);
-            });
-            self.$el.find('.o_planner_content_wrapper').append(self.$res);
+        this.$el.append(this.$template);
 
-            // update the planner_data with the new inputs of the view
-            var actual_vals = self._get_values();
-            self.planner.data = _.defaults(self.planner.data, actual_vals);
-            // set the default value
-            self._set_values(self.planner.data);
-            // show last opened page
-            self._show_last_open_page();
-            self.prepare_planner_event();
-        });
+        // update the planner_data with the new inputs of the view
+        var actual_vals = this._get_values();
+        this.planner.data = _.defaults(this.planner.data, actual_vals);
+        // set the default value
+        this._set_values(this.planner.data);
+        // show last opened page
+        this._show_last_open_page();
+
+        this.on("planner_progress_changed", this, this._update_title);
+        this._update_title();
+
+        this.prepare_planner_event();
+
+        return this._super.apply(this, arguments);
     },
-    /**
-     * This method should be overridden in other planners to bind their custom events once the
-     * view is loaded.
-     */
-    prepare_planner_event: function() {
-        var self = this;
-        this.on('change:progress', this, function() {
-            self.trigger('planner_progress_changed', self.get('progress'));
-        });
-        this.on('planner_progress_changed', this, this.update_ui_progress_bar);
-        // set progress to trigger initial UI update
-        var initial_progress = false;
-        if (!this.planner.progress) {
-            var total_pages = 0;
-            this.pages.forEach(function(page) {
-                if (! page.hide_mark_as_done) {
-                    total_pages++;
-                }
+    prepare_planner_event: function () {}, // overriden by modules
+    toggle_current_page_status: function () {
+        this.currently_shown_page.done = !this.currently_shown_page.done;
+        this._render_page_status(this.currently_shown_page, true);
+        this._update_buttons();
+        this._update_planner();
+    },
+    change_to_next_page: function (ev) {
+        ev.preventDefault();
+        this._display_page(this._get_next_page_id());
+    },
+    _update_title: function () {
+        this.set_title(core.qweb.render("PlannerDialog.Title", {
+            title: this.currently_shown_page.title,
+            percent: this.get("progress")
+        }));
+    },
+    _update_buttons: function () {
+        var page = this.currently_shown_page;
+        var buttons = [];
+        if (!page.hide_mark_as_done) {
+            buttons.push({
+                text: _t("Mark As Done"),
+                icon: page.done ? "fa-check-square-o" : "fa-square-o",
+                classes: "o_mark_as_done btn-" + (page.done ? "default" : "primary"),
+                click: this.toggle_current_page_status
             });
-            initial_progress = parseInt(( 1 / (total_pages + 1)) * 100, 10);
         }
-        this.set('progress', initial_progress || this.planner.progress);
+        if (this._get_next_page_id()) {
+            buttons.push({
+                text: _t("Next Step"),
+                icon: "fa-angle-right pull-right mt4",
+                classes: "o_next_step btn-" + ((page.done || page.hide_mark_as_done) ? "primary" : "default"),
+                click: this.change_to_next_page
+            });
+        }
+        this.set_buttons(buttons);
     },
-    _render_done_page: function (page) {
-        var mark_as_done_button = this.$('.mark_as_done')
-        var mark_as_done_li = mark_as_done_button.find('i');
-        var next_button = this.$('a.btn-next');
-        var active_menu = $(page.menu_item).find('span');
-        if (page.done) {
-            active_menu.addClass('fa-check');
-            mark_as_done_button.removeClass('btn-primary');
-            mark_as_done_li.removeClass('fa-square-o');
-            mark_as_done_button.addClass('btn-default');
-            mark_as_done_li.addClass('fa-check-square-o');
-            next_button.removeClass('btn-default');
-            next_button.addClass('btn-primary');
-
-            // page checked animation
-            $(page.dom).addClass('marked');
-            setTimeout(function() {
-                $(page.dom).removeClass('marked');
+    _render_page_status: function (page, withAnim) {
+        $(page.menu_item).find('span').toggleClass('fa-check', !!page.done);
+        if (withAnim && page.done) { // page checked animation
+            page.$dom.addClass('marked');
+            _.delay(function () {
+                page.$dom.removeClass('marked');
             }, 1000);
-        } else {
-            active_menu.removeClass('fa-check');
-            mark_as_done_button.removeClass('btn-default');
-            mark_as_done_li.removeClass('fa-check-square-o');
-            mark_as_done_button.addClass('btn-primary');
-            mark_as_done_li.addClass('fa-square-o');
-            next_button.removeClass('btn-primary');
-            next_button.addClass('btn-default');
-        }
-        if (page.hide_mark_as_done) {
-            next_button.removeClass('btn-default').addClass('btn-primary');
         }
     },
     _show_last_open_page: function () {
         var last_open_page = utils.get_cookie(this.cookie_name);
-
-        if (! last_open_page) {
+        if (!last_open_page) {
             last_open_page = this.planner.data.last_open_page || false;
         }
 
@@ -169,33 +167,20 @@ var PlannerDialog = Widget.extend({
             this._display_page(this.pages[0].id);
         }
     },
-    update_ui_progress_bar: function(percent) {
-        this.$(".progress-bar").css('width', percent+"%");
-        this.$(".o_progress_text").text(percent+"%");
-    },
-    _create_menu_item: function(page, menu_items, menu_item_page_map) {
-        var $page = $(page.dom);
-        var $menu_item_element = $page.find('h1[data-menutitle]');
-        var menu_title = $menu_item_element.data('menutitle') || $menu_item_element.text();
-
-        menu_items.push(menu_title);
-        menu_item_page_map[menu_title] = page.id;
-    },
-    render_menu: function() {
-        var self = this;
+    _render_menu: function() {
         var orphan_pages = [];
         var menu_categories = [];
         var menu_item_page_map = {};
 
         // pages with no category
-        self.pages.forEach(function(page) {
-            if (! page.hide_from_menu && ! page.get_category_name(self.category_selector)) {
-                self._create_menu_item(page, orphan_pages, menu_item_page_map);
+        _.each(this.pages, (function (page) {
+            if (!page.hide_from_menu && !page.get_category_name(this.category_selector)) {
+                _create_menu_item(page, orphan_pages, menu_item_page_map);
             }
-        });
+        }).bind(this));
 
         // pages with a category
-        self.$res.filter(self.category_selector).each(function(index, menu_category) {
+        this.$template.filter(this.category_selector).each((function (index, menu_category) {
             var $menu_category = $(menu_category);
             var menu_category_item = {
                 name: $menu_category.attr('menu-category-id'),
@@ -203,79 +188,56 @@ var PlannerDialog = Widget.extend({
                 menu_items: [],
             };
 
-            self.pages.forEach(function(page) {
-                if (! page.hide_from_menu && page.get_category_name(self.category_selector) === menu_category_item.name) {
-                    self._create_menu_item(page, menu_category_item.menu_items, menu_item_page_map);
+            _.each(this.pages, (function (page) {
+                if (!page.hide_from_menu && page.get_category_name(this.category_selector) === menu_category_item.name) {
+                    _create_menu_item(page, menu_category_item.menu_items, menu_item_page_map);
                 }
-            });
+            }).bind(this));
 
             menu_categories.push(menu_category_item);
 
             // remove the branding used to separate the pages
-            self.$res = self.$res.not($menu_category);
-            self.$res = self.$res.add($menu_category.contents());
-        });
+            this.$template = this.$template.not($menu_category);
+            this.$template = this.$template.add($menu_category.contents());
+        }).bind(this));
 
-        var menu = QWeb.render('PlannerMenu', {
+        return QWeb.render('PlannerMenu', {
             'orphan_pages': orphan_pages,
             'menu_categories': menu_categories,
             'menu_item_page_map': menu_item_page_map
         });
 
-        return menu;
-    },
-    get_next_page_id: function() {
-        var self = this;
-        var current_page_found = false;
-        var next_page_id = null;
-        this.pages.every(function(page) {
-            if (current_page_found) {
-                next_page_id = page.id;
-                return false;
-            }
+        function _create_menu_item(page, menu_items, menu_item_page_map) {
+            var $menu_item_element = page.$dom.find('h1[data-menutitle]');
+            var menu_title = $menu_item_element.data('menutitle') || $menu_item_element.text();
 
-            if (page.id === self.currently_shown_page.id) {
-                current_page_found = true;
-            }
-
-            return true;
-        });
-
-        return next_page_id;
-    },
-    change_to_next_page: function(ev) {
-        var next_page_id = this.get_next_page_id();
-
-        ev.preventDefault();
-
-        if (next_page_id) {
-            this._display_page(next_page_id);
+            menu_items.push(menu_title);
+            menu_item_page_map[menu_title] = page.id;
         }
     },
-    change_page: function(ev) {
-        ev.preventDefault();
-        var page_id = $(ev.currentTarget).attr('href').replace('#', '');
-        this._display_page(page_id);
+    _get_next_page_id: function () {
+        var currentID = this.currently_shown_page.id;
+        var currentIndex = _.findIndex(this.pages, function (page) {
+            return page.id === currentID;
+        });
+        var nextPage = this.pages[currentIndex + 1];
+        return nextPage ? nextPage.id : null;
     },
     _find_page_by_id: function (id) {
-        var result = _.find(this.pages, function (page) {
+        return _.find(this.pages, function (page) {
             return page.id === id;
         });
-
-        return result;
     },
     _find_menu_item_by_page_id: function (page_id) {
-        var result = _.find(this.menu_items, function (menu_item) {
+        return _.find(this.menu_items, function (menu_item) {
             var $menu_item = $(menu_item);
             return $($menu_item.find('a')).attr('href') === '#' + page_id;
         });
-
-        return result;
     },
-    _display_page: function(page_id) {
+    _display_page: function (page_id) {
+        if (!page_id) return;
+
         var self = this;
-        var mark_as_done_button = this.$('button.mark_as_done');
-        var next_button = this.$('a.btn-next');
         var page = this._find_page_by_id(page_id);
         if (this.currently_active_menu_item) {
             $(this.currently_active_menu_item).removeClass('active');
@@ -286,40 +248,28 @@ var PlannerDialog = Widget.extend({
         this.currently_active_menu_item = menu_item;
 
         if (this.currently_shown_page) {
-            $(this.currently_shown_page.dom).removeClass('show');
+            this.currently_shown_page.$dom.removeClass('show');
         }
 
-        $(page.dom).addClass('show');
+        page.$dom.addClass('show');
         this.currently_shown_page = page;
 
-        if (! this.get_next_page_id()) {
-            next_button.hide();
-        } else {
-            next_button.show();
-        }
-
-        if (page.hide_mark_as_done) {
-            mark_as_done_button.hide();
-        } else {
-            mark_as_done_button.show();
-        }
-
-        this._render_done_page(this.currently_shown_page);
+        this._update_title();
+        this._render_page_status(this.currently_shown_page);
+        this._update_buttons();
 
         this.planner.data.last_open_page = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
-        this.$(".modal-body").scrollTop("0");
+        this.$el.scrollTop("0");
 
         this.$('textarea').each(function () {
-            dom_utils.autoresize($(this), {parent: self});
+            dom.autoresize($(this), {parent: self});
         });
-
-        this.$('.o_currently_shown_page').text(this.currently_shown_page.title);
     },
     // planner data functions
-    _get_values: function(page){
+    _get_values: function (page) {
         // if no page_id, take the complete planner
-        var base_elem = page ? $(page.dom) : this.$(".o_planner_page");
+        var base_elem = page ? page.$dom : this.$(".o_planner_page");
         var values = {};
         // get the selector for all the input and mark_button
         // only INPUT (select, textearea, input, checkbox and radio), and BUTTON (.mark_button#) are observed
@@ -354,7 +304,7 @@ var PlannerDialog = Widget.extend({
     },
     _set_values: function(values){
         var self = this;
-        _.each(values, function(val, id){
+        _.each(values, function (val, id) {
             var $elem = self.$('[id="'+id+'"]');
             if ($elem.prop("tagName") === 'BUTTON'){
                 if(val === 'marked'){
@@ -374,12 +324,12 @@ var PlannerDialog = Widget.extend({
             }
         });
 
-        this.pages.forEach(function(page) {
+        _.each(this.pages, function (page) {
             page.done = values[page.id];
-            self._render_done_page(page);
+            self._render_page_status(page);
         });
     },
-    update_planner: function(){
+    _update_planner: function () {
         // update the planner.data with the inputs
         var vals = this._get_values(this.currently_shown_page);
         this.planner.data = _.extend(this.planner.data, vals);
@@ -388,7 +338,7 @@ var PlannerDialog = Widget.extend({
         var total_pages = 0;
         var done_pages = 0;
 
-        this.pages.forEach(function(page) {
+        _.each(this.pages, function (page) {
             if (! page.hide_mark_as_done) {
                 total_pages++;
             }
@@ -396,7 +346,7 @@ var PlannerDialog = Widget.extend({
                 done_pages++;
             }
         });
-        var percent = parseInt(( (done_pages + 1) / (total_pages + 1)) * 100, 10);
+        var percent = MIN_PROGRESS + parseInt(done_pages / total_pages * (100 - MIN_PROGRESS), 10);
         this.set('progress', percent);
 
         this.planner.progress = percent;
@@ -404,28 +354,79 @@ var PlannerDialog = Widget.extend({
         this._save_planner_data();
     },
     _save_planner_data: function() {
-        return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
+        return rpc.query({
+                model: 'web.planner',
+                method: 'write',
+                args: [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}],
+            });
     },
-    click_on_done: function(ev) {
-        ev.preventDefault();
-        this.currently_shown_page.toggle_done();
-        this._render_done_page(this.currently_shown_page);
-        this.update_planner();
+    show_enterprise: function () {
+        var buttons = [{
+            text: _t("Upgrade now"),
+            classes: 'btn-primary',
+            close: true,
+            click: function () {
+                rpc.query({
+                        model: "res.users",
+                        method: "search_count",
+                        args: [[["share", "=", false]]],
+                    })
+                    .then(function (data) {
+                        window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
+                    });
+            },
+        }, {
+            text: _t("Cancel"),
+            close: true,
+        }];
+        var dialog = new Dialog(this, {
+            size: 'medium',
+            buttons: buttons,
+            $content: $('<div>', {
+                html: QWeb.render('EnterpriseUpgrade'),
+            }),
+            title: _t("Odoo Enterprise"),
+        }).open();
+
+        return dialog;
     },
-    close_modal: function(ev) {
-        ev.preventDefault();
-        this.$el.modal('hide');
-        this.$el.detach();
+});
+
+var PlannerLauncher = Widget.extend({
+    template: "PlannerLauncher",
+    sequence: 100, // force it to be the left-most item in the systray to prevent flickering as it is not displayed in all apps
+    events: {
+        "click": "show_dialog"
     },
-    destroy: function() {
-        this.$el.modal('hide');
+    start: function () {
+        this.$progress = this.$(".progress");
+        this.$progressBar = this.$progress.find(".progress-bar");
+        this.$progress.tooltip({html: true, placement: 'bottom', delay: {'show': 500}});
+        this._loadPlannerDef = this._fetch_planner_data();
         return this._super.apply(this, arguments);
-    }
+    },
+    _fetch_planner_data: function () {},
+    show_dialog: function () {
+        return this._loadPlannerDef.then((function () {
+            this.dialog = new PlannerDialog(this, undefined, this.planner);
+            this.dialog.on("planner_progress_changed", this, this._update_parent_progress_bar);
+            this.dialog.open();
+        }).bind(this));
+    },
+    _setup_for_planner: function (planner) {
+        this.planner = planner;
+        this.$progress.attr('data-original-title', this.planner.tooltip_planner);
+        this._update_parent_progress_bar(this.planner.progress || MIN_PROGRESS);
+    },
+    _update_parent_progress_bar: function (percent) {
+        this.$progress.toggleClass("o_hidden", percent >= 100);
+        this.$progressBar.css('width', percent + "%");
+    },
 });
 
 return {
     PlannerDialog: PlannerDialog,
+    PlannerLauncher: PlannerLauncher
 };
 
 });
-

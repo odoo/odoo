@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="website_sale" inherit_id="website.snippets" name="Snippet Ecommerce">
 
     <xpath expr="//div[@id='snippet_options']" position="inside">
@@ -28,7 +27,7 @@
           </li>
           <li class='dropdown-submenu'>
               <a tabindex="-1" href="#">Promote</a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" data-no-preview="true">
                   <li data-go_to="top"><a>Push to top</a></li>
                   <li data-go_to="up"><a>Push up</a></li>
                   <li data-go_to="down"><a>Push down</a></li>
@@ -39,5 +38,4 @@
     </xpath>
 
 </template>
-</data>
-</openerp>
+</odoo>

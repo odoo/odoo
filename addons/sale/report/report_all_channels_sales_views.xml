@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="report_all_channels_sales_view_pivot" model="ir.ui.view">
+         <field name="name">report.all.channels.sales.pivot</field>
+         <field name="model">report.all.channels.sales</field>
+         <field name="arch" type="xml">
+            <pivot string="All Channels Sales Orders Analysis">
+                <field name="name" type="row"/>
+                <field name="price_total" string="Total Price" type="measure"/>
+            </pivot>
+         </field>
+    </record>
+
+    <record id="report_all_channels_sales_view_search" model="ir.ui.view">
+        <field name="name">report.all.channels.sales.search</field>
+        <field name="model">report.all.channels.sales</field>
+        <field name="arch" type="xml">
+            <search string="All Channels Sales Orders Analysis">
+                <field name="date_order"/>
+                <filter string="Current Year Sales" name="current_year" domain="[('date_order','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Sales Channel" name="team_id" context="{'group_by':'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="report_all_channels_sales_action" model="ir.actions.act_window">
+        <field name="name">All Channels Sales Orders</field>
+        <field name="res_model">report.all.channels.sales</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="report_all_channels_sales_view_pivot"/>
+        <field name="search_view_id" ref="report_all_channels_sales_view_search"/>
+        <field name="context">{'search_default_team_id': 1, 'search_default_current_year': 1}</field>
+    </record>
+</odoo>

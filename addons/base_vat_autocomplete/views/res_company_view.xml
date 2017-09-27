@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  The purpose of this view is to move the VAT field at the top of the 
+  company form. That way, the user will fill it first
+-->
+<odoo>
+    <record id="res_company_view_form" model="ir.ui.view">
+        <field name="name">res.company.view.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="replace" />
+            <field name="partner_id" position="after">
+                <field name="vat" />
+            </field>
+        </field>
+    </record>
+</odoo>

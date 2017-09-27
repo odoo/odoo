@@ -8,18 +8,26 @@
         border-radius: 2px;
     }
 
+    .o_web_settings_dashboard_container {
+        padding: 5px 0px;
+    }
+
     background: #F7F7F7;
     height: 100%;
 
     .o_web_settings_dashboard_col {
         padding: 10px 8px;
 
+        @media (max-width: @screen-sm-max) {
+            padding: 5px 8px;
+        }
+
         > div > hr {
             margin: 12px -18px 15px -18px;
             border-color: #CBCBCB;
         }
 
-        > div:first-child {
+        > div {
             .o_web_settings_dashboard_card();
             padding: 25px 18px 18px 18px;
                 .o_web_settings_dashboard_header {

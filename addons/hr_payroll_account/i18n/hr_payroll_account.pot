@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,24 +27,21 @@ msgid "Accounting Entry"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:147
-#: code:addons/hr_payroll_account/hr_payroll_account.py:163
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_analytic_account_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
 msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-msgid "Contract"
-msgstr ""
-
-#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
 msgid "Credit Account"
 msgstr ""
@@ -55,8 +52,14 @@ msgid "Date Account"
 msgstr ""
 
 #. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_debit
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
 msgid "Debit Account"
+msgstr ""
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -75,17 +78,17 @@ msgid "Pay Slip"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Batches"
-msgstr ""
-
-#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:98
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Run"
+msgstr ""
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
 msgstr ""
@@ -98,18 +101,19 @@ msgid "Salary Journal"
 msgstr ""
 
 #. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_tax_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
 msgid "Tax"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:145
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:161
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr ""

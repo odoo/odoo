@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from openerp.tests import common
-from openerp.tools import float_compare
+from odoo.tests import common
+from odoo.tools import float_compare
 
 
+@common.at_install(False)
+@common.post_install(True)
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
@@ -11,7 +13,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']
-        self.SaleConfigSetting = self.env['sale.config.settings']
+        self.SaleConfigSetting = self.env['res.config.settings']
         self.Product = self.env['product.product']
 
         self.partner_18 = self.env.ref('base.res_partner_18')
@@ -27,10 +29,13 @@ class TestDeliveryCost(common.TransactionCase):
         self.product_2 = self.env.ref('product.product_product_2')
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
+        # as the tests hereunder assume all the prices in USD, we must ensure
+        # that the company actually uses USD
+        self.env.user.company_id.write({'currency_id': self.env.ref('base.USD').id})
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
-        # Create sale order with Normal Delivery Charges
+        # Create sales order with Normal Delivery Charges
 
         self.sale_normal_delivery_charges = self.SaleOrder.create({
             'partner_id': self.partner_18.id,
@@ -46,7 +51,7 @@ class TestDeliveryCost(common.TransactionCase):
             })],
             'carrier_id': self.normal_delivery.id
         })
-        # I add delivery cost in Sale order
+        # I add delivery cost in Sales order
 
         self.a_sale = self.AccountAccount.create({
             'code': 'X2020',
@@ -68,23 +73,24 @@ class TestDeliveryCost(common.TransactionCase):
             'type': 'service'
         })
 
-        # I add delivery cost in Sale order
-        self.sale_normal_delivery_charges.delivery_set()
+        # I add delivery cost in Sales order
+        self.sale_normal_delivery_charges.get_delivery_price()
+        self.sale_normal_delivery_charges.set_delivery_line()
 
-        # I check sale order after added delivery cost
+        # I check sales order after added delivery cost
 
         line = self.SaleOrderLine.search([('order_id', '=', self.sale_normal_delivery_charges.id),
             ('product_id', '=', self.sale_normal_delivery_charges.carrier_id.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
 
-        self.assertEqual(float_compare(line.price_subtotal, 10, precision_digits=2), 0,
-            "Delivey cost is not correspond.")
+        self.assertEqual(float_compare(line.price_subtotal, 10.0, precision_digits=2), 0,
+            "Delivery cost is not correspond.")
 
-        # I confirm the sale order
+        # I confirm the sales order
 
         self.sale_normal_delivery_charges.action_confirm()
 
-        # Create one more sale order with Free Delivery Charges
+        # Create one more sales order with Free Delivery Charges
 
         self.delivery_sale_order_cost = self.SaleOrder.create({
             'partner_id': self.partner_4.id,
@@ -107,16 +113,17 @@ class TestDeliveryCost(common.TransactionCase):
             'carrier_id': self.free_delivery.id
         })
 
-        # I add free delivery cost in Sale order
-        self.delivery_sale_order_cost.delivery_set()
+        # I add free delivery cost in Sales order
+        self.delivery_sale_order_cost.get_delivery_price()
+        self.delivery_sale_order_cost.set_delivery_line()
 
-        # I check sale order after adding delivery cost
+        # I check sales order after adding delivery cost
         line = self.SaleOrderLine.search([('order_id', '=', self.delivery_sale_order_cost.id),
             ('product_id', '=', self.delivery_sale_order_cost.carrier_id.product_id.id)])
 
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
         self.assertEqual(float_compare(line.price_subtotal, 0, precision_digits=2), 0,
-            "Delivey cost is not correspond.")
+            "Delivery cost is not correspond.")
 
         # I set default delivery policy
 

@@ -1,0 +1,133 @@
+@breadcrumb-height: 30px;
+
+.o_control_panel {
+    .o-flex-display();
+    .o-flex-flow(row, wrap);
+    border-bottom: 1px solid darken(@odoo-control-panel-background-color, 20%);
+    .o-webclient-padding(@top: 10px, @bottom: 10px);
+    background-color: @odoo-control-panel-background-color;
+
+    > .breadcrumb {
+        width: 50%;
+        margin: 0px;
+        font-size: 18px;
+
+        > li {
+            .o-text-overflow(@max-width: 90%);
+
+            > a {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &.o_breadcrumb_full > .breadcrumb {
+        width: 100%;
+    }
+
+    > .o_cp_searchview {
+        width: 50%;
+        min-height: @breadcrumb-height;
+    }
+
+    .btn.o_enable_searchview {
+        width: 10%;
+        margin-left: 2%;
+        padding: 0px;
+    }
+
+    > .o_cp_left {
+        .o-flex-display();
+        .o-justify-content(space-between);
+        width: 50%;
+        margin-top: 5px;
+
+        > .o_cp_sidebar {
+            padding-right: 10px;
+
+            .o_hidden_input_file {
+                position: relative;
+                input.o_input_file {
+                    position: absolute;
+                    top: 1px;
+                    opacity: 0;
+                    width: 100%;
+                    height: 26px;
+                }
+                .o_form_binary_form span {
+                    padding: 3px 25px;
+                    color: @btn-default-color;
+                }
+                .o_form_binary_form:hover {
+                    background-color: @table-bg-hover;
+                }
+            }
+            .o_sidebar_delete_attachment {
+                padding: 0px;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+            }
+        }
+    }
+
+    > .o_cp_right {
+        .o-flex-display();
+        width: 50%;
+        margin-top: 5px;
+
+        > .o_cp_pager {
+            margin: auto 0 auto auto;
+            padding-left: 5px;
+            text-align: center;
+            .user-select(none);
+
+            > div {
+                .o-flex-display();
+                .o-align-items(center);
+            }
+
+            .o_pager_counter {
+                margin-right: 5px;
+            }
+        }
+
+        > .o_cp_switch_buttons > .btn:first-child {
+            margin-left: @odoo-horizontal-padding;
+        }
+    }
+}
+
+.o_x2m_control_panel {
+    .o-flex-display();
+    .o-flex-flow(row, wrap);
+
+    .o_cp_buttons {
+        .o-flex-display();
+        margin-right: auto;
+        > div {
+            margin-top: 5px;
+        }
+    }
+    .o_cp_pager {
+        .o-flex-display();
+        margin-left: auto;
+    }
+}
+
+// Pager input (to edit pager values)
+.o_pager_value > input {
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+@media print {
+    .o_control_panel {
+        display: none;
+    }
+}

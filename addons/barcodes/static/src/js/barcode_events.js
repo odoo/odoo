@@ -2,7 +2,17 @@ odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
 var core = require('web.core');
-var mixins = core.mixins;
+var mixins = require('web.mixins');
+
+
+// For IE >= 9, use this, new CustomEvent(), instead of new Event()
+function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+CustomEvent.prototype = window.Event.prototype;
 
 var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     timeout: null,
@@ -36,7 +46,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (match) {
             var barcode = match[1];
 
-            core.bus.trigger('barcode_scanned', barcode);
+            // Send the target in case there are several barcode widgets on the same page (e.g.
+            // registering the lot numbers in a stock picking)
+            core.bus.trigger('barcode_scanned', barcode, this.buffered_key_events[0].target);
 
             // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
             if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
@@ -61,11 +73,11 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 // bug for the longest time that causes keyCode and
                 // charCode to not be set for events created this way:
                 // https://bugs.webkit.org/show_bug.cgi?id=16735
-                new_event = new Event("keypress", {
+                var params = {
                     'bubbles': old_event.bubbles,
                     'cancelable': old_event.cancelable,
-                });
-
+                };
+                new_event = $.Event('keypress', params);
                 new_event.viewArg = old_event.viewArg;
                 new_event.ctrl = old_event.ctrl;
                 new_event.alt = old_event.alt;
@@ -78,7 +90,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 new_event.which = old_event.which;
                 new_event.dispatched_by_barcode_reader = true;
 
-                old_event.target.dispatchEvent(new_event);
+                $(old_event.target).trigger(new_event);
             }
         }
     },
@@ -95,6 +107,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (e.key === "ArrowLeft" || e.key === "ArrowRight" ||
             e.key === "ArrowUp" || e.key === "ArrowDown" ||
             e.key === "Escape" || e.key === "Tab" ||
+            e.key === "Backspace" || e.key === "Delete" ||
             /F\d\d?/.test(e.key)) {
             return true;
         } else {
@@ -127,11 +140,15 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         // Don't catch keypresses which could have a UX purpose (like shortcuts)
         if (e.ctrlKey || e.metaKey || e.altKey)
             return;
+        // Don't catch Return when nothing is buffered. This way users
+        // can still use Return to 'click' on focused buttons or links.
+        if (e.which === 13 && this.buffered_key_events.length === 0)
+            return;
         // Don't catch events targeting elements that are editable because we
         // have no way of redispatching 'genuine' key events. Resent events
         // don't trigger native event handlers of elements. So this means that
         // our fake events will not appear in eg. an <input> element.
-        if (this.element_is_editable(e.target) && e.target.getAttribute("barcode_events") !== "true")
+        if ((this.element_is_editable(e.target) && !$(e.target).data('enableBarcode')) && e.target.getAttribute("barcode_events") !== "true")
             return;
 
         // Catch and buffer the event
@@ -150,24 +167,27 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     start: function(prevent_key_repeat){
-        document.body.addEventListener('keypress', this.__handler, true);
+        $('body').bind("keypress", this.__handler);
         if (prevent_key_repeat === true) {
-            document.body.addEventListener('keydown', this.__keydown_handler, true);
-            document.body.addEventListener('keyup', this.__keyup_handler, true);
+            $('body').bind("keydown", this.__keydown_handler);
+            $('body').bind('keyup', this.__keyup_handler);
         }
     },
 
     stop: function(){
-        document.body.removeEventListener('keypress', this.__handler, true);
-        document.body.removeEventListener('keydown', this.__keydown_handler, true);
-        document.body.removeEventListener('keyup', this.__keyup_handler, true);
+        $('body').unbind("keypress", this.__handler);
+        $('body').unbind("keydown", this.__keydown_handler);
+        $('body').unbind('keyup', this.__keyup_handler);
     },
 });
 
 return {
-    // Singleton that emits barcode_scanned events on core.bus
+    /** Singleton that emits barcode_scanned events on core.bus */
     BarcodeEvents: new BarcodeEvents(),
-    // List of barcode prefixes that are reserved for internal purposes
+    /**
+     * List of barcode prefixes that are reserved for internal purposes
+     * @type Array
+     */
     ReservedBarcodePrefixes: ['O-CMD'],
 };
 

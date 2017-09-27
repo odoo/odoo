@@ -25,7 +25,7 @@
 
     <template id="page">
       <div t-att-id="page_id" t-att-title="page_title" t-att-hide-from-menu="hide_from_menu" t-att-hide-mark-as-done="hide_mark_as_done" class="o_planner_page container-fluid">
-        <h1 t-esc="page_title" t-att-data-menutitle="page_menutitle or page_title" t-att-class="'hidden' if hide_title else ''"/>
+        <h1 t-esc="page_title" t-att-data-menutitle="page_menutitle or page_title" t-att-class="'hidden' if hide_title else None"/>
         <t t-raw="0"/>
       </div>
     </template>

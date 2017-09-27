@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_trialbalance">
-    <t t-call="report.html_container">
-        <t t-call="report.internal_layout">
+    <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
             <div class="page">
                 <h2><span t-esc="res_company.name"/>: Trial Balance</h2>
 
@@ -50,13 +50,13 @@
                                 <span t-att-style="style" t-esc="account['name']"/>
                             </td>
                             <td class="text-right">
-                                 <span t-att-style="style" t-esc="account['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                 <span t-att-style="style" t-esc="account['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="account['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-att-style="style" t-esc="account['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-att-style="style" t-esc="account['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-att-style="style" t-esc="account['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                         </tr>
                     </tbody>

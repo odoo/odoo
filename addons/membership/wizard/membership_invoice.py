@@ -1,56 +1,42 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
+from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
 
-class membership_invoice(osv.osv_memory):
-    """Membership Invoice"""
 
+class MembershipInvoice(models.TransientModel):
     _name = "membership.invoice"
     _description = "Membership Invoice"
-    _columns = {
-        'product_id': fields.many2one('product.product','Membership', required=True),
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Product Price'), required=True),
-    }
-    def onchange_product(self, cr, uid, ids, product_id=False):
+
+    product_id = fields.Many2one('product.product', string='Membership', required=True)
+    member_price = fields.Float(string='Member Price', digits= dp.get_precision('Product Price'), required=True)
+
+    @api.onchange('product_id')
+    def onchange_product(self):
         """This function returns value of  product's member price based on product id.
         """
-        if not product_id:
-            return {'value': {'member_price': False}}
-        return {'value': {'member_price': self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]}}
+        price_dict = self.product_id.price_compute('list_price')
+        self.member_price = price_dict.get(self.product_id.id) or False
 
-    def membership_invoice(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        partner_obj = self.pool.get('res.partner')
-        datas = {}
-        if context is None:
-            context = {}
-        data = self.browse(cr, uid, ids, context=context)
-        if data:
-            data = data[0]
+    @api.multi
+    def membership_invoice(self):
+        if self:
             datas = {
-                'membership_product_id': data.product_id.id,
-                'amount': data.member_price
+                'membership_product_id': self.product_id.id,
+                'amount': self.member_price
             }
-        invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
+        invoice_list = self.env['res.partner'].browse(self._context.get('active_ids')).create_membership_invoice(datas=datas)
 
-        try:
-            search_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')[1]
-        except ValueError:
-            search_view_id = False
-        try:
-            form_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')[1]
-        except ValueError:
-            form_view_id = False
+        search_view_ref = self.env.ref('account.view_account_invoice_filter', False)
+        form_view_ref = self.env.ref('account.invoice_form', False)
+        tree_view_ref = self.env.ref('account.invoice_tree', False)
 
         return  {
             'domain': [('id', 'in', invoice_list)],
             'name': 'Membership Invoices',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
-            'views': [(False, 'tree'), (form_view_id, 'form')],
-            'search_view_id': search_view_id,
+            'views': [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')],
+            'search_view_id': search_view_ref and search_view_ref.id,
         }

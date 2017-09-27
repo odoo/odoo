@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import common
-import test_forum
+from . import common
+from . import test_forum
+from . import test_forum_process

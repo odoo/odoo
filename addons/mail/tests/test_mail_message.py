@@ -1,27 +1,14 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+import itertools
 
-from .common import TestMail
-from openerp.exceptions import AccessError
-from openerp.exceptions import except_orm
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.exceptions import AccessError, except_orm
+from odoo.tools import mute_logger
 
 
 class TestMailMessage(TestMail):
-
-    def setUp(self):
-        super(TestMailMessage, self).setUp()
-        self.group_private = self.env['mail.channel'].with_context({
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True
-        }).create({
-            'name': 'Private',
-            'public': 'private'}
-        ).with_context({'mail_create_nosubscribe': False})
-        self.message = self.env['mail.message'].create({
-            'body': 'My Body',
-            'model': 'mail.channel',
-            'res_id': self.group_private.id,
-        })
 
     def test_mail_message_values_basic(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
@@ -49,8 +36,8 @@ class TestMailMessage(TestMail):
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
+        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_alias_catchall(self):
         alias_domain = 'example.com'
@@ -61,16 +48,16 @@ class TestMailMessage(TestMail):
         msg = self.env['mail.message'].sudo(self.user_employee).create({})
         self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_no_alias(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -80,12 +67,12 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
         alias_domain = 'example.com'
@@ -94,24 +81,69 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s@%s>' % (self.user_employee.name, self.user_employee.alias_name, alias_domain))
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id,
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id,
             'no_auto_thread': True,
         })
         self.assertIn('reply_to', msg.message_id)
-        self.assertNotIn('mail.channel', msg.message_id)
-        self.assertNotIn('-%d-' % self.group_pigs.id, msg.message_id)
+        self.assertNotIn('mail.test', msg.message_id)
+        self.assertNotIn('-%d-' % self.test_pigs.id, msg.message_id)
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    def test_mail_message_notify_from_mail_mail(self):
+        # Due ot post-commit hooks, store send emails in every step
+        self.email_to_list = []
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_to': 'test@example.com',
+            'partner_ids': [(4, self.user_employee.partner_id.id)]
+        })
+        self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
+        self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
+        mail.send()
+        self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
+        self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
+        self.assertIn(u'test@example.com', self.email_to_list)
+
+
+class TestMailMessageAccess(TestMail):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailMessageAccess, cls).setUpClass()
+        Channel = cls.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True
+        })
+        # Pigs: base group for tests
+        cls.group_pigs = Channel.create({
+            'name': 'Pigs',
+            'public': 'groups',
+            'group_public_id': cls.env.ref('base.group_user').id})
+        # Jobs: public group
+        cls.group_public = Channel.create({
+            'name': 'Jobs',
+            'description': 'NotFalse',
+            'public': 'public'})
+        # Private: private gtroup
+        cls.group_private = Channel.create({
+            'name': 'Private',
+            'public': 'private'})
+        cls.message = cls.env['mail.message'].create({
+            'body': 'My Body',
+            'model': 'mail.channel',
+            'res_id': cls.group_private.id,
+        })
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_access_search(self):
         # Data: various author_ids, partner_ids, documents
         msg1 = self.env['mail.message'].create({
@@ -164,7 +196,7 @@ class TestMailMessage(TestMail):
         messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_Test')])
         self.assertEqual(messages, msg4 | msg5)
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
         # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
         # which still generate exception in except_orm.So we need to change all
@@ -172,7 +204,7 @@ class TestMailMessage(TestMail):
         with self.assertRaises(except_orm):
             self.message.sudo(self.user_employee).read()
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_mail_message_access_read_crash_portal(self):
         with self.assertRaises(except_orm):
             self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
@@ -183,7 +215,7 @@ class TestMailMessage(TestMail):
 
     def test_mail_message_access_read_notification(self):
         attachment = self.env['ir.attachment'].create({
-            'datas': 'My attachment'.encode('base64'),
+            'datas': base64.b64encode(b'My attachment'),
             'name': 'doc.txt',
             'datas_fname': 'doc.txt'})
         # attach the attachment to the message
@@ -202,7 +234,7 @@ class TestMailMessage(TestMail):
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
         self.message.sudo(self.user_employee).read()
 
-    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_mail_message_access_create_crash_public(self):
         # Do: Bert creates a message on Pigs -> ko, no creation rights
         with self.assertRaises(AccessError):
@@ -212,13 +244,13 @@ class TestMailMessage(TestMail):
         with self.assertRaises(AccessError):
             self.env['mail.message'].sudo(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_mail_message_access_create_crash(self):
         # Do: Bert create a private message -> ko, no creation rights
         with self.assertRaises(except_orm):
             self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
-    @mute_logger('openerp.models')
+    @mute_logger('odoo.models')
     def test_mail_message_access_create_doc(self):
         # TODO Change the except_orm to Warning
         Message = self.env['mail.message'].sudo(self.user_employee)
@@ -236,18 +268,23 @@ class TestMailMessage(TestMail):
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_message_set_star(self):
-        msg = self.group_pigs.message_post(body='My Body', subject='1')
+        msg = self.test_pigs.message_post(body='My Body', subject='1')
         msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred
-        msg.set_message_starred(True)
+        msg.toggle_message_starred()
         self.assertTrue(msg.starred)
 
         # Employee set as starred
-        msg_emp.set_message_starred(True)
+        msg_emp.toggle_message_starred()
         self.assertTrue(msg_emp.starred)
 
         # Do: Admin unstars msg
-        msg.set_message_starred(False)
+        msg.toggle_message_starred()
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
+
+    def test_60_cache_invalidation(self):
+        msg_cnt = len(self.test_pigs.message_ids)
+        self.test_pigs.message_post(body='Hi!', subject='test')
+        self.assertEqual(len(self.test_pigs.message_ids), msg_cnt + 1)

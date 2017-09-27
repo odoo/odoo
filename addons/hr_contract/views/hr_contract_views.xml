@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="act_hr_employee_2_hr_contract" model="ir.actions.act_window">
+            <field name="name">Contracts</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                'search_default_employee_id': [active_id],
+                'default_employee_id': active_id,
+                'search_default_group_by_state': 1
+            }</field>
+        </record>
+
+        <record id="hr_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='toggle_active']" position="before">
+                        <button name="%(act_hr_employee_2_hr_contract)d"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="action"
+                            groups="hr.group_hr_manager">
+                            <field name="contracts_count" widget="statinfo" string="Contracts"/>
+                        </button>
+                    </xpath>
+                    <xpath expr="//field[@name='coach_id']" position="after">
+                        <field name="manager" groups="base.group_no_one"/>
+                    </xpath>
+                    <xpath expr="//group[@name='active_group']" position="after">
+                        <group string="Current Contract">
+                            <field name="medic_exam" string="Medical Exam"/>
+                            <field name="vehicle"/>
+                            <field name="vehicle_distance"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//field[@name='marital']" position="after">
+                        <field name="children"/>
+                    </xpath>
+                    <xpath expr="//field[@name='birthday']" position="after">
+                        <field name="place_of_birth"/>
+                    </xpath>
+                    <xpath expr="//field[@name='bank_account_id']" position="replace">
+                        <field name="bank_account_id" context="{'display_partner':True}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_search" model="ir.ui.view">
+            <field name="name">hr.contract.search</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract">
+                    <field name="name" string="Contracts"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="resource_calendar_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="state"/>
+                    <filter string="To Renew" name="to_renew" domain="[('state', '=', 'pending')]"/>
+                    <separator />
+                    <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
+                    <separator/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.form</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <form string="Current Contract">
+                    <header>
+                        <field name="state" widget="statusbar" clickable="1"/>
+                    </header>
+                    <sheet>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Contract Reference"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="type_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Salary Information" name="information">
+                            <group name="main_info">
+                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" nolabel="1"/>
+                                        <span>/ month</span>
+                                    </div>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other Information" name="other">
+                            <group>
+                                <group name="duration_group" string="Contract Terms">
+                                    <field name="date_start"/>
+                                    <label for="date_end"/>
+                                    <div class="o_row">
+                                        <field name="date_end" nolabel="1"/>
+                                        <span class="text-muted">(If fixed-term contract)</span>
+                                    </div>
+                                    <field name="trial_date_end"/>
+                                    <field name="resource_calendar_id"/>
+                                </group>
+                            </group>
+                            <group string="Notes">
+                                <field name="notes" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.tree</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <tree string="Contracts" decoration-bf="message_needaction == True">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="job_id"/>
+                    <field name="type_id"/>
+                    <field name="resource_calendar_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="wage" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_contract_view_kanban" model="ir.ui.view">
+            <field name="name">hr.contract.kanban</field>
+            <field name="model">hr.contract</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_small_column">
+                    <field name="employee_id"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Contract</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div>
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                                <div class="text-muted o_kanban_record_subtitle">
+                                    <field name="job_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('hr.employee', 'image_medium', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+
+        <record id="action_hr_contract" model="ir.actions.act_window">
+            <field name="name">Contracts</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('employee_id', '!=', False)]</field>
+            <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
+            <field name="search_view_id" ref="hr_contract_view_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click here to create new contracts.
+              </p>
+            </field>
+        </record>
+
+        <record id="hr_contract_type_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.type.form</field>
+            <field name="model">hr.contract.type</field>
+            <field name="arch" type="xml">
+                <form string="Contract Type">
+                    <group col="4">
+                        <field colspan="4" name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_contract_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.type.tree</field>
+            <field name="model">hr.contract.type</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Type">
+                    <field name="sequence" widget="handle"/>
+                    <field colspan="4" name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_contract_type_view_search" model="ir.ui.view">
+            <field name="name">hr.contract.type.search</field>
+            <field name="model">hr.contract.type</field>
+            <field name="arch" type="xml">
+                <search string="Search Contract Type">
+                    <field name="name" string="Contract Type"/>
+                    <field name="sequence" string="Sequence"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_hr_contract_type" model="ir.actions.act_window">
+            <field name="name">Contract Types</field>
+            <field name="res_model">hr.contract.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_contract_type_view_search"/>
+        </record>
+
+        <menuitem
+            id="hr_menu_contract_type"
+            action="action_hr_contract_type"
+            parent="hr.menu_human_resources_configuration"
+            sequence="3"
+            groups="base.group_no_one"/>
+
+        <menuitem
+            id="hr_menu_contract"
+            name="Contracts"
+            action="action_hr_contract"
+            parent="hr.menu_hr_root"
+            sequence="4"
+            groups="hr.group_hr_manager"/>
+
+
+</odoo>

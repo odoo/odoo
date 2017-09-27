@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="website_settings_payment" model="ir.ui.view">
             <field name="name">website.form</field>
@@ -18,30 +18,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="acquirer_form_published" model="ir.ui.view">
-            <field name="name">payment.acquirer.form.published</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_button_box']/*[1]" position="before">
-                    <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
-                        <field name="website_published" widget="website_button"/>
-                    </button>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="acquirer_list_published" model="ir.ui.view">
-            <field name="name">payment.acquirer.tree.published</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_list"/>
-            <field name="arch" type="xml">
-                <field name="provider" position="after">
-                    <field name="website_published"/>
-                </field>
-            </field>
-        </record>
-
     </data>
-</openerp>
+</odoo>

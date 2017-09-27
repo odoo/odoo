@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="acquirer_form_authorize" model="ir.ui.view">
+            <field name="name">acquirer.form.authorize</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'authorize')]}">
+                        <field name="authorize_login"/>
+                        <field name="authorize_transaction_key" password="True"/>
+                        <a colspan="2" href="https://www.odoo.com/documentation/user/online/ecommerce/shopper_experience/authorize.html" target="_blank">How to get paid with Authorize.Net</a>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="token_form_authorize_net" model="ir.ui.view">
+            <field name='name'>payment.token.form</field>
+            <field name='model'>payment.token</field>
+            <field name="inherit_id" ref="payment.payment_token_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="acquirer_ref"]' position='after'>
+                    <field name="authorize_profile" attrs="{'invisible':['|', ('provider', '!=', 'authorize'), ('save_token', '=', 'none')]}"/>
+                    <field name="provider" invisible='1'/>
+                    <field name="save_token" invisible='1'/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

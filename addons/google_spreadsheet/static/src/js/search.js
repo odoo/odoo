@@ -4,32 +4,17 @@ odoo.define('google_spreadsheet.google.spreadsheet', function (require) {
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
 var data = require('web.data');
+var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
-var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 
 var QWeb = core.qweb;
 
-FormView.include({
-    on_processed_onchange: function(result, processed) {
-        var self = this;
-        var fields = self.fields;
-        _(result.selection).each(function (selection, fieldname) {
-            var field = fields[fieldname];
-            if (!field) { return; }
-            field.field.selection = selection;
-            field.values = selection;
-            field.renderElement(); 
-        });
-        return this._super(result, processed);
-    },
-});
-
 FavoriteMenu.include({
-    prepare_dropdown_menu: function (filters) {
-        this._super(filters);
-        var am = this.findAncestor(function(a) {
+    start: function () {
+        this._super();
+        var am = this.findAncestor(function (a) {
             return a instanceof ActionManager;
         });
         if (am && am.get_inner_widget() instanceof ViewManager) {
@@ -43,17 +28,14 @@ FavoriteMenu.include({
             model = this.searchview.dataset.model,
             list_view = this.view_manager.views.list,
             list_view_id = list_view ? list_view.view_id : false,
-            context = this.searchview.dataset.get_context() || [],
-            compound_context = new data.CompoundContext(context),
-            compound_domain = new data.CompoundDomain(context),
+            domain = [],
             groupbys = pyeval.eval('groupbys', sv_data.groupbys).join(" "),
             ds = new data.DataSet(this, 'google.drive.config');
 
-        _.each(sv_data.contexts, compound_context.add, compound_context);
-        _.each(sv_data.domains, compound_domain.add, compound_domain);
-
-        compound_domain = JSON.stringify(compound_domain.eval());
-        ds.call('set_spreadsheet', [model, compound_domain, groupbys, list_view_id])
+        _.each(sv_data.domains, function (d) {
+            domain.push.apply(domain, Domain.prototype.stringToArray(d));
+        });
+        ds.call('set_spreadsheet', [model, Domain.prototype.arrayToString(domain), groupbys, list_view_id])
             .done(function (res) {
                 if (res.url){
                     window.open(res.url, '_blank');

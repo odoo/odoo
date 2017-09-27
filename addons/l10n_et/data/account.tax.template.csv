@@ -1,14 +1,14 @@
-id,description,chart_template_id:id,type_tax_use,name,amount,amount_type,tag_ids:id,account_id:id,refund_account_id:id
-id_tax03,tax03,l10n_et,sale,VAT 15% rated sales,15,percent,tax_tax03,l10n_et3007,l10n_et3007
-id_tax04,tax04,l10n_et,sale,VAT 0% rated sales,,percent,tax_tax04,l10n_et3007,l10n_et3007
-id_tax06,tax06,l10n_et,sale,VAT Exempt rated sales,,percent,tax_tax06,l10n_et3007,l10n_et3007
-id_tax11,tax11,l10n_et,sale,VAT Out of Scope rated sales,,percent,tax_tax11,l10n_et3007,l10n_et3007
-id_tax02,tax02,l10n_et,sale,Withholding 2% rated sales,-2,percent,tax_tax02,l10n_et3006,l10n_et3006
-id_tax13,tax13,l10n_et,sale,Withholding 35% rated sales,-35,percent,tax_tax13,l10n_et3006,l10n_et3006
-id_tax14,tax14,l10n_et,sale,Withholding VAT 15% rated sales,-15,percent,tax_tax14,l10n_et3006,l10n_et3006
-id_tax08,tax08,l10n_et,purchase,VAT 15% rated purchases,15,percent,tax_tax08,l10n_et2212,l10n_et2212
-id_tax07,tax07,l10n_et,purchase,VAT 0% rated purchases,,percent,tax_tax07,l10n_et2212,l10n_et2212
-id_tax10,tax10,l10n_et,purchase,VAT Exempt rated purchases,,percent,tax_tax10,l10n_et2212,l10n_et2212
-id_tax09,tax09,l10n_et,purchase,VAT Out of Scope rated purchases,,percent,tax_tax09,l10n_et2212,l10n_et2212
-id_tax05,tax05,l10n_et,purchase,Withholding 2% rated purchases,-2,percent,tax_tax05,l10n_et2213,l10n_et2213
-id_tax12,tax12,l10n_et,purchase,Withholding 35% rated purchases,-35,percent,tax_tax12,l10n_et2213,l10n_et2213
+id,description,chart_template_id:id,type_tax_use,name,amount,amount_type,tag_ids:id,account_id:id,refund_account_id:id,tax_group_id:id
+id_tax03,tax03,l10n_et,sale,VAT 15% rated sales,15,percent,"tag_et_13,tag_et_22",l10n_et3007,l10n_et3007,tax_group_vat_15
+id_tax04,tax04,l10n_et,sale,VAT 0% rated sales,,percent,tag_et_12,l10n_et3007,l10n_et3007,tax_group_vat_0
+id_tax06,tax06,l10n_et,sale,VAT Exempt rated sales,,percent,tag_et_11,l10n_et3007,l10n_et3007,tax_group_vat_0
+id_tax11,tax11,l10n_et,sale,VAT Out of Scope rated sales,,percent,tag_et_10,l10n_et3007,l10n_et3007,tax_group_vat_0
+id_tax02,tax02,l10n_et,sale,Withholding 2% rated sales,-2,percent,"tag_et_15,tag_et_27",l10n_et3006,l10n_et3006,tax_group_withh_2
+id_tax13,tax13,l10n_et,sale,Withholding 35% rated sales,-35,percent,"tag_et_16,tag_et_28",l10n_et3006,l10n_et3006,tax_group_withh_35
+id_tax14,tax14,l10n_et,sale,Withholding VAT 15% rated sales,-15,percent,"tag_et_17,tag_et_29",l10n_et3006,l10n_et3006,tax_group_withh_15
+id_tax08,tax08,l10n_et,purchase,VAT 15% rated purchases,15,percent,"tag_et_05,tag_et_20",l10n_et2212,l10n_et2212,tax_group_vat_15
+id_tax07,tax07,l10n_et,purchase,VAT 0% rated purchases,,percent,tag_et_04,l10n_et2212,l10n_et2212,tax_group_vat_0
+id_tax10,tax10,l10n_et,purchase,VAT Exempt rated purchases,,percent,tag_et_03,l10n_et2212,l10n_et2212,tax_group_vat_0
+id_tax09,tax09,l10n_et,purchase,VAT Out of Scope rated purchases,,percent,tag_et_02,l10n_et2212,l10n_et2212,tax_group_vat_0
+id_tax05,tax05,l10n_et,purchase,Withholding 2% rated purchases,-2,percent,"tag_et_07,tag_et_24",l10n_et2213,l10n_et2213,tax_group_withh_2
+id_tax12,tax12,l10n_et,purchase,Withholding 35% rated purchases,-35,percent,"tag_et_08,tag_et_25",l10n_et2213,l10n_et2213,tax_group_withh_35

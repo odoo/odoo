@@ -1,59 +1,44 @@
-#!/usr/bin/env python
-#-*- coding:utf-8 -*-
-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.report import report_sxw
+from odoo import api, models
 
 
-class fiche_paye_parser(report_sxw.rml_parse):
+class FichePayeParser(models.AbstractModel):
+    _name = 'report.l10n_fr_hr_payroll.report_l10n_fr_fiche_paye'
 
-    def __init__(self, cr, uid, name, context):
-        super(fiche_paye_parser, self).__init__(cr, uid, name, context)
-        self.localcontext.update({
+    def get_payslip_lines(self, objs):
+        res = []
+        ids = []
+        for item in objs:
+            if item.appears_on_payslip is True and not item.salary_rule_id.parent_rule_id:
+                ids.append(item.id)
+        if ids:
+            res = self.env['hr.payslip.line'].browse(ids)
+        return res
+
+    def get_total_by_rule_category(self, obj, code):
+        category_total = 0
+        category_id = self.env['hr.salary.rule.category'].search([('code', '=', code)], limit=1).id
+        if category_id:
+            line_ids = self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('category_id', 'child_of', category_id)])
+            for line in line_ids:
+                category_total += line.total
+        return category_total
+
+    def get_employer_line(self, obj, parent_line):
+        return self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id)], limit=1)
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        payslip = self.env['hr.payslip'].browse(docids)
+        return {
+            'doc_ids': docids,
+            'doc_model': 'hr.payslip',
+            'data': data,
+            'docs': payslip,
             'lang': "fr_FR",
             'get_payslip_lines': self.get_payslip_lines,
             'get_total_by_rule_category': self.get_total_by_rule_category,
             'get_employer_line': self.get_employer_line,
-        })
-
-    def get_payslip_lines(self, objs):
-        payslip_line = self.pool.get('hr.payslip.line')
-        res = []
-        ids = []
-        for item in objs:
-            if item.appears_on_payslip == True and not item.salary_rule_id.parent_rule_id :
-                ids.append(item.id)
-        if ids:
-            res = payslip_line.browse(self.cr, self.uid, ids)
-        return res
-
-    def get_total_by_rule_category(self, obj, code):
-        payslip_line = self.pool.get('hr.payslip.line')
-        rule_cate_obj = self.pool.get('hr.salary.rule.category')
-
-        cate_ids = rule_cate_obj.search(self.cr, self.uid, [('code', '=', code)])
-
-        category_total = 0
-        if cate_ids:
-            line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id),('category_id.id', '=', cate_ids[0] )])
-            for line in payslip_line.browse(self.cr, self.uid, line_ids):
-                 category_total += line.total
-
-        return category_total
-
-    def get_employer_line(self, obj, parent_line):
-        payslip_line = self.pool.get('hr.payslip.line')
-
-        line_ids = payslip_line.search(self.cr, self.uid, [('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id )])
-        res = line_ids and payslip_line.browse(self.cr, self.uid, line_ids[0]) or False
-
-        return res
-
-
-class wrapped_report_fiche_paye(osv.AbstractModel):
-    _name = 'report.l10n_fr_hr_payroll.report_l10nfrfichepaye'
-    _inherit = 'report.abstract_report'
-    _template = 'l10n_fr_hr_payroll.report_l10nfrfichepaye'
-    _wrapped_report_class = fiche_paye_parser
+        }

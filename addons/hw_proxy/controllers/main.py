@@ -1,34 +1,37 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from __future__ import print_function
 import logging
-import commands
-import json
-import os
-import os.path
-import openerp
-import time
-import random
 import subprocess
-import json
-import werkzeug
-import werkzeug.wrappers
+import time
+import subprocess
+from threading import Lock
+
+
+from odoo import http
+from odoo.http import request
+
 _logger = logging.getLogger(__name__)
 
 
-from openerp import http
-from openerp.http import request
-
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
-BANNED_DEVICES = set([
+BANNED_DEVICES = {
 	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
 	"1d6b:0002",	# Linux Foundation 2.0 root hub
 	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
-])
+}
 
 
-# drivers modules must add to drivers an object with a get_status() method 
+# drivers modules must add to drivers an object with a get_status() method
 # so that 'status' can return the status of all active drivers
 drivers = {}
+
+# keep a list of RS-232 devices that have been recognized by a driver,
+# so other drivers can skip them during probes
+rs232_devices = {}  # {'/path/to/device': 'driver'}
+rs232_lock = Lock() # must be held to update `rs232_devices`
 
 class Proxy(http.Controller):
 
@@ -47,7 +50,7 @@ class Proxy(http.Controller):
         return True
 
     @http.route('/hw_proxy/status', type='http', auth='none', cors='*')
-    def status_http(self):
+    def status_http(self, debug=None, **kwargs):
         resp = """
 <!DOCTYPE HTML>
 <html>
@@ -95,23 +98,36 @@ class Proxy(http.Controller):
             <h2>Connected Devices</h2>
             <p>The list of connected USB devices as seen by the posbox</p>
         """
-        devices = commands.getoutput("lsusb").split('\n')
+        if debug is None:
+            resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
+        devices = subprocess.check_output("lsusb").split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
         for device in devices:
             device_name = device[device.find('ID')+2:]
             device_id   = device_name.split()[0]
             if not (device_id in BANNED_DEVICES):
-            	resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
-        
+
         if count == 0:
             resp += "<div class='device'>No USB Device Found</div>"
 
         resp += "</div>\n</body>\n</html>\n\n"
 
+        if debug is not None:
+            resp += """
+
+                <h3>Debug version</h3>
+                <p><tt>lsusb -v</tt> output:</p>
+                <pre>
+                %s
+                </pre>
+
+            """ % subprocess.check_output('lsusb -v', shell=True)
+
         return request.make_response(resp,{
-            'Cache-Control': 'no-cache', 
+            'Cache-Control': 'no-cache',
             'Content-Type': 'text/html; charset=utf-8',
             'Access-Control-Allow-Origin':  '*',
             'Access-Control-Allow-Methods': 'GET',
@@ -126,78 +142,78 @@ class Proxy(http.Controller):
         """
         A product has been scanned with success
         """
-        print 'scan_item_success: ' + str(ean)
+        print('scan_item_success: %s', ean)
 
     @http.route('/hw_proxy/scan_item_error_unrecognized', type='json', auth='none', cors='*')
     def scan_item_error_unrecognized(self, ean):
         """
         A product has been scanned without success
         """
-        print 'scan_item_error_unrecognized: ' + str(ean)
+        print('scan_item_error_unrecognized: %s', ean)
 
     @http.route('/hw_proxy/help_needed', type='json', auth='none', cors='*')
     def help_needed(self):
         """
         The user wants an help (ex: light is on)
         """
-        print "help_needed"
+        print("help_needed")
 
     @http.route('/hw_proxy/help_canceled', type='json', auth='none', cors='*')
     def help_canceled(self):
         """
         The user stops the help request
         """
-        print "help_canceled"
+        print("help_canceled")
 
     @http.route('/hw_proxy/payment_request', type='json', auth='none', cors='*')
     def payment_request(self, price):
         """
-        The PoS will activate the method payment 
+        The PoS will activate the method payment
         """
-        print "payment_request: price:"+str(price)
+        print("payment_request: price:%s" % price)
         return 'ok'
 
     @http.route('/hw_proxy/payment_status', type='json', auth='none', cors='*')
     def payment_status(self):
-        print "payment_status"
-        return { 'status':'waiting' } 
+        print("payment_status")
+        return { 'status':'waiting' }
 
     @http.route('/hw_proxy/payment_cancel', type='json', auth='none', cors='*')
     def payment_cancel(self):
-        print "payment_cancel"
+        print("payment_cancel")
 
     @http.route('/hw_proxy/transaction_start', type='json', auth='none', cors='*')
     def transaction_start(self):
-        print 'transaction_start'
+        print('transaction_start')
 
     @http.route('/hw_proxy/transaction_end', type='json', auth='none', cors='*')
     def transaction_end(self):
-        print 'transaction_end'
+        print('transaction_end')
 
     @http.route('/hw_proxy/cashier_mode_activated', type='json', auth='none', cors='*')
     def cashier_mode_activated(self):
-        print 'cashier_mode_activated'
+        print('cashier_mode_activated')
 
     @http.route('/hw_proxy/cashier_mode_deactivated', type='json', auth='none', cors='*')
     def cashier_mode_deactivated(self):
-        print 'cashier_mode_deactivated'
+        print('cashier_mode_deactivated')
 
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
     def open_cashbox(self):
-        print 'open_cashbox'
+        print('open_cashbox')
 
     @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
-        print 'print_receipt' + str(receipt)
+        print('print_receipt %s', receipt)
 
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
     def is_scanner_connected(self, receipt):
-        print 'is_scanner_connected?' 
+        print('is_scanner_connected?')
         return False
 
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
     def scanner(self, receipt):
-        print 'scanner' 
+        print('scanner')
         time.sleep(10)
         return ''
 
@@ -207,4 +223,4 @@ class Proxy(http.Controller):
 
     @http.route('/hw_proxy/print_pdf_invoice', type='json', auth='none', cors='*')
     def print_pdf_invoice(self, pdfinvoice):
-        print 'print_pdf_invoice' + str(pdfinvoice)
+        print('print_pdf_invoice %s' % pdfinvoice)

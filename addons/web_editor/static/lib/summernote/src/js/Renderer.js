@@ -31,7 +31,6 @@ define([
       var title = options.title;
       var className = options.className;
       var dropdown = options.dropdown;
-      var no_caret = options.no_caret;
       var hide = options.hide;
 
       return (dropdown ? '<div class="btn-group' +
@@ -48,7 +47,7 @@ define([
                  (hide ? ' data-hide=\'' + hide + '\'' : '') +
                  ' tabindex="-1">' +
                  label +
-                 ((dropdown && !no_caret)? ' <span class="caret"></span>' : '') +
+                 (dropdown ? ' <span class="caret"></span>' : '') +
                '</button>' +
                (dropdown || '') +
              (dropdown ? '</div>' : '');
@@ -225,52 +224,27 @@ define([
           value: '{"backColor":"#B35E9B"}'
         });
 
-        // This is a copy of web_editor.snippet.option.colorpicker qweb template
-        var colorpicker_template = '' +
-          '<div class="dropdown-menu">' +
-            '<div class="colorpicker">' +
-              '<div class="note-palette-title">{0}</div>' +
-              '<div class="btn-group palette-reset">' +
-                '<div class="note-color-reset" data-event="{2}" data-value="inherit" title="{1}">' +
-                  '<i class="fa fa-ban"></i>' +
-                '</div>' +
-              '</div>' +
-              '<div class="o_colorpicker_sections">' +
-                '<ul class="nav nav-pills o_colorpicker_section_menu">' +
-                  '<li><a href="#o_palette_spectrum"><i class="fa fa-eyedropper"></i></a></li>' +
-                '</ul>' +
-                '<div class="tab-content o_colorpicker_section_tabs">' +
-                  '<div class="tab-pane" id="o_palette_spectrum">' +
-                    '<div class="note-color-palette" data-target-event="{2}"></div>' +
-                  '</div>' +
-                '</div>' +
-              '</div>' +
-            '</div>' +
-          '</div>';
+        var items = [
+          '<li><div class="btn-group">',
+          '<div class="note-palette-title">' + lang.color.background + '</div>',
+          '<div class="note-color-reset" data-event="backColor"',
+          ' data-value="inherit" title="' + lang.color.transparent + '">' + lang.color.setTransparent + '</div>',
+          '<div class="note-color-palette" data-target-event="backColor"></div>',
+          '</div><div class="btn-group">',
+          '<div class="note-palette-title">' + lang.color.foreground + '</div>',
+          '<div class="note-color-reset" data-event="foreColor" data-value="inherit" title="' + lang.color.reset + '">',
+          lang.color.resetToDefault,
+          '</div>',
+          '<div class="note-color-palette" data-target-event="foreColor"></div>',
+          '</div></li>'
+        ];
 
-        var foreground = formatStr(colorpicker_template, [lang.color.foreground, lang.color.reset, 'foreColor']);
-        var background = formatStr(colorpicker_template, [lang.color.background, lang.color.transparent, 'backColor']);
-
-        var foregroundButton = tplButton('', {
-          title: lang.color.foreground,
-          className: 'o_foreground_toggle',
-          dropdown: foreground,
-          no_caret: true,
-        });
-        var backgroundButton = tplButton('', {
-          title: lang.color.background,
-          className: 'o_background_toggle',
-          dropdown: background,
-          no_caret: true,
+        var moreButton = tplButton('', {
+          title: lang.color.more,
+          dropdown: tplDropdown(items)
         });
 
-        return colorButton + foregroundButton + backgroundButton;
-
-        function formatStr(str, values) {
-          return str.replace(/{(\d+)}/g, function (match, number) { 
-            return (values[number] !== undefined)? values[number] : match;
-          });
-        };
+        return colorButton + moreButton;
       },
       bold: function (lang, options) {
         return tplIconButton(options.iconPrefix + options.icons.font.bold, {
@@ -437,6 +411,10 @@ define([
       };
 
       var tplImagePopover = function () {
+        var autoButton = tplButton('<span class="note-fontsize-10">Auto</span>', {
+          event: 'resize',
+          value: 'auto'
+        });
         var fullButton = tplButton('<span class="note-fontsize-10">100%</span>', {
           title: lang.image.resizeFull,
           event: 'resize',
@@ -496,7 +474,7 @@ define([
           value: 'none'
         });
 
-        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + fullButton + halfButton + quarterButton + '</div>') +
+        var content = (options.disableResizeImage ? '' : '<div class="btn-group">' + autoButton + fullButton + halfButton + quarterButton + '</div>') +
                       '<div class="btn-group">' + leftButton + rightButton + justifyButton + '</div>' +
                       '<div class="btn-group">' + roundedButton + circleButton + thumbnailButton + noneButton + '</div>' +
                       '<div class="btn-group">' + removeButton + '</div>';
@@ -869,7 +847,7 @@ define([
       //03. create editable
       var isContentEditable = !$holder.is(':disabled');
       var $editable = $('<div class="note-editable panel-body" contentEditable="' + isContentEditable + '"></div>').prependTo($editingArea);
-      
+
       if (options.height) {
         $editable.height(options.height);
       }

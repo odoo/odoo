@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-
-        <record id="event_sponsor_type1" model="event.sponsor.type">
-            <field name="name">Bronze</field>
-            <field name="sequence">3</field>
+        <record id="event_type_data_tracks" model="event.type">
+            <field name="name">Conference</field>
+            <field name="auto_confirm" eval="True"/>
+            <field name="use_mail_schedule" eval="True"/>
+            <field name="website_menu" eval="True"/>
+            <field name="website_track" eval="True"/>
+            <field name="website_track_proposal" eval="True"/>
         </record>
-        <record id="event_sponsor_type2" model="event.sponsor.type">
-            <field name="name">Silver</field>
-            <field name="sequence">2</field>
-        </record>
-        <record id="event_sponsor_type3" model="event.sponsor.type">
-            <field name="name">Gold</field>
-            <field name="sequence">1</field>
-        </record>
-
-        <!-- Event-related subtypes for new track / Chatter -->
-        <record id="mt_event_track" model="mail.message.subtype">
-            <field name="name">New Track</field>
-            <field name="res_model">event.event</field>
-            <field name="description">New Track Created</field>
-            <field name="default" eval="False"/>
-        </record>
-
     </data>
-</openerp>
+</odoo>

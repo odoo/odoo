@@ -1,11 +1,24 @@
-// General rules
+///
+/// This file regroups the snippets-specific design rules.
+///
+
 .carousel, .parallax, .blockquote {
     overflow: hidden;
 }
-
 @media (max-width: 400px) {
     section, .parallax, .row, .hr, .blockquote {
         height: auto !important;
+    }
+}
+
+// "Cover" snippet
+@s_text_block_image_fw-padding: 0 30px;
+.s_text_block_image_fw {
+    .container {
+        padding: @s_text_block_image_fw-padding;
+        > .row > div {
+            padding: 30px;
+        }
     }
 }
 
@@ -16,7 +29,6 @@
     word-break: break-all;
     border: 1px solid #dddddd;
 }
-
 .table_heading {
     background-color: #f5f5f5;
     border: 1px solid #dddddd;
@@ -24,7 +36,6 @@
     font-size: 14px;
     padding: 4px;
 }
-
 table.table_desc tr td {
     text-align: left;
     padding: 5px;
@@ -42,8 +53,31 @@ table.table_desc tr td {
 }
 
 // Other snippet styles
+// To prevent paragraph text coming below the feature grid icon / image
+.s_feature_grid p {
+    overflow: auto;
+}
+
 .s_comparisons .panel .list-group-item:not(.active) {
     color: #666;
+}
+.s_comparisons {
+    .panel small {
+        color: inherit;
+    }
+    .text-muted {
+        color: @text-muted;
+    }
+}
+
+.s_faq_collapse .container .panel {
+    background-color: inherit;
+    border : 1px solid rgba(0, 0, 0, 0.15);
+    .panel-body {
+        border-top: none;
+        border-bottom-left-radius: (@panel-border-radius - 1);
+        border-bottom-right-radius: (@panel-border-radius - 1);
+    }
 }
 
 .s_references .img-thumbnail {
@@ -101,7 +135,6 @@ table.table_desc tr td {
     height: 100%;
     .item {
         height: 100%;
-        background-size: cover;
     }
     .carousel-control {
         cursor: pointer;
@@ -135,7 +168,6 @@ table.table_desc tr td {
 .quotecarousel {
     padding-bottom: 16px;
 }
-
 div.carousel .container {
     > .carousel-caption {
         .o-position-absolute(@right: 50%, @left: 50%);
@@ -210,25 +242,25 @@ div.carousel .container {
     &.o_grid {
         &.o_spc-none div.row {
             margin: 0;
-            * {
+            > div {
                 padding: 0;
             }
         }
         &.o_spc-small div.row {
             margin: 5px 0;
-            * {
+            > div {
                 padding: 0 5px;
             }
         }
         &.o_spc-medium div.row {
             margin: 10px 0;
-            * {
+            > div {
                 padding: 0 10px;
             }
         }
         &.o_spc-big div.row {
             margin: 15px 0;
-            * {
+            > div {
                 padding: 0 15px;
             }
         }
@@ -316,9 +348,6 @@ div.carousel .container {
                 max-height: 100%;
                 max-width: 100%;
                 margin: auto;
-                position: relative;
-                top: 50%;
-                .translate(0, -50%);
             }
 
             ul.carousel-indicators {
@@ -349,6 +378,10 @@ div.carousel .container {
                         filter: gray;
                         filter: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' height='0'><filter id='greyscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0' /></filter></svg>#greyscale");
                     }
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
                 }
             }
 
@@ -362,35 +395,57 @@ div.carousel .container {
     }
 }
 
-// Parallax Theme
 div.carousel {
-    .carousel-indicators {
-        li { border: 1px solid grey; }
-        .active { background-color: grey; }
+    .carousel-indicators li {
+        box-shadow: 0 0 0 1px grey;
+        &:hover:not(.active) {
+            background-color: @color-white-50;
+        }
     }
     span.carousel-img img,
     div.carousel-content {
         max-height: 95%;
         padding: 10px;
     }
-    div.carousel-content {
-        background-color: black;
-        color: white;
-        background: rgba(0, 0, 0, 0.3);
+    .carousel-control {
+        cursor: pointer;
     }
 }
 
+// Parallax Theme
 .parallax {
-    background-size: cover;
-    > div {
-        position: relative;
-        display: table;
-        width: 100%;
-        min-height: 200px;
-        > div {
-            display: table-cell;
-            vertical-align: middle;
-            padding: 32px 0;
+    position: relative;
+    z-index: 0;
+
+    .oe_structure {
+        > :first-child {
+            margin-top: 32px;
+        }
+        > :last-child {
+            margin-bottom: 32px;
+        }
+    }
+
+    > .s_parallax_bg {
+        .o-position-absolute(0, 0, 0, 0);
+        background-size: cover;
+        background-attachment: scroll;
+        pointer-events: none;
+    }
+    &.s_parallax_is_fixed > .s_parallax_bg {
+        background-attachment: fixed;
+    }
+}
+.s_parallax {
+    min-height: 200px;
+}
+
+// Company Team
+
+.s_company_team {
+    @media (max-width: @screen-sm-max) {
+        img {
+            max-width: 50%;
         }
     }
 }

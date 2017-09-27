@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import account_test
-import report
+
+from . import models
+from . import report

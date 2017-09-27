@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-# 
+#
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2015-10-20 07:32+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:59
@@ -28,10 +30,17 @@ msgstr "%s (копия)"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
 "* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             \n"
+"* If the payslip is under verification, the status is "
+"'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr "* Когда расчетная ведомость создана, она имеет статус \"Черновик\". ↵ \n* Если расчетная ведомость находится на проверке, она имеет статус \"Ожидание\". ↵ \n* Если расчетная ведомость подтверждается то, статус меняется на \"Готово\". ↵ \n* Когда пользователь отменил ведомость, статус меняется на \"Отказано\"."
+msgstr ""
+"* Когда расчетная ведомость создана, она имеет статус \"Черновик\". ↵ \n"
+"* Если расчетная ведомость находится на проверке, она имеет статус \"Ожидание"
+"\". ↵ \n"
+"* Если расчетная ведомость подтверждается то, статус меняется на \"Готово\". "
+"↵ \n"
+"* Когда пользователь отменил ведомость, статус меняется на \"Отказано\"."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -117,9 +126,14 @@ msgstr "<strong>Итого</strong>"
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, the\n"
+"                payment of the employees. It can be the social security, "
+"the\n"
 "                estate or anyone that collect or inject money on payslips."
-msgstr "Реестр отчислений - это третья сторона, вовлеченная в систему выплаты\nзаработной платы сотрудников. Это может быть фонд социального страхования, страховка имущества, или любая другая организация, получающая или отдающая денежные средства в платежную ведомость."
+msgstr ""
+"Реестр отчислений - это третья сторона, вовлеченная в систему выплаты\n"
+"заработной платы сотрудников. Это может быть фонд социального страхования, "
+"страховка имущества, или любая другая организация, получающая или отдающая "
+"денежные средства в платежную ведомость."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -186,7 +200,9 @@ msgstr "Появилось в платежной ведомости"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr "Примените это правило для вычислений если условие справедливо. Вы можете для основы установить значение > 1000."
+msgstr ""
+"Примените это правило для вычислений если условие справедливо. Вы можете для "
+"основы установить значение > 1000."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
@@ -221,7 +237,7 @@ msgstr "Отклонить платежную ведомость"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9081
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9052
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Категория"
@@ -330,7 +346,6 @@ msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_contract
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
@@ -430,7 +445,12 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr "Определяет правила, которые должны быть применены к этой платежной ведомости, в соответствии с выбранным контрактом. Если вы если вы оставите поле контракта пустым, это поле не является обязательным больше и, таким образом, применяемыми правилами, будут все правила, установленные на структуре всех контрактов работника действительных для выбранного периода"
+msgstr ""
+"Определяет правила, которые должны быть применены к этой платежной "
+"ведомости, в соответствии с выбранным контрактом. Если вы если вы оставите "
+"поле контракта пустым, это поле не является обязательным больше и, таким "
+"образом, применяемыми правилами, будут все правила, установленные на "
+"структуре всех контрактов работника действительных для выбранного периода"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
@@ -520,6 +540,12 @@ msgid "Employee"
 msgstr "Сотрудник"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+#, fuzzy
+msgid "Employee Contract"
+msgstr "Трудовая функция работника"
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
 msgid "Employee Function"
@@ -548,7 +574,8 @@ msgstr "Ошибка! Вы не можете создать рекурсивну
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "Иногда в выплате заработной платы сотрудникам участвует третья сторона."
+msgstr ""
+"Иногда в выплате заработной платы сотрудникам участвует третья сторона."
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -617,7 +644,9 @@ msgstr "ID"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr "Если все проверено, пометьте что все платежные ведомости отсюда являются оплаченными ведомостями."
+msgstr ""
+"Если все проверено, пометьте что все платежные ведомости отсюда являются "
+"оплаченными ведомостями."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -625,7 +654,9 @@ msgstr "Если все проверено, пометьте что все пл�
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
-msgstr "Если в поле 'Активно' имеет значение Неверно, вы сможете скрыть правило начисления заработной платы, не удаляя его."
+msgstr ""
+"Если в поле 'Активно' имеет значение Неверно, вы сможете скрыть правило "
+"начисления заработной платы, не удаляя его."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
@@ -661,15 +692,22 @@ msgid ""
 "It is used in computation for percentage and fixed amount.For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
-msgstr "Используется в расчетах для процентов и фиксированной суммы. Например в Правиле для ваучер на питание зафиксировано количество 1 € за рабочий день, его количество определяется в выражении типа worked_days.WORK100.number_of_days."
+msgstr ""
+"Используется в расчетах для процентов и фиксированной суммы. Например в "
+"Правиле для ваучер на питание зафиксировано количество 1 € за рабочий день, "
+"его количество определяется в выражении типа worked_days.WORK100."
+"number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of"
-" basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
-msgstr "Используется в вычислении. Для например, Правила для продаж, имеющих 1% комиссионных базового оклада для каждого программного продукта может определены в выражении типа result=inputs.SALEURO.amount*contract.wage*0,01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of "
+"basic salary for per product can defined in expression like result = inputs."
+"SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"Используется в вычислении. Для например, Правила для продаж, имеющих 1% "
+"комиссионных базового оклада для каждого программного продукта может "
+"определены в выражении типа result=inputs.SALEURO.amount*contract.wage*0,01."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
@@ -735,7 +773,9 @@ msgstr "Присоедините свою платежную ведомость 
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
-msgstr "Присоединение зарплатной категории к ее руководству используется только в целях отчетности."
+msgstr ""
+"Присоединение зарплатной категории к ее руководству используется только в "
+"целях отчетности."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
@@ -889,7 +929,6 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "В платежной ведомости \"дата от\" должна быть раньше \"Даты до\"."
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -936,6 +975,12 @@ msgstr "Строки платежных ведомостей в реестре �
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
 msgstr "Название платежной ведомости"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+#, fuzzy
+msgid "Payslip Run"
+msgstr "Строка расчетного листка"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1141,7 +1186,8 @@ msgid "Salary Rules"
 msgstr "Правила начисления зарплаты"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:638
+#: code:addons/hr_payroll/hr_payroll.py:640
+#: code:addons/hr_payroll/hr_payroll.py:699
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Зарплатный листок от %s для %s"
@@ -1239,7 +1285,9 @@ msgstr "Структура"
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
-msgstr "Код правил начисления заработных плат может быть использован как ссылка при выведении других правил. В таком случае, он чувствителен."
+msgstr ""
+"Код правил начисления заработных плат может быть использован как ссылка при "
+"выведении других правил. В таком случае, он чувствителен."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
@@ -1276,17 +1324,23 @@ msgstr "Минимальная сумма, применяемая для дан�
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic,"
-" but you can also use categories code fields in lowercase as a variable "
-"names (hra, ma, lta, etc.) and the variable basic."
-msgstr "Эта информация будет использоваться для вычисления % значений полей; в общем это основной, но вы также можете использовать поля категории кода в нижнем регистре как имена переменных (HRA, MA, LTA и т.д.) и различных оснований."
+"This will be used to compute the % fields values; in general it is on basic, "
+"but you can also use categories code fields in lowercase as a variable names "
+"(hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+"Эта информация будет использоваться для вычисления % значений полей; в общем "
+"это основной, но вы также можете использовать поля категории кода в нижнем "
+"регистре как имена переменных (HRA, MA, LTA и т.д.) и различных оснований."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
-msgstr "Этот мастер будет генерировать платежные ведомости для всех выбранного сотрудника (ов) на основе даты и кредитного примечания, указанного в расчетных листах Run."
+"This wizard will generate payslips for all selected employee(s) based on the "
+"dates and credit note specified on Payslips Run."
+msgstr ""
+"Этот мастер будет генерировать платежные ведомости для всех выбранного "
+"сотрудника (ов) на основе даты и кредитного примечания, указанного в "
+"расчетных листах Run."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
@@ -1311,7 +1365,8 @@ msgstr "Используется для организации последов�
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
 msgid "Used to display the salary rule on payslip."
-msgstr "Используется для выведения правила начисления зарплаты на расчетный листок."
+msgstr ""
+"Используется для выведения правила начисления зарплаты на расчетный листок."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1339,45 +1394,61 @@ msgid "Worked Days & Inputs"
 msgstr "Отработанные дни и исходные данные"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:838
+#: code:addons/hr_payroll/hr_payroll.py:884
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr "Неправильный процент основания или величина, определяемая для Правила начисления зарплаты %s (%s)."
+msgstr ""
+"Неправильный процент основания или величина, определяемая для Правила "
+"начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:844
+#: code:addons/hr_payroll/hr_payroll.py:890
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "Неверный код python определенный для правила начисления зарплаты %s (%s)."
+msgstr ""
+"Неверный код python определенный для правила начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:867
+#: code:addons/hr_payroll/hr_payroll.py:913
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr "Неверное условие для  python, определенное для правила начисления зарплаты %s (%s)."
+msgstr ""
+"Неверное условие для  python, определенное для правила начисления зарплаты "
+"%s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:831
+#: code:addons/hr_payroll/hr_payroll.py:877
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr "Неверное количество, определенное для правила начисления зарплаты %s (%s)."
+msgstr ""
+"Неверное количество, определенное для правила начисления зарплаты %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:861
+#: code:addons/hr_payroll/hr_payroll.py:907
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr "Неверное условие диапазона, определенное для правила начисления зарплаты %s (%s)."
+msgstr ""
+"Неверное условие диапазона, определенное для правила начисления зарплаты %s "
+"(%s)."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:333
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr "Вы не можете удалить расчетный листок, который не является черновиком или не отменен!"
+msgstr ""
+"Вы не можете удалить расчетный листок, который не является черновиком или не "
+"отменен!"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Вы должны выбрать сотрудника(ов) чтобы создать расчетный листок(ки)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:964
+#, fuzzy, python-format
+msgid "You must set a contract to create a payslip line."
 msgstr "Вы должны выбрать сотрудника(ов) чтобы создать расчетный листок(ки)."
 
 #. module: hr_payroll

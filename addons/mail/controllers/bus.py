@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*
-import base64
-import openerp
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.http import request
+from odoo import SUPERUSER_ID
+from odoo.http import request, route
+from odoo.addons.bus.controllers.main import BusController
 
 
-class MailChatController(openerp.addons.bus.controllers.main.BusController):
+class MailChatController(BusController):
 
     def _default_request_uid(self):
         """ For Anonymous people, they receive the access right of SUPERUSER_ID since they have NO access (auth=none)
@@ -23,6 +23,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
             partner_id = request.env.user.partner_id.id
 
             if partner_id:
+                channels = list(channels)       # do not alter original list
                 for mail_channel in request.env['mail.channel'].search([('channel_partner_ids', 'in', [partner_id])]):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
                 # personal and needaction channel
@@ -33,7 +34,7 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
     # --------------------------
     # Anonymous routes (Common Methods)
     # --------------------------
-    @openerp.http.route('/mail/chat_post', type="json", auth="none")
+    @route('/mail/chat_post', type="json", auth="none")
     def mail_chat_post(self, uuid, message_content, **kwargs):
         request_uid = self._default_request_uid()
         # find the author from the user session, which can be None
@@ -45,8 +46,11 @@ class MailChatController(openerp.addons.bus.controllers.main.BusController):
         message = mail_channel.sudo(request_uid).with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext', **kwargs)
         return message and message.id or False
 
-    @openerp.http.route(['/mail/chat_history'], type="json", auth="none")
+    @route(['/mail/chat_history'], type="json", auth="none")
     def mail_chat_history(self, uuid, last_id=False, limit=20):
         request_uid = self._default_request_uid()
         channel = request.env["mail.channel"].sudo(request_uid).search([('uuid', '=', uuid)], limit=1)
-        return channel.sudo(request_uid).channel_fetch_message(last_id, limit)
+        if not channel:
+            return []
+        else:
+            return channel.sudo(request_uid).channel_fetch_message(last_id, limit)

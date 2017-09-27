@@ -1,29 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_attendance
-# 
+#
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-08 16:19+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid ""
-"(*) A positive delay means that the employee worked less than recorded.<br/>\n"
+"(*) A positive delay means that the employee worked less than recorded.<br/"
+">\n"
 "(*) A negative delay means that the employee worked more than encoded."
-msgstr "(*) Положительное значение означает, что сотрудник работал меньше, чем записано.<br/>\n(*) Отрицательное значение обозначает, что сотрудник работал больше, чем указано."
+msgstr ""
+"(*) Положительное значение означает, что сотрудник работал меньше, чем "
+"записано.<br/>\n"
+"(*) Отрицательное значение обозначает, что сотрудник работал больше, чем "
+"указано."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -57,7 +64,9 @@ msgstr "Тип действия"
 msgid ""
 "Allowed difference in minutes between the signin/signout and the timesheet "
 "computation for one sheet. Set this to 0 for no tolerance."
-msgstr "Разрешенная разница в минутах между входом/выходом и расчет табеля одного листа. Установите его на 0, если вы толерантны к опозданиям."
+msgstr ""
+"Разрешенная разница в минутах между входом/выходом и расчет табеля одного "
+"листа. Установите его на 0, если вы толерантны к опозданиям."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -119,7 +128,9 @@ msgid ""
 "Below the maximum tolerance, the attendance error will not be taken into "
 "account. Above the maximum tolerance, the error is considered to be "
 "voluntary and will be taken into account."
-msgstr "Опоздания в рамках допуска не будут учтены. Опоздания, превышающие допуск, будут считаться осознанными и будут учтены."
+msgstr ""
+"Опоздания в рамках допуска не будут учтены. Опоздания, превышающие допуск, "
+"будут считаться осознанными и будут учтены."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -217,7 +228,9 @@ msgstr "Дата окончания"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. Входом)"
+msgstr ""
+"Ошибка! Вход (соответственно и Выход) должен следовать за Выходом (соотв. "
+"Входом)"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -358,8 +371,7 @@ msgstr "Выход"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgid "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Указывает причину регистрации/выхода в случае сверхурочной работы."
 
 #. module: hr_attendance
@@ -378,17 +390,10 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr "Функция учета рабочего времени направлена на контроль за посещаемостью и Входом / Выходом сотрудников. Вы также можете соединить эту функцию с системой  посещаемости с помощью функции веб-служб Odoo."
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Управление временем"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.timesheet_menu_root
-msgid "Timesheets"
-msgstr "Табели учёта"
+msgstr ""
+"Функция учета рабочего времени направлена на контроль за посещаемостью и "
+"Входом / Выходом сотрудников. Вы также можете соединить эту функцию с "
+"системой  посещаемости с помощью функции веб-служб Odoo."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -406,9 +411,17 @@ msgstr "Наработанные часы"
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
-msgstr "Вы пытались %s с предшествующей даты к другому событию!↵ \nПопробуйте связаться с HR-менеджер, чтобы исправить посещаемость."
+msgstr ""
+"Вы пытались %s с предшествующей даты к другому событию!↵ \n"
+"Попробуйте связаться с HR-менеджер, чтобы исправить посещаемость."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
 msgstr "report.hr_attendance.report_attendanceerrors"
+
+#~ msgid "Time Tracking"
+#~ msgstr "Управление временем"
+
+#~ msgid "Timesheets"
+#~ msgstr "Табели учёта"

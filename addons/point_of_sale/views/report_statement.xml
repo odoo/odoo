@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
 <template id="report_statement">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.internal_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <h2>Statement</h2>
 
@@ -32,17 +32,13 @@
                             <strong>Opening Date</strong>:<br/>
                             <span t-field="o.date"/>
                         </div>
-                        <!-- <div class="col-xs-3">
-                            <strong>Closing Date</strong>:<br/>
-                            <span t-field="o.closing_date"/>
-                        </div> -->
                         <div class="col-xs-3">
                             <strong>Starting Balance</strong>:<br/>
-                            <span t-field="o.balance_start" t-field-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            <span t-field="o.balance_start" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Ending Balance</strong>:<br/>
-                            <span t-field="o.balance_end_real" t-field-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                            <span t-field="o.balance_end_real" t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                         </div>
                     </div>
 
@@ -60,7 +56,7 @@
                                 <td><span t-esc="line.partner_id.name"/></td>
                                 <td class="text-right">
                                     <span t-field="line.amount" 
-                                        t-field-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                        t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'/>
                                 </td>
                             </tr>
                         </tbody>
@@ -71,7 +67,7 @@
                             <table class="table table-condensed">
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
-                                    <td class="text-right"><span t-esc="formatLang(get_total(o.line_ids), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="sum([line.amount for line in o.line_ids])" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -82,4 +78,4 @@
     </t>
 </template>
 </data>
-</openerp>
+</odoo>

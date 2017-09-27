@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="mrp_bom_structure_report">
+    <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+            <div class="page">
+                <h2>BOM Structure</h2>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>BOM Name</th>
+                            <th>Quantity</th>
+                            <th>BOM Ref</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs" t-as="o">
+                            <tr style="font-weight: bold;">
+                                <td>
+                                    <span t-field="o.product_id.default_code"/>
+                                    <span t-field="o.display_name"/>
+                                </td>
+                                <td>
+                                    <span t-field="o.product_qty"/>
+                                    <span groups="product.group_uom" t-field="o.product_uom_id.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="o.code"/>
+                                </td>
+                            </tr>
+                            <tr t-foreach="get_children(o.bom_line_ids)" t-as="l">
+                                <td style="padding-left: 20px;">
+                                    <span style="color: white;" t-esc="'... '*(l['level'])"/>
+                                    <span t-esc="l['pname']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="l['pqty']"/>
+                                    <span t-esc="l['uname']" groups="product.group_uom"/>
+                                </td>
+                                <td>
+                                    <span t-esc="l['code']"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

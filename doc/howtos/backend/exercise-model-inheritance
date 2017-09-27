@@ -10,10 +10,10 @@ Index: addons/openacademy/__init__.py
  from . import controllers
  from . import models
 +from . import partner
-Index: addons/openacademy/__openerp__.py
+Index: addons/openacademy/__manifest__.py
 ===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-26 17:26:01.227783353 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-26 17:26:01.223783354 +0200
+--- addons.orig/openacademy/__manifest__.py	2014-08-26 17:26:01.227783353 +0200
++++ addons/openacademy/__manifest__.py	2014-08-26 17:26:01.223783354 +0200
 @@ -28,6 +28,7 @@
          # 'security/ir.model.access.csv',
          'templates.xml',
@@ -28,7 +28,7 @@ Index: addons/openacademy/partner.py
 +++ addons/openacademy/partner.py	2014-08-26 17:26:01.223783354 +0200
 @@ -0,0 +1,12 @@
 +# -*- coding: utf-8 -*-
-+from openerp import fields, models
++from odoo import fields, models
 +
 +class Partner(models.Model):
 +    _inherit = 'res.partner'
@@ -45,8 +45,8 @@ Index: addons/openacademy/views/partner.xml
 +++ addons/openacademy/views/partner.xml	2014-08-26 17:26:01.223783354 +0200
 @@ -0,0 +1,32 @@
 +<?xml version="1.0" encoding="UTF-8"?>
-+ <openerp>
-+    <data>
++ <odoo>
++
 +        <!-- Add instructor field to existing view -->
 +        <record model="ir.ui.view" id="partner_instructor_form_view">
 +            <field name="name">partner.instructor</field>
@@ -74,5 +74,5 @@ Index: addons/openacademy/views/partner.xml
 +        <menuitem id="contact_menu" name="Contacts"
 +                  parent="configuration_menu"
 +                  action="contact_list_action"/>
-+    </data>
-+</openerp>
++
++</odoo>

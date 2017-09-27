@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
     <template id="assets_frontend_result" inherit_id="website.assets_frontend" name="Survey Results assets">
         <xpath expr="." position="inside">
@@ -61,7 +61,7 @@
                             <t t-if="question.description">
                                 <div class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
-                            <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
+                            <t t-if="question.type in ['textbox', 'free_text', 'date']">
                                 <t t-call="survey.result_text"></t>
                             </t>
                             <t t-if="question.type in ['simple_choice', 'multiple_choice']">
@@ -84,7 +84,7 @@
         </t>
     </template>
 
-    <!-- Result for free_text,textbox and datetime -->
+    <!-- Result for free_text,textbox and date -->
     <template id="result_text" name="Text Result">
         <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
             <thead>
@@ -107,9 +107,9 @@
                             <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
                         </td>
                     </t>
-                    <t t-if="question.type == 'datetime'">
+                    <t t-if="question.type == 'date'">
                         <td>
-                            <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" class="oe_date" t-field="user_input.value_date"></a><br/>
+                            <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
                         </td>
                     </t>
                 </tr>
@@ -352,4 +352,4 @@
         </ul>
     </template>
 </data>
-</openerp>
+</odoo>

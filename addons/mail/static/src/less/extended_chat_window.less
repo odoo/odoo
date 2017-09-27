@@ -1,0 +1,60 @@
+.o_chat_window {
+    &.o_thread_less {
+        .o_chat_search_input {
+            .o-flex-display();
+            .o-align-items(baseline);
+            padding: @o-mail-chatter-gap*0.5 @o-mail-chatter-gap;
+
+            > span {
+                .o-flex(0, 0, auto);
+            }
+
+            > input {
+                margin-left: 5px;
+                padding: @o-mail-chatter-gap*0.5;
+                .o-flex(1, 1, 100%);
+            }
+        }
+
+        .o_mail_thread {
+            background-color: @odoo-webclient-background-color;
+        }
+
+        .o_chat_composer {
+            display: none;
+        }
+    }
+
+    .o_chat_composer {
+        .o_composer {
+            .o_composer_input {
+                width: 80%;
+                > textarea {
+                    padding: 10px;
+                    font-size: 13px;
+                }
+                @media (max-width: @screen-xs-max) {
+                    width: 70%;
+                    > textarea {
+                        padding: 15px 10px;
+                    }
+                }
+            }
+            .o_chatter_composer_tools {
+                .o-position-absolute(@right: 0px, @top: 0px);
+                button {
+                    padding: 10px;
+                    @media (max-width: @screen-xs-max) {
+                        padding: 13px;
+                    }
+                    &.btn-icon {
+                        font-size: 1.3em;
+                    }
+                }
+            }
+        }
+        .o_composer_attachments_list {
+            margin: 0px;
+        }
+    }
+}

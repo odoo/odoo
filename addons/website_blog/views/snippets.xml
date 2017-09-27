@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
-
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-js='website_blog'
-            data-selector=".js_blog #title"
-            data-no-check="true">
-
-            <li data-change="true"> <a href="#">Change Cover</a> </li>
+        <div data-js="blog_cover" data-selector=".website_blog .o_blog_cover_container" data-no-check="true">
+            <li data-change="true" data-no-preview="true"><a href="#">Change Cover</a></li>
+            <li data-clear="true" data-no-preview="true"><a href="#" >No Cover</a></li>
             <li class="dropdown-submenu">
                 <a href="#">Size</a>
                 <ul class="dropdown-menu">
-                    <li data-cover_class="cover cover_full"><a>Full Screen</a></li>
-                    <li data-cover_class="cover container cover_narrow"><a>Narrow</a></li>
+                    <li data-select-class="cover container-fluid cover_full"><a href="#">Full Screen</a></li>
+                    <li data-select-class="cover container-fluid cover_narrow"><a href="#">Mid screen</a></li>
+                    <li data-select-class="cover container cover_narrow"><a href="#">Narrow</a></li>
                 </ul>
             </li>
             <li class="dropdown-submenu">
-                <a href="#">Color</a>
+                <a href="#">Filter Intensity</a>
                 <ul class="dropdown-menu">
-                    <li data-bgcolor="oe_blue"><a>Blue</a></li>
-                    <li data-bgcolor="oe_yellow"><a>Yellow</a></li>
-                    <li data-bgcolor="oe_red"><a>Red</a></li>
-                    <li data-bgcolor="oe_purple"><a>Purple</a></li>
-                    <li data-bgcolor="oe_green"><a>Green</a></li>
-                    <li data-bgcolor="oe_none"><a>None</a></li>
+                    <li data-filter_value="0.0"><a href="#">None</a></li>
+                    <li data-filter_value="0.2"><a href="#">Low</a></li>
+                    <li data-filter_value="0.4"><a href="#">Medium</a></li>
+                    <li data-filter_value="0.6"><a href="#">High</a></li>
                 </ul>
             </li>
             <li class="dropdown-submenu">
-                <a href="#">Opacity</a>
+                <a href="#">Filter Color</a>
                 <ul class="dropdown-menu">
-                    <li data-opacity="1.0"><a>None</a></li>
-                    <li data-opacity="0.8"><a>Low</a></li>
-                    <li data-opacity="0.6"><a>Medium</a></li>
-                    <li data-opacity="0.4"><a>High</a></li>
+                    <li data-filter_color="oe_black"><a href="#">Black</a></li>
+                    <li data-filter_color="oe_none"><a href="#">White</a></li>
+                    <li data-filter_color="oe_blue"><a href="#">Blue</a></li>
+                    <li data-filter_color="oe_yellow"><a href="#">Yellow</a></li>
+                    <li data-filter_color="oe_red"><a href="#">Red</a></li>
+                    <li data-filter_color="oe_purple"><a href="#">Purple</a></li>
+                    <li data-filter_color="oe_green"><a href="#">Green</a></li>
                 </ul>
             </li>
-            <li data-clear="true"> <a href="#" >No Cover</a></li>
         </div>
     </xpath>
-
 </template>
-</data>
-</openerp>
+</odoo>

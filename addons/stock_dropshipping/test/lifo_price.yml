@@ -1,8 +1,8 @@
 -
   Set the company currency as EURO for the sake of repeatibility
 -
-   !python {model: res.company}: |
-    self.write(cr, uid, [ref('base.main_company')], {'currency_id':ref('base.EUR')}, context=context)
+   !python {model: res.company, id: base.main_company}: |
+    self.write({'currency_id':ref('base.EUR')})
 
 - 
   Set product category removal strategy as LIFO 
@@ -23,7 +23,7 @@
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
     valuation: real_time
-    cost_method: real
+    cost_method: fifo
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
     description: LIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
@@ -54,8 +54,8 @@
 - 
   I confirm the first purchase order
 -
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_lifo1")])
+  !python {model: purchase.order, id: purchase_order_lifo1}: |
+    self.button_confirm()
 -
   I check the "Approved" status of purchase order 1
 -
@@ -64,31 +64,21 @@
 - 
   Process the receipt of purchase order 1
 -
-  !python {model: stock.picking}: |
-    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_lifo1"), context=context).picking_ids[0]
-    order.do_transfer()
-- 
-  Check the standard price of the product (lifo icecream)
-- 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 70.0, 'Standard price should not have changed!'
-- 
+  !python {model: purchase.order, id: purchase_order_lifo1}: |
+    self.picking_ids[0].move_lines.quantity_done = self.picking_ids[0].move_lines.product_qty
+    self.picking_ids[0].button_validate()
+-
   I confirm the second purchase order
 - 
-  !python {model: purchase.order}: |
-    self.button_confirm(cr, uid, [ref("purchase_order_lifo2")])
+  !python {model: purchase.order, id: purchase_order_lifo2}: |
+    self.button_confirm()
 -
   Process the receipt of purchase order 2
 - 
-  !python {model: stock.picking}: |
-    order = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_lifo2"), context=context).picking_ids[0]
-    order.do_transfer()
-- 
-  Check the standard price should not have changed
-- 
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 70.0, 'Standard price as lifo price of second receipt incorrect!'
-- 
+  !python {model: purchase.order, id: purchase_order_lifo2}: |
+    self.picking_ids[0].move_lines.quantity_done = self.picking_ids[0].move_lines.product_qty
+    self.picking_ids[0].button_validate()
+-
   Let us send some goods
 - 
   !record {model: stock.picking, id: outgoing_lifo_shipment}:
@@ -107,16 +97,16 @@
 - 
   I assign this outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_lifo_shipment")])
+  !python {model: stock.picking, id: outgoing_lifo_shipment}: |
+    self.action_assign()
+    self.move_lines.quantity_done = self.move_lines.product_qty
 - 
   Process the delivery of the outgoing shipment
 - 
-  !python {model: stock.picking}: |
-    pick_order = self.pool.get('stock.picking').browse(cr, uid, ref("outgoing_lifo_shipment"), context=context)
-    pick_order.do_transfer()
+  !python {model: stock.picking, id: outgoing_lifo_shipment}: |
+    self.button_validate()
 -
-  Check standard price became 80 euro
+  Check if the move value correctly reflects the fifo costing method
 -
-  !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 80.0, 'Price should have been 80 euro'
+  !python {model: stock.picking, id: outgoing_lifo_shipment}: |
+    assert self.move_lines.value == -1400.0, 'Stock move value should have been 1400 euro'

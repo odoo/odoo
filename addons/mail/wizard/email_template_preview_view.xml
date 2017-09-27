@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- Email Template Preview -->
         <record model="ir.ui.view" id="email_template_preview_form">
@@ -40,10 +40,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="email_template_preview_form"/>
-            <field name="auto_refresh" eval="1" />
             <field name="target">new</field>
             <field name="context">{'template_id':active_id}</field>
         </record>
 
     </data>
-</openerp>
+</odoo>

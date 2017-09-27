@@ -1,27 +1,34 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
+import pytz
+
+from datetime import datetime
 from psycopg2 import IntegrityError
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
-from openerp.addons.base.ir.ir_qweb import nl2br
+
+from odoo import http
+from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
+from odoo.addons.base.ir.ir_qweb.fields import nl2br
+
 
 class WebsiteForm(http.Controller):
 
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
-        model_record = request.env['ir.model'].search([('model', '=', model_name), ('website_form_access', '=', True)])
+        model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
             return json.dumps(False)
 
         try:
-            data = self.extract_data(model_record, ** kwargs)
+            data = self.extract_data(model_record, request.params)
         # If we encounter an issue while extracting data
-        except ValidationError, e:
+        except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception
             return json.dumps({'error_fields' : e.args[0]})
 
@@ -36,8 +43,9 @@ class WebsiteForm(http.Controller):
         except IntegrityError:
             return json.dumps(False)
 
+        request.session['form_builder_model_model'] = model_record.model
         request.session['form_builder_model'] = model_record.name
-        request.session['form_builder_id']    = id_record
+        request.session['form_builder_id'] = id_record
 
         return json.dumps({'id': id_record})
 
@@ -60,6 +68,17 @@ class WebsiteForm(http.Controller):
     def boolean(self, field_label, field_input):
         return bool(field_input)
 
+    def date(self, field_label, field_input):
+        lang = request.env['ir.qweb.field'].user_lang()
+        return datetime.strptime(field_input, lang.date_format).strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+    def datetime(self, field_label, field_input):
+        lang = request.env['ir.qweb.field'].user_lang()
+        strftime_format = (u"%s %s" % (lang.date_format, lang.time_format))
+        user_tz = pytz.timezone(request.context.get('tz') or request.env.user.tz or 'UTC')
+        dt = user_tz.localize(datetime.strptime(field_input, strftime_format)).astimezone(pytz.utc)
+        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())
 
@@ -73,7 +92,8 @@ class WebsiteForm(http.Controller):
         'char': identity,
         'text': identity,
         'html': identity,
-        'datetime': identity,
+        'date': date,
+        'datetime': datetime,
         'many2one': integer,
         'one2many': one2many,
         'many2many':many2many,
@@ -86,7 +106,7 @@ class WebsiteForm(http.Controller):
 
 
     # Extract all data sent by the form and sort its on several properties
-    def extract_data(self, model, **kwargs):
+    def extract_data(self, model, values):
 
         data = {
             'record': {},        # Values to create record
@@ -97,7 +117,8 @@ class WebsiteForm(http.Controller):
         authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
 
-        for field_name, field_value in kwargs.items():
+
+        for field_name, field_value in values.items():
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
@@ -121,7 +142,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
+                data['custom'] += u"%s : %s\n" % (field_name, field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
@@ -139,18 +160,18 @@ class WebsiteForm(http.Controller):
         # def website_form_input_filter(self, values):
         #     values['name'] = '%s\'s Application' % values['partner_name']
         #     return values
-        dest_model = request.env[model.model]
+        dest_model = request.env[model.sudo().model]
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in authorized_fields.iteritems() if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in authorized_fields.items() if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 
         return data
 
     def insert_record(self, request, model, values, custom, meta=None):
-        record = request.env[model.model].sudo().create(values)
+        record = request.env[model.model].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
             default_field = model.website_form_default_field_id
@@ -200,7 +221,7 @@ class WebsiteForm(http.Controller):
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record
         if orphan_attachment_ids:
-            if model.name != 'mail.mail':
+            if model.model != 'mail.mail':
                 values = {
                     'body': _('<p>Attached files : </p>'),
                     'model': model.model,

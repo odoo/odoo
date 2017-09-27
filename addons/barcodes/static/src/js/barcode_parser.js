@@ -2,7 +2,7 @@ odoo.define('barcodes.BarcodeParser', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 
 // The BarcodeParser is used to detect what is the category
 // of a barcode (product, partner, ...) and extract an encoded value
@@ -18,19 +18,26 @@ var BarcodeParser = Class.extend({
     // only when those data have been loaded
     load: function(){
         var self = this;
-        return new Model('barcode.nomenclature')
-            .query(['name','rule_ids','upc_ean_conv'])
-            .filter([['id','=',this.nomenclature_id[0]]])
-            .first()
-            .then(function(nomenclature){
-                self.nomenclature = nomenclature;
+        var id = this.nomenclature_id[0];
+        rpc.query({
+                model: 'barcode.nomenclature',
+                method: 'read',
+                args: [[id], ['name','rule_ids','upc_ean_conv']],
+            })
+            .then(function (nomenclatures){
+                self.nomenclature = nomenclatures[0];
 
-                return new Model('barcode.rule')
-                    .query(['name','sequence','type','encoding','pattern','alias'])
-                    .filter([['barcode_nomenclature_id','=',self.nomenclature.id ]])
-                    .all();
+                var args = [
+                    [['barcode_nomenclature_id', '=', self.nomenclature.id]],
+                    ['name', 'sequence', 'type', 'encoding', 'pattern', 'alias'],
+                ];
+                return rpc.query({
+                    model: 'barcode.rule',
+                    method: 'search_read',
+                    args: args,
+                });
             }).then(function(rules){
-                rules = rules.sort(function(a,b){ return a.sequence - b.sequence; });
+                rules = rules.sort(function(a, b){ return a.sequence - b.sequence; });
                 self.nomenclature.rules = rules;
             });
     },
@@ -102,7 +109,7 @@ var BarcodeParser = Class.extend({
         ean = ean.substr(0,13);
 
         for(var n = 0, count = (13 - ean.length); n < count; n++){
-            ean = ean + '0';
+            ean = '0' + ean;
         }
         return ean.substr(0,12) + this.ean_checksum(ean);
     },

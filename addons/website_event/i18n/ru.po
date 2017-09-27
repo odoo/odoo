@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2016-01-13 00:29+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-07-01 09:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:210
+#: code:addons/website_event/controllers/main.py:219
 #, python-format
 msgid "%(month)s %(start_day)s%(end_day)s"
 msgstr ""
@@ -104,13 +106,13 @@ msgid "Add Content"
 msgstr "Добавить содержание"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:105
+#: code:addons/website_event/controllers/main.py:106
 #, python-format
 msgid "All Categories"
 msgstr "Все категории"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:116
+#: code:addons/website_event/controllers/main.py:117
 #, python-format
 msgid "All Countries"
 msgstr "Все страны"
@@ -119,6 +121,11 @@ msgstr "Все страны"
 #: model:ir.ui.view,arch_db:website_event.layout
 msgid "All Events"
 msgstr "Все события"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Attendee #%s"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -141,14 +148,14 @@ msgstr "Нажмите здесь, чтобы создать новое собы
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:89
+#: code:addons/website_event/static/src/js/website.tour.event.js:82
 #, python-format
 msgid "Click here to customize your event further."
 msgstr "Нажмите здесь, чтобы персонализировать ваше событие дальше."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:75
 #, python-format
 msgid "Click to publish your event."
 msgstr "Нажмите, чтобы опубликовать ваше событие."
@@ -175,7 +182,9 @@ msgstr "Создать событие"
 msgid ""
 "Create a name for your new event and click <em>'Continue'</em>. e.g: "
 "Technical Training"
-msgstr "Создайте название для вашего нового события и нажмите <em>'Продолжить'</em>. Например: Техническая подготовка"
+msgstr ""
+"Создайте название для вашего нового события и нажмите <em>'Продолжить'</em>. "
+"Например: Техническая подготовка"
 
 #. module: website_event
 #. openerp-web
@@ -207,7 +216,7 @@ msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:88
+#: code:addons/website_event/static/src/js/website.tour.event.js:81
 #, python-format
 msgid "Customize your event"
 msgstr "Персонализировать ваше событие"
@@ -220,7 +229,6 @@ msgstr "Выделенное меню"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:59
-#: code:addons/website_event/static/src/js/website.tour.event.js:66
 #, python-format
 msgid "Drag & Drop a block"
 msgstr "Перетащить и отпустить блок"
@@ -231,13 +239,6 @@ msgstr "Перетащить и отпустить блок"
 #, python-format
 msgid "Drag the 'Image-Text' block and drop it in your page."
 msgstr "Перетащите блок 'Изображение-Текст' и поместите его на вашей странице."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:67
-#, python-format
-msgid "Drag the 'Text Block' in your event page."
-msgstr "Перетащите 'Текстовый блок' на вашу страницу события."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -332,7 +333,9 @@ msgstr "Eventos:"
 msgid ""
 "Find out what people see and say about this event,\n"
 "                            and join the conversation."
-msgstr "Узнайте, что люди видят и говорят по этому событию,\n                            и присоединяйтесь к обсуждению."
+msgstr ""
+"Узнайте, что люди видят и говорят по этому событию,\n"
+"                            и присоединяйтесь к обсуждению."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -371,7 +374,7 @@ msgstr "Название"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:192
+#: code:addons/website_event/controllers/main.py:201
 #: code:addons/website_event/static/src/js/website.tour.event.js:32
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
@@ -387,19 +390,19 @@ msgid "New Event Created"
 msgstr "Создано новое событие"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:37
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Next Events"
 msgstr "Следующие события"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:46
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "Next Week"
 msgstr "Следующая неделя"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:54
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Next month"
 msgstr "Следующий месяц"
@@ -410,14 +413,14 @@ msgid "No event found"
 msgstr "Не найдено ни одного события"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:58
+#: code:addons/website_event/controllers/main.py:59
 #, python-format
 msgid "Old Events"
 msgstr "Старые события"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:74
+#: code:addons/website_event/static/src/js/website.tour.event.js:67
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Как только вы нажмете на Сохранить, ваше событие обновится."
@@ -464,7 +467,7 @@ msgstr "Цена"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:81
+#: code:addons/website_event/static/src/js/website.tour.event.js:74
 #, python-format
 msgid "Publish your event"
 msgstr "Опубликовать ваше событие"
@@ -497,7 +500,7 @@ msgstr "Вернуться к списку событий."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:73
+#: code:addons/website_event/static/src/js/website.tour.event.js:66
 #, python-format
 msgid "Save your modifications"
 msgstr "Сохранить ваши изменения"
@@ -542,34 +545,31 @@ msgid "Start Tutorial"
 msgstr "Начать Обучение"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:26
-#, python-format
-msgid ""
-"The <em>Content</em> menu allows you to create new pages, events, menus, "
-"etc."
-msgstr "Меню <em>Содержание</em> позволяет вам создавать новые страницы, события, меню, т.п."
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_url
-msgid "The full URL to access the document through the website."
-msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:42
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "This Week"
 msgstr "Эта неделя"
 
 #. module: website_event
 #. openerp-web
+#: code:addons/website_event/static/src/js/website.tour.event.js:26
+#, fuzzy, python-format
+msgid "This button allows you to create new pages, events, menus, etc."
+msgstr ""
+"Меню <em>Содержание</em> позволяет вам создавать новые страницы, события, "
+"меню, т.п."
+
+#. module: website_event
+#. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:53
 #, python-format
 msgid "This is your new event page. We will edit the event presentation page."
-msgstr "Это ваша новая страница событий. Мы отредактируем страницу представления событий."
+msgstr ""
+"Это ваша новая страница событий. Мы отредактируем страницу представления "
+"событий."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:50
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "This month"
 msgstr "В этом месяце"
@@ -585,7 +585,7 @@ msgid "Ticket Type #"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Today"
 msgstr "Cегодня"
@@ -621,36 +621,6 @@ msgid "Website Home"
 msgstr "Главная страница сайта"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Сообщения с сайта"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_url
-msgid "Website URL"
-msgstr "URL веб-сайта"
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "История общения с сайта"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_description
-msgid "Website meta description"
-msgstr "Мета описание сайта"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Мета-ключевые слова сайта"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_meta_title
-msgid "Website meta title"
-msgstr "Мета заголовок сайта"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "When"
 msgstr "Когда"
@@ -666,7 +636,10 @@ msgid ""
 "Write here a quote from one of your attendees.\n"
 "                        It gives confidence in your\n"
 "                        events."
-msgstr "Напишите здесь цитату от одного из ваших участников.\n                        Это дает уверенность в ваших\n                        событиях."
+msgstr ""
+"Напишите здесь цитату от одного из ваших участников.\n"
+"                        Это дает уверенность в ваших\n"
+"                        событиях."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -692,3 +665,27 @@ msgstr "pull-right"
 #: model:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
 msgstr "для"
+
+#~ msgid "Drag the 'Text Block' in your event page."
+#~ msgstr "Перетащите 'Текстовый блок' на вашу страницу события."
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Полный URL, чтобы получить доступ к документу через веб-сайт."
+
+#~ msgid "Website Messages"
+#~ msgstr "Сообщения с сайта"
+
+#~ msgid "Website URL"
+#~ msgstr "URL веб-сайта"
+
+#~ msgid "Website communication history"
+#~ msgstr "История общения с сайта"
+
+#~ msgid "Website meta description"
+#~ msgstr "Мета описание сайта"
+
+#~ msgid "Website meta keywords"
+#~ msgstr "Мета-ключевые слова сайта"
+
+#~ msgid "Website meta title"
+#~ msgstr "Мета заголовок сайта"

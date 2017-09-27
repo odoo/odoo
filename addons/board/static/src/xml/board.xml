@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <template>
 <t t-name="DashBoard">
     <div class="oe_dashboard_links">
@@ -9,7 +10,7 @@
     <table t-att-data-layout="node.attrs.layout" t-attf-class="oe_dashboard oe_dashboard_layout_#{node.attrs.layout}" cellspacing="0" cellpadding="0" border="0">
     <tr>
         <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
-             t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">
+             t-att-id="'column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">
 
             <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
         </td>
@@ -17,7 +18,7 @@
     </table>
 </t>
 <t t-name="DashBoard.action">
-    <div t-att-data-id="action.attrs.name" class="oe_action">
+    <div t-att-data-id="action.attrs.id" class="oe_action">
         <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
             <span class="oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
             <input class = "oe_header_text" type="text"/>
@@ -26,8 +27,7 @@
             <span class='oe_icon oe_minimize oe_fold' t-if="!action.attrs.fold"></span>
             <span class='oe_icon oe_maximize oe_fold' t-if="action.attrs.fold"></span>
         </h2>
-        
-        <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
+        <div t-att-class="'oe_content' + (action.attrs.fold ? ' oe_folded' : '')"/>
     </div>
 </t>
 <t t-name="DashBoard.layouts">
@@ -38,8 +38,7 @@
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
                 <img t-attf-src="/board/static/src/img/layout_#{layout}.png"/>
-                <img t-if="layout == current_layout"
-                    src="/web/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe_dashboard_selected_layout"/>
+                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
             </li>
         </ul>
     </div>

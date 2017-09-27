@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_product_margin_graph">
+            <field name="name">product.margin.graph</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <graph string="Product Margins" type="bar">
+                    <field name="product_tmpl_id"/>
+                    <field name="total_margin" type="measure" operator="+"/>
+                </graph>
+            </field>
+    </record>
+
+     <record id="view_product_margin_form" model="ir.ui.view">
+            <field name="name">product.margin.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                 <form string="Product Margins">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="default_code"/>
+                    </group>
+                    <notebook>
+                    <page string="Margins">
+                        <group string="Analysis Criteria">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <newline/>
+                            <field name="invoice_state" />
+
+                            <separator string="Sales" colspan="4"/>
+                            <field name="sale_avg_price"/>
+                            <field name="list_price" string="Catalog Price" readonly="1"/>
+                            <field name="sale_num_invoiced" />
+                            <field name="sales_gap" />
+                            <field name="turnover" />
+                            <field name="sale_expected" />
+
+                            <separator string="Purchases" colspan="4"/>
+                            <field name="purchase_avg_price"/>
+                            <field name="standard_price" string="Standard Price" readonly="1"/>
+                            <field name="purchase_num_invoiced" />
+                            <field name="purchase_gap" />
+                            <field name="total_cost" />
+                            <field name="normal_cost" />
+
+                            <separator string="Margins" colspan="4"/>
+                            <field name="total_margin"/>
+                            <field name="expected_margin"/>
+                            <field name="total_margin_rate" widget="progressbar"/>
+                            <field name="expected_margin_rate" widget="progressbar"/>
+                         </group>
+                    </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_margin_tree" model="ir.ui.view">
+            <field name="name">product.margin.tree</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <tree string="Product Margins">
+                    <field name="name"/>
+                    <field name="default_code"/>
+                    <field name="sale_avg_price"/>
+                    <field name="sale_num_invoiced"/>
+                    <field name="turnover" sum="Turnover"/>
+                    <field name="sales_gap" sum="Sales Gap"/>
+                    <field name="total_cost" sum="Total Cost"/>
+                    <field name="purchase_num_invoiced" string="# Purchased"/>
+                    <field name="total_margin" sum="Total Margin"/>
+                    <field name="expected_margin"/>
+                    <field name="total_margin_rate"  widget="progressbar"/>
+                    <field name="expected_margin_rate" widget="progressbar"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="uom_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+            </tree>
+            </field>
+        </record>
+
+    <menuitem action="product_margin_act_window" id="menu_action_product_margin" name="Product Margins" sequence="20" parent="account.account_reports_management_menu"/>
+
+</odoo>

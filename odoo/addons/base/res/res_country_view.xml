@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+        Country
+        -->
+        <record id="view_country_tree" model="ir.ui.view">
+            <field name="name">res.country.tree</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <tree string="Country">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_country_form" model="ir.ui.view">
+            <field name="name">res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="oe_button_box">
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="currency_id"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="phone_code"/>
+                            <field name="vat_label"/>
+                        </group>
+                        <group string="Advanced Address Formatting" groups="base.group_no_one" col="4" colspan="4">
+                            <field name="address_view_id"/>
+                            <div colspan="2" class="text-muted">Choose a subview of partners that includes only address fields, to change the way users can input addresses.</div>
+                            <field name="address_format" placeholder="Address format..."/>
+                            <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
+                            <field name="name_position"/>
+                        </group>
+                    </group>
+                    <label for="state_ids"/>
+                    <field name="state_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="code"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_country" model="ir.actions.act_window">
+            <field name="name">Countries</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country</field>
+            <field name="view_type">form</field>
+            <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
+        </record>
+
+        <record id="view_country_group_tree" model="ir.ui.view">
+            <field name="name">res.country.group.tree</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <tree string="Country Group">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_country_group_form" model="ir.ui.view">
+            <field name="name">res.country.group.form</field>
+            <field name="model">res.country.group</field>
+            <field name="arch" type="xml">
+                <form string="Country Group">
+                    <div class="oe_title">
+                        <label for="name" string="Group name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group name="country_group">
+                        <field name="country_ids" widget="many2many_tags"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_country_group" model="ir.actions.act_window">
+            <field name="name">Country Group</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country.group</field>
+            <field name="view_type">form</field>
+            <field name="help">Display and manage the list of all countries group. You can create or delete country group to make sure the ones you are working on will be maintained.</field>
+        </record>
+
+        <!-- State -->
+        <record id="view_country_state_tree" model="ir.ui.view">
+            <field name="name">res.country.state.tree</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <tree string="State">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_country_state_form" model="ir.ui.view">
+            <field name="name">res.country.state.form</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <form string="State">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": True}'/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_country_state" model="ir.actions.act_window">
+            <field name="name">Fed. States</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country.state</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_country_state_tree"/>
+            <field name="help">If you are working on the American market, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
+        </record>
+
+    </data>
+</odoo>

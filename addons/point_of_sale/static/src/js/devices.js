@@ -2,8 +2,11 @@ odoo.define('point_of_sale.devices', function (require) {
 "use strict";
 
 var core = require('web.core');
+var mixins = require('web.mixins');
+var rpc = require('web.rpc');
 var Session = require('web.Session');
 
+var QWeb = core.qweb;
 var _t = core._t;
 
 // the JobQueue schedules a sequence of 'jobs'. each job is
@@ -87,15 +90,15 @@ var JobQueue = function(){
 // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
 // methods are used both to signal an event, and to fetch information.
 
-var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
+var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     init: function(parent,options){
-        core.mixins.PropertiesMixin.init.call(this,parent);
+        mixins.PropertiesMixin.init.call(this,parent);
         var self = this;
         options = options || {};
 
         this.pos = parent;
 
-        this.weighting = false;
+        this.weighing = false;
         this.debug_weight = 0;
         this.use_debug_weight = false;
 
@@ -128,6 +131,8 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
                 self.print_receipt();
             }
         });
+
+        this.posbox_supports_display = true;
 
         window.hw_proxy = this;
     },
@@ -421,7 +426,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
                         send_printing_job();
                     },function(error){
                         if (error) {
-                            self.pos.chrome.screen_selector.show_popup('error-traceback',{
+                            self.pos.gui.show_popup('error-traceback',{
                                 'title': _t('Printing Error: ') + error.data.message,
                                 'body':  error.data.debug,
                             });
@@ -432,6 +437,46 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             }
         }
         send_printing_job();
+    },
+
+    print_sale_details: function() {
+        var self = this;
+        rpc.query({
+                model: 'report.point_of_sale.report_saledetails',
+                method: 'get_sale_details',
+            })
+            .then(function(result){
+                var env = {
+                    company: self.pos.company,
+                    pos: self.pos,
+                    products: result.products,
+                    payments: result.payments,
+                    taxes: result.taxes,
+                    total_paid: result.total_paid,
+                    date: (new Date()).toLocaleString(),
+                };
+                var report = QWeb.render('SaleDetailsReport', env);
+                self.print_receipt(report);
+            });
+    },
+
+    update_customer_facing_display: function(html) {
+        if (this.posbox_supports_display) {
+            return this.message('customer_facing_display',
+                { html: html },
+                { timeout: 5000 });
+        }
+    },
+
+    take_ownership_over_client_screen: function(html) {
+        return this.message("take_control", { html: html });
+    },
+
+    test_ownership_of_client_screen: function() {
+        if (this.connection) {
+            return this.message("test_ownership", {});
+        }
+        return null;
     },
 
     // asks the proxy to log some information, as with the debug.log you can provide several arguments.

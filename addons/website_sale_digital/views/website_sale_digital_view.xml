@@ -5,12 +5,11 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view" />
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
-                <button class="oe_stat_button" name="action_open_attachments" type="object"
-                    attrs="{'invisible':[('type', '!=', 'digital')]}" icon="fa-file">
-                    <field string="File" name="attachment_count" widget="statinfo" />
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" name="action_open_attachments" type="object" icon="fa-file">
+                    <field string="Portal Files" name="attachment_count" widget="statinfo" />
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 
@@ -19,12 +18,11 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-             <div name="button_box" position="inside">
-                <button class="oe_stat_button" name="action_open_attachments" type="object"
-                    attrs="{'invisible':[('type', '!=', 'digital')]}" icon="fa-file">
-                    <field string="File" name="attachment_count" widget="statinfo" />
+             <button name="toggle_active" position="before">
+                <button class="oe_stat_button" name="action_open_attachments" type="object" icon="fa-file">
+                    <field string="Portal Files" name="attachment_count" widget="statinfo" />
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 </odoo>

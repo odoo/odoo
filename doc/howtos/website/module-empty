@@ -10,10 +10,10 @@ new file mode 100644
 +# -*- coding: utf-8 -*-
 +import controllers
 +import models
-diff --git a/academy/__openerp__.py b/academy/__openerp__.py
+diff --git a/academy/__manifest__.py b/academy/__manifest__.py
 new file mode 100644
 --- /dev/null
-+++ b/academy/__openerp__.py
++++ b/academy/__manifest__.py
 @@ -0,0 +1,34 @@
 +# -*- coding: utf-8 -*-
 +{
@@ -21,7 +21,7 @@ new file mode 100644
 +
 +    'summary': """
 +        Short (1 phrase/line) summary of the module's purpose, used as
-+        subtitle on modules listing or apps.openerp.com""",
++        subtitle on modules listing or apps.odoo.com""",
 +
 +    'description': """
 +        Long description of module's purpose
@@ -31,7 +31,7 @@ new file mode 100644
 +    'website': "http://www.yourcompany.com",
 +
 +    # Categories can be used to filter modules in modules listing
-+    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
++    # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
 +    # for the full list
 +    'category': 'Uncategorized',
 +    'version': '0.1',
@@ -55,7 +55,7 @@ new file mode 100644
 +++ b/academy/controllers.py
 @@ -0,0 +1,20 @@
 +# -*- coding: utf-8 -*-
-+from openerp import http
++from odoo import http
 +
 +# class Academy(http.Controller):
 +#     @http.route('/academy/academy/', auth='public')
@@ -79,8 +79,8 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/demo.xml
 @@ -0,0 +1,25 @@
-+<openerp>
-+    <data>
++<odoo>
++
 +        <!--  -->
 +        <!--   <record id="object0" model="academy.academy"> -->
 +        <!--     <field name="name">Object 0</field> -->
@@ -102,8 +102,8 @@ new file mode 100644
 +        <!--     <field name="name">Object 4</field> -->
 +        <!--   </record> -->
 +        <!--  -->
-+    </data>
-+</openerp>
++
++</odoo>
 diff --git a/academy/models.py b/academy/models.py
 new file mode 100644
 --- /dev/null
@@ -111,7 +111,7 @@ new file mode 100644
 @@ -0,0 +1,8 @@
 +# -*- coding: utf-8 -*-
 +
-+from openerp import models, fields, api
++from odoo import models, fields, api
 +
 +# class academy(models.Model):
 +#     _name = 'academy.academy'
@@ -129,8 +129,8 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/templates.xml
 @@ -0,0 +1,22 @@
-+<openerp>
-+    <data>
++<odoo>
++
 +        <!-- <template id="listing"> -->
 +        <!--   <ul> -->
 +        <!--     <li t-foreach="objects" t-as="object"> -->
@@ -149,5 +149,5 @@ new file mode 100644
 +        <!--     </t> -->
 +        <!--   </dl> -->
 +        <!-- </template> -->
-+    </data>
-+</openerp>
++
++</odoo>

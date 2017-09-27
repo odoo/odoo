@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_partners_form_website" model="ir.ui.view">
+            <field name="name">view.res.partner.form.website.tags</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="website_partner.view_partners_form_website" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="website_tag_ids" widget="many2many_tags" string="Website Tags"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_partner_tag_form" model="ir.ui.view">
+            <field name="name">Website Tags</field>
+            <field name="model">res.partner.tag</field>
+            <field name="arch" type="xml">
+                <form string="Partner Tag">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="classname"/>
+                        <field name="website_published"/>
+                        <field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_partner_tag_list" model="ir.ui.view">
+            <field name="name">Website Tags</field>
+            <field name="model">res.partner.tag</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Website Tags">
+                    <field name="name"/>
+                    <field name="classname"/>
+                    <field name="website_published"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_partner_tag_form" model="ir.actions.act_window">
+            <field name="name">Website Tags</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.tag</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new partner tag.
+                </p>
+                <p>
+                    Manage the partner tags to better classify them on your website.
+                    You can add the filter by tag on your website in the "Customize" menu.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="action_partner_tag_form"
+            id="menu_partner_tag_form"
+            name="Website Tags"
+            sequence="2"
+            parent="contacts.res_partner_menu_config"
+        />
+
+</odoo>

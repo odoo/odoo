@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo.addons.web import http
-from odoo.addons.web.http import request
+from odoo import http
+from odoo.http import request
 from odoo.tools import html_escape as escape
 
 
@@ -47,8 +47,15 @@ class GoogleMap(http.Controller):
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
             })
+        if 'customers' in post.get('partner_url', ''):
+            partner_url = '/customers/'
+        else:
+            partner_url = '/partners/'
+
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
         values = {
-            'partner_url': post.get('partner_url'),
-            'partner_data': json.dumps(partner_data)
+            'partner_url': partner_url,
+            'partner_data': json.dumps(partner_data),
+            'google_maps_api_key': google_maps_api_key,
         }
-        return request.website.render("website_google_map.google_map", values)
+        return request.render("website_google_map.google_map", values)

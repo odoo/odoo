@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_calendar
-# 
+#
 # Translators:
 # Goutoudis Kostas <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-12-27 23:52+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
@@ -28,8 +28,11 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"<br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field <b>\"Authorized redirect URI\"</b>\n"
-"                                    and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):\n"
+"<br/> You should now configure the allowed pages on which you will be "
+"redirected. To do it, you need to complete the field <b>\"Authorized "
+"redirect URI\"</b>\n"
+"                                    and set as value  (your own domain "
+"followed by <i>'/google_account/authentication'</i>):\n"
 "                                    <br/>==&gt;"
 msgstr ""
 
@@ -57,7 +60,9 @@ msgstr "Λογαριασμοί"
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr "Όλα τα συμβάντα έχουν αποσυνδεθεί από το προηγούμενο λογαριασμό σας. Μπορείτε τώρα να επανεκκινήσετε το συγχρονισμό"
+msgstr ""
+"Όλα τα συμβάντα έχουν αποσυνδεθεί από το προηγούμενο λογαριασμό σας. "
+"Μπορείτε τώρα να επανεκκινήσετε το συγχρονισμό"
 
 #. module: google_calendar
 #. openerp-web
@@ -66,7 +71,9 @@ msgstr "Όλα τα συμβάντα έχουν αποσυνδεθεί από τ
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
-msgstr "Ένας διαχειριστής θα πρέπει να ρυθμίσει τον συγχρονισμό Google για να μπορέσετε να το χρησιμοποιήσετε!"
+msgstr ""
+"Ένας διαχειριστής θα πρέπει να ρυθμίσει τον συγχρονισμό Google για να "
+"μπορέσετε να το χρησιμοποιήσετε!"
 
 #. module: google_calendar
 #. openerp-web
@@ -75,7 +82,10 @@ msgstr "Ένας διαχειριστής θα πρέπει να ρυθμίσε�
 msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
-msgstr "Παρουσιάστηκε σφάλμα κατά την αποσύνδεση συμβάντων από τον προηγούμενο λογαριασμό σας. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με τον διαχειριστή σας."
+msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την αποσύνδεση συμβάντων από τον προηγούμενο "
+"λογαριασμό σας. Παρακαλώ δοκιμάστε ξανά ή επικοινωνήστε με τον διαχειριστή "
+"σας."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -95,15 +105,18 @@ msgstr "Αναγνωριστικό Ημερολογίου"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Check that the Application type is set on <b>'Web Application'</b>, then click on <b>'Configure consent screen'</b>.\n"
-"                                    <br/> Specify an email address and a product name, then save.\n"
+"Check that the Application type is set on <b>'Web Application'</b>, then "
+"click on <b>'Configure consent screen'</b>.\n"
+"                                    <br/> Specify an email address and a "
+"product name, then save.\n"
 "                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Click on <b>'Create a project...'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services\n"
+"Click on <b>'Create a project...'</b> and enter a project name and change "
+"your id if you want. Don't forget to accept the Terms of Services\n"
 "                                    <br/><br/>"
 msgstr ""
 
@@ -182,6 +195,15 @@ msgid "Google ID should be unique!"
 msgstr "Το Αναγνωριστικό Google πρέπει να είναι μοναδικό!"
 
 #. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:718
+#, python-format
+msgid ""
+"Google is lost... the next synchro will be a full synchro. \n"
+"\n"
+" %s"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
 msgid "ID"
 msgstr "ID"
@@ -193,21 +215,27 @@ msgstr "ID"
 msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
-msgstr "Για να γίνει αυτό, πρέπει πρώτα να αποσυνδέσετε όλα τα υπάρχοντα συμβάντα από το παλιό λογαριασμό."
+msgstr ""
+"Για να γίνει αυτό, πρέπει πρώτα να αποσυνδέσετε όλα τα υπάρχοντα συμβάντα "
+"από το παλιό λογαριασμό."
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
+"In the menu on left side, select the sub menu <b>'Credentials'</b> (from "
+"menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
 "                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"In the menu on left side, select the sub menu APIs (from menu APIs and auth) and click on <b>'Calendar API'</b>.\n"
-"                                    <br/> Activate the Calendar API by clicking on the blue button <b>'Enable API'</b>.\n"
-"                                    <br/> When it's done, the Calendar API overview will be available\n"
+"In the menu on left side, select the sub menu APIs (from menu APIs and auth) "
+"and click on <b>'Calendar API'</b>.\n"
+"                                    <br/> Activate the Calendar API by "
+"clicking on the blue button <b>'Enable API'</b>.\n"
+"                                    <br/> When it's done, the Calendar API "
+"overview will be available\n"
 "                                    <br/><br/>"
 msgstr ""
 
@@ -216,7 +244,10 @@ msgstr ""
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr "Τελευταίο Αναγνωριστικό Ημερολογίου που έχει συγχρονιστεί. Εάν αλλάξει, αφαιρέστε όλες τις συνδέσεις μεταξύ Αναγνωριστικό Google και Odoo Google Εσωτερικό Αναγνωριστικό"
+msgstr ""
+"Τελευταίο Αναγνωριστικό Ημερολογίου που έχει συγχρονιστεί. Εάν αλλάξει, "
+"αφαιρέστε όλες τις συνδέσεις μεταξύ Αναγνωριστικό Google και Odoo Google "
+"Εσωτερικό Αναγνωριστικό"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -241,7 +272,8 @@ msgstr " Ημερομηνία Ενημέρωσης Odoo"
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
-"Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
+"Once done, you will have the both informations (<b>Client ID</b> and "
+"<b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
 "                                    <br/><br/>"
 msgstr ""
 
@@ -269,7 +301,7 @@ msgstr "Εμφάνιση Εκμάθησης"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:87
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:88
 #, python-format
 msgid "Sync with <b>Google</b>"
 msgstr ""
@@ -281,7 +313,9 @@ msgstr ""
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
-msgstr "Ο συγχρονισμός Google πρέπει να ρυθμιστεί για να μπορέσετε να τον χρησιμοποιήσετε, θέλετε να το κάνετε τώρα;"
+msgstr ""
+"Ο συγχρονισμός Google πρέπει να ρυθμιστεί για να μπορέσετε να τον "
+"χρησιμοποιήσετε, θέλετε να το κάνετε τώρα;"
 
 #. module: google_calendar
 #. openerp-web
@@ -290,14 +324,18 @@ msgstr "Ο συγχρονισμός Google πρέπει να ρυθμιστεί 
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
-msgstr "Ο λογαριασμός που προσπαθείτε να συγχρονίσετε (%s) δεν είναι ο ίδιος με τον τελευταίο που χρησιμοποιήθηκε (%s)!"
+msgstr ""
+"Ο λογαριασμός που προσπαθείτε να συγχρονίσετε (%s) δεν είναι ο ίδιος με τον "
+"τελευταίο που χρησιμοποιήθηκε (%s)!"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid ""
 "To setup the signin process with Google, first you have to perform the "
 "following steps"
-msgstr "Για να ρυθμίσετε τη διαδικασία σύνδεσης μέσω Google, πρώτα θα πρέπει να ακολουθήστε τα παρακάτω βήματα"
+msgstr ""
+"Για να ρυθμίσετε τη διαδικασία σύνδεσης μέσω Google, πρώτα θα πρέπει να "
+"ακολουθήστε τα παρακάτω βήματα"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
@@ -324,7 +362,14 @@ msgstr "Χρήστες"
 #: code:addons/google_calendar/static/src/js/calendar_sync.js:34
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr "Θα μεταφερθείτε στην Google να εγκρίνετε την πρόσβαση στο ημερολόγιό σας!"
+msgstr ""
+"Θα μεταφερθείτε στην Google να εγκρίνετε την πρόσβαση στο ημερολόγιό σας!"
+
+#. module: google_calendar
+#: code:addons/google_calendar/google_calendar.py:298
+#, python-format
+msgid "Your token is invalid or has been revoked !"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_base_config_settings

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from openerp import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 
 class ReportTrialBalance(models.AbstractModel):
@@ -44,26 +45,31 @@ class ReportTrialBalance(models.AbstractModel):
             currency = account.currency_id and account.currency_id or account.company_id.currency_id
             res['code'] = account.code
             res['name'] = account.name
-            if account.id in account_result.keys():
+            if account.id in account_result:
                 res['debit'] = account_result[account.id].get('debit')
                 res['credit'] = account_result[account.id].get('credit')
                 res['balance'] = account_result[account.id].get('balance')
             if display_account == 'all':
                 account_res.append(res)
-            if display_account in ['movement', 'not_zero'] and not currency.is_zero(res['balance']):
+            if display_account == 'not_zero' and not currency.is_zero(res['balance']):
+                account_res.append(res)
+            if display_account == 'movement' and (not currency.is_zero(res['debit']) or not currency.is_zero(res['credit'])):
                 account_res.append(res)
         return account_res
 
 
-    @api.multi
-    def render_html(self, data):
+    @api.model
+    def get_report_values(self, docids, data=None):
+        if not data.get('form') or not self.env.context.get('active_model'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
-        accounts = self.env['account.account'].search([])
+        accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
         account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
 
-        docargs = {
+        return {
             'doc_ids': self.ids,
             'doc_model': self.model,
             'data': data['form'],
@@ -71,4 +77,3 @@ class ReportTrialBalance(models.AbstractModel):
             'time': time,
             'Accounts': account_res,
         }
-        return self.env['report'].render('account.report_trialbalance', docargs)

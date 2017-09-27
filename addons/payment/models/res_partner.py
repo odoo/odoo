@@ -1,20 +1,20 @@
-from openerp.osv import fields, osv
+# coding: utf-8
+
+from odoo import api, fields, models
 
 
-class res_partner(osv.osv):
+class res_partner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    def _compute_payment_method_count(self, cr, uid, ids, field_names, arg, context=None):
-        result = {}
-        payment_data = self.pool['payment.method'].read_group(
-            cr, uid, [('partner_id', 'in', ids)], ['partner_id'], ['partner_id'], context=context)
-        mapped_data = dict([(payment['partner_id'][0], payment['partner_id_count']) for payment in payment_data])
-        for partner in self.browse(cr, uid, ids, context=context):
-            result[partner.id] = mapped_data.get(partner.id, 0)
-        return result
+    payment_token_ids = fields.One2many('payment.token', 'partner_id', 'Payment Tokens')
+    payment_token_count = fields.Integer(
+        'Count Payment Token', compute='_compute_payment_token_count')
 
-    _columns = {
-        'payment_method_ids': fields.one2many('payment.method', 'partner_id', 'Payment Methods'),
-        'payment_method_count': fields.function(_compute_payment_method_count, string='Count Payment Method', type="integer"),
-    }
+    @api.depends('payment_token_ids')
+    def _compute_payment_token_count(self):
+        payment_data = self.env['payment.token'].read_group([
+            ('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(payment['partner_id'][0], payment['partner_id_count']) for payment in payment_data])
+        for partner in self:
+            partner.payment_token_count = mapped_data.get(partner.id, 0)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
         <record id="category_1" model="slide.category">
@@ -26,68 +26,113 @@
         </record>
 
         <record id="slide_0" model="slide.slide">
-            <field name="name">Odoo Explained</field>
-            <field name="url">http://www.youtube.com/watch?v=o0UM3Lg7K4Y</field>
+            <field name="name">Odoo MRP</field>
+            <field name="url">https://www.youtube.com/watch?v=QtIU0p8daAo</field>
+            <field name="document_id">QtIU0p8daAo</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/QtIU0p8daAo.jpg"/>
+            <field name="description">Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.
+
+Read more about the features at: https://www.odoo.com/page/manufacturing-features
+
+Discover Odoo MRP: https://www.odoo.com/page/manufacturing</field>
         </record>
         <record id="slide_1" model="slide.slide">
-            <field name="name">Odoo Website &amp; E-commerce Demonstration</field>
-            <field name="url">https://www.youtube.com/watch?v=tR0xandHlhU</field>
+            <field name="name">Odoo CRM</field>
+            <field name="url">https://www.youtube.com/watch?v=fgdz8MH2YHY</field>
+            <field name="document_id">fgdz8MH2YHY</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/fgdz8MH2YHY.jpg"/>
+            <field name="description">Discover the CRM sales people love https://www.odoo.com/page/crm</field>
         </record>
         <record id="slide_2" model="slide.slide">
             <field name="name">Odoo All-in-One Software Demonstration</field>
             <field name="url">https://www.youtube.com/watch?v=tUx39vAENy0</field>
+            <field name="document_id">tUx39vAENy0</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_2"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/tUx39vAENy0.jpg"/>
+            <field name="description">Discover the all-in-one business management software solution that fits any business size and use case.
+
+Learn more at https://odoo.com</field>
         </record>
         <record id="slide_3" model="slide.slide">
             <field name="name">Odoo Sign Demonstration</field>
             <field name="url">https://www.youtube.com/watch?v=8DBabYQ1nUE</field>
+            <field name="document_id">8DBabYQ1nUE</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_2"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/8DBabYQ1nUE.jpg"/>
+            <field name="description">Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!
+
+Discover more at https://www.odoo.com/page/sign</field>
         </record>
         <record id="slide_5" model="slide.slide">
             <field name="name">Awesome Timesheet by Odoo</field>
             <field name="url">https://www.youtube.com/watch?v=v2O0YZU19ms</field>
+            <field name="document_id">v2O0YZU19ms</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/v2O0YZU19ms.jpg"/>
+            <field name="description">Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!
+
+Chrome: http://bit.ly/2613LcY
+iOS: http://bit.ly/1ZUZsZD</field>
         </record>
         <record id="slide_6" model="slide.slide">
-            <field name="name">Odoo Marketing - part 1: ATTRACT</field>
-            <field name="url">https://www.youtube.com/watch?v=qhSCMShJkTY&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="name">Odoo Marketing</field>
+            <field name="url">https://www.youtube.com/watch?v=sDxfUTd-gs0</field>
+            <field name="document_id">sDxfUTd-gs0</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/sDxfUTd-gs0.jpg"/>
+            <field name="description">Discover how easy marketing your business can be with Odoo</field>
         </record>
         <record id="slide_7" model="slide.slide">
-            <field name="name">Odoo Marketing - part 1: ATTRACT_2</field>
-            <field name="url">https://www.youtube.com/watch?v=L1Ye6ATzZXY&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="name">Odoo Inventory</field>
+            <field name="url">https://www.youtube.com/watch?v=Vp5xqQOWLzE</field>
+            <field name="document_id">Vp5xqQOWLzE</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/Vp5xqQOWLzE.jpg"/>
+            <field name="description">Warehouse management software for the 21st century.
+
+Discover Odoo Inventory: https://www.odoo.com/page/warehouse</field>
         </record>
         <record id="slide_8" model="slide.slide">
-            <field name="name">Odoo Marketing - part 1: ATTRACT_3</field>
-            <field name="url">https://www.youtube.com/watch?v=sEvZyNZCtOs&amp;list=UUkQPikELWZFLgQNHd73jkdg</field>
+            <field name="name">Odoo Sales</field>
+            <field name="url">https://www.youtube.com/watch?v=VMuCr5_arsY</field>
+            <field name="document_id">VMuCr5_arsY</field>
+            <field name="slide_type">video</field>
             <field name="channel_id" ref="channel_public"/>
             <field name="category_id" ref="category_1"/>
             <field name="website_published" eval="True"/>
             <field name="tag_ids" eval="[(4, ref('tag1')), (4, ref('tag2'))]"/>
+            <field name="image" type="base64" file="website_slides/data/demo-thumbnails/VMuCr5_arsY.jpg"/>
+            <field name="description">Learn more at https://www.odoo.com/page/sales</field>
         </record>
 
         <record id="slide_9" model="slide.slide">
@@ -103,7 +148,7 @@
             <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
         </record>
         <record id="slide_10" model="slide.slide">
-            <field name="name">Odoo Roadmap &amp; Strategy - Fabien Pinckaers</field>
+            <field name="name">Company Culture</field>
             <field name="datas" type="base64" file="website_slides/static/src/img/keynote.pdf"/>
             <field name="image" type="base64" file="website_slides/static/src/img/keynote.png"/>
             <field name="slide_type">presentation</field>
@@ -112,31 +157,7 @@
             <field name="website_published" eval="True"/>
             <field name="likes">13</field>
             <field name="slide_views">6399</field>
-            <field name="index_content">1. Odoo Roadmap &amp; Strategy Fabien Pinckaers, Founder
-2. From 2,000,000 users to 10,000,000 users. or how we will turn Odoo mainstream...
-3. from $2M to $10M Investment Areas To Turn Odoo Mainstream 5 or how to spend $10M as fast as possible and burn a lot of energy...
-4. Release A Product That Deprecates Every Competitor 1 This is something we excel at...
-5. A product growth no one can follow
-6. Version 9: roadmap o 40% Usability: – Improving all existing apps, the right feature at the right place – User onboarding, ease of use o 20% Accounting: – 8 countries in the core o 20% CMS / eCommerce o 10% New design: – Merge front/backend, mobile, modern design o 10% Framework: o New API
-7. 1 Release cycle February 2012: v6.1 (13 months) 2 January 2013: v7 (11 months) 3 June 2014: v8 (18 months) 4 June 2015: v9 (12 months) 5 Every new version is a revolution. Version 9 will be even more impressive! January 2011: v6.0
-8. Attract The Mass Of Users 2 It's all about getting users, a lot of users. Not only customers.
-9. An attractive pricing... o The cloud, free for 2 users: – Why the cloud? Smooth user experience. High satisfaction rates as everything works out-of-the-box – Unlimited applications: CRM, CMS, eCommerce, Accounting, etc. o Millions of CMS/eCommerce for free: – Already 50k pages on CMS/eCommerce websites built with Odoo CMS Beta – You can do a lot with 2 users: we don't need to get revenues from CMS/eCommerce-only instances as we have so many applications to upsell
-10. Affordable implementations o Lower entry barrier - no huge starting costs for SMEs: – No complex implementation projects – A fixed-price packaged offer o New service offer, 100€ / month per application for: – Implementation assistance and configuration – Unlimited customization of screens, reports, workflows – Monthly upgrades – Training material – Unlimited support tickets, 24/24 response time!
-11. Disrupt A Market Having A Huge Traction 3 Creating the frontend of all apps will not only increase the quality of all apps but also disrupt the CMS/eCommerce market.
-12. " " The CMS/eCommerce market looks like the ERP market 6 years ago, before Odoo entered into it. Full of complex products that did not evolve over the past 3 years.
-13. Traditional ERPs o The monetization (and main focus) remains on business apps: – Accounting – Warehouse Management – Project Management – Point of sale – Marketing – HR, ... o But CMS/eCommerce will bring a huge volume of prospects to our other business apps
-14. Make Partners Rich By Making Customers Super-Happy 4 You will like our product and services so much that you will always want to purchase more.
-15. Traditional ERPs o Buy an ERP – Invest on 7 years o Maintain as long as you can – Implementations are so painful that you have no other choice – Upgrades are too expensive o After 7 years : it breaks – You change the product and call other vendors
-16. Traditional ERPs o Modern companies deserve to: – Evolve continuously – Benefit from top features every year – Be free of any legacy constraints – Have the flexibility to customize easily o Odoo Enterprise – our main value proposition: – Providing so much value to customers through continuous upgrades that they will want to purchase even more
-17. Odoo Enterprise o Odoo Enterprise is our core business: – Unlimited upgrades – Unlimited bugfix support – Optional hosting on our cloud – Guarantees : security, performance, legal o Customers shouldn't have to pay for: – Painful upgrades; if upgrades are costly, they tend to not upgrade – Bugs take delay the project and costs man*days of work
-18. " " Story of a 1300 users customer I met last week...
-19. Let's Burn A Few Millions In Marketing Too 5 We have an awesome product, a huge channel of partners, a strong service offer, ... Now, people need to know it.
-20.
-21. Marketing activities o Smart Content: – Documentation, books, blog posts, white papers, Q&amp;A – Translations of website and documentation – A super clean website, marketing optimized ! o Inbound Marketing: – SEO, SEA, funnel optimization with a powerful CMS o User/developer on boarding: – Users : usability, clean features, etc. – Devs: docs, easy installation, modules scafolding, ... – Community: efficient tools and communication o Local Events: share, meet and inform people
-22. All of this while maintaining a fun working environment and a sane relationship between partners, customers and the community.
-23. Relationship between proprietary software vendors and their implementation partners
-24. What we do By enforcing full open source rules, we set up the rules to guarantee a sane relationship between all parties of the value chain: ● Vendor: Odoo SA ● Customers ● Partners ● Community
-25. 2014-2015 This will be an epic time...</field>
+            <field name="index_content">Indexed content, automatically generated.</field>
             <field name="tag_ids" eval="[(4, ref('tag5'))]"/>
         </record>
 
@@ -219,7 +240,7 @@
 67. Conclusion
 68. Conclusion Performance : o Odoo is 3x times faster than the Drupal o Odoo is 6x times faster than the Magento o Odoo is 2x times faster than the Prestashop Scalability : o Odoo timeout at 198 users o Drupal timeout at 125 users o Magento timeout at 148 users o Prestashop timeout at 104 users Maintainability : o 1.3x times smaller then the drupal o 5.5x times smaller then the magento o 1.9x times smaller then the prestashop
 69. Questions ?
-70. Odoo sales@odoo.com +32 (0) 2 290 34 90 www.odoo.com R&amp;D and services offce Chaussée de Namur 40 B-1367 Grand Rosière Sales offce Avenue Van Nieuwenhuyse 5 B-1160 Brussels Thank You</field>
+70. Odoo sales@odoo.com +32 (0) 2 290 34 90 www.odoo.com R&amp;D and services offce Chaussée de Namur 40 B-1367 Grand Rosière Sales offce Avenue Van Nieuwenhuyse 6 B-1160 Brussels Thank You</field>
         </record>
 
         <record model="slide.channel" id="channel_public">
@@ -228,5 +249,5 @@
         </record>
 
   </data>
-</openerp>
+</odoo>
 

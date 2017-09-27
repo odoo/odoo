@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
-msgid "# Analytic Rules"
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
 msgstr ""
 
 #. module: account_analytic_default
@@ -34,7 +43,6 @@ msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
@@ -47,10 +55,9 @@ msgid "Analytic Distribution"
 msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
-#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr ""
 
@@ -76,6 +83,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+msgid "Default Analytic Values"
+msgstr ""
+
+#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
 msgid "Default end date for this Analytic Account."
 msgstr ""
@@ -96,16 +108,6 @@ msgid "End Date"
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_expense_policy
-msgid "Expense Invoice Policy"
-msgstr ""
-
-#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
@@ -118,11 +120,6 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
 msgid "ID"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_product_product_expense_policy
-msgid "If you invoice at cost, the expense will be invoiced on the sale order at the cost of the analytic line;if you invoice at sales price, the price of the product will be used instead."
 msgstr ""
 
 #. module: account_analytic_default
@@ -152,15 +149,9 @@ msgid "Partner"
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_product
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
 msgstr ""
 
 #. module: account_analytic_default
@@ -199,13 +190,13 @@ msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Transfer"
-msgstr ""
-
-#. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
 msgstr ""
 

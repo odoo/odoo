@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="adyen_form">
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="merchantReference" t-att-value="merchantReference"/>
+            <input type="hidden" name="paymentAmount" t-att-value="paymentAmount"/>
+            <input type="hidden" name="currencyCode" t-att-value="currencyCode"/>
+            <input type="hidden" name="shipBeforeDate" t-att-value="shipBeforeDate"/>
+            <input type="hidden" name="skinCode" t-att-value="skinCode"/>
+            <input type="hidden" name="merchantAccount" t-att-value="merchantAccount"/>
+            <input type="hidden" name="shopperLocale" t-att-value="shopperLocale"/>
+            <input type="hidden" name="sessionValidity" t-att-value="sessionValidity"/>
+            <input type="hidden" name="merchantSig" t-att-value="merchantSig"/>
+            <!-- URLs -->
+            <input type='hidden' name='resURL'
+                t-att-value="resURL"/>
+            <!-- custom -->
+            <input t-if="merchantReturnData" type='hidden' name='merchantReturnData'
+                t-att-value="merchantReturnData"/>
+            <!-- shopperEmail is not included for SHA-1. To avoid breaking compatibility,
+                    include only if filled in -->
+            <input t-if="shopperEmail"
+                type='hidden' name='shopperEmail' t-att-value="shopperEmail"/>
+        </template>
+    </data>
+</odoo>

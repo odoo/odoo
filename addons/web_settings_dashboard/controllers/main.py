@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, timedelta
 
-from openerp import http
-from openerp.exceptions import AccessError
-from openerp.http import request
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-
+from odoo import fields, http
+from odoo.exceptions import AccessError
+from odoo.http import request
+from odoo import release
 
 class WebSettingsDashboard(http.Controller):
 
@@ -20,12 +21,20 @@ class WebSettingsDashboard(http.Controller):
         ])
         cr = request.cr
         cr.execute("""
-            SELECT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id), count(1)
-              FROM res_users u
-             WHERE active=true
-          GROUP BY 1
+            SELECT count(*)
+              FROM res_users
+             WHERE active=true AND
+                   share=false
         """)
-        counts = dict(cr.fetchall())
+        active_count = cr.dictfetchall()[0].get('count')
+
+        cr.execute("""
+            SELECT count(u.*)
+            FROM res_users u
+            WHERE active=true AND
+                  NOT exists(SELECT 1 FROM res_users_log WHERE create_uid=u.id)
+        """)
+        pending_count = cr.dictfetchall()[0].get('count')
 
         cr.execute("""
            SELECT id, login
@@ -39,17 +48,27 @@ class WebSettingsDashboard(http.Controller):
 
         # See update.py for this computation
         limit_date = datetime.now() - timedelta(15)
-        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", limit_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('share', '=', False)])
+        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", fields.Datetime.to_string(limit_date)), ('share', '=', False)])
 
+        expiration_date = request.env['ir.config_parameter'].sudo().get_param('database.expiration_date')
         return {
             'apps': {
                 'installed_apps': installed_apps,
                 'enterprise_users': enterprise_users,
             },
             'users_info': {
-                'active_users': counts.get(True, 0),
-                'pending_count': counts.get(False, 0),
+                'active_users': active_count,
+                'pending_count': pending_count,
                 'pending_users': pending_users,
                 'user_form_view_id': request.env['ir.model.data'].xmlid_to_res_id("base.view_users_form"),
             },
+            'share': {
+                'server_version': release.version,
+                'expiration_date': expiration_date,
+                'debug': request.debug,
+            },
+            'company': {
+                'company_id': request.env.user.company_id.id,
+                'company_name': request.env.user.company_id.name
+            }
         }

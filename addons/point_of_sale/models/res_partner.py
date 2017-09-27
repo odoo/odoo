@@ -6,7 +6,18 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    barcode = fields.Char(string='Barcode', help="BarCode", oldname='ean13')
+    barcode = fields.Char(string='Barcode', oldname='ean13')
+    pos_order_count = fields.Integer(
+        compute='_compute_pos_order',
+        help="The number of point of sales orders related to this customer",
+        groups="point_of_sale.group_pos_user",
+    )
+
+    def _compute_pos_order(self):
+        partners_data = self.env['pos.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
+        for partner in self:
+            partner.pos_order_count = mapped_data.get(partner.id, 0)
 
     @api.model
     def create_from_ui(self, partner):
@@ -19,6 +30,6 @@ class ResPartner(models.Model):
         if partner_id:  # Modifying existing partner
             self.browse(partner_id).write(partner)
         else:
+            partner['lang'] = self.env.user.lang
             partner_id = self.create(partner).id
-        
         return partner_id

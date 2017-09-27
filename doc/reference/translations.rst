@@ -54,15 +54,15 @@ Odoo automatically exports translatable strings from "data"-type content:
   exported except inside ``t-translation="off"`` blocks, the content of the
   ``title``, ``alt``, ``label`` and ``placeholder`` attributes are also
   exported
-* for :class:`~openerp.fields.Field`, unless their model is marked with
+* for :class:`~odoo.fields.Field`, unless their model is marked with
   ``_translate = False``:
 
   * their ``string`` and ``help`` attributes are exported
   * if ``selection`` is present and a list (or tuple), it's exported
   * if their ``translate`` attribute is set to ``True``, all of their existing
     values (across all records) are exported
-* help/error messages of :attr:`~openerp.models.Model._constraints` and
-  :attr:`~openerp.models.Model._sql_constraints` are exported
+* help/error messages of :attr:`~odoo.models.Model._constraints` and
+  :attr:`~odoo.models.Model._sql_constraints` are exported
 
 Explicit exports
 ================
@@ -72,11 +72,11 @@ code, Odoo cannot automatically export translatable terms so they
 must be marked explicitly for export. This is done by wrapping a literal
 string in a function call.
 
-In Python, the wrapping function is :func:`openerp._`::
+In Python, the wrapping function is :func:`odoo._`::
 
     title = _("Bank Accounts")
 
-In JavaScript, the wrapping function is generally :js:func:`openerp.web._t`:
+In JavaScript, the wrapping function is generally :js:func:`odoo.web._t`:
 
 .. code-block:: javascript
 

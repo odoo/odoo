@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_attendance
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-12 18:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-06 09:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid ""
-"(*) A positive delay means that the employee worked less than recorded.<br/>\n"
+"(*) A positive delay means that the employee worked less than recorded.<br/"
+">\n"
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
 
@@ -75,13 +76,13 @@ msgstr "Assistència"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_access
 msgid "Attendance Access"
-msgstr ""
+msgstr "Accés a l'assistència"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph_filtered
 msgid "Attendance Analysis"
-msgstr ""
+msgstr "Anàlisis d'assistències"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
@@ -92,7 +93,7 @@ msgstr "Informe errors d'assistència"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "Attendance Errors:"
-msgstr ""
+msgstr "Errors d'assistència:"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -130,7 +131,7 @@ msgstr "Cancel·la"
 #: code:addons/hr_attendance/static/src/js/attendance.js:41
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Premi per registrar l'entrada a %s."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_config
@@ -154,7 +155,7 @@ msgstr "Creat el"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "Current Month"
-msgstr ""
+msgstr "Mes actual"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_name
@@ -216,7 +217,7 @@ msgstr "Data de finalització"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Error! Una entrada ha de seguir a un registre de sortida."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -247,7 +248,7 @@ msgstr "Darrera modificació feta el"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
 msgid "Last Sign"
-msgstr ""
+msgstr "Últim registre"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_uid
@@ -268,7 +269,7 @@ msgstr "Actualitzat per última vegada el dia"
 #: code:addons/hr_attendance/static/src/js/attendance.js:39
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "Última entrada: %s, <br/> %s. <br/> Premi per registrar la sortida."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
@@ -288,13 +289,13 @@ msgstr "Mes"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
 msgid "My Attendance"
-msgstr ""
+msgstr "La meva assistència"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:34
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "No s'han trobat registres per la seva selecció!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -357,8 +358,7 @@ msgstr "Registra sortida"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_action_desc
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgid "Specifies the reason for Signing In/Signing Out in case of extra hours."
 msgstr "Especifiqueu la raó d'entrada i sortida en el cas d'hores extres."
 
 #. module: hr_attendance
@@ -378,16 +378,10 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
 msgstr ""
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Seguiment de temp"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.timesheet_menu_root
-msgid "Timesheets"
-msgstr "Fulls de treball"
+"La funcionalitat de seguiment de temps permeten gestionar les assistències "
+"dels empleats des de les accions de Fixar entrada/ Fixar sortida. Pot "
+"enllaçar aquesta característica amb un dispositiu d'assistència utilitzant "
+"els serveis web d'Odoo."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -397,7 +391,7 @@ msgstr "Avui"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
 msgid "Worked Hours"
-msgstr ""
+msgstr "Hores treballades"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:163
@@ -406,8 +400,16 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
 msgstr ""
+"Ha intentat %s amb una data anterior a un altre esdeveniment! Intenti "
+"contactar amb el responsable de RRHH per corregir les assistències."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
 msgstr ""
+
+#~ msgid "Time Tracking"
+#~ msgstr "Seguiment de temp"
+
+#~ msgid "Timesheets"
+#~ msgstr "Fulls de treball"

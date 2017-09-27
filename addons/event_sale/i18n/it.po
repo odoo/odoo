@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * event_sale
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-26 10:43+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-22 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
@@ -27,6 +27,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Salva"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+#, fuzzy
+msgid "Asset Type"
+msgstr "Tipo di evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -53,14 +59,18 @@ msgstr ""
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Scegliere un evento a verrà creato automaticamente una registrazione per lo stesso"
+msgstr ""
+"Scegliere un evento a verrà creato automaticamente una registrazione per lo "
+"stesso"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "Scegliere un biglietto evento e verrà automaticamente creata una registrazione per lo stesso."
+msgstr ""
+"Scegliere un biglietto evento e verrà automaticamente creata una "
+"registrazione per lo stesso."
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -83,6 +93,11 @@ msgid "Created on"
 msgstr "Creato il"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -96,7 +111,9 @@ msgstr ""
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "Determina se un articolo ha bisogno di creare automaticamente una registrazione alla conferma della riga di vendita."
+msgstr ""
+"Determina se un articolo ha bisogno di creare automaticamente una "
+"registrazione alla conferma della riga di vendita."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -202,7 +219,7 @@ msgstr "Ultima modifica il"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Limitato"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
@@ -324,9 +341,11 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
 #: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
 msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
-msgstr "Seleziona i tipi di evento che quanto usiamo questo articolo in un ordine di vendita, saranno visualizzati gli eventi di questo tipo."
+"Select event types so when we use this product in sales order lines, it will "
+"filter events of this type only."
+msgstr ""
+"Seleziona i tipi di evento che quanto usiamo questo articolo in un ordine di "
+"vendita, saranno visualizzati gli eventi di questo tipo."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

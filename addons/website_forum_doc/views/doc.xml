@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- DOCUMENTATION TOC VIEWS -->
         <record id="view_documentation_toc_list" model="ir.ui.view">
             <field name="name">forum.documentation.toc.list</field>
@@ -27,7 +25,7 @@
 
 
         <!-- Project Task Kanban View -->
-        <record model="ir.ui.view" id="view_forum_post_kanban">
+        <record id="view_forum_post_kanban" model="ir.ui.view">
             <field name="name">forum.post.kanban</field>
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
@@ -39,9 +37,8 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li t-if="widget.editable"><a type="edit">Edit Post</a></li>
@@ -49,13 +46,15 @@
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
-                            <div class="oe_kanban_content">
-                                <div><b><field name="name"/></b></div>
+                            <div class="o_kanban_record_top">
+                                <b class="o_kanban_record_title"><field name="name"/></b>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-title="record.create_uid.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                             </div>
-                            <div class="oe_clear"></div>
                         </div>
                     </t>
                     </templates>
@@ -68,7 +67,7 @@
             <field name="res_model">forum.post</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('documentation_toc_id','&lt;&gt;', False)]</field>
+            <field name="domain">[('documentation_toc_id','!=', False)]</field>
         </record>
         <menuitem id="menu_forum_doc_posts"
             parent="website_forum.menu_website_forum" name="Documentation Posts"
@@ -100,6 +99,4 @@
                 </xpath>
             </field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

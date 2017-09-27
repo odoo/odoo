@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_transfer
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-10 09:38+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
+"language/zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_transfer
@@ -47,7 +48,9 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>錯誤,</i> 交易時發生錯誤. 訂單成立但無法支付. 如對您的訂單狀態有疑問請聯繫我們.</span>"
+msgstr ""
+"<span><i>錯誤,</i> 交易時發生錯誤. 訂單成立但無法支付. 如對您的訂單狀態有疑問"
+"請聯繫我們.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer
@@ -58,6 +61,7 @@ msgstr "<span><i>暫停,</i> 您的在線付款已成功進行. 但您的訂單�
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:30
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
 #, python-format
 msgid "Bank Account"
 msgstr "銀行帳戶"
@@ -67,6 +71,11 @@ msgstr "銀行帳戶"
 #, python-format
 msgid "Bank Accounts"
 msgstr "銀行帳號"
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Communication"
+msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
@@ -79,12 +88,24 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the following transfer details"
+msgstr ""
+
+#. module: payment_transfer
+#: model:payment.acquirer,post_msg:payment_transfer.payment_acquirer_transfer
+msgid "Please use the order name as communication reference."
+msgstr ""
+
+#. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
 msgid "Transfer information will be provided after choosing the payment mode."
 msgstr ""
 
 #. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:19
 #: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
+#, python-format
 msgid "Wire Transfer"
 msgstr ""
 

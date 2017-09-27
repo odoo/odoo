@@ -17,7 +17,7 @@ A stock move is the elementary model in OpenERP that can move stock between 2 lo
 
 In order to make it easy to move multiple products at once and pass that as an assignment to a warehouse operator, we use pickings that group these stock moves.  
 
-We want to categorize the pickings in picking types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. in the standard warehouse, not configuring anything, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.  
+We want to categorize the pickings in operation types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. in the standard warehouse, not configuring anything, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.
 
 You might have a weird feeling talking about moving from location A to location B, even for deliveries and incoming shipments.  That is because OpenERP uses a double-entry concept similar to double-entry accounting.  In OpenERP you do not talk of disappearance, consumption or loss of products: instead you speak only about stock moves from one place to another.
 
@@ -45,7 +45,7 @@ A warehouse represents the building where we stock our goods.  In case of multip
 
 A warehouse corresponds also to a location.  As the locations are hierarchical, OpenERP will create one parent location for the warehouse that contains all the different locations in it.  
 
-When you create a warehouse, the system will create the necessary picking types and main child locations for this main location in the background.
+When you create a warehouse, the system will create the necessary operation types and main child locations for this main location in the background.
 
 
 ===========================================
@@ -127,11 +127,11 @@ Assigning stock moves to pickings
 
 When you want to give an assignment to a warehouse operator manually, you will create a picking and create the moves in it by specifying the different products and quantities.   When confirming a sale order however, Odoo will create procurements which will be solved bt creating moves.  First, these stock moves will be created without picking.  In a second step, they will be attributed to an existing picking or a picking will be created.
 
-In order to assign the move to a picking, Odoo will check if the move was assigned a picking type (e.g. My Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
+In order to assign the move to a picking, Odoo will check if the move was assigned an operation type (e.g. My Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the correct state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one.
 
 This mechanism allows for a lot of flexibility when for example some products have to go through the Packing zone for packing and some don't.  That way, the packing order will still group the moves that need packing from the sale order and the direct moves will be grouped in a separate picking also.  For the delivery order, everything will be together in one picking again.  
 
-A picking is almost entirely determined by the moves in it.  The state depends on the moves and the picking type, the source and destination location are those of the moves.  The scheduled date is calculated as a minimum date for the stock moves.  
+A picking is almost entirely determined by the moves in it.  The state depends on the moves and the operation type, the source and destination location are those of the moves.  The scheduled date is calculated as a minimum date for the stock moves.
 
 The state of a picking depends primarily on its moves: 
 
@@ -142,7 +142,7 @@ The other states depend however also on the move type. The move type determines 
 
 In case of partial, a special state exists: partial availability.  It is possible that a move is in the confirmed / waiting state, but has partially some stock reserved.  This move will still be in the waiting/confirmed state, but have a flag partially available.  In that case, the picking will not stay in the confirmed/waiting state but go to the partially available state, which makes it possible to deliver the goods partially.  A picking is also partially available when some moves are assigned and others have no stock at all reserved.  
 
-Sometimes a move does not have a picking type.  This means it will not be assigned to a picking.  This is the case for inventory corrections and moves in and out of production. 
+Sometimes a move does not have an operation type.  This means it will not be assigned to a picking.  This is the case for inventory corrections and moves in and out of production.
 
 
 ================================================================
@@ -356,7 +356,7 @@ For the inter-warehouse configurations, there is also a possibility to put a war
 How does the system choose the correct push rule
 ================================================
 
-Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category, then on those of the warehouse passed to the move or of the picking type of the move and then it will search a rule that is not in a route.
+Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category, then on those of the warehouse passed to the move or of the operation type of the move and then it will search a rule that is not in a route.
 
 
 =======================
@@ -378,7 +378,7 @@ You can choose multiple resupply warehouses.  These are selectable on the produc
 What happens behind simple warehouse config
 ===========================================
 
-The wizard will create all the necessary locations and picking types to support the selected settings.  
+The wizard will create all the necessary locations and operation types to support the selected settings.
 
 The Incoming shipments and Outgoing shipments routes are bundled into routes that are on the warehouse.  So, if you choose that warehouse, it will choose the route by default.  The incoming routes will also have the push rules associated with them.  
 

@@ -39,7 +39,7 @@ following command:
 
 This will create a ``petstore`` folder wherever you executed the command.
 You then need to add that folder to Odoo's
-:option:`addons path <odoo.py --addons-path>`, create a new database and
+:option:`addons path <odoo-bin --addons-path>`, create a new database and
 install the ``oepetstore`` module.
 
 If you browse the ``petstore`` folder, you should see the following content:
@@ -55,7 +55,7 @@ If you browse the ``petstore`` folder, you should see the following content:
     |   `-- mice.jpg
     |-- __init__.py
     |-- oepetstore.message_of_the_day.csv
-    |-- __openerp__.py
+    |-- __manifest__.py
     |-- petstore_data.xml
     |-- petstore.py
     |-- petstore.xml
@@ -86,7 +86,7 @@ sub-folders are conventional and not strictly necessary.
     application (or at least its web-browser side) as javascript. It should
     currently look like::
 
-        openerp.oepetstore = function(instance, local) {
+        odoo.oepetstore = function(instance, local) {
             var _t = instance.web._t,
                 _lt = instance.web._lt;
             var QWeb = instance.web.qweb;
@@ -103,7 +103,7 @@ sub-folders are conventional and not strictly necessary.
 
 Which only prints a small message in the browser's console.
 
-The files in the ``static`` folder, need to be defined within the module in order for them to be loaded correctly. Everything in ``src/xml`` is defined in ``__openerp__.py`` while the contents of ``src/css`` and ``src/js`` are defined in ``petstore.xml``, or a similar file.
+The files in the ``static`` folder, need to be defined within the module in order for them to be loaded correctly. Everything in ``src/xml`` is defined in ``__manifest__.py`` while the contents of ``src/css`` and ``src/js`` are defined in ``petstore.xml``, or a similar file.
 
 .. warning::
 
@@ -127,7 +127,7 @@ The files in the ``static`` folder, need to be defined within the module in orde
     This will reload the web client with optimizations disabled, making
     development and debugging significantly more comfortable.
 
-.. todo:: qweb files hooked via __openerp__.py, but js and CSS use bundles
+.. todo:: qweb files hooked via __manifest__.py, but js and CSS use bundles
 
 Odoo JavaScript Module
 ======================
@@ -142,11 +142,11 @@ in order to both namespace code and correctly order its loading.
 
 ``oepetstore/static/js/petstore.js`` contains a module declaration::
 
-    openerp.oepetstore = function(instance, local) {
+    odoo.oepetstore = function(instance, local) {
         local.xxx = ...;
     }
 
-In Odoo web, modules are declared as functions set on the global ``openerp``
+In Odoo web, modules are declared as functions set on the global ``odoo``
 variable. The function's name must be the same as the addon (in this case
 ``oepetstore``) so the framework can find it, and automatically initialize it.
 
@@ -173,8 +173,8 @@ equivalent (if lower-level and more verbose) mechanisms.
 For simplicity and developer-friendliness Odoo web provides a class
 system based on John Resig's `Simple JavaScript Inheritance`_.
 
-New classes are defined by calling the :func:`~openerp.web.Class.extend`
-method of :class:`openerp.web.Class`::
+New classes are defined by calling the :func:`~odoo.web.Class.extend`
+method of :class:`odoo.web.Class`::
 
     var MyClass = instance.web.Class.extend({
         say_hello: function() {
@@ -182,7 +182,7 @@ method of :class:`openerp.web.Class`::
         },
     });
 
-The :func:`~openerp.web.Class.extend` method takes a dictionary describing
+The :func:`~odoo.web.Class.extend` method takes a dictionary describing
 the new class's content (methods and static attributes). In this case, it will
 only have a ``say_hello`` method which takes no parameters.
 
@@ -223,8 +223,8 @@ parameters passed when using the ``new`` operator::
     // print "hello Bob" in the console
 
 It is also possible to create subclasses from existing (used-defined) classes
-by calling :func:`~openerp.web.Class.extend` on the parent class, as is done
-to subclass :class:`~openerp.web.Class`::
+by calling :func:`~odoo.web.Class.extend` on the parent class, as is done
+to subclass :class:`~odoo.web.Class`::
 
     var MySpanishClass = MyClass.extend({
         say_hello: function() {
@@ -284,7 +284,7 @@ maintenance.
 
 Much like object-oriented desktop UI toolkits (e.g. Qt_, Cocoa_ or GTK_),
 Odoo Web makes specific components responsible for sections of a page. In
-Odoo web, the base for such components is the :class:`~openerp.Widget`
+Odoo web, the base for such components is the :class:`~odoo.Widget`
 class, a component specialized in handling a page section and displaying
 information for the user.
 
@@ -299,8 +299,8 @@ The initial demonstration module already provides a basic widget::
         },
     });
 
-It extends :class:`~openerp.Widget` and overrides the standard method
-:func:`~openerp.Widget.start`, which — much like the previous ``MyClass``
+It extends :class:`~odoo.Widget` and overrides the standard method
+:func:`~odoo.Widget.start`, which — much like the previous ``MyClass``
 — does little for now.
 
 This line at the end of the file::
@@ -327,14 +327,14 @@ Widgets have a number of methods and features, but the basics are simple:
 * format the widget's data
 * display the widget
 
-The ``HomePage`` widget already has a :func:`~openerp.Widget.start`
+The ``HomePage`` widget already has a :func:`~odoo.Widget.start`
 method. That method is part of the normal widget lifecycle and automatically
 called once the widget is inserted in the page. We can use it to display some
 content.
 
-All widgets have a :attr:`~openerp.Widget.$el` which represents the
+All widgets have a :attr:`~odoo.Widget.$el` which represents the
 section of page they're in charge of (as a jQuery_ object). Widget content
-should be inserted there. By default, :attr:`~openerp.Widget.$el` is an
+should be inserted there. By default, :attr:`~odoo.Widget.$el` is an
 empty ``<div>`` element.
 
 A ``<div>`` element is usually invisible to the user if it has no content (or
@@ -367,7 +367,7 @@ To learn how to use a widget "from scratch" let's create a new one::
     });
 
 We can now add our ``GreetingsWidget`` to the ``HomePage`` by using the
-``GreetingsWidget``'s :func:`~openerp.Widget.appendTo` method::
+``GreetingsWidget``'s :func:`~odoo.Widget.appendTo` method::
 
     local.HomePage = instance.Widget.extend({
         start: function() {
@@ -380,17 +380,17 @@ We can now add our ``GreetingsWidget`` to the ``HomePage`` by using the
 * ``HomePage`` first adds its own content to its DOM root
 * ``HomePage`` then instantiates ``GreetingsWidget``
 * Finally it tells ``GreetingsWidget`` where to insert itself, delegating part
-  of its :attr:`~openerp.Widget.$el` to the ``GreetingsWidget``.
+  of its :attr:`~odoo.Widget.$el` to the ``GreetingsWidget``.
 
-When the :func:`~openerp.Widget.appendTo` method is called, it asks the
+When the :func:`~odoo.Widget.appendTo` method is called, it asks the
 widget to insert itself at the specified position and to display its content.
-The :func:`~openerp.Widget.start` method will be called during the call
-to :func:`~openerp.Widget.appendTo`.
+The :func:`~odoo.Widget.start` method will be called during the call
+to :func:`~odoo.Widget.appendTo`.
 
 To see what happens under the displayed interface, we will use the browser's
 DOM Explorer. But first let's alter our widgets slightly so we can more easily
 find where they are, by :attr:`adding a class to their root elements
-<openerp.Widget.className>`::
+<odoo.Widget.className>`::
 
     local.HomePage = instance.Widget.extend({
         className: 'oe_petstore_homepage',
@@ -414,7 +414,7 @@ then :guilabel:`Inspect Element`), it should look like this:
     </div>
 
 Which clearly shows the two ``<div>`` elements automatically created by
-:class:`~openerp.Widget`, because we added some classes on them.
+:class:`~odoo.Widget`, because we added some classes on them.
 
 We can also see the two message-holding divs we added ourselves
 
@@ -442,7 +442,7 @@ of another widget, and exist on behalf of it. We call the container the
 Due to multiple technical and conceptual reasons, it is necessary for a widget
 to know who is its parent and who are its children.
 
-:func:`~openerp.Widget.getParent`
+:func:`~odoo.Widget.getParent`
     can be used to get the parent of a widget::
 
         local.GreetingsWidget = instance.Widget.extend({
@@ -452,7 +452,7 @@ to know who is its parent and who are its children.
             },
         });
 
-:func:`~openerp.Widget.getChildren`
+:func:`~odoo.Widget.getChildren`
     can be used to get a list of its children::
 
         local.HomePage = instance.Widget.extend({
@@ -464,7 +464,7 @@ to know who is its parent and who are its children.
             },
         });
 
-When overriding the :func:`~openerp.Widget.init` method of a widget it is
+When overriding the :func:`~odoo.Widget.init` method of a widget it is
 *of the utmost importance* to pass the parent to the ``this._super()`` call,
 otherwise the relation will not be set up correctly::
 
@@ -484,20 +484,20 @@ Destroying Widgets
 ------------------
 
 If you can display content to your users, you should also be able to erase
-it. This is done via the :func:`~openerp.Widget.destroy` method::
+it. This is done via the :func:`~odoo.Widget.destroy` method::
 
     greeting.destroy();
 
 When a widget is destroyed it will first call
-:func:`~openerp.Widget.destroy` on all its children. Then it erases itself
+:func:`~odoo.Widget.destroy` on all its children. Then it erases itself
 from the DOM. If you have set up permanent structures in
-:func:`~openerp.Widget.init` or :func:`~openerp.Widget.start` which
+:func:`~odoo.Widget.init` or :func:`~odoo.Widget.start` which
 must be explicitly cleaned up (because the garbage collector will not handle
-them), you can override :func:`~openerp.Widget.destroy`.
+them), you can override :func:`~odoo.Widget.destroy`.
 
 .. danger::
 
-    when overriding :func:`~openerp.Widget.destroy`, ``_super()``
+    when overriding :func:`~odoo.Widget.destroy`, ``_super()``
     *must always* be called otherwise the widget and its children are not
     correctly cleaned up leaving possible memory leaks and "phantom events",
     even if no error is displayed
@@ -525,9 +525,9 @@ characteristics:
 
 * It's implemented fully in JavaScript and rendered in the browser
 * Each template file (XML files) contains multiple templates
-* It has special support in Odoo Web's :class:`~openerp.Widget`, though it
+* It has special support in Odoo Web's :class:`~odoo.Widget`, though it
   can be used outside of Odoo's web client (and it's possible to use
-  :class:`~openerp.Widget` without relying on QWeb)
+  :class:`~odoo.Widget` without relying on QWeb)
 
 .. note::
 
@@ -569,9 +569,9 @@ template defined in the XML file::
 :func:`QWeb.render` looks for the specified template, renders it to a string
 and returns the result.
 
-However, because :class:`~openerp.Widget` has special integration for QWeb
+However, because :class:`~odoo.Widget` has special integration for QWeb
 the template can be set directly on the widget via its
-:attr:`~openerp.Widget.template` attribute::
+:attr:`~odoo.Widget.template` attribute::
 
     local.HomePage = instance.Widget.extend({
         template: "HomePageTemplate",
@@ -584,7 +584,7 @@ Although the result looks similar, there are two differences between these
 usages:
 
 * with the second version, the template is rendered right before
-  :func:`~openerp.Widget.start` is called
+  :func:`~odoo.Widget.start` is called
 * in the first version the template's content is added to the widget's root
   element, whereas in the second version the template's root element is
   directly *set as* the widget's root element. Which is why the "greetings"
@@ -593,7 +593,7 @@ usages:
 .. warning::
 
     templates should have a single non-``t`` root element, especially if
-    they're set as a widget's :attr:`~openerp.Widget.template`. If there are
+    they're set as a widget's :attr:`~odoo.Widget.template`. If there are
     multiple "root elements", results are undefined (usually only the first
     root element will be used and the others will be ignored)
 
@@ -621,11 +621,11 @@ will result in:
 
     <div>Hello Klaus</div>
 
-When using :class:`~openerp.Widget`'s integration it is not possible to
+When using :class:`~odoo.Widget`'s integration it is not possible to
 provide additional data to the template. The template will be given a single
 ``widget`` context variable, referencing the widget being rendered right
-before :func:`~openerp.Widget.start` is called (the widget's state will
-essentially be that set up by :func:`~openerp.Widget.init`):
+before :func:`~odoo.Widget.start` is called (the widget's state will
+essentially be that set up by :func:`~odoo.Widget.init`):
 
 .. code-block:: xml
 
@@ -850,7 +850,7 @@ Exercise
 
         ::
 
-            openerp.oepetstore = function(instance, local) {
+            odoo.oepetstore = function(instance, local) {
                 var _t = instance.web._t,
                     _lt = instance.web._lt;
                 var QWeb = instance.web.qweb;
@@ -918,8 +918,8 @@ Selecting DOM elements within a widget can be performed by calling the
 
     this.$el.find("input.my_input")...
 
-But because it's a common operation, :class:`~openerp.Widget` provides an
-equivalent shortcut through the :func:`~openerp.Widget.$` method::
+But because it's a common operation, :class:`~odoo.Widget` provides an
+equivalent shortcut through the :func:`~odoo.Widget.$` method::
 
     local.MyWidget = instance.Widget.extend({
         start: function() {
@@ -963,7 +963,7 @@ While this works it has a few issues:
 3. it requires dealing with ``this``-binding issues
 
 Widgets thus provide a shortcut to DOM event binding via
-:attr:`~openerp.Widget.events`::
+:attr:`~odoo.Widget.events`::
 
     local.MyWidget = instance.Widget.extend({
         events: {
@@ -974,7 +974,7 @@ Widgets thus provide a shortcut to DOM event binding via
         }
     });
 
-:attr:`~openerp.Widget.events` is an object (mapping) of an event to the
+:attr:`~odoo.Widget.events` is an object (mapping) of an event to the
 function or method to call when the event is triggered:
 
 * the key is an event name, possibly refined with a CSS selector in which
@@ -1025,12 +1025,12 @@ This widget acts as a facade, transforming user input (through DOM events)
 into a documentable internal event to which parent widgets can bind
 themselves.
 
-:func:`~openerp.Widget.trigger` takes the name of the event to trigger as
+:func:`~odoo.Widget.trigger` takes the name of the event to trigger as
 its first (mandatory) argument, any further arguments are treated as event
 data and passed directly to listeners.
 
 We can then set up a parent event instantiating our generic widget and
-listening to the ``user_chose`` event using :func:`~openerp.Widget.on`::
+listening to the ``user_chose`` event using :func:`~odoo.Widget.on`::
 
     local.HomePage = instance.Widget.extend({
         start: function() {
@@ -1047,11 +1047,11 @@ listening to the ``user_chose`` event using :func:`~openerp.Widget.on`::
         },
     });
 
-:func:`~openerp.Widget.on` binds a function to be called when the
+:func:`~odoo.Widget.on` binds a function to be called when the
 event identified by ``event_name`` is. The ``func`` argument is the
 function to call and ``object`` is the object to which that function is
 related if it is a method. The bound function will be called with the
-additional arguments of :func:`~openerp.Widget.trigger` if it has
+additional arguments of :func:`~odoo.Widget.trigger` if it has
 any. Example::
 
     start: function() {
@@ -1067,7 +1067,7 @@ any. Example::
 .. note::
 
     Triggering events on an other widget is generally a bad idea. The main
-    exception to that rule is ``openerp.web.bus`` which exists specifically
+    exception to that rule is ``odoo.web.bus`` which exists specifically
     to broadcasts evens in which any widget could be interested throughout
     the Odoo web application.
 
@@ -1087,10 +1087,10 @@ that they trigger events when set::
         console.log("The new value of the property 'name' is", this.widget.get("name"));
     }
 
-* :func:`~openerp.Widget.set` sets the value of a property and triggers
+* :func:`~odoo.Widget.set` sets the value of a property and triggers
   :samp:`change:{propname}` (where *propname* is the property name passed as
-  first parameter to :func:`~openerp.Widget.set`) and ``change``
-* :func:`~openerp.Widget.get` retrieves the value of a property.
+  first parameter to :func:`~odoo.Widget.set`) and ``change``
+* :func:`~odoo.Widget.get` retrieves the value of a property.
 
 Exercise
 --------
@@ -1119,7 +1119,7 @@ Exercise
 
         ::
 
-            openerp.oepetstore = function(instance, local) {
+            odoo.oepetstore = function(instance, local) {
                 var _t = instance.web._t,
                     _lt = instance.web._lt;
                 var QWeb = instance.web.qweb;
@@ -1189,7 +1189,7 @@ Modify existing widgets and classes
 ===================================
 
 The class system of the Odoo web framework allows direct modification of
-existing classes using the :func:`~openerp.web.Class.include` method::
+existing classes using the :func:`~odoo.web.Class.include` method::
 
     var TestClass = instance.web.Class.extend({
         testMethod: function() {
@@ -1212,9 +1212,9 @@ target class in-place instead of creating a new class.
 In that case, ``this._super()`` will call the original implementation of a
 method being replaced/redefined. If the class already had sub-classes, all
 calls to ``this._super()`` in sub-classes will call the new implementations
-defined in the call to :func:`~openerp.web.Class.include`. This will also work
+defined in the call to :func:`~odoo.web.Class.include`. This will also work
 if some instances of the class (or of any of its sub-classes) were created
-prior to the call to :func:`~openerp.Widget.include`.
+prior to the call to :func:`~odoo.Widget.include`.
 
 Translations
 ============
@@ -1235,7 +1235,7 @@ In Odoo, translations files are automatically generated by scanning the source
 code. All piece of code that calls a certain function are detected and their
 content is added to a translation file that will then be sent to the
 translators. In Python, the function is ``_()``. In JavaScript the function is
-:func:`~openerp.web._t` (and also :func:`~openerp.web._lt`).
+:func:`~odoo.web._t` (and also :func:`~odoo.web._lt`).
 
 ``_t()`` will return the translation defined for the text it is given. If no
 translation is defined for that text, it will return the original text as-is.
@@ -1255,7 +1255,7 @@ translation is defined for that text, it will return the original text as-is.
     This makes translatable strings more readable to translators, and gives
     them more flexibility to reorder or ignore parameters.
 
-:func:`~openerp.web._lt` ("lazy translate") is similar but somewhat more
+:func:`~odoo.web._lt` ("lazy translate") is similar but somewhat more
 complex: instead of translating its parameter immediately, it returns
 an object which, when converted to a string, will perform the translation.
 
@@ -1309,11 +1309,11 @@ Here is a sample widget that calls ``my_method()`` and displays the result::
         },
     });
 
-The class used to call Odoo models is :class:`openerp.Model`. It is
+The class used to call Odoo models is :class:`odoo.Model`. It is
 instantiated with the Odoo model's name as first parameter
 (``oepetstore.message_of_the_day`` here).
 
-:func:`~openerp.web.Model.call` can be used to call any (public) method of an
+:func:`~odoo.web.Model.call` can be used to call any (public) method of an
 Odoo model. It takes the following positional arguments:
 
 ``name``
@@ -1349,7 +1349,7 @@ Odoo model. It takes the following positional arguments:
       model.call("my_method", [], {a: 1, b: 2, c: 3, ...
       // with this a=1, b=2 and c=3
 
-:func:`~openerp.Widget.call` returns a deferred resolved with the value
+:func:`~odoo.Widget.call` returns a deferred resolved with the value
 returned by the model's method as first argument.
 
 CompoundContext
@@ -1370,13 +1370,13 @@ is used by people in different countries.
 The ``argument`` is necessary in all methods, otherwise bad things could
 happen (such as the application not being translated correctly). That's why,
 when you call a model's method, you should always provide that argument. The
-solution to achieve that is to use :class:`openerp.web.CompoundContext`.
+solution to achieve that is to use :class:`odoo.web.CompoundContext`.
 
-:class:`~openerp.web.CompoundContext` is a class used to pass the user's
+:class:`~odoo.web.CompoundContext` is a class used to pass the user's
 context (with language, time zone, etc...) to the server as well as adding new
 keys to the context (some models' methods use arbitrary keys added to the
 context). It is created by giving to its constructor any number of
-dictionaries or other :class:`~openerp.web.CompoundContext` instances. It will
+dictionaries or other :class:`~odoo.web.CompoundContext` instances. It will
 merge all those contexts before sending them to the server.
 
 .. code-block:: javascript
@@ -1393,17 +1393,17 @@ merge all those contexts before sending them to the server.
 You can see the dictionary in the argument ``context`` contains some keys that
 are related to the configuration of the current user in Odoo plus the
 ``new_key`` key that was added when instantiating
-:class:`~openerp.web.CompoundContext`.
+:class:`~odoo.web.CompoundContext`.
 
 Queries
 -------
 
-While :func:`~openerp.Model.call` is sufficient for any interaction with Odoo
+While :func:`~odoo.Model.call` is sufficient for any interaction with Odoo
 models, Odoo Web provides a helper for simpler and clearer querying of models
 (fetching of records based on various conditions):
-:func:`~openerp.Model.query` which acts as a shortcut for the common
-combination of :py:meth:`~openerp.models.Model.search` and
-::py:meth:`~openerp.models.Model.read`. It provides a clearer syntax to search
+:func:`~odoo.Model.query` which acts as a shortcut for the common
+combination of :py:meth:`~odoo.models.Model.search` and
+::py:meth:`~odoo.models.Model.read`. It provides a clearer syntax to search
 and read models::
 
     model.query(['name', 'login', 'user_email', 'signature'])
@@ -1423,19 +1423,19 @@ versus::
             // do work with users records
         });
 
-* :func:`~openerp.web.Model.query` takes an optional list of fields as
+* :func:`~odoo.web.Model.query` takes an optional list of fields as
   parameter (if no field is provided, all fields of the model are fetched). It
-  returns a :class:`openerp.web.Query` which can be further customized before
+  returns a :class:`odoo.web.Query` which can be further customized before
   being executed
-* :class:`~openerp.web.Query` represents the query being built. It is
+* :class:`~odoo.web.Query` represents the query being built. It is
   immutable, methods to customize the query actually return a modified copy,
   so it's possible to use the original and the new version side-by-side. See
-  :class:`~openerp.web.Query` for its customization options.
+  :class:`~odoo.web.Query` for its customization options.
 
 When the query is set up as desired, simply call
-:func:`~openerp.web.Query.all` to execute it and return a
+:func:`~odoo.web.Query.all` to execute it and return a
 deferred to its result. The result is the same as
-:py:meth:`~openerp.models.Model.read`'s, an array of dictionaries where each
+:py:meth:`~odoo.models.Model.read`'s, an array of dictionaries where each
 dictionary is a requested record, with each requested field a dictionary key.
 
 Exercises
@@ -1453,7 +1453,7 @@ Exercises
 
         .. code-block:: javascript
 
-            openerp.oepetstore = function(instance, local) {
+            odoo.oepetstore = function(instance, local) {
                 var _t = instance.web._t,
                     _lt = instance.web._lt;
                 var QWeb = instance.web.qweb;
@@ -1531,7 +1531,7 @@ Exercises
 
         .. code-block:: javascript
 
-            openerp.oepetstore = function(instance, local) {
+            odoo.oepetstore = function(instance, local) {
                 var _t = instance.web._t,
                     _lt = instance.web._lt;
                 var QWeb = instance.web.qweb;
@@ -1666,7 +1666,7 @@ The action manager can be invoked explicitly from javascript code by creating
 a dictionary describing :ref:`an action <reference/actions>` of the right
 type, and calling an action manager instance with it.
 
-:func:`~openerp.Widget.do_action` is a shortcut of :class:`~openerp.Widget`
+:func:`~odoo.Widget.do_action` is a shortcut of :class:`~odoo.Widget`
 looking up the "current" action manager and executing the action::
 
     instance.web.TestWidget = instance.Widget.extend({
@@ -1766,9 +1766,9 @@ Our widget is registered as the handler for the client action through this::
     instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
 
 
-``instance.web.client_actions`` is a :class:`~openerp.web.Registry` in which
+``instance.web.client_actions`` is a :class:`~odoo.web.Registry` in which
 the action manager looks up client action handlers when it needs to execute
-one. The first parameter of :class:`~openerp.web.Registry.add` is the name
+one. The first parameter of :class:`~odoo.web.Registry.add` is the name
 (tag) of the client action, and the second parameter is the path to the widget
 from the Odoo web client root.
 
@@ -1817,7 +1817,7 @@ The Views
 '''''''''
 
 Most :ref:`Odoo views <reference/views>` are implemented through a subclass
-of :class:`openerp.web.View` which provides a bit of generic basic structure
+of :class:`odoo.web.View` which provides a bit of generic basic structure
 for handling events and displaying model information.
 
 The *search view* is considered a view type by the main Odoo framework, but
@@ -1825,17 +1825,17 @@ handled separately by the web client (as it's a more permanent fixture and
 can interact with other views, which regular views don't do).
 
 A view is responsible for loading its own description XML (using
-:py:class:`~openerp.models.Model.fields_view_get`) and any other data source
+:py:class:`~odoo.models.Model.fields_view_get`) and any other data source
 it needs. To that purpose, views are provided with an optional view
-identifier set as the :attr:`~openerp.web.View.view_id` attribute.
+identifier set as the :attr:`~odoo.web.View.view_id` attribute.
 
-Views are also provided with a :class:`~openerp.web.DataSet` instance which
+Views are also provided with a :class:`~odoo.web.DataSet` instance which
 holds most necessary model information (the model name and possibly various
 record ids).
 
 Views may also want to handle search queries by overriding
-:func:`~openerp.web.View.do_search`, and updating their
-:class:`~openerp.web.DataSet` as necessary.
+:func:`~odoo.web.View.do_search`, and updating their
+:class:`~odoo.web.DataSet` as necessary.
 
 The Form View Fields
 --------------------
@@ -1847,7 +1847,7 @@ All built-in fields have a default display implementation, a new
 form widget may be necessary to correctly interact with a new field type
 (e.g. a :term:`GIS` field) or to provide new representations and ways to
 interact with existing field types (e.g. validate
-:py:class:`~openerp.fields.Char` fields which should contain email addresses
+:py:class:`~odoo.fields.Char` fields which should contain email addresses
 and display them as email links).
 
 To explicitly specify which form widget should be used to display a field,
@@ -2150,7 +2150,7 @@ abstract class.
 
 Form widgets can interact with form fields by listening for their changes and
 fetching or altering their values. They can access form fields through
-their :attr:`~openerp.web.form.FormWidget.field_manager` attribute::
+their :attr:`~odoo.web.form.FormWidget.field_manager` attribute::
 
     local.WidgetMultiplication = instance.web.form.FormWidget.extend({
         start: function() {
@@ -2168,14 +2168,14 @@ their :attr:`~openerp.web.form.FormWidget.field_manager` attribute::
 
     instance.web.form.custom_widgets.add('multiplication', 'instance.oepetstore.WidgetMultiplication');
 
-:attr:`~openerp.web.form.FormWidget` is generally the
-:class:`~openerp.web.form.FormView` itself, but features used from it should
-be limited to those defined by :class:`~openerp.web.form.FieldManagerMixin`,
+:attr:`~odoo.web.form.FormWidget` is generally the
+:class:`~odoo.web.form.FormView` itself, but features used from it should
+be limited to those defined by :class:`~odoo.web.form.FieldManagerMixin`,
 the most useful being:
 
-* :func:`~openerp.web.form.FieldManagerMixin.get_field_value(field_name)`
+* :func:`~odoo.web.form.FieldManagerMixin.get_field_value(field_name)`
   which returns the value of a field.
-* :func:`~openerp.web.form.FieldManagerMixin.set_values(values)` sets multiple
+* :func:`~odoo.web.form.FieldManagerMixin.set_values(values)` sets multiple
   field values, takes a mapping of ``{field_name: value_to_set}``
 * An event :samp:`field_changed:{field_name}` is triggered any time the value
   of the field called ``field_name`` is changed

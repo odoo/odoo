@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, _
-from openerp.exceptions import UserError
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountReportGeneralLedger(models.TransientModel):
@@ -19,4 +19,5 @@ class AccountReportGeneralLedger(models.TransientModel):
         data['form'].update(self.read(['initial_balance', 'sortby'])[0])
         if data['form'].get('initial_balance') and not data['form'].get('date_from'):
             raise UserError(_("You must define a Start Date"))
-        return self.env['report'].with_context(landscape=True).get_action(self, 'account.report_generalledger', data=data)
+        records = self.env[data['model']].browse(data.get('ids', []))
+        return self.env.ref('account.action_report_general_ledger').with_context(landscape=True).report_action(records, data=data)

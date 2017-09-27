@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-import commands
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from __future__ import print_function
 import logging
-import json
+import math
 import os
 import os.path
-import io
-import base64
-import openerp
-import time
-import random
-import math
-import md5
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-import pickle
-import re
 import subprocess
+import time
 import traceback
 
 try: 
@@ -24,19 +17,20 @@ try:
 except ImportError:
     escpos = printer = None
 
+try:
+    from queue import Queue
+except ImportError:
+    from Queue import Queue # pylint: disable=deprecated-module
 from threading import Thread, Lock
-from Queue import Queue, Empty
 
 try:
     import usb.core
 except ImportError:
     usb = None
 
-from PIL import Image
+from odoo import http, _
 
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -86,10 +80,15 @@ class EscposDriver(Thread):
             printers = usb.core.find(find_all=True, idVendor=0x0519)
 
         for printer in printers:
+            try:
+                description = usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
+            except Exception as e:
+                _logger.error("Can not get printer description: %s" % e)
+                description = 'Unknown printer'
             connected.append({
                 'vendor': printer.idVendor,
                 'product': printer.idProduct,
-                'name': usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
+                'name': description
             })
 
         return connected
@@ -104,8 +103,12 @@ class EscposDriver(Thread):
   
         printers = self.connected_usb_devices()
         if len(printers) > 0:
-            self.set_status('connected','Connected to '+printers[0]['name'])
-            return Usb(printers[0]['vendor'], printers[0]['product'])
+            print_dev = Usb(printers[0]['vendor'], printers[0]['product'])
+            self.set_status(
+                'connected',
+                "Connected to %s (in=0x%02x,out=0x%02x)" % (printers[0]['name'], print_dev.in_ep, print_dev.out_ep)
+            )
+            return print_dev
         else:
             self.set_status('disconnected','Printer Not Found')
             return None
@@ -131,9 +134,9 @@ class EscposDriver(Thread):
                 self.status['messages'] = []
 
         if status == 'error' and message:
-            _logger.error('ESC/POS Error: '+message)
+            _logger.error('ESC/POS Error: %s', message)
         elif status == 'disconnected' and message:
-            _logger.warning('ESC/POS Device Disconnected: '+message)
+            _logger.warning('ESC/POS Device Disconnected: %s', message)
 
     def run(self):
         printer = None
@@ -170,17 +173,16 @@ class EscposDriver(Thread):
                 error = False
 
             except NoDeviceError as e:
-                print "No device found %s" %str(e)
+                print("No device found %s" % e)
             except HandleDeviceError as e:
-                print "Impossible to handle the device due to previous error %s" % str(e)
+                print("Impossible to handle the device due to previous error %s" % e)
             except TicketNotPrinted as e:
-                print "The ticket does not seems to have been fully printed %s" % str(e)
+                print("The ticket does not seems to have been fully printed %s" % e)
             except NoStatusError as e:
-                print "Impossible to get the status of the printer %s" % str(e)
+                print("Impossible to get the status of the printer %s" % e)
             except Exception as e:
-                self.set_status('error', str(e))
-                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
-                _logger.error(errmsg);
+                self.set_status('error', e)
+                _logger.exception()
             finally:
                 if error:
                     self.queue.put((timestamp, task, data))
@@ -196,7 +198,7 @@ class EscposDriver(Thread):
         hosting_ap = os.system('pgrep hostapd') == 0
         ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
         mac = subprocess.check_output('ifconfig | grep -B 1 \'inet addr\' | grep -o \'HWaddr .*\' | sed \'s/HWaddr //\'', shell=True).rstrip()
-        ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
+        ips =  [ c.split(':')[1].split(' ')[0] for c in subprocess.check_output("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
         ips =  [ ip for ip in ips if ip not in localips ] 
         eprint.text('\n\n')
         eprint.set(align='center',type='b',height=2,width=2)
@@ -371,4 +373,3 @@ class EscposProxy(hw_proxy.Proxy):
     def print_xml_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT XML RECEIPT') 
         driver.push_task('xml_receipt',receipt)
-

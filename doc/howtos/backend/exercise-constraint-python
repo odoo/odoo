@@ -8,8 +8,8 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 @@ -1,6 +1,6 @@
  # -*- coding: utf-8 -*-
  
--from openerp import models, fields, api
-+from openerp import models, fields, api, exceptions
+-from odoo import models, fields, api
++from odoo import models, fields, api, exceptions
  
  class Course(models.Model):
      _name = 'openacademy.course'

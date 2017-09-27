@@ -58,7 +58,7 @@ following attributes:
     Requires an :term:`external id`, defaults to ``True``.
 
 ``field``
-'''''''''
+----------
 
 Each record can be composed of ``field`` tags, defining values to set when
 creating the record. A ``record`` with no ``field`` will use all default
@@ -77,13 +77,13 @@ Nothing
 
     Will evaluate the domain, search the field's model using it and set the
     search's result as the field's value. Will only use the first result if
-    the field is a :class:`~openerp.fields.Many2one`
+    the field is a :class:`~odoo.fields.Many2one`
 ``ref``
     if a ``ref`` attribute is provided, its value must be a valid
     :term:`external id`, which will be looked up and set as the field's value.
 
-    Mostly for :class:`~openerp.fields.Many2one` and
-    :class:`~openerp.fields.Reference` fields
+    Mostly for :class:`~odoo.fields.Many2one` and
+    :class:`~odoo.fields.Reference` fields
 ``type``
     if a ``type`` attribute is provided, it is used to interpret and convert
     the field's content. The field's content can be provided through an
@@ -152,16 +152,6 @@ Parameters can be provided using ``eval`` (should evaluate to a sequence of
 parameters to call the method with) or ``value`` elements (see ``list``
 values).
 
-``workflow``
-------------
-
-The ``workflow`` tag sends a signal to an existing workflow. The workflow
-can be specified via a ``ref`` attribute (the :term:`external id` of
-an existing workflow) or a ``value`` tag returning the id of a workflow.
-
-The tag also has two mandatory attributes ``model`` (the model linked to the
-workflow) and ``action`` (the name of the signal to send to the workflow).
-
 .. ignored assert
 
 Shortcuts
@@ -228,10 +218,10 @@ section of the view, and allowing a few *optional* attributes:
 ``report``
 ----------
 
-Creates a ``ir.actions.report.xml`` record with a few default values.
+Creates a ``ir.actions.report`` record with a few default values.
 
 Mostly just proxies attributes to the corresponding fields on
-``ir.actions.report.xml``, but also automatically creates the item in the
+``ir.actions.report``, but also automatically creates the item in the
 :guilabel:`More` menu of the report's ``model``.
 
 .. ignored url, act_window and ir_set
@@ -253,14 +243,14 @@ For this case, data files can also use csv_, this is often the case for
 Here's the first lines of the data file defining US states
 ``res.country.state.csv``
 
-.. literalinclude:: ../../openerp/addons/base/res/res.country.state.csv
+.. literalinclude:: ../../odoo/addons/base/res/res.country.state.csv
     :language: text
     :lines: 1-15
 
 rendered in a more readable format:
 
 .. csv-table::
-    :file: ../../openerp/addons/base/res/res.country.state.csv
+    :file: ../../odoo/addons/base/res/res.country.state.csv
     :header-rows: 1
     :class: table-striped table-hover table-condensed
 

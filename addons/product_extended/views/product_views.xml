@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="product_product_ext_form_view2" model="ir.ui.view">
+            <field name="name">product_extended.product.form.view</field>
+            <field name="model">product.template</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+            <field name="arch" type="xml">
+                <div name="standard_price_uom" position="after">
+                    <button name="compute_price"
+                        string="Compute from BOM" type="object"
+                        attrs="{'invisible': ['|', '|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0), ('product_variant_count', '!=', 1)]}"
+                        help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                        class="oe_link oe_read_only"
+                        colspan="2"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="product_product_view_form_normal_inherit_extended" model="ir.ui.view">
+            <field name="name">product.product.view.form.normal.inherit.extended</field>
+            <field name="model">product.product</field>
+            <field name="priority">4</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+            <field name="arch" type="xml">
+               <div name="standard_price_uom" position="after">
+                    <button name="compute_price"
+                        string="Compute from BOM" type="object"
+                        attrs="{'invisible': ['|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0)]}"
+                        help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                        class="oe_link oe_read_only"
+                        colspan="2"/>
+                </div>
+            </field>
+        </record>
+</odoo>

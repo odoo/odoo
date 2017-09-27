@@ -3,16 +3,20 @@
 # * sales_team
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-11-22 14:01+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,21 +32,21 @@ msgstr "3. ver. afsluiting"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:137
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:139
 #, python-format
 msgid "35,029.39€"
 msgstr "35,029.39€"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:124
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:125
 #, python-format
 msgid "78,140.03€"
 msgstr "78,140.03€"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:171
 #, python-format
 msgid "80.000€"
 msgstr "80.000€"
@@ -54,8 +58,8 @@ msgstr "<span>Nieuw</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Rapporten</span>"
+msgid "<span>Reporting</span>"
+msgstr "<span>Rapportering</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -63,9 +67,9 @@ msgid "<span>View</span>"
 msgstr "<span>Bekijk</span>"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Action Needed"
-msgstr "Vereist actie"
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_account_accountant
+msgid "Accounting"
+msgstr "Boekhouding"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
@@ -80,29 +84,76 @@ msgid "Activities Done"
 msgstr "Activiteiten gedaan"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
+#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
+msgid "Bank Accounts"
+msgstr "Bankrekeningen"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
+msgid "Banks"
+msgstr "Banken"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Bar"
+msgstr ""
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:235
+#, python-format
+msgid "Big Pretty Button :)"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_crm
+msgid "CRM"
+msgstr "Relatiebeheer"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Cancel"
+msgstr "Annuleer"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
+msgid "Channel Leader"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+msgid "Channel Members"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
+msgid "Channel Type"
+msgstr "Kanaalsoort"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales team."
-msgstr "Klik hier om een nieuw verkoopteam te definiëren."
+msgid "Click here to define a new sales channel."
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:152
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:161
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:165
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:174
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:178
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:150
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:154
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:163
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:167
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:176
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:180
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:184
 #, python-format
 msgid "Click to set"
 msgstr "Klik om in te stellen"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "Code"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -111,76 +162,138 @@ msgstr "Kleur index"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_company_id
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+msgid "Configuration"
+msgstr "Instellingen"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_config
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Configure Sales"
+msgstr "Instellen verkoop"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
+msgid "Contact Tags"
+msgstr "Contact labels"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
+msgid "Contact Titles"
+msgstr "Titels contact"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_address_book
+msgid "Contacts"
+msgstr "Contacten"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+msgid "Content"
+msgstr "Inhoud"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_partner
+msgid "Countries"
+msgstr "Landen"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_group
+msgid "Country Group"
+msgstr "Landengroep"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:219
 #, python-format
-msgid "Create a few opportunities to activate your dashboard."
-msgstr "Maak een paar prospects aan om uw dashboard te activeren."
+msgid "Create a few opportunities in it."
+msgstr "Maak een paar prospects aan."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
+msgid "Currencies"
+msgstr "Valuta"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_form
+msgid "Customers"
+msgstr "Klanten"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:16
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:18
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.ui.menu,name:sales_team.menu_sales_team_act
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #, python-format
 msgid "Dashboard"
 msgstr "Dashboard"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum van het laatste bericht verstuurt op deze regel."
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+msgid "Dashboard Button"
+msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Direct Sales"
-msgstr "Directe verkoop"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+msgid "Dashboard Graph Data"
+msgstr ""
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Day"
+msgstr "Dag"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Schermnaam"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
+msgid "Fed. States"
+msgstr "Fed. staten/Provincies"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr "Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers van dit team de volgen."
+msgstr ""
+"Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers "
+"van dit team de volgen."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_follower_ids
-msgid "Followers"
-msgstr "Volgers"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Volgers (Kanalen)"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Graph"
+msgstr "Diagram"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:214
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:218
 #, python-format
 msgid "Great sales journeys start with a clean pipeline."
 msgstr "Geweldige verkooptrajecten starten met een propere pijplijn."
@@ -191,77 +304,114 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+msgid "Group by"
+msgstr "Groepeer op"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_helpdesk
+msgid "Helpdesk"
+msgstr "Helpdesk"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:213
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:217
 #, python-format
 msgid "Hi there!"
 msgstr "Hallo daar!"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+msgid "How this channel's dashboard graph will group the results."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+msgid ""
+"If set, this sales channel will be used for sales and assignations related "
+"to this partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
-"team without removing it."
-msgstr "Als het actief veld is ingesteld als onwaar, kunt u het verkoopteam verbergen zonder het te verwijderen."
+"channel without removing it."
+msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "Indirect Sales"
-msgstr "Indirecte verkoop"
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Integrations"
+msgstr "integraties"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:142
 #, python-format
 msgid "Invoiced"
 msgstr "Gefactureerd"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_is_follower
-msgid "Is Follower"
-msgstr "Is een volger"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_last_post
-msgid "Last Message Date"
-msgstr "Laatste bericht datum"
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "Facturen"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:190
 #, python-format
 msgid "Last Month"
-msgstr "Laatste maand"
+msgstr " Vorige maand"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_type:0
+msgid "Line"
+msgstr "Regel"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_localisation
+msgid "Localization"
+msgstr "Positie in magazijn"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Manage leads, opportunities, meetings and activities"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
+msgid "Manage subscriptions and recurring invoicing"
+msgstr "Beheer abonnementen en herhalende facturen"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr "Beheerder"
 
 #. module: sales_team
 #. openerp-web
@@ -271,14 +421,9 @@ msgid "Meetings"
 msgstr "Afspraken"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_ids
-msgid "Messages"
-msgstr "Berichten"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Month"
+msgstr "Maand"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -286,9 +431,13 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "More Info"
-msgstr "Meer informatie"
+#. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:220
+#, python-format
+msgid "My Pipeline"
+msgstr "Mijn pijplijn"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -306,27 +455,12 @@ msgstr "Volgende 7 dagen"
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:38
 #, python-format
-msgid "Next Actions"
-msgstr "Volgende acties"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Aantal acties"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Aantal ongelezen berichten"
+msgid "Next Activities"
+msgstr "Volgende activiteiten"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Alleen gehele getallen zijn geldig."
@@ -344,14 +478,49 @@ msgid "Performance"
 msgstr "Prestaties"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+msgid "Period"
+msgstr "Periode"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Pipeline"
+msgstr "Pijplijn"
+
+#. module: sales_team
+#: selection:crm.team,team_type:0
+msgid "Point of Sale"
+msgstr "Kassa"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Recommended Apps"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
 msgid "Reply-To"
 msgstr "Antwoord aan"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_report
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Verkoopprijslijst"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_model:0
+#: model:crm.team,name:sales_team.team_sales_department
+#: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale
+#: model:ir.ui.menu,name:sales_team.menu_base_partner
+#: model:ir.ui.menu,name:sales_team.menu_sales
+msgid "Sales"
+msgstr "Verkopen"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -361,19 +530,27 @@ msgstr "Verkoopprijslijst"
 #: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Team"
-msgstr "Verkoopteam"
+msgid "Sales Channel"
+msgstr "Verkoopkanaal"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+msgid ""
+"Sales Channel the user is member of. Used to compute the members of a sales "
+"channel through the inverse one2many"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-msgid "Sales Teams"
-msgstr "Verkoopteams"
+#: model:ir.ui.menu,name:sales_team.sales_team_config
+msgid "Sales Channels"
+msgstr ""
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "Sales team"
-msgstr "Verkoopteam"
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Salesperson"
+msgstr "Verkoper"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -386,54 +563,107 @@ msgid "Salesteams Search"
 msgstr "Zoek verkoopteams"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Save"
+msgstr "Opslaan"
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Sell recurring services with automated billing"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Send quotations and manage invoicing"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Send, sign and approve documents online"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Instellingen"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:148
 #, python-format
 msgid "Target"
 msgstr "Doel"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Teamleider"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Teamleden"
 
 #. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
-msgstr "De verkoopteam code moet uniek zijn!"
+#: model:ir.model.fields,help:sales_team.field_crm_team_color
+msgid "The color of the channel"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales team"
-msgstr "Het e-mail adres wat in het 'antwoord-aan' veld wordt gezet van alle e-mails die door Odoo worden verstuurt over werkzaamheden van het verkoopteam."
+"cases in this sales channel"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+msgid "The time period this channel's dashboard graph will consider."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+msgid "The type of graph this channel will display in the dashboard."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+msgid ""
+"The type of this channel, it will define the resources this channel uses."
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
+#: selection:crm.team,dashboard_graph_period:0
 #, python-format
 msgid "This Month"
 msgstr "Deze maand"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_period:0
+msgid "This Week"
+msgstr "Deze week"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_period:0
+msgid "This Year"
+msgstr "Dit jaar"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen aan de huidige relatie"
+msgstr ""
+"Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen "
+"aan de huidige relatie"
 
 #. module: sales_team
 #. openerp-web
@@ -447,7 +677,7 @@ msgstr "Naar activiteiten"
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:105
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:189
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:191
 #, python-format
 msgid "To Activity Report"
 msgstr "Naar activiteitsrapport"
@@ -462,8 +692,8 @@ msgstr "Naar kalender"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:131
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:132
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:202
 #, python-format
 msgid "To Invoice Report"
 msgstr "Naar factuur rapport"
@@ -478,7 +708,7 @@ msgstr "Naar prospects"
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:118
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:194
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:196
 #, python-format
 msgid "To Opportunity Report"
 msgstr "Naar prospects rapport"
@@ -498,24 +728,40 @@ msgid "Today"
 msgstr "Vandaag"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
+#: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
+msgid "Track after-sales tickets"
+msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Teller ongelezen berichten"
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+msgid "Type"
+msgstr "Soort"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:122
+#: code:addons/sales_team/models/crm_team.py:125
+#, python-format
+msgid "Undefined graph model for Sales Channel: %s"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales team to organize your different salespersons or\n"
-"                    departments into separate teams. Each team will work in\n"
-"                    its own list of opportunities."
-msgstr "Gebruik verkoopteams om uw verschillende verkopers te organiseren of\ndepartement te organiseren in teams. Elk team werkt aan zijn\neigen lijst van prospects."
+"Use sales channels to organize your sales departments. \n"
+"                    Each channel will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr "Gebruiker: Alle documenten"
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr "Gebruiker: Alleen eigen documenten"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -523,32 +769,34 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.salesteam_website_sales
+#: selection:crm.team,team_type:0
+msgid "Website"
+msgstr "Website"
+
+#. module: sales_team
+#: selection:crm.team,dashboard_graph_group:0
+msgid "Week"
+msgstr "Week"
+
+#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:128
 #, python-format
 msgid "Won in Opportunities"
 msgstr "Gewonnen als prospect"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_working_hours
-msgid "Working Hours"
-msgstr "Werkuren"
-
-#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:65
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Verkeerde waarde ingevoerd!"
 
 #. module: sales_team
-#. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, python-format
-msgid "Your Pipeline"
-msgstr "Uw pijplijn"
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_website_sign
+msgid "eSign"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -563,3 +811,33 @@ msgstr "Ver. afsluiting"
 #, python-format
 msgid "overdue"
 msgstr "vervallen"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"de gebruiker heeft toegang tot alle regels van iedereen in de "
+"verkoopapplicatie."
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+"de gebruiker zal toegang hebben tot zijn eigen gegevens in de verkoop "
+"applicatie."
+
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic"
+" reports."
+msgstr ""
+"De gebruiker krijgt toegang tot de verkoop instellingen en de statistische "
+"rapporten"

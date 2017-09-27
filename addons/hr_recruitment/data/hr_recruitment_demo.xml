@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
+<odoo>
   <data noupdate="1">
 
     <record model="hr.recruitment.stage" id="stage_job1">
@@ -25,37 +25,26 @@
         <field name="fold" eval="True"/>
     </record>
 
-        <!--Manage the job_id to get in hr.applicant-->
+    <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">4</field>
-        <field name="survey_id" ref="recruitment_form"/>
-    </record>
-    <record id="hr.job_ceo" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
-    </record>
-    <record id="hr.job_cto" model="hr.job">
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">1</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
         <field name="state">recruit</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">3</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="state">recruit</field>
         <field name="no_of_recruitment">6</field>
-        <field name="survey_id" ref="recruitment_form"/>
     </record>
 
     <record id="hr_case_salesman0" model="hr.applicant">
@@ -69,8 +58,6 @@
         <field name="partner_name">Enrique Jones</field>
         <field name="partner_mobile">9963214587</field>
         <field name="stage_id" ref="stage_job1"/>
-        <field eval="time.strftime('%Y-%m-15 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
@@ -84,8 +71,6 @@
         <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6633225</field>
-        <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date_action"/>
-        <field name="title_action">Call to define real needs about training</field>
     </record>
     <record id="hr_case_fresher0" model="hr.applicant">
         <field name="name">Fresher</field>
@@ -98,8 +83,6 @@
         <field name="partner_name">Jose</field>
         <field name="stage_id" ref="stage_job3"/>
         <field name="partner_phone">999666735</field>
-        <field eval="time.strftime('%Y-%m-5 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
@@ -110,8 +93,6 @@
         <field name="user_id" ref="base.user_root"/>
         <field name="partner_name">John Bruno</field>
         <field name="stage_id" ref="stage_job5"/>
-        <field eval="time.strftime('%Y-%m-24 18:15:00')" name="date_action"/>
-        <field name="title_action">Call to define real needs about training</field>
     </record>
     <record id="hr_case_marketingjob0" model="hr.applicant">
         <field name="name">More than 5 yrs Experience in PHP</field>
@@ -122,8 +103,6 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="partner_name">Sandra Elvis</field>
         <field name="stage_id" ref="stage_job5"/>
-        <field eval="time.strftime('%Y-%m-20 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_financejob0" model="hr.applicant">
         <field name="name">Finance Manager</field>
@@ -136,8 +115,6 @@
         <field name="partner_name">David Armstrong</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="partner_phone">33968745</field>
-        <field eval="time.strftime('%Y-%m-18 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
@@ -149,8 +126,6 @@
         <field name="partner_mobile">9898745745</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
-        <field eval="time.strftime('%Y-%m-15 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
@@ -163,8 +138,6 @@
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
         <field name="salary_expected">11000.0</field>
-        <field eval="time.strftime('%Y-%m-24 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
     <record id="hr_case_advertisement" model="hr.applicant">
         <field name="name">Advertisement</field>
@@ -176,8 +149,6 @@
         <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="salary_expected">11000.0</field>
-        <field eval="time.strftime('%Y-%m-15 18:15:00')" name="date_action"/>
-        <field name="title_action">Send mail regarding our interview</field>
     </record>
 
     <record id="hr_case_salesman0_cv" model="ir.attachment">
@@ -221,8 +192,8 @@
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
     </record>
-    <function model="mail.message" name="set_message_starred"
-            eval="[ ref('msg_case18_aplicant')], True"
+    <function model="mail.message" name="toggle_message_starred"
+            eval="[ref('msg_case18_aplicant')]"
     />
     <record id="msg_case_salesman0_aplicant" model="mail.message">
         <field name="subject">Refuse Application</field>
@@ -246,5 +217,27 @@
         <field name="author_id" ref="base.partner_demo"/>
     </record>
 
+    <record id="mail_activity_0" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_email" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-15 18:15:00')"/>
+        <field name="summary">Send mail regarding our interview</field>
+    </record>
+    <record id="mail_activity_1" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-10 18:15:00')"/>
+        <field name="summary">Call to define real needs about training</field>
+    </record>
+    <record id="mail_activity_2" model="mail.activity">
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0" />
+        <field name="res_model_id" ref="model_hr_applicant"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_call" />
+        <field name="date_deadline" eval="time.strftime('%Y-%m-24 18:15:00')"/>
+        <field name="summary">Call to define real needs about training</field>
+    </record>
+
   </data>
-</openerp>
+</odoo>

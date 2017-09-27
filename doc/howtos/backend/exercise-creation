@@ -1,9 +1,9 @@
 # HG changeset patch
 # Parent 0000000000000000000000000000000000000000
-Index: addons/openacademy/__openerp__.py
+Index: addons/openacademy/__manifest__.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ addons/openacademy/__openerp__.py	2014-08-26 17:25:49.787783523 +0200
++++ addons/openacademy/__manifest__.py	2014-08-26 17:25:49.787783523 +0200
 @@ -0,0 +1,35 @@
 +# -*- coding: utf-8 -*-
 +{
@@ -22,7 +22,7 @@ Index: addons/openacademy/__openerp__.py
 +    'website': "http://www.yourcompany.com",
 +
 +    # Categories can be used to filter modules in modules listing
-+    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
++    # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
 +    # for the full list
 +    'category': 'Test',
 +    'version': '0.1',
@@ -54,7 +54,7 @@ Index: addons/openacademy/controllers.py
 +++ addons/openacademy/controllers.py	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,20 @@
 +# -*- coding: utf-8 -*-
-+from openerp import http
++from odoo import http
 +
 +# class Openacademy(http.Controller):
 +#     @http.route('/openacademy/openacademy/', auth='public')
@@ -78,8 +78,8 @@ Index: addons/openacademy/demo.xml
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ addons/openacademy/demo.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,25 @@
-+<openerp>
-+    <data>
++<odoo>
++
 +        <!--  -->
 +        <!--   <record id="object0" model="openacademy.openacademy"> -->
 +        <!--     <field name="name">Object 0</field> -->
@@ -101,8 +101,8 @@ Index: addons/openacademy/demo.xml
 +        <!--     <field name="name">Object 4</field> -->
 +        <!--   </record> -->
 +        <!--  -->
-+    </data>
-+</openerp>
++
++</odoo>
 Index: addons/openacademy/models.py
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
@@ -110,7 +110,7 @@ Index: addons/openacademy/models.py
 @@ -0,0 +1,8 @@
 +# -*- coding: utf-8 -*-
 +
-+from openerp import models, fields, api
++from odoo import models, fields, api
 +
 +# class openacademy(models.Model):
 +#     _name = 'openacademy.openacademy'
@@ -128,8 +128,8 @@ Index: addons/openacademy/templates.xml
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ addons/openacademy/templates.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,22 @@
-+<openerp>
-+    <data>
++<odoo>
++
 +        <!-- <template id="listing"> -->
 +        <!--   <ul> -->
 +        <!--     <li t-foreach="objects" t-as="object"> -->
@@ -148,5 +148,5 @@ Index: addons/openacademy/templates.xml
 +        <!--     </t> -->
 +        <!--   </dl> -->
 +        <!-- </template> -->
-+    </data>
-+</openerp>
++
++</odoo>

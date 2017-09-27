@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
-import os
 import time
 from os import listdir
 from os.path import join
-from threading import Thread, Lock
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty # pylint: disable=deprecated-module
 from select import select
-from Queue import Queue, Empty
+from threading import Thread, Lock
 
-import openerp
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
-from openerp import http
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http
+
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -22,6 +24,13 @@ except ImportError:
     _logger.error('Odoo module hw_scanner depends on the evdev python module')
     evdev = None
 
+class ScannerDevice():
+    def __init__(self, path):
+        self.evdev = evdev.InputDevice(path)
+        self.evdev.grab()
+
+        self.barcode = []
+        self.shift = False
 
 class Scanner(Thread):
     def __init__(self):
@@ -29,6 +38,7 @@ class Scanner(Thread):
         self.lock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/input/by-id/'
+        self.open_devices = []
         self.barcodes = Queue()
         self.keymap = {
             2: ("1","!"),
@@ -109,25 +119,36 @@ class Scanner(Thread):
         elif status == 'disconnected' and message:
             _logger.info('Disconnected Barcode Scanner: %s', message)
 
-    def get_device(self):
+    def get_devices(self):
         try:
             if not evdev:
-                return None
-            devices   = [ device for device in listdir(self.input_dir)]
-            keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
-            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
-            if len(scanners) > 0:
-                self.set_status('connected','Connected to '+scanners[0])
-                return evdev.InputDevice(join(self.input_dir,scanners[0]))
-            elif len(keyboards) > 0:
-                self.set_status('connected','Connected to '+keyboards[0])
-                return evdev.InputDevice(join(self.input_dir,keyboards[0]))
+                return []
+
+            if not os.path.isdir(self.input_dir):
+                return []
+
+            new_devices = [device for device in listdir(self.input_dir)
+                           if join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]
+            scanners = [device for device in new_devices
+                        if (('kbd' in device) and ('keyboard' not in device.lower()))
+                        or ('barcode' in device.lower()) or ('scanner' in device.lower())]
+
+            for device in scanners:
+                _logger.debug('opening device %s', join(self.input_dir,device))
+                self.open_devices.append(ScannerDevice(join(self.input_dir,device)))
+
+            if self.open_devices:
+                self.set_status('connected','Connected to '+ str([dev.evdev.name for dev in self.open_devices]))
             else:
                 self.set_status('disconnected','Barcode Scanner Not Found')
-                return None
+
+            return self.open_devices
         except Exception as e:
             self.set_status('error',str(e))
-            return None
+            return []
+
+    def release_device(self, dev):
+        self.open_devices.remove(dev)
 
     def get_barcode(self):
         """ Returns a scanned barcode. Will wait at most 5 seconds to get a barcode, and will
@@ -150,6 +171,11 @@ class Scanner(Thread):
         self.lockedstart()
         return self.status
 
+    def _get_open_device_by_fd(self, fd):
+        for dev in self.open_devices:
+            if dev.evdev.fd == fd:
+                return dev
+
     def run(self):
         """ This will start a loop that catches all keyboard events, parse barcode
             sequences and put them on a timestamped queue that can be consumed by
@@ -160,49 +186,45 @@ class Scanner(Thread):
         
         barcode  = []
         shift    = False
-        device   = None
+        devices  = None
 
         while True: # barcodes loop
-            if device:  # ungrab device between barcodes and timeouts for plug & play
-                try:
-                    device.ungrab() 
-                except Exception as e:
-                    device = None
-                    self.set_status('error',str(e))
-            else:
-                time.sleep(5)   # wait until a suitable device is plugged
-                device = self.get_device()
-                if not device:
-                    continue
+            devices = self.get_devices()
 
             try:
-                device.grab()
-                shift = False
-                barcode = []
-
                 while True: # keycode loop
-                    r,w,x = select([device],[],[],5)
+                    r,w,x = select({dev.fd: dev for dev in [d.evdev for d in devices]},[],[],5)
                     if len(r) == 0: # timeout
                         break
-                    events = device.read()
 
-                    for event in events:
-                        if event.type == evdev.ecodes.EV_KEY:
-                            #_logger.debug('Evdev Keyboard event %s',evdev.categorize(event))
-                            if event.value == 1: # keydown events
-                                if event.code in self.keymap: 
-                                    if shift:
-                                        barcode.append(self.keymap[event.code][1])
-                                    else:
-                                        barcode.append(self.keymap[event.code][0])
-                                elif event.code == 42 or event.code == 54: # SHIFT
-                                    shift = True
-                                elif event.code == 28: # ENTER, end of barcode
-                                    self.barcodes.put( (time.time(),''.join(barcode)) )
-                                    barcode = []
-                            elif event.value == 0: #keyup events
-                                if event.code == 42 or event.code == 54: # LEFT SHIFT
-                                    shift = False
+                    for fd in r:
+                        device = self._get_open_device_by_fd(fd)
+
+                        if not evdev.util.is_device(device.evdev.fn):
+                            _logger.info('%s disconnected', str(device.evdev))
+                            self.release_device(device)
+                            break
+
+                        events = device.evdev.read()
+
+                        for event in events:
+                            if event.type == evdev.ecodes.EV_KEY:
+                                # _logger.debug('Evdev Keyboard event %s',evdev.categorize(event))
+                                if event.value == 1: # keydown events
+                                    if event.code in self.keymap:
+                                        if device.shift:
+                                            device.barcode.append(self.keymap[event.code][1])
+                                        else:
+                                            device.barcode.append(self.keymap[event.code][0])
+                                    elif event.code == 42 or event.code == 54: # SHIFT
+                                        device.shift = True
+                                    elif event.code == 28: # ENTER, end of barcode
+                                        _logger.debug('pushing barcode %s from %s', ''.join(device.barcode), str(device.evdev))
+                                        self.barcodes.put( (time.time(),''.join(device.barcode)) )
+                                        device.barcode = []
+                                elif event.value == 0: #keyup events
+                                    if event.code == 42 or event.code == 54: # LEFT SHIFT
+                                        device.shift = False
 
             except Exception as e:
                 self.set_status('error',str(e))

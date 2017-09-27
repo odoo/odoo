@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-# flake8:noqa
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ir_actions
-import ir_ui_view
-import website
-import ir_qweb
-import ir_http
-import res_config
-import web_planner
+from . import ir_actions
+from . import ir_attachment
+from . import ir_http
+from . import ir_qweb
+from . import website
+from . import ir_ui_view
+from . import res_company
+from . import res_partner
+from . import web_planner
+from . import res_config_settings

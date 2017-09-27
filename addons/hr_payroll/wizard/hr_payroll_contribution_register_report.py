@@ -1,31 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 from datetime import datetime
 from dateutil import relativedelta
-from openerp.osv import fields, osv
+
+from odoo import api, fields, models
 
 
-class payslip_lines_contribution_register(osv.osv_memory):
+class PayslipLinesContributionRegister(models.TransientModel):
     _name = 'payslip.lines.contribution.register'
     _description = 'PaySlip Lines by Contribution Registers'
-    _columns = {
-        'date_from': fields.date('Date From', required=True),
-        'date_to': fields.date('Date To', required=True),
-    }
 
-    _defaults = {
-        'date_from': lambda *a: time.strftime('%Y-%m-01'),
-        'date_to': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
-    }
+    date_from = fields.Date(string='Date From', required=True,
+        default=datetime.now().strftime('%Y-%m-01'))
+    date_to = fields.Date(string='Date To', required=True,
+        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
 
-    def print_report(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_report(self):
+        active_ids = self.env.context.get('active_ids', [])
         datas = {
-             'ids': context.get('active_ids', []),
+             'ids': active_ids,
              'model': 'hr.contribution.register',
-             'form': self.read(cr, uid, ids, context=context)[0]
+             'form': self.read()[0]
         }
-        return self.pool['report'].get_action(
-            cr, uid, [], 'hr_payroll.report_contributionregister', data=datas, context=context
-        )
+        return self.env.ref('hr_payroll.action_contribution_register').report_action([], data=datas)

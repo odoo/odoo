@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="rule_slide_channel_global" model="ir.rule">
@@ -17,7 +17,7 @@
         <record id="rule_slide_channel_public" model="ir.rule">
             <field name="name">Channel: public: published only</field>
             <field name="model_id" ref="model_slide_channel"/>
-            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_public')) ,(4, ref('base.group_portal'))]"/>
             <field name="domain_force">[('website_published', '=', True)]</field>
         </record>
 
@@ -36,8 +36,8 @@
         <record id="rule_slide_slide_public" model="ir.rule">
             <field name="name">Slide: public: published only</field>
             <field name="model_id" ref="model_slide_slide"/>
-            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
             <field name="domain_force">[('channel_id.website_published', '=', True), ('website_published', '=', True)]</field>
         </record>
     </data>
-</openerp>
+</odoo>

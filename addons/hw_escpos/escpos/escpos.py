@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import time
+from __future__ import print_function
+import base64
 import copy
 import io
-import base64
 import math
-import md5
 import re
 import traceback
-import xml.etree.ElementTree as ET
-import xml.dom.minidom as minidom
+from hashlib import md5
 
 from PIL import Image
+from xml.etree import ElementTree as ET
+
+from odoo.tools import pycompat
 
 try:
     import jcconv
@@ -23,12 +24,12 @@ try:
 except ImportError:
     qrcode = None
 
-from constants import *
-from exceptions import *
+from .constants import *
+from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """
-    if isinstance(stuff,basestring):
+    if isinstance(stuff,pycompat.string_types):
         return stuff
     else:
         return str(stuff)
@@ -147,7 +148,7 @@ class StyleStack:
         _style = {}
         for attr in style:
             if attr in self.cmds and not style[attr] in self.cmds[attr]:
-                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+                print('WARNING: ESC/POS PRINTING: ignoring invalid value: %s for style %s' % (style[attr], utfstr(attr)))
             else:
                 _style[attr] = self.enforce_type(attr, style[attr])
         self.stack.append(_style)
@@ -157,7 +158,7 @@ class StyleStack:
         _style = {}
         for attr in style:
             if attr in self.cmds and not style[attr] in self.cmds[attr]:
-                print 'WARNING: ESC/POS PRINTING: ignoring invalid value: '+utfstr(style[attr])+' for style: '+utfstr(attr)
+                print('WARNING: ESC/POS PRINTING: ignoring invalid value: %s for style %s' % (style[attr], attr))
             else:
                 self.stack[-1][attr] = self.enforce_type(attr, style[attr])
 
@@ -169,8 +170,7 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        ordered_cmds = self.cmds.keys()
-        ordered_cmds.sort(lambda x,y: cmp(self.cmds[x]['_order'], self.cmds[y]['_order']))
+        ordered_cmds = sorted(self.cmds, key=lambda x: self.cmds[x]['_order'])
         for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd
@@ -385,7 +385,7 @@ class Escpos:
 
 
         if im.size[0] > 512:
-            print  "WARNING: Image is wider than 512 and could be truncated at print time "
+            print("WARNING: Image is wider than 512 and could be truncated at print time ")
         if im.size[1] > 255:
             raise ImageSizeError()
 
@@ -431,12 +431,12 @@ class Escpos:
 
     def print_base64_image(self,img):
 
-        print 'print_b64_img'
+        print('print_b64_img')
 
-        id = md5.new(img).digest()
+        id = md5(img.encode('utf-8')).digest()
 
         if id not in self.img_cache:
-            print 'not in cache'
+            print('not in cache')
 
             img = img[img.find(',')+1:]
             f = io.BytesIO('img')
@@ -445,22 +445,22 @@ class Escpos:
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
             channels = img_rgba.split()
-            if len(channels) > 1:
+            if len(channels) > 3:
                 # use alpha channel as mask
                 img.paste(img_rgba, mask=channels[3])
             else:
                 img.paste(img_rgba)
 
-            print 'convert image'
+            print('convert image')
         
             pix_line, img_size = self._convert_image(img)
 
-            print 'print image'
+            print('print image')
 
             buffer = self._raw_print_image(pix_line, img_size)
             self.img_cache[id] = buffer
 
-        print 'raw image'
+        print('raw image')
 
         self._raw(self.img_cache[id])
 
@@ -790,7 +790,7 @@ class Escpos:
                     if encoding in remaining:
                         del remaining[encoding]
                     if len(remaining) >= 1:
-                        encoding = remaining.items()[0][0]
+                        (encoding, _) = remaining.popitem()
                     else:
                         encoding = 'cp437'
                         encoded  = '\xb1'    # could not encode, output error character

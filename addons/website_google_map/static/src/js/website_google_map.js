@@ -16,6 +16,9 @@ function initialize_map() {
     var partners = new google.maps.MarkerImage('/website_google_map/static/src/img/partners.png', new google.maps.Size(25, 25));
     var partner_url = document.body.getAttribute('data-partner-url') || '';
     var markers = [];
+    var options = {
+        imagePath: '/website_google_map/static/src/lib/images/m'
+    };
 
     google.maps.event.addListener(map, 'click', function() {
         infoWindow.close();
@@ -75,7 +78,7 @@ function initialize_map() {
         for (var i = 0; i < odoo_partner_data.counter; i++) {
             set_marker(odoo_partner_data.partners[i]);
         }
-        var markerCluster = new MarkerClusterer(map, markers);
+        var markerCluster = new MarkerClusterer(map, markers, options);
     }
 }
 

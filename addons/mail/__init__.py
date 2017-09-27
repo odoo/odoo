@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import models
-import wizard
-import controllers
+from . import models
+from . import wizard
+from . import controllers
+from .tests import test_mail_model

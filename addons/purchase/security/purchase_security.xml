@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
 
     <record id="group_purchase_user" model="res.groups">
@@ -15,19 +15,10 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
-    </record>
-
     <record id="group_analytic_accounting" model="res.groups">
         <field name="name">Analytic Accounting for Purchases</field>
         <field name="category_id" ref="base.module_category_hidden"/>
         <field name="implied_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
-    </record>
-
-    <record id="group_advance_bidding" model="res.groups">
-        <field name="name">Advance bidding process</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="group_manage_vendor_price" model="res.groups">
@@ -35,8 +26,16 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_warning_purchase" model="res.groups">
+        <field name="name">A warning can be set on a product or a customer (Purchase)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 </data>
 <data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
+    </record>
 
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
@@ -52,5 +51,22 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="portal_purchase_order_user_rule" model="ir.rule">
+        <field name="name">Portal Purchase Orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+    </record>
+
+    <record id="portal_purchase_order_line_rule" model="ir.rule">
+        <field name="name">Portal Purhcase Orders Line</field>
+        <field name="model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="domain_force">[('order_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
 </data>
-</openerp>
+</odoo>

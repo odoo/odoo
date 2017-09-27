@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- add google drive config field in user form -->
+        <record id="view_google_drive_config_tree" model="ir.ui.view">
+            <field name="name">google_drive.config.tree</field>
+            <field name="model">google.drive.config</field>
+            <field name="arch" type="xml">
+                <tree string="Google Drive Configuration">
+                    <field name="name" />
+                    <field name="model_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_google_drive_config_form" model="ir.ui.view">
+            <field name="name">google_drive.config.form</field>
+            <field name="model">google.drive.config</field>
+            <field name="arch" type="xml">
+                <form string="Google Drive Configuration">
+                    <field name="model" invisible="1" />
+                    <group>
+                        <field name="name" />
+                        <field name="active" />
+                        <field name="model_id"/>
+                        <label for='filter_id' />
+                        <div>
+                            <field name='filter_id' />
+                            <p class="oe_grey">
+                                <b>To create a new filter:</b><br/>
+                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>
+                                - In this "Search" view, select the option "Save Current Filter", enter the name (Ex: Sales Department)<br/>
+                                - If you select "Share with all users", link of google document in "More" options will appear for all users in opportunities of Sales Department.<br/>
+                                - If you don't select "Share with all users", link of google document in "More" options will not appear for other users in opportunities of Sales Department.<br/>
+                                - If filter is not specified, link of google document will appear in "More" option for all users for all opportunities.
+                            </p>
+                        </div>
+                        <field name='google_drive_template_url' placeholder="https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit" required="1" />
+                        <field name='google_drive_resource_id' invisible="1" />
+                        <label for='name_template' />
+                        <div>
+                            <field name='name_template' />
+                            <p class="oe_grey">
+                                The name of the attached document can use fixed or variable data. To distinguish between documents in
+                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%%(name)s_Sales
+                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named
+                                'Agrolait_SO0001_Sales'.
+                            </p>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_google_drive_config_kanban" model="ir.ui.view">
+            <field name="name">google.drive.config.kanban</field>
+            <field name="model">google.drive.config</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="model_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row o_kanban_record_title">
+                                    <div class="col-xs-4 text-center"><strong>Template</strong></div>
+                                    <div class="col-xs-4 text-center"><strong>Model</strong></div>
+                                    <div class="col-xs-4 text-center"><strong>Active</strong></div>
+                                </div>
+                                <hr class="mb4 mt4"/>
+                                <div class="row o_kanban_record_subtitle">
+                                    <div class="col-xs-4 text-center"><field name="name"/></div>
+                                    <div class="col-xs-4 text-center"><field name="model_id"/></div>
+                                    <div class="col-xs-4 text-center">
+                                        <field name="active" widget="boolean"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id='action_google_drive_users_config' model='ir.actions.act_window'>
+            <field name='name'>Templates</field>
+            <field name='res_model'>google.drive.config</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='view_type'>form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name='view_id' ref='view_google_drive_config_tree' />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new template.
+                </p>
+                <p>
+                    Link your own google drive templates to any record of Odoo. If you have really specific documents you want your collaborator fill in, e.g. Use a spreadsheet to control the quality of your product or review the delivery checklist for each order in a foreign country, ... Its very easy to manage them, link them to Odoo and use them to collaborate with your employees.
+                </p>
+            </field>
+        </record>
+
+</odoo>

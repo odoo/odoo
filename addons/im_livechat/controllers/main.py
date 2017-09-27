@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
-from openerp import http, _
-from openerp.http import request
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
-from openerp.addons.web.controllers.main import binary_content
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
+
+from odoo import http, _
+from odoo.http import request
+from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.addons.web.controllers.main import binary_content
 
 
 class LivechatController(http.Controller):
 
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
     def livechat_lib(self, ext, **kwargs):
-        asset = AssetsBundle("im_livechat.external_lib")
+        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
+        xmlid = 'im_livechat.external_lib'
+        files, remains = request.env["ir.qweb"]._get_asset_content(xmlid, options=request.context)
+        asset = AssetsBundle(xmlid, files, remains)
+
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
             mock_attachment = mock_attachment[0]
@@ -68,11 +75,7 @@ class LivechatController(http.Controller):
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             anonymous_name = request.env.user.name
-        return request.env["im_livechat.channel"].get_mail_channel(channel_id, anonymous_name)
-
-    @http.route('/im_livechat/history', type="json", auth="public")
-    def history(self, channel_id, limit):
-        return request.env["mail.channel"].browse(channel_id).channel_fetch_message(limit=limit)
+        return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -83,23 +86,31 @@ class LivechatController(http.Controller):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
+                'consumed': True,
+                'feedback': reason,
             }
             if not channel.rating_ids:
+                res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
                 values.update({
                     'res_id': channel.id,
-                    'res_model': 'mail.channel',
-                    'rating': rate,
-                    'feedback': reason,
+                    'res_model_id': res_model_id,
                 })
                 # find the partner (operator)
                 if channel.channel_partner_ids:
                     values['rated_partner_id'] = channel.channel_partner_ids[0] and channel.channel_partner_ids[0].id or False
+                # if logged in user, set its partner on rating
+                values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
                 rating = Rating.sudo().create(values)
             else:
-                if reason:
-                    values['feedback'] = reason
                 rating = channel.rating_ids[0]
                 rating.write(values)
             return rating.id
         return False
+
+    @http.route('/im_livechat/history', type="json", auth="public")
+    def history_pages(self, pid, channel_uuid, page_history=None):
+        channel = request.env['mail.channel'].search([('uuid', '=', channel_uuid)])
+        if channel:
+            channel._send_history_message(pid, page_history)
+        return True

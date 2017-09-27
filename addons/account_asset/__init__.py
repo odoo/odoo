@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_asset
-import account_asset_invoice
-import wizard
-import report
+from . import models
+from . import wizard
+from . import report

@@ -1,28 +1,28 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
 
-        <record id="view_emails_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.emails.info.inherit</field>
+        <record id="res_partner_view_form_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit.mail</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name='notify_email' widget="radio" groups="base.group_no_one"/>
                     <field name="opt_out" string="Mailing Opt-Out" groups="base.group_no_one"/>
                     <field name="message_bounce" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </xpath>
             </field>
         </record>
 
-       <record model="ir.ui.view" id="res_partner_opt_out_search">
-            <field name="name">res.partner.opt_out.search</field>
+       <record id="res_partner_view_search_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.search.inherit.mail</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
@@ -31,6 +31,19 @@
                         <filter string="Available for mass mailing"
                                 name='not_opt_out' domain="[('opt_out', '=', False)]"
                                 help="Partners that did not ask not to be included in mass mailing campaigns" />
+                        <separator/>
+                        <filter string="My Activities" name="activities_my"
+                                domain="[('activity_ids.user_id', '=', uid)]"/>
+                        <separator/>
+                        <filter string="Late Activities" name="activities_overdue"
+                                domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                                help="Show all records which has next action date is before today"/>
+                        <filter string="Today Activities" name="activities_today"
+                                domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        <filter string="Future Activities" name="activities_upcoming_all"
+                                domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                        <separator/>
                     </filter>
             </field>
         </record>
@@ -52,7 +65,7 @@
                 multi="True"
                 target="new"
                 key2="client_action_multi"
-                id="base.action_partner_mass_mail"
+                id="action_partner_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
                             'default_partner_to': '${object.id or \'\'}',
@@ -61,8 +74,8 @@
                         }"/>
 
         <record id="email_template_partner" model="mail.template">
-            <field name="ref_ir_act_window" ref="base.action_partner_mass_mail"/>
+            <field name="ref_ir_act_window" ref="action_partner_mass_mail"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

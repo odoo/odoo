@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models, _
 import random
-from openerp.exceptions import UserError
 
-class lunch_order_line(models.TransientModel):
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+
+class LunchOrderLineLucky(models.TransientModel):
     _name = 'lunch.order.line.lucky'
 
     def _default_supplier(self):
@@ -16,7 +18,7 @@ class lunch_order_line(models.TransientModel):
     supplier_ids = fields.Many2many(comodel_name='res.partner', string='Vendor', domain=lambda self: [("id", "in", self.env['lunch.product'].search([]).mapped("supplier").ids)])
     is_max_budget = fields.Boolean("I'm not feeling rich", help="Enable this option to set a maximal budget for your lucky order.", store=True)
     max_budget = fields.Float('Max Budget', store=True)
-    
+
     @api.multi
     def random_pick(self):
         """
@@ -24,13 +26,13 @@ class lunch_order_line(models.TransientModel):
         """
         self.ensure_one()
         if self.is_max_budget:
-            products_obj =  self.env['lunch.product'].search([('supplier', "in", self.supplier_ids.ids), ('price', '<=', self.max_budget)])
+            products_obj = self.env['lunch.product'].search([('supplier', "in", self.supplier_ids.ids), ('price', '<=', self.max_budget)])
         else:
-            products_obj =  self.env['lunch.product'].search([('supplier', "in", self.supplier_ids.ids)])
+            products_obj = self.env['lunch.product'].search([('supplier', "in", self.supplier_ids.ids)])
         if len(products_obj) != 0:
             random_product_obj = self.env['lunch.product'].browse([random.choice(products_obj.ids)])
             order_line = self.env['lunch.order.line'].create({
-                'product_id': random_product_obj.id, 
+                'product_id': random_product_obj.id,
                 'order_id': self._context['active_id']
             })
         else:

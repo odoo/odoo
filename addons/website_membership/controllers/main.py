@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from openerp import SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.models.website import unslug
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.translate import _
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 import werkzeug.urls
+
+from odoo import fields
+
+from odoo import http
+from odoo.http import request
+from odoo.addons.http_routing.models.ir_http import unslug
+from odoo.tools.translate import _
 
 
 class WebsiteMembership(http.Controller):
@@ -30,14 +31,14 @@ class WebsiteMembership(http.Controller):
         '/members/association/<membership_id>/country/<int:country_id>/page/<int:page>',
     ], type='http', auth="public", website=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=1, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        product_obj = request.registry['product.product']
-        country_obj = request.registry['res.country']
-        membership_line_obj = request.registry['membership.membership_line']
-        partner_obj = request.registry['res.partner']
+        Product = request.env['product.product']
+        Country = request.env['res.country']
+        MembershipLine = request.env['membership.membership_line']
+        Partner = request.env['res.partner']
+
         post_name = post.get('search') or post.get('name', '')
         current_country = None
-        today = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        today = fields.Date.today()
 
         # base domain for groupby / searches
         base_line_domain = [
@@ -47,40 +48,34 @@ class WebsiteMembership(http.Controller):
         if membership_id and membership_id != 'free':
             membership_id = int(membership_id)
             base_line_domain.append(('membership_id', '=', membership_id))
-            membership = product_obj.browse(cr, uid, membership_id, context=context)
-        else:
-            membership = None
+
         if post_name:
-            base_line_domain += ['|', ('partner.name', 'ilike', post_name),
-                                      ('partner.website_description', 'ilike', post_name)]
+            base_line_domain += ['|', ('partner.name', 'ilike', post_name), ('partner.website_description', 'ilike', post_name)]
 
         # group by country, based on all customers (base domain)
         if membership_id != 'free':
-            membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, base_line_domain, context=context)
-            country_domain = [('member_lines', 'in', membership_line_ids)]
+            membership_lines = MembershipLine.sudo().search(base_line_domain)
+            country_domain = [('member_lines', 'in', membership_lines.ids)]
             if not membership_id:
                 country_domain = ['|', country_domain[0], ('membership_state', '=', 'free')]
         else:
-            membership_line_ids = []
             country_domain = [('membership_state', '=', 'free')]
         if post_name:
-            country_domain += ['|', ('name', 'ilike', post_name),
-                                  ('website_description', 'ilike', post_name)]
-        countries = partner_obj.read_group(
-            cr, SUPERUSER_ID, country_domain + [("website_published", "=", True)], ["id", "country_id"],
-            groupby="country_id", orderby="country_id", context=request.context)
+            country_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
+
+        countries = Partner.sudo().read_group(country_domain + [("website_published", "=", True)], ["id", "country_id"], groupby="country_id", orderby="country_id")
         countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
 
         line_domain = list(base_line_domain)
         if country_id:
             line_domain.append(('partner.country_id', '=', country_id))
-            current_country = country_obj.read(cr, uid, country_id, ['id', 'name'], context)
+            current_country = Country.browse(country_id).read(['id', 'name'])[0]
             if not any(x['country_id'][0] == country_id for x in countries if x['country_id']):
                 countries.append({
                     'country_id_count': 0,
                     'country_id': (country_id, current_country["name"])
                 })
-                countries = filter(lambda d:d['country_id'], countries)
+                countries = [d for d in countries if d['country_id']]
                 countries.sort(key=lambda d: d['country_id'][1])
 
         countries.insert(0, {
@@ -89,57 +84,59 @@ class WebsiteMembership(http.Controller):
         })
 
         # format domain for group_by and memberships
-        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
-        memberships = product_obj.browse(cr, uid, membership_ids, context=context)
+        memberships = Product.search([('membership', '=', True)], order="website_sequence")
+
         # make sure we don't access to lines with unpublished membershipts
-        line_domain.append(('membership_id', 'in', membership_ids))
+        line_domain.append(('membership_id', 'in', memberships.ids))
 
         limit = self._references_per_page
         offset = limit * (page - 1)
 
         count_members = 0
-        membership_line_ids = []
+        membership_lines = MembershipLine.sudo()
         # displayed non-free membership lines
         if membership_id != 'free':
-            count_members = membership_line_obj.search_count(cr, SUPERUSER_ID, line_domain, context=context)
+            count_members = MembershipLine.sudo().search_count(line_domain)
             if offset <= count_members:
-                membership_line_ids = tuple(membership_line_obj.search(cr, SUPERUSER_ID, line_domain, offset, limit, context=context))
-        membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
-        # TODO: Following line can be deleted in master. Kept for retrocompatibility.
-        membership_lines = sorted(membership_lines, key=lambda x: x.membership_id.website_sequence)
+                membership_lines = MembershipLine.sudo().search(line_domain, offset, limit)
         page_partner_ids = set(m.partner.id for m in membership_lines)
 
+        # get google maps localization of partners
         google_map_partner_ids = []
         if request.env.ref('website_membership.opt_index_google_map').customize_show:
-            membership_lines_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
-            google_map_partner_ids = membership_line_obj.get_published_companies(cr, uid, membership_line_ids, limit=2000, context=context)
+            google_map_partner_ids = MembershipLine.search(line_domain).get_published_companies(limit=2000)
 
         search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
         if post_name:
             search_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
         if country_id:
             search_domain += [('country_id', '=', country_id)]
-        free_partner_ids = partner_obj.search(cr, SUPERUSER_ID, search_domain, context=context)
+        free_partners = Partner.sudo().search(search_domain)
+        free_partner_ids = []
+
         memberships_data = []
         for membership_record in memberships:
             memberships_data.append({'id': membership_record.id, 'name': membership_record.name})
+
         memberships_partner_ids = {}
         for line in membership_lines:
             memberships_partner_ids.setdefault(line.membership_id.id, []).append(line.partner.id)
-        if free_partner_ids:
+
+        if free_partners:
             memberships_data.append({'id': 'free', 'name': _('Free Members')})
             if not membership_id or membership_id == 'free':
                 if count_members < offset + limit:
                     free_start = max(offset - count_members, 0)
                     free_end = max(offset + limit - count_members, 0)
-                    memberships_partner_ids['free'] = free_partner_ids[free_start:free_end]
+                    memberships_partner_ids['free'] = free_partners.ids[free_start:free_end]
                     page_partner_ids |= set(memberships_partner_ids['free'])
                 google_map_partner_ids += free_partner_ids[:2000-len(google_map_partner_ids)]
                 count_members += len(free_partner_ids)
 
-        google_map_partner_ids = ",".join(map(str, google_map_partner_ids))
+        google_map_partner_ids = ",".join(str(it) for it in google_map_partner_ids)
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
-        partners = { p.id: p for p in partner_obj.browse(request.cr, SUPERUSER_ID, list(page_partner_ids), request.context)}
+        partners = {p.id: p for p in Partner.sudo().browse(list(page_partner_ids))}
 
         base_url = '/members%s%s' % ('/association/%s' % membership_id if membership_id else '',
                                      '/country/%s' % country_id if country_id else '')
@@ -149,9 +146,6 @@ class WebsiteMembership(http.Controller):
 
         values = {
             'partners': partners,
-            'membership_lines': membership_lines,  # TODO: This line can be deleted in master. Kept for retrocompatibility.
-            'memberships': memberships,  # TODO: This line too.
-            'membership': membership,  # TODO: This line too.
             'memberships_data': memberships_data,
             'memberships_partner_ids': memberships_partner_ids,
             'membership_id': membership_id,
@@ -162,17 +156,19 @@ class WebsiteMembership(http.Controller):
             'pager': pager,
             'post': post,
             'search': "?%s" % werkzeug.url_encode(post),
+            'search_count': count_members,
+            'google_maps_api_key': google_maps_api_key,
         }
-        return request.website.render("website_membership.index", values)
+        return request.render("website_membership.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/members/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
         if partner_id:
-            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-            if partner.exists() and partner.website_published:
+            partner = request.env['res.partner'].sudo().browse(partner_id)
+            if partner.exists() and partner.website_published:  # TODO should be done with access rules
                 values = {}
                 values['main_object'] = values['partner'] = partner
-                return request.website.render("website_membership.partner", values)
+                return request.render("website_membership.partner", values)
         return self.members(**post)

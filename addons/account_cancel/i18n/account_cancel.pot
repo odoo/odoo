@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,13 @@ msgid "Bank Statement"
 msgstr ""
 
 #. module: account_cancel
-#: model:ir.model,name:account_cancel.model_account_bank_statement_line
-msgid "Bank Statement Line"
+#: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
+msgid "Cancel"
 msgstr ""
 
 #. module: account_cancel
-#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
-#: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
-msgid "Cancel"
+#: model:ir.ui.view,arch_db:account_cancel.view_move_form_inherit_account_cancel
+msgid "Cancel Entry"
 msgstr ""
 
 #. module: account_cancel
@@ -38,13 +37,12 @@ msgid "Cancel Invoice"
 msgstr ""
 
 #. module: account_cancel
-#: code:addons/account_cancel/models/account_bank_statement.py:22
-#, python-format
-msgid "Please set the bank statement to New before canceling."
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
+msgid "Reset to New"
 msgstr ""
 
 #. module: account_cancel
-#: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
-msgid "Reset to New"
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+msgid "Revert reconciliation"
 msgstr ""
 

@@ -1,8 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_account_analytic_line,account.account.analytic.line,account.model_account_analytic_line,base.group_hr_user,1,1,1,1
-access_hr_account_analytic_line_employee,account.account.analytic.line employee,account.model_account_analytic_line,base.group_user,1,1,1,1
-access_product_product_user,product.product user,product.model_product_product,base.group_hr_user,1,1,1,1
-access_product_template_hr_timesheet,product.template.hr.timesheet,product.model_product_template,base.group_hr_user,1,1,1,1
-access_product_uom_hr_timesheet,product.uom.hr.timesheet,product.model_product_uom,base.group_hr_user,1,1,1,1
-access_account_analytic_line_user,account.analytic.line.user,model_account_analytic_line,base.group_user,1,1,1,0
-access_hr_timesheet_report,hr.timesheet.report,model_hr_timesheet_report,base.group_hr_manager,1,1,0,0
+access_account_analytic_line_user,analytic.account.analytic.line.timesheet.user,analytic.model_account_analytic_line,hr_timesheet.group_hr_timesheet_user,1,1,1,1
+access_account_analytic_line_portal,access_timesheets_portal,analytic.model_account_analytic_line,base.group_portal,1,0,0,0
+access_account_analytic_user,analytic.account.analytic.timesheet.user,analytic.model_account_analytic_account,hr_timesheet.group_hr_timesheet_user,1,1,0,0
+access_product_product_user,product.product.timesheet.user,product.model_product_product,hr_timesheet.group_hr_timesheet_user,1,1,1,0
+access_product_template_timesheet_user,product.template.timesheet.user,product.model_product_template,hr_timesheet.group_hr_timesheet_user,1,1,1,0
+access_product_uom_hr_timesheet,product.uom.timesheet.user,product.model_product_uom,hr_timesheet.group_hr_timesheet_user,1,0,0,0
+access_project_project,project.project.timesheet.user,model_project_project,hr_timesheet.group_hr_timesheet_user,1,0,0,0
+access_project_task,project.task.timesheet.user,model_project_task,hr_timesheet.group_hr_timesheet_user,1,1,0,0

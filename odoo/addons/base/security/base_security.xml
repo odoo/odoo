@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!--
+            Users Groups
+            Note that the field 'category_id' is set later in
+            base/module/module_data.xml
+        -->
+        <record model="res.groups" id="group_erp_manager">
+            <field name="name">Access Rights</field>
+        </record>
+
+        <record model="res.groups" id="group_system">
+            <field name="name">Settings</field>
+            <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_user">
+            <field name="name">Employee</field>
+        </record>
+
+        <record id="default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_multi_company">
+            <field name="name">Multi Companies</field>
+        </record>
+
+        <record model="res.groups" id="group_multi_currency">
+            <field name="name">Multi Currencies</field>
+        </record>
+
+        <record model="res.groups" id="group_no_one">
+            <field name="name">Technical Features</field>
+        </record>
+        <record model="res.groups" id="group_user">
+            <field name="implied_ids" eval="[(4, ref('group_no_one'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_partner_manager">
+            <field name="name">Contact Creation</field>
+        </record>
+
+        <record id="default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_partner_manager'))]"/>
+        </record>
+
+        <!--
+            A group dedicated to the portal users, making groups
+            restrictions more convenient.
+        -->
+        <record id="group_portal" model="res.groups">
+            <field name="name">Portal</field>
+            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual Odoo groups.</field>
+            <field name="is_portal" eval="True"/>
+        </record>
+        <!--
+            A group dedicated to the public user only, making groups
+            restrictions more convenient.
+        -->
+        <record id="group_public" model="res.groups">
+            <field name="name">Public</field>
+            <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
+                They usually do not belong to the usual Odoo groups.</field>
+        </record>
+
+        <record id="public_user" model="res.users">
+            <field name="groups_id" eval="[(4, ref('base.group_public'))]"/>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <record model="ir.rule" id="res_users_log_rule">
+            <field name="name">res.users.log per user</field>
+            <field name="model_id" ref="model_res_users_log"/>
+            <field name="domain_force">[('create_uid','=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="res_partner_rule">
+            <field name="name">res.partner company</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <!--
+                Show partners from ancestors and descendants companies
+                (or company-less), this is usually a better default for
+                multicompany setups.
+            -->
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="res_partner_portal_public_rule">
+            <field name="name">res_partner: portal/public: read access on my commercial partner</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_user_rule">
+            <field name="name">Defaults: alter personal defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_system_rule">
+            <field name="name">Defaults: alter all defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
+        <record model="ir.rule" id="ir_ui_view_custom_personal">
+            <field name="name">ir.ui.view_custom rule</field>
+            <field name="model_id" ref="model_ir_ui_view_custom"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+        </record>
+
+	<record id="res_partner_bank_rule" model="ir.rule">
+	    <field name="name">Partner bank company rule</field>
+	    <field name="model_id" ref="model_res_partner_bank"/>
+	    <field name="global" eval="True"/>
+            <!--
+                Same as res_partner above.
+            -->
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+	</record>
+
+        <record id="res_currency_rate_rule" model="ir.rule">
+            <field name="name">multi-company currency rate rule</field>
+            <field name="model_id" ref="model_res_currency_rate"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+    </data>
+</odoo>
+

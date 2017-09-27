@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
-from openerp.exceptions import UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ServerActions(models.Model):
@@ -9,17 +10,14 @@ class ServerActions(models.Model):
     _name = 'ir.actions.server'
     _inherit = ['ir.actions.server']
 
-    @api.model
-    def _get_states(self):
-        res = super(ServerActions, self)._get_states()
-        res.insert(0, ('email', 'Send Email'))
-        return res
-
-    email_from = fields.Char('From', related='template_id.email_from', readonly=True)
-    email_to = fields.Char('To (Emails)', related='template_id.email_to', readonly=True)
-    partner_to = fields.Char('To (Partners)', related='template_id.partner_to', readonly=True)
-    subject = fields.Char('Subject', related='template_id.subject', readonly=True)
-    body_html = fields.Html('Body', related='template_id.body_html', readonly=True)
+    state = fields.Selection(selection_add=[
+        ('email', 'Send Email'),
+        ('followers', 'Add Followers')
+    ])
+    # Followers
+    partner_ids = fields.Many2many('res.partner', string='Add Followers')
+    channel_ids = fields.Many2many('mail.channel', string='Add Channels')
+    # Template
     template_id = fields.Many2one(
         'mail.template', 'Email Template', ondelete='set null',
         domain="[('model_id', '=', model_id)]",
@@ -30,6 +28,14 @@ class ServerActions(models.Model):
         """ Render the raw template in the server action fields. """
         if self.template_id and not self.template_id.email_from:
             raise UserError(_('Your template should define email_from'))
+
+    @api.model
+    def run_action_followers_multi(self, action, eval_context=None):
+        Model = self.env[action.model_id.model]
+        if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
+            records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
+            records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids, force=False)
+        return False
 
     @api.model
     def run_action_email(self, action, eval_context=None):
@@ -47,8 +53,7 @@ class ServerActions(models.Model):
         to the currently executed action will be set in the queue instead of
         sent directly. This will avoid possible break in transactions. """
         eval_context = super(ServerActions, self)._get_eval_context(action=action)
-        # re-dictify, because eval_context['context'] is a frozendict
-        ctx = dict(eval_context.get('context', {}))
+        ctx = dict(eval_context['env'].context)
         ctx['mail_notify_force_send'] = False
-        eval_context['context'] = ctx
+        eval_context['env'].context = ctx
         return eval_context

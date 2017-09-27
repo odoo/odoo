@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_config_view_form_pos_sale" model="ir.ui.view"> 
+        <field name="name">pos.config.form.pos.sale</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <div id="company" position="after">
+                <div class="row mt16 o_settings_container" id="crm_team_id" groups="base.group_no_one">
+                  <div class="col-xs-12 col-md-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <label for="crm_team_id" class="col-md-3"/>
+                        <field name="crm_team_id"/>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

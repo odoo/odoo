@@ -1,42 +1,21 @@
 
-@-webkit-keyframes dragAndDrop {
-    0% {
-        top: -10px;
-        left: -20px;
-        .rotate(0);
-        opacity: 0;
-    }
-    50% {
-        top: -10px;
-        left: -20px;
-        .rotate(0);
-        opacity: 0;
-    }
-    100% {
-        top: 30px;
-        left: 20px;
-        .rotate(45deg);
-        opacity: 1;
-    }
-}
-@keyframes dragAndDrop {
-    0% {
-        top: -10px;
-        left: -20px;
-        .rotate(0);
-        opacity: 0;
-    }
-    50% {
-        top: -10px;
-        left: -20px;
-        .rotate(0);
-        opacity: 0;
-    }
-    100% {
-        top: 30px;
-        left: 20px;
-        .rotate(45deg);
-        opacity: 1;
+.o_homepage_editor_welcome_message {
+    padding-top: 128px;
+    padding-bottom: 128px;
+    font-family: Roboto, @font-family-sans-serif;
+
+    .o_tooltip_container {
+        .o-inline-flex-display();
+        .o-align-items(center);
+
+        > .o_tooltip {
+            .o-position-absolute();
+            position: relative;
+            display: inline-block;
+            margin: 0 8px;
+            opacity: 1;
+            z-index: auto;
+        }
     }
 }
 
@@ -64,27 +43,13 @@
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
+        &:empty {
+            height: 300px;
+            background: url(/website/static/src/img/drag_here.png) center no-repeat;
+            background-size: 380px;
+        }
         > p:empty:only-child {
             color: #aaa;
-        }
-    }
-    &.oe_structure.oe_empty, &[data-oe-type=html] {
-        &:empty,
-        > .oe_drop_zone.oe_insert:only-child,
-        > p:empty:only-child {
-            position: relative;
-            &:before {
-                display: block;
-                font-family: FontAwesome;
-                content: "\f061";
-                color: @odoo-brand-primary;
-                font-size: 30px;
-
-                position: absolute;
-                z-index: 1031;
-                .o-animation(dragAndDrop, 1s, linear, 0s, infinite, alternate);
-            }
-            &:focus:before { display: none; }
         }
     }
 }
@@ -111,9 +76,6 @@
 
 [data-oe-type=html].oe_no_empty:empty {
     height: 16px!important;
-    &:before {
-        content: ''!important;
-    }
 }
 
 // EDITOR BAR
@@ -145,4 +107,18 @@ table.editorbar-panel {
 // fontawesome
 .note-editable .fa {
     cursor: pointer;
+}
+
+// parallax dropzones are in conflict with outside of parallax dropzones
+.parallax .oe_structure > .oe_drop_zone {
+    &:first-child {
+        top: 16px;
+    }
+    &:last-child {
+        bottom: 16px;
+    }
+}
+
+.editor_enable .js_language_selector {
+    display: none;
 }

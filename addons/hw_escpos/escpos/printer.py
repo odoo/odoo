@@ -1,19 +1,20 @@
 #!/usr/bin/python
 
-import usb.core
-import usb.util
+from __future__ import print_function
 import serial
 import socket
+import usb.core
+import usb.util
 
-from escpos import *
-from constants import *
-from exceptions import *
+from .escpos import *
+from .constants import *
+from .exceptions import *
 from time import sleep
 
 class Usb(Escpos):
     """ Define USB printer """
 
-    def __init__(self, idVendor, idProduct, interface=0, in_ep=0x82, out_ep=0x01):
+    def __init__(self, idVendor, idProduct, interface=0, in_ep=None, out_ep=None):
         """
         @param idVendor  : Vendor ID
         @param idProduct : Product ID
@@ -42,6 +43,23 @@ class Usb(Escpos):
                 self.device.detach_kernel_driver(self.interface) 
             self.device.set_configuration()
             usb.util.claim_interface(self.device, self.interface)
+
+            cfg = self.device.get_active_configuration()
+            intf = cfg[(0,0)] # first interface
+            if self.in_ep is None:
+                # Attempt to detect IN/OUT endpoint addresses
+                try:
+                    is_IN = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_IN
+                    is_OUT = lambda e: usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_OUT
+                    endpoint_in = usb.util.find_descriptor(intf, custom_match=is_IN)
+                    endpoint_out = usb.util.find_descriptor(intf, custom_match=is_OUT)
+                    self.in_ep = endpoint_in.bEndpointAddress
+                    self.out_ep = endpoint_out.bEndpointAddress
+                except usb.core.USBError:
+                    # default values for officially supported printers
+                    self.in_ep = 0x82
+                    self.out_ep = 0x01
+
         except usb.core.USBError as e:
             raise HandleDeviceError(e)
 
@@ -65,7 +83,7 @@ class Usb(Escpos):
 
     def _raw(self, msg):
         """ Print any command sent in raw format """
-        if len(msg) != self.device.write(self.out_ep, msg, self.interface):
+        if len(msg) != self.device.write(self.out_ep, msg, self.interface, timeout=5000):
             self.device.write(self.out_ep, self.errorText, self.interface)
             raise TicketNotPrinted()
     
@@ -153,9 +171,9 @@ class Serial(Escpos):
         self.device = serial.Serial(port=self.devfile, baudrate=self.baudrate, bytesize=self.bytesize, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=self.timeout, dsrdtr=True)
 
         if self.device is not None:
-            print "Serial printer enabled"
+            print("Serial printer enabled")
         else:
-            print "Unable to open serial printer on: %s" % self.devfile
+            print("Unable to open serial printer on: %s" % self.devfile)
 
 
     def _raw(self, msg):
@@ -189,7 +207,7 @@ class Network(Escpos):
         self.device.connect((self.host, self.port))
 
         if self.device is None:
-            print "Could not open socket for %s" % self.host
+            print("Could not open socket for %s" % self.host)
 
 
     def _raw(self, msg):

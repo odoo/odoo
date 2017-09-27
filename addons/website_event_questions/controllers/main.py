@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.website_event.controllers.main import website_event
+from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 
-class website_event(website_event):
+class WebsiteEvent(WebsiteEventController):
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
-        registrations = super(website_event, self)._process_registration_details(details)
+        registrations = super(WebsiteEvent, self)._process_registration_details(details)
         for registration in registrations:
             answer_ids = []
-            for key, value in registration.iteritems():
+            for key, value in registration.items():
                 if key.startswith('answer_ids-'):
                     answer_ids.append([4, int(value)])
             registration['answer_ids'] = answer_ids

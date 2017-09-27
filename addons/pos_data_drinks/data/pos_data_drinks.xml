@@ -2,457 +2,457 @@
   <data noupdate="1">
 
     <!-- Drink Categories -->
-    <record id="point_of_sale.beverage" model="pos.category">
+    <record id="beverage" model="pos.category">
       <field name="name">Beverages</field>
       <field name="image" type="base64" file="point_of_sale/static/img/beverage-image.jpg"/>
     </record>
-    <record id="point_of_sale.soft" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="soft" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Soft Drinks</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-soft_drinks.jpg"/>
       <field name="sequence">1</field>
     </record>
-    <record id="point_of_sale.milkshake" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="milkshake" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Milkshakes</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshakes.jpg"/>
       <field name="sequence">3</field>
     </record>
-    <record id="point_of_sale.hot" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="hot" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Hot Drinks</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-hot_drinks.jpg"/>
       <field name="sequence">2</field>
     </record>
-    <record id="point_of_sale.beer" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="beer" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Beers</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-beers.jpg"/>
       <field name="sequence">4</field>
     </record>
-    <record id="point_of_sale.alcohol" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="alcohol" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Import Drinks</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-import_drinks.jpg"/>
       <field name="sequence">6</field>
     </record>
-    <record id="point_of_sale.wine" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="wine" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Wine</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-wine.jpg"/>
       <field name="sequence">5</field>
     </record>
-    <record id="point_of_sale.cocktail" model="pos.category">
-      <field name="parent_id" ref="point_of_sale.beverage"/>
+    <record id="cocktail" model="pos.category">
+      <field name="parent_id" ref="beverage"/>
       <field name="name">Cocktails</field>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-cocktail.jpg"/>
       <field name="sequence">7</field>
     </record>
 
     <!-- Soft Products -->
-    <record id="point_of_sale.coke" model="product.product">
+    <record id="coke" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Coca-Cola</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-coke.jpg"/>
     </record>
-    <record id="point_of_sale.fanta" model="product.product">
+    <record id="fanta" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Fanta</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-fanta.jpg"/>
     </record>
-    <record id="point_of_sale.ice_tea" model="product.product">
+    <record id="ice_tea" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Ice Tea</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-ice_tea.jpg"/>
     </record>
-    <record id="point_of_sale.minute_maid" model="product.product">
+    <record id="minute_maid" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Minute Maid</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-minute_maid.jpg"/>
     </record>
-    <record id="point_of_sale.redbull" model="product.product">
+    <record id="redbull" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.60</field>
       <field name="name">RedBull</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-redbull.jpg"/>
     </record>
-    <record id="point_of_sale.schweppes" model="product.product">
+    <record id="schweppes" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Schweppes</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-schweppes.jpg"/>
     </record>
-    <record id="point_of_sale.sprite" model="product.product">
+    <record id="sprite" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Sprite</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-sprite.jpg"/>
     </record>
-    <record id="point_of_sale.water" model="product.product">
+    <record id="water" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">2.20</field>
       <field name="name">Water</field>
-      <field name="pos_categ_id" ref="point_of_sale.soft"/>
+      <field name="pos_categ_id" ref="soft"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-water.jpg"/>
     </record>
 
     <!-- Milk Shakes -->
-    <record id="point_of_sale.milkshake_banana" model="product.product">
+    <record id="milkshake_banana" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.60</field>
       <field name="name">Milkshake Banana</field>
-      <field name="pos_categ_id" ref="point_of_sale.milkshake"/>
+      <field name="pos_categ_id" ref="milkshake"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshake_banana.jpg"/>
     </record>
-    <record id="point_of_sale.milkshake_cherry" model="product.product">
+    <record id="milkshake_cherry" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.60</field>
       <field name="name">Milkshake Cherry</field>
-      <field name="pos_categ_id" ref="point_of_sale.milkshake"/>
+      <field name="pos_categ_id" ref="milkshake"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshake_cherry.jpg"/>
     </record>
-    <record id="point_of_sale.milkshake_chocolate" model="product.product">
+    <record id="milkshake_chocolate" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.60</field>
       <field name="name">Milkshake Chocolate</field>
-      <field name="pos_categ_id" ref="point_of_sale.milkshake"/>
+      <field name="pos_categ_id" ref="milkshake"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshake_chocolate.jpg"/>
     </record>
-    <record id="point_of_sale.milkshake_strawberry" model="product.product">
+    <record id="milkshake_strawberry" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.60</field>
       <field name="name">Milkshake Strawberry</field>
-      <field name="pos_categ_id" ref="point_of_sale.milkshake"/>
+      <field name="pos_categ_id" ref="milkshake"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshake_strawberry.jpg"/>
     </record>
-    <record id="point_of_sale.milkshake_vanilla" model="product.product">
+    <record id="milkshake_vanilla" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.60</field>
       <field name="name">Milkshake Vanilla</field>
-      <field name="pos_categ_id" ref="point_of_sale.milkshake"/>
+      <field name="pos_categ_id" ref="milkshake"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-milkshake_vanilla.jpg"/>
     </record>
 
     <!-- Hot Drinks Products -->
-    <record id="point_of_sale.tea" model="product.product">
+    <record id="tea" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Yellow Tea</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-tea.jpg"/>
     </record>
-    <record id="point_of_sale.nescafe" model="product.product">
+    <record id="nescafe" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Nescafe</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-nescafe.jpg"/>
     </record>
-    <record id="point_of_sale.irish_coffee" model="product.product">
+    <record id="irish_coffee" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Irish Coffee</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-irish_coffee.jpg"/>
     </record>
-    <record id="point_of_sale.green_tea" model="product.product">
+    <record id="green_tea" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Green Tea</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-green_tea.jpg"/>
     </record>
-    <record id="point_of_sale.capuccino" model="product.product">
+    <record id="capuccino" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Capuccino</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-capuccino.jpg"/>
     </record>
-    <record id="point_of_sale.coffee" model="product.product">
+    <record id="coffee" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Coffee</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-coffee.jpg"/>
     </record>
-    <record id="point_of_sale.espresso" model="product.product">
+    <record id="espresso" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">4.70</field>
       <field name="name">Espresso</field>
-      <field name="pos_categ_id" ref="point_of_sale.hot"/>
+      <field name="pos_categ_id" ref="hot"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-espresso.jpg"/>
     </record>
 
 
     <!-- Wine Products-->
-    <record id="point_of_sale.red_wine" model="product.product">
+    <record id="red_wine" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.50</field>
       <field name="name">Red Wine</field>
-      <field name="pos_categ_id" ref="point_of_sale.wine"/>
+      <field name="pos_categ_id" ref="wine"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-red_wine.jpg"/>
     </record>
-    <record id="point_of_sale.white_wine" model="product.product">
+    <record id="white_wine" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.50</field>
       <field name="name">White Wine</field>
-      <field name="pos_categ_id" ref="point_of_sale.wine"/>
+      <field name="pos_categ_id" ref="wine"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-white_wine.jpg"/>
     </record>
-    <record id="point_of_sale.rose_wine" model="product.product">
+    <record id="rose_wine" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.50</field>
       <field name="name">Rose Wine</field>
-      <field name="pos_categ_id" ref="point_of_sale.wine"/>
+      <field name="pos_categ_id" ref="wine"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-rose_wine.jpg"/>
     </record>
 
     <!-- Import Drink Products -->
-    <record id="point_of_sale.bacardi" model="product.product">
+    <record id="bacardi" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Bacardi</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-bacardi.jpg"/>
     </record>
-    <record id="point_of_sale.baileys" model="product.product">
+    <record id="baileys" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Baileys</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-baileys.jpg"/>
     </record>
-    <record id="point_of_sale.captain_morgan" model="product.product">
+    <record id="captain_morgan" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Captain Morgan</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-captain_morgan.jpg"/>
     </record>
-    <record id="point_of_sale.disaronno" model="product.product">
+    <record id="disaronno" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Disaronno</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-disaronno.jpg"/>
     </record>
-    <record id="point_of_sale.gordon" model="product.product">
+    <record id="gordon" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Gordon</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-gordon.jpg"/>
     </record>
-    <record id="point_of_sale.jack_daniels" model="product.product">
+    <record id="jack_daniels" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Jack Daniel's</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-jack_daniels.jpg"/>
     </record>
-    <record id="point_of_sale.jim_beam" model="product.product">
+    <record id="jim_beam" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Jim Beam</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-jim_beam.jpg"/>
     </record>
-    <record id="point_of_sale.malibu" model="product.product">
+    <record id="malibu" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Malibu</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-malibu.jpg"/>
     </record>
-    <record id="point_of_sale.martini" model="product.product">
+    <record id="martini" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Martini</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-martini.jpg"/>
     </record>
-    <record id="point_of_sale.red_label" model="product.product">
+    <record id="red_label" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Red Label</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-red_label.jpg"/>
     </record>
-    <record id="point_of_sale.safari" model="product.product">
+    <record id="safari" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Safari</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-safari.jpg"/>
     </record>
-    <record id="point_of_sale.smirnoff" model="product.product">
+    <record id="smirnoff" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Smirnoff</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-smirnoff.jpg"/>
     </record>
-    <record id="point_of_sale.tequila" model="product.product">
+    <record id="tequila" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">5.50</field>
       <field name="name">Tequila</field>
-      <field name="pos_categ_id" ref="point_of_sale.alcohol"/>
+      <field name="pos_categ_id" ref="alcohol"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-tequila.jpg"/>
     </record>
 
     <!-- Beers Products -->
-    <record id="point_of_sale.tuborg" model="product.product">
+    <record id="tuborg" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Tuborg</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-tuborg.jpg"/>
     </record>
-    <record id="point_of_sale.stella_artois" model="product.product">
+    <record id="stella_artois" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Stella Artois</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-stella_artois.jpg"/>
     </record>
-    <record id="point_of_sale.miller" model="product.product">
+    <record id="miller" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Miller</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-miller.jpg"/>
     </record>
-    <record id="point_of_sale.guinness" model="product.product">
+    <record id="guinness" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Guinness</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-guinness.jpg"/>
     </record>
-    <record id="point_of_sale.fosters" model="product.product">
+    <record id="fosters" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Foster's</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-fosters.jpg"/>
     </record>
-    <record id="point_of_sale.efes" model="product.product">
+    <record id="efes" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Efes</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-efes.jpg"/>
     </record>
-    <record id="point_of_sale.corona" model="product.product">
+    <record id="corona" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Corona</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-corona.jpg"/>
     </record>
-    <record id="point_of_sale.carlsberg" model="product.product">
+    <record id="carlsberg" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Carlsberg</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-carlsberg.jpg"/>
     </record>
-    <record id="point_of_sale.budweiser" model="product.product">
+    <record id="budweiser" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">3.40</field>
       <field name="name">Budweiser</field>
-      <field name="pos_categ_id" ref="point_of_sale.beer"/>
+      <field name="pos_categ_id" ref="beer"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-budweiser.jpg"/>
     </record>
 
     <!-- Cocktails Products -->
-    <record id="point_of_sale.bloody_mary" model="product.product">
+    <record id="bloody_mary" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Bloody Mary</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-bloody_mary.jpg"/>
     </record>
-    <record id="point_of_sale.caipirinha" model="product.product">
+    <record id="caipirinha" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Caipirinha</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-caipirinha.jpg"/>
     </record>
-    <record id="point_of_sale.cosmopolitan" model="product.product">
+    <record id="cosmopolitan" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Cosmopolitan</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-cosmopolitan.jpg"/>
     </record>
-    <record id="point_of_sale.cuba_libre" model="product.product">
+    <record id="cuba_libre" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Cuba Libre</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-cuba_libre.jpg"/>
     </record>
-    <record id="point_of_sale.daiquiri" model="product.product">
+    <record id="daiquiri" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Daiquiri</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-daiquiri.jpg"/>
     </record>
-    <record id="point_of_sale.manhattan" model="product.product">
+    <record id="manhattan" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Manhattan</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-manhattan.jpg"/>
     </record>
-    <record id="point_of_sale.margarita" model="product.product">
+    <record id="margarita" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Margarita</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-margarita.jpg"/>
     </record>
-    <record id="point_of_sale.martini_cocktail" model="product.product">
+    <record id="martini_cocktail" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Martini</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-martini_cocktail.jpg"/>
     </record>
-    <record id="point_of_sale.mojito" model="product.product">
+    <record id="mojito" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Mojito</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-mojito.jpg"/>
     </record>
-    <record id="point_of_sale.pina_colada" model="product.product">
+    <record id="pina_colada" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">Pina Colada</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-pina_colada.jpg"/>
     </record>
-    <record id="point_of_sale.white_russian" model="product.product">
+    <record id="white_russian" model="product.product">
       <field name="available_in_pos">True</field>
       <field name="list_price">7.50</field>
       <field name="name">White Russian</field>
-      <field name="pos_categ_id" ref="point_of_sale.cocktail"/>
+      <field name="pos_categ_id" ref="cocktail"/>
       <field name="image" type="base64" file="pos_data_drinks/static/img/th-white_russian.jpg"/>
     </record>
 

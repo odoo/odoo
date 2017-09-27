@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.controllers.main import Website
-from openerp.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.http import request
+from odoo.tools.pycompat import izip
 
+class WebsiteSale(WebsiteSale):
 
-class website_sale_stock(website_account):
+    def get_attribute_value_ids(self, product):
+        res = super(WebsiteSale, self).get_attribute_value_ids(product)
+        variant_ids = [r[0] for r in res]
+        # recordsets conserve the order
+        for r, variant in izip(res, request.env['product.product'].sudo().browse(variant_ids)):
+            r.extend([{
+                'virtual_available': variant.virtual_available,
+                'product_type': str(variant.type),
+                'inventory_availability': str(variant.inventory_availability),
+                'available_threshold': variant.available_threshold,
+                'custom_message': str(variant.custom_message),
+                'product_template': variant.product_tmpl_id.id,
+                'cart_qty': variant.cart_qty,
+                'uom_name': str(variant.uom_id.name),
+            }])
 
-    @http.route([
-        '/my/orders/<int:order>',
-    ], type='http', auth='user', website=True)
-    def orders_followup(self, order=None, **post):
-        response = super(website_sale_stock, self).orders_followup(order=order, **post)
-
-        order = response.qcontext['order']
-        shipping_lines = request.env['stock.move'].sudo().search([('picking_id', 'in', order.picking_ids.ids)])
-        order_shipping_lines = {sl.product_id.id: sl.picking_id for sl in shipping_lines}
-
-        response.qcontext.update({
-            'order_shipping_lines': order_shipping_lines,
-        })
-        return response
+        return res

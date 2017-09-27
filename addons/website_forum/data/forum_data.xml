@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="forum_help" model="forum.forum">
             <field name="name">Help</field>
@@ -13,7 +13,7 @@
         </record>
     </data>
     <data>
-        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)" />
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)"/>
 
         <!-- JUMP TO FORUM AT INSTALL -->
         <record id="action_open_forum" model="ir.actions.act_url">
@@ -138,7 +138,7 @@
         <record id="validation_email" model="mail.template">
             <field name="name">Forum: Email Verification</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="email_from"><![CDATA[${object.company_id.name} <${(object.company_id.email or user.email)|safe}>]]></field>
+            <field name="email_from"><![CDATA["${object.company_id.name|safe}" <${(object.company_id.email or user.email)|safe}>]]></field>
             <field name="email_to">${object.email|safe}</field>
             <field name="subject"><![CDATA[${object.company_id.name} Forums validation]]></field>
             <field name="body_html"><![CDATA[
@@ -170,7 +170,7 @@
                 <p>You have been invited to validate your email in order to get access to
                 "${object.company_id.name}" Q/A Forums.</p>
                 <p>To validate your email, please click on the following link:</p>
-                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx.get('token_url')}">
+                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx.get('token_url')}">
                     Validate my account for "${object.company_id.name}" Q/A Forums
                 </a>
                 <p>Thanks for your participation!</p>
@@ -181,4 +181,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

@@ -3,7 +3,21 @@
     <data noupdate="1">
 
         <record id="hr.employee_mit" model="hr.employee">
-            <field name="address_home_id" ref="base.res_partner_address_5"/>
+            <field name="address_home_id" ref="base.res_partner_address_3"/>
+        </record>
+
+        <record id="res_partner_address_fp" model="res.partner">
+            <field name="name">Pieter Parter's Farm</field>
+            <field name="parent_id" eval="ref('base.partner_root')"/>
+            <field name="supplier">1</field>
+            <field name="street">Chaussée de Namur, 40</field>
+            <field name="zip">1367</field>
+            <field name="city">Grand-Rosière-Hottomont</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+
+        <record id="hr.employee_root" model="hr.employee">
+            <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
 
         <record id="car_travel" model="product.product">

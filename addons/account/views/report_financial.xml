@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_financial">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.internal_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <h2 t-esc="data['account_report_id'][1]"/>
 
@@ -43,13 +43,13 @@
                                         <span t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
                                     <td class="text-right" style="white-space: text-nowrap;">
-                                        <span t-att-style="style" t-esc="a.get('debit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                        <span t-att-style="style" t-esc="a.get('debit')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                     </td>
                                     <td class="text-right" style="white-space: text-nowrap;">
-                                        <span t-att-style="style" t-esc="a.get('credit')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                        <span t-att-style="style" t-esc="a.get('credit')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                     </td>
                                     <td class="text-right" style="white-space: text-nowrap;">
-                                        <span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                        <span t-att-style="style" t-esc="a.get('balance')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                                     </td>
                                 </t>
                             </tr>
@@ -73,7 +73,7 @@
                                         <span style="color: white;" t-esc="'..' * a.get('level', 0)"/>
                                         <span t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
-                                    <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
                                 </t>
                             </tr>
                         </tbody>
@@ -96,7 +96,7 @@
                                         <span style="color: white;" t-esc="'..'"/>
                                         <span t-att-style="style" t-esc="a.get('name')"/>
                                     </td>
-                                    <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                                    <td class="text-right"><span t-att-style="style" t-esc="a.get('balance')" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
                                     <td class="text-right"><span t-att-style="style" t-esc="a.get('balance_cmp')"/></td>
                                 </t>
                             </tr>

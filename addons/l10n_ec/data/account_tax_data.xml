@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Tags -->
+
+    <record id="tax_sale_cobrado_12" model="account.account.tag">
+        <field name="name">sale_cobrado_12</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_sale_pagado_12" model="account.account.tag">
+        <field name="name">sale_pagado_12</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_sale_retencion_8" model="account.account.tag">
+        <field name="name">sale_retencion_8</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_sale_retencion_30" model="account.account.tag">
+        <field name="name">sale_retencion_30</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_sale_retencion_70" model="account.account.tag">
+        <field name="name">sale_retencion_70</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_sale_retencion_100" model="account.account.tag">
+        <field name="name">sale_retencion_100</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_cobrado_12" model="account.account.tag">
+        <field name="name">purchase_cobrado_12</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_pagado_12" model="account.account.tag">
+        <field name="name">purchase_pagado_12</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_retencion_8" model="account.account.tag">
+        <field name="name">purchase_retencion_8</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_retencion_30" model="account.account.tag">
+        <field name="name">purchase_retencion_30</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_retencion_70" model="account.account.tag">
+        <field name="name">purchase_retencion_70</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_purchase_retencion_100" model="account.account.tag">
+        <field name="name">purchase_retencion_100</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="salevat1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale IVA Cobrado (12%)(12.0%)</field>
+      <field name="description">IVA Cobrado 12%</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210401"/>
+      <field name="account_id" ref="210401"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_cobrado_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_12"/>
+    </record>
+
+    <record id="salevat2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale IVA Pagado (12%)(12.0%)</field>
+      <field name="description">IVA Pagado 12%</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210401"/>
+      <field name="account_id" ref="210401"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_pagado_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_12"/>
+    </record>
+
+    <record id="saleret1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale Retencion (8%)(8.0%)</field>
+      <field name="description">Retencion 8%</field>
+      <field name="amount">-8.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_retencion_8')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_8"/>
+    </record>
+
+    <record id="saleret2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale Retencion (30%)(30.0%)</field>
+      <field name="description">Retencion 30%</field>
+      <field name="amount">-30.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_retencion_30')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_30"/>
+    </record>
+
+    <record id="saleret3" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale Retencion (70%)(70.0%)</field>
+      <field name="description">Retencion 70%</field>
+      <field name="amount">-70.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_retencion_70')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_70"/>
+    </record>
+
+    <record id="saleret4" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Sale Retencion (100%)(100.0%)</field>
+      <field name="description">Retencion 100%</field>
+      <field name="amount">-100.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_sale_retencion_100')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_100"/>
+    </record>
+
+    <record id="purchasevat1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase IVA Cobrado (12%)(12.0%)</field>
+      <field name="description">IVA Cobrado 12%</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210401"/>
+      <field name="account_id" ref="210401"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_cobrado_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_12"/>
+    </record>
+
+    <record id="purchasevat2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase IVA Pagado (12%)(12.0%)</field>
+      <field name="description">IVA Pagado 12%</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210401"/>
+      <field name="account_id" ref="210401"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_pagado_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_iva_12"/>
+    </record>
+
+    <record id="purchaseret1" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase Retencion (8%)(8.0%)</field>
+      <field name="description">Retencion 8%</field>
+      <field name="amount">-8.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_retencion_8')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_8"/>
+    </record>
+
+    <record id="purchaseret2" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase Retencion (30%)(30.0%)</field>
+      <field name="description">Retencion 30%</field>
+      <field name="amount">-30.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_retencion_30')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_30"/>
+    </record>
+
+    <record id="purchaseret3" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase Retencion (70%)(70.0%)</field>
+      <field name="description">Retencion 70%</field>
+      <field name="amount">-70.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_retencion_70')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_70"/>
+    </record>
+
+    <record id="purchaseret4" model="account.tax.template">
+      <field name="chart_template_id" ref="ec_chart_template"/>
+      <field name="name">Purchase Retencion (100%)(100.0%)</field>
+      <field name="description">Retencion 100%</field>
+      <field name="amount">-100.0</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="210403"/>
+      <field name="account_id" ref="210403"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tax_purchase_retencion_100')])]"/>
+      <field name="tax_group_id" ref="tax_group_ret_100"/>
+    </record>
+</odoo>

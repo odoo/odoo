@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import pprint
 import logging
-import urlparse
+from werkzeug import urls, utils
 
-from openerp import http
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -23,10 +23,47 @@ class AuthorizeController(http.Controller):
         if post:
             request.env['payment.transaction'].sudo().form_feedback(post, 'authorize')
             return_url = post.pop('return_url', '/')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # Authorize.Net is expecting a response to the POST sent by their server.
         # This response is in the form of a URL that Authorize.Net will pass on to the
         # client's browser to redirect them to the desired location need javascript.
         return request.render('payment_authorize.payment_authorize_redirect', {
-            'return_url': '%s' % urlparse.urljoin(base_url, return_url)
+            'return_url': urls.url_join(base_url, return_url)
         })
+
+    @http.route(['/payment/authorize/s2s/create_json'], type='json', auth='public')
+    def authorize_s2s_create_json(self, **kwargs):
+        acquirer_id = int(kwargs.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        return acquirer.s2s_process(kwargs).id
+
+    @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
+    def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+
+        if not token:
+            res = {
+                'result': False,
+            }
+            return res
+
+        res = {
+            'result': True,
+            'id': token.id,
+            'short_name': token.short_name,
+            '3d_secure': False,
+            'verified': False,
+        }
+
+        if verify_validity != False:
+            token.validate()
+            res['verified'] = token.verified
+
+        return res
+
+    @http.route(['/payment/authorize/s2s/create'], type='http', auth='public')
+    def authorize_s2s_create(self, **post):
+        acquirer_id = int(post.get('acquirer_id'))
+        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        acquirer.s2s_process(post)
+        return utils.redirect(post.get('return_url', '/'))

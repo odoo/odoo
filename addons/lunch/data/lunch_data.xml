@@ -1,60 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="lunch_order_line_action_order" model="ir.actions.server">
-        <field name="name">Order meals</field>
+        <field name="name">Lunch: Order meals</field>
         <field name="model_id" ref="model_lunch_order_line"/>
+        <field name="binding_model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
         <field name="code">
-            if context.get('active_ids'):
-                self.order(cr, uid, context['active_ids'], context=context)
+if records:
+    records.order()
         </field>
-    </record>
-
-    <record id="ir_lunch_order_line_action_order" model="ir.values">
-        <field name="model_id" ref="model_lunch_order_line" />
-        <field name="name">Order meals</field>
-        <field name="key2">client_action_multi</field>
-        <field eval="'ir.actions.server,%d'%lunch_order_line_action_order" name="value"/>
-        <field name="key">action</field>
-        <field name="model">lunch.order.line</field>
     </record>
 
     <record id="lunch_order_line_action_confirm" model="ir.actions.server">
-        <field name="name">Receive meals</field>
+        <field name="name">Lunch: Receive meals</field>
         <field name="model_id" ref="model_lunch_order_line"/>
+        <field name="binding_model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
-        <field name="code">
-            if context.get('active_ids'):
-                self.confirm(cr, uid, context['active_ids'], context=context)
-        </field>
-    </record>
-
-    <record id="ir_lunch_order_line_action_confirm" model="ir.values">
-        <field name="model_id" ref="model_lunch_order_line" />
-        <field name="name">Receive meals</field>
-        <field name="key2">client_action_multi</field>
-        <field eval="'ir.actions.server,%d'%lunch_order_line_action_confirm" name="value"/>
-        <field name="key">action</field>
-        <field name="model">lunch.order.line</field>
+        <field name="code">records.confirm()</field>
     </record>
 
     <record id="lunch_order_line_action_cancel" model="ir.actions.server">
-        <field name="name">Cancel meals</field>
+        <field name="name">Lunch: Cancel meals</field>
         <field name="model_id" ref="model_lunch_order_line"/>
+        <field name="binding_model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
-        <field name="code">
-            if context.get('active_ids'):
-                self.cancel(cr, uid, context['active_ids'], context=context)
-        </field>
-    </record>
-
-    <record id="ir_lunch_order_line_action_cancel" model="ir.values">
-        <field name="model_id" ref="model_lunch_order_line" />
-        <field name="name">Cancel meals</field>
-        <field name="key2">client_action_multi</field>
-        <field eval="'ir.actions.server,%d'%lunch_order_line_action_cancel" name="value"/>
-        <field name="key">action</field>
-        <field name="model">lunch.order.line</field>
+        <field name="code">records.cancel()</field>
     </record>
 
 </odoo>

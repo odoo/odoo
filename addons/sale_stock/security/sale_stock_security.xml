@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="0">    
         <record id="group_route_so_lines" model="res.groups">
             <field name="name">Enable Route on Sales Order Line</field>
             <field name="category_id" ref="base.module_category_hidden"/>
         </record>
+
+        <record id="group_display_incoterm" model="res.groups">
+            <field name="name">Display incoterms on Sales Order and related invoices</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
     </data>
-</openerp>
+</odoo>

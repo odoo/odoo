@@ -1,4 +1,4 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 
 class AccountTestUsers(AccountingTestCase):
@@ -11,7 +11,7 @@ class AccountTestUsers(AccountingTestCase):
         self.main_company = self.env.ref('base.main_company')
         self.main_partner = self.env.ref('base.main_partner')
         self.main_bank = self.env.ref('base.res_bank_1')
-        res_users_account_user = self.env.ref('account.group_account_user')
+        res_users_account_user = self.env.ref('account.group_account_invoice')
         res_users_account_manager = self.env.ref('account.group_account_manager')
         partner_manager = self.env.ref('base.group_partner_manager')
         self.tax_model = self.env['account.tax']

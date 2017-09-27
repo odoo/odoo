@@ -1,16 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_account_analytic_line_user,account.analytic.line,account.model_account_analytic_line,group_mrp_user,1,1,1,0
+access_mrp_workcenter_productivity_loss_manager,mrp.workcenter.productivity.loss,model_mrp_workcenter_productivity_loss,mrp.group_mrp_manager,1,1,1,1
+access_mrp_workcenter_productivity_loss,mrp.workcenter.productivity.loss,model_mrp_workcenter_productivity_loss,mrp.group_mrp_user,1,0,0,0
+access_mrp_workcenter_productivity,mrp.workcenter.productivity,model_mrp_workcenter_productivity,mrp.group_mrp_user,1,1,1,1
 access_mrp_workcenter,mrp.workcenter,model_mrp_workcenter,mrp.group_mrp_user,1,0,0,0
 access_mrp_routing,mrp.routing,model_mrp_routing,mrp.group_mrp_user,1,0,0,0
 access_mrp_routing_workcenter,mrp.routing.workcenter,model_mrp_routing_workcenter,mrp.group_mrp_user,1,0,0,0
 access_mrp_bom,mrp.bom,model_mrp_bom,group_mrp_user,1,0,0,0
 access_mrp_bom_line,mrp.bom.line,model_mrp_bom_line,group_mrp_user,1,0,0,0
 access_mrp_production,mrp.production user,model_mrp_production,mrp.group_mrp_user,1,1,1,1
-access_mrp_production_salesman,mrp.production salesman,model_mrp_production,base.group_sale_salesman,1,1,1,0
-access_mrp_production_product_line_salesman,mrp.production.product.line salesman,model_mrp_production_product_line,base.group_sale_salesman,1,0,1,0
-access_mrp_production_workcenter_line_salesman,mrp.production.workcenter.line salesman,model_mrp_production_workcenter_line,base.group_sale_salesman,1,0,1,0
-access_mrp_production_product_line,mrp.production.product.line,model_mrp_production_product_line,mrp.group_mrp_user,1,1,1,1
-access_procurement,procurement.order,model_procurement_order,mrp.group_mrp_user,1,1,1,1
 access_mrp_workcenter_manager,mrp.workcenter.manager,model_mrp_workcenter,mrp.group_mrp_manager,1,1,1,1
 access_mrp_resource_manager,access_mrp_resource manager,resource.model_resource_resource,mrp.group_mrp_manager,1,1,1,1
 access_mrp_routing_manager,mrp.routing.manager,model_mrp_routing,mrp.group_mrp_manager,1,1,1,1
@@ -21,19 +18,15 @@ access_stock_location_mrp_worker,stock.location mrp_worker,stock.model_stock_loc
 access_stock_move_mrp_worker,stock.move mrp_worker,stock.model_stock_move,mrp.group_mrp_user,1,1,1,0
 access_stock_picking_mrp_worker,stock.picking mrp_worker,stock.model_stock_picking,mrp.group_mrp_user,1,1,1,1
 access_stock_warehouse,stock.warehouse mrp_worker,stock.model_stock_warehouse,mrp.group_mrp_user,1,0,0,0
-access_account_account,account.account mrp_worker,account.model_account_account,mrp.group_mrp_user,1,0,0,0
-access_hr_timesheet_group_mrp_worker,resource.calendar mrp_manager,resource.model_resource_calendar,mrp.group_mrp_manager,1,1,1,1
-access_procurement_user,procurement.order.user,model_procurement_order,base.group_user,1,1,1,1
 access_mrp_production_stock_worker,mrp.production stock_worker,model_mrp_production,stock.group_stock_user,1,0,0,0
-access_report_workcenter_load,report.workcenter.load,model_report_workcenter_load,mrp.group_mrp_manager,1,1,1,1
-access_report_mrp_inout,report.mrp.inout,model_report_mrp_inout,mrp.group_mrp_manager,1,1,1,1
-access_ir_property_manager,ir.property manager,base.model_ir_property,mrp.group_mrp_manager,1,1,1,1
 access_product_product_user,product.product user,product.model_product_product,mrp.group_mrp_user,1,0,0,0
 access_product_template_user,product.template user,product.model_product_template,mrp.group_mrp_user,1,0,0,0
+access_product_price_history_mrp_manager,product.price.history.mrp.manager,product.model_product_price_history,mrp.group_mrp_manager,1,1,1,1
 access_product_uom_user,product.uom user,product.model_product_uom,mrp.group_mrp_user,1,0,0,0
 access_product_supplierinfo_user,product.supplierinfo user,product.model_product_supplierinfo,mrp.group_mrp_user,1,1,1,1
 access_res_partner,res.partner,base.model_res_partner,mrp.group_mrp_user,1,0,0,0
-access_workcenter_user,mrp.production.workcenter.line.user,model_mrp_production_workcenter_line,mrp.group_mrp_user,1,1,1,1
+access_mrp_workorder_mrp_user,mrp.workorder.user,model_mrp_workorder,mrp.group_mrp_user,1,1,1,1
+access_mrp_workorder_mrp_manager,mrp.workorder,model_mrp_workorder,mrp.group_mrp_manager,1,1,1,1
 access_resource_calendar_leaves_user,mrp.resource.calendar.leaves.user,resource.model_resource_calendar_leaves,mrp.group_mrp_user,1,1,1,1
 access_resource_calendar_leaves_manager,mrp.resource.calendar.leaves.manager,resource.model_resource_calendar_leaves,mrp.group_mrp_manager,1,0,0,0
 access_resource_calendar_attendance_mrp_user,mrp.resource.calendar.attendance.mrp.user,resource.model_resource_calendar_attendance,mrp.group_mrp_user,1,1,1,1
@@ -43,18 +36,11 @@ access_resource_resource,resource.resource,resource.model_resource_resource,mrp.
 access_resource_resource_manager,resource.resource.manager,resource.model_resource_resource,mrp.group_mrp_manager,1,1,1,1
 access_product_supplierinfo_manager,product.supplierinfo user,product.model_product_supplierinfo,mrp.group_mrp_manager,1,0,0,0
 access_mrp_production_manager,mrp.production manager,model_mrp_production,mrp.group_mrp_manager,1,0,0,0
-access_procurement_manager,procurement.order,model_procurement_order,mrp.group_mrp_manager,1,0,0,0
-access_workcenter_manager,mrp.production.workcenter.line,model_mrp_production_workcenter_line,mrp.group_mrp_manager,1,0,0,0
 access_stock_move_mrp_manager,stock.move mrp_manager,stock.model_stock_move,mrp.group_mrp_manager,1,0,0,0
-access_mrp_production_product_line_manager,mrp.production.product.line manager,model_mrp_production_product_line,mrp.group_mrp_manager,1,0,0,0
 access_stock_production_lot_user,stock.production.lot,stock.model_stock_production_lot,mrp.group_mrp_user,1,1,1,1
 access_stock_warehouse_orderpoint_user,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,mrp.group_mrp_user,1,0,0,0
 access_stock_picking_mrp_manager,stock.picking mrp_manager,stock.model_stock_picking,mrp.group_mrp_manager,1,0,0,0
-access_report_mrp_inout_user,report.mrp.inout user,model_report_mrp_inout,mrp.group_mrp_user,1,0,0,0
-access_report_workcenter_load_user,report.workcenter.load.user,model_report_workcenter_load,mrp.group_mrp_user,1,0,0,0
-access_mrp_bom_salesman,mrp.bom,model_mrp_bom,base.group_sale_salesman,1,0,0,0
 access_mrp_bom_stockuser,mrp.bom,model_mrp_bom,stock.group_stock_user,1,0,0,0
-access_mrp_bom_line_salesman,mrp.bom.line,model_mrp_bom_line,base.group_sale_salesman,1,0,0,0
 access_mrp_bom_line_stockuser,mrp.bom.line,model_mrp_bom_line,stock.group_stock_user,1,0,0,0
 access_product_uom_categ_mrp_manager,product.uom.categ mrp_manager,product.model_product_uom_categ,mrp.group_mrp_manager,1,1,1,1
 access_product_uom_mrp_manager,product.uom mrp_manager,product.model_product_uom,mrp.group_mrp_manager,1,1,1,1
@@ -63,14 +49,12 @@ access_product_template_mrp_manager,product.template mrp_manager,product.model_p
 access_product_product_mrp_manager,product.product mrp_manager,product.model_product_product,mrp.group_mrp_manager,1,1,1,1
 access_product_packaging_mrp_manager,product.packaging mrp_manager,product.model_product_packaging,mrp.group_mrp_manager,1,1,1,1
 access_product_pricelist_mrp_manager,product.pricelist mrp_manager,product.model_product_pricelist,mrp.group_mrp_manager,1,1,1,1
-access_ir_property_group_product_mrp_manager,ir_property group_product_mrp_manager,base.model_ir_property,mrp.group_mrp_manager,1,1,1,1
 access_product_group_res_partner_mrp_manager,res_partner group_mrp_manager,base.model_res_partner,mrp.group_mrp_manager,1,1,1,0
 access_product_pricelist_item_mrp_manager,product.pricelist.item mrp_manager,product.model_product_pricelist_item,mrp.group_mrp_manager,1,1,1,1
 access_resource_calendar_manufacturinguser,resource.calendar manufacturing.user,resource.model_resource_calendar,mrp.group_mrp_user,1,0,0,0
-access_account_journal_mrp_manager,account.journal mrp manager,account.model_account_journal,mrp.group_mrp_manager,1,0,0,0
-access_mrp_property_group_manager,mrp.property.group,model_mrp_property_group,stock.group_stock_manager,1,1,1,1
-access_mrp_property_manager,mrp.property,model_mrp_property,stock.group_stock_manager,1,1,1,1
-access_mrp_property_group,mrp.property.group,model_mrp_property_group,base.group_user,1,0,0,0
-access_mrp_property,mrp.property,model_mrp_property,base.group_user,1,0,0,0
-access_mrp_bom_invoicing_payment,mrp.bom,model_mrp_bom,account.group_account_invoice,1,0,0,0
-access_mrp_production_invoicing_payment,mrp.production,model_mrp_production,account.group_account_invoice,1,1,1,0
+access_mrp_unbuild,mrp.unbuild,model_mrp_unbuild,group_mrp_user,1,0,0,0
+access_mrp_unbuild_manager,mrp.unbuild manager,model_mrp_unbuild,group_mrp_manager,1,1,1,1
+access_mrp_message_mrp_user,mrp.message,model_mrp_message,group_mrp_user,1,0,0,0
+access_mrp_message_mrp_manager,mrp.message,model_mrp_message,group_mrp_manager,1,1,1,1
+access_mrp_document_mrp_manager,mrp.document group_user,model_mrp_document,group_mrp_manager,1,1,1,1
+access_mrp_document_mrp_user,mrp.document group_user,model_mrp_document,group_mrp_user,1,1,1,1

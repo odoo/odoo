@@ -41,6 +41,7 @@
           <field name="name">Boni Oranges</field>
           <field name="to_weight">True</field>
           <field name="barcode">2100002000003</field>
+          <field name="taxes_id">False</field>
           <field name="pos_categ_id" ref="fruits_vegetables"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
@@ -141,6 +142,7 @@
           <field name="uom_id" ref="product.product_uom_kgm" />
           <field name="uom_po_id" ref="product.product_uom_kgm" />
           <field name="image" type="base64" file="point_of_sale/static/img/peche-image.jpg"/>
+          <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
         </record>
 
         <record id="raisins_noir" model="product.product">
@@ -360,9 +362,7 @@
         <record id="product.consu_delivery_03" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.consu_delivery_02" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.consu_delivery_01" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
-        <record id="sale.advance_product_0" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.membership_0" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.membership_1" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
         <record id="product.membership_2" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
-
 </odoo>

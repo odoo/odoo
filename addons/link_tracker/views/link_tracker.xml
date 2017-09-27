@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record model="ir.actions.act_window" id="action_view_click_statistics">
             <field name="name">Statistics of Clicks</field>
@@ -110,6 +110,7 @@
             <field name="res_model">link.tracker</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_link_tracker_tree"/>
         </record>
 
         <!-- Website links click views -->
@@ -156,14 +157,7 @@
         </record>
 
         <!-- Action for website links click-->
-        <record model="ir.actions.act_window" id="action_link_tracker_click">
-            <field name="name">Tracked Links</field>
-            <field name="res_model">link.tracker.click</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree,form</field>
-        </record>
 
-        <menuitem id="menu_url_shortener_main" name="Link Tracker" parent="utm.menu_link_tracker_root" groups="base.group_no_one"/>
-        <menuitem id="menu_url_shortener_links" name="Tracked Links" parent="menu_url_shortener_main" action="action_link_tracker"/>
+        <menuitem id="menu_url_shortener_main" name="Link Tracker" parent="utm.menu_link_tracker_root" action="action_link_tracker" groups="base.group_no_one"/>
     </data>
-</openerp>
+</odoo>

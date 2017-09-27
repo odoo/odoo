@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-# 
+#
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-12-05 03:28+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-07-21 01:03+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:91
 #, python-format
 msgid "3 exp. closing"
-msgstr ""
+msgstr "3 完了遅延"
 
 #. module: sales_team
 #. openerp-web
@@ -49,22 +50,17 @@ msgstr ""
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>新規</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>レポート</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction
-msgid "Action Needed"
-msgstr ""
+msgstr "<span>照会</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
@@ -76,14 +72,14 @@ msgstr "有効"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:114
 #, python-format
 msgid "Activities Done"
-msgstr ""
+msgstr "完了"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Click here to define a new sales team."
-msgstr ""
+msgstr "クリックして販売チームを新規作成してください。"
 
 #. module: sales_team
 #. openerp-web
@@ -96,7 +92,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
 #, python-format
 msgid "Click to set"
-msgstr ""
+msgstr "クリックして設定"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_code
@@ -141,14 +137,9 @@ msgid "Dashboard"
 msgstr "ダッシュボード"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr ""
-
-#. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Direct Sales"
-msgstr ""
+msgstr "直接販売"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
@@ -160,21 +151,6 @@ msgstr "表示名"
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_follower_ids
-msgid "Followers"
-msgstr "フォロワー"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_partner_ids
-msgid "Followers (Partners)"
 msgstr ""
 
 #. module: sales_team
@@ -202,16 +178,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
@@ -221,7 +187,7 @@ msgstr ""
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Indirect Sales"
-msgstr ""
+msgstr "間接販売"
 
 #. module: sales_team
 #. openerp-web
@@ -229,16 +195,6 @@ msgstr ""
 #, python-format
 msgid "Invoiced"
 msgstr "請求済"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_last_post
-msgid "Last Message Date"
-msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
@@ -250,7 +206,7 @@ msgstr "最終更新日"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
 #, python-format
 msgid "Last Month"
-msgstr ""
+msgstr "先月"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
@@ -267,27 +223,26 @@ msgstr "最終更新日"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:25
 #, python-format
 msgid "Meetings"
-msgstr "ミーティング"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_ids
-msgid "Messages"
-msgstr "メッセージ"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_ids
-msgid "Messages and communication history"
-msgstr "メッセージと通信履歴"
+msgstr "打ち合わせ"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "さらに <i class=\"fa fa-caret-down\"/>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "More Info"
-msgstr ""
+msgstr "その他"
+
+#. module: sales_team
+#. openerp-web
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
+#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
+#, fuzzy, python-format
+msgid "My Pipeline"
+msgstr "自分のパイプライン"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -299,7 +254,7 @@ msgstr "自分の販売チーム"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:50
 #, python-format
 msgid "Next 7 days"
-msgstr ""
+msgstr "この先7日間"
 
 #. module: sales_team
 #. openerp-web
@@ -309,23 +264,8 @@ msgid "Next Actions"
 msgstr "次のアクション"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージ数"
-
-#. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -340,7 +280,7 @@ msgstr "取引先"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:102
 #, python-format
 msgid "Performance"
-msgstr ""
+msgstr "パフォーマンス"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
@@ -361,7 +301,14 @@ msgstr "販売価格リスト"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr "営業チーム"
+msgstr "販売チーム"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+msgid ""
+"Sales Team the user is member of. Used to compute the members of a sales "
+"team through the inverse one2many"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -372,12 +319,12 @@ msgstr "販売チーム"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales team"
-msgstr ""
+msgstr "販売チーム"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Salesteam name..."
-msgstr ""
+msgstr "販売チーム名..."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -394,7 +341,7 @@ msgstr "設定"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:146
 #, python-format
 msgid "Target"
-msgstr ""
+msgstr "ターゲット"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
@@ -406,12 +353,17 @@ msgstr "チームリーダー"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
-msgstr "チームメンバー"
+msgstr "チームメンバ"
 
 #. module: sales_team
 #: sql_constraint:crm.team:0
 msgid "The code of the sales team must be unique !"
 msgstr "営業チームのコードは固有である必要があります。"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team_color
+msgid "The color of the team"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -432,7 +384,9 @@ msgstr "今月"
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
-msgstr "この価格リストは現在のパートナに販売するために、デフォルトのそれに代って使用されます。"
+msgstr ""
+"この価格リストは現在のパートナに販売するために、デフォルトのそれに代って使用"
+"されます。"
 
 #. module: sales_team
 #. openerp-web
@@ -494,17 +448,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
 #, python-format
 msgid "Today"
-msgstr "今日"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread
-msgid "Unread Messages"
-msgstr "未読メッセージ"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
+msgstr "本日"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
@@ -526,39 +470,64 @@ msgstr "ユーザ"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
 #, python-format
 msgid "Won in Opportunities"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_working_hours
-msgid "Working Hours"
-msgstr "労働時間"
+msgstr "受注済案件"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:87
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
 msgstr "入力した値が間違っています!"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
-#: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, python-format
-msgid "Your Pipeline"
-msgstr ""
-
-#. module: sales_team
-#. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
 #, python-format
 msgid "exp. closing"
-msgstr ""
+msgstr "完了遅延"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
-msgstr ""
+msgstr "遅延"
+
+#~ msgid "Action Needed"
+#~ msgstr "必要なアクション"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "記録上の最後のメッセージが投稿された日"
+
+#~ msgid "Followers"
+#~ msgstr "フォロワー"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "フォロワー(チャンネル)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "フォロワー(取引先)"
+
+#~ msgid "Last Message Date"
+#~ msgstr "最終メッセージ日"
+
+#~ msgid "Messages"
+#~ msgstr "メッセージ"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "メッセージと通信履歴"
+
+#~ msgid "Number of Actions"
+#~ msgstr "アクションの数"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "未読メッセージ数"
+
+#~ msgid "Unread Messages"
+#~ msgstr "未読メッセージ"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "未読メッセージカウンター"
+
+#~ msgid "Working Hours"
+#~ msgstr "労働時間"

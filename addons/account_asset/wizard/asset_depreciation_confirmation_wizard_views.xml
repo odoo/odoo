@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_asset_depreciation_confirmation_wizard" model="ir.ui.view">
+        <field name="name">asset.depreciation.confirmation.wizard</field>
+        <field name="model">asset.depreciation.confirmation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Compute Asset">
+                <div>
+                    <p>
+                        This wizard will post installment/depreciation lines for the selected month.<br/>
+                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well.
+                    </p> 
+                </div>
+                <group>
+                    <field name="date"/>
+                </group>
+                <footer>
+                    <button string="Generate Entries" name="asset_compute" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+         </field>
+    </record>
+
+    <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">
+        <field name="name">Post Depreciation Lines</field>
+        <field name="res_model">asset.depreciation.confirmation.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_asset_depreciation_confirmation_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'asset_type': 'purchase'}</field>
+    </record>
+
+    <menuitem name="Generate Assets Entries" action="action_asset_depreciation_confirmation_wizard"
+        id="menu_asset_depreciation_confirmation_wizard"
+        parent="account.menu_finance_entries_generate_entries" sequence="111" groups="base.group_no_one"/>
+
+</odoo>

@@ -8,20 +8,19 @@ from odoo.exceptions import UserError
 class PosInvoiceReport(models.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
 
-    @api.multi
-    def render_html(self, data=None):
-        Report = self.env['report']
+    @api.model
+    def get_report_values(self, docids, data=None):
         PosOrder = self.env['pos.order']
         ids_to_print = []
         invoiced_posorders_ids = []
-        selected_orders = PosOrder.browse(self.ids)
+        selected_orders = PosOrder.browse(docids)
         for order in selected_orders.filtered(lambda o: o.invoice_id):
             ids_to_print.append(order.invoice_id.id)
             invoiced_posorders_ids.append(order.id)
-        not_invoiced_orders_ids = list(set(self.ids) - set(invoiced_posorders_ids))
+        not_invoiced_orders_ids = list(set(docids) - set(invoiced_posorders_ids))
         if not_invoiced_orders_ids:
             not_invoiced_posorders = PosOrder.browse(not_invoiced_orders_ids)
-            not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
+            not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
-        return Report.sudo().render('account.report_invoice', {'docs': self.env['account.invoice'].browse(ids_to_print)})
+        return {'docs': self.env['account.invoice'].sudo().browse(ids_to_print)}

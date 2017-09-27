@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import account_asset_change_duration
-import wizard_asset_compute
+from . import asset_depreciation_confirmation_wizard
+from . import asset_modify

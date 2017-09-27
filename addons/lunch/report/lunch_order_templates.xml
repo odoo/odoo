@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_lunch_order">
-        <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+        <t t-call="web.html_container">
+                <t t-call="web.external_layout">
                     <div class="page">
                         <div class="oe_structure"/>
 
                         <div class="row">
                             <div class="col-xs-5 col-xs-offset-7">
                                 <div t-field="user.partner_id"
-                                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                             </div>
                         </div>
 
@@ -51,7 +51,7 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-field="line.price"
-                                                t-field-options='{"widget": "monetary", "display_currency": "user.company_id.currency_id"}'/>
+                                                t-options='{"widget": "monetary", "display_currency": user.company_id.currency_id}'/>
                                         </td>
                                     </tr>
                                 </t>

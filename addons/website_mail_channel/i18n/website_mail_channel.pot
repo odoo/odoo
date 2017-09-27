@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
 #, python-format
 msgid "Add a Subscribe Button"
 msgstr ""
@@ -61,14 +61,9 @@ msgstr ""
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:20
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
 #, python-format
 msgid "Discussion List"
-msgstr ""
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
 msgstr ""
 
 #. module: website_mail_channel
@@ -79,6 +74,11 @@ msgstr ""
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
 msgstr ""
 
 #. module: website_mail_channel
@@ -93,14 +93,9 @@ msgid "Mailing Lists"
 msgstr ""
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:23
+#: code:addons/website_mail_channel/models/mail_mail.py:20
 #, python-format
 msgid "Mailing-List"
-msgstr ""
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
 msgstr ""
 
 #. module: website_mail_channel
@@ -114,14 +109,19 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:24
-#, python-format
-msgid "Post to"
+#: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
+msgid "Please confirm subscription to ${object.name}"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
+#: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
+msgid "Please confirm unsubscription to ${object.name}"
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:21
+#, python-format
+msgid "Post to"
 msgstr ""
 
 #. module: website_mail_channel
@@ -135,27 +135,40 @@ msgid "Stay in touch with our Community"
 msgstr ""
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Subscribe"
 msgstr ""
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:25
+#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid "Used to display messages in a paragraph-based chatter using a unique path;"
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "You have been correctly"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
+msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c703e48656c6c6f2c3c2f703e0a3c703e596f7520686176652072657175657374656420746f206265207375627363726962656420746f20746865206d61696c696e67206c697374203c7374726f6e673e247b6f626a6563742e6e616d657d3c2f7374726f6e673e3c2f703e0a3c703e546f20636f6e6669726d2c20706c656173652076697369742074686520666f6c6c6f77696e67206c696e6b3a3c2f703e0a3c703e3c7374726f6e673e3c6120687265663d22247b6374785b27746f6b656e5f75726c275d7d223e247b6374785b27746f6b656e5f75726c275d7d3c2f613e3c2f7374726f6e673e3c2f703e0a3c703e49662074686973207761732061206d697374616b65206f7220796f7520646964206e6f7420726571756573746564207468697320616374696f6e2c20706c656173652069676e6f72652074686973206d6573736167652e3c2f703e0a3c2f646174613e"
 msgstr ""
 
 #. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
+msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c703e48656c6c6f2c3c2f703e0a3c703e596f7520686176652072657175657374656420746f20626520756e7375627363726962656420746f20746865206d61696c696e67206c697374203c7374726f6e673e247b6f626a6563742e6e616d657d3c2f7374726f6e673e3c2f703e0a3c703e546f20636f6e6669726d2c20706c656173652076697369742074686520666f6c6c6f77696e67206c696e6b3a3c2f703e0a3c703e3c7374726f6e673e3c6120687265663d22247b6374785b27746f6b656e5f75726c275d7d223e247b6374785b27746f6b656e5f75726c275d7d3c2f613e3c2f7374726f6e673e3c2f703e0a3c703e49662074686973207761732061206d697374616b65206f7220796f7520646964206e6f7420726571756573746564207468697320616374696f6e2c20706c656173652069676e6f72652074686973206d6573736167652e3c2f703e0a3c2f646174613e"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "a confirmation email has been sent."
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "archives"
 msgstr ""
@@ -199,6 +212,7 @@ msgid "replies"
 msgstr ""
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "send mail"
 msgstr ""
@@ -209,16 +223,28 @@ msgid "show"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "unknown"
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "subscribed"
 msgstr ""
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "to the mailing list."
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "unsubscribe"
 msgstr ""
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "unsubscribed"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr ""
