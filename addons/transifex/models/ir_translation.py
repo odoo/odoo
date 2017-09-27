@@ -41,7 +41,7 @@ class IrTranslation(models.Model):
                 tx_sections.extend(tx_config_file.sections()[1:])
 
         if not base_url or not tx_sections:
-            self.transifex_url = False
+            self.update({'transifex_url': False})
         else:
             base_url = base_url.rstrip('/')
 
