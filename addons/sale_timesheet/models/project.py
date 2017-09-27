@@ -56,7 +56,7 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain=[('is_service', '=', True)])
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id)]")
 
     @api.multi
     def write(self, values):
