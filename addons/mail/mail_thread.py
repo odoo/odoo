@@ -723,7 +723,7 @@ class mail_thread(osv.AbstractModel):
                 alias_ids = self.pool['mail.alias'].search(
                     cr, SUPERUSER_ID, [
                         ('alias_parent_model_id.model', '=', model_name),
-                        ('alias_parent_thread_id', 'in', ids),
+                        ('alias_parent_thread_id', 'in', ids + [0]),
                         ('alias_name', '!=', False)
                     ], context=context)
                 aliases.update(
@@ -731,7 +731,7 @@ class mail_thread(osv.AbstractModel):
                          for alias in self.pool['mail.alias'].browse(cr, SUPERUSER_ID, alias_ids, context=context)))
                 doc_names.update(
                     dict((ng_res[0], ng_res[1])
-                         for ng_res in self.pool[model_name].name_get(cr, SUPERUSER_ID, aliases.keys(), context=context)))
+                         for ng_res in self.pool[model_name].name_get(cr, SUPERUSER_ID, aliases.keys(), context=context) if ng_res[0]))
             # left ids: use catchall
             left_ids = set(ids).difference(set(aliases.keys()))
             if left_ids:
