@@ -121,7 +121,11 @@ class Http(models.AbstractModel):
                 'deletable': True,
                 'main_object': mypage,
             }, mimetype=_guess_mimetype(ext))
+        return False
 
+    @classmethod
+    def _serve_404(cls):
+        req_page = request.httprequest.path
         return request.website.is_publisher() and request.render('website.page_404', {'path': req_page[1:]}) or False
 
     @classmethod
@@ -148,7 +152,7 @@ class Http(models.AbstractModel):
         if redirect:
             return request.redirect(redirect.url_to, code=redirect.type)
 
-        return False
+        return cls._serve_404()
 
     @classmethod
     def _handle_exception(cls, exception):
