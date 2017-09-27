@@ -103,7 +103,9 @@ class AccountAnalyticLine(models.Model):
                     values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
                     values['timesheet_invoice_type'] = 'billable_time'
                 elif so_line.product_id.invoice_policy == 'order':
-                    quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
+                    quantity_hour = unit_amount
+                    if so_line.product_uom.category_id == timesheet_uom.category_id:
+                        quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
                     # compute the total revenue the SO since we are in fixed price
                     total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
                     # compute the total revenue already existing (without the current timesheet line)
