@@ -200,7 +200,8 @@ var ModelFieldSelector = Widget.extend({
                     args: [
                         false,
                         ["store", "searchable", "type", "string", "relation", "selection", "related"]
-                    ]
+                    ],
+                    context: this.getSession().user_context,
                 })
                 .then((function (fields) {
                     modelFieldsCache.cache[model] = sortFields(fields);

@@ -504,7 +504,9 @@
                                         <t t-if="record.sent_date">
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <a>Opened</a>
+                                                    <a name="%(action_view_mail_mail_statistics_mailing)d"
+                                                       context="{'search_default_filter_opened': True}"
+                                                       type="action">Opened</a>
                                                 </div>
                                                 <div class="col-xs-4 text-right">
                                                     <field name="opened_ratio"/> %
@@ -512,7 +514,9 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <a>Replied</a>
+                                                    <a name="%(action_view_mail_mail_statistics_mailing)d"
+                                                       context="{'search_default_filter_replied': True}"
+                                                       type="action">Replied</a>
                                                 </div>
                                                 <div class="col-xs-4 text-right">
                                                     <field name="replied_ratio"/> %
@@ -520,7 +524,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <a>Clicks</a>
+                                                    <a name="%(action_view_mass_mailing_links_statistics)d"
+                                                       type="action">Clicks</a>
                                                 </div>
                                                 <div class="col-xs-4 text-right">
                                                     <field name="clicks_ratio"/> %

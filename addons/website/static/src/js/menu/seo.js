@@ -455,6 +455,7 @@ var SeoConfigurator = Dialog.extend({
             data.website_meta_keywords = this.keywordList.keywords().join(', ');
         }
         this.saveMetaData(data).then(function () {
+           self.htmlPage.changeKeywords(self.keywordList.keywords());
            self.close();
         });
     },
@@ -545,10 +546,6 @@ var SeoConfigurator = Dialog.extend({
         var $preview = this.$('.js_seo_preview');
         $preview.empty();
         preview.appendTo($preview);
-    },
-    destroy: function () {
-        this.htmlPage.changeKeywords(this.keywordList.keywords());
-        this._super.apply(this, arguments);
     },
     updateTable : function (removed) {
         var self = this,

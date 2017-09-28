@@ -1645,24 +1645,25 @@ var BasicModel = AbstractModel.extend({
         var hasOnchange = false;
         var specs = {};
         var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
+        generateSpecs(fieldsInfo, record.fields);
 
-        _.each(Object.keys(fieldsInfo), function (name) {
-            var field = record.fields[name];
-            var fieldInfo = fieldsInfo[name];
-            specs[name] = (field.onChange) || "";
-            if (field.onChange) {
-                hasOnchange = true;
-            }
-            _.each(fieldInfo.views, function (view) {
-                _.each(view.fieldsInfo[view.type], function (field, subname) {
-                    var onChange = view.fields[subname].onChange;
-                    specs[name + '.' + subname] = onChange || "";
-                    if (onChange) {
-                        hasOnchange = true;
-                    }
+        // recursively generates the onchange specs for fields in fieldsInfo,
+        // and their subviews
+        function generateSpecs (fieldsInfo, fields, prefix) {
+            prefix = prefix || '';
+            _.each(Object.keys(fieldsInfo), function (name) {
+                var field = fields[name];
+                var fieldInfo = fieldsInfo[name];
+                var key = prefix + name;
+                specs[key] = (field.onChange) || "";
+                if (field.onChange) {
+                    hasOnchange = true;
+                }
+                _.each(fieldInfo.views, function (view) {
+                    generateSpecs(view.fieldsInfo[view.type], view.fields, key + '.');
                 });
             });
-        });
+        }
         return hasOnchange ? specs : false;
     },
     /**

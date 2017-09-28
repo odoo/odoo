@@ -912,14 +912,14 @@ var ActionManager = Widget.extend({
                 action: JSON.stringify(action),
                 token: new Date().getTime()
             };
-            var url = self.session.url('/web/report', params);
+            var url = session.url('/web/report', params);
             framework.unblockUI();
             $('<a href="'+url+'" target="_blank"></a>')[0].click();
             return;
         }
         var c = crash_manager;
         return $.Deferred(function (d) {
-            self.session.get_file({
+            session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
                 complete: framework.unblockUI,

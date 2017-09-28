@@ -40,6 +40,7 @@ odoo.define('portal.signature_form', function (require){
                 'decor-color': '#D1D0CE',
                 'color': '#000',
                 'background-color': '#fff',
+                'height': '142px',
             });
             this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
         },
@@ -60,7 +61,7 @@ odoo.define('portal.signature_form', function (require){
             var signature = self.$("#o_portal_signature").jSignature('getData', 'image');
             var is_empty = signature ? this.empty_sign[1] === signature[1] : true;
 
-            this.$('#o_portal_sign_name').toggleClass('has-error', !partner_name);
+            this.$('#o_portal_sign_name').parent().toggleClass('has-error', !partner_name);
             this.$('#o_portal_sign_draw').toggleClass('panel-danger', is_empty).toggleClass('panel-default', !is_empty);
             if (is_empty || ! partner_name) {
                 return false;
@@ -85,8 +86,8 @@ odoo.define('portal.signature_form', function (require){
                 }
                 else if (data.success) {
                     $confirm_btn.remove();
-                    var $prout = qweb.render("portal.portal_signature_success", {widget: data});
-                    self.$('#o_portal_sign_draw').parent().replaceWith($prout);
+                    var $success = qweb.render("portal.portal_signature_success", {widget: data});
+                    self.$('#o_portal_sign_draw').parent().replaceWith($success);
                 }
             });
         },

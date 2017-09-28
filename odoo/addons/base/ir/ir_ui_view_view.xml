@@ -33,7 +33,8 @@
                         </page>
                         <page name="inherit_children" string="Inherited Views">
                             <field name="inherit_children_ids" context="{'default_model':model,'default_type':type,'default_inherit_id':active_id,'default_mode':'extension'}">
-                                <tree>
+                                <tree default_order="priority,id">
+                                    <field name="id"/>
                                     <field name="priority"/>
                                     <field name="name"/>
                                     <field name="xml_id"/>

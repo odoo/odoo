@@ -245,7 +245,7 @@ class link_tracker_click(models.Model):
 
         if not again:
             self.create(
-                self._get_click_values(dict(
+                self._get_click_values_from_route(dict(
                     code=code,
                     ip=ip,
                     country_code=country_code,

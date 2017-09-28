@@ -112,7 +112,7 @@ class TestStockFlow(TestStockCommon):
         # ----------------------------------------------------------------------
 
         # Check total no of move lines of incoming shipment. move line e disappear from original picking to go in backorder.
-        self.assertEqual(len(picking_in.move_lines), 6, 'Wrong number of move lines.')
+        self.assertEqual(len(picking_in.move_lines), 4, 'Wrong number of move lines.')
         # Check incoming shipment state.
         self.assertEqual(picking_in.state, 'done', 'Incoming shipment state should be done.')
         # Check incoming shipment move lines state.
@@ -120,12 +120,10 @@ class TestStockFlow(TestStockCommon):
             self.assertEqual(move.state, 'done', 'Wrong state of move line.')
         # Check product A done quantity must be 3 and 1
         moves = self.MoveObj.search([('product_id', '=', self.productA.id), ('picking_id', '=', picking_in.id)])
-        a_done_qty = [move.product_uom_qty for move in moves]
-        self.assertEqual(set(a_done_qty), set([1.0, 3.0]), 'Wrong move quantity for product A.')
+        self.assertEqual(moves.product_uom_qty, 4.0, 'Wrong move quantity for product A.')
         # Check product B done quantity must be 4 and 1
         moves = self.MoveObj.search([('product_id', '=', self.productB.id), ('picking_id', '=', picking_in.id)])
-        b_done_qty = [move.product_uom_qty for move in moves]
-        self.assertEqual(set(b_done_qty), set([4.0, 1.0]), 'Wrong move quantity for product B.')
+        self.assertEqual(moves.product_uom_qty, 5.0, 'Wrong move quantity for product B.')
         # Check product C done quantity must be 7
         c_done_qty = self.MoveObj.search([('product_id', '=', self.productC.id), ('picking_id', '=', picking_in.id)], limit=1).product_uom_qty
         self.assertEqual(c_done_qty, 7.0, 'Wrong move quantity of product C (%s found instead of 7)' % (c_done_qty))
@@ -254,7 +252,7 @@ class TestStockFlow(TestStockCommon):
         # check outgoing shipment status.
         self.assertEqual(picking_out.state, 'done', 'Wrong state of outgoing shipment.')
         # check outgoing shipment total moves and and its state.
-        self.assertEqual(len(picking_out.move_lines), 5, 'Wrong number of move lines')
+        self.assertEqual(len(picking_out.move_lines), 4, 'Wrong number of move lines')
         for move in picking_out.move_lines:
             self.assertEqual(move.state, 'done', 'Wrong state of move line.')
         back_order_out = self.PickingObj.search([('backorder_id', '=', picking_out.id)])
@@ -372,7 +370,7 @@ class TestStockFlow(TestStockCommon):
         # ----------------------------------------------------------------------
 
         # Check total no of move lines.
-        self.assertEqual(len(back_order_in.move_lines), 4, 'Wrong number of move lines')
+        self.assertEqual(len(back_order_in.move_lines), 3, 'Wrong number of move lines')
         # Check incoming shipment state must be 'Done'.
         self.assertEqual(back_order_in.state, 'done', 'Wrong state of picking.')
         # Check incoming shipment move lines state must be 'Done'.
@@ -383,8 +381,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(movesA.product_uom_qty, 10, "Wrong move quantity of product A (%s found instead of 10)" % (movesA.product_uom_qty))
         # Check product C done quantity must be 3.0, 1.0, 2.0
         movesC = self.MoveObj.search([('product_id', '=', self.productC.id), ('picking_id', '=', back_order_in.id)])
-        c_done_qty = [move.product_uom_qty for move in movesC]
-        self.assertEqual(set(c_done_qty), set([3.0, 3.0]), 'Wrong quantity of moves product C.')
+        self.assertEqual(movesC.product_uom_qty, 6.0, 'Wrong quantity of moves product C.')
         # Check product D done quantity must be 5.0 and 3.0
         movesD = self.MoveObj.search([('product_id', '=', self.productD.id), ('picking_id', '=', back_order_in.id)])
         d_done_qty = [move.product_uom_qty for move in movesD]

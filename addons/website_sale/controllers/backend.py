@@ -141,7 +141,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_graph = [{
             '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),
             # Respect read_group format in models.py
-            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
+            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang') or 'en_US'), 0)
         } for d in date_list]
 
         return sales_graph

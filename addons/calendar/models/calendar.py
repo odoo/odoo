@@ -683,16 +683,30 @@ class Meeting(models.Model):
         date_deadline = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date)
-        time_str = date.strftime(format_time)
+        date_str = date.strftime(format_date).decode('utf-8')
+        time_str = date.strftime(format_time).decode('utf-8')
 
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            display_time = _("%s at (%s To %s) (%s)") % (date_str, time_str, duration.strftime(format_time), timezone)
+            duration_time = duration.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at (%s To %s) (%s)") % (
+                date_str,
+                time_str,
+                duration_time,
+                timezone,
+            )
         else:
-            display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
+            dd_date = date_deadline.strftime(format_date).decode('utf-8')
+            dd_time = date_deadline.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at %s To\n %s at %s (%s)") % (
+                date_str,
+                time_str,
+                dd_date,
+                dd_time,
+                timezone,
+            )
         return display_time
 
     def _get_duration(self, start, stop):
@@ -724,6 +738,13 @@ class Meeting(models.Model):
     allday = fields.Boolean('All Day', states={'done': [('readonly', True)]}, default=False)
     start_date = fields.Date('Start Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     start_datetime = fields.Datetime('Start DateTime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
+    # FIXME
+    # If you wonder why `start_datetime` is sometimes not properly recomputed
+    # and desperately returns `False`, this is due to the override of `read()`
+    # hereunder that pollutes the cache at recomputing time.
+    # According to RCO, fixing this should require a redesing of recurring
+    # events and is probably not trivial... Use `start` instead!
+
     stop_date = fields.Date('End Date', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     stop_datetime = fields.Datetime('End Datetime', compute='_compute_dates', inverse='_inverse_dates', store=True, states={'done': [('readonly', True)]}, track_visibility='onchange')  # old date_deadline
     duration = fields.Float('Duration', states={'done': [('readonly', True)]})

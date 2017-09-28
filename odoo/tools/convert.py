@@ -116,29 +116,29 @@ def _eval_xml(self, node, env):
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
         def _process(s):
-            matches = re.finditer(br'[^%]%\((.*?)\)[ds]', s)
+            matches = re.finditer(br'[^%]%\((.*?)\)[ds]'.decode('utf-8'), s)
             done = set()
             for m in matches:
                 found = m.group()[1:]
                 if found in done:
                     continue
                 done.add(found)
-                id = m.groups()[0].decode('utf-8')
+                id = m.groups()[0]
                 if not id in self.idref:
                     self.idref[id] = self.id_get(id)
                 # So funny story: in Python 3, bytes(n: int) returns a
                 # bytestring of n nuls. In Python 2 it obviously returns the
                 # stringified number, which is what we're expecting here
-                s = s.replace(found, pycompat.text_type(self.idref[id]).encode('utf-8'))
-            s = s.replace(b'%%', b'%') # Quite wierd but it's for (somewhat) backward compatibility sake
+                s = s.replace(found, pycompat.text_type(self.idref[id]))
+            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
             return s
 
         if t == 'xml':
             _fix_multiple_roots(node)
-            return b'<?xml version="1.0"?>\n'\
-                +_process(b"".join(etree.tostring(n, encoding='utf-8') for n in node))
+            return '<?xml version="1.0"?>\n'\
+                +_process("".join(etree.tostring(n, encoding='unicode') for n in node))
         if t == 'html':
-            return _process(b"".join(etree.tostring(n, encoding='utf-8') for n in node))
+            return _process("".join(etree.tostring(n, encoding='unicode') for n in node))
 
         data = node.text
         if node.get('file'):

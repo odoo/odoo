@@ -109,7 +109,7 @@ var CalendarView = AbstractView.extend({
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default widgets.QuickCreate
-        //if quick_add = is NOT False and IS specified in view, we this one for widgets.QuickCreate'   
+        //if quick_add = is NOT False and IS specified in view, we this one for widgets.QuickCreate'
         this.controllerParams.quickAddPop = (!('quick_add' in attrs) || utils.toBoolElse(attrs.quick_add+'', true));
         this.controllerParams.disableQuickCreate =  params.disable_quick_create || !this.controllerParams.quickAddPop;
         // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
@@ -118,6 +118,7 @@ var CalendarView = AbstractView.extend({
         this.controllerParams.eventOpenPopup = utils.toBoolElse(attrs.event_open_popup || '', false);
         this.controllerParams.mapping = mapping;
         this.controllerParams.context = params.context || {};
+        this.controllerParams.displayName = params.action && params.action.name;
 
         this.rendererParams.displayFields = displayFields;
         this.rendererParams.eventTemplate = _.findWhere(arch.children, {'tag': 'templates'});

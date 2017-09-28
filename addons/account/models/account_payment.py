@@ -455,7 +455,7 @@ class account_payment(models.Model):
         for rec in self:
 
             if rec.state != 'draft':
-                raise UserError(_("Only a draft payment can be posted. Trying to post a payment in state %s.") % rec.state)
+                raise UserError(_("Only a draft payment can be posted."))
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
                 raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
@@ -475,7 +475,7 @@ class account_payment(models.Model):
                     if rec.payment_type == 'outbound':
                         sequence_code = 'account.payment.supplier.invoice'
             rec.name = self.env['ir.sequence'].with_context(ir_sequence_date=rec.payment_date).next_by_code(sequence_code)
-            if not rec.name and self.payment_type != 'transfer':
+            if not rec.name and rec.payment_type != 'transfer':
                 raise UserError(_("You have to define a sequence for %s in your company.") % (sequence_code,))
 
             # Create the journal entry

@@ -20,7 +20,7 @@ from odoo.addons import decimal_precision as dp
 class SaleOrder(models.Model):
     _name = "sale.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
-    _description = "Sales Order"
+    _description = "Quotation"
     _order = 'date_order desc, id desc'
 
     @api.depends('order_line.price_total')
@@ -811,11 +811,7 @@ class SaleOrderLine(models.Model):
         orders = self.mapped('order_id')
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = ""
-            if any([values['product_uom_qty'] < x.product_uom_qty for x in order_lines]):
-                msg += "<b>" + _(
-                    'The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.') + '</b>'
-            msg += "<ul>"
+            msg = "<b>The ordered quantity has been updated.</b><ul>"
             for line in order_lines:
                 msg += "<li> %s:" % (line.product_id.display_name,)
                 msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
@@ -828,11 +824,8 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        lines = False
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
         result = super(SaleOrderLine, self).write(values)

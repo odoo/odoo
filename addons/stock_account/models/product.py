@@ -77,8 +77,8 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_open_product_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
-        action['domain'] = [('product_id.product_tmpl_id', '=', self.id)]
+        action = self.env.ref('stock_account.product_valuation_action').read()[0]
+        action['domain'] = [('product_tmpl_id', '=', self.id)]
         action['context'] = {
             'search_default_outgoing': True,
             'search_default_incoming': True,
@@ -159,6 +159,7 @@ class ProductProduct(models.Model):
         return candidates
 
     @api.multi
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_stock_value(self):
         for product in self:
             if product.cost_method in ['standard', 'average']:
@@ -167,13 +168,13 @@ class ProductProduct(models.Model):
                 StockMove = self.env['stock.move']
                 domain = [('product_id', '=', product.id)] + StockMove._get_all_base_domain()
                 moves = StockMove.search(domain)
-                product.stock_value = sum(moves.mapped('value'))
+                product.stock_value = sum(moves.mapped('remaining_value'))
 
     @api.multi
     def action_open_product_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
+        action = self.env.ref('stock_account.product_valuation_action').read()[0]
+        action['domain'] = [('id', '=', self.id)]
         action['context'] = {
             'search_default_outgoing': True,
             'search_default_incoming': True,

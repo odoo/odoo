@@ -15,15 +15,15 @@
                 </div>
                 <div id="o_portal_signature" class="panel-body" style="padding: 0"/>
             </div>
-            <div>
-              <button type="submit" class="btn btn-primary o_portal_sign_submit">Sign &amp; Confirm</button>
+            <div class="mt16 pull-right">
+              <button type="submit" class="btn btn-primary o_portal_sign_submit"><t t-esc="widget.options.signLabel or 'Accept &amp; Sign'"/></button>
             </div>
         </form>
     </t>
     <t t-name="portal.portal_signature_success">
         <div class="alert alert-success" role="alert">
-            <strong>Well done!</strong><br />
-            <span t-esc="widget.success_msg"/>
+            <strong>Thank You !</strong><br />
+            <span t-esc="widget.success"/>
             <a t-att-href="widget.redirect_url">Click here to see your document.</a>
         </div>
     </t>

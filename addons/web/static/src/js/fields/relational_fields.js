@@ -1608,7 +1608,7 @@ var FieldMany2ManyTags = AbstractField.extend({
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .badge': '_onOpenColorPicker',
-        'mousedown .o_colorpicker span': '_onUpdateColor',
+        'mousedown .o_colorpicker a': '_onUpdateColor',
         'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
@@ -1681,22 +1681,19 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var self = this;
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
-            var $tag = $('<span>')
-                    .text(m2m.data.display_name)
-                    .data('res_id', m2m.res_id)
-                    .prepend('<span>')
-                    .appendTo(self.$el);
-            if (self.colorField in m2m.data) {
-                if (m2m.data[self.colorField] === 10) {
-                    // 10th color is invisible
-                    $tag.hide();
-                } else {
-                    $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
-                }
-            } else {
-                // display tags in grey by default
-                $tag.addClass('o_tag o_tag_color_0');
+            if (self.colorField in m2m.data && !m2m.data[self.colorField]) {
+                // When a color field is specified and that color is the default
+                // one, the kanban tag is not rendered.
+                return;
             }
+
+            $('<span>', {
+                class: 'o_tag o_tag_color_' + (m2m.data[self.colorField] || 0),
+                text: m2m.data.display_name,
+            })
+            .data('res_id', m2m.res_id)
+            .prepend('<span>')
+            .appendTo(self.$el);
         });
     },
 

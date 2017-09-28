@@ -35,6 +35,10 @@ _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
 
+# First sort criterion for inheritance is priority, second is chronological order of installation
+# Note: natural _order has `name`, but only because that makes list browsing easier
+INHERIT_ORDER = 'priority,id'
+
 
 def keep_query(*keep_params, **additional_params):
     """
@@ -455,9 +459,10 @@ actual arch.
             # used to implement it.
             modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
             views = self.search(conditions + [('model_ids.module', 'in', modules)])
-            views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)])
+            views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
+            views = self.search(conditions + views_cond, order=INHERIT_ORDER)
         else:
-            views = self.search(conditions)
+            views = self.search(conditions, order=INHERIT_ORDER)
 
         return [(view.arch, view.id)
                 for view in views.sudo()
