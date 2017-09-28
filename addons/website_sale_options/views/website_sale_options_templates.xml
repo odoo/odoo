@@ -29,7 +29,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-        <h4 class="modal-title" id="myModalLabel">Add to cart</h4>
+        <h4 class="modal-title" id="myModalLabel">Add to Cart</h4>
       </div>
       <div class="modal-body">
         <table class="table table-striped table-condensed">
@@ -115,14 +115,14 @@
                        "widget": "monetary",
                        "display_currency": website.currency_id
                    }'/>
-                  <p class="css_not_available_msg bg-danger" style="position:absolute; padding: 15px;">Product not available</p>
+                  <p class="css_not_available_msg bg-danger" style="padding: 5px;">Product not available</p>
 
                   <div class='mt8'>
                     <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
                     <a href="#" class="js_add btn btn-sm btn-info"><strong>Add<span class='hidden-xs'> to Cart</span></strong></a>
                     <span class="js_remove hidden">
-                      <span class="js_item">1 Item</span><span class="js_items hidden">5 Items</span><br/>
-                      <a href="#" class="js_remove btn btn-sm btn-info"><small>Remove <span class='hidden-xs'> from Cart</span></small></a>
+                      <span class="js_item">1 </span><span class="js_items hidden">5 </span> <span t-field="product.uom_id.name"/><br/>
+                      <a href="#" class="js_remove btn btn-xs btn-info"><small>Remove <span class='hidden-xs'> from Cart</span></small></a>
                     </span>
                   </div>
                 </td>
@@ -133,7 +133,7 @@
         </div>
         <div class="modal-footer">
           <a class="btn btn-default a-submit js_goto_shop"><i class="fa fa-chevron-left"></i> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
-          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to checkout</span><span class="visible-xs-inline">Checkout</span></a>
+          <a class="btn btn-primary pull-right a-submit"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to Checkout</span><span class="visible-xs-inline">Checkout</span></a>
         </div>
       </div>
     </div>
