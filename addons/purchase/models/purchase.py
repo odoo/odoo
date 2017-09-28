@@ -895,7 +895,7 @@ class ProcurementOrder(models.Model):
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
                         uom_id=procurement.purchase_line_id.product_uom)
 
-                    price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, procurement.purchase_line_id.product_id.supplier_taxes_id, procurement.purchase_line_id.taxes_id, self.company_id) if seller else 0.0
+                    price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, procurement.purchase_line_id.product_id.supplier_taxes_id, procurement.purchase_line_id.taxes_id, procurement.company_id) if seller else 0.0
                     if price_unit and seller and procurement.purchase_line_id.order_id.currency_id and seller.currency_id != procurement.purchase_line_id.order_id.currency_id:
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
