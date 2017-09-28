@@ -127,7 +127,7 @@ class MrpProduction(models.Model):
         ('assigned', 'Available'),
         ('partially_available', 'Partially Available'),
         ('waiting', 'Waiting'),
-        ('none', 'None')], string='Availability',
+        ('none', 'None')], string='Materials Availability',
         compute='_compute_availability', store=True)
 
     unreserve_visible = fields.Boolean(
