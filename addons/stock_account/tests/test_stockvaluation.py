@@ -2149,3 +2149,139 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move7.value, 100.0)
         self.assertEqual(self.product1.standard_price, 10)
+
+    def test_change_cost_method_1(self):
+        """ Change the cost method from FIFO to AVCO.
+        """
+        # ---------------------------------------------------------------------
+        # Use FIFO, make some operations
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        # receive 10@10
+        move1 = self.env['stock.move'].create({
+            'name': '10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+
+        # receive 10@15
+        move2 = self.env['stock.move'].create({
+            'name': '10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 15,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 10.0
+        move2._action_done()
+
+        # sell 1
+        move3 = self.env['stock.move'].create({
+            'name': 'Sale 5 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 1.0
+        move3._action_done()
+
+        self.assertEqual(self.product1.stock_value, 240)
+
+        # ---------------------------------------------------------------------
+        # Change the production valuation to AVCO
+        # ---------------------------------------------------------------------
+        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'average'
+
+        # valuation should stay to ~240
+        self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
+
+        # no accounting entry should be created
+
+        # the cost should now be 12,65
+        # (9 * 10) + (15 * 10) / 19
+        self.assertEqual(self.product1.standard_price, 12.63)
+
+    def test_change_cost_method_2(self):
+        """ Change the cost method from FIFO to standard.
+        """
+        # ---------------------------------------------------------------------
+        # Use FIFO, make some operations
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        # receive 10@10
+        move1 = self.env['stock.move'].create({
+            'name': '10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+
+        # receive 10@15
+        move2 = self.env['stock.move'].create({
+            'name': '10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 15,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 10.0
+        move2._action_done()
+
+        # sell 1
+        move3 = self.env['stock.move'].create({
+            'name': 'Sale 5 units',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 1.0
+        move3._action_done()
+
+        self.assertEqual(self.product1.stock_value, 240)
+
+        # ---------------------------------------------------------------------
+        # Change the production valuation to AVCO
+        # ---------------------------------------------------------------------
+        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'standard'
+
+        # valuation should stay to ~240
+        self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
+
+        # no accounting entry should be created
+
+        # the cost should now be 12,65
+        # (9 * 10) + (15 * 10) / 19
+        self.assertEqual(self.product1.standard_price, 12.63)
