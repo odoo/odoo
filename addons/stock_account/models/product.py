@@ -86,7 +86,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def action_open_product_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock_account.product_valuation_action').read()[0]
+        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
         action['domain'] = [('product_tmpl_id', '=', self.id)]
         action['context'] = {
             'search_default_outgoing': True,
@@ -185,8 +185,8 @@ class ProductProduct(models.Model):
     @api.multi
     def action_open_product_moves(self):
         self.ensure_one()
-        action = self.env.ref('stock_account.product_valuation_action').read()[0]
-        action['domain'] = [('id', '=', self.id)]
+        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
         action['context'] = {
             'search_default_outgoing': True,
             'search_default_incoming': True,
