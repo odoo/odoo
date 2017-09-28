@@ -148,7 +148,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             module = env['ir.module.module'].browse(module_id)
 
             if perform_checks:
-                module.check()
+                module._check()
 
             if package.state=='to upgrade':
                 # upgrading the module information
@@ -164,7 +164,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             # Update translations for all installed languages
             overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module.with_context(overwrite=overwrite).update_translations()
+            module.with_context(overwrite=overwrite)._update_translations()
 
             registry._init_modules.add(package.name)
 
