@@ -62,8 +62,8 @@ class SaleTimesheetController(http.Controller):
             dashboard_values['rates']['total'] += float_round(data.get('unit_amount') / dashboard_total_hours * 100, precision_rounding=hour_rounding)
 
         # money_amount
-        dashboard_values['money_amount']['invoiced'] = sum(values['timesheet_lines'].filtered(lambda l: l.timesheet_invoice_id).mapped('timesheet_revenue'))
-        dashboard_values['money_amount']['to_invoice'] = sum(values['timesheet_lines'].filtered(lambda l: not l.timesheet_invoice_id).mapped('timesheet_revenue'))
+        dashboard_values['money_amount']['invoiced'] = sum(values['timesheet_lines'].mapped('so_line.amt_invoiced'))
+        dashboard_values['money_amount']['to_invoice'] = sum(values['timesheet_lines'].mapped('so_line.amt_to_invoice'))
         dashboard_values['money_amount']['cost'] = sum(values['timesheet_lines'].mapped('amount'))
         dashboard_values['money_amount']['total'] = sum([dashboard_values['money_amount'][item] for item in dashboard_values['money_amount'].keys()])
 
