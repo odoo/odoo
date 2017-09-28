@@ -58,6 +58,15 @@ class ProductTemplate(models.Model):
 
     @api.one
     def _set_cost_method(self):
+        # When going from FIFO to AVCO or to standard, we update the standard price with the
+        # average value in stock.
+        if self.property_cost_method == 'fifo' and self.cost_method in ['average', 'standard']:
+            # Cannot use the `stock_value` computed field as it's already invalidated when
+            # entering this method.
+            valuation = sum([variant._sum_remaining_values() for variant in self.product_variant_ids])
+            qty_available = self.with_context(company_owned=True).qty_available
+            if qty_available:
+                self.standard_price = valuation / qty_available
         return self.write({'property_cost_method': self.cost_method})
 
     @api.multi
@@ -158,17 +167,20 @@ class ProductProduct(models.Model):
         candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
+    def _sum_remaining_values(self):
+        StockMove = self.env['stock.move']
+        domain = [('product_id', '=', self.id)] + StockMove._get_all_base_domain()
+        moves = StockMove.search(domain)
+        return sum(moves.mapped('remaining_value'))
+
     @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'product_tmpl_id.cost_method')
     def _compute_stock_value(self):
         for product in self:
             if product.cost_method in ['standard', 'average']:
                 product.stock_value = product.standard_price * product.with_context(company_owned=True).qty_available
             elif product.cost_method == 'fifo':
-                StockMove = self.env['stock.move']
-                domain = [('product_id', '=', product.id)] + StockMove._get_all_base_domain()
-                moves = StockMove.search(domain)
-                product.stock_value = sum(moves.mapped('remaining_value'))
+                product.stock_value = product._sum_remaining_values()
 
     @api.multi
     def action_open_product_moves(self):
