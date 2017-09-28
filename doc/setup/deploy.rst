@@ -211,7 +211,7 @@ the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo-bin --xmlrpc-port>`
+the :option:`normal HTTP port <odoo-bin --http-port>`
 
 .. warning:: The livechat worker requires the ``psycogreen`` Python module,
              which is not always included with all installation packages.
@@ -357,7 +357,7 @@ To run cron jobs for an Odoo deployment as a WSGI application requires
   :option:`odoo-bin -d`)
 * which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo-bin --no-xmlrpc` or setting ``xmlrpc = False``
+  entirely with :option:`odoo-bin --no-http` or setting ``http_enable = False``
   in the configuration file
 
 LiveChat
