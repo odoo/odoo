@@ -154,7 +154,7 @@
                                     <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 </group>
                                 <group>
-                                    <field name="availability"/>
+                                    <field name="availability" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>
