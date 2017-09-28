@@ -29,11 +29,11 @@
             </div>
 
             <h2>
-                <t t-if="not env.context.get('proforma', False)">
+                <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
                     <span t-if="doc.state not in ['draft','sent']">Order # </span>
                     <span t-if="doc.state in ['draft','sent']">Quotation # </span>
                 </t>
-                <t t-if="env.context.get('proforma', False)">
+                <t t-if="env.context.get('proforma', False) or is_pro_forma">
                     <span>Pro-Forma Invoice # </span>
                 </t>
                 <span t-field="doc.name"/>
@@ -201,4 +201,14 @@
         </t>
     </t>
 </template>
+
+<template id="report_saleorder_pro_forma">
+    <t t-call="web.html_container">
+        <t t-set="is_pro_forma" t-value="True"/>
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
 </odoo>
