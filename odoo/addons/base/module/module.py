@@ -342,7 +342,7 @@ class Module(models.Model):
             raise UserError(msg % (module_name, e.args[0]))
 
     @api.multi
-    def state_update(self, newstate, states_to_update, level=100):
+    def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
 
@@ -361,7 +361,7 @@ class Module(models.Model):
                     update_mods += dep.depend_id
 
             # update dependency modules that require it, and determine demo for module
-            update_demo = update_mods.state_update(newstate, states_to_update, level=level-1)
+            update_demo = update_mods._state_update(newstate, states_to_update, level=level-1)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
@@ -389,7 +389,7 @@ class Module(models.Model):
         modules = self
         while modules:
             # Mark the given modules and their dependencies to be installed.
-            modules.state_update('to install', ['uninstalled'])
+            modules._state_update('to install', ['uninstalled'])
 
             # Determine which auto-installable modules must be installed.
             modules = self.search(auto_domain).filtered(must_install)
@@ -807,9 +807,8 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
-    @assert_log_admin_access
     @api.multi
-    def update_translations(self, filter_lang=None):
+    def _update_translations(self, filter_lang=None):
         if not filter_lang:
             langs = self.env['res.lang'].search([('translatable', '=', True)])
             filter_lang = [lang.code for lang in langs]
@@ -819,7 +818,7 @@ class Module(models.Model):
         self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
 
     @api.multi
-    def check(self):
+    def _check(self):
         for module in self:
             if not module.description:
                 _logger.warning('module %s: description is empty !', module.name)
