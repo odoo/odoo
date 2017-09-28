@@ -109,7 +109,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
-                    <notebook>
+                    <notebook name="information">
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
@@ -147,7 +147,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Miscellaneous">
+                        <page string="Miscellaneous" name="Miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
