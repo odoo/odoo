@@ -204,6 +204,9 @@ class configmanager(object):
                          help="specify the database host")
         group.add_option("--db_port", dest="db_port", my_default=False,
                          help="specify the database port", type="int")
+        group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer',
+                         choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
+                         help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to posgresql")
         group.add_option("--db-template", dest="db_template", my_default="template1",
@@ -381,7 +384,7 @@ class configmanager(object):
 
         # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
-                'db_name', 'db_user', 'db_password', 'db_host',
+                'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
