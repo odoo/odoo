@@ -143,7 +143,7 @@
     overflow-x: visible;
 
     @media (max-width: @screen-xs-max) {
-        padding: 0px;
+        padding: 0px!important;
         overflow-x: auto;
     }
 
@@ -602,7 +602,7 @@
             margin: (@o-kanban-record-margin * 0.5) @o-kanban-record-margin;
 
             @media (max-width: @screen-xs-max) {
-                margin: 0 0 @o-kanban-record-margin 0;
+                margin: 0 0 -1px 0;
                 .o-flex(1, 0, 100%);
             }
 
@@ -631,9 +631,4 @@
 
     // Records colours
     .o-kanban-record-color();
-}
-
-// Introduced with new views (TODO check)
-.o_kanban {
-    height: 100%; // required for grouped kanban views
 }
