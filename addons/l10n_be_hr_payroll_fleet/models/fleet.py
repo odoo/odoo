@@ -69,7 +69,7 @@ class FleetVehicle(models.Model):
         return babel.dates.format_date(
             date=Datetime.from_string(self.acquisition_date),
             format='MMMM y',
-            locale=self._context.get('lang', 'en_US')
+            locale=self._context.get('lang') or 'en_US'
         )
 
     def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
