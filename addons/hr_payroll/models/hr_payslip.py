@@ -391,7 +391,7 @@ class HrPayslip(models.Model):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee = self.env['hr.employee'].browse(employee_id)
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
             'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale))),
             'company_id': employee.company_id.id,
@@ -442,7 +442,7 @@ class HrPayslip(models.Model):
         contract_ids = []
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 
