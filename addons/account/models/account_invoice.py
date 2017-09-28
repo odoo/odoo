@@ -838,6 +838,10 @@ class AccountInvoice(models.Model):
     def get_mail_url(self):
         return self.get_share_url()
 
+    def is_installed_account_payment(self):
+        module_account_payment = self.env['ir.module.module'].search([('name', '=', 'account_payment')])
+        return module_account_payment.state == 'installed'
+
     @api.multi
     def get_formview_id(self, access_uid=None):
         """ Update form view id of action to open the invoice """

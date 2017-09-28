@@ -2,6 +2,7 @@
 import pprint
 import logging
 from werkzeug import urls, utils
+from odoo.exceptions import ValidationError
 
 from odoo import http
 from odoo.http import request
@@ -39,7 +40,13 @@ class AuthorizeController(http.Controller):
 
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = False
+        try:
+            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        except ValidationError as e:
+            return {
+                'error': e.args[0]
+            }
 
         if not token:
             res = {

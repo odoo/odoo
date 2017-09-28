@@ -101,6 +101,7 @@ class SaleOrder(models.Model):
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
+            self.website_description = False
             return
         template = self.template_id.with_context(lang=self.partner_id.lang)
 
@@ -185,7 +186,7 @@ class SaleOrder(models.Model):
 
     def get_mail_url(self):
         self.ensure_one()
-        if self.state not in ['sale', 'done']:
+        if self.template_id and self.template_id.active and self.state not in ['sale', 'done']:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
             return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
         return super(SaleOrder, self).get_mail_url()

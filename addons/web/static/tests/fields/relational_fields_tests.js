@@ -7944,6 +7944,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldMany2ManyCards');
+
+    QUnit.test('widget many2many_cards', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="partner_ids" widget="many2many_cards" options="{\'image_field\': \'image\'}"/>' +
+                '</form>',
+        });
+
+        // add a tag on field partner_ids
+        var $input = form.$('.o_field_many2manytags[name="partner_ids"] .o_input');
+        $input.click(); // opens the dropdown
+        $input.autocomplete('widget').find('li:first()').click(); // adds a tag
+
+        assert.strictEqual(form.$('div.o_field_widget.o_field_many2manytags .o_image_card').children().length, 2,
+            "should contain image");
+        // debugger;
+        form.$('.o_field_many2manytags .o_image_card:contains(first record) .o_delete').click();
+        assert.strictEqual(form.$('.o_selected_row .o_field_many2manytags .o_badge_text:contains(first record)').length, 0,
+            "tag should have been correctly removed");
+        assert.strictEqual(form.$('div.o_field_widget.o_field_many2manytags .o_image_card .o_delete').length, 0,
+            "there should not be a Delete button (readonly)");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyCheckBoxes');
 
     QUnit.test('widget many2many_checkboxes', function (assert) {

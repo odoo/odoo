@@ -841,6 +841,17 @@
         </ul>
     </div>
 </t>
+<t t-name="FieldMany2ManyCards">
+    <t t-foreach="elements" t-as="el">
+        <div class="o_image_card">
+            <div class="o_display_name" t-att-data-index="el_index" t-att-data-id="el.id">
+                <t t-raw="el.display_name" />
+                <span t-if="!readonly" class="fa fa-times o_delete o_card_delete pull-right"/>
+            </div>
+            <span class="o_card_image" t-attf-style="background:url(#{el.image_field});background-repeat: no-repeat;"/>
+        </div>
+    </t>
+</t>
 <t t-name="ProgressBar">
     <div class="o_progressbar">
         <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><div class="o_progress">

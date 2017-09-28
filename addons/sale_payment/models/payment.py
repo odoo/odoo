@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -53,10 +54,9 @@ class PaymentTransaction(models.Model):
                 self.sale_order_id.with_context(send_email=True).action_confirm()
 
         if self.state == 'done':
-            _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s) and generating invoice', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
+            _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
             if self.sale_order_id.state in ('draft', 'sent'):
                 self.sale_order_id.with_context(send_email=True).action_confirm()
-            self._generate_and_pay_invoice()
         elif self.state not in ['cancel', 'error'] and self.sale_order_id.state == 'draft':
             _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id)
             self.sale_order_id.force_quotation_send()
@@ -190,3 +190,11 @@ class PaymentTransaction(models.Model):
             order.pricelist_id.currency_id.id,
             values=values,
         )
+
+
+class PaymentAcquirer(models.Model):
+    _inherit = 'payment.acquirer'
+
+    def _get_cancel_url(self):
+        super(PaymentAcquirer, self)._get_cancel_url()
+        return request.httprequest.headers.get('Referer', '')

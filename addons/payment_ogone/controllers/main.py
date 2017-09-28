@@ -35,7 +35,14 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = False
+        try:
+            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        except ValidationError as e:
+            error = str(e).splitlines()[0].split('|')[-1] or ''
+            return {
+                'error': error
+            }
 
         if not token:
             res = {
