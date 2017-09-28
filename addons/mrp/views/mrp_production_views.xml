@@ -77,7 +77,7 @@
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></h1>
                     </div>
-                    <group>
+                    <group name="headerproduction">
                         <group>
                             <field name="has_moves" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
@@ -109,7 +109,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
-                    <notebook name="information">
+                    <notebook>
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
@@ -147,7 +147,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Miscellaneous" name="Miscellaneous">
+                        <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group groups="stock.group_stock_multi_locations">
                                     <field name="picking_type_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
