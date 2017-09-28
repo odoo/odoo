@@ -256,7 +256,7 @@
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
                             <field name="move_line_ids" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_uom_qty" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
+                                <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_uom_qty and state!='done'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="product.group_uom"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
