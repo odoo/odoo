@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
+import datetime
+import errno
 from os import utime
 import time
 
@@ -10,6 +12,21 @@ from odoo.addons.base.ir.ir_qweb import AssetsBundle
 from odoo.modules.module import get_resource_path
 from odoo.tests import HttpCase
 from odoo.tests.common import TransactionCase
+
+
+def _touch(filepath, asset, t=None):
+    try:
+        utime(filepath, (t, t) if t else None)
+    except OSError as e:
+        if e.errno in [errno.EPERM, errno.EACCES, errno.EROFS]:
+            # Permission denied when touching the asset file, possibly read-only filesystem.
+            # We alter the asset last modified time to simulate a change in the file
+            now = datetime.datetime.now()
+            asset.last_modified = now
+            for sheet in asset.stylesheets:
+                sheet.last_modified = now
+        else:
+            raise
 
 
 class TestJavascriptAssetsBundle(TransactionCase):
@@ -82,9 +99,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         version0 = bundle0.version
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
-        utime(path, None)  # touch
-
         bundle1 = self._get_asset(self.jsbundle_xmlid)
+        _touch(path, bundle1)
+
         bundle1.js()
         last_modified1 = bundle1.last_modified
         version1 = bundle1.version
@@ -210,9 +227,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         version0 = bundle0.version
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
-        utime(path, None)  # touch
-
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        _touch(path, bundle1)
+
         bundle1.css()
         last_modified1 = bundle1.last_modified
         version1 = bundle1.version
@@ -362,10 +379,12 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.env['ir.attachment']._patch_method('unlink', unlink)
         self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
 
-    def _bundle(self, should_create, should_unlink):
-        self.counter.clear()
+    def _get_asset(self):
         files, remains = self.env['ir.qweb']._get_asset_content(self.lessbundle_xmlid, {})
-        asset = AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+        return AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+
+    def _bundle(self, asset, should_create, should_unlink):
+        self.counter.clear()
         asset.to_html(debug='assets')
         self.assertEquals(self.counter['create'], int(should_create))
         self.assertEquals(self.counter['unlink'], int(should_unlink))
@@ -375,16 +394,17 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         are correctly invalidated.
         """
         # Compile for the first time
-        self._bundle(True, False)
+        self._bundle(self._get_asset(), True, False)
 
         # Compile a second time, without changes
-        self._bundle(False, False)
+        self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'less', 'test_lessfile1.less')
         t = time.time() + 5
-        utime(path, (t, t))   # touch
-        self._bundle(True, True)
+        asset = self._get_asset()
+        _touch(path, asset, t=t)
+        self._bundle(asset, True, True)
 
         # Because we are in the same transaction since the beginning of the test, the first asset
         # created and the second one have the same write_date, but the file's last modified date
@@ -394,4 +414,4 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
 
         # Compile a fourth time, without changes
-        self._bundle(False, False)
+        self._bundle(self._get_asset(), False, False)
