@@ -144,10 +144,10 @@ QUnit.test('pager buttons', function (assert) {
 
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
     // O-CMD.PAGER-NEXT
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","N","E","X","T","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
     // O-CMD.PAGER-PREV
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","P","R","E","V","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
     // O-CMD.PAGER-LAST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
@@ -194,7 +194,7 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
     assert.verifySteps(['read'], "update should not have been called yet");
 
     // switch to next record
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","N","E","X","T","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
     // a first update is done to reload the data (thus followed by a read), but
     // update shouldn't be called afterwards
     assert.verifySteps(['read', 'update', 'read']);
