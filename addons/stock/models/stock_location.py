@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil import relativedelta
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -87,6 +88,8 @@ class Location(models.Model):
             name = location.name
             while location.location_id and location.usage != 'view':
                 location = location.location_id
+                if not name:
+                    raise UserError(_('You have to set a name for this location.'))
                 name = location.name + "/" + name
             ret_list.append((orig_location.id, name))
         return ret_list
