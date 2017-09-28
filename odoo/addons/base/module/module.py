@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from collections import defaultdict
+from decorator import decorator
 from operator import attrgetter
 import importlib
 import io
@@ -28,6 +30,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tools.parse_version import parse_version
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -53,6 +56,23 @@ def backup(path, raise_exception=True):
             return bck
         cnt += 1
 
+
+def assert_log_admin_access(method):
+    """Decorator checking that the calling user is an administrator, and logging the call.
+
+    Raises an AccessDenied error if the user does not have administrator privileges, according
+    to `user._is_admin()`.
+    """
+    def check_and_log(method, self, *args, **kwargs):
+        user = self.env.user
+        origin = request.httprequest.remote_addr if request else 'n/a'
+        log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
+        if not self.env.user._is_admin():
+            _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
+            raise AccessDenied()
+        _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
+        return method(self, *args, **kwargs)
+    return decorator(check_and_log, method)
 
 class ModuleCategory(models.Model):
     _name = "ir.module.category"
@@ -352,6 +372,7 @@ class Module(models.Model):
 
         return demo
 
+    @assert_log_admin_access
     @api.multi
     def button_install(self):
         # domain to select auto-installable (but not yet installed) modules
@@ -407,6 +428,7 @@ class Module(models.Model):
 
         return dict(ACTION_DICT, name=_('Install'))
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
@@ -417,11 +439,13 @@ class Module(models.Model):
         """
         return self._button_immediate_function(type(self).button_install)
 
+    @assert_log_admin_access
     @api.multi
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
+    @assert_log_admin_access
     @api.multi
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
@@ -505,6 +529,7 @@ class Module(models.Model):
             'params': {'menu_id': menu.id},
         }
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_uninstall(self):
         """
@@ -513,6 +538,7 @@ class Module(models.Model):
         """
         return self._button_immediate_function(type(self).button_uninstall)
 
+    @assert_log_admin_access
     @api.multi
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
@@ -521,11 +547,13 @@ class Module(models.Model):
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
+    @assert_log_admin_access
     @api.multi
     def button_uninstall_cancel(self):
         self.write({'state': 'installed'})
         return True
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_upgrade(self):
         """
@@ -534,6 +562,7 @@ class Module(models.Model):
         """
         return self._button_immediate_function(type(self).button_upgrade)
 
+    @assert_log_admin_access
     @api.multi
     def button_upgrade(self):
         Dependency = self.env['ir.module.module.dependency']
@@ -564,6 +593,7 @@ class Module(models.Model):
         self.browse(to_install).button_install()
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
+    @assert_log_admin_access
     @api.multi
     def button_upgrade_cancel(self):
         self.write({'state': 'installed'})
@@ -601,6 +631,7 @@ class Module(models.Model):
         return new
 
     # update the list of available packages
+    @assert_log_admin_access
     @api.model
     def update_list(self):
         res = [0, 0]    # [update, add]
@@ -643,10 +674,12 @@ class Module(models.Model):
 
         return res
 
+    @assert_log_admin_access
     @api.multi
     def download(self, download=True):
         return []
 
+    @assert_log_admin_access
     @api.model
     def install_from_urls(self, urls):
         if not self.env.user.has_group('base.group_system'):
@@ -774,6 +807,7 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
+    @assert_log_admin_access
     @api.multi
     def update_translations(self, filter_lang=None):
         if not filter_lang:
