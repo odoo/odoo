@@ -21,6 +21,43 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         return super(WebsiteSaleDelivery, self).payment(**post)
 
+    @http.route(['/shop/<int:carrier_id>/delivery_price'], type='json', auth="public", methods=['POST'], website=True)
+    def get_delivery_price(self, carrier_id=False, **post):
+        order = request.website.sale_get_order()
+        carrier_sudo = request.env['delivery.carrier'].sudo().browse(carrier_id)
+        res = carrier_sudo.rate_shipment(order)
+        data = {}
+        if res['success']:
+            data['price'] = res['price']
+        else:
+            data['error_message'] = res['error_message']
+        return data
+
+    @http.route(['/shop/<int:carrier_id>/delivery_carrier'], type='json', auth="public", methods=['POST'], website=True)
+    def set_delivery_carrier(self, carrier_id=False, **post):
+        order = request.website.sale_get_order()
+        default_amount_tax = order.amount_total - order.amount_untaxed
+        default_amount_untaxed = order.amount_total - (order.delivery_price + default_amount_tax)
+        default_amount_total = default_amount_untaxed + default_amount_tax
+        if order:
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
+        sale_order_data = {
+            'amount_untaxed': order.amount_untaxed,
+            'amount_tax': order.amount_tax,
+            'amount_total': order.amount_total,
+            'delivery_price': order.delivery_price,
+            'delivery_rating_success': order.delivery_rating_success,
+        }
+        if not order.delivery_rating_success:
+            sale_order_data.update({
+                'amount_tax': default_amount_tax,
+                'amount_total': default_amount_total,
+                'amount_untaxed': default_amount_untaxed,
+                'delivery_message': (_("Ouch, you cannot choose this carrier!"), _("%s does not ship to your address, please choose another one.\n(Error: %s)" % (order.carrier_id.name, order.delivery_message))),
+            })
+
+        return sale_order_data
+
     def order_lines_2_google_api(self, order_lines):
         """ Transforms a list of order lines into a dict for google analytics """
         order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)

@@ -1267,7 +1267,7 @@
                     <div class="row">
                         <div class="col-md-offset-2 col-lg-8 col-sm-9">
                             <t t-foreach="errors" t-as="error">
-                                <div class="alert alert-danger" t-if="error">
+                                <div class="alert alert-danger o_website_sale_delivery_error_message" t-if="error">
                                     <h4>
                                         <t t-esc="error[0]" />
                                     </h4>
@@ -1522,19 +1522,19 @@
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
-                    <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                    <span class="o_website_sale_amount_untaxed" t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total_taxes">
                 <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
-                    <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
+                    <span class="o_website_sale_amount_tax" t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total">
                 <span class="col-xs-6 text-right h4">Total:</span>
                 <span class="col-xs-6 text-right-not-xs text-left-xs h4" style="white-space: nowrap;">
-                    <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                    <span class="o_website_sale_amount_total" t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
         </div>
