@@ -55,7 +55,7 @@ class StockPickingBatch(models.Model):
     @api.multi
     def done(self):
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
-        if any(picking.state != 'assigned' for picking in pickings):
+        if any(picking.state not in ('assigned') for picking in pickings):
             raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this batch to done.'))
         for picking in pickings:
             picking.message_post(
@@ -64,9 +64,45 @@ class StockPickingBatch(models.Model):
                     _("Batch Picking"),
                     picking.batch_id.id,
                     picking.batch_id.name))
-        if pickings:
-            pickings.action_done()
-        return self.write({'state': 'done'})
+
+        picking_to_backorder = self.env['stock.picking']
+        picking_without_qty_done = self.env['stock.picking']
+        for picking in pickings:
+            if all([x.qty_done == 0.0 for x in picking.move_line_ids]):
+                # If no lots when needed, raise error
+                picking_type = picking.picking_type_id
+                if (picking_type.use_create_lots or picking_type.use_existing_lots):
+                    for ml in picking.move_line_ids:
+                        if ml.product_id.tracking != 'none':
+                            raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
+                # Check if we need to set some qty done.
+                picking_without_qty_done |= picking
+            elif picking._check_backorder():
+                picking_to_backorder |= picking
+            else:
+                picking.action_done()
+        self.write({'state': 'done'})
+        if picking_without_qty_done:
+            view = self.env.ref('stock.view_immediate_transfer')
+            wiz = self.env['stock.immediate.transfer'].create({
+                'pick_ids': [(4, p.id) for p in picking_without_qty_done],
+                'pick_to_backorder_ids': [(4, p.id) for p in picking_to_backorder],
+            })
+            return {
+                'name': _('Immediate Transfer?'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.immediate.transfer',
+                'views': [(view.id, 'form')],
+                'view_id': view.id,
+                'target': 'new',
+                'res_id': wiz.id,
+                'context': self.env.context,
+            }
+        if picking_to_backorder:
+            return picking_to_backorder.action_generate_backorder_wizard()
+        return True
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
@@ -80,4 +116,4 @@ class StockPicking(models.Model):
     batch_id = fields.Many2one(
         'stock.picking.batch', string='Batch Picking', oldname="wave_id",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help='Batch associated to this picking')
+        help='Batch associated to this picking', copy=False)

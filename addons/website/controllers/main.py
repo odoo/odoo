@@ -207,6 +207,10 @@ class Website(Home):
 
     @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
     def pages_management(self, page=1, sortby='name', search='', **kw):
+        # only website_designer should access the page Management
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.NotFound()
+
         Page = request.env['website.page']
         searchbar_sortings = {
             'url': {'label': _('Sort by Url'), 'order': 'url'},

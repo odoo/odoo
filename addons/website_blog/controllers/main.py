@@ -35,7 +35,7 @@ class WebsiteBlog(http.Controller):
             group['date_begin'] = start
             group['date_end'] = end
 
-            locale = request.context.get('lang', 'en_US')
+            locale = request.context.get('lang') or 'en_US'
             start = pytz.UTC.localize(fields.Datetime.from_string(start))
             tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
 

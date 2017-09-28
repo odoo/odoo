@@ -122,6 +122,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_portal_confirmation(self):
         if not self.portal_confirmation:
             self.portal_confirmation_options = False
+        elif not self.portal_confirmation_options:
+            self.portal_confirmation_options = 'sign'
 
     @api.onchange('portal_confirmation_options')
     def _onchange_portal_confirmation_options(self):

@@ -125,6 +125,17 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
+     * Opens a given group and loads its <limit> first records
+     *
+     * @param {string} groupID
+     * @returns {Deferred}
+     */
+    loadColumnRecords: function (groupID) {
+        var dataPoint = this.localData[groupID];
+        dataPoint.isOpen = true;
+        return this.reload(groupID);
+    },
+    /**
      * Load more records in a group.
      *
      * @param {string} groupID localID of the group

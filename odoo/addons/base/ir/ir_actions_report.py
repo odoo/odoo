@@ -490,7 +490,7 @@ class IrActionsReport(models.Model):
 
         # Check special case having only one record with existing attachment.
         if len(save_in_attachment) == 1 and not pdf_content:
-            return base64.decodestring(save_in_attachment.values()[0].datas)
+            return base64.decodestring(list(save_in_attachment.values())[0].datas)
 
         # Create a list of streams representing all sub-reports part of the final result
         # in order to append the existing attachments and the potentially modified sub-reports
@@ -676,12 +676,13 @@ class IrActionsReport(models.Model):
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)) and config:
-            template = self.env.ref('base.view_company_report_form')
+        discard_logo_check = self.env.context.get('discard_logo_check')
+        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+            template = self.env.ref('base.view_company_report_form_with_print')
             return {
                 'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',
-                'context': {'default_report_name': self.report_name},
+                'context': {'default_report_name': self.report_name, 'discard_logo_check': True},
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_id': self.env.user.company_id.id,

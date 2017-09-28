@@ -4,13 +4,33 @@
 import werkzeug.urls
 
 from odoo import http
-from odoo.addons.http_routing.models.ir_http import unslug
+from odoo.addons.http_routing.models.ir_http import unslug, slug
+from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.tools.translate import _
 from odoo.http import request
 
 
 class WebsiteCustomer(http.Controller):
     _references_per_page = 20
+
+    def sitemap_industry(env, rule, qs):
+        if not qs or qs.lower() in '/customers':
+            yield {'loc': '/customers'}
+
+        Industry = env['res.partner.industry']
+        dom = sitemap_qs2dom(qs, '/customers/industry', Industry._rec_name)
+        for industry in Industry.search(dom):
+            loc = '/customers/industry/%s' % slug(industry)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
+        dom += sitemap_qs2dom(qs, '/customers/country')
+        countries = env['res.partner'].sudo().read_group(dom, ['id', 'country_id'], groupby='country_id')
+        for country in countries:
+            loc = '/customers/country/%s' % slug(country['country_id'])
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
 
     @http.route([
         '/customers',
@@ -21,7 +41,7 @@ class WebsiteCustomer(http.Controller):
         '/customers/industry/<model("res.partner.industry"):industry>/page/<int:page>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_industry)
     def customers(self, country=None, industry=None, page=0, **post):
         Tag = request.env['res.partner.tag']
         Partner = request.env['res.partner']

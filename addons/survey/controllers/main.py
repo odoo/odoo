@@ -32,7 +32,7 @@ class WebsiteSurvey(http.Controller):
 
         # If there is no pages
         if not survey.page_ids:
-            return request.render("survey.nopages")
+            return request.render("survey.nopages", {'survey': survey})
 
         # Everything seems to be ok
         return None

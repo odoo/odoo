@@ -2192,6 +2192,7 @@ class One2many(_RelationalMulti):
         # retrieve the lines in the comodel
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
+        get_id = (lambda rec: rec.id) if comodel._fields[inverse].type == 'many2one' else int
         domain = self.domain(records) if callable(self.domain) else self.domain
         domain = domain + [(inverse, 'in', records.ids)]
         lines = comodel.search(domain, limit=self.limit)
@@ -2200,7 +2201,7 @@ class One2many(_RelationalMulti):
         group = defaultdict(list)
         for line in lines.with_context(prefetch_fields=False):
             # line[inverse] may be a record or an integer
-            group[int(line[inverse])].append(line.id)
+            group[get_id(line[inverse])].append(line.id)
 
         # store result in cache
         cache = records.env.cache

@@ -265,19 +265,19 @@ return {
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        var $container = $('<div class="checkbox o_checkbox"><label><input type="checkbox"/><span/></label></div>');
         if (options && options.prop) {
-            $container.children('input').prop(options.prop);
+            $container.find('input').prop(options.prop);
         }
         if (options && options.text) {
-            $container = $('<label/>').append(
-                $container,
+            $container.find('label').append(
                 $('<span/>', {
-                    class: 'ml8',
                     text: options.text,
+                    class: 'o_checkbox_label',
                 })
             );
         }
+
         return $container;
     },
     /**

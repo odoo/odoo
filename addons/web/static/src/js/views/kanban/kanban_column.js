@@ -99,7 +99,7 @@ var KanbanColumn = Widget.extend({
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
-        if (config.device.size_class > config.device.SIZES.XS && this.draggable !== false) {
+        if (!config.isMobile && this.draggable !== false) {
             // deactivate sortable in mobile mode.  It does not work anyway,
             // and it breaks horizontal scrolling in kanban views.  Someday, we
             // should find a way to use the touch events to make sortable work.
@@ -140,6 +140,7 @@ var KanbanColumn = Widget.extend({
             }
         });
         if (this.barOptions) {
+            this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
             defs.push(this.progressBar.appendTo(this.$header));
         }
@@ -238,7 +239,7 @@ var KanbanColumn = Widget.extend({
         this.$header.find('.o_column_title').text(title);
         this.$header.find('.o-kanban-count').text(this.records.length);
 
-        this.$el.toggleClass('o_column_folded', this.folded);
+        this.$el.toggleClass('o_column_folded', this.folded && !config.isMobile);
         var tooltip = this.size + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
         this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);

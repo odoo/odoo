@@ -3206,6 +3206,54 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('pressing escape in editable o2m list in dialog', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "partner,false,form": '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal .o_data_row.o_selected_row').length, 1,
+            "there should be a row in edition in the dialog");
+
+        // trigger keydown ESCAPE in the edited row
+        $('.modal .o_data_cell input').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+
+        assert.strictEqual($('.modal').length, 1,
+            "dialog should still be open");
+        assert.strictEqual($('.modal .o_data_row').length, 0,
+            "the row should have been removed");
+
+        form.destroy();
+    });
+
     QUnit.test('editable o2m with onchange and required field: delete an invalid line', function (assert) {
         assert.expect(5);
 
@@ -5913,7 +5961,47 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange on a one2many containing a one2many', function (assert) {
+        // the purpose of this test is to ensure that the onchange specs are
+        // correctly and recursively computed
+        assert.expect(1);
 
+        this.data.partner.onchanges = {
+            p: function () {}
+        };
+        var checkOnchange = false;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree><field name="display_name"/></tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                            '<field name="p">' +
+                                '<tree editable="bottom"><field name="display_name"/></tree>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange' && checkOnchange) {
+                    assert.strictEqual(args.args[3]['p.p.display_name'], '',
+                        "onchange specs should be computed recursively");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal .o_data_cell input').val('new record').trigger('input');
+        checkOnchange = true;
+        $('.modal .modal-footer .btn-primary').click(); // save (should trigger the onchange)
+
+        form.destroy();
+    });
     QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
         assert.expect(12);
 
@@ -7454,9 +7542,11 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags: update color', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.records[0].timmy = [12, 14];
+        this.data.partner_type.records[0].color = 0;
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -7467,16 +7557,20 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
+        // First checks that default color 0 is rendered as 0 color
+        assert.ok(form.$('span:first()').is('.o_tag_color_0'),
+            'first tag color should be 0');
+
         // Update the color in readonly
         form.$('span:first()').click();
-        $('.o_colorpicker span[data-color="1"]').trigger('mousedown'); // choose color 1
+        $('.o_colorpicker a[data-color="1"]').trigger('mousedown'); // choose color 1
         assert.strictEqual(form.$('span:first()').data('color'), 1,
             'should have correctly updated the color (in readonly)');
 
         // Update the color in edit
         form.$buttons.find('.o_form_button_edit').click();
         form.$('span:first()').click();
-        $('.o_colorpicker span[data-color="6"]').trigger('mousedown'); // choose color 6
+        $('.o_colorpicker a[data-color="6"]').trigger('mousedown'); // choose color 6
         assert.strictEqual(form.$('span:first()').data('color'), 6,
             'should have correctly updated the color (in edit)');
         form.destroy();

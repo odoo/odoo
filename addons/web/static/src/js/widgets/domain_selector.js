@@ -636,7 +636,7 @@ var DomainLeaf = DomainNode.extend({
                 // Set list of values according to field type
                 this.selectionChoices = null;
                 if (selectedField.type === "boolean") {
-                    this.selectionChoices = [["1", "set (true)"], ["0", "not set (false)"]];
+                    this.selectionChoices = [["1", _t("set (true)")], ["0", _t("not set (false)")]];
                 } else if (selectedField.type === "selection") {
                     this.selectionChoices = selectedField.selection;
                 }
