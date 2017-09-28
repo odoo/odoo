@@ -10,7 +10,7 @@
 
     <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
-            <t t-set="in_wish" t-value="product.product_variant_ids[0] in request.env.user.partner_id.wishlist_ids.mapped('product_id')"/>
+            <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
             <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart"></span></a>
         </xpath>
     </template>
@@ -18,7 +18,7 @@
     <template id="product_add_to_wishlist" name='Add to wishlist in product page' inherit_id="website_sale.product" priority="20">
         <xpath expr="//a[@id='add_to_cart']" position="after">
             <t t-if="product.env.ref('website_sale_wishlist.add_to_wishlist').active">
-                <t t-set="in_wish" t-value="product.product_variant_ids[0] in request.env.user.partner_id.wishlist_ids.mapped('product_id')"/>
+                <t t-set="in_wish" t-value="product.product_variant_ids &amp; request.env['product.wishlist'].current().mapped('product_id')"/>
                 <a class="btn btn-default btn-lg mt8 o_add_wishlist_dyn" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart"></span></a>
             </t>
         </xpath>
@@ -26,9 +26,9 @@
 
     <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
         <xpath expr="//header//ul[@id='top_menu']/li[@id='my_cart']" position="after">
-            <t t-if="(request.env.user.id != request.website.user_id.id) and request.env.ref('website_sale_wishlist.add_to_wishlist').active">
-                <t t-set='wishcount' t-value="request.env['product.wishlist'].search_count([('partner_id', '=', request.env.user.partner_id.id)])"/>
-                <li id="my_wish" t-att-style="not wishcount and 'display:none'">
+            <t t-if="request.env.ref('website_sale_wishlist.add_to_wishlist').active">
+                <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                <li id="my_wish" t-att-class="not wishcount and 'hidden'">
                     <a href="/shop/wishlist">
                         <i class="fa fa-heart"></i>
                         Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink label label-primary"><t t-esc='wishcount'/></sup>
