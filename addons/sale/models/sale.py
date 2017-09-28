@@ -182,10 +182,6 @@ class SaleOrder(models.Model):
         return False
 
     @api.multi
-    def button_dummy(self):
-        return True
-
-    @api.multi
     def unlink(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
