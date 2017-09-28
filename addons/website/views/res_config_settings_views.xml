@@ -26,7 +26,7 @@
                                             </div>
                                             <div class="row">
                                                 <label class="col-md-3 o_light_label" for="favicon" />
-                                                <field name="favicon" widget="image"/>
+                                                <field name="favicon" widget="image" class="pull-left oe_avatar"/>
                                             </div>
                                         </div>
                                     </div>
@@ -202,5 +202,19 @@
             action="action_website_configuration"
             parent="menu_website_global_configuration"
             groups="base.group_system"/>
+
+        <menuitem name="Pages"
+            id="menu_website_pages_list"
+            action="action_website_pages_list"
+            parent="menu_website_global_configuration"
+            sequence="20"
+            groups="base.group_no_one"/>
+
+        <menuitem name="Redirects"
+            id="menu_website_redirect_list"
+            action="action_website_redirect_list"
+            parent="menu_website_global_configuration"
+            sequence="30"
+            groups="base.group_no_one"/>
 
 </odoo>

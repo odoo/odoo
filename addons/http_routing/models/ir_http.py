@@ -170,7 +170,9 @@ def is_multilang_url(local_url, langs=None):
         func = router.match(path, method='POST', query_args=query_string)[0]
         return (func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
-    except Exception:
+    except werkzeug.exceptions.NotFound:
+        return True
+    except Exception as e:
         return False
 
 
@@ -318,7 +320,7 @@ class IrHttp(models.AbstractModel):
         # locate the controller method
         try:
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
-                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
+                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string.decode('utf-8')
                 return werkzeug.utils.redirect(new_url, 301)
             rule, arguments = cls._find_handler(return_rule=True)
             func = rule.endpoint
@@ -331,7 +333,7 @@ class IrHttp(models.AbstractModel):
 
         request.is_frontend_multilang = (
             request.is_frontend and
-            func and func.routing.get('multilang', func.routing['type'] == 'http')
+            (not func or (func and func.routing.get('multilang', func.routing['type'] == 'http')))
         )
 
         cls._geoip_setup_resolver()
@@ -373,7 +375,7 @@ class IrHttp(models.AbstractModel):
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
                     routing_error = None
-                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                    redirect = request.redirect(path + '?' + request.httprequest.query_string.decode('utf-8'))
                     redirect.set_cookie('frontend_lang', request.lang)
                     return redirect
                 elif url_lang:
@@ -432,5 +434,5 @@ class IrHttp(models.AbstractModel):
                 if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
-                    path += '?' + request.httprequest.query_string
+                    path += '?' + request.httprequest.query_string.decode('utf-8')
                 return werkzeug.utils.redirect(path, code=301)

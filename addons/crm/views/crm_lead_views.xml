@@ -184,6 +184,7 @@
         <record id="view_crm_lead_kanban" model="ir.ui.view">
             <field name="name">crm.lead.kanban</field>
             <field name="model">crm.lead</field>
+            <field name="priority" eval="100"/>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
@@ -282,6 +283,7 @@
         <record id="crm_case_kanban_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.kanban.lead</field>
             <field name="model">crm.lead</field>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="crm.create_opportunity_simplified">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
@@ -750,7 +752,10 @@ if record:
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
-            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'default_type':'lead',

@@ -1309,14 +1309,18 @@
             <span class="oe_topbar_name"/>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li><a href="#" data-menu="documentation">Documentation</a></li>
-            <li><a href="#" data-menu="support">Support</a></li>
-            <li class="divider"/>
-            <li><a href="#" data-menu="settings">Preferences</a></li>
-            <li><a href="#" data-menu="account">My Odoo.com account</a></li>
-            <li><a href="#" data-menu="logout">Log out</a></li>
+            <t t-call="UserMenu.Actions"/>
         </ul>
     </li>
+</t>
+
+<t t-name="UserMenu.Actions">
+    <li><a href="#" data-menu="documentation">Documentation</a></li>
+    <li><a href="#" data-menu="support">Support</a></li>
+    <li class="divider"/>
+    <li><a href="#" data-menu="settings">Preferences</a></li>
+    <li><a href="#" data-menu="account">My Odoo.com account</a></li>
+    <li><a href="#" data-menu="logout">Log out</a></li>
 </t>
 
 <t t-name="SwitchCompanyMenu">

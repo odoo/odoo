@@ -107,7 +107,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_valuation_tree"/>
-            <field name="domain">[('type', '=', 'product')]</field>
+            <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -122,7 +122,7 @@
              <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
              <field name="arch" type="xml">
                  <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
-                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
+                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
                  </xpath>
              </field>
         </record>
@@ -133,7 +133,7 @@
              <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
              <field name="arch" type="xml">
                  <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
-                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
+                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
                  </xpath>
              </field>
         </record>

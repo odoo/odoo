@@ -13,7 +13,7 @@ Allows you to add delivery methods in sale orders and picking.
 You can define your own carrier for prices. When creating
 invoices from picking, the system is able to add and compute the shipping line.
 """,
-    'depends': ['sale_stock'],
+    'depends': ['sale_stock', 'sale_management'],
     'data': [
         'security/ir.model.access.csv',
         'security/delivery_carrier_security.xml',

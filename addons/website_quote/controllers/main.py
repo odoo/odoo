@@ -22,18 +22,11 @@ class CustomerPortal(CustomerPortal):
                 return request.redirect('/quote/%s/%s' % (order, access_token or ''))
         return super(CustomerPortal, self).portal_order_page(order=order, access_token=access_token, **kw)
 
-    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
-    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        try:
-            order_sudo = self._order_check_access(res_id, access_token=access_token)
-        except exceptions.AccessError:
-            pass
-        else:
-            if order_sudo.require_payment:
-                return {
-                    'error': _('Order is not in a state requiring customer validation.')
-                }
-        return super(CustomerPortal, self).portal_quote_accept(res_id, access_token=access_token, partner_name=partner_name, signature=signature)
+    def _portal_quote_user_can_accept(self, order_id):
+        result = super(CustomerPortal, self)._portal_quote_user_can_accept(order_id)
+        order_sudo = request.env['sale.order'].sudo().browse(order_id)
+        # either use quote template settings or fallback on default behavior
+        return not order_sudo.require_payment if order_sudo.template_id else result
 
 
 class sale_quote(http.Controller):
@@ -55,7 +48,7 @@ class sale_quote(http.Controller):
         if Order and request.session.get('view_quote') != now and request.env.user.share:
             request.session['view_quote'] = now
             body = _('Quotation viewed by customer')
-            _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, token_field="access_token", message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
+            _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
         if not Order:
             return request.render('website.404')
 
@@ -124,7 +117,7 @@ class sale_quote(http.Controller):
         Order.action_cancel()
         message = post.get('decline_message')
         if message:
-            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token, 'token_field': 'access_token'} if token else {})
+            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token} if token else {})
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
 
     @http.route(['/quote/update_line'], type='json', auth="public", website=True)

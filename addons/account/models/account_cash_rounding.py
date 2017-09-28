@@ -23,7 +23,7 @@ class AccountCashRounding(models.Model):
     account_id = fields.Many2one('account.account', string='Account')
     rounding_method = fields.Selection(string='Rounding Method', required=True,
         selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
-        default='HALF-UP', help='These values must correspond to the rounding_method of the float_round tools method.')
+        default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
 
     @api.multi
     def round(self, amount):

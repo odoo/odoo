@@ -69,17 +69,15 @@ rte.Class.include({
         return this._super.apply(this, arguments);
     },
     _saveElement: function ($el, context) {
+        var defs = [this._super.apply(this, arguments)];
         // TODO the o_dirty class is not put on the right element for blog cover
         // edition. For some strange reason, it was forcly put (even if not
         // dirty) in <= saas-16 but this is not the case anymore.
-        if (this.__blogCoverSaved) {
-            return $.when();
-        }
         var $blogContainer = $el.closest('.o_blog_cover_container');
-        if ($blogContainer.length) {
+        if (!this.__blogCoverSaved && $blogContainer.length) {
             $el = $blogContainer;
             this.__blogCoverSaved = true;
-            return this._rpc({
+            defs.push(this._rpc({
                 route: '/blog/post_change_background',
                 params: {
                     post_id: parseInt($el.closest("[name=\"blog_post\"], .website_blog").find("[data-oe-model=\"blog.post\"]").first().data("oe-id"), 10),
@@ -90,9 +88,9 @@ rte.Class.include({
                         "resize_class": $el.data("cover_class"),
                     },
                 },
-            });
+            }));
         }
-        return this._super.apply(this, arguments);
+        return $.when.apply($, defs);
     },
 });
 

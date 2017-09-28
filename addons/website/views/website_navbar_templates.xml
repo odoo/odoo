@@ -85,7 +85,7 @@
                     <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
                     </li>
-                    <li t-if="'website_published' in main_object.fields_get()">
+                    <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
                         <a class="btn btn-primary btn-xs dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>

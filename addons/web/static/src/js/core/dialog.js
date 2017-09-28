@@ -247,7 +247,7 @@ Dialog.confirm = function (owner, message, options) {
  */
 Dialog.safeConfirm = function (owner, message, options) {
     var $checkbox = dom.renderCheckbox({
-        text: options && options.securityMessage || _t("I am sure about this"),
+        text: options && options.securityMessage || _t("I am sure about this."),
     }).addClass('mb0');
     var $securityCheck = $('<div/>', {
         class: 'alert alert-' + (options && options.securityLevel || 'warning') + ' mt8 mb0',

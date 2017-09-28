@@ -13,10 +13,12 @@ class TestWorkOrderProcess(common.TransactionCase):
 
     def test_00_workorder_process(self):
         """ Testing consume quants and produced quants with workorder """
+
         dining_table = self.env.ref("mrp.product_product_computer_desk")
         product_table_sheet = self.env.ref('mrp.product_product_computer_desk_head')
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
+        product_screw = self.env.ref('mrp.product_product_computer_desk_screw')
 
         production_table = self.env['mrp.production'].create({
             'product_id': dining_table.id,
@@ -59,6 +61,11 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'product_qty': 20,
                 'prod_lot_id': lot_bolt.id,
                 'location_id': self.source_location_id
+            }), (0, 0, {
+                'product_id': product_screw.id,
+                'product_uom_id': product_screw.uom_id.id,
+                'product_qty': 20,
+                'location_id': self.source_location_id
             })]
         })
         inventory.action_done()
@@ -66,72 +73,44 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Create work order
         production_table.button_plan()
         # Check Work order created or not
-        self.assertEqual(len(production_table.workorder_ids), 3)
+        self.assertEqual(len(production_table.workorder_ids), 1)
 
         # ---------------------------------------------------------
         # Process all workorder and check it state.
         # ----------------------------------------------------------
 
-        workorders = production_table.workorder_ids
-        self.assertEqual(workorders[0].state, 'ready', "First workorder state should be ready.")
-        self.assertEqual(workorders[1].state, 'pending')
-        self.assertEqual(workorders[2].state, 'pending')
+        workorder = production_table.workorder_ids[0]
+        self.assertEqual(workorder.state, 'ready', "workorder state should be ready.")
 
         # --------------------------------------------------------------
-        # Process cutting operation...
+        # Process assembly line
         # ---------------------------------------------------------
 
         finished_lot =self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
-        workorders[0].write({'final_lot_id': finished_lot.id})
-        workorders[0].button_start()
-        workorders[0].active_move_line_ids[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
-        self.assertEqual(workorders[0].state, 'progress')
-        workorders[0].record_production()
-        self.assertEqual(workorders[0].state, 'done')
+        workorder.write({'final_lot_id': finished_lot.id})
+        workorder.button_start()
+        for active_move_line_id in workorder.active_move_line_ids:
+            if active_move_line_id.product_id.id == product_bolt.id:
+                active_move_line_id.write({'lot_id': lot_bolt.id, 'qty_done': 1})
+            if active_move_line_id.product_id.id == product_table_sheet.id:
+                active_move_line_id.write({'lot_id': lot_sheet.id, 'qty_done': 1})
+            if active_move_line_id.product_id.id == product_table_leg.id:
+                active_move_line_id.write({'lot_id': lot_leg.id, 'qty_done': 1})
+        self.assertEqual(workorder.state, 'progress')
+        workorder.record_production()
+        self.assertEqual(workorder.state, 'done')
         move_table_sheet = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_sheet)
         self.assertEqual(move_table_sheet.quantity_done, 1)
-
-        # --------------------------------------------------------------
-        # Process drilling operation ...
-        # ---------------------------------------------------------
-
-        workorders[1].button_start()
-        workorders[1].active_move_line_ids[0].write({'lot_id': lot_leg.id, 'qty_done': 4})
-        workorders[1].record_production()
-        move_leg = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_leg)
-        self.assertEqual(workorders[1].state, 'done')
-        self.assertEqual(move_leg.quantity_done, 4)
-
-        # --------------------------------------------------------------
-        # Process fitting operation ...
-        # ---------------------------------------------------------
-
-        finish_move = production_table.move_finished_ids.filtered(lambda x : x.product_id.id == dining_table.id)
-
-        workorders[2].button_start()
-        move_lot = workorders[2].active_move_line_ids[0]
-        move_lot.write({'lot_id': lot_bolt.id, 'qty_done': 4})
-        move_table_bolt = production_table.move_raw_ids.filtered(lambda x : x.product_id.id == product_bolt.id)
-        workorders[2].record_production()
-        self.assertEqual(workorders[2].state, 'done')
-        self.assertEqual(move_table_bolt.quantity_done, 4)
-
-        # -----------------------------------------
-        # Post inventory of manufacturing order
-        # -----------------------------------------
-
-        # This behaviour was changed
-        #self.assertEqual(production_table.state, 'done', "Production order should be in done state.")
 
         # ---------------------------------------------------------------
         # Check consume quants and produce quants after posting inventory
         # ---------------------------------------------------------------
         production_table.button_mark_done()
-# TODO: check quantities in stock then
-#         self.assertEqual(sum(move_table_sheet.quant_ids.mapped('qty')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
-#         self.assertEqual(sum(move_leg.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
-#         self.assertEqual(sum(move_table_bolt.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
-        #consume_quants = move_table_sheet.quant_ids + move_leg.quant_ids + move_table_bolt.quant_ids
+
+        self.assertEqual(product_screw.qty_available, 10)
+        self.assertEqual(product_bolt.qty_available, 19)
+        self.assertEqual(product_table_leg.qty_available, 19)
+        self.assertEqual(product_table_sheet.qty_available, 19)
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """

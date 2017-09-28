@@ -244,3 +244,18 @@ class Company(models.Model):
     def open_company_edit_report(self):
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
+
+    @api.multi
+    def write_company_and_print_report(self, values):
+        res = self.write(values)
+
+        report_name = values.get('default_report_name')
+        active_ids = values.get('active_ids')
+        active_model = values.get('active_model')
+        if report_name and active_ids and active_model:
+            docids = self.env[active_model].browse(active_ids)
+            return (self.env['ir.actions.report'].search([('report_name', '=', report_name)], limit=1)
+                        .with_context(values)
+                        .report_action(docids))
+        else:
+            return res
