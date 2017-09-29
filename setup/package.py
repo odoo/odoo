@@ -270,14 +270,14 @@ def _prepare_build_dir(o, win32=False):
     if not win32:
         cmd += ['--exclude', 'setup/win32']
     system(cmd + ['%s/' % o.odoo_dir, o.build_dir])
-    try:
-        for addon_path in glob(join(o.build_dir, 'addons/*')):
-            if addon_path.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
+    for addon_path in glob(join(o.build_dir, 'addons/*')):
+        if addon_path.split(os.path.sep)[-1] not in ADDONS_NOT_TO_PUBLISH:
+            try:
                 shutil.move(addon_path, join(o.build_dir, 'odoo/addons'))
-    except shutil.Error:
-        # Thrown when the add-on is already in odoo/addons (if _prepare_build_dir
-        # has already been called once)
-        pass
+            except shutil.Error as e:
+                # Thrown when the add-on is already in odoo/addons (if _prepare_build_dir
+                # has already been called once)
+                print("Warning '{}' while moving addon '{}'".format(e,addon_path), file=stderr)
 
 def build_tgz(o):
     system(['python3', 'setup.py', 'sdist', '--quiet', '--formats=gztar,zip'], o.build_dir)
