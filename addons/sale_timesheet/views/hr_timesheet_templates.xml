@@ -107,10 +107,8 @@
                                             <t t-esc="dashboard['hours']['total']" t-options="{'widget': 'float_time'}"/>
                                         </td>
                                         <td><b>Total</b></td>
-                                        <td class="o_timesheet_plan_dashboard_total">
-                                            <t t-esc="dashboard['rates']['total']"/> %
-                                        </td>
-                                        <td><b>Total</b></td>
+                                        <td></td>
+                                        <td></td>
                                         <td class="o_timesheet_plan_dashboard_total">
                                             <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                             <t t-esc="dashboard['money_amount']['total']"/>
