@@ -6002,6 +6002,7 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
     QUnit.test('editing tabbed one2many (editable=bottom)', function (assert) {
         assert.expect(12);
 
@@ -6114,6 +6115,49 @@ QUnit.module('relational_fields', {
             "should have 40 data rows on the current page");
 
         assert.verifySteps(['read', 'read', 'read', 'default_get', 'write', 'read', 'read']);
+        form.destroy();
+    });
+
+    QUnit.test('focus is correctly reset after an onchange in an x2many', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {
+            int_field: function () {}
+        };
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="int_field"/>' +
+                            '<field name="qux"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    // delay the onchange RPC
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        def = $.Deferred();
+        form.$('.o_field_widget[name=int_field]')
+            .val('44')
+            .trigger('input')
+            .trigger({type: 'keydown', which: $.ui.keyCode.TAB});
+        def.resolve();
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name=qux]')[0],
+            "qux field should have the focus");
+
         form.destroy();
     });
 

@@ -12,6 +12,7 @@ odoo.define('web.EditableListRenderer', function (require) {
  * view. It uses the same widgets, but the code is totally stand alone.
  */
 var core = require('web.core');
+var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
 
@@ -127,6 +128,17 @@ ListRenderer.include({
      */
     confirmUpdate: function (state, id, fields, ev) {
         var self = this;
+
+        // store the cursor position to restore it once potential onchanges have
+        // been applied
+        var currentRowID, currentWidget, focusedElement, selectionRange;
+        if (self.currentRow !== null) {
+            currentRowID = this.state.data[this.currentRow].id;
+            currentWidget = this.allFieldWidgets[currentRowID][this.currentCol];
+            focusedElement = currentWidget.getFocusableElement().get(0);
+            selectionRange = dom.getSelectionRange(focusedElement);
+        }
+
         var oldData = this.state.data;
         this.state = state;
         return this.confirmChange(state, id, fields, ev).then(function () {
@@ -160,6 +172,13 @@ ListRenderer.include({
             });
             if (self.currentRow !== null) {
                 self.currentRow = newRowIndex;
+                return self._selectCell(newRowIndex, self.currentCol, {force: true}).then(function () {
+                    // restore the cursor position
+                    currentRowID = self.state.data[newRowIndex].id;
+                    currentWidget = self.allFieldWidgets[currentRowID][self.currentCol];
+                    focusedElement = currentWidget.getFocusableElement().get(0);
+                    dom.setSelectionRange(focusedElement, selectionRange);
+                });
             }
         });
     },
@@ -544,14 +563,18 @@ ListRenderer.include({
      *   triggered the cell selection
      *   selected from the colIndex to the last column, then we wrap around and
      *   try to select a widget starting from the beginning
+     * @param {boolean} [options.force=false] if true, force selecting the cell
+     *   even if seems to be already the selected one (useful after a re-
+     *   rendering, to reset the focus on the correct field)
      * @return {Deferred} fails if no cell could be selected
      */
     _selectCell: function (rowIndex, colIndex, options) {
+        options = options || {};
         // Do nothing if the user tries to select current cell
-        if (rowIndex === this.currentRow && colIndex === this.currentCol) {
+        if (!options.force && rowIndex === this.currentRow && colIndex === this.currentCol) {
             return $.when();
         }
-        var wrap = (!options || options.wrap === undefined) ? true : options.wrap;
+        var wrap = options.wrap === undefined ? true : options.wrap;
 
         // Select the row then activate the widget in the correct cell
         var self = this;
@@ -599,6 +622,12 @@ ListRenderer.include({
         // To select a row, the currently selected one must be unselected first
         var self = this;
         return this.unselectRow().then(function () {
+            if (self.state.data.length <= rowIndex) {
+                // The row to selected doesn't exist anymore (probably because
+                // an onchange triggered when unselecting the previous one
+                // removes rows)
+                return $.Deferred().reject();
+            }
             // Notify the controller we want to make a record editable
             var def = $.Deferred();
             self.trigger_up('edit_line', {

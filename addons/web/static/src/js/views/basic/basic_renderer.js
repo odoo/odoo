@@ -127,7 +127,7 @@ var BasicRenderer = AbstractRenderer.extend({
         this.editRecord(id);
         if (typeof offset === "number") {
             var field = _.findWhere(this.allFieldWidgets[id], {name: fieldName});
-            dom.setCursor(field.getFocusableElement(), offset);
+            dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
 
