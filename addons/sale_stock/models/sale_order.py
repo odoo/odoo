@@ -58,7 +58,13 @@ class SaleOrder(models.Model):
         view, if there is only one delivery order to show.
         '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
-        action['domain'] = [('id', 'in', self.picking_ids.ids)]
+
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
         return action
 
     @api.multi
