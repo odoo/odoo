@@ -22,9 +22,7 @@ QUnit.module('Discuss client action', {
                 archs: {
                     'mail.message,false,search': '<search/>',
                 },
-                config: {
-                    isMobile: true
-                },
+                config: {device: {isMobile: true}},
             });
             var chatAction = new ChatAction(parent, params);
             chatAction.set_cp_bus(new Widget());
@@ -51,9 +49,7 @@ QUnit.skip('mobile basic rendering', function (assert) {
         archs: {
             'mail.message,false,search': '<search/>',
         },
-        config: {
-            isMobile: true,
-        },
+        config: {device: {isMobile: true}},
     });
 
     var params = {

@@ -2116,9 +2116,7 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['product_id'],
-            config: {
-                isMobile: true
-            }
+            config: {device: {isMobile: true}},
         }).then(function (kanban) {
 
             // Dummy dom update trigger for activate mobile tabs and move to first column
