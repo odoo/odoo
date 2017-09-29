@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from werkzeug.exceptions import RuntimeError
 from odoo import api, fields, models
-from odoo.http import request
 
 
 class ProductWishlist(models.Model):
@@ -38,13 +36,14 @@ class ProductWishlist(models.Model):
 
     @api.model
     def current(self):
-        domain = []
-        try:
-            domain + ["|", ("session", "=", request.session.sid)]
-        except RuntimeError:
-            pass  # Unbound session
-        domain += [("partner_id", "=", self.env.user.partner_id.id)]
-        return self.search(domain)
+        """Get all wishlist items that belong to current user or session."""
+        return self.search([
+            "|",
+            ("partner_id", "=", self.env.user.partner_id.id),
+            "&",
+            ("partner_id", "=", False),
+            ("session", "=", self.env.user.current_session),
+        ])
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False, session=False):
@@ -62,24 +61,21 @@ class ProductWishlist(models.Model):
     @api.model
     def _join_current_user_and_session(self):
         """Assign all dangling session wishlisted products to user."""
-        try:
-            session_domain = [
-                ("session", "=", request.session.sid),
-                ("partner_id", "=", False),
-            ]
-        except RuntimeError:
-            return  # No session is bound, nothing to join
-        user_products = self.search([
+        session_wishes = self.search([
+            ("session", "=", self.env.user.current_session),
+            ("partner_id", "=", False),
+        ])
+        partner_wishes = self.search([
             ("partner_id", "=", self.env.user.partner_id.id),
-        ]).mapped("product_id")
+        ])
+        partner_products = partner_wishes.mapped("product_id")
         # Remove session products already present for the user
-        self.search(session_domain + [("product_id", "in", user_products.ids)]).unlink()
+        session_wishes.filtered(lambda wish: wish.product_id <= partner_products).unlink()
         # Assign the rest to the user
-        self.search(session_domain).write({
+        session_wishes.write({
             "partner_id": self.env.user.partner_id.id,
             "session": False,
         })
-
 
 
 class ResPartner(models.Model):
