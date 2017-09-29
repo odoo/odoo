@@ -59,6 +59,9 @@ class SaleOrder(models.Model):
         '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
+        if len(self.picking_ids.ids) == 1:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = self.picking_ids.ids[0]
         return action
 
     @api.multi
