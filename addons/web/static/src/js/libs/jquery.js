@@ -89,12 +89,8 @@ $.fn.extend({
      */
     odooBounce: function () {
         return this.each(function () {
-            var $elem = $(this);
-            $elem
-                .css('box-sizing', 'content-box')
-                .effect('bounce', {distance: 18, times: 5}, 250, function () {
-                    $elem.css('box-sizing', '');
-                });
+            $(this).css('box-sizing', 'content-box')
+                   .effect('bounce', {distance: 18, times: 5}, 250);
         });
     },
     /**
