@@ -301,6 +301,10 @@ class Website(models.Model):
         return self.env['ir.model.access'].check('ir.ui.menu', 'read', False)
 
     @api.model
+    def is_public_user(self):
+        return request.env.user.id == request.website.user_id.id
+
+    @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
         if isinstance(template, pycompat.integer_types):
