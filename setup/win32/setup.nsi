@@ -207,16 +207,14 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     # TODO: install in a temp dir before
     
     # Installing winpython
-    SetOutPath "$INSTDIR\WinPython"
-    File /r /x "__pycache__" "..\..\..\WinPython\*"
+    SetOutPath "$INSTDIR\python"
+    File /r /x "__pycache__" "..\..\..\WinPython\python-3.6.2\*"
+
+    SetOutPath "$INSTDIR\nssm"
+    File /r /x "src" "..\..\..\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
     File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
-
-    SetOutPath "$INSTDIR\service"
-    File "win32_service.py"
-    File "start.bat"
-    File "stop.bat"
 
     # Install Visual C redistribuable files
     DetailPrint "Installing Visual C++ redistributable files"
@@ -242,22 +240,15 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     ${EndIf}
 
     DetailPrint "Installing Windows service"
-    nsExec::ExecTOLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    #nsExec::ExecToLog '"$INSTDIR\WinPython\python-3.6.2\python.exe" "$INSTDIR\service\win32_service.py" install'
-    SimpleSC::InstallService "OdooServer" "Odoo Server" "16" "2" "$INSTDIR\WinPython\python-3.6.2\python.exe $INSTDIR\service\win32_service.py" "" "" ""
-    SimpleSC::StartService "OdooServer" "" 60
-    Pop $0
-    IntCmp $0 0 Done +1 +1 
-      Push $0
-      SimpleSC::GetErrorMessage
-      Pop $0
-      MessageBox MB_OK|MB_ICONSTOP "Start failed - Reason: $0"
-    Done:
-    #nsExec::Exec "net stop ${SERVICENAME}"
-    #sleep 2
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set AppDirectory "$\"$INSTDIR\server$\""'
+    
+    nsExec::Exec "net stop ${SERVICENAME}"
+    sleep 2
 
-    #nsExec::Exec "net start ${SERVICENAME}"
-    #sleep 2
+    nsExec::Exec "net start ${SERVICENAME}"
+    sleep 2
 
 SectionEnd
     
