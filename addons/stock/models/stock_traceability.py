@@ -155,7 +155,7 @@ class MrpStockReport(models.TransientModel):
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
-            'product_qty_uom': str(move_line.qty_done) + ' ' + move_line.product_id.uom_id.name,
+            'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
             'location': move_line.location_id.name + ' -> ' + move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
@@ -175,7 +175,7 @@ class MrpStockReport(models.TransientModel):
                 'model': model or 'stock.move.line',
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
-                'product_qty_uom': str(move_line.qty_done) + ' ' + move_line.product_id.uom_id.name,
+                'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
                 'location': move_line.location_dest_id.name,
                 'stream': stream,
                 'reference_id': False}]
