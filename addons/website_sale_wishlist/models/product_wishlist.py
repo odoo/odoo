@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
-
+from odoo import api, fields, http, models
 
 class ProductWishlist(models.Model):
     _name = 'product.wishlist'
@@ -76,6 +75,14 @@ class ProductWishlist(models.Model):
             "partner_id": self.env.user.partner_id.id,
             "session": False,
         })
+
+    @api.model
+    def _garbage_collector(self):
+        """Remove wishlists for unexisting sessions."""
+        self.search([
+            ("session", "not in", http.root.session_store.list()),
+            ("partner_id", "=", False),
+        ]).unlink()
 
 
 class ResPartner(models.Model):
