@@ -455,10 +455,10 @@ def options():
     op.add_option("", "--no-windows", action="store_true", help="don't build the windows package")
 
     # Windows VM
-    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/win1035/win10_py35.qcow2', help="%default")
-    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/win1035/id_rsa', help="%default")
+    op.add_option("", "--vm-winxp-image", default='/home/odoo/vm/win1036/win10_winpy36.qcow2', help="%default")
+    op.add_option("", "--vm-winxp-ssh-key", default='/home/odoo/vm/win1036/id_rsa', help="%default")
     op.add_option("", "--vm-winxp-login", default='Naresh', help="Windows login (%default)")
-    op.add_option("", "--vm-winxp-python-version", default='3.5', help="Windows Python version installed in the VM (default: %default)")
+    op.add_option("", "--vm-winxp-python-version", default='3.6', help="Windows Python version installed in the VM (default: %default)")
     op.add_option("", "--no-remove", action="store_true", help="don't remove build dir")
 
     (o, args) = op.parse_args()
