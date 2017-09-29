@@ -26,7 +26,7 @@ class ProcurementRule(models.Model):
         orderpoint = values.get('orderpoint_id')
         if orderpoint:
             production.message_post_with_view('mail.message_origin_link',
-                                              values={'self': production, 'origin': orderpoint.id},
+                                              values={'self': production, 'origin': orderpoint},
                                               subtype_id=self.env.ref('mail.mt_note').id)
         if origin_production:
             production.message_post_with_view('mail.message_origin_link',
