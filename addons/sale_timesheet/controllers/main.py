@@ -19,17 +19,12 @@ class SaleTimesheetController(http.Controller):
 
     def _prepare_plan_values(self, domain):
 
-        def float_to_time(hour_number):
-            hours, minutes = divmod(hour_number * 60, 60)
-            return _('%02d:%02d') % (hours, minutes)
-
         timesheet_lines = request.env['account.analytic.line'].search(domain)
 
         values = {
             'currency': request.env.user.company_id.currency_id,
             'timesheet_lines': timesheet_lines,
             'domain': domain,
-            'float_to_time': float_to_time,
         }
         hour_rounding = request.env.ref('product.product_uom_hour').rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
