@@ -11,6 +11,7 @@
                     <group attrs="{'invisible': [('provider', '!=', 'paypal')]}">
                         <field name="paypal_email_account"/>
                         <field name="paypal_seller_account"/>
+                        <field name="paypal_pdt_token"/>
                         <field name="paypal_use_ipn"/>
                         <field name="paypal_api_enabled" invisible="1"/>
                         <field name="paypal_api_username" invisible="1"/>
@@ -26,12 +27,8 @@
             <field name="model">payment.transaction</field>
             <field name="inherit_id" ref="payment.transaction_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//notebook' position='inside'>
-                    <page string="Paypal TX Details">
-                        <group>
-                            <field name="paypal_txn_type"/>
-                        </group>
-                    </page>
+                <xpath expr="//field[@name='acquirer_reference']" position="after">
+                    <field name="paypal_txn_type" readonly="1" attrs="{'invisible': [('provider', '!=', 'paypal')]}"/>
                 </xpath>
             </field>
         </record>

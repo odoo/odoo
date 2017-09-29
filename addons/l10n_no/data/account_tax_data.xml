@@ -79,6 +79,7 @@
       <field name="account_id" ref="chart2701"/>
       <field name="refund_account_id" ref="chart2701"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_04'),ref('tag_no_14')])]"/>
+	<field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="tax2" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -90,6 +91,7 @@
       <field name="account_id" ref="chart2703"/>
       <field name="refund_account_id" ref="chart2703"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_05'),ref('tag_no_16')])]"/>
+	<field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="tax3" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -101,6 +103,7 @@
       <field name="account_id" ref="chart2704"/>
       <field name="refund_account_id" ref="chart2704"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_06'),ref('tag_no_15')])]"/>
+	<field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax4" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -112,6 +115,7 @@
       <field name="account_id" ref="chart2711"/>
       <field name="refund_account_id" ref="chart2711"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_07'),ref('tag_no_11')])]"/>
+	<field name="tax_group_id" ref="tax_group_25"/>
     </record>
     <record id="tax5" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -123,6 +127,7 @@
       <field name="account_id" ref="chart2713"/>
       <field name="refund_account_id" ref="chart2713"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_08'),ref('tag_no_13')])]"/>
+	<field name="tax_group_id" ref="tax_group_15"/>
     </record>
     <record id="tax6" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -134,6 +139,7 @@
       <field name="account_id" ref="chart2714"/>
       <field name="refund_account_id" ref="chart2714"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_09'),ref('tag_no_12')])]"/>
+	<field name="tax_group_id" ref="tax_group_10"/>
     </record>
 
     <record id="tax7" model="account.tax.template">
@@ -145,6 +151,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="account_id" ref="chart2714"/>
       <field name="refund_account_id" ref="chart2714"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="tax8" model="account.tax.template">
@@ -157,6 +164,7 @@
       <field name="account_id" ref="chart2704"/>
       <field name="refund_account_id" ref="chart2704"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_03')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
   </data>

@@ -40,8 +40,9 @@ class StockMoveInvoice(AccountingTestCase):
             'carrier_id': self.normal_delivery.id
         })
 
-        # I add delivery cost in Sale order
-        self.sale_prepaid.delivery_set()
+        # I add delivery cost in Sales order
+        self.sale_prepaid.get_delivery_price()
+        self.sale_prepaid.set_delivery_line()
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()

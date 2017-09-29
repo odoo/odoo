@@ -6,17 +6,17 @@ import datetime
 import hashlib
 import pytz
 import threading
-import urllib2
-import urlparse
 
 from email.utils import formataddr
+
+import requests
 from lxml import etree
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.orm import browse_record
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -27,11 +27,6 @@ WARNING_MESSAGE = [
                    ]
 WARNING_HELP = _('Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.')
 
-
-ADDRESS_FORMAT_CLASSES = {
-    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
-    '%(zip)s %(city)s': 'o_zip_city'
-}
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 @api.model
@@ -44,26 +39,30 @@ def _tz_get(self):
     return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
 
-class FormatAddress(object):
-    @api.model
-    def fields_view_get_address(self, arch):
-        address_format = self.env.user.company_id.country_id.address_format or ''
-        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
-            if format_pattern in address_format:
-                doc = etree.fromstring(arch)
-                for address_node in doc.xpath("//div[@class='o_address_format']"):
-                    # add address format class to address block
-                    address_node.attrib['class'] += ' ' + format_class
-                    if format_class.startswith('o_zip'):
-                        zip_fields = address_node.xpath("//field[@name='zip']")
-                        city_fields = address_node.xpath("//field[@name='city']")
-                        if zip_fields and city_fields:
-                            # move zip field before city field
-                            city_fields[0].addprevious(zip_fields[0])
-                arch = etree.tostring(doc)
-                break
-        return arch
+class FormatAddressMixin(models.AbstractModel):
+    _name = "format.address.mixin"
 
+    def _fields_view_get_address(self, arch):
+        # consider the country of the user, not the country of the partner we want to display
+        address_view_id = self.env.user.company_id.country_id.address_view_id
+        if address_view_id and not self._context.get('no_address_format'):
+            #render the partner address accordingly to address_view_id
+            doc = etree.fromstring(arch)
+            for address_node in doc.xpath("//div[hasclass('o_address_format')]"):
+                Partner = self.env['res.partner'].with_context(no_address_format=True)
+                sub_view = Partner.fields_view_get(
+                    view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
+                sub_view_node = etree.fromstring(sub_view['arch'])
+                #if the model is different than res.partner, there are chances that the view won't work
+                #(e.g fields not present on the model). In that case we just return arch
+                if self._name != 'res.partner':
+                    try:
+                        self.env['ir.ui.view'].postprocess_and_fields(self._name, sub_view_node, None)
+                    except ValueError:
+                        return arch
+                address_node.getparent().replace(address_node, sub_view_node)
+            arch = etree.tostring(doc, encoding='unicode')
+        return arch
 
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
@@ -125,10 +124,10 @@ class PartnerTitle(models.Model):
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)
 
-    _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
 
-class Partner(models.Model, FormatAddress):
-    _description = 'Partner'
+class Partner(models.Model):
+    _description = 'Contact'
+    _inherit = ['format.address.mixin']
     _name = "res.partner"
     _order = "display_name"
 
@@ -194,10 +193,10 @@ class Partner(models.Model, FormatAddress):
         'Formatted Email', compute='_compute_email_formatted',
         help='Format email address "Name <email@domain>"')
     phone = fields.Char()
-    fax = fields.Char()
     mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
+    industry_id = fields.Many2one('res.partner.industry', 'Sector of Activity')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
         selection=[('person', 'Individual'), ('company', 'Company')],
@@ -214,6 +213,7 @@ class Partner(models.Model, FormatAddress):
     # technical field used for managing commercial fields
     commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
                                              string='Commercial Entity', store=True, index=True)
+    commercial_partner_country_id = fields.Many2one('res.country', related='commercial_partner_id.country_id', store=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')
@@ -277,41 +277,12 @@ class Partner(models.Model, FormatAddress):
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
     @api.model
-    def _get_default_image(self, partner_type, is_company, parent_id):
-        if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
-            return False
-
-        colorize, img_path, image = False, False, False
-
-        if partner_type in ['other'] and parent_id:
-            parent_image = self.browse(parent_id).image
-            image = parent_image and parent_image.decode('base64') or None
-
-        if not image and partner_type == 'invoice':
-            img_path = get_module_resource('base', 'static/src/img', 'money.png')
-        elif not image and partner_type == 'delivery':
-            img_path = get_module_resource('base', 'static/src/img', 'truck.png')
-        elif not image and is_company:
-            img_path = get_module_resource('base', 'static/src/img', 'company_image.png')
-        elif not image:
-            img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
-            colorize = True
-
-        if img_path:
-            with open(img_path, 'rb') as f:
-                image = f.read()
-        if image and colorize:
-            image = tools.image_colorize(image)
-
-        return tools.image_resize_image_big(image.encode('base64'))
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
-        res = super(Partner, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(Partner, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(res['arch'])
+            res['arch'] = self._fields_view_get_address(res['arch'])
         return res
 
     @api.constrains('parent_id')
@@ -359,13 +330,13 @@ class Partner(models.Model, FormatAddress):
 
     @api.onchange('email')
     def onchange_email(self):
-        if not self.image and not self._context.get('yaml_onchange') and self.email:
+        if not self.image and self._context.get('gravatar_image') and self.email:
             self.image = self._get_gravatar_image(self.email)
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
         for partner in self:
-            partner.email_formatted = formataddr((partner.name, partner.email))
+            partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -475,11 +446,11 @@ class Partner(models.Model, FormatAddress):
             parent.update_address(addr_vals)
 
     def _clean_website(self, website):
-        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
-        if not scheme:
-            if not netloc:
-                netloc, path = path, ''
-            website = urlparse.urlunparse(('http', netloc, path, params, query, fragment))
+        url = urls.url_parse(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url.replace(netloc=url.path, path='')
+            website = url.replace(scheme='http').to_url()
         return website
 
     @api.multi
@@ -520,10 +491,6 @@ class Partner(models.Model, FormatAddress):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
-        # compute default image in create, because computing gravatar in the onchange
-        # cannot be easily performed if default images are in the way
-        if not vals.get('image'):
-            vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
         tools.image_resize_images(vals)
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
@@ -656,7 +623,8 @@ class Partner(models.Model, FormatAddress):
                          FROM res_partner
                       {where} ({email} {operator} {percent}
                            OR {display_name} {operator} {percent}
-                           OR {reference} {operator} {percent})
+                           OR {reference} {operator} {percent}
+                           OR {vat} {operator} {percent})
                            -- don't panic, trust postgres bitmap
                      ORDER BY {display_name} {operator} {percent} desc,
                               {display_name}
@@ -665,14 +633,15 @@ class Partner(models.Model, FormatAddress):
                                email=unaccent('email'),
                                display_name=unaccent('display_name'),
                                reference=unaccent('ref'),
-                               percent=unaccent('%s'))
+                               percent=unaccent('%s'),
+                               vat=unaccent('vat'),)
 
-            where_clause_params += [search_name]*4
+            where_clause_params += [search_name]*5
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
             self.env.cr.execute(query, where_clause_params)
-            partner_ids = map(lambda x: x[0], self.env.cr.fetchall())
+            partner_ids = [row[0] for row in self.env.cr.fetchall()]
 
             if partner_ids:
                 return self.browse(partner_ids).name_get()
@@ -695,15 +664,15 @@ class Partner(models.Model, FormatAddress):
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):
-        gravatar_image = False
-        email_hash = hashlib.md5(email.lower()).hexdigest()
+        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
         try:
-            image_content = urllib2.urlopen(url + "?d=404&s=128", timeout=5).read()
-            gravatar_image = base64.b64encode(image_content)
-        except Exception:
-            pass
-        return gravatar_image
+            res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
+            if res.status_code != requests.codes.ok:
+                return False
+        except requests.exceptions.ConnectionError as e:
+            return False
+        return base64.b64encode(res.content)
 
     @api.multi
     def _email_send(self, email_from, subject, body, on_error=None):
@@ -764,6 +733,10 @@ class Partner(models.Model, FormatAddress):
         ''' Return the main partner '''
         return self.env.ref('base.main_partner')
 
+    @api.model
+    def _get_default_address_format(self):
+        return "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+
     @api.multi
     def _display_address(self, without_company=False):
 
@@ -779,7 +752,7 @@ class Partner(models.Model, FormatAddress):
         # get the information that will be injected into the display format
         # get the address format
         address_format = self.country_id.address_format or \
-              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+            self._get_default_address_format()
         args = {
             'state_code': self.state_id.code or '',
             'state_name': self.state_id.name or '',
@@ -801,3 +774,13 @@ class Partner(models.Model, FormatAddress):
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]
+
+
+class ResPartnerIndustry(models.Model):
+    _description = 'Sector of Activity'
+    _name = "res.partner.industry"
+    _order = "name"
+
+    name = fields.Char('Name', translate=True)
+    full_name = fields.Char('Full Name', translate=True)
+    active = fields.Boolean('Active', default=True)

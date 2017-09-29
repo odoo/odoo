@@ -38,7 +38,7 @@ class SaleOrder(models.Model):
         value = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
         line = SaleOrderLineSudo.browse(value.get('line_id'))
-        # link a product to the sale order
+        # link a product to the sales order
         if kwargs.get('linked_line_id'):
             linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
             line.write({

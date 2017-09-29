@@ -1,23 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll_account
-# 
+#
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-12-02 00:38+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll_account
@@ -32,8 +30,8 @@ msgid "Accounting Entry"
 msgstr "Catatan akuntansi"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
+#: code:addons/hr_payroll_account/hr_payroll_account.py:154
+#: code:addons/hr_payroll_account/hr_payroll_account.py:170
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Penyesuaian entri"
@@ -43,7 +41,7 @@ msgstr "Penyesuaian entri"
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_analytic_account_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
 msgid "Analytic Account"
-msgstr "Akun Analitik"
+msgstr "Akun Analisis"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
@@ -64,8 +62,9 @@ msgstr "Debet rekening"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
+#, fuzzy
 msgid "Employee Contract"
-msgstr "Kontrak Karyawan"
+msgstr "Kontrak"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -89,11 +88,12 @@ msgstr "Jalur payslip"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+#, fuzzy
 msgid "Payslip Run"
-msgstr ""
+msgstr "Jalur payslip"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
+#: code:addons/hr_payroll_account/hr_payroll_account.py:105
 #, python-format
 msgid "Payslip of %s"
 msgstr "Payslip dari %s"
@@ -112,16 +112,18 @@ msgid "Tax"
 msgstr "Pajak"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
 #, python-format
-msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr ""
 "Biaya jurnal \"%s\" telah tidak dikonfigurasi dengan benar rekening kredit!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
 #, python-format
-msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr ""
 "Biaya jurnal \"%s\" telah tidak dikonfigurasi dengan benar Debit rekening!"
 
@@ -129,3 +131,6 @@ msgstr ""
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr ""
+
+#~ msgid "Payslip Batches"
+#~ msgstr "Batch payslip"

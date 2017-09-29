@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pytz
 import datetime
+import itertools
 import logging
 
 from collections import defaultdict
@@ -13,7 +14,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition
+from odoo.tools import partition, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def name_boolean_group(id):
     return 'in_group_' + str(id)
 
 def name_selection_groups(ids):
-    return 'sel_groups_' + '_'.join(map(str, ids))
+    return 'sel_groups_' + '_'.join(str(it) for it in ids)
 
 def is_boolean_group(name):
     return name.startswith('in_group_')
@@ -44,7 +45,7 @@ def get_boolean_group(name):
     return int(name[9:])
 
 def get_selection_groups(name):
-    return map(int, name[11:].split('_'))
+    return [int(v) for v in name[11:].split('_')]
 
 def parse_m2m(commands):
     "return a list of ids corresponding to a many2many value"
@@ -83,6 +84,7 @@ class Groups(models.Model):
     color = fields.Integer(string='Color Index')
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
+    is_portal = fields.Boolean('Portal', help="If checked, this group is usable as a portal.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
@@ -91,7 +93,7 @@ class Groups(models.Model):
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
-        for group, group1 in zip(self, self.sudo()):
+        for group, group1 in pycompat.izip(self, self.sudo()):
             if group1.category_id:
                 group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
             else:
@@ -105,12 +107,12 @@ class Groups(models.Model):
                 return expression.AND(domains)
             else:
                 return expression.OR(domains)
-        if isinstance(operand, basestring):
+        if isinstance(operand, pycompat.string_types):
             lst = False
             operand = [operand]
         where = []
         for group in operand:
-            values = filter(bool, group.split('/'))
+            values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
             category_name = values and '/'.join(values).strip() or group_name
             group_domain = [('name', operator, lst and [group_name] or group_name)]
@@ -294,19 +296,17 @@ class Users(models.Model):
 
         canwrite = self.env['ir.model.access'].check('res.users', 'write', False)
         if not canwrite:
-            def override_password(vals):
-                if (vals['id'] != self._uid):
+            for vals in result:
+                if vals['id'] != self._uid:
                     for key in USER_PRIVATE_FIELDS:
                         if key in vals:
                             vals[key] = '********'
-                return vals
-            result = map(override_password, result)
 
         return result
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+        groupby_fields = set([groupby] if isinstance(groupby, pycompat.string_types) else groupby)
         if groupby_fields.intersection(USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
@@ -338,7 +338,7 @@ class Users(models.Model):
                     raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if self == self.env.user:
-            for key in values.keys():
+            for key in list(values):
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
                     break
             else:
@@ -355,7 +355,7 @@ class Users(models.Model):
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
-            self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
+            self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
         if 'groups_id' in values:
@@ -562,6 +562,16 @@ class Users(models.Model):
     has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
+    def _is_public(self):
+        self.ensure_one()
+        return self.has_group('base.group_public')
+
+    @api.multi
+    def _is_system(self):
+        self.ensure_one()
+        return self.has_group('base.group_system')
+
+    @api.multi
     def _is_admin(self):
         self.ensure_one()
         return self._is_superuser() or self.has_group('base.group_erp_manager')
@@ -614,7 +624,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': zip(repeat(4), group.with_context(active_test=False).users.ids)}
+                vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
@@ -671,24 +681,24 @@ class GroupsView(models.Model):
     def create(self, values):
         user = super(GroupsView, self).create(values)
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return user
 
     @api.multi
     def write(self, values):
         res = super(GroupsView, self).write(values)
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return res
 
     @api.multi
     def unlink(self):
         res = super(GroupsView, self).unlink()
         self._update_user_groups_view()
-        # ir_values.get_actions() depends on action records
-        self.env['ir.values'].clear_caches()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
         return res
 
     @api.model
@@ -707,7 +717,7 @@ class GroupsView(models.Model):
         if view and view.exists() and view._name == 'ir.ui.view':
             group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="2"))
+            xml1.append(E.separator(string=_('Application Accesses'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application():
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 attrs = {}
@@ -734,7 +744,7 @@ class GroupsView(models.Model):
             xml2.append({'class': "o_label_nowrap"})
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
-            xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
+            xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
             view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
 
     def get_application_groups(self, domain):
@@ -756,7 +766,7 @@ class GroupsView(models.Model):
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
-            if len(set(order.itervalues())) == len(gs):
+            if len(set(order.values())) == len(gs):
                 return (app, 'selection', gs.sorted(key=order.get))
             else:
                 return (app, 'boolean', gs)
@@ -770,7 +780,7 @@ class GroupsView(models.Model):
                 others += g
         # build the result
         res = []
-        for app, gs in sorted(by_app.iteritems(), key=lambda (a, _): a.sequence or 0):
+        for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
             res.append(linearize(app, gs))
         if others:
             res.append((self.env['ir.module.category'], 'boolean', others))
@@ -810,7 +820,7 @@ class UsersView(models.Model):
         add, rem = [], []
         values1 = {}
 
-        for key, val in values.iteritems():
+        for key, val in values.items():
             if is_boolean_group(key):
                 (add if val else rem).append(get_boolean_group(key))
             elif is_selection_groups(key):
@@ -822,7 +832,10 @@ class UsersView(models.Model):
 
         if 'groups_id' not in values and (add or rem):
             # remove group ids in `rem` and add group ids in `add`
-            values1['groups_id'] = zip(repeat(3), rem) + zip(repeat(4), add)
+            values1['groups_id'] = list(itertools.chain(
+                pycompat.izip(repeat(3), rem),
+                pycompat.izip(repeat(4), add)
+            ))
 
         return values1
 
@@ -837,7 +850,7 @@ class UsersView(models.Model):
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones
-        fields1 = fields or self.fields_get().keys()
+        fields1 = fields or list(self.fields_get())
         group_fields, other_fields = partition(is_reified_group, fields1)
 
         # read regular fields (other_fields); add 'groups_id' if necessary

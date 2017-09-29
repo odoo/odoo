@@ -37,13 +37,13 @@ class IrUiMenu(models.Model):
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
     complete_name = fields.Char(compute='_compute_complete_name', string='Full Path')
     web_icon = fields.Char(string='Web Icon File')
-    action = fields.Reference(selection=[('ir.actions.report.xml', 'ir.actions.report.xml'),
+    action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
                                          ('ir.actions.act_window', 'ir.actions.act_window'),
                                          ('ir.actions.act_url', 'ir.actions.act_url'),
                                          ('ir.actions.server', 'ir.actions.server'),
                                          ('ir.actions.client', 'ir.actions.client')])
 
-    web_icon_data = fields.Binary(string='Web Icon Image', compute="_compute_web_icon", store=True, attachment=True)
+    web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -58,18 +58,6 @@ class IrUiMenu(models.Model):
             return self.parent_id._get_full_name(level - 1) + MENU_ITEM_SEPARATOR + (self.name or "")
         else:
             return self.name
-
-    @api.depends('web_icon')
-    def _compute_web_icon(self):
-        """ Returns the image associated to `web_icon`.
-            `web_icon` can either be:
-              - an image icon [module, path]
-              - a built icon [icon_class, icon_color, background_color]
-            and it only has to call `read_image` if it's an image.
-        """
-        for menu in self:
-            if menu.web_icon and len(menu.web_icon.split(',')) == 2:
-                menu.web_icon_data = self.read_image(menu.web_icon)
 
     def read_image(self, path):
         if not path:
@@ -109,15 +97,15 @@ class IrUiMenu(models.Model):
 
         # process action menus, check whether their action is allowed
         access = self.env['ir.model.access']
-        model_fname = {
-            'ir.actions.act_window': 'res_model',
-            'ir.actions.report.xml': 'model',
-            'ir.actions.server': 'model_id',
+        MODEL_GETTER = {
+            'ir.actions.act_window': lambda action: action.res_model,
+            'ir.actions.report': lambda action: action.model,
+            'ir.actions.server': lambda action: action.model_id.model,
         }
         for menu in action_menus:
-            fname = model_fname.get(menu.action._name)
-            if not fname or not menu.action[fname] or \
-                    access.check(menu.action[fname], 'read', False):
+            get_model = MODEL_GETTER.get(menu.action._name)
+            if not get_model or not get_model(menu.action) or \
+                    access.check(get_model(menu.action), 'read', False):
                 # make menu visible, and its folder ancestors, too
                 visible += menu
                 menu = menu.parent_id
@@ -145,9 +133,9 @@ class IrUiMenu(models.Model):
             if not self._context.get('ir.ui.menu.full_list'):
                 menus = menus._filter_visible_menus()
             if offset:
-                menus = menus[long(offset):]
+                menus = menus[offset:]
             if limit:
-                menus = menus[:long(limit)]
+                menus = menus[:limit]
         return len(menus) if count else menus
 
     @api.multi
@@ -157,12 +145,26 @@ class IrUiMenu(models.Model):
     @api.model
     def create(self, values):
         self.clear_caches()
+        if 'web_icon' in values:
+            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).create(values)
 
     @api.multi
     def write(self, values):
         self.clear_caches()
+        if 'web_icon' in values:
+            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).write(values)
+
+    def _compute_web_icon_data(self, web_icon):
+        """ Returns the image associated to `web_icon`.
+            `web_icon` can either be:
+              - an image icon [module, path]
+              - a built icon [icon_class, icon_color, background_color]
+            and it only has to call `read_image` if it's an image.
+        """
+        if web_icon and len(web_icon.split(',')) == 2:
+            return self.read_image(web_icon)
 
     @api.multi
     def unlink(self):
@@ -188,50 +190,6 @@ class IrUiMenu(models.Model):
             record.name = record.name + '(1)'
         return record
 
-    @api.multi
-    def get_needaction_data(self):
-        """ Return for each menu entry in ``self``:
-            - whether it uses the needaction mechanism (needaction_enabled)
-            - the needaction counter of the related action, taking into account
-              the action domain
-        """
-        menu_ids = set()
-        for menu in self:
-            menu_ids.add(menu.id)
-            ctx = {}
-            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.context:
-                with tools.ignore(Exception):
-                    # use magical UnquoteEvalContext to ignore undefined client-side variables such as `active_id`
-                    eval_ctx = tools.UnquoteEvalContext(self._context)
-                    ctx = safe_eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or {}
-            menu_refs = ctx.get('needaction_menu_ref')
-            if menu_refs:
-                if not isinstance(menu_refs, list):
-                    menu_refs = [menu_refs]
-                for menu_ref in menu_refs:
-                    record = self.env.ref(menu_ref, False)
-                    if record and record._name == 'ir.ui.menu':
-                        menu_ids.add(record.id)
-
-        res = {}
-        for menu in self.browse(menu_ids):
-            res[menu.id] = {
-                'needaction_enabled': False,
-                'needaction_counter': False,
-            }
-            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                if menu.action.res_model in self.env:
-                    model = self.env[menu.action.res_model]
-                    if model._needaction:
-                        if menu.action.type == 'ir.actions.act_window':
-                            eval_context = self.env['ir.actions.act_window']._get_eval_context()
-                            dom = safe_eval(menu.action.domain or '[]', eval_context)
-                        else:
-                            dom = safe_eval(menu.action.params_store or '{}', {'uid': self._uid}).get('domain')
-                        res[menu.id]['needaction_enabled'] = model._needaction
-                        res[menu.id]['needaction_counter'] = model._needaction_count(dom)
-        return res
-
     @api.model
     @api.returns('self')
     def get_user_roots(self):
@@ -248,13 +206,18 @@ class IrUiMenu(models.Model):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
-        return {
+
+        menu_root = {
             'id': False,
             'name': 'root',
             'parent_id': [-1, ''],
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
+        menu_roots._set_menuitems_xmlids(menu_root)
+
+        return menu_root
 
     @api.model
     @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
@@ -274,6 +237,7 @@ class IrUiMenu(models.Model):
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
         if not menu_roots_data:
             return menu_root
 
@@ -300,4 +264,25 @@ class IrUiMenu(models.Model):
         for menu_item in menu_items:
             menu_item.setdefault('children', []).sort(key=operator.itemgetter('sequence'))
 
+        (menu_roots + menus)._set_menuitems_xmlids(menu_root)
+
         return menu_root
+
+    def _set_menuitems_xmlids(self, menu_root):
+        menuitems = self.env['ir.model.data'].sudo().search([
+                ('res_id', 'in', self.ids),
+                ('model', '=', 'ir.ui.menu')
+            ])
+
+        xmlids = {
+            menu.res_id: menu.complete_name
+            for menu in menuitems
+        }
+
+        def _set_xmlids(tree, xmlids):
+            tree['xmlid'] = xmlids.get(tree['id'], '')
+            if 'children' in tree:
+                for child in tree['children']:
+                    _set_xmlids(child, xmlids)
+
+        _set_xmlids(menu_root, xmlids)

@@ -3,15 +3,16 @@
 # * base_gengo
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
+# Talway <9010446@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Talway <9010446@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,18 +33,18 @@ msgstr "添加Gengo登录公开密钥…"
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Add your comments here for translator...."
-msgstr "添加你的评论在这里翻译...."
+msgstr "添加您的评论在这里翻译...."
+
+#. module: base_gengo
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Auto Approve Translation"
+msgstr "自动审核翻译"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_auto_approve
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_auto_approve
 msgid "Auto Approve Translation ?"
 msgstr "自动审核翻译 ?"
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Auto Approve Translation*"
-msgstr "自动认可翻译*"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -61,7 +62,7 @@ msgstr "取消"
 msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
-msgstr "如果你使用Gengo沙盒模式 选中这个框,主要是用于测试目的."
+msgstr "如果您使用Gengo沙盒模式 选中这个框,主要是用于测试目的."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
@@ -70,8 +71,8 @@ msgstr "单击此处配置Gengo参数"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Comment*"
-msgstr "评论*"
+msgid "Comment"
+msgstr "备注"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_comment
@@ -147,11 +148,6 @@ msgid "Gengo Translation Service Level"
 msgstr "Gengo 翻译服务级别"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Gengo Translator"
-msgstr "Gengo翻译器"
-
-#. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:84
 #, python-format
 msgid ""
@@ -174,6 +170,20 @@ msgstr ""
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
 msgstr "Gengo: 手册翻译要求"
+
+#. module: base_gengo
+#: model:ir.actions.server,name:base_gengo.gengo_sync_send_request_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
+#: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
+msgid "Gengo: Sync translation (Request)"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
+#: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
+msgid "Gengo: Sync translation (Response)"
+msgstr ""
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_id
@@ -221,8 +231,8 @@ msgstr "注意: 如果翻译状态为 '处理中', 则表示翻译需要在递�
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Private Key*"
-msgstr "私钥*"
+msgid "Private Key"
+msgstr "私有密匙"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -231,8 +241,8 @@ msgstr "Pro"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Public Key*"
-msgstr "公钥*"
+msgid "Public Key"
+msgstr "公开密钥"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
@@ -242,13 +252,9 @@ msgstr "接收翻译"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_sandbox
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
 msgid "Sandbox Mode"
 msgstr "沙盒模式"
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Sandbox Mode*"
-msgstr "沙盒模式*"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from

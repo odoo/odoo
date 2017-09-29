@@ -1,0 +1,116 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="portal.chatter_message_count">
+        <t t-set="count" t-value="widget.get('message_count')"/>
+        <div class="o_message_counter">
+            <t t-if="count">
+                <span class="o_message_count fa fa-comments"> <t t-esc="count"/></span>
+                <t t-if="count == 1">comment</t>
+                <t t-else="">comments</t>
+            </t>
+            <t t-else="">
+                There are no comments for now.
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal.chatter_composer">
+        <div class="o_portal_chatter_composer" t-if="widget.options['allow_composer']">
+            <t t-if="!widget.options['display_composer']">
+                <h4>Leave a comment</h4>
+                <p>You must be <a t-attf-href="/web/login?redirect=#{window.encodeURI(window.location.href + '#discussion')}">logged in</a> to post a comment.</p>
+            </t>
+            <t t-if="widget.options['display_composer']">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="o_portal_chatter_avatar pull-left" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
+                    </div>
+                    <div class="media-body">
+                        <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
+                            <div class="mb32">
+                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
+                                <input type='hidden' name="res_model" t-att-value="widget.options['res_model']"/>
+                                <input type='hidden' name="res_id" t-att-value="widget.options['res_id']"/>
+                                <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
+                                <input type='hidden' name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
+                                <input type='hidden' name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
+                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;">
+                                    Oops! Something went wrong. Try to reload the page and log in.
+                                </div>
+                                <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </t>
+            <hr/>
+        </div>
+    </t>
+
+    <t t-name="portal.chatter_messages">
+        <div class="o_portal_chatter_messages">
+            <t t-foreach="widget.get('messages')" t-as="message">
+                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
+                    <div class="media-left">
+                        <img class="media-object o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
+                    </div>
+                    <div class="media-body">
+
+                        <div class="o_portal_chatter_message_title">
+                            <h5 class="media-heading">
+                                <t t-esc="message.author_id[1]"/>
+                            </h5>
+                            <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
+                        </div>
+                        <t t-raw="message.body"/>
+
+                        <div class="o_portal_chatter_attachments">
+                            <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                                <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                    <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                    <div class='oe_attachment_name'><t t-raw='attachment.name'/></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal.pager">
+        <div class="o_portal_chatter_pager">
+            <t t-if="!_.isEmpty(widget.get('pager'))">
+                <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="o_portal_chatter_pager_btn">
+                        <a href="#"><i class="fa fa-chevron-left"/></a>
+                    </li>
+                    <t t-foreach="widget.get('pager')['pages']" t-as="page">
+                        <li t-att-data-page="page" t-att-class="page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'">
+                            <a href="#"><t t-esc="page"/></a>
+                        </li>
+                    </t>
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="o_portal_chatter_pager_btn">
+                        <a href="#"><i class="fa fa-chevron-right"/></a>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal.chatter">
+        <div class="o_portal_chatter">
+            <div class="o_portal_chatter_header">
+                <t t-call="portal.chatter_message_count"/>
+            </div>
+            <hr/>
+            <t t-call="portal.chatter_composer"/>
+            <t t-call="portal.chatter_messages"/>
+            <div class="o_portal_chatter_footer">
+                <t t-call="portal.pager"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

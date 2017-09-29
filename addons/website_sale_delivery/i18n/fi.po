@@ -1,30 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
-# Kari Lindgren <karisatu@gmail.com>, 2016
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
-# Kim Asplund <kim.asplund@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2017\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-05-11 16:12+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -35,47 +25,24 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
-msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
-"Customer Invoice/Refund"
-msgstr ""
-"Asiakkaille tarkoitettu tuotteen kuvaus. Lisätään Myyntitilauksiin, "
-"Toimitustilauksiin ja asiakkaan laskuihin/palautuksiin."
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
-msgid ""
-"Accessories show up when the customer reviews the cart before paying (cross-"
-"sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
-"figures out a list of accessories based on all the products added to cart."
-msgstr ""
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Accessory Products"
 msgstr "Tarvikkeet"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
-msgid "Adds an availability status on the web product page."
-msgstr ""
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Appear on the product page"
+msgstr "Näytetään tuotesivulla"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
-msgid "Alternative Products"
-msgstr "Vaihtoehtoiset tuotteet"
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
+msgid "Appear on the shopping cart"
+msgstr "Näytä ostoskorissa"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
-msgid "Availability"
-msgstr "Saatavuus"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
-msgid "Availability Warning"
-msgstr "Saatavuusvaroitus"
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "Saatavilla kassapäätteestä"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -83,48 +50,50 @@ msgid "Carrier"
 msgstr "Huolitsija"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_to_weight
 msgid ""
-"Categories can be published on the Shop page (online catalog grid) to help "
-"customers find all the items within a category. To publish them, go to the "
-"Shop page, hit Customize and turn *Product Categories* on. A product can "
-"belong to several categories."
-msgstr ""
+"Check if the product should be weighted using the hardware scale integration"
+msgstr "Tarkista pitääkö tuote punnita käyttäen vaaka-integraatiota"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "Valitse tämä jos haluat tämän tuotteen näkyvän kassapäätteellä."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr "Valitse toimitustapa"
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_res_country
-msgid "Country"
-msgstr "Maa"
+#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
+msgid "Country..."
+msgstr "Maa..."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Create a task under this project on sale order validation."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr "Toimitusmäärä"
-
-#. module: website_sale_delivery
-#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
-msgid "Delivery Methods"
-msgstr "Toimitustavat"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
-msgstr "Kuvaus"
+msgstr "Descripción"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "Kuvaus verkkokaupan ja verkkosivuston tarjouksiin."
+msgid "Description displayed on the eCommerce and on the Online Quotations."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
 msgid "Description for Online Quotations"
-msgstr "Kuvaus verkkosivuston tarjouksiin."
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
@@ -149,7 +118,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
 msgid "File"
-msgstr "Tiedosto"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -159,11 +128,6 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
-msgid "Images"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -177,24 +141,32 @@ msgid "Landed Costs"
 msgstr "Lähetyksen kokonaiskulut"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:99
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr "Viesti ostotilausriville"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "Viesti myyntitilausriville"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/models/sale_order.py:138
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr "Lisätuotteet"
+msgstr ""
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
-msgid ""
-"Optional Products are suggested whenever the customer hits *Add to Cart* "
-"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
-msgstr ""
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "Kassapäätteen kategoria"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -202,34 +174,59 @@ msgid "Procurement"
 msgstr "Hankinta"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
-msgid "Published"
-msgstr "Julkaistu"
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
+msgid "Products to propose when add to cart."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_project_id
+msgid "Project"
+msgstr "Projekti"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+msgid "Purchase Order Line"
+msgstr "Ostotilausrivi"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
-msgstr "Arvostelu"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
-msgid "Rating Last Value"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
-msgid "Rating count"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
-msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "Arvosana: 0=Tyytymätön, 10=Tyytyväinen"
+msgstr "Tärkeys"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
 msgstr "Myyntitilaus"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid "Sales Order Line"
+msgstr "Myyntitilauksen Rivi"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.country_state_shipping
+msgid "Select..."
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_purchase_line_warn
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_sale_line_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Valittaessa vaihtoehto: \r\n"
+"                        \"Varoitusviesti\", käyttäjälle näytetään "
+"varoitusviesti\r\n"
+"                        \"Estoviesti, käyttäjälle näytetään poikkeusviesti "
+"ja toimenpide estetään.\r\n"
+"Kirjoita näytettävä viesti seuraavaan kenttään."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
+msgid "Sequence"
+msgstr "Sequence"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -242,7 +239,7 @@ msgid "Size Y"
 msgstr "Koko Y"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/models/sale_order.py:98
+#: code:addons/website_sale_delivery/models/sale_order.py:137
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -258,11 +255,9 @@ msgid "Styles"
 msgstr "Tyylit"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
-msgid ""
-"Suggest more expensive alternatives to your customers (upsell strategy). "
-"Those products show up on the product page."
-msgstr ""
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
+msgid "Suggested Products"
+msgstr "Ehdotetut tuotteet"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -270,28 +265,32 @@ msgid "The amount without tax."
 msgstr "Veroton arvo"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
+msgid "Those categories are used to group similar products for e-commerce."
+msgstr ""
+"Näitä kategorioita käytetään samankaltaisten tuotteiden ryhmittelyyn "
+"verkkokaupassa."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
+"Näitä ryhmiä käytetään samankaltaisten tuotteiden ryhmittelyyn "
+"kassapäätteelle."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_to_weight
+msgid "To Weigh With Scale"
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
 msgid "Tracking:"
-msgstr "Seuranta:"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
-msgid "Visible in Website"
-msgstr "Näkyvillä verkkosivustolla"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
-msgid "Website Comments"
-msgstr "Verkkosivun kommentit"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
-msgstr "Verkkosivun Tuote Kategoria"
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
-msgid "Website Sequence"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -309,12 +308,8 @@ msgstr "Verkkosivuston meta avainsanat"
 msgid "Website meta title"
 msgstr "Verkkosivuston metaotsikko"
 
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
-msgid "Website price"
-msgstr ""
+#~ msgid "Website Comments"
+#~ msgstr "Verkkosivun kommentit"
 
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
-msgid "Website public price"
-msgstr ""
+#~ msgid "Website URL"
+#~ msgstr "Verkkosivuston osoite"

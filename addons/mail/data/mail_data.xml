@@ -2,35 +2,34 @@
 <odoo>
     <data noupdate="1">
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
-            <field name="name">Email Queue Manager</field>
+            <field name="name">Mail: Email Queue Manager</field>
+            <field name="model_id" ref="model_mail_mail"/>
+            <field name="state">code</field>
+            <field name="code">model.process_email_queue()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'mail.mail'" name="model"/>
-            <field eval="'process_email_queue'" name="function"/>
-            <field eval="'()'" name="args"/>
         </record>
 
         <record id="ir_cron_module_update_notification" model="ir.cron">
-            <field name="name">Update Notification</field>
-            <field eval="True" name="active" />
+            <field name="name">Publisher: Update Notification</field>
+            <field name="model_id" ref="model_publisher_warranty_contract"/>
+            <field name="state">code</field>
+            <field name="code">model.update_notification(None)</field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field eval="False" name="doall" />
-            <field eval="'publisher_warranty.contract'" name="model" />
-            <field eval="'update_notification'" name="function" />
-            <field eval="'(None,)'" name="args" />
             <field name="priority">1000</field>
         </record>
 
-        <!-- Admin should not receivve emails at creation -->
-        <record id="base.partner_root" model="res.partner">
-            <field name="notify_email">none</field>
+        <!-- Admin should not receive emails at creation -->
+        <record id="base.user_root" model="res.users">
+            <field name="notification_type">inbox</field>
         </record>
 
         <!-- Catchall Email Alias -->
@@ -55,6 +54,12 @@
             <field name="default" eval="False"/>
             <field name="internal" eval="True"/>
             <field name="sequence" eval="100"/>
+        </record>
+        <record id="mt_activities" model="mail.message.subtype">
+            <field name="name">Activities</field>
+            <field name="default" eval="True"/>
+            <field name="internal" eval="True"/>
+            <field name="sequence" eval="90"/>
         </record>
 
     </data>
@@ -105,7 +110,7 @@
         % endif
     </td>
     <td valign="center" align="right">
-        <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+        <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;" alt="${user.company_id.name}">
     </td>
 </tr>
 <tr>
@@ -113,16 +118,18 @@
         <hr width="100%"
             style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;">
         % if ctx.get('subtype') and ctx.get('subtype').internal:
-        <span style="background-color: #f2dede; padding: 5px;">
-            <strong>Internal note</strong>: replies are not sent to followers.
-        </span>
+        <p style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
+            <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
+        </p>
         % endif
     </td>
 </tr>
 </tbody></table>
 </div>
 % endif
-${object.body | safe}
+<div>
+    ${object.body | safe}
+</div>
 % if ctx.get('tracking'):
     <ul>
     % for tracking in ctx['tracking']
@@ -145,7 +152,7 @@ ${object.body | safe}
     </a>
     % endif
     using
-    <a href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
+    <a target="_blank" href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>
 </div>]]></field>
         </record>

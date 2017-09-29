@@ -201,7 +201,6 @@ class AccountFiscalPositionAccount(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
-    _description = 'Partner'
 
     @api.multi
     def _credit_debit_get(self):
@@ -247,7 +246,7 @@ class ResPartner(models.Model):
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
-        return [('id', 'in', map(itemgetter(0), res))]
+        return [('id', 'in', [r[0] for r in res])]
 
     @api.model
     def _credit_search(self, operator, operand):
@@ -318,14 +317,6 @@ class ResPartner(models.Model):
             domain += overdue_domain
         return domain
 
-    @api.multi
-    def _compute_issued_total(self):
-        """ Returns the issued total as will be displayed on partner view """
-        today = fields.Date.context_today(self)
-        domain = self.get_followup_lines_domain(today, overdue_only=True)
-        for aml in self.env['account.move.line'].search(domain):
-            aml.partner_id.issued_total += aml.amount_residual
-
     @api.one
     def _compute_has_unreconciled_entries(self):
         # Avoid useless work if has_unreconciled_entries is not relevant for this partner
@@ -386,7 +377,6 @@ class ResPartner(models.Model):
 
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
-    issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
@@ -402,7 +392,7 @@ class ResPartner(models.Model):
         help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
+        help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
          string='Vendor Payment Terms',
          help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
@@ -439,11 +429,10 @@ class ResPartner(models.Model):
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
 
-    def open_partner_history(self):
-        '''
-        This function returns an action that display invoices/refunds made for the given partners.
-        '''
+    @api.multi
+    def action_view_partner_invoices(self):
+        self.ensure_one()
         action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
         action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('partner_id', 'child_of', self.ids))
+        action['domain'].append(('partner_id', 'child_of', self.id))
         return action

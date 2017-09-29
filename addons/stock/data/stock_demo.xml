@@ -13,6 +13,7 @@
             <field name="name">IT Vendors</field>
             <field name="location_id" ref="stock_location_suppliers"/>
             <field name="usage">supplier</field>
+            <field name="barcode">2601985</field>
         </record>
         <record id="stock_location_4" model="stock.location">
             <field name="name">Big Vendors</field>
@@ -131,7 +132,7 @@
         </record>
 
         <function model="stock.inventory" name="action_done">
-            <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
+            <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
 

@@ -1,32 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
-# Jonathan S <jonathan.c.strom@gmail.com>, 2016
-# Daniel Forslund <daniel.forslund@gmail.com>, 2016
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
-# Patrik Lermon <patrik.lermon@gmail.com>, 2016
-# Kim Asplund <kim.asplund@gmail.com>, 2017
+# larmar <martin.wilderoth@linserv.se>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2017\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-19 06:30+0000\n"
+"Last-Translator: larmar <martin.wilderoth@linserv.se>\n"
+"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -87,8 +80,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Definera arbetstid och schema som skall utgöra underlag för tidsplanering av"
-" dina projektdeltagare."
+"Definera arbetstid och schema som skall utgöra underlag för tidsplanering av "
+"dina projektdeltagare."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -115,8 +108,7 @@ msgid "End Date"
 msgstr "Slutdatum"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:738
-#, python-format
+#: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Fel! Lämna start-datum måste vara lägre sedan lämna slutdatum."
 
@@ -129,7 +121,7 @@ msgstr "Fredag"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Gruppera på"
+msgstr "Gruppera efter"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -206,7 +198,7 @@ msgstr "Frånvarodetaljer"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr "Frånvaro Månad"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -236,7 +228,7 @@ msgstr "Namn"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "Anledning"
+msgstr "Orsak"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
@@ -299,8 +291,8 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett"
-" specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
+"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett "
+"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
 "arbetsbelastning utifrån en veckoarbetstid."
 
 #. module: resource
@@ -349,18 +341,12 @@ msgid "Sunday"
 msgstr "Söndag"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:714
-#, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
 "Detta fält visar effektiviteten av resursen för att utföra uppgifter. t.ex. "
 "resurs sattes på en etapp i 5 dagar med 5 uppgifter som tilldelats honom, "

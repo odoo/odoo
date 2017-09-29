@@ -10,16 +10,12 @@ from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
 MODULE_UNINSTALL_FLAG = '_force_unlink'
-
-
-def encode(s):
-    """ Return an UTF8-encoded version of ``s``. """
-    return s.encode('utf8') if isinstance(s, unicode) else s
 
 
 # base environment for doing a safe_eval
@@ -34,6 +30,28 @@ def make_compute(text, deps):
     func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
     deps = [arg.strip() for arg in (deps or "").split(",")]
     return api.depends(*deps)(func)
+
+
+# generic INSERT and UPDATE queries
+INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES ({vals}) RETURNING id"
+UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+
+def query_insert(cr, table, values):
+    query = INSERT_QUERY.format(
+        table=table,
+        cols=",".join(values),
+        vals=",".join("%({0})s".format(v) for v in values),
+    )
+    cr.execute(query, values)
+
+def query_update(cr, table, values, selectors):
+    setters = set(values) - set(selectors)
+    query = UPDATE_QUERY.format(
+        table=table,
+        assignment=",".join("{0}=%({0})s".format(s) for s in setters),
+        condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
+    )
+    cr.execute(query, values)
 
 
 #
@@ -74,6 +92,8 @@ class IrModel(models.Model):
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
+    count = fields.Integer(compute='_compute_count', string="Count (incl. archived)",
+                           help="Total number of records in this model")
 
     @api.depends()
     def _inherited_models(self):
@@ -96,6 +116,15 @@ class IrModel(models.Model):
         for model in self:
             model.view_ids = self.env['ir.ui.view'].search([('model', '=', model.model)])
 
+    @api.depends()
+    def _compute_count(self):
+        cr = self.env.cr
+        for model in self:
+            records = self.env[model.model]
+            if not records._abstract:
+                cr.execute('SELECT COUNT(*) FROM "%s"' % records._table)
+                model.count = cr.fetchone()[0]
+
     @api.constrains('model')
     def _check_model_name(self):
         for model in self:
@@ -109,6 +138,19 @@ class IrModel(models.Model):
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
+    def _get(self, name):
+        """ Return the (sudoed) `ir.model` record with the given name.
+        The result may be an empty recordset if the model is not found.
+        """
+        model_id = self._get_id(name) if name else False
+        return self.sudo().browse(model_id)
+
+    @tools.ormcache('name')
+    def _get_id(self, name):
+        self.env.cr.execute("SELECT id FROM ir_model WHERE model=%s", (name,))
+        result = self.env.cr.fetchone()
+        return result and result[0]
+
     # overridden to allow searching both on model name (field 'model') and model
     # description (field 'name')
     @api.model
@@ -121,12 +163,11 @@ class IrModel(models.Model):
     def _drop_table(self):
         for model in self:
             table = self.env[model.model]._table
-            self._cr.execute('select relkind from pg_class where relname=%s', (table,))
-            result = self._cr.fetchone()
-            if result and result[0] == 'v':
-                self._cr.execute('DROP view %s' % table)
-            elif result and result[0] == 'r':
-                self._cr.execute('DROP TABLE %s CASCADE' % table)
+            kind = tools.table_kind(self._cr, table)
+            if kind == 'v':
+                self._cr.execute('DROP VIEW "%s"' % table)
+            elif kind == 'r':
+                self._cr.execute('DROP TABLE "%s" CASCADE' % table)
         return True
 
     @api.multi
@@ -139,26 +180,21 @@ class IrModel(models.Model):
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 
-        imc = self.env['ir.model.constraint'].search([('model', 'in', self.ids)])
-        imc.unlink()
-
         self._drop_table()
         res = super(IrModel, self).unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
         # reload is done independently in odoo.modules.loading.
         if not self._context.get(MODULE_UNINSTALL_FLAG):
-            self._cr.commit()  # must be committed before reloading registry in new cursor
-            api.Environment.reset()
-            registry = Registry.new(self._cr.dbname)
-            registry.signal_registry_change()
+            # setup models; this automatically removes model from registry
+            self.pool.setup_models(self._cr)
 
         return res
 
     @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in self._context.iteritems() if k != '__last_update'})
+            self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
@@ -176,10 +212,9 @@ class IrModel(models.Model):
         res = super(IrModel, self).create(vals)
         if vals.get('state', 'manual') == 'manual':
             # setup models; this automatically adds model in registry
-            self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+            self.pool.setup_models(self._cr)
             # update database schema
             self.pool.init_models(self._cr, [vals['model']], dict(self._context, update_custom_fields=True))
-            self.pool.signal_registry_change()
         return res
 
     @api.model
@@ -191,11 +226,48 @@ class IrModel(models.Model):
         }
         return self.create(vals).name_get()[0]
 
+    def _reflect_model_params(self, model):
+        """ Return the values to write to the database for the given model. """
+        return {
+            'model': model._name,
+            'name': model._description,
+            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'state': 'manual' if model._custom else 'base',
+            'transient': model._transient,
+        }
+
+    def _reflect_model(self, model):
+        """ Reflect the given model and return the corresponding record. Also
+            create entries in 'ir.model.data'.
+        """
+        cr = self.env.cr
+
+        # create/update the entries in 'ir.model' and 'ir.model.data'
+        params = self._reflect_model_params(model)
+        query_update(cr, self._table, params, ['model'])
+        if not cr.rowcount:
+            query_insert(cr, self._table, params)
+
+        record = self.browse(cr.fetchone())
+        self.pool.post_init(record.modified, set(params) - {'model', 'state'})
+
+        if model._module == self._context.get('module'):
+            # self._module is the name of the module that last extended self
+            xmlid = 'model_' + model._name.replace('.', '_')
+            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
+                       (xmlid, self._context['module']))
+            if not cr.rowcount:
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (self._context['module'], xmlid, record._name, record.id))
+
+        return record
+
     @api.model
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = encode(model_data['model'])
+            _name = pycompat.to_native(model_data['model'])
             _description = model_data['name']
             _module = False
             _custom = True
@@ -203,6 +275,23 @@ class IrModel(models.Model):
             __doc__ = model_data['info']
 
         return CustomModel
+
+    def _add_manual_models(self):
+        """ Add extra models to the registry. """
+        # clean up registry first
+        custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
+        for name in custom_models:
+            del self.pool.models[name]
+        # add manual models
+        cr = self.env.cr
+        cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
+        for model_data in cr.dictfetchall():
+            model_class = self._instanciate(model_data)
+            model_class._build_model(self.pool, cr)
+
+
+# retrieve field types defined by the framework only (not extensions)
+FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 
 
 class IrModelFields(models.Model):
@@ -222,7 +311,7 @@ class IrModelFields(models.Model):
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
     help = fields.Text(string='Field Help', translate=True)
-    ttype = fields.Selection(selection='_get_field_types', string='Field Type', required=True)
+    ttype = fields.Selection(selection=FIELD_TYPES, string='Field Type', required=True)
     selection = fields.Char(string='Selection Options', default="",
                             help="List of options for a selection field, "
                                  "specified as a Python expression defining a list of (key, label) pairs. "
@@ -243,11 +332,6 @@ class IrModelFields(models.Model):
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     selectable = fields.Boolean(default=True)
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the field is defined')
-    serialization_field_id = fields.Many2one('ir.model.fields', 'Serialization Field', domain="[('ttype','=','serialized')]",
-                                             ondelete='cascade', help="If set, this field will be stored in the sparse "
-                                                                      "structure of the serialization field, instead "
-                                                                      "of having its own database column. This cannot be "
-                                                                      "changed after creation.")
     relation_table = fields.Char(help="Used for custom many2many fields to define a custom relation table name")
     column1 = fields.Char(string='Column 1', help="Column referring to the record in the model table")
     column2 = fields.Char(string="Column 2", help="Column referring to the record in the comodel table")
@@ -260,11 +344,6 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
-
-    @api.model
-    def _get_field_types(self):
-        # retrieve the possible field types from the field classes' metaclass
-        return sorted((key, key) for key in fields.MetaField.by_type)
 
     @api.depends()
     def _in_modules(self):
@@ -298,15 +377,8 @@ class IrModelFields(models.Model):
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
                 raise ValidationError(msg)
 
-    @api.constrains('model', 'name')
-    def _unique_name(self):
-        # fix on stable branch (to be converted into an SQL constraint)
-        for field in self:
-            count = self.search_count([('model', '=', field.model), ('name', '=', field.name)])
-            if count > 1:
-                raise ValidationError(_("Field names must be unique per model."))
-
     _sql_constraints = [
+        ('name_unique', 'UNIQUE(model, name)', "Field names must be unique per model."),
         ('size_gt_zero', 'CHECK (size>=0)', 'Size of the field cannot be negative.'),
     ]
 
@@ -340,7 +412,7 @@ class IrModelFields(models.Model):
             try:
                 field = self._related_field()
             except UserError as e:
-                return {'warning': {'title': _("Warning"), 'message': e.message}}
+                return {'warning': {'title': _("Warning"), 'message': e}}
             self.ttype = field.type
             self.relation = field.comodel_name
             self.readonly = True
@@ -419,6 +491,20 @@ class IrModelFields(models.Model):
                     'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
                 }}
 
+    def _get(self, model_name, name):
+        """ Return the (sudoed) `ir.model.fields` record with the given model and name.
+        The result may be an empty recordset if the model is not found.
+        """
+        field_id = self._get_id(model_name, name) if model_name and name else False
+        return self.sudo().browse(field_id)
+
+    @tools.ormcache('model_name', 'name')
+    def _get_id(self, model_name, name):
+        self.env.cr.execute("SELECT id FROM ir_model_fields WHERE model=%s AND name=%s",
+                            (model_name, name))
+        result = self.env.cr.fetchone()
+        return result and result[0]
+
     @api.multi
     def _drop_column(self):
         tables_to_drop = set()
@@ -427,14 +513,9 @@ class IrModelFields(models.Model):
             if field.name in models.MAGIC_COLUMNS:
                 continue
             model = self.env[field.model]
-            self._cr.execute('SELECT relkind FROM pg_class WHERE relname=%s', (model._table,))
-            relkind = self._cr.fetchone()
-            self._cr.execute("""SELECT column_name FROM information_schema.columns
-                                WHERE table_name=%s AND column_name=%s""",
-                             (model._table, field.name))
-            column_name = self._cr.fetchone()
-            if column_name and (relkind and relkind[0] == 'r'):
-                self._cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
+            if tools.column_exists(self._cr, model._table, field.name) and \
+                    tools.table_kind(self._cr, model._table) == 'r':
+                self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (model._table, field.name))
             if field.state == 'manual' and field.ttype == 'many2many':
                 rel_name = field.relation_table or model._fields[field.name].relation
                 tables_to_drop.add(rel_name)
@@ -485,8 +566,8 @@ class IrModelFields(models.Model):
         except Exception:
             raise UserError("\n".join([
                 _("Cannot rename/delete fields that are still present in views:"),
-                _("Fields:") + " " + ", ".join(map(str, fields)),
-                _("View:") + " " + view.name,
+                _("Fields: %s") % ", ".join(str(f) for f in fields),
+                _("View: %s") % view.name,
             ]))
         finally:
             # the registry has been modified, restore it
@@ -512,12 +593,11 @@ class IrModelFields(models.Model):
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
         if not self._context.get(MODULE_UNINSTALL_FLAG):
-            self._cr.commit()
-            api.Environment.reset()
-            registry = Registry.new(self._cr.dbname)
-            models = registry.descendants(model_names, '_inherits')
-            registry.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-            registry.signal_registry_change()
+            # setup models; this re-initializes models in registry
+            self.pool.setup_models(self._cr)
+            # update database schema of model and its descendant models
+            models = self.pool.descendants(model_names, '_inherits')
+            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
         return res
 
@@ -541,29 +621,19 @@ class IrModelFields(models.Model):
                 if not self.search([('model_id', '=', vals['relation']), ('name', '=', vals['relation_field']), ('ttype', '=', 'many2one')]):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
-            self.pool.clear_manual_fields()
+            self.clear_caches()                     # for _existing_field_data()
 
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
-                self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+                self.pool.setup_models(self._cr)
                 # update database schema of model and its descendant models
                 models = self.pool.descendants([vals['model']], '_inherits')
                 self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-                self.pool.signal_registry_change()
 
         return res
 
     @api.multi
     def write(self, vals):
-        # For the moment renaming a sparse field or changing the storing system
-        # is not allowed. This may be done later
-        if 'serialization_field_id' in vals or 'name' in vals:
-            for field in self:
-                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise UserError(_('Changing the storing system for field "%s" is not allowed.') % field.name)
-                if field.serialization_field_id and (field.name != vals['name']):
-                    raise UserError(_('Renaming sparse field "%s" is not allowed') % field.name)
-
         # if set, *one* column can be renamed here
         column_rename = None
 
@@ -610,7 +680,7 @@ class IrModelFields(models.Model):
 
         res = super(IrModelFields, self).write(vals)
 
-        self.pool.clear_manual_fields()
+        self.clear_caches()                         # for _existing_field_data()
 
         if column_rename:
             # rename column in database, and its corresponding index if present
@@ -621,15 +691,12 @@ class IrModelFields(models.Model):
 
         if column_rename or patched_models:
             # setup models, this will reload all manual fields in registry
-            self.pool.setup_models(self._cr, partial=(not self.pool.ready))
+            self.pool.setup_models(self._cr)
 
         if patched_models:
             # update the database schema of the models to patch
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
-
-        if column_rename or patched_models:
-            self.pool.signal_registry_change()
 
         return res
 
@@ -640,9 +707,112 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    @api.model
-    def _instanciate(self, field_data, partial):
-        """ Return a field instance corresponding to parameters ``field_data``. """
+    @tools.ormcache('model_name')
+    def _existing_field_data(self, model_name):
+        """ Return the given model's existing field data. """
+        cr = self._cr
+        cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", [model_name])
+        return {row['name']: row for row in cr.dictfetchall()}
+
+    def _reflect_field_params(self, field):
+        """ Return the values to write to the database for the given field. """
+        model = self.env['ir.model']._get(field.model_name)
+        return {
+            'model_id': model.id,
+            'model': field.model_name,
+            'name': field.name,
+            'field_description': field.string,
+            'help': field.help or None,
+            'ttype': field.type,
+            'state': 'manual' if field.manual else 'base',
+            'relation': field.comodel_name or None,
+            'index': bool(field.index),
+            'store': bool(field.store),
+            'copy': bool(field.copy),
+            'related': ".".join(field.related) if field.related else None,
+            'readonly': bool(field.readonly),
+            'required': bool(field.required),
+            'selectable': bool(field.search or field.store),
+            'translate': bool(field.translate),
+            'relation_field': field.inverse_name if field.type == 'one2many' else None,
+            'relation_table': field.relation if field.type == 'many2many' else None,
+            'column1': field.column1 if field.type == 'many2many' else None,
+            'column2': field.column2 if field.type == 'many2many' else None,
+        }
+
+    def _reflect_field(self, field):
+        """ Reflect the given field and return its corresponding record. """
+        fields_data = self._existing_field_data(field.model_name)
+        field_data = fields_data.get(field.name)
+        params = self._reflect_field_params(field)
+
+        if field_data is None:
+            cr = self.env.cr
+            # create an entry in this table
+            query_insert(cr, self._table, params)
+            record = self.browse(cr.fetchone())
+            self.pool.post_init(record.modified, list(params))
+            # create a corresponding xml id
+            module = field._module or self._context.get('module')
+            if module:
+                model = self.env[field.model_name]
+                xmlid = 'field_%s_%s' % (model._table, field.name)
+                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
+                if cr.fetchone():
+                    xmlid = xmlid + "_" + str(record.id)
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (module, xmlid, record._name, record.id))
+            # update fields_data (for recursive calls)
+            fields_data[field.name] = dict(params, id=record.id)
+            return record
+
+        diff = {key for key, val in params.items() if field_data[key] != val}
+        if diff:
+            cr = self.env.cr
+            # update the entry in this table
+            query_update(cr, self._table, params, ['model', 'name'])
+            record = self.browse(cr.fetchone())
+            self.pool.post_init(record.modified, diff)
+            # update fields_data (for recursive calls)
+            field_data.update(params)
+            return record
+
+        else:
+            # nothing to update, simply return the corresponding record
+            return self.browse(field_data['id'])
+
+    def _reflect_model(self, model):
+        """ Reflect the given model's fields. """
+        self.clear_caches()
+        for field in model._fields.values():
+            self._reflect_field(field)
+
+        if not self.pool._init:
+            # remove ir.model.fields that are not in self._fields
+            fields_data = self._existing_field_data(model._name)
+            extra_names = set(fields_data) - set(model._fields)
+            if extra_names:
+                # add key MODULE_UNINSTALL_FLAG in context to (1) force the
+                # removal of the fields and (2) not reload the registry
+                records = self.browse([fields_data.pop(name)['id'] for name in extra_names])
+                records.with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+
+    @tools.ormcache()
+    def _all_manual_field_data(self):
+        cr = self._cr
+        cr.execute("SELECT * FROM ir_model_fields WHERE state='manual'")
+        result = defaultdict(dict)
+        for row in cr.dictfetchall():
+            result[row['model']][row['name']] = row
+        return result
+
+    def _get_manual_field_data(self, model_name):
+        """ Return the given model's manual field data. """
+        return self._all_manual_field_data().get(model_name, {})
+
+    def _instanciate_attrs(self, field_data):
+        """ Return the parameters for a field instance for ``field_data``. """
         attrs = {
             'manual': True,
             'string': field_data['field_description'],
@@ -654,30 +824,29 @@ class IrModelFields(models.Model):
             'readonly': bool(field_data['readonly']),
             'store': bool(field_data['store']),
         }
-        # FIXME: ignore field_data['serialization_field_id']
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
             attrs['size'] = field_data['size'] or None
         elif field_data['ttype'] in ('selection', 'reference'):
             attrs['selection'] = safe_eval(field_data['selection'])
         elif field_data['ttype'] == 'many2one':
-            if partial and field_data['relation'] not in self.env:
+            if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'one2many':
-            if partial and not (
+            if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
                     field_data['relation_field'] in self.env[field_data['relation']]._fields or
-                    field_data['relation_field'] in self.pool.get_manual_fields(self._cr, field_data['relation'])
+                    field_data['relation_field'] in self._get_manual_field_data(field_data['relation'])
             )):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['inverse_name'] = field_data['relation_field']
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'many2many':
-            if partial and field_data['relation'] not in self.env:
+            if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
             attrs['comodel_name'] = field_data['relation']
             rel, col1, col2 = self._custom_many2many_names(field_data['model'], field_data['relation'])
@@ -688,8 +857,22 @@ class IrModelFields(models.Model):
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
+        return attrs
 
-        return fields.Field.by_type[field_data['ttype']](**attrs)
+    def _instanciate(self, field_data):
+        """ Return a field instance corresponding to parameters ``field_data``. """
+        attrs = self._instanciate_attrs(field_data)
+        if attrs:
+            return fields.Field.by_type[field_data['ttype']](**attrs)
+
+    def _add_manual_fields(self, model):
+        """ Add extra fields on model. """
+        fields_data = self._get_manual_field_data(model._name)
+        for name, field_data in fields_data.items():
+            if name not in model._fields and field_data['state'] == 'manual':
+                field = self._instanciate(field_data)
+                if field:
+                    model._add_field(name, field)
 
 
 class IrModelConstraint(models.Model):
@@ -702,7 +885,7 @@ class IrModelConstraint(models.Model):
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
     definition = fields.Char(help="PostgreSQL constraint definition")
-    model = fields.Many2one('ir.model', required=True, index=True)
+    model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True)
     module = fields.Many2one('ir.module.module', required=True, index=True)
     type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
                        help="Type of the constraint: `f` for a foreign key, "
@@ -765,6 +948,53 @@ class IrModelConstraint(models.Model):
         default['name'] = self.name + '_copy'
         return super(IrModelConstraint, self).copy(default)
 
+    def _reflect_constraint(self, model, conname, type, definition, module):
+        """ Reflect the given constraint, to make it possible to delete it later
+            when the module is uninstalled. ``type`` is either 'f' or 'u'
+            depending on the constraint being a foreign key or not.
+        """
+        if not module:
+            # no need to save constraints for custom models as they're not part
+            # of any module
+            return
+        assert type in ('f', 'u')
+        cr = self._cr
+        query = """ SELECT type, definition
+                    FROM ir_model_constraint c, ir_module_module m
+                    WHERE c.module=m.id AND c.name=%s AND m.name=%s """
+        cr.execute(query, (conname, module))
+        cons = cr.dictfetchone()
+        if not cons:
+            query = """ INSERT INTO ir_model_constraint
+                            (name, date_init, date_update, module, model, type, definition)
+                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                            (SELECT id FROM ir_module_module WHERE name=%s),
+                            (SELECT id FROM ir_model WHERE model=%s), %s, %s) """
+            cr.execute(query, (conname, module, model._name, type, definition))
+        elif cons['type'] != type or (definition and cons['definition'] != definition):
+            query = """ UPDATE ir_model_constraint
+                        SET date_update=now() AT TIME ZONE 'UTC', type=%s, definition=%s
+                        WHERE name=%s AND module=(SELECT id FROM ir_module_module WHERE name=%s) """
+            cr.execute(query, (type, definition, conname, module))
+
+    def _reflect_model(self, model):
+        """ Reflect the _sql_constraints of the given model. """
+        def cons_text(txt):
+            return txt.lower().replace(', ',',').replace(' (','(')
+
+        # map each constraint on the name of the module where it is defined
+        constraint_module = {
+            constraint[0]: cls._module
+            for cls in reversed(type(model).mro())
+            if not getattr(cls, 'pool', None)
+            for constraint in getattr(cls, '_local_sql_constraints', ())
+        }
+
+        for (key, definition, _) in model._sql_constraints:
+            conname = '%s_%s' % (model._table, key)
+            module = constraint_module.get(key)
+            self._reflect_constraint(model, conname, 'u', cons_text(definition), module)
+
 
 class IrModelRelation(models.Model):
     """
@@ -800,16 +1030,31 @@ class IrModelRelation(models.Model):
                 # as installed modules have defined this element we must not delete it!
                 continue
 
-            self._cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
-            if self._cr.fetchone():
+            if tools.table_exists(self._cr, name):
                 to_drop.add(name)
 
         self.unlink()
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute('DROP TABLE %s CASCADE' % table,)
+            self._cr.execute('DROP TABLE "%s" CASCADE' % table,)
             _logger.info('Dropped table %s', table)
+
+    def _reflect_relation(self, model, table, module):
+        """ Reflect the table of a many2many field for the given model, to make
+            it possible to delete it later when the module is uninstalled.
+        """
+        cr = self._cr
+        query = """ SELECT 1 FROM ir_model_relation r, ir_module_module m
+                    WHERE r.module=m.id AND r.name=%s AND m.name=%s """
+        cr.execute(query, (table, module))
+        if not cr.rowcount:
+            query = """ INSERT INTO ir_model_relation (name, date_init, date_update, module, model)
+                        VALUES (%s, now() AT TIME ZONE 'UTC', now() AT TIME ZONE 'UTC',
+                                (SELECT id FROM ir_module_module WHERE name=%s),
+                                (SELECT id FROM ir_model WHERE model=%s)) """
+            cr.execute(query, (table, module, model._name))
+            self.invalidate_cache()
 
 
 class IrModelAccess(models.Model):
@@ -847,7 +1092,7 @@ class IrModelAccess(models.Model):
         else:
             model_name = model
 
-        if isinstance(group_ids, (int, long)):
+        if isinstance(group_ids, pycompat.integer_types):
             group_ids = [group_ids]
 
         query = """ SELECT 1 FROM ir_model_access a
@@ -885,18 +1130,13 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
+        assert isinstance(model, pycompat.string_types), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
-        if isinstance(model, models.BaseModel):
-            assert model._name == 'ir.model', 'Invalid model object'
-            model_name = model.model
-        else:
-            model_name = model
-
         # TransientModel records have no access rights, only an implicit access rule
-        if model_name not in self.env:
-            _logger.error('Missing model %s', model_name)
-        elif self.env[model_name].is_transient():
+        if model not in self.env:
+            _logger.error('Missing model %s', model)
+        elif self.env[model].is_transient():
             return True
 
         # We check if a specific rule exists
@@ -907,7 +1147,7 @@ class IrModelAccess(models.Model):
                              WHERE m.model = %s
                                AND gu.uid = %s
                                AND a.active IS TRUE""".format(mode=mode),
-                         (model_name, self._uid,))
+                         (model, self._uid,))
         r = self._cr.fetchone()[0]
 
         if not r:
@@ -918,11 +1158,11 @@ class IrModelAccess(models.Model):
                                  WHERE a.group_id IS NULL
                                    AND m.model = %s
                                    AND a.active IS TRUE""".format(mode=mode),
-                             (model_name,))
+                             (model,))
             r = self._cr.fetchone()[0]
 
         if not r and raise_exception:
-            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(model_name, mode))
+            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(model, mode))
             msg_heads = {
                 # Messages are declared in extenso so they are properly exported in translation terms
                 'read': _("Sorry, you are not allowed to access this document."),
@@ -932,11 +1172,11 @@ class IrModelAccess(models.Model):
             }
             if groups:
                 msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document model") + ": %s)"
-                msg_params = (groups, model_name)
+                msg_params = (groups, model)
             else:
                 msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
-                msg_params = (model_name,)
-            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model_name)
+                msg_params = (model,)
+            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise AccessError(msg % msg_params)
 
@@ -1008,7 +1248,7 @@ class IrModelData(models.Model):
     @api.depends('module', 'name')
     def _compute_complete_name(self):
         for res in self:
-            res.complete_name = ".".join(filter(None, [res.module, res.name]))
+            res.complete_name = ".".join(n for n in [res.module, res.name] if n)
 
     @api.depends('model', 'res_id')
     def _compute_reference(self):
@@ -1026,12 +1266,10 @@ class IrModelData(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_module_name_uniq_index'")
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE UNIQUE INDEX ir_model_data_module_name_uniq_index ON ir_model_data (module, name)')
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_model_data_model_res_id_index'")
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX ir_model_data_model_res_id_index ON ir_model_data (model, res_id)')
+        tools.create_unique_index(self._cr, 'ir_model_data_module_name_uniq_index',
+                                  self._table, ['module', 'name'])
+        tools.create_index(self._cr, 'ir_model_data_model_res_id_index',
+                           self._table, ['model', 'res_id'])
         return res
 
     @api.multi
@@ -1041,7 +1279,7 @@ class IrModelData(models.Model):
             model_id_name[xid.model][xid.res_id] = None
 
         # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in model_id_name.iteritems():
+        for model, id_name in model_id_name.items():
             try:
                 ng = self.env[model].browse(id_name).name_get()
                 id_name.update(ng)
@@ -1060,7 +1298,7 @@ class IrModelData(models.Model):
         Return (id, res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
-        xid = self.search([('module', '=', module), ('name', '=', name)])
+        xid = self.sudo().search([('module', '=', module), ('name', '=', name)])
         if not xid:
             raise ValueError('External ID not found in the system: %s' % xmlid)
         # the sql constraints ensure us we have only one result
@@ -1086,8 +1324,8 @@ class IrModelData(models.Model):
 
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a browse_record
-        if not found and raise_if_not_found is False return None
+        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
+        set
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
         res_model, res_id = t
@@ -1138,7 +1376,7 @@ class IrModelData(models.Model):
                 record = self.get_object(module, xml_id)
                 if record:
                     self.loads[(module, xml_id)] = (model, record.id)
-                    for parent_model, parent_field in self.env[model]._inherits.iteritems():
+                    for parent_model, parent_field in self.env[model]._inherits.items():
                         parent = record[parent_field]
                         parent_xid = '%s_%s' % (xml_id, parent_model.replace('.', '_'))
                         self.loads[(module, parent_xid)] = (parent_model, parent.id)
@@ -1193,7 +1431,7 @@ class IrModelData(models.Model):
         elif record:
             record.write(values)
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
+                for parent_model, parent_field in record._inherits.items():
                     self.sudo().create({
                         'name': xml_id + '_' + parent_model.replace('.', '_'),
                         'model': parent_model,
@@ -1212,8 +1450,8 @@ class IrModelData(models.Model):
         elif mode == 'init' or (mode == 'update' and xml_id):
             existing_parents = set()            # {parent_model, ...}
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
-                    xid = self.search([
+                for parent_model, parent_field in record._inherits.items():
+                    xid = self.sudo().search([
                         ('module', '=', module),
                         ('name', '=', xml_id + '_' + parent_model.replace('.', '_')),
                     ])
@@ -1232,7 +1470,7 @@ class IrModelData(models.Model):
                 inherit_models = [record]
                 while inherit_models:
                     current_model = inherit_models.pop()
-                    for parent_model_name, parent_field in current_model._inherits.iteritems():
+                    for parent_model_name, parent_field in current_model._inherits.items():
                         inherit_models.append(self.env[parent_model_name])
                         if parent_model_name in existing_parents:
                             continue
@@ -1258,7 +1496,7 @@ class IrModelData(models.Model):
 
         if xml_id and record:
             self.loads[(module, xml_id)] = (model, record.id)
-            for parent_model, parent_field in record._inherits.iteritems():
+            for parent_model, parent_field in record._inherits.items():
                 parent_xml_id = xml_id + '_' + parent_model.replace('.', '_')
                 self.loads[(module, parent_xml_id)] = (parent_model, record[parent_field].id)
 
@@ -1282,31 +1520,13 @@ class IrModelData(models.Model):
         self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
 
         datas = self.search([('module', 'in', modules_to_remove)])
-        wkf_todo = []
         to_unlink = tools.OrderedSet()
         undeletable = self.browse([])
 
         for data in datas.sorted(key='id', reverse=True):
             model = data.model
             res_id = data.res_id
-
             to_unlink.add((model, res_id))
-
-            if model == 'workflow.activity':
-                # Special treatment for workflow activities: temporarily revert their
-                # incoming transition and trigger an update to force all workflow items
-                # to move out before deleting them
-                self._cr.execute('SELECT res_type, res_id FROM wkf_instance WHERE id IN (SELECT inst_id FROM wkf_workitem WHERE act_id=%s)', (res_id,))
-                wkf_todo.extend(self._cr.fetchall())
-                self._cr.execute("UPDATE wkf_transition SET condition='True', group_id=NULL, signal=NULL, act_to=act_from, act_from=%s WHERE act_to=%s", (res_id, res_id))
-                self.invalidate_cache()
-
-        for model, res_id in wkf_todo:
-            try:
-                record = self.env[model].browse(res_id)
-                record.step_workflow()
-            except Exception:
-                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
             undeletable = self.browse()

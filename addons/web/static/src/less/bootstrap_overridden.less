@@ -7,6 +7,7 @@
 
 //== Colors
 @brand-primary: @odoo-brand-primary;
+@gray-lighter: @odoo-color-silver;
 
 //== Titles
 @font-size-h1: @odoo-font-size-base + 13px;
@@ -52,6 +53,18 @@
 @btn-primary-border: @odoo-brand-optional;
 @btn-primary-color: white;
 
+//== Dropdowns
+@dropdown-bg: white;
+@dropdown-border: @gray-lighter-dark;
+@dropdown-divider-bg: @gray-lighter-dark;
+@dropdown-link-color: @odoo-main-text-color;
+@dropdown-link-hover-color: @gray-dark;
+@dropdown-link-hover-bg: @gray-lighter;
+@dropdown-link-active-color: @component-active-color;
+@dropdown-link-active-bg: @component-active-bg;
+@dropdown-link-disabled-color: @gray-light;
+@dropdown-header-color: @gray-light;
+
 //== Modals
 @modal-sm: 300px;
 @modal-md: 650px;
@@ -78,7 +91,6 @@
 //== Tables
 @table-bg-accent: #efeff8; // FIXME: expose
 
-
 // ------------------------------------------------------------------
 // Bootstrap components rules (non exposed features variables)
 // ------------------------------------------------------------------
@@ -91,8 +103,42 @@
 }
 
 //== Buttons
+// Mixin to define variations for btn-links and muted btn-links
+.o-btn-link-variant(@color, @color-active) {
+    text-transform: none;
+    .o-hover-text-color(@default-color: @color, @hover-color: @color-active);
+
+    &, &:hover, &:focus, &:active, &.active {
+        border-color: transparent;
+        background-color: transparent
+    }
+
+    &.text-muted, .text-muted {
+        .o-hover-opacity();
+        .o-hover-text-color(@default-color: @text-muted, @hover-color: @color-active);
+    }
+}
 .btn-icon {
   .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+}
+.btn-link {
+    font-weight: @btn-font-weight;
+
+    &.btn-default {
+        .o-btn-link-variant(@text-color, @headings-color);
+    }
+    &.btn-success, &.text-success {
+        .o-btn-link-variant(@text-color, @brand-success);
+    }
+    &.btn-warning, &.text-warning {
+        .o-btn-link-variant(@text-color, @brand-warning);
+    }
+    &.btn-danger, &.text-danger {
+        .o-btn-link-variant(@text-color, @brand-danger);
+    }
+    &.btn-info, &.text-info {
+        .o-btn-link-variant(@text-color, darken(@brand-info, 20%));
+    }
 }
 
 //== Printing improvements

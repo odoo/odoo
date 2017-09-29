@@ -14,7 +14,14 @@ class StockProductionLot(models.Model):
     removal_date = fields.Datetime(string='Removal Date',
         help='This is the date on which the goods with this Serial Number should be removed from the stock.')
     alert_date = fields.Datetime(string='Alert Date',
-        help="This is the date on which an alert should be notified about the goods with this Serial Number.")
+        help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
+    product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Alert Date has been reached.")
+
+    @api.depends('alert_date')
+    def _compute_product_expiry_alert(self):
+        current_date = fields.Datetime.now()
+        for lot in self.filtered(lambda l: l.alert_date):
+            lot.product_expiry_alert = lot.alert_date <= current_date
 
     def _get_dates(self, product_id=None):
         """Returns dates based on number of days configured in current lot's product."""
@@ -24,10 +31,10 @@ class StockProductionLot(models.Model):
             'removal_date': 'removal_time',
             'alert_date': 'alert_time'
         }
-        res = dict.fromkeys(mapped_fields.keys(), False)
+        res = dict.fromkeys(mapped_fields, False)
         product = self.env['product.product'].browse(product_id) or self.product_id
         if product:
-            for field in mapped_fields.keys():
+            for field in mapped_fields:
                 duration = getattr(product, mapped_fields[field])
                 if duration:
                     date = datetime.datetime.now() + datetime.timedelta(days=duration)
@@ -38,7 +45,7 @@ class StockProductionLot(models.Model):
     @api.model
     def create(self, vals):
         dates = self._get_dates(vals.get('product_id'))
-        for d in dates.keys():
+        for d in dates:
             if not vals.get(d):
                 vals[d] = dates[d]
         return super(StockProductionLot, self).create(vals)

@@ -50,4 +50,7 @@ class MailChatController(BusController):
     def mail_chat_history(self, uuid, last_id=False, limit=20):
         request_uid = self._default_request_uid()
         channel = request.env["mail.channel"].sudo(request_uid).search([('uuid', '=', uuid)], limit=1)
-        return channel.sudo(request_uid).channel_fetch_message(last_id, limit)
+        if not channel:
+            return []
+        else:
+            return channel.sudo(request_uid).channel_fetch_message(last_id, limit)

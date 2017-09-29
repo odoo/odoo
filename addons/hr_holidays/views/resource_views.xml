@@ -1,17 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
-    <!-- UoM on resource calendar -->
-    <record id="resource_calendar_form_inherit" model="ir.ui.view">
-        <field name="name">resource.calendar.form.inherit</field>
-        <field name="model">resource.calendar</field>
-        <field name="inherit_id" ref="resource.resource_calendar_form"/>
-        <field name="arch" type="xml">
-            <field name="company_id" position="after">
-                <field name="uom_id" groups="product.group_uom"/>
-            </field>
-        </field>
-    </record>
-
     <!-- Holiday on resource leave -->
     <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.form.inherit</field>
@@ -23,5 +11,4 @@
             </field>
         </field>
     </record>
-
 </odoo>

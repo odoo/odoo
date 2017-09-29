@@ -85,6 +85,7 @@
         <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_09'),ref('tag_vn_05')])]"/>
+        <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_purchase_vat5" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -96,6 +97,7 @@
         <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_08'),ref('tag_vn_04')])]"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_purchase_vat0" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -107,6 +109,7 @@
         <field name="refund_account_id" ref="chart1331"/>
         <field name="type_tax_use">purchase</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_07')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <!-- for sale -->
@@ -120,6 +123,7 @@
         <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_18'),ref('tag_vn_14')])]"/>
+        <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_sale_vat5" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -131,6 +135,7 @@
         <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_17'),ref('tag_vn_13')])]"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_sale_vat0" model="account.tax.template">
         <field name="chart_template_id" ref="vn_template"/>
@@ -142,5 +147,6 @@
         <field name="refund_account_id" ref="chart33311"/>
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('tag_vn_16')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 </odoo>

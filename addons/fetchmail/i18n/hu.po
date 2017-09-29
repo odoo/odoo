@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -52,14 +52,9 @@ msgid "Configuration"
 msgstr "Beállítások"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "A bejövő e-mail átjáró beállítása"
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Megerősített"
+msgstr "Jóváhagyott"
 
 #. module: fetchmail
 #: code:addons/fetchmail/models/fetchmail.py:137
@@ -138,6 +133,11 @@ msgid "Inbound Mail Server"
 msgstr "Beérkező e-mail szerver"
 
 #. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Incoming Email Servers"
+msgstr ""
+
+#. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
@@ -190,6 +190,13 @@ msgid "Login Information"
 msgstr "Bejelentkezési információk"
 
 #. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
+
+#. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
 msgid "Messages"
@@ -213,6 +220,11 @@ msgid ""
 msgstr ""
 "Egyedi szerver művelet lehetőség az összes bejövő e-mail kapcsolásához,  az "
 "ezzel az e-maillel létrehozott vagy frissített rekordon."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Outgoing Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail

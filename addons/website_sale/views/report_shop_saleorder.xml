@@ -13,12 +13,9 @@
                    <tbody class="sale_tbody">
                         <tr>
                             <td>
-                                <strong>Payment Method:</strong> <t t-esc="doc.payment_acquirer_id.name"/><br />
+                                <strong>Payment Acquirer:</strong> <t t-esc="doc.payment_acquirer_id.name"/><br />
                                 <strong>Payment Status:</strong>
-                                <t t-if="doc.payment_acquirer_id.auto_confirm == 'none'">
-                                    <t t-raw="doc.payment_acquirer_id.pending_msg"/>
-                                </t>
-                                <t t-if="doc.payment_acquirer_id.auto_confirm in ['confirm_so', 'generate_and_pay_invoice']">
+                                <t t-if="doc.payment_acquirer_id.journal_id">
                                     <t t-if="doc.payment_tx_id.state == 'pending'">
                                         <t t-raw="doc.payment_acquirer_id.pending_msg"/>
                                     </t>

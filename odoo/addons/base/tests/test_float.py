@@ -4,7 +4,7 @@
 from math import log10
 
 from odoo.tests.common import TransactionCase
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, float_split_str, pycompat
 
 
 class TestFloatPrecision(TransactionCase):
@@ -99,13 +99,12 @@ class TestFloatPrecision(TransactionCase):
         # Note: max precision for double floats is 53 bits of precision or
         # 17 significant decimal digits
         for magnitude in range(7):
-            for i in xrange(len(fractions)):
-                frac, exp, prec = fractions[i], expecteds[i], precisions[i]
+            for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
                 for sign in [-1,1]:
-                    for x in xrange(0,10000,97):
-                        n = x * 10**magnitude
+                    for x in range(0, 10000, 97):
+                        n = x * 10 ** magnitude
                         f = sign * (n + frac)
-                        f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
+                        f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
                         try_round(f, f_exp, digits=prec)
 
         def try_zero(amount, expected):
@@ -152,18 +151,33 @@ class TestFloatPrecision(TransactionCase):
         currency = self.env.ref('base.EUR')
         currency_rate = self.env['res.currency.rate']
 
-        def try_roundtrip(value, expected):
-            rate = currency_rate.create({'name':'2000-01-01',
+        def try_roundtrip(value, expected, date):
+            rate = currency_rate.create({'name': date,
                                          'rate': value,
                                          'currency_id': currency.id})
             self.assertEqual(rate.rate, expected,
                              'Roundtrip error: got %s back from db, expected %s' % (rate, expected))
 
         # res.currency.rate uses 6 digits of precision by default
-        try_roundtrip(2.6748955, 2.674896)
-        try_roundtrip(-2.6748955, -2.674896)
-        try_roundtrip(10000.999999, 10000.999999)
-        try_roundtrip(-10000.999999, -10000.999999)
+        try_roundtrip(2.6748955, 2.674896, '2000-01-01')
+        try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
+        try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
+        try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')
+
+    def test_float_split_05(self):
+        """ Test split method with 2 digits. """
+        currency = self.env.ref('base.EUR')
+
+        def try_split(value, expected):
+            digits = max(0, -int(log10(currency.rounding)))
+            result = float_split_str(value, precision_digits=digits)
+            self.assertEqual(result, expected, 'Split error: got %s, expected %s' % (result, expected))
+
+        try_split(2.674, ('2', '67'))
+        try_split(2.675, ('2', '68'))   # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(-2.675, ('-2', '68')) # in Python 2.7.2, round(2.675,2) gives 2.67
+        try_split(0.001, ('0', '00'))
+        try_split(-0.001, ('-0', '00'))
 
     def test_rounding_invalid(self):
         """ verify that invalid parameters are forbidden """

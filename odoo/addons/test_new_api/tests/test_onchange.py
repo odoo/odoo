@@ -44,7 +44,7 @@ class TestOnChange(common.TransactionCase):
             'author': USER.id,
             'size': 0,
         }
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = self.Message.onchange(values, 'discussion', field_onchange)
         self.assertIn('name', result['value'])
         self.assertEqual(result['value']['name'], "[%s] %s" % (discussion.name, USER.name))
@@ -57,7 +57,7 @@ class TestOnChange(common.TransactionCase):
             'author': USER.id,
             'size': 0,
         }
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = self.Message.onchange(values, 'body', field_onchange)
         self.assertIn('size', result['value'])
         self.assertEqual(result['value']['size'], len(BODY))
@@ -71,7 +71,7 @@ class TestOnChange(common.TransactionCase):
             'author': USER.id,
             'size': 0,
         }
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = self.Message.onchange(values, 'body', field_onchange)
         self.assertNotIn('name', result['value'])
 
@@ -89,7 +89,7 @@ class TestOnChange(common.TransactionCase):
             'root_categ': False,
         }
 
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = Category.onchange(values, 'parent', field_onchange).get('value', {})
         self.assertIn('root_categ', result)
         self.assertEqual(result['root_categ'], root.name_get()[0])
@@ -97,7 +97,7 @@ class TestOnChange(common.TransactionCase):
         values.update(result)
         values['parent'] = False
 
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = Category.onchange(values, 'parent', field_onchange).get('value', {})
         self.assertIn('root_categ', result)
         self.assertIs(result['root_categ'], False)
@@ -136,7 +136,7 @@ class TestOnChange(common.TransactionCase):
                 }),
             ],
         }
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
@@ -157,11 +157,56 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+    def test_onchange_one2many_reference(self):
+        """ test the effect of onchange() on one2many fields with line references """
+        BODY = "What a beautiful day!"
+        USER = self.env.user
+        REFERENCE = "virtualid42"
+
+        field_onchange = self.Discussion._onchange_spec()
+        self.assertEqual(field_onchange.get('name'), '1')
+        self.assertEqual(field_onchange.get('messages'), '1')
+        self.assertItemsEqual(
+            strip_prefix('messages.', field_onchange),
+            ['author', 'body', 'name', 'size', 'important'],
+        )
+
+        # modify discussion name, and check that the reference of the new line
+        # is returned
+        values = {
+            'name': "Foo",
+            'categories': [],
+            'moderator': False,
+            'participants': [],
+            'messages': [
+                (0, REFERENCE, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                    'important': False,
+                }),
+            ],
+        }
+        self.env.cache.invalidate()
+        result = self.Discussion.onchange(values, 'name', field_onchange)
+        self.assertIn('messages', result['value'])
+        self.assertItemsEqual(result['value']['messages'], [
+            (5,),
+            (0, REFERENCE, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.name_get()[0],
+                'size': len(BODY),
+                'important': False,
+            }),
+        ])
+
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
-        partner = self.env.ref('base.res_partner_1')
-        multi = self.env['test_new_api.multi'].create({'partner': partner.id})
-        line = multi.lines.create({'multi': multi.id})
+        partner1 = self.env.ref('base.res_partner_1')
+        multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
+        line1 = multi.lines.create({'multi': multi.id})
 
         field_onchange = multi._onchange_spec()
         self.assertEqual(field_onchange, {
@@ -170,30 +215,66 @@ class TestOnChange(common.TransactionCase):
             'lines': None,
             'lines.name': None,
             'lines.partner': None,
+            'lines.tags': None,
+            'lines.tags.name': None,
         })
 
         values = multi._convert_to_write({key: multi[key] for key in ('name', 'partner', 'lines')})
         self.assertEqual(values, {
-            'name': partner.name,
-            'partner': partner.id,
-            'lines': [(6, 0, [line.id])],
+            'name': partner1.name,
+            'partner': partner1.id,
+            'lines': [(6, 0, [line1.id])],
         })
 
         # modify 'partner'
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
         #       -> set 'name' on all lines
-        partner = self.env.ref('base.res_partner_2')
-        values['partner'] = partner.id
-        values['lines'].append((0, 0, {'name': False, 'partner': False}))
-        self.env.invalidate_all()
+        partner2 = self.env.ref('base.res_partner_2')
+        values = {
+            'name': partner1.name,
+            'partner': partner2.id,             # this one just changed
+            'lines': [(6, 0, [line1.id]),
+                      (0, 0, {'name': False, 'partner': False, 'tags': [(5,)]})],
+        }
+        self.env.cache.invalidate()
+
         result = multi.onchange(values, 'partner', field_onchange)
         self.assertEqual(result['value'], {
-            'name': partner.name,
+            'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line.id, {'name': partner.name, 'partner': (partner.id, partner.name)}),
-                (0, 0, {'name': partner.name, 'partner': (partner.id, partner.name)}),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,)]}),
+            ],
+        })
+
+        # do it again, but this time with a new tag on the second line
+        values = {
+            'name': partner1.name,
+            'partner': partner2.id,             # this one just changed
+            'lines': [(6, 0, [line1.id]),
+                      (0, 0, {'name': False,
+                              'partner': False,
+                              'tags': [(5,), (0, 0, {'name': 'Tag'})]})],
+        }
+        self.env.cache.invalidate()
+
+        result = multi.onchange(values, 'partner', field_onchange)
+        self.assertEqual(result['value'], {
+            'name': partner2.name,
+            'lines': [
+                (5,),
+                (1, line1.id, {'name': partner2.name,
+                               'partner': (partner2.id, partner2.name),
+                               'tags': [(5,)]}),
+                (0, 0, {'name': partner2.name,
+                        'partner': (partner2.id, partner2.name),
+                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
             ],
         })
 
@@ -221,7 +302,7 @@ class TestOnChange(common.TransactionCase):
             'messages': [(4, msg.id) for msg in discussion.messages],
             'participants': [(4, usr.id) for usr in discussion.participants],
         }
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         result = discussion.onchange(values, 'moderator', field_onchange)
 
         self.assertIn('participants', result['value'])
@@ -230,6 +311,28 @@ class TestOnChange(common.TransactionCase):
             [(5,)] + [(1, user.id, {'display_name': user.display_name})
                       for user in discussion.participants + demo],
         )
+
+    def test_onchange_default(self):
+        """ test the effect of a conditional user-default on a field """
+        Foo = self.env['test_new_api.foo']
+        field_onchange = Foo._onchange_spec()
+        self.assertTrue(Foo._fields['value1'].change_default)
+        self.assertEqual(field_onchange.get('value1'), '1')
+
+        # create a user-defined default based on 'value1'
+        self.env['ir.default'].set('test_new_api.foo', 'value2', 666, condition='value1=42')
+
+        # setting 'value1' to 42 should trigger the change of 'value2'
+        self.env.cache.invalidate()
+        values = {'name': 'X', 'value1': 42, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {'value2': 666})
+
+        # setting 'value1' to 24 should not trigger the change of 'value2'
+        self.env.cache.invalidate()
+        values = {'name': 'X', 'value1': 24, 'value2': False}
+        result = Foo.onchange(values, 'value1', field_onchange)
+        self.assertEqual(result['value'], {})
 
     def test_onchange_one2many_value(self):
         """ test the value of the one2many field inside the onchange """
@@ -282,16 +385,16 @@ class TestOnChange(common.TransactionCase):
         })
 
         # check if server-side cache is working correctly
-        self.env.invalidate_all()
+        self.env.cache.invalidate()
         self.assertIn(email, discussion.emails)
         self.assertNotIn(email, discussion.important_emails)
         email.important = True
         self.assertIn(email, discussion.important_emails)
 
         # check that when trigger an onchange, we don't reset important emails
-        # (force `invalidate_all` as but appear in onchange only when we get a
-        # cache miss)
-        self.env.invalidate_all()
+        # (force `invalidate` as but appear in onchange only when we get a cache
+        # miss)
+        self.env.cache.invalidate()
         self.assertEqual(len(discussion.messages), 4)
         values = {
             'name': "Foo Bar",

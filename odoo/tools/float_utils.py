@@ -1,7 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from __future__ import print_function
 import math
+
+from odoo.tools import pycompat
+
+if not pycompat.PY2:
+    import builtins
+    def round(f):
+        # P3's builtin round differs from P2 in the following manner:
+        # * it rounds half to even rather than up (away from 0)
+        # * round(-0.) loses the sign (it returns -0 rather than 0)
+        # * round(x) returns an int rather than a float
+        #
+        # this compatibility shim implements Python 2's round in terms of
+        # Python 3's so that important rounding error under P3 can be
+        # trivially fixed, assuming the P2 behaviour to be debugged and
+        # correct.
+        roundf = builtins.round(f)
+        if builtins.round(f + 1) - roundf != 1:
+            return f + math.copysign(0.5, f)
+        # copysign ensures round(-0.) -> -0 *and* result is a float
+        return math.copysign(roundf, f)
+else:
+    round = round
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
@@ -24,9 +47,10 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
-       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
-           one rounding up to the closest number with the rule that number>=0.5 is 
-           rounded up to 1, and the latest one always rounding up.
+       :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or 'DOWN',
+           the first one rounding up to the closest number with the rule that
+           number>=0.5 is rounded up to 1, the second always rounding up and the
+           latest one always rounding down.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -53,21 +77,22 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     epsilon_magnitude = math.log(abs(normalized_value), 2)
     epsilon = 2**(epsilon_magnitude-53)
     if rounding_method == 'HALF-UP':
-        normalized_value += cmp(normalized_value,0) * epsilon
-        rounded_value = round(normalized_value) # round to integer
+        normalized_value += math.copysign(epsilon, normalized_value)
+        rounded_value = round(normalized_value)     # round to integer
 
-    # TIE-BREAKING: UP (for ceiling operations)
-    # When rounding the value up, we instead subtract the epsilon value
+    # TIE-BREAKING: UP (for ceiling[resp. flooring] operations)
+    # When rounding the value up[resp. down], we instead subtract the epsilon value
     # as the the approximation of the real value may be slightly *above* the
-    # tie limit, this would result in incorrectly rounding up to the next number
-    # The math.ceil operation is applied on the absolute value in order to
+    # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
+    # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is
     # restored.
 
-    elif rounding_method == 'UP':
-        sign = cmp(normalized_value, 0)
+    else:
+        func = math.floor if rounding_method == 'DOWN' else math.ceil
+        sign = math.copysign(1.0, normalized_value)
         normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+        rounded_value = func(abs(normalized_value)) * sign
 
     result = rounded_value * rounding_factor # de-normalize
     return result
@@ -150,22 +175,30 @@ def float_repr(value, precision_digits):
 
 _float_repr = float_repr
 
-class float_precision(float):
-    """ A class for float values that carry precision digits. This is a thin
-        layer on top of ``float``, and the precision digits are not propagated
-        to the result of arithmetic operations. This class is used when
-        converting monetary values to cache, and for serializing them to the
-        database.
+def float_split_str(value, precision_digits):
+    """ Splits the given float 'value' in its unitary and decimal parts. The value
+       is first rounded thanks to the ``precision_digits`` argument given.
+
+       Example: 1.432 would return (1, 43) for a digits precision of 2.
+
+       :param float value: value to split.
+       :param int precision_digits: number of fractional digits to round to.
+       :return: returns the tuple(<unitary part>, <decimal part>) of the given value
+       :rtype: tuple(str, str)
     """
-    __slots__ = ['precision_digits']
+    value = float_round(value, precision_digits=precision_digits)
+    value_repr = float_repr(value, precision_digits)
+    units, cents = value_repr.split('.')
+    return units, cents
 
-    def __new__(cls, value, precision_digits):
-        obj = super(float_precision, cls).__new__(cls, value)
-        obj.precision_digits = precision_digits
-        return obj
+def float_split(value, precision_digits):
+    """ same as float_split_str() except that it returns the unitary and decimal
+        parts as integers instead of strings.
 
-    def float_repr(self):
-        return _float_repr(self, self.precision_digits)
+       :rtype: tuple(int, int)
+    """
+    units, cents = float_split_str(value, precision_digits)
+    return int(units), int(cents)
 
 
 if __name__ == "__main__":
@@ -181,20 +214,19 @@ if __name__ == "__main__":
                             precision_digits=precision_digits)
         if result != expected:
             errors += 1
-            print '###!!! Rounding error: got %s , expected %s' % (result, expected)
+            print('###!!! Rounding error: got %s , expected %s' % (result, expected))
 
     # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
     fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
     for magnitude in range(7):
-        for i in xrange(len(fractions)):
-            frac, exp, prec = fractions[i], expecteds[i], precisions[i]
+        for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
             for sign in [-1,1]:
-                for x in xrange(0,10000,97):
+                for x in range(0, 10000, 97):
                     n = x * 10**magnitude
                     f = sign * (n + frac)
-                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp 
+                    f_exp = ('-' if f != 0 and sign == -1 else '') + str(n) + exp
                     try_round(f, f_exp, precision_digits=prec)
 
     stop = time.time()
@@ -203,4 +235,4 @@ if __name__ == "__main__":
     # 47130 round calls in 0.422306060791 secs, with Python 2.6.7 on Core i3 x64
     # with decimal:
     # 47130 round calls in 6.612248100021 secs, with Python 2.6.7 on Core i3 x64
-    print count, " round calls, ", errors, "errors, done in ", (stop-start), 'secs'
+    print(count, " round calls, ", errors, "errors, done in ", (stop-start), 'secs')

@@ -40,6 +40,7 @@ For more specific needs, you may also assign custom-defined actions
         'security/ir.model.access.csv',
         'views/fetchmail_views.xml',
         'views/mail_mail_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [],
     'installable': True,

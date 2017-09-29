@@ -1,40 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# Bàrbara Partegàs <barbararof@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Josep Sànchez <papapep@gmx.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:35+0000\n"
-"PO-Revision-Date: 2016-09-19 12:35+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-12-03 12:53+0000\n"
+"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "(reload fonts)"
-msgstr "(recarregar fonts)"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Aquesta configuració esta relacionada amb la companyia en la "
-"questas conectada.</span>"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
@@ -49,7 +31,7 @@ msgstr "Permet compartir documents"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allow multi currencies"
-msgstr "Permetre multi divisa"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
@@ -64,12 +46,13 @@ msgstr "Permet als usuaris importar dades de fitxers CSV/XLS/XLSX/ODS"
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Permet treballar en un entorn multi-divisa"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
-msgstr "Aplicar"
+msgstr "Aplica"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
@@ -83,22 +66,20 @@ msgstr "Autenticació"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_custom_footer
-msgid ""
-"Check this to define the report footer manually. Otherwise it will be filled"
-" in automatically."
-msgstr ""
-"Marqui si vol definir el peu d'informe manualment. En un altre cas "
-"s'emplenarà automàticament."
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Client"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
-msgid "Company"
-msgstr "Companyia"
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Configurar Vendes"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -112,33 +93,34 @@ msgstr "Configurar les dades de la vostra empresa"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Creat per"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Creat el"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
-msgid "Custom Report Footer *"
-msgstr "Peu de pàgina de l'informe personalitzat *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
-msgid "Custom footer *"
-msgstr "Peu de pàgina personalitzat *"
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Client"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Mostra Nom"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Edit default access rights for new users"
-msgstr "Editar regles d'accés per defecte per a nous usuaris"
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donant"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -146,22 +128,10 @@ msgid "Email"
 msgstr "Correu electrònic"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
-msgid "Font *"
-msgstr "Font *"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Footer text displayed at the bottom of all reports."
-msgstr "Text mostrat al peu de pàgina de tots els informes."
-
-#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_config
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "Configuració General"
+msgstr "Configuració general"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
@@ -184,14 +154,26 @@ msgid "Google Integration"
 msgstr "Integració Google"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Convidat"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Com voleu anomenar un Client"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Import / Export"
-msgstr "Importar / Exportar  "
+msgstr "Importa / Exporta"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -200,18 +182,24 @@ msgstr "Entre empreses "
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
-msgstr "Última modificació el "
+msgstr "Darrera modificació feta el"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
-msgstr "Última actualització per"
+msgstr "Actualitzat per última vegada per"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
-msgstr "Última actualització el"
+msgstr "Actualitzat per última vegada el dia"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
@@ -224,6 +212,11 @@ msgid "Manage multiple companies"
 msgstr "Gestiona múltiples empreses"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Membre"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Multi companyia"
@@ -231,26 +224,26 @@ msgstr "Multi companyia"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Currencies"
-msgstr "Monedes múltiples"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "New users access rights"
-msgstr "Noves regles d'accés d'usuari"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
 msgstr ""
 "Un cop instal·lat, podeu configurar les credencials de al vostra API per a "
 "\"Google Calendar\""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
-msgid "Paper Format *"
-msgstr "Format paper *"
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Pacient "
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -258,52 +251,8 @@ msgid "Portal access"
 msgstr "Portal d'accés "
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Preview RML Report"
-msgstr "Prèvia RML Report"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
-msgid "RML Header *"
-msgstr "Capçalera RML *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
-msgid "RML Internal Header *"
-msgstr "Capçalera interna RML *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
-msgid "RML Internal Header for Landscape Reports *"
-msgstr "Capçalera interna RML per informes Horitzontals *"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "RML Report Configuration"
-msgstr "Configuració de l'informe RML"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Report Configuration"
-msgstr "Paràmetres de l'informe"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Report Footer *"
-msgstr "Peu de pàgina de l'informe"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_font
-msgid ""
-"Set the font into the report header, it will be used as default font in the "
-"RML reports of the user company"
-msgstr ""
-"Estableixi el tipus de lletra en la capçalera de l'informe, i s'utilitzarà "
-"com el tipus predefinit als informes RML de la companyia de l'usuari."
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embed any screen of Odoo."
+msgid "Share or embbed any screen of Odoo."
 msgstr "Comparteix o incrusta qualsevol pantalla de Odoo."
 
 #. module: base_setup
@@ -315,17 +264,32 @@ msgstr "Compartir socis per a totes les empreses"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
 msgstr ""
 "Comparteix els teus socis a totes les empreses definides en la instància..\n"
-" * Marcat : Els socis són visibles per a totes les companyies, fins i tot si l'empresa està definida al soci.\n"
-" * Desmarcat : Cada empresa pot veure només els seus socis (socis, on l'empresa es defineix). Els socis no relacionats amb una empresa són visibles per a totes les empreses."
+" * Marcat : Els socis són visibles per a totes les companyies, fins i tot si "
+"l'empresa està definida al soci.\n"
+" * Desmarcat : Cada empresa pot veure només els seus socis (socis, on "
+"l'empresa es defineix). Els socis no relacionats amb una empresa són "
+"visibles per a totes les empreses."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
 msgstr "Recursos compartits"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Especifiqueu la vostra Terminologia "
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Inquilí "
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
@@ -341,23 +305,33 @@ msgstr "Això instal·la el mòdul google_docs."
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
 msgstr ""
 "Això instal·la el mòdul inter_company_rules.\n"
-"Configura les regles de l'empresa per crear SO/PO quan una de les nostres empreses ven/compra a un altra empresa nostra."
+"Configura les regles de l'empresa per crear SO/PO quan una de les nostres "
+"empreses ven/compra a un altra empresa nostra."
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Utilitzar una altra paraula per dir \"Client\""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
-msgstr "Ús de proveïdors d'autenticació externs (OAuth)"
+msgid "Use external authentication providers, sign in with Google..."
+msgstr "Utilitzar un proveïdor d'autenticació extern, entrada amb Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
 msgstr ""
 "Quan envieu un document a un client\n"
@@ -369,11 +343,20 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
+"Work in multi-company environments, with appropriate security access between "
+"companies."
 msgstr ""
 "Treballar en entorns multi-empresa, amb l'accés de seguretat adient entre "
 "empreses. "
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+"Podeu utilitzar aquest assistent per canviar la terminologia per als clients "
+"en tota l'aplicació. "
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -388,3 +371,13 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"

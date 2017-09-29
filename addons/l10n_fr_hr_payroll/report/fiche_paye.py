@@ -30,9 +30,9 @@ class FichePayeParser(models.AbstractModel):
         return self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id)], limit=1)
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         payslip = self.env['hr.payslip'].browse(docids)
-        docargs = {
+        return {
             'doc_ids': docids,
             'doc_model': 'hr.payslip',
             'data': data,
@@ -42,4 +42,3 @@ class FichePayeParser(models.AbstractModel):
             'get_total_by_rule_category': self.get_total_by_rule_category,
             'get_employer_line': self.get_employer_line,
         }
-        return self.env['report'].render('l10n_fr_hr_payroll.report_l10n_fr_fiche_paye', docargs)

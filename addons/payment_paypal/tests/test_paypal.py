@@ -3,10 +3,11 @@
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
+from werkzeug import urls
+
 from odoo.tools import mute_logger
 
 from lxml import objectify
-import urlparse
 
 
 class PaypalCommon(PaymentAcquirerCommon):
@@ -60,16 +61,19 @@ class PaypalForm(PaypalCommon):
             'zip': '1000',
             'country': 'BE',
             'email': 'norbert.buyer@example.com',
-            'return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
-            'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
-            'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
+            'return': urls.url_join(base_url, PaypalController._return_url),
+            'notify_url': urls.url_join(base_url, PaypalController._notify_url),
+            'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
         }
 
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'paypal: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
         for form_input in tree.input:
-            if form_input.get('name') in ['submit']:
+            if form_input.get('name') in ['submit', 'data_set']:
                 continue
             self.assertEqual(
                 form_input.get('value'),
@@ -98,7 +102,10 @@ class PaypalForm(PaypalCommon):
         # check form result
         handling_found = False
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'paypal: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
         for form_input in tree.input:
             if form_input.get('name') in ['handling']:
                 handling_found = True

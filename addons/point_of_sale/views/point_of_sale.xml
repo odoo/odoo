@@ -20,4 +20,100 @@
             <script type="text/javascript" src="/point_of_sale/static/src/js/screens.js"></script>
             <script type="text/javascript" src="/point_of_sale/static/src/js/tests.js"></script>
         </template>
+
+    <template id="FieldTextHtml">
+        <t t-set="head">
+            <t t-raw="head"/>
+            <t t-if="enable_editor">
+                <link rel="stylesheet" href="/point_of_sale/static/src/css/customer_facing_display_editor_thumb.css" type="text/css"/>
+            </t>
+        </t>
+        <t t-call="web_editor.layout">
+            <div id="editable_area"
+                 class="o_editable"
+                 t-att-data-oe-model="model"
+                 t-att-data-oe-field="field"
+                 t-att-data-oe-id="res_id"
+                 data-oe-type="html">
+                <t t-raw="content" />
+            </div>
+        </t>
+    </template>
+
+    <template id="customer_facing_display_html" >
+        <t name="point_of_sale.customer_facing_display_html" >
+            <div class="pos-customer_facing_display pos-palette_01">
+                <div class="pos-customer_products" name="Products list">
+                    <div class="pos_orderlines">
+                        <div class="pos_orderlines_item pos_orderlines_header">
+                            <div/>
+                            <div/>
+                            <div>Quantity</div>
+                            <div>Price</div>
+                        </div>
+                        <div class="pos_orderlines_list">
+                            <div class="pos_orderlines_item">
+                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-water.jpg)"/></div>
+                                <div>Water</div>
+                                <div>2</div>
+                                <div>$ 4.40</div>
+                            </div>
+                            <div class="pos_orderlines_item">
+                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-fanta.jpg)"/></div>
+                                <div>Fanta</div>
+                                <div>3</div>
+                                <div>$ 3.12</div>
+                            </div>
+                            <div class="pos_orderlines_item">
+                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-gordon.jpg)"/></div>
+                                <div>Gordon</div>
+                                <div>3</div>
+                                <div>$ 8.50</div>
+                            </div>
+                            <div class="pos_orderlines_item">
+                                <div><div style="background-image:url(/pos_data_drinks/static/img/th-malibu.jpg)"/></div>
+                                <div>Malibu Drink</div>
+                                <div>1</div>
+                                <div>$ 4.50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pos-payment_info">
+                    <div class="pos-adv" style="background-image:url(http://placehold.it/300x350?text=ADV);"></div>
+                    <div class="pos-company_logo"/>
+            
+                    <div class="pos-payment_info_details">
+                        <div class="pos-total">
+                            <div>
+                                <span class="total-amount-formatting">TOTAL</span>
+                            </div>
+                            <div>
+                                <span id="total-amount" class="pos_total-amount">$ 469.14</span>
+                            </div>
+                        </div>
+                        <div class="pos-paymentlines">
+                            <div>
+                                <span>Cash (USD):</span>
+                            </div>
+                            <div>
+                                <span>$ 470.00</span>
+                            </div>
+                            <div>
+                                <span class="pos-change_title">Change</span>
+                            </div>
+                            <div>
+                                <span class="pos-change_amount">$ 0.86</span>
+                            </div>
+                        </div>
+                        <div class="pos-odoo_logo_container">
+                            <img src="/web/static/src/img/logo_inverse_white_206px.png" alt="Odoo Logo"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>                    
+    </template>
+
 </odoo>

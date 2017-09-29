@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_byproduct
-# 
+#
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# ТАрас <tratatuta@i.ua>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko, 2015
+# Bohdan Lisnenko, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-05-06 12:24+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
@@ -57,9 +58,26 @@ msgid "Created on"
 msgstr "Дата створення"
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,help:mrp_byproduct.field_mrp_subproduct_subproduct_type
+msgid ""
+"Define how the quantity of byproducts will be set on the production orders "
+"using this BoM.  'Fixed' depicts a situation where the quantity of created "
+"byproduct is always equal to the quantity set on the BoM, regardless of how "
+"many are created in the production order.  By opposition, 'Variable' means "
+"that the quantity will be computed as    '(quantity of byproduct set on the "
+"BoM / quantity of manufactured product set on the BoM * quantity of "
+"manufactured product in the production order.)'"
+msgstr ""
+
+#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: mrp_byproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Фіксований"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
@@ -82,11 +100,6 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
-msgid "Produced at Operation"
-msgstr ""
-
-#. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
 msgid "Product"
 msgstr "Товар"
@@ -97,27 +110,23 @@ msgid "Product Qty"
 msgstr "К-сть"
 
 #. module: mrp_byproduct
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom
+msgid "Product Unit of Measure"
+msgstr "Одиниця виміру товару"
+
+#. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
+#, fuzzy
 msgid "Production"
-msgstr "Виробництво"
+msgstr "Товар"
 
 #. module: mrp_byproduct
-#: model:ir.model,name:mrp_byproduct.model_stock_move
-msgid "Stock Move"
-msgstr "Переміщення запасів"
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_subproduct_type
+msgid "Quantity Type"
+msgstr "Тип кількості"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
-msgid "Subproduct"
-msgstr ""
-
-#. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
-msgid "Subproduct line that generated the move in a manufacturing order"
-msgstr ""
-
-#. module: mrp_byproduct
-#: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
+#: code:addons/mrp_byproduct/mrp_byproduct.py:45
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -125,12 +134,15 @@ msgid ""
 msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
-msgid "Unit of Measure"
-msgstr "Одиниця виміру"
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Змінний"
 
 #. module: mrp_byproduct
-#: code:addons/mrp_byproduct/models/mrp_subproduct.py:31
+#: code:addons/mrp_byproduct/mrp_byproduct.py:45
 #, python-format
 msgid "Warning"
 msgstr "Попередження"
+
+#~ msgid "Manufacturing Order"
+#~ msgstr "Замовлення на виробництво"

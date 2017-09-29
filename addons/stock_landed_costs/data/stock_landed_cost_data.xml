@@ -8,10 +8,6 @@
             <field name="description">Landed cost validated</field>
         </record>
 
-        <record model="res.groups" id="base.group_user">
-            <field name="implied_ids" eval="[(4, ref('stock_account.group_inventory_valuation'))]"/>
-        </record>
-
         <record id="seq_stock_landed_costs" model="ir.sequence">
             <field name="name">Stock Landed Costs</field>
             <field name="code">stock.landed.cost</field>

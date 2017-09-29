@@ -5,7 +5,7 @@
     'name': 'Sale Service Rating',
     'category': 'Hidden',
     'description': """
-This module allows a customer to give rating on task which are created from sale order.
+This module allows a customer to give rating on task which are created from sales order.
 """,
     'depends': [
         'rating_project',

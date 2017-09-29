@@ -30,7 +30,7 @@ class MrpProduction(models.Model):
                 'subproduct_id': sub_product.id
             }
             move = Move.create(data)
-            move.action_confirm()
+            move._action_confirm()
 
     @api.multi
     def _generate_moves(self):

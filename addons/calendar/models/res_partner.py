@@ -16,7 +16,7 @@ class Partner(models.Model):
     @api.multi
     def get_attendee_detail(self, meeting_id):
         """ Return a list of tuple (id, name, status)
-            Used by web_calendar.js : Many2ManyAttendee
+            Used by base_calendar.js : Many2ManyAttendee
         """
         datas = []
         meeting = None

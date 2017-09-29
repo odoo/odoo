@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="view_event_question_form">
+    <field name="name">event.question.form</field>
+    <field name="model">event.question</field>
+    <field name="arch" type="xml">
+        <form string="Question">
+            <h1><field name="title" /></h1>
+            <field name="is_individual"/>
+            <label for="is_individual"/>
+            <field name="answer_ids">
+                <tree editable="bottom">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                </tree>
+            </field>
+        </form>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_event_answer_simplified_form">
+    <field name="name">event.answer.simplified.form</field>
+    <field name="model">event.answer</field>
+    <field name="arch" type="xml">
+        <form string="Question">
+            <group>
+                <field name="name"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="event_type_view_form_inherit_question" model="ir.ui.view">
+    <field name="name">event.type.view.form.inherit.question</field>
+    <field name="model">event.type</field>
+    <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
+    <field name="arch" type="xml">
+        <div name="event_type_attendees_auto_confirm" position="after">
+            <div class="col-xs-12 col-md-12 o_setting_box">
+                <div class="o_setting_left_pane">
+                    <field name="use_questions"/>
+                </div>
+                <div class="o_setting_right_pane">
+                    <label for="use_questions"/>
+                    <div class="row mt16" attrs="{'invisible': [('use_questions', '=', False)]}">
+                        <div class="col-md-9">
+                            <field name="question_ids"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_event_form_inherit_question">
+    <field name="name">event.event.view.form.inherit.question</field>
+    <field name="model">event.event</field>
+    <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//notebook" position="inside">
+                <page string="Questions">
+                    <field name="question_ids" nolabel="1">
+                        <tree>
+                            <field name="sequence" widget="handle" />
+                            <field name="title"/>
+                            <field name="is_individual"/>
+                            <field name="answer_ids"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+       </data>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_event_registration_form_inherit_question">
+    <field name="name">event.registration.form.inherit.question</field>
+    <field name="model">event.registration</field>
+    <field name="inherit_id" ref="event.view_event_registration_form" />
+    <field name="arch" type="xml">
+        <group name="event" position="inside">
+            <field name="answer_ids" widget="many2many_tags" readonly="1"/>
+        </group>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="view_registration_search_inherit_question">
+    <field name="name">event.registration.search.inherit.question</field>
+    <field name="model">event.registration</field>
+    <field name="inherit_id" ref="event.view_registration_search"/>
+    <field name="arch" type="xml">
+        <search position="inside">
+            <field name="answer_ids" string="Answers"/>
+        </search>
+    </field>
+</record>
+
+</odoo>

@@ -163,7 +163,9 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 - Try to group the record by model. In case of dependencies between
   action/menu/views, this convention may not be applicable.
 - Use naming convention defined at the next point
-- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``
+- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``.
+  If there is only not-updatable data in the file, the ``noupdate=1`` can be
+  set on the ``<odoo>`` tag and do not set a ``<data>`` tag.
 
 .. code-block:: xml
 
@@ -182,7 +184,6 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 Odoo supports custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- workflow: the <workflow> tag sends a signal to an existing workflow.
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
@@ -409,7 +410,7 @@ Idiomatics Python Programming
 .. code-block:: python
 
     value = my_dict.get('key', None) # very very redundant
-    value= my_dict.get('key') # good
+    value = my_dict.get('key') # good
 
 Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
 meaning, be sure that you're using the right one.
@@ -451,11 +452,8 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     # better
     for key in my_dict:
             "do something..."
-    # creates a temporary list
+    # accessing the key,value pair
     for key, value in my_dict.items():
-            "do something..."
-    # only iterates
-    for key, value in my_dict.iteritems():
             "do something..."
 
 - Use dict.setdefault

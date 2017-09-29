@@ -54,7 +54,7 @@ Business objects
     by Odoo based on their configuration
 
 Data files
-    XML or CSV files declaring metadata (views or workflows), configuration
+    XML or CSV files declaring metadata (views or reports), configuration
     data (modules parameterization), demonstration data and more
 
 Web controllers
@@ -230,11 +230,11 @@ record.
 .. code-block:: xml
 
     <odoo>
-        <data>
+
             <record model="{model name}" id="{record identifier}">
                 <field name="{a field name}">{a value}</field>
             </record>
-        </data>
+
     </odoo>
 
 * ``model`` is the name of the Odoo model for the record.
@@ -1234,90 +1234,6 @@ Kanban views define the structure of each card as a mix of form elements
 
         .. patch::
 
-Workflows
-=========
-
-Workflows are models associated to business objects describing their dynamics.
-Workflows are also used to track processes that evolve over time.
-
-.. exercise:: Almost a workflow
-
-    Add a ``state`` field to the *Session* model. It will be used to define
-    a workflow-ish.
-
-    A sesion can have three possible states: Draft (default), Confirmed and
-    Done.
-
-    In the session form, add a (read-only) field to
-    visualize the state, and buttons to change it. The valid transitions are:
-
-    * Draft -> Confirmed
-    * Confirmed -> Draft
-    * Confirmed -> Done
-    * Done -> Draft
-
-    .. only:: solutions
-
-        #. Add a new ``state`` field
-        #. Add state-transitioning methods, those can be called from view
-           buttons to change the record's state
-        #. And add the relevant buttons to the session's form view
-
-        .. patch::
-
-Workflows may be associated with any object in Odoo, and are entirely
-customizable. Workflows are used to structure and manage the lifecycles of
-business objects and documents, and define transitions, triggers, etc. with
-graphical tools. Workflows, activities (nodes or actions) and transitions
-(conditions) are declared as XML records, as usual. The tokens that navigate
-in workflows are called workitems.
-
-.. warning::
-
-    A workflow associated with a model is only created when the
-    model's records are created. Thus there is no workflow instance
-    associated with session instances created before the workflow's
-    definition
-
-.. exercise:: Workflow
-
-    Replace the ad-hoc *Session* workflow by a real workflow. Transform the
-    *Session* form view so its buttons call the workflow instead of the
-    model's methods.
-
-    .. only:: solutions
-
-        .. patch::
-
-        .. tip::
-
-            In order to check if instances of the workflow are correctly
-            created alongside sessions, go to :menuselection:`Settings -->
-            Technical --> Workflows --> Instances`
-
-
-
-.. exercise:: Automatic transitions
-
-    Automatically transition sessions from *Draft* to *Confirmed* when more
-    than half the session's seats are reserved.
-
-    .. only:: solutions
-
-        .. patch::
-
-.. exercise:: Server actions
-
-    Replace the Python methods for synchronizing session state by
-    server actions.
-
-    Both the workflow and the server actions could have been created entirely
-    from the UI.
-
-    .. only:: solutions
-
-        .. patch::
-
 Security
 ========
 
@@ -1590,7 +1506,7 @@ Odoo 8.0 comes with a new report engine based on :ref:`reference/qweb`,
 
 A report is a combination two elements:
 
-* an ``ir.actions.report.xml``, for which a ``<report>`` shortcut element is
+* an ``ir.actions.report``, for which a ``<report>`` shortcut element is
   provided, it sets up various basic parameters for the report (default
   type, whether the report should be saved to the database after generation,…)
 

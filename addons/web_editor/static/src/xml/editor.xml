@@ -6,7 +6,7 @@
 
     <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
     <t t-name="web_editor.editorbar">
-        <div id="web_editor-top-edit" class="o_css_editor">
+        <div id="web_editor-top-edit">
             <div id="web_editor-toolbars"/>
             <form class="navbar-form text-muted">
                 <button type="button" class="btn btn-sm btn-default" data-action="cancel"><i class="fa fa-times"/> Discard</button>
@@ -31,14 +31,14 @@
     <!-- Alt Dialog (allows to change alt and title of page images) -->
     <form t-name="web_editor.dialog.alt" action="#" class="form-horizontal">
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="alt">Description</label>
-            <div class="col-sm-9">
+            <label class="col-sm-3 control-label" for="alt">Description (alt tag)</label>
+            <div class="col-sm-8">
                 <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="title">Tooltip</label>
-            <div class="col-sm-9">
+            <label class="col-sm-3 control-label" for="title">Tooltip</label>
+            <div class="col-sm-8">
                 <input class="form-control" id="title" required="required" t-att-value="widget.title" type="text"/>
             </div>
         </div>
@@ -53,11 +53,11 @@
             <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
             <li class="search">
                 <ul class="pager mb0 mt0">
-                    <li class="previous disabled">
-                        <a href="#">← Previous</a>
+                    <li class="previous">
+                        <a class="btn btn-default disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
                     </li>
-                    <li class="next disabled">
-                        <a href="#">Next →</a>
+                    <li class="next">
+                        <a class="btn btn-default disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
                     </li>
                 </ul>
             </li>
@@ -187,138 +187,118 @@
 
     <!-- Video choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.video">
-        <form action="#" class="form-inline">
-            <div class="well">
-                <div class="form-group btn-group">
-                    <span class="text-muted pull-right" style="margin-left:10px; line-height: 2em;">(Youtube, Vimeo, Dailymotion)</span>
-                    <label class="pull-left" for="urlvideo" style="width: 220px; line-height: 2em;">Set a video URL</label>
-                    <input class="form-control url pull-left" id="urlvideo" name="url" placeholder="//www.youtube.com/embed/yws1tbgNV7k" style="width: 400px;" t-translation="off" type="text"/>
-                    <button class="btn btn-default">Preview</button>
+        <form action="#" class="form-inline well">
+            <div class="o_video_dialog_form">
+                <div class="form-group" id="o_video_form_group">
+                    <label class="mt8" for="o_video_text">Video code <small class="text-muted">(URL or Embed)</small></label>
+                    <textarea class="form-control url" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
+                    <label class="control-label o_validate_feedback" for="o_video_text"><i class="fa fa-check"/><i class="fa fa-exclamation-triangle"/></label>
                 </div>
-                <div class="form-group btn-group">
-                    <label class="pull-left" for="urlvideo" style="width: 220px; line-height: 2em;">
-                        <span class="text-muted">— or —</span>Embed Video (HTML)</label>
-                    <input class="form-control url pull-left" id="embedvideo" name="embed" placeholder="&lt;iframe src=&quot;//www.youtube.com/embed/yws1tbgNV7k&quot;&gt;&lt;/iframe&gt;" style="width: 400px;" t-translation="off" type="text"/>
-                    <button class="btn btn-default">Preview</button>
+                <div class="text-right">
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                </div>
+                <div class="o_video_dialog_options hidden mt48">
+                    <small class="text-muted">Options</small>
+                    <ul class="list-group">
+                        <li class="list-group-item o_yt_option o_vim_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_vim_option">
+                            <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                        </li>
+                        <li class="list-group-item o_yt_option o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
+                        </li>
+                        <li class="list-group-item o_yt_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
+                        </li>
+                        <li class="list-group-item o_dm_option">
+                            <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+            <div id="video-preview">
+                <div class="o_video_dialog_preview_text small mt16 mb8 hidden">Preview</div>
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
-                    <iframe allowfullscreen="allowfullscreen" frameborder="0" src=""/>
-                </div>
-            </div>
-            <div class="text-center mt32">
-                <div class="checkbox">
-                    <label title="The feature might not be supported for every video type">
-                        <input id="autoplay" type="checkbox"/>Autoplay</label>
+                    <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
                 </div>
             </div>
         </form>
     </t>
 
     <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
-    <form t-name="web_editor.dialog.link">
-        <div class="list-group">
-            <div class="form-group list-group-item active">
-                <h3 class="list-group-item-heading">
-                    <label class="control-label" for="link-new">Link Label
-                    </label>
-                </h3>
-                <input class="form-control" id="link-text" required="required" type="text"/>
-            </div>
-        </div>
-        <ul class="list-group">
-            <li class="list-group-item form-group clearfix active">
-                <div class="pull-right" style="display: none;">
-                    <label>
-                        <input class="window-new" type="checkbox"/>Open in new window</label>
-                </div>
-                <h4 class="list-group-item-heading">
-                    <label class="control-label" for="link-external">URL or Email Address
-                    </label>
-                </h4>
-                <input class="form-control url email-address url-source" id="link-external" placeholder="https://www.odoo.com" type="text"/>
-            </li>
-        </ul>
-        <div class="form-horizontal link-style">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Style
-                </label>
-                <div class="col-sm-4">
-                    <div class="dropdown" style="line-height: 2em;">
-                        <a class="btn btn-default" data-toggle="dropdown" href="#">Color Style
-                            <span class="caret"/></a>
-                        <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
-                            <li>
-                                <label class="btn btn-link o_btn_preview">Link
-                                    <input checked="checked" class="link-style" name="link-style-type" type="radio" value=""/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default o_btn_preview">Basic
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-default"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-success o_btn_preview">Success
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-success"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-primary o_btn_preview">Primary
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-primary"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-info o_btn_preview">Info
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-info"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-warning o_btn_preview">Warning
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-warning"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-danger o_btn_preview">Danger
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-danger"/></label>
-                            </li>
-                        </ul>
+    <div t-name="web_editor.dialog.link" class="o_link_dialog">
+        <div class="row">
+            <form class="col-md-8 form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="o_link_dialog_label_input">Link Label</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="o_link_dialog_label_input" required="required"/>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="dropdown" style="line-height: 2em;">
-                        <a class="btn btn-default" data-toggle="dropdown" href="#">Size
-                            <span class="caret"/></a>
-                        <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
-                            <li>
-                                <label class="btn btn-default btn-xs o_btn_preview">Extra Small
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-xs"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default btn-sm o_btn_preview">Small
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-sm"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default o_btn_preview">Default
-                                    <input checked="checked" class="link-style" name="link-style-size" type="radio" value=""/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default btn-lg o_btn_preview">Large
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-lg"/></label>
-                            </li>
-                        </ul>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="o_link_dialog_url_input">URL or Email</label>
+                    <div class="col-sm-9">
+                        <input class="form-control url email-address url-source" id="o_link_dialog_url_input" required="required"/>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="form-horizontal link-style">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Preview
-                </label>
-                <div class="col-sm-10" style="line-height: 2em;">
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Size</label>
+                    <div class="col-sm-9">
+                        <select class="form-control col-sm-3 link-style">
+                            <option value="btn-xs">Extra Small</option>
+                            <option value="btn-sm">Small</option>
+                            <option value="" selected="selected">Medium</option>
+                            <option value="btn-lg">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Color</label>
+                    <div class="col-sm-9">
+                        <div class="o_link_dialog_color">
+                            <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
+                                <span>L</span>
+                                <input class="hidden link-style" name="link-style-type" type="radio" value=""/>
+                                <i class="fa"/>
+                            </label>
+                            <t t-foreach="['btn-primary', 'btn-default', 'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-alpha', 'btn-beta', 'btn-gamma', 'btn-delta', 'btn-epsilon']" t-as="color">
+                                <label t-attf-class="o_link_dialog_color_item o_btn_preview btn #{color}" t-att-data-color="color">
+                                    <input class="hidden link-style" name="link-style-type" type="radio" t-att-value="color"/>
+                                    <i class="fa"/>
+                                </label>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                    <label class="o_switch">
+                        <input class="window-new" type="checkbox"/>
+                        <span/>
+                        Open in new window
+                    </label>
+                    </div>
+                </div>
+            </form>
+            <div class="col-md-4 o_link_dialog_preview">
+                <div class="form-group text-center">
+                    <label>Preview</label>
                     <div style="overflow: auto; max-width: 100%; max-height: 200px;">
                         <a href="#" id="link-preview"/>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
     <!--=================-->
     <!-- Snippet options -->

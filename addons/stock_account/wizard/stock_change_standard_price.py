@@ -16,7 +16,8 @@ class StockChangeStandardPrice(models.TransientModel):
              "If cost price is decreased, stock variation account will be creadited and stock input account will be debited.")
     counterpart_account_id = fields.Many2one(
         'account.account', string="Counter-Part Account",
-        domain=[('deprecated', '=', False)], required=True)
+        domain=[('deprecated', '=', False)])
+    counterpart_account_id_required = fields.Boolean(string="Counter-Part Account Required")
 
     @api.model
     def default_get(self, fields):
@@ -27,6 +28,7 @@ class StockChangeStandardPrice(models.TransientModel):
             res['new_price'] = product_or_template.standard_price
         if 'counterpart_account_id' in fields and 'counterpart_account_id' not in res:
             res['counterpart_account_id'] = product_or_template.property_account_expense_id.id or product_or_template.categ_id.property_account_expense_categ_id.id
+        res['counterpart_account_id_required'] = bool(product_or_template.valuation == 'real_time')
         return res
 
     @api.multi

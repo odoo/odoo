@@ -1,0 +1,20 @@
+// less properties for copy widget
+.o_field_copy {
+    position: relative;
+    border-radius: 5px;
+    border: 1px solid @btn-primary-border;
+    font-size: @font-size-small;
+    color: @odoo-brand-optional;
+    font-weight: @badge-font-weight;
+    text-align: center;
+    .o_clipboard_button {
+        &.o_btn_text_copy {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        &.o_btn_char_copy {
+            padding-top: 2px;
+        }
+    }
+}

@@ -24,8 +24,8 @@ def remove_accents(input_str):
 
 
 class Alias(models.Model):
-    """A Mail Alias is a mapping of an email address with a given OpenERP Document
-       model. It is used by OpenERP's mail gateway when processing incoming emails
+    """A Mail Alias is a mapping of an email address with a given Odoo Document
+       model. It is used by Odoo's mail gateway when processing incoming emails
        sent to the system. If the recipient address (To) of the message matches
        a Mail Alias, the message will be either processed following the rules
        of that alias. If the message is a reply it will be attached to the
@@ -34,7 +34,7 @@ class Alias(models.Model):
 
        This is meant to be used in combination with a catch-all email configuration
        on the company's mail server, so that as soon as a new mail.alias is
-       created, it becomes immediately usable and OpenERP will accept email for it.
+       created, it becomes immediately usable and Odoo will accept email for it.
      """
     _name = 'mail.alias'
     _description = "Email Aliases"
@@ -63,7 +63,7 @@ class Alias(models.Model):
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
     alias_domain = fields.Char('Alias domain', compute='_get_alias_domain',
-                               default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+                               default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
@@ -86,7 +86,7 @@ class Alias(models.Model):
 
     @api.multi
     def _get_alias_domain(self):
-        alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain")
+        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
 
@@ -111,10 +111,10 @@ class Alias(models.Model):
         if vals.get('alias_name'):
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
         if model_name:
-            model = self.env['ir.model'].search([('model', '=', model_name)])
+            model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
         if parent_model_name:
-            model = self.env['ir.model'].search([('model', '=', parent_model_name)])
+            model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 
@@ -239,6 +239,11 @@ class AliasMixin(models.AbstractModel):
         if name != 'alias_id':
             return
 
+        # both self and the alias model must be present in 'ir.model'
+        IM = self.env['ir.model']
+        IM._reflect_model(self)
+        IM._reflect_model(self.env[self.get_alias_model_name({})])
+
         alias_ctx = {
             'alias_model_name': self.get_alias_model_name({}),
             'alias_parent_model_name': self._name,
@@ -257,3 +262,21 @@ class AliasMixin(models.AbstractModel):
             record.with_context({'mail_notrack': True}).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
+
+    def _alias_check_contact(self, message, message_dict, alias):
+        author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+        if alias.alias_contact == 'followers' and self.ids:
+            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+                return {
+                    'error_mesage': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
+            if not author or author not in accepted_partner_ids:
+                return {
+                    'error_mesage': _('restricted to followers'),
+                }
+        elif alias.alias_contact == 'partners' and not author:
+            return {
+                'error_message': _('restricted to known authors')
+            }
+        return True

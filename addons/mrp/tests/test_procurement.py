@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
-
+from odoo.exceptions import UserError
 
 class TestProcurement(TestMrpCommon):
 
@@ -38,11 +38,11 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(production_product_6.state, 'confirmed', 'Production order should be for Confirmed state')
 
         # Check procurement for product 4 created or not.
-        procurement = self.env['procurement.order'].search([('group_id', '=', production_product_6.procurement_group_id.id), ('product_id', '=', self.product_4.id)])
-        self.assertTrue(procurement, 'No procurement are created !')
-        self.assertEqual(procurement.state, 'running', 'Procurement order should be in state running')
+        # Check it created a purchase order
 
-        produce_product_4 = procurement.production_id
+        move_raw_product4 = production_product_6.move_raw_ids.filtered(lambda x: x.product_id == self.product_4)
+        produce_product_4 = self.env['mrp.production'].search([('product_id', '=', self.product_4.id),
+                                                               ('move_dest_ids', '=', move_raw_product4[0].id)])
         # produce product
         self.assertEqual(produce_product_4.availability, 'waiting', "Consume material not available")
 
@@ -76,7 +76,6 @@ class TestProcurement(TestMrpCommon):
         # Check procurement and Production state for product 4.
         produce_product_4.button_mark_done()
         self.assertEqual(produce_product_4.state, 'done', 'Production order should be in state done')
-        self.assertEqual(procurement.state, 'done', 'Procurement order should be in state done')
 
         # Produce product 6
         # ------------------
@@ -126,17 +125,12 @@ class TestProcurement(TestMrpCommon):
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
-        # create MO
-        production_product_4 = self.env['mrp.production'].create({
-            'name': 'MO/Test-00002',
-            'product_id': self.product_4.id,
-            'product_qty': 1,
-            'bom_id': self.bom_1.id,
-            'product_uom_id': self.product_4.uom_id.id,
-        })
-
-        # check that procurement are correctly created
-        procurement = self.env['procurement.order'].search(
-            [('group_id', '=', production_product_4.procurement_group_id.id),
-             ('product_id', 'in', self.bom_1.bom_line_ids.mapped('product_id.id'))])
-        self.assertEqual(len(procurement), 2)
+        # create MO, but check it raises error as components are in make to order and not everyone has 
+        with self.assertRaises(UserError):
+            production_product_4 = self.env['mrp.production'].create({
+                'name': 'MO/Test-00002',
+                'product_id': self.product_4.id,
+                'product_qty': 1,
+                'bom_id': self.bom_1.id,
+                'product_uom_id': self.product_4.uom_id.id,
+            })

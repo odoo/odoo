@@ -7,9 +7,10 @@ var _t = core._t;
 
 planner.PlannerDialog.include({
     prepare_planner_event: function() {
-        var self = this;
         this._super.apply(this, arguments);
-        if(self.planner['planner_application'] == 'planner_project') {
+        if (this.planner["planner_application"] === "planner_project") {
+            var self = this;
+
             var stages = {
                 'development_process': {
                     'input_element_stage_0' : _t('Specification'),

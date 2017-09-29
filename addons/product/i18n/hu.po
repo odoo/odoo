@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,107 +38,22 @@ msgid "# Products"
 msgstr "# Termékek"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:438
+#: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% árengedmény"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:440
+#: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr "%s %% árengedmény és %s pótdíj"
 
 #. module: product
-#: code:addons/product/models/product_template.py:302
+#: code:addons/product/models/product_template.py:317
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
-
-#. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_1
-msgid "16 GB"
-msgstr "16 GB"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_3
-#: model:product.template,description_sale:product.product_product_3_product_template
-msgid ""
-"17\" LCD Monitor\n"
-"Processor AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
-msgstr ""
-"17\" LCD Monitor\n"
-"Processor AMD 8-Core\n"
-"512MB RAM\n"
-"HDD SH-1"
-
-#. module: product
-#: model:product.product,description:product.product_product_25
-#: model:product.template,description:product.product_product_25_product_template
-msgid ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processor\n"
-"QWERTY keyboard"
-msgstr ""
-"17\" Monitor\n"
-"4GB RAM\n"
-"Standard-1294P Processzor\n"
-"QWERTY billentyűzet"
-
-#. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_5
-msgid "2.4 GHz"
-msgstr "2.4 GHz"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_8
-#: model:product.template,description_sale:product.product_product_8_product_template
-msgid ""
-"2.7GHz quad-core Intel Core i5\n"
-"                Turbo Boost up to 3.2GHz\n"
-"                8GB (two 4GB) memory\n"
-"                1TB hard drive\n"
-"                Intel Iris Pro graphics\n"
-"            "
-msgstr ""
-"2.7GHz négy-magos Intel Core i5\n"
-"                Turbo Boost 3.2GHz\n"
-"                8GB (két 4GB) memoria\n"
-"                1TB tároló lemez \n"
-"                Intel Iris Pro grafika\n"
-"            "
-
-#. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_2
-msgid "32 GB"
-msgstr "32 GB"
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_4
-#: model:product.product,description_sale:product.product_product_4b
-#: model:product.product,description_sale:product.product_product_4c
-#: model:product.product,description_sale:product.product_product_4d
-#: model:product.template,description_sale:product.product_product_4_product_template
-#: model:product.template,description_sale:product.product_product_4b_product_template
-#: model:product.template,description_sale:product.product_product_4c_product_template
-#: model:product.template,description_sale:product.product_product_4d_product_template
-msgid ""
-"7.9‑inch (diagonal) LED-backlit, 128Gb\n"
-"Dual-core A5 with quad-core graphics\n"
-"FaceTime HD Camera, 1.2 MP Photos"
-msgstr ""
-"7.9‑inch (átmérő) LED-háttérvilágítás, 128Gb\n"
-"két-magos A5 négy-magos grafikával\n"
-"FaceTime HD kamera, 1.2 MP fotó"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "75 percent less reflection."
-msgstr "75 százalékkal kisebb visszatükröződés."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -193,7 +108,7 @@ msgstr ""
 "                        elveszti a személyre szabásának lehetőségét."
 
 #. module: product
-#: code:addons/product/models/product.py:167 sql_constraint:product.product:0
+#: code:addons/product/models/product.py:171 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr "Egy bárkód csak egy termékhez párosítható !"
@@ -212,11 +127,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
 "A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sale Order, Delivery Order and "
+" This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 "Egy termék leírása, melyről beszélgetést szeretne fojtatni a vásárlókkal.  "
-"Ez a leírás lesz átmásolva minden egyes árajánlatra, szállítási "
+"Ez a leírás lesz átmásolva minden egyes Vásárlói megrendelésre, szállítási "
 "megbízásra/szállítólevélre és vásárlói számlára/visszatérítésre."
 
 #. module: product
@@ -233,12 +148,6 @@ msgstr ""
 "számlára/visszatérítésre."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_9
-#: model:product.template,website_description:product.product_product_9_product_template
-msgid "A great Keyboard. Cordless."
-msgstr "Egy nagyszerű billentyűzet. Vezeték nélküli."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
 #: model:ir.model.fields,help:product.field_product_template_description
 msgid ""
@@ -251,16 +160,10 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
-"                the sales price of the products."
+"                the sale price of the products."
 msgstr ""
 "Egy árlista szabályokat tartalmaz annak megítéléséhez, hogy  hogyan számítja ki\n"
 "                a termék értékesítési árát."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "A screen worthy of iPad."
-msgstr "Egy képernyő ami az iPad-on kiváló."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -277,20 +180,6 @@ msgstr ""
 "Egy digitális tartalom egy online árusított nem tárgyi termék. A termékekhez kapcsolt fájl amit értékesít az e-kereskedelemben, mint e-könyvek, zenék, képek,... A  \"Digitális Termék\" modult kell telepítenie."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
-"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
-"                                    so you can see more of the music, photos, and videos you love."
-msgstr ""
-"Mint egy hitelkártya mérete — és csak 5.4 mm vastag — iPod nano a valaha készített legvékonyabb iPod.\n"
-"                                    A 2.5-inch Több-érintéses képernyő körülbelül kétszer akkora mint az előző iPod nano képernyője,\n"
-"                                    így a szívéhez közel álló zenéből, fényképből, és videóból többet láthat ."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
 #: model:ir.model.fields,field_description:product.field_product_product_active
 #: model:ir.model.fields,field_description:product.field_product_template_active
@@ -305,7 +194,7 @@ msgid "All"
 msgstr "Összes"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:433
+#: code:addons/product/models/product_pricelist.py:435
 #, python-format
 msgid "All Products"
 msgstr "Összes termék"
@@ -314,40 +203,6 @@ msgstr "Összes termék"
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
 msgstr "Ennek a terméknek az összes általános beállításának a kezelése itt"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid ""
-"And at the Apple Online Store, you can configure your iMac with an even more"
-" powerful Intel Core i7 processor, up to 3.5GHz."
-msgstr ""
-"És az Apple Online Áruházban, testre szabhatja az iMac számtógépet egy "
-"erőteljesebb Intel Core i7 processzorral, egészen 3.5GHz-ig."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-msgid "And because it’s so easy to use, it’s easy to love."
-msgstr "És mert könnyen használható, ezért könnyen megszerethető."
-
-#. module: product
-#: model:product.product,name:product.product_product_7
-#: model:product.template,name:product.product_product_7_product_template
-msgid "Apple In-Ear Headphones"
-msgstr "Apple fül halgatók"
-
-#. module: product
-#: model:product.product,name:product.product_product_9
-#: model:product.template,name:product.product_product_9_product_template
-msgid "Apple Wireless Keyboard"
-msgstr "Apple kábeles billentyűzet"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
@@ -411,25 +266,16 @@ msgid "Attributes"
 msgstr "Tulajdonságok"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Auxiliary input for portable devices"
-msgstr "Külső csatlakozó a hordozható készülékekhez"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Auxiliary port lets you connect other audio sources, like an MP3 player"
-msgstr ""
-"Külső csatlakozó lehetővé teszi más hang források csatlakoztatását, mint MP3"
-" lejátszó"
-
-#. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging_barcode
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
 #: model:ir.model.fields,field_description:product.field_product_template_barcode
 msgid "Barcode"
 msgstr "Vonalkód"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging_barcode
+msgid "Barcode used for packaging identification."
+msgstr "Vonalkód a csomagolás azonosításához."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_base
@@ -459,30 +305,6 @@ msgid "Based on"
 msgstr "Alapján"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_03
-#: model:product.template,name:product.consu_delivery_03_product_template
-msgid "Basic Computer"
-msgstr "Alap számítógép"
-
-#. module: product
-#: model:product.product,name:product.membership_2
-#: model:product.template,name:product.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Alap tagság"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "Beautiful 7.9‑inch display."
-msgstr "Gyönyörű 7.9‑inch képernyő."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Beautiful widescreen display."
-msgstr "Gyönyörű széles kijelzős képernyő."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image
 msgid "Big-sized image"
 msgstr "Nagyméretű kép"
@@ -496,55 +318,6 @@ msgstr "Nagyítási arányszám"
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
 msgstr "Nagyobb mint a referencia mértékegység"
-
-#. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_4
-msgid "Black"
-msgstr "Fekete"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Bluetooth connectivity"
-msgstr "Bluetooth kapcsolódás"
-
-#. module: product
-#: model:product.product,name:product.product_product_5b
-#: model:product.template,name:product.product_product_5b_product_template
-msgid "Bose Mini Bluetooth Speaker"
-msgstr "Bose Mini Bluetooth hangszóró"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Bose Mini Bluetooth Speaker."
-msgstr "Bose Mini Bluetooth hangszóró."
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_5b
-#: model:product.template,description_sale:product.product_product_5b_product_template
-msgid "Bose's smallest portable Bluetooth speaker"
-msgstr "Bose legkisebb hordozható Bluetooth hangszóró"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Brilliance onscreen. And behind it."
-msgstr "Ragyogás a képernyőn. És ami mögötte van."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
-"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
-"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
-msgstr ""
-"Gombokkal gyorsan lehet kezelni a lejátszást, pillanatállítást, számot választani, vagy hangerőt állítani.\n"
-"                                    A finom felületű galvanizált alumínium kivitel olyan érzést ad az iPod nano készülékhez, mint amilyen jó a hangzása.\n"
-"                                    És az iPod nano nem lenne iPod nano a káprázatos, nehezen eldönthető színek nélkül."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -574,7 +347,7 @@ msgstr "Értékesíthető"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégse"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
@@ -593,32 +366,10 @@ msgid "Category name"
 msgstr "Kategórianév"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:427
+#: code:addons/product/models/product_pricelist.py:429
 #, python-format
 msgid "Category: %s"
 msgstr "Kategória: %s"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Characteristics"
-msgstr "Karakterisztikák"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Charges iPod/iPhone"
-msgstr "iPod/iPhone töltők"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Charging cradle recharges the battery and serves as a convenient\n"
-"                                    home base for your speaker, and it lets you play while it charges."
-msgstr ""
-"Töltő bölcső tölti az akkumulátorokat és megfelelő hangszórók otthoni \n"
-"                                    állványának, valamint lejátszás közben is tölthet vele."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
@@ -661,37 +412,15 @@ msgid "Codes"
 msgstr "Kódok"
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_2
-msgid "Color"
-msgstr "Szín"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_color
 #: model:ir.model.fields,field_description:product.field_product_template_color
 msgid "Color Index"
 msgstr "Szín jegyzék"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_6
-#: model:product.template,description_sale:product.product_product_6_product_template
-msgid ""
-"Color: White\n"
-"Capacity: 16GB\n"
-"Connectivity: Wifi\n"
-"Beautiful 7.9-inch display\n"
-"Over 375,000 apps\n"
-"Ultrafast wireless\n"
-"iOS7\n"
-"            "
-msgstr ""
-"Szín: Fehér\n"
-"Kapacitás: 16GB\n"
-"Csatlakozás: Wifi\n"
-"Gyönyörű 7.9-inch képernyő\n"
-"Több mint 375,000 alkalmazás\n"
-"Ultragyors vezeték nélküli átvitel\n"
-"iOS7\n"
-"            "
+#: model:ir.ui.view,arch_db:product.base_config_settings_view_form_inherit_product
+msgid "Common Product Catalog"
+msgstr "Általános termék katalógus"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -709,26 +438,10 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
 msgstr "Ár számítása"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
-msgid "Compute price"
-msgstr "Ár számítás"
-
-#. module: product
-#: model:product.product,name:product.product_product_16
-#: model:product.template,name:product.product_product_16_product_template
-msgid "Computer Case"
-msgstr "Számítógép ház"
-
-#. module: product
-#: model:product.product,name:product.product_product_3
-#: model:product.template,name:product.product_product_3_product_template
-msgid "Computer SC234"
-msgstr "Számítógép SC234"
 
 #. module: product
 #: code:addons/product/models/product_template.py:42
@@ -747,7 +460,7 @@ msgstr ""
 " tartoznak. Az átváltás az arányszámok alapján történik."
 
 #. module: product
-#: code:addons/product/models/product_uom.py:89
+#: code:addons/product/models/product_uom.py:96
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -781,12 +494,6 @@ msgid "Cost of the product, in the default unit of measure of the product."
 msgstr "Termék bekerülési ára a termék alapértelmezett mértékegységében."
 
 #. module: product
-#: model:product.product,name:product.service_delivery
-#: model:product.template,name:product.service_delivery_product_template
-msgid "Cost-plus Contract"
-msgstr "Költség-plusz szerződés"
-
-#. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
 msgstr "Ország csoport"
@@ -798,7 +505,7 @@ msgstr "Országcsoportok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
-msgid "Create variant"
+msgid "Create Variant"
 msgstr "Termékváltozat létrehozás"
 
 #. module: product
@@ -840,21 +547,6 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid ""
-"Creating such a stunningly thin design took some equally stunning feats of "
-"technological innovation. We refined,re-imagined,or re-engineered everything"
-" about iMac from the inside out. The result is an advanced, elegant all-in-"
-"one computer that’s as much a work of art as it is state of the art."
-msgstr ""
-"Létrehozni egy ilyen vékonyságú kialakítást, ahhoz nagyon nagy technológiai "
-"újítás kell. Újra finomítottuk,újra-álmodtuk,vagy újra-terveztük amit az "
-"iMac -ról tudtunk, kívülről, belülről. Az eredmény egy előremutató, elegáns "
-"minden-az-egyben számítógép ami annyi művészi munka mint amennyi "
-"csúcstechnológia."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -864,33 +556,9 @@ msgid "Currency"
 msgstr "Pénznem"
 
 #. module: product
-#: model:product.product,name:product.product_product_5
-#: model:product.template,name:product.product_product_5_product_template
-msgid "Custom Computer (kit)"
-msgstr "Egyéni számítógép (szett)"
-
-#. module: product
-#: model:product.product,description:product.product_product_27
-#: model:product.template,description:product.product_product_27_product_template
-msgid "Custom Laptop based on customer's requirement."
-msgstr "Egyedi laptop a vevő igényei alapján."
-
-#. module: product
-#: model:product.product,description:product.product_product_5
-#: model:product.template,description:product.product_product_5_product_template
-msgid "Custom computer shipped in kit."
-msgstr "Egyéni számítógép szettben szállítva"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
 msgstr "Vevői hivatkozás"
-
-#. module: product
-#: model:product.product,name:product.product_delivery_02
-#: model:product.template,name:product.product_delivery_02_product_template
-msgid "Datacard"
-msgstr "Adatkártya"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
@@ -936,14 +604,6 @@ msgid "Description for Quotations"
 msgstr "Leírás az árajánlatokhoz"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Design. The thinnest iPod ever."
-msgstr "Kivitel. A legvékonyabb iPod."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value_sequence
 msgid "Determine the display order"
@@ -975,16 +635,6 @@ msgid "Dozen(s)"
 msgstr "tucat"
 
 #. module: product
-#: model:product.product,description_sale:product.consu_delivery_03
-#: model:product.template,description_sale:product.consu_delivery_03_product_template
-msgid ""
-"Dvorak keyboard \n"
-"            left-handed mouse"
-msgstr ""
-"Dvorak billentyűzet\n"
-"            balkezes egér"
-
-#. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
@@ -994,12 +644,6 @@ msgstr ""
 "Szabályok magukban foglalnak alkalmazható szabály kritérium készletet (dátum intervallum,\n"
 "                termék kategória...) és egy számítást mely könnyen elérhetővé teszi \n"
 "                bármely árképzést."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Efficient, high-quality audio"
-msgstr "Hatékony, magas-minőségű hang"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
@@ -1024,13 +668,13 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Hiba! Nem tud ismétlődő kategóriát létrehozni."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:97
+#: code:addons/product/models/product_attribute.py:101
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr "Hiba ! Nem használhatja ezt a tulajdonságot a következő értékkel."
 
 #. module: product
-#: code:addons/product/models/product.py:302
+#: code:addons/product/models/product.py:306
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1039,14 +683,14 @@ msgstr ""
 "Hiba! Nem lehet több mint egy értéket választani a megadott tulajdonságra."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:419
+#: code:addons/product/models/product_pricelist.py:421
 #, python-format
 msgid "Error! The minimum margin should be lower than the maximum margin."
 msgstr ""
 "Hiba! A minimum árrésnek kisebbnek kell lennie mint a maximum árrésnek."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:413
+#: code:addons/product/models/product_pricelist.py:415
 #, python-format
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
@@ -1055,7 +699,7 @@ msgstr ""
 "Hiba! Nem csatolhatja a fő árlistát mint más árlista az árlista tételben!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:252
+#: code:addons/product/models/product_template.py:267
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1065,97 +709,10 @@ msgstr ""
 "ugyanabba a kategóriába kell tartoznia."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid ""
-"Everything you love about iPad — the beautiful\n"
-"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
-"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
-"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
-msgstr ""
-"Minden amit az IPad-en szeret — a csodálatos \n"
-"                                    kijelző, gyors színek élesek és a szöveg éles az iPad mini képernyőjén.\n"
-"                                    De ami különlegessé teszi az a mérete. A 7.9 inch,\n"
-"                                    a perfekt méret amivel olyan élményt tud nyújtani mint egy iPad."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-msgid ""
-"Everything you love about iPad — the beautiful\n"
-"                                    screen, fast and fluid performance, FaceTime and\n"
-"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
-"                                    battery life* — is everything you’ll love about\n"
-"                                    iPad mini, too. And you can hold it in one hand."
-msgstr ""
-"Minden amit az IPad-en szeret — a csodálatos \n"
-"                                    kijelző, gyors és könnyed teljesítmény, FaceTime és\n"
-"                                    iSight kamera, ezernyi csodálatos alkalmazás, 10-óra\n"
-"                                    üzemidő* — ez minden amiről álmodott az IPad miniben is\n"
-"                                    benne van. És egy kézzel hordhatja."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid ""
-"Everything you love about iPad — the beautiful screen,\n"
-"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
-"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
-"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
-msgstr ""
-"Minden amit az IPad-en szeret — a csodálatos \n"
-"                                    kijelző, gyors és könnyed teljesítmény, FaceTime és\n"
-"                                    iSight kamera, ezernyi csodálatos alkalmazás, 10-óra\n"
-"                                    üzemidő* — ez minden amiről álmodott az IPad miniben is\n"
-"                                    benne van. És egy kézzel hordhatja."
-
-#. module: product
-#: model:product.product,description:product.product_product_2
-#: model:product.template,description:product.product_product_2_product_template
-msgid "Example of product to invoice based on delivery."
-msgstr "Minta a termék szállításán alapuló számlázáshoz."
-
-#. module: product
-#: model:product.product,description:product.service_order_01
-#: model:product.template,description:product.service_order_01_product_template
-msgid "Example of product to invoice on order."
-msgstr "Minta a termék megrendelésen alapuló számlázáshoz."
-
-#. module: product
-#: model:product.product,description:product.service_cost_01
-#: model:product.template,description:product.service_cost_01_product_template
-msgid "Example of products to invoice based on cost."
-msgstr "Minta a termékek költségein alapuló számlázáshoz."
-
-#. module: product
-#: model:product.product,description:product.product_product_1
-#: model:product.template,description:product.product_product_1_product_template
-msgid "Example of products to invoice based on delivery."
-msgstr "Minta a termékek szállításán alapuló számlázáshoz."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price
 msgid "Explicit rule name for this pricelist line."
 msgstr "Az alábbi árlista sort meghatározó szabály neve."
-
-#. module: product
-#: model:product.product,name:product.service_cost_01
-#: model:product.template,name:product.service_cost_01_product_template
-msgid "External Audit"
-msgstr "Külső audit"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "Fast connections.The world over."
-msgstr "Gyors összekapcsolás.A világon át."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1182,60 +739,15 @@ msgid "Formula"
 msgstr "Formula"
 
 #. module: product
-#: model:product.product,description_sale:product.product_product_7
-#: model:product.template,description_sale:product.product_product_7_product_template
-msgid ""
-"Frequency: 5Hz to 21kHz\n"
-"Impedance: 23 ohms\n"
-"Sensitivity: 109 dB SPL/mW\n"
-"Drivers: two-way balanced armature\n"
-"Cable length: 1065 mm\n"
-"Weight: 10.2 grams\n"
-"            "
-msgstr ""
-"Frekvencia: 5Hz tól 21kHz ig\n"
-"Ellenállás: 23 ohms\n"
-"Érzékenység: 109 dB SPL/mW\n"
-"Meghajtók: Két-oldali egyensúlyozott armatúra\n"
-"Kábel hosszúság: 1065 mm\n"
-"Önsúly: 10.2 gramm\n"
-"            "
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Friendly to the environment."
-msgstr "Környezetbarát."
-
-#. module: product
-#: model:product.product,name:product.product_product_1
-#: model:product.template,name:product.product_product_1_product_template
-msgid "GAP Analysis Service"
-msgstr "GAP Elemző szolgáltatás"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
 msgstr "Általános információk"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Genius. Your own personal DJ."
-msgstr "Genius. A saját egyedi DJ-d."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_packaging_ids
 #: model:ir.model.fields,help:product.field_product_template_packaging_ids
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the picking order and is mainly used if you use the EDI module."
-msgstr ""
-"Megadja ugyanazon termék csomagolásának különböző módjait. Nincs hatása a "
-"kiválogatási rendre, és nagyrészt csak az elektronikus adatcsere modullal "
-"használatos."
+msgid "Gives the different ways to package the same product."
+msgstr "Ugyanannak a terméknek a különböző csomagolási módját adja."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
@@ -1260,82 +772,14 @@ msgid "Global"
 msgstr "Globális"
 
 #. module: product
-#: model:product.product,name:product.membership_0
-#: model:product.template,name:product.membership_0_product_template
-msgid "Gold Membership"
-msgstr "Arany tagság"
-
-#. module: product
-#: model:product.product,name:product.product_product_24
-#: model:product.template,name:product.product_product_24_product_template
-msgid "Graphics Card"
-msgstr "Videokártya"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Group By"
 msgstr "Csoportosítás ezzel"
 
 #. module: product
-#: model:product.product,name:product.product_product_17
-#: model:product.template,name:product.product_product_17_product_template
-msgid "HDD SH-1"
-msgstr "HDD SH-1"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Have Genius call the tunes."
-msgstr "Legyen Genius és hangoljon rá."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid "Hear, hear."
-msgstr "Hallgasd, hallgasd."
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_11
-#: model:product.product,description_sale:product.product_product_11b
-#: model:product.template,description_sale:product.product_product_11_product_template
-#: model:product.template,description_sale:product.product_product_11b_product_template
-msgid ""
-"Height: 76.5 mm\n"
-"Width:  39.6 mm\n"
-"Depth:  5.4 mm\n"
-"Weight: 31 grams"
-msgstr ""
-"Magasság: 76.5 mm\n"
-"Szélesség:  39.6 mm\n"
-"Mélység:  5.4 mm\n"
-"Önsúly: 31 gramm"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Highly rated designs."
-msgstr "Magas minőségű kivitel."
-
-#. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
 msgstr "Óra(k)"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid ""
-"How did we make an already gorgeous widescreen display even better? By "
-"making it 75 percent less reflective. And by re-architecting the LCD and "
-"moving it right up against the cover glass. So you see your photos, games, "
-"movies, and everything else in vivid, lifelike detail."
-msgstr ""
-"Hogyan készíthetünk egy már eleve gyönyörű képernyőből még jobbat? 75 "
-"százalékkal kevésbé visszatükröződéssel. És az LCD újra építésével és a "
-"takaró üveghez illesztésével. Így a fotóit, játékait, filmjeit és minden más"
-" élesebb, életszerűbb részletekkel láthatja."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor_inv
@@ -1357,14 +801,6 @@ msgstr ""
 "egység)"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "How to get your groove on."
-msgstr "Hogyan lesz fejlődő."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_id
@@ -1383,12 +819,6 @@ msgstr "Hogyan lesz fejlődő."
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_id
 msgid "ID"
 msgstr "Azonosító ID"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "If it's made for iPad, it's made for iPad mini."
-msgstr "Ami iPad-hoz készített, az az iPad mini-hez is készített."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_active
@@ -1440,32 +870,9 @@ msgstr ""
 "állítva)."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Individually calibrated for true-to-life color."
-msgstr "Egyedileg beállított az igazi-élő színekhez."
-
-#. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
 msgstr "Információ a termék beszállítójáról"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid ""
-"Inside each earpiece is a stainless steel mesh cap that protects the precision acoustic\n"
-"                                    components from dust and debris. You can remove the caps for cleaning or replace\n"
-"                                    them with an extra set that’s included in the box."
-msgstr ""
-"Mindegyik fülhallgatón belül egy rozsdamentes acél sapka védi a precíz akusztika\n"
-"                                    elemeit a portól és szennyeződésektől. Leveheti a sapkát a tisztításhoz vagy az\n"
-"                                    extra, termékkel szállított, csere sapkával kicserélheti."
-
-#. module: product
-#: model:product.category,name:product.product_category_2
-msgid "Internal"
-msgstr "Belső"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
@@ -1488,28 +895,9 @@ msgid "International Article Number used for product identification."
 msgstr "Nemzetközi cikk szám melyet a termék azonosítására használnak."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid "Keep it clean."
-msgstr "Tartsa tisztán"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Key Features"
-msgstr "Főbb jellemzők"
-
-#. module: product
-#: model:product.product,name:product.product_product_27
-#: model:product.template,name:product.product_product_27_product_template
-msgid "Laptop Customized"
-msgstr "Egyedi Laptop"
-
-#. module: product
-#: model:product.product,name:product.product_product_25
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Laptop E5023"
-msgstr "Laptop E5023"
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Inventory"
+msgstr "Készlet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute___last_update
@@ -1601,18 +989,6 @@ msgid "Liter(s)"
 msgstr "liter"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_02
-#: model:product.template,name:product.consu_delivery_02_product_template
-msgid "Little server"
-msgstr "Kis szerver"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
-#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
-msgid "Logistical Units"
-msgstr "Logosztikai egységek"
-
-#. module: product
 #: model:res.groups,name:product.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Mértékegységek szervezése"
@@ -1631,11 +1007,6 @@ msgstr "Termék csomagolás szervezése"
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
 msgstr "Termékváltozatok kezelése"
-
-#. module: product
-#: model:res.groups,name:product.group_mrp_properties
-msgid "Manage Properties of Product"
-msgstr "Termék tulajdonság szervezése"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1666,11 +1037,6 @@ msgstr ""
 "kanban nézetben."
 
 #. module: product
-#: model:product.attribute,name:product.product_attribute_1
-msgid "Memory"
-msgstr "Memória"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
 msgstr "Min. árrés"
@@ -1691,44 +1057,6 @@ msgid "Minimal Quantity"
 msgstr "Minimum mennyiség"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "More energy efficient."
-msgstr "Nagyobb energia hatékonyságú."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "More features."
-msgstr "Több tulajdonság."
-
-#. module: product
-#: model:product.product,name:product.product_product_20
-#: model:product.template,name:product.product_product_20_product_template
-msgid "Motherboard I9P57"
-msgstr "Alaplap I9P57"
-
-#. module: product
-#: model:product.product,name:product.product_product_10
-#: model:product.template,name:product.product_product_10_product_template
-msgid "Mouse, Optical"
-msgstr "Egér, optikai"
-
-#. module: product
-#: model:product.product,name:product.product_product_12
-#: model:product.template,name:product.product_product_12_product_template
-msgid "Mouse, Wireless"
-msgstr "Egér, rádió vezérlésű"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Music. It's what beats inside."
-msgstr "Zene. Ez ami belül dobog."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
 #: model:ir.model.fields,field_description:product.field_product_category_name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
@@ -1742,11 +1070,6 @@ msgstr "Név"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "New Price ="
 msgstr "Új ár ="
-
-#. module: product
-#: selection:base.config.settings,group_product_variant:0
-msgid "No variants on products"
-msgstr "Nincsenek variációk a termékre"
 
 #. module: product
 #: selection:product.category,type:0
@@ -1770,15 +1093,13 @@ msgid "Other Pricelist"
 msgstr "Másik árlista"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "Over 375,000 apps."
-msgstr "Több mint 375,000 alkalm."
-
-#. module: product
 #: model:ir.model,name:product.model_product_packaging
+#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
 msgstr "Csomagolás"
 
@@ -1811,43 +1132,6 @@ msgstr "Százalék (kedvezmény)"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
 msgid "Percentage Price"
 msgstr "Százalékos ár"
-
-#. module: product
-#: model:product.category,name:product.product_category_5
-msgid "Physical"
-msgstr "Fizikai"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Playlists. The perfect mix for every mood."
-msgstr "Lejátszási lista. A legjobb keverés az összes lelkiállapothoz."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Plays where you play"
-msgstr "Ott játssza ahol te játszol"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid ""
-"Powered by fourth-generation Intel Core processors, this iMac is the fastest"
-" yet. Every model in the lineup comes standard with a quad-core Intel Core "
-"i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
-msgstr ""
-"Negyedik generációs Intel processzor hajtja, ez az iMac a jelenlegi "
-"leggyorsabb. A sorozat minden tagja alapértelmezetten tartalmazza a négy-"
-"magos Intel Core i5 processzort, 2.7GHz -től egészen 3.4GHz -ig."
-
-#. module: product
-#: model:product.product,name:product.service_order_01
-#: model:product.template,name:product.service_order_01_product_template
-msgid "Prepaid Consulting"
-msgstr "Előre bérmentesített tanácsadó"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
@@ -1926,6 +1210,11 @@ msgid "Pricelist"
 msgstr "Árlista"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
+msgid "Pricelist Item"
+msgstr "Árlista tételek"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
 msgid "Pricelist Item applicable on selected option"
 msgstr "Kiválasztott kiegészítőre vonatkozó árlista"
@@ -1951,11 +1240,6 @@ msgstr "Árlista név"
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
 msgstr "Árlista tétel"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
-msgid "Pricelist item ids"
-msgstr "Árlista tétel id azonosítók"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -1985,14 +1269,8 @@ msgid "Print"
 msgstr "Nyomtatás"
 
 #. module: product
-#: model:product.product,name:product.product_product_22
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor Core i5 2.70 Ghz"
-msgstr "Processzor Core i5 2.70 Ghz"
-
-#. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.model.fields,field_description:product.field_product_packaging_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_packaging_product_id
 #: model:ir.model.fields,field_description:product.field_product_price_history_product_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_id
@@ -2089,7 +1367,6 @@ msgstr "Termékváltozat"
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_variant_action
-#: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
 msgstr "Termékváltozatok"
@@ -2126,21 +1403,7 @@ msgid "Products Price Search"
 msgstr "Termékár keresése"
 
 #. module: product
-#: selection:base.config.settings,group_product_variant:0
-msgid ""
-"Products can have several attributes, defining variants (Example: size, "
-"color,...)"
-msgstr ""
-"Termék több jellemzővel rendelkezhet, meghatározó variációk (Példa: szín, "
-"méret,...)"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_search_view
-msgid "Products your store in the inventory"
-msgstr "Termékek, melyeket a raktárkészletében raktározza"
-
-#. module: product
-#: code:addons/product/models/product.py:466
+#: code:addons/product/models/product.py:469
 #, python-format
 msgid "Products: "
 msgstr "Termékek: "
@@ -2150,6 +1413,11 @@ msgstr "Termékek: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Nyilvános ár"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Nyilvános árlista"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2166,7 +1434,7 @@ msgstr "Beszerzés mértékegysége"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr "Csomagonkénti mennyiség"
+msgstr "Csomagonkénti Mennyiség"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2194,12 +1462,6 @@ msgid "Quantity-5"
 msgstr "Mennyiség - 5"
 
 #. module: product
-#: model:product.product,name:product.product_product_13
-#: model:product.template,name:product.product_product_13_product_template
-msgid "RAM SR5"
-msgstr "RAM SR5"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_factor
 msgid "Ratio"
 msgstr "Arány"
@@ -2210,64 +1472,9 @@ msgid "Reference Unit of Measure for this category"
 msgstr "Ennek a kategóriának a referencia mértékegysége"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Remote control for power, volume, track seek"
-msgstr "Távirányító a bekapcsoláshoz, hangerőhöz, szám kiválasztáshoz"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
 msgid "Right Parent"
 msgstr "A megfelelő szülő"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid ""
-"Right from the start, apps made for iPad also work with iPad mini.\n"
-"                                    They’re immersive, full-screen apps that let you do almost anything\n"
-"                                    you can imagine. And with automatic updates,\n"
-"                                    you're always getting the best experience possible."
-msgstr ""
-"Már a kezdetektől, az iPad alkalmazások elfutnak az iPad mini gépen is.\n"
-"                                    Magával ragadóak, teljes-képernyős alkalmazásokkal azt tehet amit csak akar,\n"
-"                                    amit csak el tud képzelni. És automatikus frissítésekkel,\n"
-"                                    mindig a lehető legjobb élményt kapja."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-msgid ""
-"Right from the start, there’s a lot to love about\n"
-"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
-"                                    full-featured. It can do just about everything and\n"
-"                                    be just about anything."
-msgstr ""
-"Már a kezdetektől, sok mindenben szerethető az \n"
-"                                    iPad. Most egyszerű és erőteljes. Vékony és könnyű valamint\n"
-"                                    teljes-értékű. Majdnem mindent meg tud csinálni és \n"
-"                                    majdnem mindenné átváltozhat."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid ""
-"Right from the start, there’s a lot to love about iPad.\n"
-"                                   It’s simple yet powerful. Thin and light yet full-\n"
-"                                   featured. It can do just about everything and be just\n"
-"                                   about anything.And because it’s so easy to use, it’s\n"
-"                                   easy to love."
-msgstr ""
-"Már a kezdetektől, sok mindenben szerethető az \n"
-"                                    iPad. Most egyszerű és erőteljes. Vékony és könnyű valamint\n"
-"                                    teljes-értékű. Majdnem mindent el tud végezni. \n"
-"                                    És majdnem mindenné átváltozhat."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2294,7 +1501,6 @@ msgstr "Eladási ár"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
-#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Eladási árlista"
 
@@ -2312,26 +1518,6 @@ msgstr "Értékesítések"
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
 msgstr "Értékesítési árlista"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"Say you’re listening to a song you love and you want to stay in the mood.\n"
-"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
-"                                        and makes a Genius playlist for you. For more song combinations\n"
-"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
-"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
-"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
-msgstr ""
-"Monjuk halgat egy számot, amit szeret, és benne akar maradni az érzésben.\n"
-"                                        Csak érintse rá a Genius -ra. Az iPod nano számai közül talál egyet, mellyel nagyszerűen\n"
-"                                        tovább élvezheti Genius előadólistáját. Több szám kombinációért\n"
-"                                        nem kell gyötörnie magát, végezzen el egy  Genius Mixeset az iTunes\n"
-"                                        felületen és szinkronizálja azok közül az iPod nano egységgel. Ezután érintsen rá a Genius Mixekre és \n"
-"                                        ismét fedezze fel a régóta nem hallott számokat  — vagy találjon olyanokat amiket már rég elfelejtett."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_categ_id
@@ -2352,12 +1538,6 @@ msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: product
-#: model:product.product,name:product.consu_delivery_01
-#: model:product.template,name:product.consu_delivery_01_product_template
-msgid "Server"
-msgstr "Szerver"
-
-#. module: product
 #: code:addons/product/models/product_template.py:43
 #: selection:product.template,type:0
 #, python-format
@@ -2366,7 +1546,6 @@ msgstr "Szolgáltatás"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
-#: model:product.category,name:product.product_category_3
 msgid "Services"
 msgstr "Szolgáltatások"
 
@@ -2399,18 +1578,6 @@ msgstr ""
 " * Nem bejelölt: Mindegyik vállalat csak a saját termékeit látja  (termékek, melyek a vállalathoz kapcsoltak). Termékek, melyek egyik vállalathoz sem tartoznak azok az összes vállalat számára láthatóak."
 
 #. module: product
-#: model:product.product,name:product.membership_1
-#: model:product.template,name:product.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Ezüst tagság"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Sleek, compact design"
-msgstr "Keskeny, kompakt kivitel"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
 #: model:ir.model.fields,field_description:product.field_product_template_image_small
 msgid "Small-sized image"
@@ -2431,21 +1598,6 @@ msgstr ""
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
 msgstr "Kisebb mint a referencia mértékegység"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Soft covers are available separately in blue, green or orange. Pick a color "
-"to match your style."
-msgstr ""
-"Lágy borítók külön elérhetőek kékben, zöldben vagy narancssárgában. "
-"Válasszon a stílusához megfelelő színt."
-
-#. module: product
-#: model:product.category,name:product.product_category_4
-msgid "Software"
-msgstr "Szoftver"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
@@ -2522,96 +1674,12 @@ msgid "Stockable Product"
 msgstr "Raktározható termék"
 
 #. module: product
-#: model:product.product,name:product.product_product_2
-#: model:product.template,name:product.product_product_2_product_template
-msgid "Support Contract (on timesheet)"
-msgstr "Támogatási szerződés (munkaidő-beosztásokra)"
-
-#. module: product
-#: model:product.product,name:product.product_delivery_01
-#: model:product.template,name:product.product_delivery_01_product_template
-msgid "Switch, 24 ports"
-msgstr "24 portos kapcsoló"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "Sync to your heart’s content."
-msgstr "Szinkronizálja a szívéhez közelálló tartalmat."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"Tap to play your favorite songs. Or entire albums.\n"
-"                                    Or everything by one artist. You can even browse by genres or composers.\n"
-"                                    Flip through your music: Album art looks great on the bigger screen.\n"
-"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
-msgstr ""
-"Érintse meg a kedvenc dalai lejátszásához. Vagy a teljes albumhoz.\n"
-"                                    Vagy egy előadó összesét. Még böngészhet is a műfajok vagy zeneszerzők között.\n"
-"                                    Lapozgasson a zenéi közt: Album jobban néz ki a nagy képernyőn.\n"
-"                                    Vagy tartsa dogait frissen, rázza meg az iPod nano gépét, ami átvált a zene könyvtárában egy másik számra."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_product_pricelist_id
 #: model:ir.model.fields,help:product.field_product_template_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
 "Műszaki mező. Az árlisták keresésére használt, nem mentett az adatbázisban."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid ""
-"The Apple In-Ear Headphones deliver a truly immersive sound experience by drastically\n"
-"                                    reducing unwanted outside noises. The soft, silicone ear tips fit snugly and comfortably\n"
-"                                    in your ear, creating a seal that isolates your music from your surroundings.\n"
-"                                    Three different sizes of ear tips are included so you can find a perfect fit for each ear.\n"
-"                                    Also included are a convenient carrying case for the ear tips and a cable-control case\n"
-"                                    for the headphones themselves."
-msgstr ""
-"Az Apple In-Ear fejhallgatóval teljesen magával ragadó hang élményt élhet át drasztikusan\n"
-"                                    csökkentett, oda nem illő, külső zajok szűrésével. A puha, szilikon fülre illesztett részek kényelmes és komfortos \n"
-"                                    viselést tesz lehetővé, tömítést képezve a környezettől elszigetelve a zenét.\n"
-"                                    Három különböző méretű fül védővel a szállítás tartozéka, így megtalálhatja a füleire legjobban illeszkedőt.\n"
-"                                    Még tartozék a megfelelő méretű hordtáska a fül védőknek és a kábel-vezérlő tasak\n"
-"                                    a fejhallgató részére."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"The Bose® SoundLink® mini is Bose's smallest portable Bluetooth speaker. Its ultra-compact size fits in the \n"
-"                                    palm of your hand, yet gives you full, natural sound wirelessly from your iPhone, iPad, or iPod. Grab it and go \n"
-"                                    full-featured. It can do just about everything and\n"
-"                                    experience music just about anywhere."
-msgstr ""
-"A Bose® SoundLink® mini a Bose cég legkisebb hordozható Bluetooth hangszórója. Ez ultra-kompakt méretű, elfér a  \n"
-"                                    markában, azonban teljesen természetes hangot ad vissza vezeték nélkül az iPhone, iPad, vay iPod készülékről. Vegye és legyen \n"
-"                                    teljes-értékű. Majdnem mindent tud  és\n"
-"                                    tapasztalja meg bárhol."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"The SoundLink® Mini speaker is small and light enough\n"
-"                                        to tuck into your bag. It weighs in at just 1.5 pounds.\n"
-"                                        Its low profile lets you place it almost anywhere and\n"
-"                                        provides a low center of gravity that makes it nearly\n"
-"                                        impossible to tip over."
-msgstr ""
-"A SoundLink® Mini hangszóró kicsi és könnyű ahhoz, hogy a táskájába\n"
-"                                        hordozza. Csak 726 gramm /1.5 font/ súlyú.\n"
-"                                        Az alacsony kiépítése révén majdnem mindenhova elhelyezhető és\n"
-"                                        alacsony súlypontja miatt szinte lehetetlen\n"
-"                                        felbillenteni."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2637,41 +1705,9 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Egy mértékegység átváltási aránya nem lehet 0!"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "The desktop. In its most advanced form ever"
-msgstr "Az asztali gép. A mindenkori legfejlettebb forma "
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
 msgid "The first in the sequence is the default one."
 msgstr "A sorrendben az első az alapértelmezett."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "The full iPad experience."
-msgstr "A teljes iPad élmény."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_9
-#: model:product.template,website_description:product.product_product_9_product_template
-msgid ""
-"The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
-"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
-"                                    you like — with the keyboard in front of your iPad or on your lap."
-msgstr ""
-"A hihetetlenül vékony Apple vezeték nélküli Bluetooth billentyűzet  technológia,\n"
-"                                    mely kompatibilissé teszi az iPad géppel. És szabadon gépelhet ahol \n"
-"                                    csak akar — az IPad előtt lévő  billentyűzeten vagy a fedelén."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
@@ -2732,18 +1768,6 @@ msgstr ""
 "                beszerzési módok, stb."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"The rechargeable lithium-ion battery delivers up to seven hours of playtime.\n"
-"                                    And at home, you can listen even longer—the charging cradle lets\n"
-"                                    you listen while it charges."
-msgstr ""
-"Az újratölthető lítium-ion akkumulátor hét órás játékidőt biztosítanak.\n"
-"                                    És otthon, még tovább is hallgathatja—a töltő bölcső lehetővé teszi\n"
-"                                    a töltések közbeni zenehallgatást."
-
-#. module: product
 #: code:addons/product/models/product_uom.py:44 sql_constraint:product.uom:0
 #, python-format
 msgid "The rounding precision must be greater than 0!"
@@ -2757,32 +1781,6 @@ msgid ""
 msgstr ""
 "Az értékesítési árakat a termék sablonból kezeli. Kattintson a 'Ár "
 "variációk' gombra az extra ár tulajdonságokra."
-
-#. module: product
-#: model:product.product,description_sale:product.product_product_9
-#: model:product.template,description_sale:product.product_product_9_product_template
-msgid ""
-"The sleek aluminium Apple Wireless Keyboard.\n"
-"            "
-msgstr ""
-"Apple vezeték  nélküli, keskeny alumínium  billentyűzet.\n"
-"            "
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"The speaker has a range of about 30 feet, so you can enjoy\n"
-"                                    the sound you want without wires. It pairs easily with your\n"
-"                                    smartphone, iPad® or other Bluetooth device.\n"
-"                                    And it remembers the most recent six devices you've used,\n"
-"                                    so reconnecting is even simpler."
-msgstr ""
-"A hangszóró körülbelül 1 méteres /30 feet/ hatótávolsággal rendelkezik, így, ha akarja \n"
-"                                    vezeték nélkül élvezheti a hangot. Könnyen párosítható\n"
-"                                    okos telefonjával, iPad® vagy más Bluetooth eszközzel.\n"
-"                                    Emlékezik a legutóbb használt hat párosított eszközre,\n"
-"                                    így az újracsatlakoztatás még egyszerűbb."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
@@ -2800,40 +1798,6 @@ msgstr "A térfogat köbméterben."
 #: model:ir.model.fields,help:product.field_product_template_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
 msgstr "A konténer súlya kg-ban, csomagolás nélkül, stb."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-msgid "There is less of it, but no less to it."
-msgstr "Ez kevesebb, de nem kevésbé."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "There's less of it, but no less to it."
-msgstr "Ez kevesebb, de nem kevésbé."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
-"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
-"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
-"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
-msgstr ""
-"Van másik lehetőség is az IPod zenéi keverésére: Hagyja, hogy elvégezze az a Genius.\n"
-"                                        Kapcsolja be az iTunes Genius-t a számítógépén, és automatikusan megtalálja az együtt jól hangzó  zenéit.\n"
-"                                        Ezután létrehoz egy Genius keverést, melyet könnyen szinkronizálhat az iPod-ra.\n"
-"                                        Ez a  tökéletes módja a rég elfelejtett dalok újbóli felfedezésének."
 
 #. module: product
 #: sql_constraint:product.attribute.value:0
@@ -2877,7 +1841,6 @@ msgstr "Ez a megjegyzés látható lesz az árajánlaton."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
-#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2904,42 +1867,9 @@ msgstr ""
 "üresen a belső megnevezés használatához."
 
 #. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid "Two is better than one."
-msgstr "Kettő jobb mint egy."
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_uom_type
 msgid "Type"
 msgstr "Típus"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"USB port allows for software update to ensure ongoing Bluetooth device "
-"compatibility"
-msgstr ""
-"USB csatlakozó a szoftver frissítéseknél biztosítja az eszközök Bluetooth "
-"kompatibilitását"
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr ""
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "Ultrafast wireless."
-msgstr "Ultragyors vezeték nélküli."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_8
-#: model:product.template,website_description:product.product_product_8_product_template
-msgid "Ultrathin design"
-msgstr "Ultravékony kivitel"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active
@@ -2994,31 +1924,6 @@ msgstr ""
 "Ugyanabba a kategóriába tartozó mértékegység \n"
 "            átkonvertálhatóak egymás közt. Például, az\n"
 "            <i>'Idő'</i>, kategóriában, a következő mértékegységek vannak: Órák, Napok."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Universal iPod docking station fits most iPod/iPhone models"
-msgstr ""
-"Univerzális iPod dokkoló egység a legtöbb iPod/iPhone modellhez megfelelő"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_7
-#: model:product.template,website_description:product.product_product_7_product_template
-msgid ""
-"Unlike many small headphones, each earpiece of the Apple In-Ear Headphones\n"
-"                                    contains two separate high-performance drivers — a woofer to handle bass and\n"
-"                                    mid-range sounds and a tweeter for high-frequency audio. These dedicated\n"
-"                                    drivers help ensure accurate, detailed sound across the entire sonic spectrum.\n"
-"                                    The result: you’re immersed in the music and hear details you never knew existed.\n"
-"                                    Even when listening to an old favorite, you may feel like you’re hearing it for the first time."
-msgstr ""
-"Sok kicsi okos telefonnal ellentétben, az Apple In-Ear mindegyik fejhallgatója \n"
-"                                    tartalmaz két különálló nagy-teljesítményű meghajtót — egy mély-hangszórót a basszus kezelésére és \n"
-"                                    közép--hangterjedelmű hangokat és egy csipogót a magas - frekvenciájú hangnak. Ezek a  dedikált\n"
-"                                    meghajtók segítenek biztosítani a pontos, részletes hangok terjedésében a teljes hang spektrumban.\n"
-"                                    Az eredmény: belemerülhet a zene élvezetébe és olyan részletekbe melyeket eddig nem ismert.\n"
-"                                    Még akkor is, ha egy régi  kedvencet hallgat, úgy érezheti, hogy most hallja először."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3128,20 +2033,6 @@ msgid "Volume"
 msgstr "Térfogat"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid "Volume control on main system"
-msgstr "Hangerő szabályozás a fő egységen"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_5b
-#: model:product.template,website_description:product.product_product_5b_product_template
-msgid ""
-"Wall charger can be plugged into the cradle or directly into the speaker"
-msgstr ""
-"Fali töltőt csatlakoztathat a bölcsőhöz vagy közvetlenül a hangszóróba"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_warranty
 #: model:ir.model.fields,field_description:product.field_product_template_warranty
 msgid "Warranty"
@@ -3160,14 +2051,6 @@ msgid "Weights"
 msgstr "Súlyok"
 
 #. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid "When one playlist isn’t enough."
-msgstr "Ha egy lejátszási lista nem elég."
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
@@ -3177,58 +2060,19 @@ msgstr ""
 "alkalmazva."
 
 #. module: product
-#: model:product.attribute.value,name:product.product_attribute_value_3
-msgid "White"
-msgstr "Fehér"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_4
-#: model:product.product,website_description:product.product_product_4b
-#: model:product.product,website_description:product.product_product_4c
-#: model:product.product,website_description:product.product_product_4d
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_4_product_template
-#: model:product.template,website_description:product.product_product_4b_product_template
-#: model:product.template,website_description:product.product_product_4c_product_template
-#: model:product.template,website_description:product.product_product_4d_product_template
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid "Why you'll love an iPad."
-msgstr "Mért fogja szeretni az iPad készüléket."
-
-#. module: product
-#: model:product.attribute,name:product.product_attribute_3
-msgid "Wi-Fi"
-msgstr "Wi-Fi"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_6
-#: model:product.template,website_description:product.product_product_6_product_template
-msgid ""
-"With advanced Wi‑Fi that’s up to twice as fast as\n"
-"                                   any previous-generation iPad and access to fast\n"
-"                                   cellular data networks around the world, iPad mini\n"
-"                                   lets you download content, stream video,\n"
-"                                   and browse the web at amazing speeds."
-msgstr ""
-"Haladó WIFI kétszer gyorsabb lehet mint\n"
-"                                   bármely előző-generációs iPad és eléri a világon\n"
-"                                   bárhol a cellás adat forgalmakat, iPad mini\n"
-"                                   lehetővé teszi a tartalmak letöltését, videók letöltését,\n"
-"                                   és a web szélsebes böngészését."
-
-#. module: product
-#: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
-msgid ""
-"Work with product variant allows you to define some variant of the same "
-"products, an ease the product management in the ecommerce for example"
-msgstr ""
-"Termék variációkkal történő munka lehetővé teszi a termékekhez több variáció"
-" meghatározását, egy termék kezelés bővítését az e-értékesítéshez például"
-
-#. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Munkaidő"
+
+#. module: product
+#: code:addons/product/models/product_template.py:262
+#, python-format
+msgid ""
+"You cannot create a product with an Internal Category set as View. Please "
+"change the category or the category type."
+msgstr ""
+"Nem hozhat létre Belső kategória szettel tételt Nézetként. Kérem változtassa"
+" meg a kategóriát vagy a kategória típust."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -3271,30 +2115,6 @@ msgstr ""
 "Mindenre amit értékesít egy terméket kell meghatároznia, legyen az egy "
 "fizikai termék, egy fogyó termék vagy egy szolgáltatás, melyet a "
 "vársárlóinak értékesít."
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"You probably have multiple playlists in iTunes on your computer.\n"
-"                                        One for your commute. One for the gym. Sync those playlists\n"
-"                                        to iPod, and you can play the perfect mix for whatever\n"
-"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
-"                                        so it’s easy to switch between them and find the one you want without looking."
-msgstr ""
-"Lehet, hogy több lejátszási listával rendelkezik a számítógépén az iTunes-on.\n"
-"                                        Egyik az ingázáshoz. Egyik a tornagyakorlatokhoz. Szinkronizálja ezeket\n"
-"                                        az iPod-ra, és minden lelki állapotban a megfelelőt\n"
-"                                        tudja lejátszani. VoiceOver megmondja mindegyik lejátszási lista nevét,\n"
-"                                        így könnyen váltogathat közöttük és megtalálja a kívánt listát anélkül, hogy oda pillantana."
-
-#. module: product
-#: model:product.product,name:product.product_order_01
-#: model:product.template,name:product.product_order_01_product_template
-msgid "Zed+ Antivirus"
-msgstr "Zed+ Antivírus"
 
 #. module: product
 #: model:ir.model,name:product.model_base_config_settings
@@ -3357,52 +2177,6 @@ msgid "gal(s)"
 msgstr "gallon(s)"
 
 #. module: product
-#: model:product.product,name:product.product_product_8
-#: model:product.template,name:product.product_product_8_product_template
-msgid "iMac"
-msgstr "iMac"
-
-#. module: product
-#: model:product.product,name:product.product_product_6
-#: model:product.template,name:product.product_product_6_product_template
-msgid "iPad Mini"
-msgstr "iPad Mini"
-
-#. module: product
-#: model:product.product,name:product.product_product_4
-#: model:product.product,name:product.product_product_4b
-#: model:product.product,name:product.product_product_4c
-#: model:product.product,name:product.product_product_4d
-#: model:product.template,name:product.product_product_4_product_template
-#: model:product.template,name:product.product_product_4b_product_template
-#: model:product.template,name:product.product_product_4c_product_template
-#: model:product.template,name:product.product_product_4d_product_template
-msgid "iPad Retina Display"
-msgstr "iPad Retina kijelző"
-
-#. module: product
-#: model:product.product,name:product.product_product_11
-#: model:product.product,name:product.product_product_11b
-#: model:product.template,name:product.product_product_11_product_template
-#: model:product.template,name:product.product_product_11b_product_template
-msgid "iPod"
-msgstr "iPod"
-
-#. module: product
-#: model:product.product,website_description:product.product_product_11
-#: model:product.product,website_description:product.product_product_11b
-#: model:product.template,website_description:product.product_product_11_product_template
-#: model:product.template,website_description:product.product_product_11b_product_template
-msgid ""
-"iTunes on your Mac or PC makes it easy to load up\n"
-"                                        your iPod. Just choose the playlists, audiobooks,\n"
-"                                        podcasts, and other audio files you want, then sync."
-msgstr ""
-"iTunes a Mac vagy PC segítségével könnyűvé teszi a feltöltést az \n"
-"                                        iPod-ra. Csak válassza ki a lejátszási listákat, hangoskönyveket,\n"
-"                                        hang- videó anyagokat, és más hang fájlokat, melyeket szinkronizálni akar."
-
-#. module: product
 #: model:product.uom,name:product.product_uom_inch
 msgid "inch(es)"
 msgstr "inch(es)"
@@ -3456,26 +2230,6 @@ msgstr "product.price.history"
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
 msgstr "db"
-
-#. module: product
-#: model:product.product,description_sale:product.consu_delivery_02
-#: model:product.template,description_sale:product.consu_delivery_02_product_template
-msgid ""
-"raid 1 \n"
-"            512ECC ram"
-msgstr ""
-"kiosztás 1 \n"
-"            512ECC ram"
-
-#. module: product
-#: model:product.product,description_sale:product.consu_delivery_01
-#: model:product.template,description_sale:product.consu_delivery_01_product_template
-msgid ""
-"raid 10 \n"
-"            2048ECC ram"
-msgstr ""
-"kiosztás 10 \n"
-"            2048ECC ram"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist

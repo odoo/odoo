@@ -6,10 +6,10 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,6 @@ msgid "Click to add a new template."
 msgstr "点击新增一个模板"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
-msgid "Configure your templates"
-msgstr "配置你的模板"
-
-#. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
 msgid "Created by"
 msgstr "创建人"
@@ -83,11 +78,6 @@ msgstr "创建时间"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "创建谷歌驱动器只能由一次完成。"
-
-#. module: google_drive
-#: model:ir.filters,name:google_drive.filter_partner
-msgid "Customer"
-msgstr "客户"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
@@ -109,7 +99,7 @@ msgstr "至配置面板"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
 msgid "Google Client"
-msgstr "谷歌客户端"
+msgstr ""
 
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
@@ -126,6 +116,11 @@ msgstr "谷歌网盘设定"
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
 msgstr "谷歌网盘名称模式"
+
+#. module: google_drive
+#: model:ir.ui.view,arch_db:google_drive.base_config_settings_view_form_inherit_google_drive
+msgid "Google Drive Templates"
+msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:61
@@ -246,7 +241,7 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr "'任何人的联系'的'读取'许可为尚未写入文件"
+msgstr "'任何人的联系'的'读取'权限为尚未写入文件"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
@@ -259,12 +254,7 @@ msgstr "URI"
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr "你还没有配置从谷歌产生的“授权码”，请生成并配置它。"
-
-#. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
-msgid "and paste it here"
-msgstr "并粘贴在这里"
+msgstr "您还没有配置从谷歌产生的“授权码”，请生成并配置它。"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings

@@ -42,6 +42,9 @@
             <field name="arch" type="xml">
                 <search string="Groups">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                    <filter name="portal" string="Portal Groups" domain="[('is_portal','=',True)]"/>
+                    <filter name="no_portal" string="Non-Portal Groups" domain="[('is_portal','=',False)]"/>
+                    <separator orientation="vertical"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Groups" domain="[('share','=',False)]"/>
                 </search>
@@ -56,6 +59,7 @@
                     <group col="4">
                         <field name="category_id"/>
                         <field name="name"/>
+                        <field name="is_portal"/>
                         <field name="share"/>
                     </group>
                     <notebook>
@@ -151,11 +155,10 @@
                             <label for="groups_id" string="Access Rights"
                                     attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
-                            <field name="fax"/>
                         </group>
                     </sheet>
                 </form>
@@ -167,7 +170,6 @@
             <field name="arch" type="xml">
                 <form string="Users">
                     <header>
-                        <button string="Change Password" type="action" name="%(change_password_wizard_action)d" help="Change the user password."/>
                     </header>
                     <sheet>
                         <field name="id" invisible="1"/>
@@ -230,6 +232,40 @@
                 </tree>
             </field>
         </record>
+        <record id="view_res_users_kanban" model="ir.ui.view">
+            <field name="name">res.users.kanban</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="lang"/>
+                    <field name="active"/>
+                    <field name="login_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('res.users', 'image_medium', record.id.value)"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" aria-hidden="true"></i></li>
+                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle"></i></li>
+                                        <li class="mb4">
+                                            <strong><field name="name"/></strong>
+                                        </li>
+                                        <li class="badge pull-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
+                                        <li class="mb4" t-if="record.login.raw_value"><i class="fa fa-envelope"/> <field name="login"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_users_search" model="ir.ui.view">
             <field name="name">res.users.search</field>
             <field name="model">res.users</field>
@@ -259,6 +295,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.users</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
             <field name="context">{'search_default_no_share': 1}</field>
@@ -297,7 +334,12 @@
                             groups="base.group_multi_company"/>
                     </group>
                     <group string="Email Preferences">
-                        <field name="email" widget="email" readonly="0"/>
+                        <group name="preference_email">
+                            <field name="email" widget="email" readonly="0"/>
+                        </group>
+                        <group name="preference_contact"></group>
+                    </group>
+                    <group>
                         <field name="signature" readonly="0"/>
                     </group>
                     <footer>

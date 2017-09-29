@@ -8,6 +8,8 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
+from . import pycompat
+
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -92,9 +94,7 @@ class ormcache(object):
 
     def clear(self, model, *args):
         """ Clear the registry cache """
-        d, key0, _ = self.lru(model)
-        d.clear()
-        model.pool.cache_cleared = True
+        model.pool._clear_cache()
 
 
 class ormcache_context(ormcache):
@@ -114,7 +114,7 @@ class ormcache_context(ormcache):
         spec = getargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
-        keys_expr = "tuple(map(%s.get, %r))" % (cont_expr, self.keys)
+        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
@@ -135,7 +135,7 @@ class ormcache_multi(ormcache):
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, basestring), "ormcache_multi() parameter multi must be an argument name"
+        assert isinstance(self.multi, pycompat.string_types), "ormcache_multi() parameter multi must be an argument name"
 
         super(ormcache_multi, self).determine_key()
 
@@ -202,8 +202,8 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
     entries = defaultdict(int)
-    for dbname, reg in Registry.registries.iteritems():
-        for key in reg.cache.iterkeys():
+    for dbname, reg in Registry.registries.items():
+        for key in reg.cache:
             entries[(dbname,) + key[:2]] += 1
     for key, count in sorted(entries.items()):
         dbname, model_name, method = key
@@ -217,8 +217,8 @@ def log_ormcache_stats(sig=None, frame=None):
 
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
-    model = bound_method.im_self
-    ormcache = bound_method.clear_cache.im_self
+    model = bound_method.__self__
+    ormcache = bound_method.clear_cache.__self__
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter

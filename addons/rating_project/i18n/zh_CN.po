@@ -6,10 +6,10 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -86,7 +86,7 @@ msgid ""
 "                    <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>\n"
 "                % endif\n"
 "                % if object.project_id.rating_status == 'periodic':\n"
-"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.\n"
+"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</p>\n"
 "                % endif\n"
 "                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
 "            </td></tr>\n"
@@ -98,12 +98,12 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr "${object.project_id.company_id.name}: 服务点评请求"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr "% 任务"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -113,7 +113,7 @@ msgstr "自动看板状态"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
@@ -178,6 +178,14 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"If set and if the project's rating configuration is 'Rating when changing "
+"stage', then an email will be sent to the customer when the task reaches "
+"this step."
+msgstr ""
+
+#. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
 msgstr "最近点评：高度不满意"
@@ -195,7 +203,7 @@ msgstr "最近点评：满意"
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr "没点评"
+msgstr "不点评"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -225,6 +233,13 @@ msgid "Project"
 msgstr "项目"
 
 #. module: rating_project
+#: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
+#: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
+#: model:ir.cron,name:rating_project.ir_cron_rating_project
+msgid "Project: Send rating"
+msgstr ""
+
+#. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
 msgstr "每季度"
@@ -232,12 +247,12 @@ msgstr "每季度"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
 msgid "Rating"
-msgstr "点评"
+msgstr "评级"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr "点评邮件模板"
+msgstr "评价邮件的模板"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
@@ -246,8 +261,8 @@ msgstr "点评频率"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
-msgid "Rating request deadline"
-msgstr "点评需求截止日期"
+msgid "Rating Request Deadline"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -257,14 +272,7 @@ msgstr "在变更阶段时点评"
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr "点评"
-
-#. module: rating_project
-#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
-msgid ""
-"Select an email template. An email will be sent to the customer when the "
-"task reach this step."
-msgstr "选择一个邮件模板，当任务达到这一步时，会发送邮件给客户"
+msgstr "评级"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

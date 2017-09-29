@@ -9,15 +9,15 @@ Index: addons/openacademy/__manifest__.py
      'version': '0.1',
  
      # any module necessary for this one to work correctly
--    'depends': ['base', 'report'],
-+    'depends': ['base', 'report', 'board'],
+-    'depends': ['base'],
++    'depends': ['base', 'board'],
  
      # always loaded
      'data': [
-@@ -31,6 +31,7 @@
+@@ -30,6 +30,7 @@
+         'templates.xml',
          'views/openacademy.xml',
          'views/partner.xml',
-         'views/session_workflow.xml',
 +        'views/session_board.xml',
          'reports.xml',
      ],
@@ -29,7 +29,7 @@ Index: addons/openacademy/views/session_board.xml
 @@ -0,0 +1,66 @@
 +<?xml version="1.0"?>
 +<odoo>
-+    <data>
++
 +        <record model="ir.actions.act_window" id="act_session_graph">
 +            <field name="name">Attendees by course</field>
 +            <field name="res_model">openacademy.session</field>
@@ -91,5 +91,5 @@ Index: addons/openacademy/views/session_board.xml
 +            action="open_board_session"
 +            sequence="1"
 +            id="menu_board_session" icon="terp-graph"/>
-+    </data>
++
 +</odoo>

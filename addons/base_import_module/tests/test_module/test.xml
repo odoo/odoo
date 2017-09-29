@@ -7,11 +7,11 @@
 
     <record id="main_company2" model="res.company">
         <field name="name">Hagrid</field>
-        <field name="rml_header1">My Company Tagline</field>
+        <field name="report_header">My Company Tagline</field>
         <field name="currency_id" ref="base.EUR"/>
     </record>
 
-    <template id="test_page" name="Test Page" page="True">
+    <template id="test_page" name="Test Page">
         <t t-call="website.layout">
             <h1>
                 This page comes from an imported module!

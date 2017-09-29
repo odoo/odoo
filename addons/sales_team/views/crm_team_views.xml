@@ -2,39 +2,13 @@
 <odoo>
     <data>
 
-<menuitem name="Sales"
-    id="menu_base_partner"
-    groups="group_sale_salesman,group_sale_manager" sequence="6"/>
-
-    <menuitem id="menu_sales" name="Sales" parent="menu_base_partner" sequence="5"/>
-        <menuitem id="menu_partner_form" parent="menu_sales" action="base.action_partner_form" sequence="3"/>
-
-    <menuitem id="menu_sale_config" name="Configuration" parent="menu_base_partner"
-    sequence="100" groups="group_sale_manager"/>
-        <menuitem id="menu_sale_general_settings" name="Settings" parent="menu_sale_config"
-            sequence="0" action="action_sale_config" groups="base.group_system"/>
-
-        <menuitem id="menu_config_address_book" parent="menu_sale_config" name="Contacts" sequence="4" groups="base.group_system"/>
-            <menuitem action="base.action_partner_category_form" id="menu_partner_category_form" name="Contact Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
-            <menuitem action="base.action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3" groups="base.group_no_one"/>
-            <menuitem id="menu_localisation" name="Localization" parent="menu_config_address_book" sequence="5" groups="base.group_no_one"/>
-                <menuitem action="base.action_country" id="menu_country_partner" parent="menu_localisation" sequence="1" groups="base.group_no_one"/>
-                <menuitem action="base.action_country_group" id="menu_country_group" name="Country Group" parent="menu_localisation" sequence="3" groups="base.group_no_one"/>
-                <menuitem action="base.action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="2" groups="base.group_no_one"/>
-                <menuitem action="base.action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
-            <menuitem id="menu_config_bank_accounts" name="Bank Accounts" parent="menu_config_address_book" sequence="6" groups="base.group_no_one"/>
-                <menuitem action="base.action_res_bank_form" id="menu_action_res_bank_form" parent="menu_config_bank_accounts" sequence="1" groups="base.group_no_one"/>
-                <menuitem action="base.action_res_partner_bank_account_form" id="menu_action_res_partner_bank_form" parent="menu_config_bank_accounts" groups="base.group_no_one" sequence="2"/>
-
-
-    
         <!-- Cateamions Search view -->
         <record id="crm_team_salesteams_search" model="ir.ui.view">
             <field name="name">Case Teams - Search</field>
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
-                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                   <filter name="my_favorites" string="My Favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
@@ -48,19 +22,18 @@
 
         <!-- Case Teams Action -->
         <record id="crm_team_salesteams_act" model="ir.actions.act_window">
-            <field name="name">Dashboard</field>
+            <field name="name">Sales Channels</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_my_favorites': 1}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
+                    Click here to define a new sales channel.
                 </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
                 </p>
             </field>
         </record>
@@ -71,7 +44,7 @@
             <field name="name">crm.team.form</field>
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
-                <form string="Sales Team">
+                <form string="Sales Channel">
                     <sheet>
                       <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -79,33 +52,38 @@
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Sales team"/>
+                            <label for="name" class="oe_edit_only" string="Sales Channel"/>
                             <h1>
                                 <field name="name" placeholder="Salesteam name..."/>
                             </h1>
-                            <div name="options_active"/>
+                            <div name="options_active" attrs="{'invisible': ['&amp;', ('team_type', '!=', 'sales'), ('team_type', '!=', 'website')]}"/>
                         </div>
                         <group>
                             <group name="left">
+                                <field name="team_type" groups="base.group_no_one"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                             <group name="right">
                             </group>
                         </group>
                         <notebook>
-                            <page name="members" string="Team Members">
-                                <field name="member_ids" widget="many2many_kanban" options="{'not_delete': True}">
+                            <page name="members" string="Team Members" attrs="{'invisible': [('team_type', 'in', ['pos', 'ebay'])]}">
+                                <field name="member_ids" widget="many2many" options="{'not_delete': True}">
                                     <kanban quick_create="false" create="true" delete="true">
+                                        <field name="id"/>
                                         <field name="name"/>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div class="oe_kanban_global_click" style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/>
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
+                                                <div class="oe_kanban_global_click" style="max-width: 200px">
+                                                    <div class="o_kanban_record_top">
+                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.id.raw_value)" height="40" width="40" class="oe_avatar oe_kanban_avatar_smallbox mb0"/>
+                                                        <div class="o_kanban_record_headings ml8">
+                                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
                                                         </div>
+                                                        <a t-if="! read_only_mode" type="delete" class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </t>
@@ -113,9 +91,11 @@
                                     </kanban>
                                 </field>
                             </page>
-                            <page string="More Info" name="more_info" groups="base.group_no_one">
-                                <group string="Company" groups="base.group_multi_company">
-                                    <field name="company_id" options="{'no_create': True}"/>
+                            <page string="Dashboard" name="dashboard">
+                                <group string="Graph" name="graph">
+                                    <field name="dashboard_graph_model" attrs="{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}"/>
+                                    <field name="dashboard_graph_period"/>
+                                    <field name="dashboard_graph_group"/>
                                 </group>
                             </page>
                         </notebook>
@@ -134,7 +114,7 @@
             <field name="model">crm.team</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Sales Team">
+                <tree string="Sales Channel">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="user_id"/>
@@ -142,38 +122,39 @@
             </field>
         </record>
 
-        <record id="crm_team_act" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
-            <field name="res_model">crm.team</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_team_view_tree"/>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
-                </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
-                </p>
+        <!-- Case Teams Kanban View -->
+        <record id="crm_team_view_kanban" model="ir.ui.view">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right"><field name="user_id"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
-
-        <menuitem id="sales_team.menu_sales_team_act" action="crm_team_salesteams_act" sequence="1" parent="sales_team.menu_base_partner" name="Dashboard"/>
 
         <!-- add css / js -->
         <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/sales_team/static/src/css/sales_team.css"/>
                 <link rel="stylesheet" href="/sales_team/static/src/less/sales_team_dashboard.less"/>
-                <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
-                <script type="text/javascript" src="/sales_team/static/src/js/sales_team_dashboard.js"></script>
             </xpath>
         </template>
 
-        <menuitem id="menu_sale_report" name="Reports" parent="sales_team.menu_base_partner" sequence="99" groups="sales_team.group_sale_manager"/>
-
         <record id="sales_team_config_action" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
+            <field name="name">Sales Channels</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -181,19 +162,20 @@
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
+                    Click here to define a new sales channel.
                 </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
                 </p>
             </field>
         </record>
 
-        <menuitem name="Sales Teams"
-            id="sales_team_config"
-            parent="sales_team.menu_sale_config"
-            action="sales_team_config_action"/>
-
+        <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+            <field name="name">Activity Types</field>
+            <field name="res_model">mail.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
+        </record>
     </data>
 </odoo>

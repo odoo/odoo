@@ -44,7 +44,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
         var split = splitlines[line_id] || {'quantity': 0, line: null};
         var line  = order.get_orderline(line_id);
         
-        if( !line.get_unit().groupable ){
+        if( !line.get_unit().is_pos_groupable ){
             if( split.quantity !== line.get_quantity()){
                 split.quantity = line.get_quantity();
             }else{
@@ -52,7 +52,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             }
         }else{
             if( split.quantity < line.get_quantity()){
-                split.quantity += line.get_unit().is_unit ? 1 : line.get_unit().rounding;
+                split.quantity += line.get_unit().is_pos_groupable ? 1 : line.get_unit().rounding;
                 if(split.quantity > line.get_quantity()){
                     split.quantity = line.get_quantity();
                 }
@@ -66,7 +66,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
                 split.line = line.clone();
                 neworder.add_orderline(split.line);
             }
-            split.line.set_quantity(split.quantity);
+            split.line.set_quantity(split.quantity, 'do not recompute unit price');
         }else if( split.line ) {
             neworder.remove_orderline(split.line);
             split.line = null;
@@ -115,7 +115,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             for(var id in splitlines){
                 var split = splitlines[id];
                 var line  = order.get_orderline(parseInt(id));
-                line.set_quantity(line.get_quantity() - split.quantity);
+                line.set_quantity(line.get_quantity() - split.quantity, 'do not recompute unit price');
                 if(Math.abs(line.get_quantity()) < 0.00001){
                     order.remove_orderline(line);
                 }

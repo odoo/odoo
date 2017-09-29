@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_team_salesteams_view_kanban_inherit_website_sale" model="ir.ui.view"> 
+        <field name="name">crm.team.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <field name="team_type"/>
+                </xpath>
+                <xpath expr="//t[@name='third_options']" position="after">
+                    <div class="row" t-if="record.team_type.raw_value == 'website' &amp;&amp; record.abandoned_carts_count.raw_value">
+                        <div class="col-xs-8">
+                            <div>
+                                <a name="get_abandoned_carts" type="object">
+                                    <field name="abandoned_carts_count"/>
+                                    Abandoned Carts to Recover
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <field name="abandoned_carts_amount" widget="monetary"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

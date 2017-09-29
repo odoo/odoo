@@ -30,7 +30,7 @@
                 <field name="state_id" position="before">
                     <field name="pos_order_count"/>
                 </field>
-                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
                     <span t-if="record.pos_order_count.value>0" class="badge"><i class="fa fa-fw fa-shopping-bag"/><t t-esc="record.pos_order_count.value"/></span>
                 </xpath>
             </field>

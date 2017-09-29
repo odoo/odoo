@@ -7,6 +7,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -85,8 +86,10 @@ class GoalDefinition(models.Model):
                 })
                 # dummy search to make sure the domain is valid
                 Obj.search_count(domain)
-            except (ValueError, SyntaxError), e:
-                msg = e.message or (e.msg + '\n' + e.text)
+            except (ValueError, SyntaxError) as e:
+                msg = e
+                if isinstance(e, SyntaxError):
+                    msg = (e.msg + '\n' + e.text)
                 raise exceptions.UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
 
@@ -102,9 +105,9 @@ class GoalDefinition(models.Model):
                 if not (field and field.store):
                     raise exceptions.UserError(
                         _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
-            except KeyError, e:
+            except KeyError as e:
                 raise exceptions.UserError(
-                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
+                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e))
 
     @api.model
     def create(self, vals):
@@ -281,7 +284,7 @@ class Goal(models.Model):
                     safe_eval(code, cxt, mode="exec", nocopy=True)
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
-                    if result is not None and isinstance(result, (float, int, long)):
+                    if result is not None and isinstance(result, (float, pycompat.integer_types)):
                         goals_to_write.update(goal._get_write_values(result))
                     else:
                         _logger.error(
@@ -322,7 +325,7 @@ class Goal(models.Model):
                         for goal in [g for g in goals if g.id in query_goals]:
                             for user_value in user_values:
                                 queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], (int, long)):
+                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], pycompat.integer_types):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)
@@ -350,7 +353,7 @@ class Goal(models.Model):
 
                         goals_to_write.update(goal._get_write_values(new_value))
 
-            for goal, values in goals_to_write.iteritems():
+            for goal, values in goals_to_write.items():
                 if not values:
                     continue
                 goal.write(values)

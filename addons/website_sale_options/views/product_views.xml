@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="website_sale.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="accessory_product_ids" position="after">
-                <field name="optional_product_ids" widget="many2many_tags"/>
+                <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </field>
         </field>
     </record>

@@ -16,13 +16,24 @@ import threading
 import time
 import itertools
 import unittest
-import urllib2
-import xmlrpclib
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from lxml import etree
 from pprint import pformat
 
-import werkzeug
+import requests
+
+from odoo.tools import pycompat
+
+try:
+    from itertools import zip_longest as izip_longest
+except ImportError:
+    from itertools import izip_longest
+try:
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    # pylint: disable=bad-python3-import
+    import xmlrpclib
 
 import odoo
 from odoo import api
@@ -78,7 +89,24 @@ def post_install(flag):
         return obj
     return decorator
 
-class BaseCase(unittest.TestCase):
+class TreeCase(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        super(TreeCase, self).__init__(methodName)
+        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
+
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertEqual(n1.tag, n2.tag, msg)
+        # Because lxml.attrib is an ordereddict for which order is important
+        # to equality, even though *we* don't care
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
+
+        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
+        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
+
+        for c1, c2 in izip_longest(n1, n2):
+            self.assertEqual(c1, c2, msg)
+
+class BaseCase(TreeCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -130,8 +158,12 @@ class BaseCase(unittest.TestCase):
 
     def shortDescription(self):
         doc = self._testMethodDoc
-        return doc and ' '.join(filter(None, map(str.strip, doc.splitlines()))) or None
+        return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
 
+    if not pycompat.PY2:
+        # turns out this thing may not be quite as useful as we thought...
+        def assertItemsEqual(self, a, b, msg=None):
+            self.assertCountEqual(a, b, msg=None)
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
@@ -151,6 +183,7 @@ class TransactionCase(BaseCase):
         def reset():
             # rollback and close the cursor, and reset the environments
             self.registry.clear_caches()
+            self.registry.reset_changes()
             self.env.reset()
             self.cr.rollback()
             self.cr.close()
@@ -211,29 +244,10 @@ class SavepointCase(SingleTransactionCase):
         self.registry.clear_caches()
 
 
-class RedirectHandler(urllib2.HTTPRedirectHandler):
-    """
-    HTTPRedirectHandler is predicated upon HTTPErrorProcessor being used and
-    works by intercepting 3xy "errors".
-
-    Inherit from it to handle 3xy non-error responses instead, as we're not
-    using the error processor
-    """
-
-    def http_response(self, request, response):
-        code, msg, hdrs = response.code, response.msg, response.info()
-
-        if 300 <= code < 400:
-            return self.parent.error(
-                'http', request, response, code, msg, hdrs)
-
-        return response
-
-    https_response = http_response
-
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
+    registry_test_mode = True
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
@@ -245,29 +259,24 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        self.registry.enter_test_mode()
+        if self.registry_test_mode:
+            self.registry.enter_test_mode()
+            self.addCleanup(self.registry.leave_test_mode)
         # setup a magic session_id that will be rollbacked
         self.session = odoo.http.root.session_store.new()
         self.session_id = self.session.sid
         self.session.db = get_db_name()
         odoo.http.root.session_store.save(self.session)
         # setup an url opener helper
-        self.opener = urllib2.OpenerDirector()
-        self.opener.add_handler(urllib2.UnknownHandler())
-        self.opener.add_handler(urllib2.HTTPHandler())
-        self.opener.add_handler(urllib2.HTTPSHandler())
-        self.opener.add_handler(urllib2.HTTPCookieProcessor())
-        self.opener.add_handler(RedirectHandler())
-        self.opener.addheaders.append(('Cookie', 'session_id=%s' % self.session_id))
-
-    def tearDown(self):
-        self.registry.leave_test_mode()
-        super(HttpCase, self).tearDown()
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
-        return self.opener.open(url, data, timeout)
+        if data:
+            return self.opener.post(url, data=data, timeout=timeout)
+        return self.opener.get(url, timeout=timeout)
 
     def authenticate(self, user, password):
         # stay non-authenticated
@@ -304,9 +313,11 @@ class HttpCase(TransactionCase):
         Other lines are relayed to the test log.
 
         """
+        logger = _logger.getChild('phantomjs')
         t0 = datetime.now()
         td = timedelta(seconds=timeout)
         buf = bytearray()
+        pid = phantom.stdout.fileno()
         while True:
             # timeout
             self.assertLess(datetime.now() - t0, td,
@@ -314,8 +325,8 @@ class HttpCase(TransactionCase):
 
             # read a byte
             try:
-                ready, _, _ = select.select([phantom.stdout], [], [], 0.5)
-            except select.error, e:
+                ready, _, _ = select.select([pid], [], [], 0.5)
+            except select.error as e:
                 # In Python 2, select.error has no relation to IOError or
                 # OSError, and no errno/strerror/filename, only a pair of
                 # unnamed arguments (matching errno and strerror)
@@ -324,39 +335,35 @@ class HttpCase(TransactionCase):
                     continue
                 raise
 
-            if ready:
-                s = phantom.stdout.read(1)
-                if not s:
-                    break
-                buf.append(s)
+            if not ready:
+                continue
+
+            s = os.read(pid, 4096)
+            if not s:
+                self.fail("Ran out of data to read")
+            buf.extend(s)
 
             # process lines
-            if '\n' in buf and (not buf.startswith('<phantomLog>') or '</phantomLog>' in buf):
-                if buf.startswith('<phantomLog>'):
-                    line = buf[12:buf.index('</phantomLog>')]
-                    buf = bytearray()
+            while b'\n' in buf and (not buf.startswith(b'<phantomLog>') or b'</phantomLog>' in buf):
+
+                if buf.startswith(b'<phantomLog>'):
+                    line, buf = buf[12:].split(b'</phantomLog>\n', 1)
                 else:
-                    line, buf = buf.split('\n', 1)
-                line = str(line)
+                    line, buf = buf.split(b'\n', 1)
+                line = line.decode('utf-8')
 
                 lline = line.lower()
                 if lline.startswith(("error", "server application error")):
                     try:
                         # when errors occur the execution stack may be sent as a JSON
                         prefix = lline.index('error') + 6
-                        _logger.error("phantomjs: %s", pformat(json.loads(line[prefix:])))
+                        self.fail(pformat(json.loads(line[prefix:])))
                     except ValueError:
-                        line_ = line.split('\n\n')
-                        _logger.error("phantomjs: %s", line_[0])
-                        # The second part of the log is for debugging
-                        if len(line_) > 1:
-                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
-                        pass
-                    break
+                        self.fail(lline)
                 elif lline.startswith("warning"):
-                    _logger.warn("phantomjs: %s", line)
+                    logger.warn(line)
                 else:
-                    _logger.info("phantomjs: %s", line)
+                    logger.info(line)
 
                 if line == "ok":
                     return True
@@ -370,36 +377,43 @@ class HttpCase(TransactionCase):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
         try:
-            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None)
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None, close_fds=True)
         except OSError:
             raise unittest.SkipTest("PhantomJS not found")
-        result = False
         try:
             result = self.phantom_poll(phantom, timeout)
-        finally:
-            # kill phantomjs if phantom.exit() wasn't called in the test
-            if phantom.poll() is None:
-                phantom.terminate()
-                phantom.wait()
-            self._wait_remaining_requests()
-            # we ignore phantomjs return code as we kill it as soon as we have ok
-            _logger.info("phantom_run execution finished")
             self.assertTrue(
                 result,
                 "PhantomJS test completed without reporting success; "
                 "the log may contain errors or hints.")
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            if phantom.poll() is None:
+                _logger.info("Terminating phantomjs")
+                phantom.terminate()
+                phantom.wait()
+            else:
+                # if we had to terminate phantomjs its return code is
+                # always -15 so we don't care
+                # check PhantomJS health
+                from signal import SIGSEGV
+                _logger.info("Phantom JS return code: %d" % phantom.returncode)
+                if phantom.returncode == -SIGSEGV:
+                    _logger.error("Phantom JS has crashed (segmentation fault) during testing; log may not be relevant")
+
+            self._wait_remaining_requests()
 
     def _wait_remaining_requests(self):
         t0 = int(time.time())
         for thread in threading.enumerate():
             if thread.name.startswith('odoo.service.http.request.'):
-                thread.join_retry_count = 10
+                join_retry_count = 10
                 while thread.isAlive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
-                    thread.join_retry_count -= 1
-                    if thread.join_retry_count < 0:
+                    join_retry_count -= 1
+                    if join_retry_count < 0:
                         _logger.warning("Stop waiting for thread %s handling request for url %s",
                                         thread.name, thread.url)
                         break

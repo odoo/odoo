@@ -1,42 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
 # peso <peer.sommerlund@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Morten Schou <ms@msteknik.dk>, 2016
-# Jesper Carstensen <jc@danodoo.dk>, 2016
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:35+0000\n"
-"PO-Revision-Date: 2016-09-19 12:35+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
-"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-07-09 06:23+0000\n"
+"Last-Translator: peso <peer.sommerlund@gmail.com>\n"
+"Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "(reload fonts)"
-msgstr "(genindlæs fonte)"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Denne konfiguration er relateret til den virksomhed du er logget "
-"ind som.</span>"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
@@ -51,7 +31,7 @@ msgstr "Tillad deling af dokumenter"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allow multi currencies"
-msgstr "Tillad flere valutaer"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
@@ -66,10 +46,11 @@ msgstr "Tillad brugere at importere data fra CSV/XLS/XLSX/ODS filer"
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Tillad at arbejde med multi valuta"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Anvend"
 
@@ -85,22 +66,20 @@ msgstr "Godkendelse"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Annuller"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_custom_footer
-msgid ""
-"Check this to define the report footer manually. Otherwise it will be filled"
-" in automatically."
-msgstr ""
-"Check her for at definere sidefod i rapporter manuelt. Alternativt vil de "
-"blive udfyldt automatisk."
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Klient"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
-msgid "Company"
-msgstr "Virksomhed"
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Tilpas Ordre"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -114,33 +93,34 @@ msgstr "Opsæt firma oplysninger"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Oprettet den"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
-msgid "Custom Report Footer *"
-msgstr "Brugerdefineret sidefod i rapporter *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
-msgid "Custom footer *"
-msgstr "Brugerdefineret sidefod *"
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Kunde"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Vist navn"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Edit default access rights for new users"
-msgstr "Tilret default brugerrettigheder for nye brugere"
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donor"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -148,22 +128,10 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
-msgid "Font *"
-msgstr "Font *"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Footer text displayed at the bottom of all reports."
-msgstr "Tekst i sidefod der vises i bunden af alle rapporter."
-
-#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_config
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
-msgstr "Generel opsætning"
+msgstr "Generelle indstillinger"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
@@ -186,9 +154,21 @@ msgid "Google Integration"
 msgstr "Google Integration"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Gæst"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Hvordan kontakter du en kunde"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
-msgstr "ID"
+msgstr "Id"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -198,32 +178,43 @@ msgstr "Import / Eksport"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Inter company"
-msgstr "Inter company"
+msgstr "Inter-firma"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "Håndter inter-company"
+msgstr "Håndter inter-firma"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_company
 msgid "Manage multiple companies"
 msgstr "Administrere firmaer"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Medlem"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -233,26 +224,26 @@ msgstr "Flere firmaer"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Currencies"
-msgstr "Flere valutaer"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "New users access rights"
-msgstr "Rettigheder for nye brugere"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
 msgstr ""
-"Du kan konfigurere dine API adgang for \"Google Kalender\" efter "
+"Du kan konfigurere dine API credentials for \"Google Kalender\" efter "
 "installation"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
-msgid "Paper Format *"
-msgstr "Papirformat *"
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Kontakt"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Tålmodig"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -260,74 +251,45 @@ msgid "Portal access"
 msgstr "Portal adgang"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Preview RML Report"
-msgstr "Vis RML rapport"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
-msgid "RML Header *"
-msgstr "RML sidehoved *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
-msgid "RML Internal Header *"
-msgstr "RML internt sidehoved *"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
-msgid "RML Internal Header for Landscape Reports *"
-msgstr "RML internt sidehoved for liggende rapporter *"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "RML Report Configuration"
-msgstr "RML rapport konfiguration"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Report Configuration"
-msgstr "Konfiguration af rapport"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Report Footer *"
-msgstr "Sidefod i rapporter *"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_font
-msgid ""
-"Set the font into the report header, it will be used as default font in the "
-"RML reports of the user company"
-msgstr ""
-"Angiv fonten til sidehoved i rapporter. Den vil blive brugt som default font"
-" i RML rapporter i brugerens virksomhed"
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embed any screen of Odoo."
-msgstr "Del eller indlejr et skærmbillede fra Odoo."
+msgid "Share or embbed any screen of Odoo."
+msgstr "Del eller indlejer ethvert skærmbillede fra Odoo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr "Del partnere mellem alle firmaer"
+msgstr "Del partnere til alle firmaer"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
 msgstr ""
-"Del dine partnere mellem alle firmaer defineret i din opsætning.\n"
-"* Afkrydset: Partnere er synlige for alle firmaer, selvom der er angivet et firma på partneren.\n"
-"* Uden kryds: Hvert firma kan se deres egne partnere (partnere som har angivet det firma). Partnere som ikke er relateret til et firma er synlige for alle firmaer."
+"Del dine partnere til alle firmaer defineret i din instans.\n"
+"* Afkrydset: Partnere er synlige for alle firmaer, selvom der er angivet et "
+"firma på partneren.\n"
+"* Uden kryds: Hvert firma kan se dets egne partnere (partnere som har "
+"angivet det firma). Partnere som ikke er relateret til et firma er synlige "
+"for alle firmaer."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
 msgstr "Delte ressourcer"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Angiv din Terminologi"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
+msgstr "Lejer"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
@@ -343,38 +305,58 @@ msgstr "Dette installerer modulet google_docs"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
 msgstr ""
-"Dette installerer modulet inter_company_regler.\n"
-"Konfigurer firmaregler til automatisk at oprette SO/KO når et af dine firmaer sælger/køber til et andet af dine firmaer."
+"Dette installerer modulet inter_company_rules.\n"
+"Konfigurer firmaregler til automatisk at oprette SO/KO når et af dine "
+"firmaer sælger/køber til et andet af dine firmaer."
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Brug alternativt ord for \"Kunde\""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
-msgstr "Brug ekstern authentication providers (OAuth)"
+msgid "Use external authentication providers, sign in with Google..."
+msgstr "Brug ekstern godkendelses-udbydere, login med Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
 msgstr ""
 "Når du sender et dokument til en kunde\n"
 "                                    (tilbud, faktura), vil din kunde kunne\n"
-"                                    tilmelde sig for at tilgå alle hans dokumenter,\n"
-"                                    læse firma nyheder, kontrollere sine projekter,\n"
+"                                    tilmelde sig for at tilgå alle hans "
+"dokumenter,\n"
+"                                    læse firma nyheder, kontrollere sine "
+"projekter,\n"
 "                                    m.m."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
+"Work in multi-company environments, with appropriate security access between "
+"companies."
+msgstr "Arbejd i et multi-firma miljø, med styrede rettigheder mellem firmaer."
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
 msgstr ""
-"Arbejd i et multi-firma miljø, med styrede rettigheder mellem firmaer."
+"Du kan bruge denne wizard til at ændre terminologier for kunder i hele "
+"programmet."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -389,3 +371,13 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "Salgskonfigurations opsætninger"

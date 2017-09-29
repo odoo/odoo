@@ -6028,6 +6028,7 @@
         <field name="refund_account_id" ref="pcg_4449"/>
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_18')])]"/>
+        <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
     <record model="account.tax.template" id="tva_purchase_18">
@@ -6039,6 +6040,7 @@
         <field name="account_id" ref="pcg_4441"/>
         <field name="refund_account_id" ref="pcg_4449"/>
         <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_18')])]"/>
+        <field name="tax_group_id" ref="tax_group_18"/>
     </record>
 
     <record model="account.tax.template" id="tva_exonere">
@@ -6047,6 +6049,7 @@
         <field name="amount">0</field>
         <field name="type_tax_use">sale</field>
         <field name="tag_ids" eval="[(6,0,[ref('TVA_vente_exempt_0')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record model="account.tax.template" id="tva_achat_exonere">
@@ -6055,5 +6058,6 @@
         <field name="amount">0</field>
         <field name="type_tax_use">purchase</field>
         <field name="tag_ids" eval="[(6,0,[ref('TVA_achat_exempt_0')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 </odoo>

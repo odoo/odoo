@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='create_alias']" position="before">
-                <field name="url"/>
+                <field name="url" widget="url"/>
             </xpath>
         </field>
     </record>

@@ -15,6 +15,7 @@ class MailShortcode(models.Model):
     _description = 'Canned Response / Shortcode'
 
     source = fields.Char('Shortcut', required=True, index=True, help="The shortcut which must be replaced in the Chat Messages")
+    unicode_source = fields.Char(string='Unicode Character', help="The source is replaced by this unicode character in the Chat Messages")
     substitution = fields.Text('Substitution', required=True, index=True, help="The escaped html code replacing the shortcut")
     description = fields.Char('Description')
     shortcode_type = fields.Selection([('image', 'Smiley'), ('text', 'Canned Response')], required=True, default='text',

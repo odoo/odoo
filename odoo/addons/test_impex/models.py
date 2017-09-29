@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
+
 
 def selection_fn(model):
     return [(str(key), val) for key, val in enumerate(["Corge", "Grault", "Wheee", "Moog"])]
@@ -47,7 +49,7 @@ for name, field in MODELS:
 
         @api.model
         def name_search(self, name='', args=None, operator='ilike', limit=100):
-            if isinstance(name, basestring) and name.split(':')[0] == self._name:
+            if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
                 records = self.search([('value', operator, int(name.split(':')[1]))])
                 return records.name_get()
             else:
@@ -69,7 +71,7 @@ class One2ManyChild(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if isinstance(name, basestring) and name.split(':')[0] == self._name:
+        if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
             records = self.search([('value', operator, int(name.split(':')[1]))])
             return records.name_get()
         else:
@@ -123,7 +125,7 @@ class Many2ManyChild(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if isinstance(name, basestring) and name.split(':')[0] == self._name:
+        if isinstance(name, pycompat.string_types) and name.split(':')[0] == self._name:
             records = self.search([('value', operator, int(name.split(':')[1]))])
             return records.name_get()
         else:
@@ -148,7 +150,10 @@ class OnlyOne(models.Model):
     _name = 'export.unique'
 
     value = fields.Integer()
+    value2 = fields.Integer()
+    value3 = fields.Integer()
 
     _sql_constraints = [
         ('value_unique', 'unique (value)', "The value must be unique"),
+        ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]

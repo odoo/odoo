@@ -24,7 +24,11 @@ Notes:
     * to update the chart of tax template, update tax.xls and run tax2csv.py
 """,
     'author': 'OpenERP SA, ADN, ACSONE SA/NV',
-    'depends': ['account', 'base_vat', 'base_iban'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+    ],
     'data': [
         # basic accounting data
         'data/account_financial_report_data.xml',
@@ -32,6 +36,7 @@ Notes:
         'data/l10n_lu_chart_data.xml',
         'data/account.account.template-2011.csv',
         'data/account.account.tag.csv',
+        'data/account.tax.group.csv',
         'data/account.tax.template-2015.csv',
         'data/account.fiscal.position.template-2011.csv',
         'data/account.fiscal.position.tax.template-2015.csv',

@@ -39,7 +39,7 @@ class AssetModify(models.TransientModel):
                 node = doc.xpath("//field[@name='method_number']")[0]
                 node.set('invisible', '1')
                 setup_modifiers(node, result['fields']['method_number'])
-            result['arch'] = etree.tostring(doc)
+            result['arch'] = etree.tostring(doc, encoding='unicode')
         return result
 
     @api.model

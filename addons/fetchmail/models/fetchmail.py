@@ -132,7 +132,7 @@ class FetchmailServer(models.Model):
             try:
                 connection = server.connect()
                 server.write({'state': 'done'})
-            except Exception, err:
+            except Exception as err:
                 _logger.info("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
                 raise UserError(_("Connection test failed: %s") % tools.ustr(err))
             finally:

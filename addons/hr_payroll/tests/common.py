@@ -34,7 +34,9 @@ class TestPayslipBase(TransactionCase):
             'name': 'Salary Structure for Software Developer',
             'code': 'SD',
             'company_id': self.ref('base.main_company'),
-            'rule_ids': [(4, [self.hra_rule_id, self.conv_rule_id, self.prof_tax_rule_id, self.pf_rule_id, self.mv_rule_id, self.comm_rule_id])]
+            'rule_ids': [(4, self.hra_rule_id), (4, self.conv_rule_id),
+                         (4, self.prof_tax_rule_id), (4, self.pf_rule_id),
+                         (4, self.mv_rule_id), (4, self.comm_rule_id)],
         })
 
         # I create a contract for "Richard"
@@ -46,5 +48,4 @@ class TestPayslipBase(TransactionCase):
             'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.richard_emp.id,
             'struct_id': self.developer_pay_structure.id,
-            'working_hours': self.ref('resource.timesheet_group1')
         })

@@ -4,6 +4,14 @@
     !record {model: res.partner, id: supplier_crossdock}:
         name: Crossdocking supplier
 -
+  I first create a warehouse with pick-pack-ship and reception in 2 steps
+-
+  !record {model: stock.warehouse, id: wh_pps}:
+    name: WareHouse PickPackShip 
+    code: whpps
+    reception_steps: 'two_steps'
+    delivery_steps: 'pick_pack_ship' 
+-
     Use the warehouse created in cancellation_propagated.yml.
 -
     !python {model: stock.warehouse, id: wh_pps}: |
@@ -36,7 +44,7 @@
               product_uom_qty: 100.00
 -
     !python {model: sale.order.line, id: False}: |
-        route_wh_pps_crossdock = self.env['stock.warehouse'].browse(ref('stock_dropshipping.wh_pps')).crossdock_route_id.id
+        route_wh_pps_crossdock = self.env['stock.warehouse'].browse(ref('wh_pps')).crossdock_route_id.id
         order = self.env['sale.order'].browse(ref('sale_order_crossdock_shpng'))
         order.order_line.write({'route_id': route_wh_pps_crossdock})
 -
@@ -47,7 +55,7 @@
 -
     Run the scheduler.
 -
-    !python {model: procurement.order, id: False}: |
+    !python {model: procurement.group, id: False}: |
         self.run_scheduler()
 -
     Check a quotation was created for the created supplier and confirm it.

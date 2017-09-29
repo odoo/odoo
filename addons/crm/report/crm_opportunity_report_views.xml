@@ -109,6 +109,9 @@
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
                     <separator/>
+                    <filter string="This Month" name="this_month" domain="[('date_closed', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="Last Month" name="last_month" domain="['&amp;', ('date_closed', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date_closed', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <separator/>
                     <filter string="Current" name="current" domain="[('active', '=', True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Extended Filters">
@@ -132,7 +135,7 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
                         <filter string="City" context="{'group_by':'city'}" />
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -152,11 +155,11 @@
              <field name="res_model">crm.opportunity.report</field>
              <field name="view_type">form</field>
              <field name="view_mode">pivot,graph</field>
-             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True, 'search_default_archived': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')})]"/>
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
              <field name="help">Pipeline Analysis gives you an instant access to
 your opportunities with information such as the expected revenue, planned cost,
 missed deadlines or the number of interactions per opportunity. This report is
@@ -164,7 +167,7 @@ mainly used by the sales manager in order to do the periodic review with the
 teams of the sales pipeline.</field>
         </record>
         <menuitem id="crm_opportunity_report_menu" name="Pipeline"
-            parent="sales_team.menu_sale_report" action="crm_opportunity_report_action" sequence="5"/>
+            parent="crm_menu_report" action="crm_opportunity_report_action" sequence="5"/>
 
         <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
              <field name="name">Pipeline Analysis</field>
@@ -180,7 +183,7 @@ teams of the sales pipeline.</field>
 your opportunities with information such as the expected revenue, planned cost,
 missed deadlines or the number of interactions per opportunity. This report is
 mainly used by the sales manager in order to periodically review the pipeline
-with the the sales teams.</field>
+with the the sales channel.</field>
         </record>
 
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
@@ -191,17 +194,17 @@ with the the sales teams.</field>
             <field name="context">{'search_default_current': True, 'active_test': True, 'search_default_lead': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')})]"/>
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
             <field name="help">This report analyses the source of your leads.</field>
         </record>
 
         <menuitem
             id="crm_opportunity_report_menu_lead"
             name="Leads"
-            parent="sales_team.menu_sale_report"
+            parent="crm_menu_report"
             action="crm_opportunity_report_action_lead"
             groups="crm.group_use_lead"
-            sequence="6"/>
+            sequence="1"/>
 
 </odoo>

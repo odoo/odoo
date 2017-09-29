@@ -12,7 +12,6 @@
             <title>Odoo Editor layout</title>
             <meta name="viewport" content="initial-scale=1"/>
             <script type="text/javascript">
-                var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
 
                 var odoo = {
@@ -20,6 +19,8 @@
                         is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                         is_frontend: true, // this is not really the frontend here but this key is used to detect if xml has to be manually loaded
                     },
+                    _modules: ['web_editor'],
+                    snippetsURL: '<t t-esc="snippets or ''"/>',
                 };
             </script>
             <t t-if="not dont_load_assets">
@@ -33,6 +34,8 @@
                 <t t-call-assets="web_editor.assets_editor" t-css="false"/>
 
                 <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+                <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+                <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
                 <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                 <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
             </t>

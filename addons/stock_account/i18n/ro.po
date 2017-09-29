@@ -1,23 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-10-01 09:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -30,9 +34,20 @@ msgid "Account Stock Properties"
 msgstr "Proprietăți Cont Stoc"
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Accounting"
+msgstr "Contabilitate"
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Informații Contabile"
+
+#. module: stock_account
+#: code:addons/stock_account/wizard/stock_change_standard_price.py:62
+#, python-format
+msgid "Active ID is not set in Context."
+msgstr "ID-ul activ nu este setat in Context."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
@@ -49,30 +64,32 @@ msgid "Average Price"
 msgstr "Preț mediu"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
+msgid "Can be expensed"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Anulează"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:244
+#: code:addons/stock_account/stock_account.py:278
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:246
+#: code:addons/stock_account/stock_account.py:280
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Nu a fost găsit un cont de ieșire din stoc pentru produsul %s. Trebuie să "
-"definiți unul în categoria de produs sau în locație înainte de a procesa "
-"această operație."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -90,7 +107,6 @@ msgstr "Schimbă prețul standard"
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
 msgstr ""
-"Alege o dată din trecut pentru a obține valoarea stocului la acea dată."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -105,13 +121,26 @@ msgid "Choose your date"
 msgstr "Alegeți data"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
+msgid ""
+"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
+"coeff"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Company"
 msgstr "Companie"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:338
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average price"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/stock_account.py:351
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -124,22 +153,17 @@ msgid "Cost"
 msgstr "Cost"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-msgid "Cost method"
-msgstr "Metodă de cost"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
-msgstr "Metodă de cost"
+msgstr "Metoda de calculare a costurilor"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+#, fuzzy
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Cont ieșire din stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -163,12 +187,12 @@ msgstr "Data"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr "Nume afișat"
+msgstr "Afiseaza nume"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr "Dată contabilă stabilită"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -185,11 +209,17 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
 msgstr ""
-"Daca pretul de cost creste, contul variatiei stocului va fi debitat, iar contul de iesire din stoc va fi creditat cu valoarea = (diferenta dintre sume * cantitatea). \n"
-"Daca pretul de cost scade, contul variatiei stocului va fi creditat, iar contul de intrare al stocului va fi debitat."
+"Daca pretul de cost creste, contul variatiei stocului va fi debitat, iar "
+"contul de iesire din stoc va fi creditat cu valoarea = (diferenta dintre "
+"sume * cantitatea). \n"
+"Daca pretul de cost scade, contul variatiei stocului va fi creditat, iar "
+"contul de intrare al stocului va fi debitat."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -222,14 +252,14 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split"
-" them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split "
+"them onto the different products."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr "Stoc"
+msgstr "Inventar"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -243,19 +273,19 @@ msgstr "Locații inventar"
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
-msgstr "Evaluare stoc"
+msgstr "Evaluare Inventar"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
 msgid "Inventory Value"
-msgstr "Valoare stoc"
+msgstr "Valoare inventar"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr "Stoc la data"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -298,21 +328,21 @@ msgid "Location"
 msgstr "Locație"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Lot/Serial Number"
-msgstr "Lot/Număr Serial"
-
-#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Gestionare evaluare valoare și metode de cost"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:109
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Move"
+msgstr "Miscare"
+
+#. module: stock_account
+#: code:addons/stock_account/product.py:125
+#: code:addons/stock_account/product.py:187
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr "Nicio diferență între prețul standard și noul preț!"
+msgstr "Nicio diferenta intre pretul standard si noul pret!"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -328,23 +358,22 @@ msgstr "Dată operație"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr "Periodic (manual)"
+msgstr ""
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr "Evaluare periodică inventar (recomandat)"
+msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr "Perpetuu (automat)"
+msgstr ""
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid ""
-"Perpetual inventory valuation (stock move generates accounting entries)"
+msgid "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
 
 #. module: stock_account
@@ -360,6 +389,11 @@ msgid "Product"
 msgstr "Produs"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr "Durata alertei produsului"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -367,9 +401,19 @@ msgid "Product Category"
 msgstr "Categoria Produsului"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
+msgid "Product Life Time"
+msgstr "Durata de valabilitate a produsului"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Cantitatea produsului"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr "Timpul de inlaturare a produsului"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -377,6 +421,11 @@ msgstr "Cantitatea produsului"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Șablon produs"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
+msgid "Product Use Time"
+msgstr "Durata de folosire a produsului"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -397,13 +446,20 @@ msgstr "Afișează stocul valoric"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the curent stock valuation."
-msgstr "Obține valoarea stocului curent."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Serial Number"
+msgstr "Număr de serie"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#, fuzzy
 msgid "Set standard price"
-msgstr "Stabilește preț standard"
+msgstr "Pret Standard"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -411,14 +467,31 @@ msgid "Source"
 msgstr "Sursa"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
+msgid ""
+"Specify a unit of measure here if invoicing is made in another unit of "
+"measure than inventory. Keep empty to use the default unit of measure."
+msgstr ""
+"Specificaţi o unitate de masură aici daca factura este facută în altă "
+"unitate de masură decat cea de stoc. Lăsaţi gol pentru unitatea de masură "
+"implicită"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
+msgid "Specify whether the product can be selected in an HR expense."
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Standard Price"
-msgstr "Preț standard"
+msgstr "Pret Standard"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:126
-#: code:addons/stock_account/models/product.py:131
+#: code:addons/stock_account/product.py:138
+#: code:addons/stock_account/product.py:145
+#: code:addons/stock_account/product.py:199
+#: code:addons/stock_account/product.py:205
 #, python-format
 msgid "Standard Price changed"
 msgstr "Modificare preț standard"
@@ -427,27 +500,23 @@ msgstr "Modificare preț standard"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                    Average Price: The cost price is recomputed at each "
+"incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Stock Accounting"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_stock_history
-msgid "Stock History"
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -458,16 +527,15 @@ msgid "Stock Input Account"
 msgstr "Cont Intrare Stoc"
 
 #. module: stock_account
-#: code:addons/stock_account/models/account_chart_template.py:15
+#: code:addons/stock_account/stock_account.py:464
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr "Registru de stoc"
+msgstr "Jurnal de stoc"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Mișcare stoc"
 
@@ -494,7 +562,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Cont pentru Inventarul Stocului (Iesire)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/wizard_valuation_history.py:24
+#: code:addons/stock_account/wizard/stock_valuation_history.py:31
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -509,7 +577,7 @@ msgid "Templates for Account Chart"
 msgstr "Sabloane pentru Planul de Conturi"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:273
+#: code:addons/stock_account/stock_account.py:306
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -523,6 +591,16 @@ msgid "Total Value"
 msgstr "Valoare totală"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
+msgid "Unit of Measure -> UOS Coeff"
+msgstr "Unitatea de Masura -> UOS Coef"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
+msgid "Unit of Sale"
+msgstr "Unitate de vanzare"
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
@@ -531,11 +609,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Folosit pentru evaluarea stocului in timp-real. Atunci când este setat pe o "
-"locație virtuala (de tip non intern), acest cont va fi folosit pentru a "
-"menține valoarea produselor care sunt mutate dintr-o locatie interna in "
-"aceasta locație, in locul Contulul general pentru Iesirea Stocului setat pe "
-"produs. Acesta nu are niciun efect asupra locațiilor interne."
+"Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat "
+"pe o locatie virtuala (de tip non intern), acest cont va fi folosit pentru a "
+"mentine valoarea produselor care sunt mutate dintr-o locatie interna in "
+"aceasta locatie, in locul Contulul general pentru Iesirea Stocului setat pe "
+"produs. Acesta nu are niciun efect asupra locatiilor interne."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -547,16 +625,10 @@ msgid ""
 "internal locations."
 msgstr ""
 "Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat "
-"pe o locație virtuala (de tip non interna), acest cont va fi folosit pentru "
-"a pastra valoarea produselor care sunt mutate din aceasta locație intr-o "
-"locație interna, in loc de Contul general De Iesire a Stocului setat pentru "
-"produse. Acesta nu are niciun efect asupra locațiilor interne."
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
-msgid "Valuation"
-msgstr "Evaluare"
+"pe o locatie virtuala (de tip non interna), acest cont va fi folosit pentru "
+"a pastra valoarea produselor care sunt mutate din aceasta locatie intr-o "
+"locatie interna, in loc de Contul general De Iesire a Stocului setat pentru "
+"produse. Acesta nu are niciun efect asupra locatiilor interne."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -564,19 +636,56 @@ msgid "Value"
 msgstr "Valoare"
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca o alerta sa fie setata."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa devina periculoasa si nu trebuie consumata."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa trebuiasca sa fie scoasa din stoc."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Atunci cand este emis un nou Numar de Serie, acesta este numarul de zile "
+"inainte ca marfa sa inceapa sa se deterioreze, fara a fi periculoasa inca."
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
 msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
-"Atunci când faceți evaluarea în timp real a stocului, elementele omoloage de"
-" jurnal pentru toate mișcările de stoc care intră vor fi afișate în acest "
-"cont, doar dacă nu există un cont de evaluare anume setat pe locația sursă. "
-"Aceasta este valoarea implicita pentru toate produsele din aceasta "
-"categorie. Poate fi de asemenea setată direct pe fiecare produs în parte"
+"Atunci când faceți evaluarea în timp real a inventarului, elementele "
+"omoloage de jurnal pentru toate mișcările de stoc care intră vor fi afișate "
+"în acest cont, doar dacă nu există un cont de evaluare anume setat pe "
+"locația sursă. Aceasta este valoarea implicita pentru toate produsele din "
+"aceasta categorie. Poate fi de asemenea setată direct pe fiecare produs în "
+"parte"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -587,7 +696,7 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"Atunci când faceți evaluarea în timp real a stocului, elementele "
+"Atunci când faceți evaluarea în timp real a inventarului, elementele "
 "corespondente ale jurnalului pentru toate mișcările de stoc care intra vor "
 "fi postate în acest cont, doar dacă nu există un cont anume de evaluare "
 "setat pentru locația sursă. Atunci când nu este setat pentru produs, este "
@@ -599,14 +708,14 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
-"Atunci când faceți evaluarea în timp-real a stocului, elementele "
+"Atunci când faceți evaluarea în timp-real a inventarului, elementele "
 "corespondente al jurnalului pentru toate mișcările de ieșire vor fi postate "
 "în acest cont, doar dacă nu există un cont anume de evaluare setat pentru "
-"locația destinație. Aceasta este valoarea predefinită pentru toate produsele"
-" din aceasta categorie. Poate fi de asemenea setată direct pentru fiecare "
+"locația destinație. Aceasta este valoarea predefinită pentru toate produsele "
+"din aceasta categorie. Poate fi de asemenea setată direct pentru fiecare "
 "produs"
 
 #. module: stock_account
@@ -620,8 +729,8 @@ msgid ""
 msgstr ""
 "Atunci când faceți evaluarea în timp-real a inventarului, elementele "
 "corespondente ale jurnalului pentru toate mișcările de ieșire ale stocului "
-"vor fi postate în acest cont, doar dacă nu există un anumit cont de evaluare"
-" setat în locația destinație. Atunci când nu este setat pe produs, este "
+"vor fi postate în acest cont, doar dacă nu există un anumit cont de evaluare "
+"setat în locația destinație. Atunci când nu este setat pe produs, este "
 "folosit cel din categoria produsului."
 
 #. module: stock_account
@@ -630,8 +739,8 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Atunci când faceți evaluarea inventarului în timp real, acesta este Jurnalul"
-" Contabil în care înregistrările vor fi postate automat atunci când sunt "
+"Atunci când faceți evaluarea inventarului în timp real, acesta este Jurnalul "
+"Contabil în care înregistrările vor fi postate automat atunci când sunt "
 "procesate mișcările stocului."
 
 #. module: stock_account
@@ -649,7 +758,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:242
+#: code:addons/stock_account/stock_account.py:276
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -657,16 +766,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:111
-#: code:addons/stock_account/models/stock.py:248
+#: code:addons/stock_account/stock_account.py:282
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
-"Nu aveți definit un cont de evaluare stoc în datele de baza ale produsului "
-"sau în categorie. Trebuie să definiți unul înainte de a procesa această "
-"operație."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -681,4 +786,12 @@ msgstr "stoc.config.setari"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr "stock.history"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "unknown"
+msgstr "necunoscut(a)"

@@ -771,6 +771,11 @@ td {
     color: white;
     border-color: transparent;
 }
+.pos .numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
+    background: #c7c7c7;
+    color: #a5a1a1;
+    cursor: not-allowed;
+}
 
 /*  ********* The right pane contains the screens and headers ********* */
 
@@ -2140,6 +2145,13 @@ td {
     font-family: 'Lato';
     font-family: Lato;
 }
+.pos .modal-dialog .popup-confirm{
+    height: 250px;
+}
+.pos .popup-confirm .body {
+    overflow: auto;
+    height: 120px;
+}
 .pos .popup .title {
     background: rgba(255,255,255,0.5);
     margin: 0;
@@ -2273,7 +2285,7 @@ td {
     width: auto;
     line-height: 50px;
     margin-top: -1px;
-    border-top: solid 3px #6EC89B;
+    border-top: solid 3px rgba(60,60,60,0.1);
     
 }
 .pos .popup.popup-selection .selection-item {
@@ -2283,8 +2295,11 @@ td {
     text-align: left;
     padding: 0px 16px;
 }
-.pos .popup.popup-selection .selection-item:nth-child(even) {
+.pos .popup.popup-selection .selection-item:nth-child(odd) {
     background: rgb(247,247,247);
+}
+.pos .popup.popup-selection .selection-item.selected {
+    background: #6EC89B;
 }
 .pos .popup.popup-number {
     width: 300px;

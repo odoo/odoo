@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import fetchmail
-import mail_mail
+from . import fetchmail
+from . import mail_mail

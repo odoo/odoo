@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import logging
 import os
 import sys
@@ -22,7 +23,7 @@ class IrModule(models.Model):
     imported = fields.Boolean(string="Imported Module")
 
     @api.multi
-    def import_module(self, module, path, force=False):
+    def _import_module(self, module, path, force=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -63,8 +64,8 @@ class IrModule(models.Model):
             for root, dirs, files in os.walk(path_static):
                 for static_file in files:
                     full_path = opj(root, static_file)
-                    with open(full_path, 'r') as fp:
-                        data = fp.read().encode('base64')
+                    with open(full_path, 'rb') as fp:
+                        data = base64.b64encode(fp.read())
                     url_path = '/%s%s' % (module, full_path.split(path)[1].replace(os.path.sep, '/'))
                     url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
@@ -110,9 +111,9 @@ class IrModule(models.Model):
                         try:
                             # assert mod_name.startswith('theme_')
                             path = opj(module_dir, mod_name)
-                            self.import_module(mod_name, path, force=force)
+                            self._import_module(mod_name, path, force=force)
                             success.append(mod_name)
-                        except Exception, e:
+                        except Exception as e:
                             _logger.exception('Error while importing module')
                             errors[mod_name] = exception_to_unicode(e)
                 finally:

@@ -4,6 +4,7 @@
 -->
 <odoo>
     <record id="bank_charges_reconcile_model" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
         <field name="name">Frais bancaires</field>
         <field name="account_id" ref="pcg_6278"/>
         <field name="amount_type">percentage</field>

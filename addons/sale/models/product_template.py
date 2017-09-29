@@ -8,15 +8,15 @@ from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    track_service = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
+    service_type = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-             "Create a task and track hours: Create a task on the sale order validation and track the work hours.",
-        default='manual')
+             "Create a task and track hours: Create a task on the sales order validation and track the work hours.",
+        default='manual', oldname='track_service')
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'At sale price')],
+        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
         string='Re-Invoice Expenses',
         default='no')
 

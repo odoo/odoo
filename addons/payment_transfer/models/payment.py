@@ -21,7 +21,7 @@ class TransferPaymentAcquirer(models.Model):
     def _format_transfer_data(self):
         company_id = self.env.user.company_id.id
         # filter only bank accounts marked as visible
-        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('display_on_footer', '=', True), ('company_id', '=', company_id)])
+        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company_id)])
         accounts = journals.mapped('bank_account_id').name_get()
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
@@ -45,6 +45,13 @@ class TransferPaymentAcquirer(models.Model):
         if values.get('provider') == 'transfer' and not values.get('post_msg'):
             values['post_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        """ Hook in write to create a default post_msg. See create(). """
+        if all(not acquirer.post_msg and acquirer.provider != 'transfer' for acquirer in self) and values.get('provider') == 'transfer':
+            values['post_msg'] = self._format_transfer_data()
+        return super(TransferPaymentAcquirer, self).write(values)
 
 
 class TransferPaymentTransaction(models.Model):

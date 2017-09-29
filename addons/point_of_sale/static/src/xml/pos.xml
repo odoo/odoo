@@ -92,6 +92,21 @@
         </div>
     </t>
 
+        <t t-name="ClientScreenWidget">
+        <div class="oe_status">
+            <span class="oe_customer_display_text"></span>
+            <div class="js_warning oe_icon oe_orange oe_hidden">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+             <div class="js_disconnected oe_icon oe_red">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+            <div class="js_connected oe_icon oe_green oe_hidden">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+        </div>
+    </t>
+
     <t t-name="HeaderButtonWidget">
         <div class="header-button">
             <t t-esc="widget.label" />
@@ -111,6 +126,12 @@
     <t t-name="SetFiscalPositionButton">
         <div class='control-button'>
             <i class='fa fa-book' /> <t t-esc='widget.get_current_fiscal_position_name()'/>
+        </div>
+    </t>
+
+    <t t-name="SetPricelistButton">
+        <div class='control-button o_pricelist_button'>
+            <i class='fa fa-th-list' /> <t t-esc='widget.get_current_pricelist_name()'/>
         </div>
     </t>
 
@@ -363,6 +384,17 @@
                         <span class='label'>Tax ID</span>
                         <input class='detail vat'           name='vat'     t-att-value='partner.vat || ""'></input>
                     </div>
+                    <div t-attf-class='client-detail #{widget.pos.pricelists.length &lt;= 1 ? "oe_hidden" : ""}'>
+                        <span class='label'>Pricelist</span>
+                        <select class='detail needsclick' name='property_product_pricelist'>
+                            <t t-foreach='widget.pos.pricelists' t-as='pricelist'>
+                                <option t-att-value='pricelist.id'
+                                        t-att-selected="partner.property_product_pricelist ? (pricelist.id === partner.property_product_pricelist[0] ? true : undefined) : undefined"> 
+                                    <t t-esc='pricelist.display_name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
                 </div>
             </div>
         </section>
@@ -423,6 +455,15 @@
                         </t>
                         <t t-if='!partner.vat'>
                             <span class='detail vat empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div t-attf-class='client-detail #{widget.pos.pricelists.length &lt;= 1 ? "oe_hidden" : ""}'>
+                        <span class='label'>Pricelist</span>
+                        <t t-if='partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist'><t t-esc='partner.property_product_pricelist[1]'/></span>
+                        </t>
+                        <t t-if='!partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist empty'>N/A</span>
                         </t>
                     </div>
                 </div>
@@ -1095,7 +1136,7 @@
                 <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div class='selection-item' t-att-data-item-index='item_index'>
+                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index'>
                             <t t-esc='item.label'/>
                         </div>
                     </t>
@@ -1206,12 +1247,12 @@
                 <img t-att-src='image_url' /> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
@@ -1323,6 +1364,7 @@
                 <p class="category">Hardware Status</p>
                 <ul>
                     <li class="status weighing">Weighing</li>
+                    <li class="button display_refresh">Refresh Display</li>
                 </ul>
                 <p class="category">Hardware Events</p>
                 <ul>
@@ -1409,7 +1451,7 @@
                 Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             </div>
             <div class="receipt-user">
-                User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
+                User: <t t-esc="widget.pos.get_cashier().name"/><br />
             </div>
             <br />
             <t t-if="receipt.header">
@@ -1606,4 +1648,53 @@
         </div>
     </t>
 
+<!-- This is a duplicate of xml_id = point_of_sale.extra_head . We could have told models.js to do an extra rpc call for this-->
+    <t t-name="CustomerFacingDisplayHead">
+        <div class="resources">
+            <base t-att-href="origin"/>
+            <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+            <script type="text/javascript">
+                // This function needs to be named that way, call it the foreign JS API
+                // The posbox will execute it, with the behavior intended
+                function foreign_js(){
+                    if ($('.pos-adv').hasClass('pos-hidden')) {
+                        $('.pos-customer_facing_display').addClass('pos-js_no_ADV');
+                    }
+                    $(window).on('resize', function () {
+                        $('.pos-customer_facing_display').toggleClass('pos-js_no_ADV', $('.pos-adv').hasClass('pos-hidden'));
+                    }).trigger('resize');
+                };
+            </script>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrderLines">
+        <t t-foreach="orderlines" t-as="orderline">
+            <div class="pos_orderlines_item">
+                <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
+                    <div><t t-esc="orderline.product.display_name" /></div>
+                    <div><t t-esc="orderline.get_quantity_str()" /></div>
+                    <div><t t-esc="widget.format_currency(orderline.get_display_price())"/></div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="CustomerFacingDisplayPaymentLines">
+        <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+            <div>
+                <span><t t-esc="paymentline.name"/></span>
+            </div>
+            <div>
+                <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
+            </div>
+        </t>
+        <t t-if="order.get_paymentlines().length > 0">
+            <div>
+                <span class="pos-change_title">Change:</span>
+            </div>
+            <div >
+                <span class="pos-change_amount"><t t-esc="widget.format_currency(order.get_change())"/></span>
+            </div>
+        </t>
+    </t>
 </templates>

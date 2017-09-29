@@ -17,9 +17,10 @@ Allow users to sign up and reset their password
     ],
     'data': [
         'data/auth_signup_data.xml',
-        'views/res_config_views.xml',
+        'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/auth_signup_login_templates.xml',
+        'views/auth_signup_assets.xml',
     ],
     'bootstrap': True,
 }

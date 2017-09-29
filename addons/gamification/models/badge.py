@@ -33,18 +33,15 @@ class BadgeUser(models.Model):
         The stats counters are incremented
         :param ids: list(int) of badge users that will receive the badge
         """
-        Template = self.env['mail.template']
-        template_id = self.env.ref('gamification.email_template_badge_received')
+        template = self.env.ref('gamification.email_template_badge_received')
 
         for badge_user in self:
-            # .ids would trigger the "multi mode" which returns a mapping of
-            # res_id to templates
-            template = template_id.get_email_template(badge_user.id)
-            body_html = Template.with_context(template._context).render_template(template.body_html, 'gamification.badge.user', badge_user.id)
-            badge_user.user_id.message_post(
-                body=body_html,
-                subtype='gamification.mt_badge_granted',
-                partner_ids=badge_user.user_id.partner_id.ids
+            self.env['mail.thread'].message_post_with_template(
+                template.id,
+                model=badge_user._name,
+                res_id=badge_user.id,
+                composition_mode='mass_mail',
+                partner_ids=badge_user.user_id.partner_id.ids,
             )
 
         return True

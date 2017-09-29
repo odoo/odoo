@@ -33,7 +33,6 @@ class TestProductPricelist(TransactionCase):
             }), (0, 0, {
                 'name': '10% Discount on Assemble Computer',
                 'applied_on': '1_product',
-                'sequence': 1,
                 'product_id': self.ipad_retina_display.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
@@ -41,7 +40,6 @@ class TestProductPricelist(TransactionCase):
             }), (0, 0, {
                 'name': '1 surchange on Laptop',
                 'applied_on': '1_product',
-                'sequence': 4,
                 'product_id': self.laptop_E5023.id,
                 'compute_price': 'formula',
                 'base': 'list_price',
@@ -49,7 +47,6 @@ class TestProductPricelist(TransactionCase):
             }), (0, 0, {
                 'name': '5% Discount on all Computer related products',
                 'applied_on': '2_product_category',
-                'sequence': 1,
                 'min_quantity': 2,
                 'compute_price': 'formula',
                 'base': 'list_price',
@@ -62,7 +59,6 @@ class TestProductPricelist(TransactionCase):
                 'date_end': '2011-12-31',
                 'compute_price': 'formula',
                 'price_discount': 30,
-                'sequence': 1,
                 'base': 'list_price'
             })]
         })

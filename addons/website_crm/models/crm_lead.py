@@ -1,28 +1,37 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 
 
 class Lead(models.Model):
     _inherit = 'crm.lead'
 
     def website_form_input_filter(self, request, values):
-        defaults = self.default_get(['medium_id', 'team_id'])
-        values['medium_id'] = (
-                values.get('medium_id') or
-                defaults.get('medium_id') or
-                self.sudo().env['ir.model.data'].xmlid_to_res_id('utm.utm_medium_website')
-        )
-
-        values['team_id'] = values.get('team_id') or defaults.get('team_id')
-
-        if not values['team_id']:
-            team_model = self.env['ir.model'].search([('model', '=', 'crm.team')])
-            lead_model = self.env['ir.model'].search([('model', '=', 'crm.lead')])
-
-            values['team_id'] = self.env['mail.alias'].search([('alias_model_id', '=', lead_model.id),
-                ('alias_parent_model_id', '=', team_model.id),
-                ('alias_name', 'ilike', '%\web%')], limit=1).alias_parent_thread_id
-
+        values['medium_id'] = values.get('medium_id') or \
+                              self.default_get(['medium_id']).get('medium_id') or \
+                              self.sudo().env.ref('utm.utm_medium_website').id
+        values['team_id'] = values.get('team_id') or \
+                            request.website.crm_default_team_id.id
+        values['user_id'] = values.get('user_id') or \
+                            request.website.crm_default_user_id.id
         return values
+
+
+class Website(models.Model):
+    _inherit = 'website'
+
+    def _get_crm_default_team_domain(self):
+        if self.env.user.has_group('crm.group_use_lead'):
+            return [('use_leads', '=', True)]
+        else:
+            return [('use_opportunities', '=', True)]
+
+    crm_default_team_id = fields.Many2one(
+        'crm.team', string='Default Sales Channels',
+        default=lambda self: self.env['crm.team'].search([], limit=1),
+        domain=lambda self: self._get_crm_default_team_domain(),
+        help='Default sales channel for new leads created through the Contact Us form.')
+    crm_default_user_id = fields.Many2one(
+        'res.users', string='Default Salesperson', domain=[('share', '=', False)],
+        help='Default salesperson for new leads created through the Contact Us form.')

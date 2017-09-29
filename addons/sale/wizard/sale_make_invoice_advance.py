@@ -4,7 +4,7 @@
 import time
 
 from odoo import api, fields, models, _
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
@@ -27,8 +27,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_product_id(self):
-        product_id = self.env['ir.values'].get_default('sale.config.settings', 'deposit_product_id_setting')
-        return self.env['product.product'].browse(product_id)
+        product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
+        return self.env['product.product'].browse(int(product_id))
 
     @api.model
     def _default_deposit_account_id(self):
@@ -107,7 +107,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_id': self.product_id.id,
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'invoice_line_tax_ids': [(6, 0, tax_ids)],
-                'account_analytic_id': order.project_id.id or False,
+                'account_analytic_id': order.analytic_account_id.id or False,
             })],
             'currency_id': order.pricelist_id.currency_id.id,
             'payment_term_id': order.payment_term_id.id,
@@ -135,7 +135,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if not self.product_id:
                 vals = self._prepare_deposit_product()
                 self.product_id = self.env['product.product'].create(vals)
-                self.env['ir.values'].sudo().set_default('sale.config.settings', 'deposit_product_id_setting', self.product_id.id)
+                self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', self.product_id.id)
 
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:
@@ -161,6 +161,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
                     'tax_id': [(6, 0, tax_ids)],
+                    'is_downpayment': True,
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):

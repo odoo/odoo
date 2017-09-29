@@ -33,14 +33,14 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
     }, {
-        trigger: "button.btn-danger.js_publish_btn",
+        trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",
         content: _t("Click to publish your event."),
         position: "top",
     }, {
-        trigger: ".js_publish_management button[data-toggle=\"dropdown\"]",
-        extra_trigger: ".js_publish_management button.js_publish_btn.btn-success:visible",
+        trigger: ".css_edit_dynamic",
+        extra_trigger: ".js_publish_management .js_publish_btn .css_unpublish:visible",
         content: _t("Click here to customize your event further."),
-        position: "left",
+        position: "bottom",
     }]);
 });
