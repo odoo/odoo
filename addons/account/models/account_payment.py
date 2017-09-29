@@ -316,8 +316,7 @@ class account_payment(models.Model):
             'context': action_context,
         }
 
-    @api.onchange('amount', 'currency_id')
-    def _onchange_amount(self):
+    def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
         if self.currency_id.is_zero(self.amount):
@@ -330,11 +329,16 @@ class account_payment(models.Model):
                 domain.append(('at_least_one_inbound', '=', True))
             else:
                 domain.append(('at_least_one_outbound', '=', True))
+        return {'domain': domain, 'journal_types': set(journal_type)}
 
-        domain.append(('type', 'in', journal_type))
-        if self.journal_id.type not in journal_type:
-            self.journal_id = self.env['account.journal'].search([('type', 'in', journal_type)], limit=1)
-        return {'domain': {'journal_id': domain}}
+    @api.onchange('amount', 'currency_id')
+    def _onchange_amount(self):
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        domain_on_types = [('type', 'in', list(journal_types))]
+        if self.journal_id.type not in journal_types:
+            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -369,8 +373,10 @@ class account_payment(models.Model):
         res = self._onchange_journal()
         if not res.get('domain', {}):
             res['domain'] = {}
-        res['domain']['journal_id'] = self.payment_type == 'inbound' and [('at_least_one_inbound', '=', True)] or [('at_least_one_outbound', '=', True)]
-        res['domain']['journal_id'].append(('type', 'in', ('bank', 'cash')))
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        journal_types.update(['bank', 'cash'])
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
         return res
 
     @api.model
