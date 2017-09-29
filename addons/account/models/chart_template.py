@@ -908,7 +908,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         IrConfig = self.env['ir.config_parameter']
         if self.sale_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.purchase_tax_id.id])
+            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.sale_tax_id.id])
         if self.purchase_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
             IrConfig.sudo().set_param("account.default_purchase_tax_id", taxes_ref[self.purchase_tax_id.id])
