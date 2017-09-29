@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.osv import expression
 
 from odoo.tools import float_round
 
@@ -11,6 +12,7 @@ class SaleTimesheetController(http.Controller):
 
     @http.route('/timesheet/plan', type='json', auth="user")
     def plan(self, domain):
+        domain = expression.AND([domain, [('project_id', '!=', False)]])  # force timesheet and not AAL
         values = self._prepare_plan_values(domain)
         view = request.env.ref('sale_timesheet.timesheet_plan')
         return {
