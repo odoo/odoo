@@ -6,7 +6,7 @@
             <field name="name">Wishlisted products garbage collector</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
-            <field name="model">product.wishlist</field>
+            <field name="model_id" ref="model_product_wishlist"/>
             <field name="function">_garbage_collector</field>
             <field name="args">()</field>
         </record>
