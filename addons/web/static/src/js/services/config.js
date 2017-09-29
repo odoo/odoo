@@ -78,7 +78,7 @@ function _updateSizeProps() {
     var sc = _getSizeClass();
     if (sc !== config.device.size_class) {
         config.device.size_class = sc;
-        config.isMobile = config.device.size_class <= config.device.SIZES.XS;
+        config.device.isMobile = config.device.size_class <= config.device.SIZES.XS;
         core.bus.trigger('size_class', sc);
     }
 }
