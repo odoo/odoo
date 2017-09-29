@@ -1019,6 +1019,8 @@ class StockMove(models.Model):
     def unlink(self):
         if any(move.state not in ('draft', 'cancel') for move in self):
             raise UserError(_('You can only delete draft moves.'))
+        # With the non plannified picking, draft moves could have some move lines.
+        self.mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
     def _prepare_move_split_vals(self, uom_qty):
