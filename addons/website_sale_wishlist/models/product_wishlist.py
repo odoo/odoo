@@ -69,7 +69,9 @@ class ProductWishlist(models.Model):
         ])
         partner_products = partner_wishes.mapped("product_id")
         # Remove session products already present for the user
-        session_wishes.filtered(lambda wish: wish.product_id <= partner_products).unlink()
+        duplicated_wishes = session_wishes.filtered(lambda wish: wish.product_id <= partner_products)
+        session_wishes -= duplicated_wishes
+        duplicated_wishes.unlink()
         # Assign the rest to the user
         session_wishes.write({
             "partner_id": self.env.user.partner_id.id,
