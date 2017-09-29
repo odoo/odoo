@@ -788,7 +788,7 @@ class res_partner(osv.osv):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
             'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'size': "%sx%s" % (height, width),
+            'size': "%sx%s" % (width, height),
             'zoom': zoom,
             'sensor': 'false',
         }

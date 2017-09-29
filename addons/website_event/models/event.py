@@ -118,12 +118,13 @@ class event(osv.osv):
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         event = self.browse(cr, uid, ids[0], context=context)
         if event.address_id:
-            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_img()
+            return (self.browse(cr, SUPERUSER_ID, ids[0], context=context)
+                    .address_id.google_map_img(zoom, width, height))
         return None
 
     def google_map_link(self, cr, uid, ids, zoom=8, context=None):
         event = self.browse(cr, uid, ids[0], context=context)
         if event.address_id:
-            return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
+            return (self.browse(cr, SUPERUSER_ID, ids[0], context=context)
+                    .address_id.google_map_link(zoom))
         return None
-
