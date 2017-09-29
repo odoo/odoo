@@ -458,3 +458,61 @@ class TestMrpOrder(TestMrpCommon):
         produce_wizard.do_produce()
         self.assertEqual(production.move_raw_ids[0].quantity_done, 16, 'Should use half-up rounding when producing')
         self.assertEqual(production.move_raw_ids[1].quantity_done, 34, 'Should use half-up rounding when producing')
+
+    def test_product_produce_1(self):
+        """ Check that no produce line are created when the consumed products are not tracked """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+
+        mo.action_assign()
+
+        product_produce = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({})
+
+        self.assertEqual(len(product_produce.produce_line_ids), 0, 'You should not have any produce lines since the consumed products are not tracked.')
+
+    def test_product_produce_2(self):
+        """ Check that line are created when the consumed products are
+        tracked by serial and the lot proposed are correct. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_base_1='serial', qty_base_1=1, qty_final=2)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        lot_p1_1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': p1.id,
+        })
+        lot_p1_2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': p1.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1, lot_id=lot_p1_1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 1, lot_id=lot_p1_2)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+
+        mo.action_assign()
+        product_produce = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({})
+
+        self.assertEqual(len(product_produce.produce_line_ids), 2, 'You should have 2 produce lines. One for each serial to consume')
+        product_produce.product_qty = 1
+        produce_line_1 = product_produce.produce_line_ids[0]
+        produce_line_1.qty_done = 1
+        remaining_lot = (lot_p1_1 | lot_p1_2) - produce_line_1.lot_id
+        product_produce.do_produce()
+
+        product_produce = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({})
+        self.assertEqual(len(product_produce.produce_line_ids), 1, 'You should have 1 produce lines since one has already be consumed.')
+        self.assertEqual(product_produce.produce_line_ids[0].lot_id, remaining_lot, 'Wrong lot proposed.')
