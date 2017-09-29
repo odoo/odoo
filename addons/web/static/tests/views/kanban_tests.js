@@ -2024,6 +2024,40 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars: creating a new column should create a new progressbar', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="product_id"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        var nbProgressBars = kanban.$('.o_kanban_counter').length;
+
+        // Create a new column: this should create an empty progressbar
+        var $columnQuickCreate = kanban.$('.o_column_quick_create');
+        $columnQuickCreate.click();
+        $columnQuickCreate.find('input').val('test');
+        $columnQuickCreate.find('.btn-primary').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_counter').length, nbProgressBars + 1,
+            "a new column with a new column progressbar should have been created");
+
+        kanban.destroy();
+    });
+
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
         assert.expect(2);
 

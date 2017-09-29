@@ -79,6 +79,11 @@ var KanbanModel = BasicModel.extend({
                     value: result,
                     viewType: parent.viewType,
                 });
+                if (parent.progressBar) {
+                    newGroup.progressBarValues = _.extend({
+                        counts: {},
+                    }, parent.progressBar);
+                }
 
                 // newGroup.is_open = true;
                 parent.data.push(newGroup.id);
