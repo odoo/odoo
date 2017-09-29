@@ -26,9 +26,12 @@ var KanbanColumnProgressBar = Widget.extend({
         this.columnID = options.columnID;
 
         // <progressbar/> attributes
-        this.fieldName = columnState.progressBarValues.field;
-        this.colors = columnState.progressBarValues.colors;
-        this.sumField = columnState.progressBarValues.sum;
+        this.fieldName = this.colors = this.sumField = "";
+        if(columnState.progressBarValues) {
+            this.fieldName = columnState.progressBarValues.field;
+            this.colors = columnState.progressBarValues.colors;
+            this.sumField = columnState.progressBarValues.sum;
+        }
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
