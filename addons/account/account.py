@@ -366,12 +366,12 @@ class account_account(osv.osv):
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
 
                 # as we have to relay on values computed before this is calculated separately than previous fields
-                if current.currency_id and current.exchange_rate and \
-                            ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
+                if current.currency_id and ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
                     # Computing Adjusted Balance and Unrealized Gains and losses
-                    # Adjusted Balance = Foreign Balance / Exchange Rate
+                    # Adjusted Balance = Foreign Balance converted to company currency
                     # Unrealized Gains and losses = Adjusted Balance - Balance
-                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
+                    adj_bal = currency_obj.compute(cr, uid, current.currency_id.id, current.company_id.currency_id.id,
+                                                   sums[current.id].get('foreign_balance', 0.0), context=context)
                     sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
 
             for id in ids:
