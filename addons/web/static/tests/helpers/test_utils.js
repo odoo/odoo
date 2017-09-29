@@ -272,8 +272,14 @@ function addMockEnvironment(widget, params) {
         _.extend(session, params.session);
     }
     if ('config' in params) {
-        initialConfig = _.extend({}, config);
-        _.extend(config, params.config);
+        initialConfig = _.clone(config);
+        initialConfig.device = _.clone(config.device);
+        if ('device' in params.config) {
+            _.extend(config.device, params.config.device);
+        }
+        if ('debug' in params.config) {
+            config.debug = params.config.debug;
+        }
     }
     if ('translateParameters' in params) {
         initialParameters = _.extend({}, core._t.database.parameters);
