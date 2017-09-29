@@ -112,6 +112,10 @@ class AssetsBundle(object):
                     if self.css_errors:
                         msg = '\n'.join(self.css_errors)
                         response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
+                        response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_html())
+                if not self.css_errors:
+                    for style in self.stylesheets:
+                        response.append(style.to_html())
                 for style in self.stylesheets:
                     response.append(style.to_html())
             if js:
