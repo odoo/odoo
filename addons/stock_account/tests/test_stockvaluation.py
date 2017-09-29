@@ -1670,6 +1670,7 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move1.value, 900.0)
         self.assertEqual(move1.remaining_qty, 0.0)  # unusedin average move
+        self.assertEqual(self.product1.standard_price, 15.00)
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
@@ -1687,12 +1688,21 @@ class TestStockValuation(TransactionCase):
         move2._action_done()
 
         self.assertEqual(move2.value, 2170.0)
+        self.assertEqual(self.product1.standard_price, 15.35)
 
         # Sale 190 units @ 15.35 per unit
+        owner = self.env['res.partner'].create({'name': 'Jean'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': owner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
         move3 = self.env['stock.move'].create({
             'name': 'Sale 190 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
+            'picking_id': picking.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 190.0,
@@ -1704,6 +1714,7 @@ class TestStockValuation(TransactionCase):
 
 
         self.assertEqual(move3.value, -2916.5)
+        self.assertEqual(self.product1.standard_price, 15.35)
 
         # Purchase 70 units @ $16.00 per unit
         move4 = self.env['stock.move'].create({
@@ -1721,6 +1732,7 @@ class TestStockValuation(TransactionCase):
         move4._action_done()
 
         self.assertEqual(move4.value, 1120.0)
+        self.assertEqual(self.product1.standard_price, 15.92)
 
         # Sale 30 units @ $19.50 per unit
         move5 = self.env['stock.move'].create({
@@ -1737,6 +1749,24 @@ class TestStockValuation(TransactionCase):
         move5._action_done()
 
         self.assertEqual(move5.value, -477.6)
+        self.assertEqual(self.product1.standard_price, 15.92)
+
+        # Return Sale from March 14th: 100 units @ 15.35 are returned
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 100.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick_picking = self.env['stock.picking'].browse(
+            stock_return_picking_action['res_id'])
+
+        return_pick_picking.move_lines[0].move_line_ids[0].qty_done = 100.0
+        return_pick_picking.action_done()
+
+        # As stated in code, returns from customers shall be done at
+        # transaction cost, hence (796 + 15.34*100) / (50 + 100) = 15.54
+        self.assertEqual(self.product1.standard_price, 15.54)
+
 
     def test_average_perpetual_2(self):
         self.product1.product_tmpl_id.cost_method = 'average'
