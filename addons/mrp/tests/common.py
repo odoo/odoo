@@ -6,6 +6,47 @@ from odoo.addons.stock.tests import common2
 class TestMrpCommon(common2.TestStockCommon):
 
     @classmethod
+    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1):
+        """ This function generate a manufacturing order with one final
+        product and two consumed product. Arguments allows to choose
+        the tracking/qty for each different products. It returns the
+        MO, used bom and the tree products.
+        """
+        product_to_build = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'product',
+            'tracking': tracking_final,
+        })
+        product_to_use_1 = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'product',
+            'tracking': tracking_base_1,
+        })
+        product_to_use_2 = self.env['product.product'].create({
+            'name': 'Old Tom',
+            'type': 'product',
+            'tracking': tracking_base_2,
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
+                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
+            ]})
+        mo = self.env['mrp.production'].create({
+            'name': 'MO 1',
+            'product_id': product_to_build.id,
+            'product_uom_id': product_to_build.uom_id.id,
+            'product_qty': qty_final,
+            'bom_id': bom_1.id,
+        })
+        return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
+
+    @classmethod
     def setUpClass(cls):
         super(TestMrpCommon, cls).setUpClass()
 
