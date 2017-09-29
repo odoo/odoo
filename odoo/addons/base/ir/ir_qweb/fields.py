@@ -344,6 +344,21 @@ TIMEDELTA_UNITS = (
 )
 
 
+class FloatTimeConverter(models.AbstractModel):
+    """ ``float_time`` converter, to display integral or fractional values as
+    human-readable time spans (e.g. 1.5 as "01:30").
+
+    Can be used on any numerical field.
+    """
+    _name = 'ir.qweb.field.float_time'
+    _inherit = 'ir.qweb.field'
+
+    @api.model
+    def value_to_html(self, value, options):
+        hours, minutes = divmod(value * 60, 60)
+        return '%02d:%02d' % (hours, minutes)
+
+
 class DurationConverter(models.AbstractModel):
     """ ``duration`` converter, to display integral or fractional values as
     human-readable time spans (e.g. 1.5 as "1 hour 30 minutes").
