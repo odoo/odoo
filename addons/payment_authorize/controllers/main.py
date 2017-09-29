@@ -4,7 +4,7 @@ import logging
 from werkzeug import urls, utils
 from odoo.exceptions import ValidationError
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -41,11 +41,20 @@ class AuthorizeController(http.Controller):
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         token = False
+        acquirer = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))
         try:
-            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+            token = acquirer.s2s_process(kwargs)
         except ValidationError as e:
+            if acquirer._context.get('uid'):
+                msg = e.args[0].replace('_url', _("Please <a href='/my/account'>complete your profile.</a>"))
+            else:
+                msg = e.args[0].replace('_url', _("Please <a href='/web/login'>sign in</a> to complete your profile."))
+            # update message if portal mode = b2b
+            get_param = request.env['ir.config_parameter'].sudo().get_param
+            if get_param('auth_signup.allow_uninvited', 'False').lower() == 'false' and msg.find('complete your profile') >= 0:
+                msg += "</br>If you don't have any account, please ask your salesperson to update your profile."
             return {
-                'error': e.args[0]
+                'error': msg
             }
 
         if not token:

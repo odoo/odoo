@@ -115,14 +115,15 @@ class AuthorizeAPI():
         zipCode = partner.zip
         country = partner.country_id.name
         missing_field = ''  # missing configure fields name
+        partner_fields = partner._fields  # get all fields of partner for label
         if not city:
-            missing_field += 'city, '
+            missing_field += partner_fields.get('city').string + ', '
         if not country:
-            missing_field += 'country, '
+            missing_field += partner_fields.get('country_id').string + ', '
         if not zipCode:
-            missing_field += 'zipCode '
+            missing_field += partner_fields.get('zip').string + ' '
         if missing_field:
-            msg = _("%s fields %s invalid or missing in your account profile, please contact to administrator" % (missing_field, "are" if len(missing_field) > 1 else "is"))
+            msg = _("The transaction cannot be processed because some contact details are missing or invalid: %s </br>_url" % (missing_field))
             raise ValidationError("%s" % msg)
         etree.SubElement(billTo, "city").text = city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
