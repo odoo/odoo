@@ -3182,8 +3182,18 @@ var BasicModel = AbstractModel.extend({
                             }
                             if (value[0] === 6) {
                                 // REPLACE_WITH
-                                x2manyList.res_ids = value[2];
-                                x2manyList.count = x2manyList.res_ids.length;
+                                _.each(value[2], function (res_id) {
+                                    r = self._makeDataPoint({
+                                        modelName: x2manyList.model,
+                                        context: x2manyList.context,
+                                        fieldsInfo: fieldsInfo,
+                                        fields: fields,
+                                        parentID: x2manyList.id,
+                                        res_id: res_id,
+                                        viewType: viewType,
+                                    });
+                                    x2manyList._changes.push({operation: 'ADD', id: r.id});
+                                });
                                 var def = self._readUngroupedList(x2manyList).then(function () {
                                     return $.when(
                                         self._fetchX2ManysBatched(x2manyList),
