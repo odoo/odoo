@@ -28,7 +28,7 @@
         <xpath expr="//header//ul[@id='top_menu']/li[@id='my_cart']" position="after">
             <t t-if="request.env.ref('website_sale_wishlist.add_to_wishlist').active">
                 <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
-                <li id="my_wish" t-att-class="not wishcount and 'hidden'">
+                <li id="my_wish" t-att-style="not wishcount and 'display:none;'">
                     <a href="/shop/wishlist">
                         <i class="fa fa-heart"></i>
                         Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink label label-primary"><t t-esc='wishcount'/></sup>
@@ -68,15 +68,7 @@
                                                 <del class='text-danger'><t t-esc='wish.price' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/></del>
                                                 <br/>
                                             </t>
-                                            <t t-if="wish.product_id.availability == 'warning'">
-                                                <div class="alert alert-warning">
-                                                    <span class="fa fa-warning"></span>
-                                                    <span t-field="wish.product_id.availability_warning"></span>
-                                                </div>
-                                            </t>
-                                            <t t-else="1">
-                                                <t t-esc='wish.price_new' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/>
-                                            </t>
+                                            <t t-esc='wish.price_new' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/>
                                         </td>
                                         <td class='text-center td-wish-btn'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>

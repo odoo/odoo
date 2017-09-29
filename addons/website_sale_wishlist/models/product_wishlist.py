@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 from odoo import api, fields, http, models
 
 class ProductWishlist(models.Model):
@@ -16,15 +17,15 @@ class ProductWishlist(models.Model):
     ]
 
     partner_id = fields.Many2one('res.partner', string='Owner')
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')
+    session = fields.Char(help="Website session identifier where this product was wishlisted.")
+    product_id = fields.Many2one('product.product', string='Product', required=True)
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', readonly=True)
-    website_id = fields.Many2one('website', required=True)
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')
     price = fields.Monetary(digits=0, currency_field='currency_id', string='Price', help='Price of the product when it has been added in the wishlist')
     price_new = fields.Float(compute='compute_new_price', string='Current price', help='Current price of this product, using same pricelist, ...')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
-    session = fields.Char(help="Website session identifier where this product was wishlisted.")
-    active = fields.Boolean(default=True, required=True)
+    website_id = fields.Many2one('website', required=True)
     create_date = fields.Datetime('Added Date', readonly=True, required=True)
+    active = fields.Boolean(default=True, required=True)
 
     @api.multi
     @api.depends('pricelist_id', 'currency_id', 'product_id')
@@ -45,14 +46,15 @@ class ProductWishlist(models.Model):
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False, session=False):
+        assert partner_id or session != False
         wish = self.env['product.wishlist'].create({
             'partner_id': partner_id,
-            'pricelist_id': pricelist_id,
-            'currency_id': currency_id,
-            'website_id': website_id,
-            'price': price,
-            'product_id': product_id,
             'session': session,
+            'product_id': product_id,
+            'currency_id': currency_id,
+            'pricelist_id': pricelist_id,
+            'price': price,
+            'website_id': website_id,
         })
         return wish
 
@@ -80,8 +82,9 @@ class ProductWishlist(models.Model):
     @api.model
     def _garbage_collector(self):
         """Remove wishlists for unexisting sessions."""
+        a_week_ago = fields.Datetime.to_string(datetime.now() - timedelta(weeks=1))
         self.search([
-            ("session", "not in", http.root.session_store.list()),
+            ("create_date", "<", a_week_ago),
             ("partner_id", "=", False),
         ]).unlink()
 
