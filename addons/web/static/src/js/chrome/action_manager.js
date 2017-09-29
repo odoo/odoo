@@ -420,6 +420,10 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
+        if (this.dialog) {
+            this.dialog.close();
+            return;
+        }
         var nbViews = this.inner_action.get_nb_views();
         if (nbViews > 1) {
             // Stay on this action, but select the previous view
