@@ -1037,6 +1037,27 @@ class SaleOrderLine(models.Model):
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
+    def name_get(self):
+        if self._context.get('sale_show_order_product_name'):
+            result = []
+            for so_line in self:
+                name = '%s - %s' % (so_line.order_id.name, so_line.product_id.name)
+                result.append((so_line.id, name))
+            return result
+        return super(SaleOrderLine, self).name_get()
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if self._context.get('sale_show_order_product_name'):
+            if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+                domain = expression.AND([
+                    args or [],
+                    ['|', ('order_id.name', operator, name), ('product_id.name', operator, name)]
+                ])
+                return self.search(domain, limit=limit).name_get()
+        return super(SaleOrderLine, self).name_search(name, args, operator, limit)
+
+    @api.multi
     def unlink(self):
         if self.filtered(lambda x: x.state in ('sale', 'done')):
             raise UserError(_('You can not remove a sales order line.\nDiscard changes and try setting the quantity to 0.'))
