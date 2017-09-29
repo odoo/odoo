@@ -26,7 +26,6 @@ class ProductWishlist(models.Model):
     active = fields.Boolean(default=True, required=True)
     create_date = fields.Datetime('Added Date', readonly=True, required=True)
 
-
     @api.multi
     @api.depends('pricelist_id', 'currency_id', 'product_id')
     def compute_new_price(self):
