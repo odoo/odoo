@@ -198,10 +198,19 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             $analytics_components.empty();
             // 1. Authorize component
             var $analytics_auth = $('<div>').addClass('col-md-12');
+            window.onOriginError = function () {
+                //TODO: check if it is possible to get Google Analytics JS file with cors enabled
+                //to get a cleared message when their file throws an error
+                //https://developers.google.com/api-client-library/javascript/features/cors
+                //First thing to check: is CORS enabled for Google Analytics file on Google servers?
+                $analytics_components.find('.js_unauthorized_message').remove();
+                self.display_unauthorized_message($analytics_components, 'not_initialized');
+            };
             gapi.analytics.auth.authorize({
                 container: $analytics_auth[0],
                 clientid: client_id
             });
+
             $analytics_auth.appendTo($analytics_components);
 
             self.handle_analytics_auth($analytics_components);
