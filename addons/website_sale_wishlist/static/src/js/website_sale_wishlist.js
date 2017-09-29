@@ -7,7 +7,7 @@ var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website_sale_utils = require('website_sale.utils');
-
+var weContext = require('web_editor.context');
 
 if(!$('.oe_website_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
@@ -100,7 +100,7 @@ var ProductWishlist = Widget.extend({
         rpc.query({
                 model: 'product.wishlist',
                 method: 'write',
-                args: [[wish], { active: false }, base.get_context()],
+                args: [[wish], { active: false }, weContext.getExtra()],
             })
             .then(function(){
                 $(tr).hide();
@@ -139,7 +139,8 @@ var ProductWishlist = Widget.extend({
     add_to_cart: function(product_id, qty_id) {
         var add_to_cart = ajax.jsonRpc("/shop/cart/update_json", 'call', {
             'product_id': parseInt(product_id, 10),
-            'add_qty': parseInt(qty_id, 10)
+            'add_qty': parseInt(qty_id, 10),
+            'display': false,
         });
 
         add_to_cart.then(function(resp) {

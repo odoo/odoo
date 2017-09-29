@@ -1,6 +1,7 @@
 odoo.define('website_sale_stock.website_sale', function(require) {
 'use strict';
 
+require('web.dom_ready');
 var base = require('web_editor.base');
 var ajax = require('web.ajax');
 var core = require('web.core');
@@ -31,7 +32,7 @@ $('.oe_website_sale').each(function() {
         }
     });
 
-    /* Renders a specific message concerning the stock of the product 
+    /* Renders a specific message concerning the stock of the product
         and its variants on the product website page.
     */
     $(oe_website_sale).on('change', 'ul[data-attribute_value_ids]', function(event) {
@@ -61,7 +62,7 @@ $('.oe_website_sale').each(function() {
                 xml_load.then(function() {
                     $(oe_website_sale).find('.availability_message_' + info['product_template']).remove();
                     var $message = $(QWeb.render('website_sale_stock.product_availability', info));
-                    $message.insertAfter($parent);
+                    $('div.availability_messages').html($message);
                 });
             }
         }
