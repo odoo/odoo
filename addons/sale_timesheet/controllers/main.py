@@ -21,7 +21,7 @@ class SaleTimesheetController(http.Controller):
 
         def float_to_time(hour_number):
             hours, minutes = divmod(hour_number * 60, 60)
-            return _('%sh%s') % (hours, '%02d' % minutes)
+            return _('%02d:%02d') % (hours, minutes)
 
         timesheet_lines = request.env['account.analytic.line'].search(domain)
 
