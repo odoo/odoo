@@ -14,7 +14,7 @@ var KanbanRenderer = require('web.KanbanRenderer');
 
 var qweb = core.qweb;
 
-if (!config.isMobile) {
+if (!config.device.isMobile) {
     return;
 }
 

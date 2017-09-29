@@ -24,7 +24,7 @@ var BaseSettingRenderer = FormRenderer.extend({
 
     start: function () {
         this._super.apply(this, arguments);
-        if (config.isMobile) {
+        if (config.device.isMobile) {
             core.bus.on("DOM_updated", this, function () {
                 this._moveToTab(this.currentIndex || this._currentAppIndex());
             });
@@ -196,7 +196,7 @@ var BaseSettingRenderer = FormRenderer.extend({
             this.activeView = view;
             this.activeTab = tab;
 
-            if (config.isMobile) {
+            if (config.device.isMobile) {
                 this._activateSettingMobileTab(this.currentIndex);
             } else {
                 tab.addClass("selected");
@@ -219,7 +219,7 @@ var BaseSettingRenderer = FormRenderer.extend({
     _onKeyUpSearch: function (event) {
         this.searchText = this.searchInput.val();
         this.activeTab.removeClass('selected');
-        if (config.isMobile) {
+        if (config.device.isMobile) {
             this.$('.settings_tab').addClass('o_hidden');
             this.$('.settings').addClass('d-block');
         }
@@ -241,7 +241,7 @@ var BaseSettingRenderer = FormRenderer.extend({
         });
         this.activeTab.removeClass('o_hidden').addClass('selected');
         this.activeView.removeClass('o_hidden');
-        if (config.isMobile) {
+        if (config.device.isMobile) {
             this.$('.settings_tab').removeClass('o_hidden');
             this.$('.settings').removeClass('d-block');
         }

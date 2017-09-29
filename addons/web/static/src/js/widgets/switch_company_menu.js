@@ -12,7 +12,7 @@ var _t = core._t;
 var SwitchCompanyMenu = Widget.extend({
     template: 'SwitchCompanyMenu',
     willStart: function() {
-        this.isMobile = config.isMobile;
+        this.isMobile = config.device.isMobile;
         if (!session.user_companies) {
             return $.Deferred().reject();
         }
