@@ -198,11 +198,12 @@ odoo.define('website_sale.website_sale', function (require) {
             var min = parseFloat($input.data("min") || 0);
             var max = parseFloat($input.data("max") || Infinity);
             var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val() || 0, 10);
+            var new_qty = quantity > min ? (quantity < max ? quantity : max) : min;
             // if they are more of one input for this product (eg: option modal)
             $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
                 var $prod = $(this).closest('*:has(input[name="product_id"])');
                 return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
-            }).val(quantity > min ? (quantity < max ? quantity : max) : min);
+            }).val(new_qty);
             $input.change();
             return false;
         });
