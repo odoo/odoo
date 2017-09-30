@@ -534,6 +534,34 @@
     </t>
 </template>
 
+<template id="default_javascript">
+    <script type="text/javascript">
+        if (0 &gt; 1) {
+            let it_cant_be = false;
+        }
+    </script>
+</template>
+<template id="default_xml">
+    &lt;?xml version="1.0" encoding="utf-8"?&gt;
+</template>
+<template id="default_css">
+    <style type="text/css">
+        div#wrap div &gt; h1{
+            color: #875A7B;
+        }
+    </style>
+</template>
+<template id="default_less">
+    <style type="text/less">
+        div#wrap div &gt; h1 {
+            color: @odoo-brand-primary;
+        }
+    </style>
+</template>
+<template id="default_csv">
+    1,2,3
+</template>
+
 <template id="page_404">
     <t t-call="website.404">
         <div class="container">

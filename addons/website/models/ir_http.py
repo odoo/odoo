@@ -116,7 +116,7 @@ class Http(models.AbstractModel):
                 # 'path': req_page[1:],
                 'deletable': True,
                 'main_object': mypage,
-            }, mimetype=_guess_mimetype(ext))
+            }, mimetype=_guess_mimetype(ext)[0])
         return False
 
     @classmethod

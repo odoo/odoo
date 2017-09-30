@@ -97,7 +97,6 @@ class Website(models.Model):
             :param template : potential xml_id of the page to create
             :param namespace : module part of the xml_id if none, the template module name is used
         """
-
         if namespace:
             template_module = namespace
         else:
@@ -105,6 +104,7 @@ class Website(models.Model):
         # completely arbitrary max_length
         page_url = '/' + slugify(name, max_length=200, path=True)
         page_key = self.get_unique_path(slugify(name, 50))
+        result = dict({'url': page_url, 'view_id': False})
 
         if not name:
             name = 'Home'
@@ -125,6 +125,7 @@ class Website(models.Model):
                 'website_ids': [(6, None, [self.get_current_website().id])],
                 'view_id': view.id
             })
+            result['view_id'] = view.id
         if add_menu:
             self.env['website.menu'].create({
                 'name': name,
@@ -133,7 +134,7 @@ class Website(models.Model):
                 'page_id': page.id,
                 'website_id': self.get_current_website().id,
             })
-        return page_url
+        return result
 
     def get_unique_path(self, page_url):
         """ Given an url, return that url suffixed by counter if it already exists
