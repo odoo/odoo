@@ -2904,9 +2904,7 @@ class StockMove(TransactionCase):
         move1._action_confirm()
         move1._action_assign()
         move1.product_uom_qty = 15
-        self.assertEqual(move1.state, 'partially_available')
-
-        move1._action_assign()
+        # _action_assign is automatically called
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 15)
         self.assertEqual(len(move1.move_line_ids), 1)
@@ -2927,14 +2925,62 @@ class StockMove(TransactionCase):
         })
         move1._action_confirm()
         move1._action_assign()
-        move1.product_uom_qty = 5
-        self.assertEqual(move1.state, 'confirmed')
-        self.assertEqual(len(move1.move_line_ids), 0)
-
-        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        move1.with_context(debug=True).product_uom_qty = 5
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)
+
+    def test_initial_demand_3(self):
+        """ Increase the initial demand on a receipt picking, the system should automatically
+        reserve the new quantity.
+        """
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking._autoconfirm_picking()
+        self.assertEqual(picking.state, 'assigned')
+        move1.product_uom_qty = 12
+        self.assertEqual(picking.state, 'assigned')
+
+    def test_initial_demand_4(self):
+        """ Increase the initial demand on a delivery picking, the system should not automatically
+        reserve the new quantity.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 12)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(picking.state, 'assigned')
+        move1.product_uom_qty = 12
+        self.assertEqual(picking.state, 'assigned')  # actually, partially available
+        self.assertEqual(move1.state, 'partially_available')
+        picking.action_assign()
+        self.assertEqual(move1.state, 'assigned')
 
     def test_change_product_type(self):
         """ Changing type of an existing product will raise a user error if some move

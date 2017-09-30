@@ -363,6 +363,7 @@ class StockMove(models.Model):
 
     def write(self, vals):
         # FIXME: pim fix your crap
+        receipt_moves_to_reassign = self.env['stock.move']
         if 'product_uom_qty' in vals:
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if vals['product_uom_qty'] != move.product_uom_qty:
@@ -371,6 +372,9 @@ class StockMove(models.Model):
                 move_to_unreserve = self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))
                 move_to_unreserve._do_unreserve()
                 (self - move_to_unreserve).filtered(lambda m: m.state == 'assigned').write({'state': 'partially_available'})
+                # When editing the initial demand, directly run again action assign on receipt moves.
+                receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
+                receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
 
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
@@ -414,6 +418,8 @@ class StockMove(models.Model):
         res = super(StockMove, self).write(vals)
         if track_pickings:
             pickings.message_track(pickings.fields_get(['state']), initial_values)
+        if receipt_moves_to_reassign:
+            receipt_moves_to_reassign._action_assign()
         return res
 
     def action_show_details(self):
