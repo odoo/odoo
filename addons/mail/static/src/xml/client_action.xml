@@ -197,7 +197,7 @@
     <t t-name="mail.chat.ChannelPreview">
         <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
              t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
-            <div class="o_mail_channel_image">
+            <div t-attf-class="o_mail_channel_image #{channel.model? 'o_mail_channel_app' : ''}">
                 <img class="o_mail_channel_image" t-att-src="channel.image_src"/>
                 <i t-if="channel.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
                 <i t-if="channel.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
