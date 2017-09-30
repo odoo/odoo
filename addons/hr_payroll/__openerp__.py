@@ -46,6 +46,7 @@ Generic Payroll system.
         'hr_holidays',
         'decimal_precision',
         'report',
+        "resource",
     ],
     'data': [
         'security/hr_security.xml',
