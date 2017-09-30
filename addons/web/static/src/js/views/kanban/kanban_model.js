@@ -29,6 +29,7 @@ var KanbanModel = BasicModel.extend({
             fields: group.fields,
             fieldsInfo: group.fieldsInfo,
             viewType: group.viewType,
+            parentID: groupID,
         });
         group.data.unshift(new_record.id);
         group.res_ids.unshift(resId);

@@ -342,6 +342,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create and change state in grouped mode', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.kanban_state = {
+            string: "Kanban State",
+            type: "selection",
+            selection: [["normal", "Grey"], ["done", "Green"], ["blocked", "Red"]],
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                        '<div class="oe_kanban_bottom_right">' +
+                        '<field name="kanban_state" widget="state_selection"/>' +
+                        '</div>' +
+                        '</t></templates>' +
+                  '</kanban>',
+            groupBy: ['foo'],
+        });
+
+        // Quick create kanban record
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        var $quickAdd = kanban.$('.o_kanban_quick_create');
+        $quickAdd.find('.o_input').val('Test');
+        $quickAdd.find('.o_kanban_add').click();
+
+        // Select state in kanban
+        kanban.$('.o_status').first().click();
+        kanban.$('.o_selection ul:first li:first').click();
+        assert.ok(kanban.$('.o_status').first().hasClass('o_status_green'),
+            "Kanban state should be done (Green)");
+        kanban.destroy();
+    });
+
     QUnit.test('quick create in grouped mode', function (assert) {
         assert.expect(8);
 
