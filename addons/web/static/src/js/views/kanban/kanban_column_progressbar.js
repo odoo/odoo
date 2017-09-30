@@ -24,6 +24,7 @@ var KanbanColumnProgressBar = Widget.extend({
         this._super.apply(this, arguments);
 
         this.columnID = options.columnID;
+        this.columnState = columnState;
 
         // <progressbar/> attributes
         this.fieldName = columnState.progressBarValues.field;
@@ -70,37 +71,27 @@ var KanbanColumnProgressBar = Widget.extend({
             }
         }
 
-        return this._super.apply(this, arguments);
-    },
+        return this._super.apply(this, arguments).then(function () {
+            // This should be executed when the progressbar is fully rendered
+            // and is in the DOM, this happens to be always the case with
+            // current use of progressbars
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+            var subgroupCounts = {};
+            _.each(self.colors, function (val, key) {
+                var subgroupCount = self.columnState.progressBarValues.counts[key] || 0;
+                if (self.activeFilter === key && subgroupCount === 0) {
+                    self.activeFilter = false;
+                }
+                subgroupCounts[key] = subgroupCount;
+            });
 
-    /**
-     * Updates internal data and rendering according to new received column
-     * state.
-     *
-     * @param {Object} columnState
-     */
-    update: function (columnState) {
-        var self = this;
-
-        var subgroupCounts = {};
-        _.each(self.colors, function (val, key) {
-            var subgroupCount = columnState.progressBarValues.counts[key] || 0;
-            if (self.activeFilter === key && subgroupCount === 0) {
-                self.activeFilter = false;
-            }
-            subgroupCounts[key] = subgroupCount;
+            self.groupCount = self.columnState.count;
+            self.subgroupCounts = subgroupCounts;
+            self.prevTotalCounterValue = self.totalCounterValue;
+            self.totalCounterValue = self.sumField ? (self.columnState.aggregateValues[self.sumField] || 0) : self.columnState.count;
+            self._notifyState();
+            self._render();
         });
-
-        this.groupCount = columnState.count;
-        this.subgroupCounts = subgroupCounts;
-        this.prevTotalCounterValue = this.totalCounterValue;
-        this.totalCounterValue = this.sumField ? (columnState.aggregateValues[this.sumField] || 0) : columnState.count;
-        this._notifyState();
-        this._render();
     },
 
     //--------------------------------------------------------------------------

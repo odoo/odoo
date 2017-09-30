@@ -18,7 +18,6 @@ var KanbanColumn = Widget.extend({
     template: 'KanbanView.Group',
     custom_events: {
         cancel_quick_create: '_onCancelQuickCreate',
-        kanban_record_delete: '_onDeleteRecord',
         quick_create_add_record: '_onQuickCreateAddRecord',
         tweak_column: '_onTweakColumn',
         tweak_column_records: '_onTweakColumnRecords',
@@ -45,7 +44,6 @@ var KanbanColumn = Widget.extend({
         this.id = data.res_id || value;
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
-        this.size = data.count;
         this.fields = data.fields;
         this.records = [];
         this.modelName = data.model;
@@ -59,7 +57,7 @@ var KanbanColumn = Widget.extend({
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
         this.offset = 0;
-        this.remaining = this.size - this.data_records.length;
+        this.remaining = data.count - this.data_records.length;
 
         if (options.hasProgressBar) {
             this.barOptions = {
@@ -95,7 +93,7 @@ var KanbanColumn = Widget.extend({
         this.$header = this.$('.o_kanban_header');
 
         for (var i = 0; i < this.data_records.length; i++) {
-            this.addRecord(this.data_records[i], {no_update: true});
+            this._addRecord(this.data_records[i]);
         }
         this.$header.find('.o_kanban_header_title').tooltip();
 
@@ -112,7 +110,6 @@ var KanbanColumn = Widget.extend({
                 cursor: 'move',
                 over: function () {
                     self.$el.addClass('o_kanban_hover');
-                    self._update();
                 },
                 out: function () {
                     self.$el.removeClass('o_kanban_hover');
@@ -145,7 +142,20 @@ var KanbanColumn = Widget.extend({
             defs.push(this.progressBar.appendTo(this.$header));
         }
 
-        return $.when.apply($, defs).then(this._update.bind(this));
+        var title = this.folded ? this.title + ' (' + this.data.count + ')' : this.title;
+        this.$header.find('.o_column_title').text(title);
+
+        this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
+        var tooltip = this.data.count + _t(' records');
+        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
+        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        if (!this.remaining) {
+            this.$('.o_kanban_load_more').remove();
+        } else {
+            this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
+        }
+
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------
@@ -164,18 +174,29 @@ var KanbanColumn = Widget.extend({
         this.quickCreateWidget.insertAfter(this.$header);
     },
     /**
+     * @returns {Boolean} true iff the column is empty
+     */
+    isEmpty: function () {
+        return !this.records.length;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
      * Adds a record in the column.
      *
+     * @private
      * @param {Object} recordState
-     * @param {Object} options
-     * @params {string} options.position 'before' to add the record at the top,
-     *                  added at the bottom by default
-     * @params {Boolean} options.no_update set to true not to update the column
+     * @param {Object} [options]
+     * @param {string} [options.position]
+     *        'before' to add at the top, add at the bottom by default
      */
-    addRecord: function (recordState, options) {
+    _addRecord: function (recordState, options) {
         var record = new KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
-        if (options.position === 'before') {
+        if (options && options.position === 'before') {
             record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);
         } else {
             var $load_more = this.$('.o_kanban_load_more');
@@ -185,33 +206,7 @@ var KanbanColumn = Widget.extend({
                 record.appendTo(this.$el);
             }
         }
-        if (!options.no_update) {
-            this._update();
-        }
     },
-    /**
-     * @returns {Boolean} true iff the column is empty
-     */
-    isEmpty: function () {
-        return !this.records.length;
-    },
-    /**
-     * Updates the column progressBar and sets the new data. New data are
-     * supposed to already match column rendering (except for the progressBar).
-     *
-     * @param {Object} data
-     */
-    updateProgressBar: function (data) {
-        this.data = data;
-        if (!this.folded && this.progressBar) {
-            this.progressBar.update(this.data);
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * Destroys the QuickCreate widget.
      *
@@ -230,25 +225,6 @@ var KanbanColumn = Widget.extend({
             ids.push($(r).data('record').id);
         });
         return ids;
-    },
-    /**
-     * @private
-     */
-    _update: function () {
-        var title = this.folded ? this.title + ' (' + this.size + ')' : this.title;
-        this.$header.find('.o_column_title').text(title);
-        this.$header.find('.o-kanban-count').text(this.records.length);
-
-        this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
-        var tooltip = this.size + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
-        if (!this.remaining) {
-            this.$('.o_kanban_load_more').remove();
-        } else {
-            this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
-        }
-        this.updateProgressBar(this.data);
     },
 
     //--------------------------------------------------------------------------
@@ -297,19 +273,6 @@ var KanbanColumn = Widget.extend({
                 text: _t("Are you sure that you want to remove this column ?")
             }),
         }).open();
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onDeleteRecord: function (event) {
-        var self = this;
-        event.data.parent_id = this.db_id;
-        event.data.after = function cleanup() {
-            var index = self.records.indexOf(event.data.record);
-            self.records.splice(index, 1);
-            self._update();
-        };
     },
     /**
      * @private
