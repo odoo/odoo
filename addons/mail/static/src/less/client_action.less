@@ -358,13 +358,21 @@
 
 .o_mail_channel_preview {
     .o-flex-display();
-    border-bottom: 1px solid #ebebeb;
+    border-bottom: 1px solid @gray-lighter-darker;
+    background-color: @gray-lighter;
+    color: @odoo-main-text-color;
+    cursor: pointer;
     overflow: hidden;
     position: relative;
+    &:hover {
+        background-color: @gray-lighter-dark;
+        .o_channel_name {
+            color: @headings-color;
+        }
+    }
     .o_mail_channel_image {
         .o-flex(0, 0, auto);
         position: relative;
-        text-align: center;
         > img {
             border-radius: 50%;
         }
@@ -387,12 +395,10 @@
             .o_channel_counter {
                 .o-flex(1, 1, auto);
             }
-            .o_channel_name, .o_channel_counter {
-                color: @odoo-main-text-color;
-            }
             .o_last_message_date {
                 .o-flex(0, 0, auto);
                 color: @odoo-main-color-muted;
+                font-weight: 500;
             }
         }
         .o_last_message_preview {
@@ -403,7 +409,10 @@
         }
     }
     &.o_channel_unread {
-        background-color: #f5f5f5;
+        background-color: transparent;
+        &:hover {
+            background-color: @gray-lighter;
+        }
         .o_channel_info {
             .o_channel_title {
                 .o_channel_name, .o_channel_counter {
