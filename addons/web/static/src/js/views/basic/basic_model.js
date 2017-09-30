@@ -948,6 +948,17 @@ var BasicModel = AbstractModel.extend({
         record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
     },
     /**
+     * Manually sets a resource as dirty. This is used to notify that a field
+     * has been modified, but with an invalid value. In that case, the value is
+     * not sent to the basic model, but the record should still be flagged as
+     * dirty so that it isn't discarded without any warning.
+     *
+     * @param {string} id a resource id
+     */
+    setDirty: function (id) {
+        this.localData[id]._isDirty = true;
+    },
+    /**
      * For list resources, this changes the orderedBy key.
      *
      * @param {string} list_id id for the list resource
