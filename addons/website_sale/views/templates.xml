@@ -749,7 +749,7 @@
                                         </div>
                                         <div class="form-group form-field o_website_form_custom">
                                             <div class="col-md-3 col-sm-4 text-right-not-xs">
-                                                <label class="control-label" for="a_document">A document to provide ? </label>
+                                                <label class="control-label" for="a_document">A document to provide</label>
                                             </div>
                                             <div class="col-md-7 col-sm-8">
                                                 <input type="file" class="form-control o_website_form_input" name="a_document" />
@@ -766,6 +766,12 @@
                                     </form>
                                 </div>
                             </div>
+                            <!--
+                                Sample Code to re-inject previous value is needed.
+                                <script>
+                                    $("input[name='client_order_ref']").val(_.unescape('<t t-esc="escape(website_sale_order.client_order_ref or '') or ''"/>'));
+                                </script>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -858,7 +864,7 @@
         </table>
         <div class="js_cart_lines row">
             <t t-call="website_sale.total">
-                <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
+                <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
             </t>
         </div>
     </template>
@@ -1447,7 +1453,7 @@
                                     <table class='table'>
                                       <tr>
                                           <td class="col-md-8"></td>
-                                          <td class="text-right col-sm-2 col-xs-3">Subtotal:</td>
+                                          <td class="text-right-not-xs text-left-xs col-sm-2 col-xs-3">Subtotal:</td>
                                           <td class="text-right col-sm-2 col-xs-3">
                                               <span t-field="order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                                           </td>
@@ -1455,14 +1461,14 @@
                                       <tr>
                                           <td class='noborder'></td>
                                           <td class="text-right noborder">Taxes:</td>
-                                          <td class="text-right  noborder">
+                                          <td class="text-right-not-xs text-left-xs noborder">
                                                <span t-field="order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                                           </td>
                                       </tr>
                                       <tr>
                                           <td class='noborder'></td>
                                           <td class="text-right"><strong>Total:</strong></td>
-                                          <td class="text-right">
+                                          <td class="text-right-not-xs text-left-xs">
                                               <strong t-field="order.amount_total"
                                                   t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                                           </td>
@@ -1514,20 +1520,20 @@
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order">
             <div class="row" id="order_total_untaxed">
                 <span class="col-xs-6 text-right text-muted">Subtotal:</span>
-                <span class="col-xs-6 text-right text-muted">
+                <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
                     <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total_taxes">
                 <span class="col-xs-6 text-right text-muted" title="Taxes may be updated after providing shipping address"> Taxes:</span>
-                <span class="col-xs-6 text-right text-muted">
+                <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
                     <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                 </span>
             </div>
             <div class="row" id="order_total">
                 <hr class="mt8 mb0"/>
                 <span class="col-xs-6 text-right h4 mt0">Total:</span>
-                <span class="col-xs-6 text-right h4 mt0" style="white-space: nowrap;">
+                <span class="col-xs-6 text-right-not-xs text-left-xs h4 mt0" style="white-space: nowrap;">
                     <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
