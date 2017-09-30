@@ -518,7 +518,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('many2many_tags in kanban views', function (assert) {
-        assert.expect(11);
+        assert.expect(12);
 
         this.data.partner.records[0].category_ids = [6, 7];
         this.data.partner.records[1].category_ids = [7, 8];
@@ -534,7 +534,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<kanban class="o_kanban_test">' +
                         '<templates><t t-name="kanban-box">' +
-                            '<div>' +
+                            '<div class="oe_kanban_global_click">' +
                                 '<field name="category_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                                 '<field name="foo"/>' +
                                 '<field name="state" widget="priority"/>' +
@@ -544,6 +544,16 @@ QUnit.module('Views', {
             mockRPC: function (route) {
                 assert.step(route);
                 return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                switch_view: function (event) {
+                    assert.deepEqual(event.data, {
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
+                },
             },
         });
 
@@ -570,6 +580,9 @@ QUnit.module('Views', {
         ], 'five RPCs should have been done (previous 2, 1 write (triggers a re-render), same 2 at re-render');
         assert.strictEqual(kanban.$('.o_kanban_record:first()').find('.o_field_many2manytags .o_tag').length, 2,
             'first record should still contain only 2 tags');
+
+        // click on a tag (should trigger switch_view)
+        kanban.$('.o_tag:contains(gold):first').click();
 
         kanban.destroy();
     });
