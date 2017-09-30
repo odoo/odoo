@@ -68,10 +68,6 @@ class Http(models.AbstractModel):
             super(Http, cls)._auth_method_public()
 
     @classmethod
-    def get_page_key(cls):
-        return (cls._name, "cache", request.uid, request.lang, request.httprequest.full_path)
-
-    @classmethod
     def _add_dispatch_parameters(cls, func):
         if request.is_frontend:
             context = dict(request.context)
