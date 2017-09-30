@@ -19,6 +19,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
         reload: '_onReload',
+        set_dirty: '_onSetDirty',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
     }),
@@ -552,6 +553,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 keepChanges: data.keepChanges || false,
             });
         }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSetDirty: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
+        this.model.setDirty(ev.data.dataPointID);
     },
     /**
      * Handler used to get all the data necessary when a custom action is
