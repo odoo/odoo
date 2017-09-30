@@ -597,14 +597,12 @@ class account_payment(models.Model):
             'name': _('Transfer from %s') % self.journal_id.name,
             'account_id': self.destination_journal_id.default_credit_account_id.id,
             'currency_id': self.destination_journal_id.currency_id.id,
-            'payment_id': self.id,
             'journal_id': self.destination_journal_id.id})
         aml_obj.create(dst_liquidity_aml_dict)
 
         transfer_debit_aml_dict = self._get_shared_move_line_vals(credit, debit, 0, dst_move.id)
         transfer_debit_aml_dict.update({
             'name': self.name,
-            'payment_id': self.id,
             'account_id': self.company_id.transfer_account_id.id,
             'journal_id': self.destination_journal_id.id})
         if self.currency_id != self.company_id.currency_id:
@@ -643,6 +641,7 @@ class account_payment(models.Model):
             'debit': debit,
             'credit': credit,
             'amount_currency': amount_currency or False,
+            'payment_id': self.id,
         }
 
     def _get_counterpart_move_line_vals(self, invoice=False):
@@ -671,7 +670,6 @@ class account_payment(models.Model):
             'account_id': self.destination_account_id.id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
-            'payment_id': self.id,
         }
 
     def _get_liquidity_move_line_vals(self, amount):
@@ -681,7 +679,6 @@ class account_payment(models.Model):
         vals = {
             'name': name,
             'account_id': self.payment_type in ('outbound','transfer') and self.journal_id.default_debit_account_id.id or self.journal_id.default_credit_account_id.id,
-            'payment_id': self.id,
             'journal_id': self.journal_id.id,
             'currency_id': self.currency_id != self.company_id.currency_id and self.currency_id.id or False,
         }
