@@ -9,7 +9,6 @@
     'version': '1.0',
     'depends': ['website_sale'],
     'data': [
-        'data/ir_cron.xml',
         'security/website_sale_wishlist_security.xml',
         'security/ir.model.access.csv',
         'views/website_sale_wishlist_template.xml',
