@@ -48,6 +48,8 @@ var CalendarController = AbstractController.extend({
         this.readonlyFormViewId = params.readonlyFormViewId;
         this.mapping = params.mapping;
         this.context = params.context;
+        // The quickCreating attribute ensures that we don't do several create
+        this.quickCreating = false;
     },
 
     //--------------------------------------------------------------------------
@@ -153,18 +155,26 @@ var CalendarController = AbstractController.extend({
      */
     _onQuickCreate: function (event) {
         var self = this;
+        if (this.quickCreating) {
+            return;
+        }
+        this.quickCreating = true;
         this.model.createRecord(event)
             .then(function (id) {
                 self.quick.destroy();
                 self.quick = null;
                 self.reload(id);
-            }, function (error, errorEvent) {
+            })
+            .fail(function (error, errorEvent) {
                 // This will occurs if there are some more fields required
                 // Preventdefaulting the error event will prevent the traceback window
                 errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
+            })
+            .always(function () {
+                self.quickCreating = false;
             });
     },
     /**
