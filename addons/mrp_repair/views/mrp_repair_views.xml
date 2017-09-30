@@ -11,8 +11,6 @@
                 <field name="product_id" />
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
@@ -64,8 +62,8 @@
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
                         </group>
                         <group>
-                            <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
-                            <field name="location_dest_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_id"/>
+                            <field name="location_dest_id"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
