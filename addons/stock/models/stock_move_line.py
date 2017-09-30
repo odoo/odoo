@@ -248,9 +248,10 @@ class StockMoveLine(models.Model):
         if updates or 'qty_done' in vals:
             for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product'):
                 # undo the original move line
-                in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -ml.qty_done, lot_id=ml.lot_id,
+                qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.package_id, owner_id=ml.owner_id)[1]
-                Quant._update_available_quantity(ml.product_id, ml.location_id, ml.qty_done, lot_id=ml.lot_id,
+                Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.package_id, owner_id=ml.owner_id, in_date=in_date)
 
                 # move what's been actually done
