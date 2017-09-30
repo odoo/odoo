@@ -1142,8 +1142,8 @@
                                 <t t-if="mode == ('new', 'billing')">
                                     <h3 class="page-header mt32 ml16">Your Address
                                         <small> or </small>
-                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
-                                        <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
+                                    <t t-set='connect' t-value="('login', 'Log In')"/>
+                                    <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
                                     </h3>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
@@ -1502,6 +1502,8 @@
                                         </tbody>
                                     </table>
                                     <t t-call="website_sale.payment_confirmation_status" />
+                                    <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
+                                    <t t-if="connect[0] == 'signup'"><a t-attf-href='/web/{{connect1[0]}}?redirect=/shop/checkout' style="margin-top: -11px">Sign Up Now to Follow Your Order</a></t>
                                 </div>
                             </div>
                             <div class="col-md-3 hidden-sm hidden-xs text-muted">
