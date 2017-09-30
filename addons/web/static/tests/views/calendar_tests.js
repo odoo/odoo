@@ -1288,6 +1288,57 @@ QUnit.module('Views', {
             "should be one event in the all day row");
         calendar.destroy();
     });
+
+    QUnit.test('quickcreate avoid double event creation', function (assert) {
+        assert.expect(1);
+        var createCount = 0;
+        var def = $.Deferred();
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === "create") {
+                    createCount++;
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // create a new event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        var $input = $('.modal-body input:first');
+        $input.val('new event in quick create').trigger('input');
+        // Simulate ENTER pressed on Create button (after a TAB)
+        $input.trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+        $('.modal-footer button:first').click();
+        def.resolve();
+        assert.strictEqual(createCount, 1,
+            "should create only one event");
+
+        calendar.destroy();
+    });
 });
 
 });
