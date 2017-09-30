@@ -353,10 +353,13 @@ var KanbanController = BasicController.extend({
                 .addRecordToGroup(columnState.id, records[0])
                 .then(function (db_id) {
                     self._updateEnv();
-                    column.addRecord(self.model.get(db_id), {position: 'before'});
-                    if (event.data.openRecord) {
-                        self.trigger_up('open_record', {id: db_id, mode: 'edit'});
-                    }
+
+                    var columnState = self.model.getColumn(db_id);
+                    return self.renderer.updateColumn(columnState.id, columnState).then(function () {
+                        if (event.data.openRecord) {
+                            self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                        }
+                    });
                 });
         }
     },
