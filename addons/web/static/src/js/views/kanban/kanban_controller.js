@@ -84,7 +84,9 @@ var KanbanController = BasicController.extend({
         var grouped = data.groupedBy.length;
         if (grouped) {
             var columnState = this.model.getColumn(id);
-            return this.renderer.updateColumn(columnState.id, columnState);
+            if (columnState) {
+                return this.renderer.updateColumn(columnState.id, columnState);
+            }
         }
         return this.renderer.updateRecord(this.model.get(id));
     },
