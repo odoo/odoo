@@ -1704,6 +1704,14 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 });
 
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
+    // Remove event handlers on this widget to ensure that the kanban 'global
+    // click' opens the clicked record, even if the click is done on a tag
+    // This is necessary because of the weird 'global click' logic in
+    // KanbanRecord, which should definitely be cleaned.
+    // Anyway, those handlers are only necessary in Form and List views, so we
+    // can removed them here.
+    events: AbstractField.prototype.events,
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
