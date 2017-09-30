@@ -250,7 +250,7 @@ class StockMoveLine(models.Model):
                 # undo the original move line
                 qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
-                                                      package_id=ml.package_id, owner_id=ml.owner_id)[1]
+                                                      package_id=ml.result_package_id, owner_id=ml.owner_id)[1]
                 Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.package_id, owner_id=ml.owner_id, in_date=in_date)
 
