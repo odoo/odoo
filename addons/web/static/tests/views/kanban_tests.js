@@ -518,7 +518,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('many2many_tags in kanban views', function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         this.data.partner.records[0].category_ids = [6, 7];
         this.data.partner.records[1].category_ids = [7, 8];
@@ -545,14 +545,6 @@ QUnit.module('Views', {
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                add_filter: function (event) {
-                    assert.deepEqual(event.data, {
-                        domain: "[['category_ids','=','gold']]",
-                        help: 'gold',
-                    }, "should trigger an 'add_filter' event with correct data");
-                },
-            },
         });
 
         var $first_record = kanban.$('.o_kanban_record:first()');
@@ -578,46 +570,6 @@ QUnit.module('Views', {
         ], 'five RPCs should have been done (previous 2, 1 write (triggers a re-render), same 2 at re-render');
         assert.strictEqual(kanban.$('.o_kanban_record:first()').find('.o_field_many2manytags .o_tag').length, 2,
             'first record should still contain only 2 tags');
-
-        // click on a tag to trigger a search by tag
-        kanban.$('.o_tag:contains(gold):first').click();
-
-        kanban.destroy();
-    });
-
-    QUnit.test('many2many_tags with no color field and search by tag', function (assert) {
-        assert.expect(3);
-
-        delete this.data.category.fields.color;
-        this.data.partner.records[0].category_ids = [6, 7];
-
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban><templates><t t-name="kanban-box">' +
-                    '<div>' +
-                        '<field name="category_ids" widget="many2many_tags"/>' +
-                        '<field name="foo"/>' +
-                    '</div>' +
-                '</t></templates></kanban>',
-            intercepts: {
-                add_filter: function (event) {
-                    assert.deepEqual(event.data, {
-                        domain: "[['category_ids','=','gold']]",
-                        help: 'gold',
-                    }, "should trigger an 'add_filter' event with correct data");
-                },
-            },
-        });
-
-        var $first_record = kanban.$('.o_kanban_record:first()');
-        assert.strictEqual($first_record.find('.o_field_many2manytags .o_tag').length, 2,
-            'first record should contain 2 tags');
-        assert.ok($first_record.find('.o_tag.o_tag_color_0').hasClass('o_tag_color_0'),
-            'both tags should have the default color');
-        // click on a tag to trigger a search by tag
-        kanban.$('.o_tag:contains(gold):first').click();
 
         kanban.destroy();
     });
