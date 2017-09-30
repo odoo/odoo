@@ -1235,7 +1235,7 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
-            var oldValue = record._changes[name] || record.data[name];
+            var oldValue = name in record._changes ? record._changes[name] : record.data[name];
             var id;
             if (field.type === 'many2one') {
                 id = false;
