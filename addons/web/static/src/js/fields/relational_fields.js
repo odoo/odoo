@@ -1704,10 +1704,6 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 });
 
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
-    events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .o_tag': '_onTagClicked',
-    }),
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1730,29 +1726,10 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 class: 'o_tag o_tag_color_' + (m2m.data[self.colorField] || 0),
                 text: m2m.data.display_name,
             })
-            .data('res_id', m2m.res_id)
             .prepend('<span>')
             .appendTo(self.$el);
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} e
-     */
-    _onTagClicked: function (e) {
-        var resID = $(e.currentTarget).data('res_id');
-        var record = _.findWhere(this.value.data, {res_id: resID});
-        var displayName = record.data.display_name;
-        this.trigger_up('add_filter', {
-            domain: "[['" + this.name + "','=','" + displayName + "']]",
-            help: displayName,
-        });
-    }
 });
 
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
