@@ -160,6 +160,7 @@ ListRenderer.include({
                 }
             });
             var newRowIndex = _.findIndex(state.data, {id: id});
+            var $lastRow = $row;
             _.each(state.data, function (record, index) {
                 if (index === newRowIndex) {
                     return;
@@ -168,7 +169,8 @@ ListRenderer.include({
                 if (index < newRowIndex) {
                     $newRow.insertBefore($row);
                 } else {
-                    $newRow.insertAfter($row);
+                    $newRow.insertAfter($lastRow);
+                    $lastRow = $newRow;
                 }
             });
             if (self.currentRow !== null) {

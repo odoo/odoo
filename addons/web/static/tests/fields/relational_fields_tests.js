@@ -3689,6 +3689,44 @@ QUnit.module('relational_fields', {
         AbstractField.prototype.destroy = oldDestroy;
     });
 
+    QUnit.test('one2many editable list with onchange keeps the order', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.onchanges = {
+            p: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_cell').text(), 'first recordsecond recordaaa',
+            "records should be display in the correct order");
+
+        form.$('.o_data_row:first .o_data_cell').click();
+        form.$('.o_selected_row .o_field_widget[name=display_name]').val('new').trigger('input');
+        form.$el.click(); // click outside to validate the row
+
+        assert.strictEqual(form.$('.o_data_cell').text(), 'newsecond recordaaa',
+            "records should be display in the correct order");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many list (editable): readonly domain is evaluated', function (assert) {
         assert.expect(2);
 
