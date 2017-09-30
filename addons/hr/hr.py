@@ -170,6 +170,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name_related'
+    _rec_name = 'name_related'
     _inherits = {'resource.resource': "resource_id"}
     _inherit = ['mail.thread']
 
