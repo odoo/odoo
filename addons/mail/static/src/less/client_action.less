@@ -302,16 +302,17 @@
         }
 
         .o_mail_chat_mobile_inbox_buttons {
+            .o-flex-display();
             .o-flex(0, 0, auto);
-            padding: 15px 15px 10px 15px;
+            z-index: 2;
+            box-shadow: 0 2px 4px @gray-lighter-darker;
+
             .o_channel_inbox_item {
-                width: 50%;
-                border: 1px solid @odoo-brand-optional;
-                &:first-child {
-                    border-radius: 4px 0px 0px 4px;
-                }
-                &:last-child {
-                    border-radius: 0px 4px 4px 0px;
+                .o-flex(1, 1, 50%);
+                padding: 2%;
+
+                &.btn-default {
+                    border-bottom: 1px solid @gray-lighter-darker
                 }
             }
         }
@@ -358,7 +359,6 @@
 
 .o_mail_channel_preview {
     .o-flex-display();
-    border-bottom: 1px solid @gray-lighter-darker;
     background-color: @gray-lighter;
     color: @odoo-main-text-color;
     cursor: pointer;
@@ -370,10 +370,14 @@
             color: @headings-color;
         }
     }
+    &:not(:last-child) {
+        border-bottom: 1px solid @gray-lighter-darker;
+    }
     .o_mail_channel_image {
         .o-flex(0, 0, auto);
         position: relative;
         > img {
+            .square(100%);
             border-radius: 50%;
         }
         &.o_mail_channel_app > img {
@@ -427,60 +431,62 @@
 }
 
 @media (max-width: @screen-xs-max) {
+    @o-mail-chatter-mobile-gap: 2%;
+
+    .o_main_navbar > ul.o_menu_systray > li.open .dropdown-menu {
+        border: none;
+    }
+
     .o_mail_channel_preview {
-        height: 85px;
-        padding: 15px;
-        .o_channel_info {
-            margin-left: 15px;
-            padding-top: 5px;
-            .o_channel_title {
-                .o_channel_name, .o_channel_counter {
-                    font-size: 15px;
-                    font-weight: 500;
-                }
-                .o_last_message_date {
-                    padding-top: 2px;
-                    margin-left: 10px;
-                }
-            }
+        padding: @o-mail-chatter-mobile-gap;
+
+        .o_mail_channel_image:not(img) {
+            width: @o-mail-chatter-mobile-gap*6;
         }
-        &.o_channel_unread {
-            .o_channel_info .o_last_message_preview {
-                font-weight: 500;
-            }
+
+        .o_channel_info, .o_last_message_date {
+            margin-left: @o-mail-chatter-mobile-gap;
         }
-    }
-    .o_mail_channel_image {
-        width: 55px;
-        > img {
-            max-height: 55px;
+
+        .o_channel_name {
+            font-size: 1.1em;
+        }
+
+        .o_last_message_date {
+            font-size: 0.9em;
+        }
+
+        .o_last_message_preview {
+            margin-top: @o-mail-chatter-mobile-gap*0.5;
         }
     }
+
     .o_mail_mobile_tabs {
         .o-flex-display();
-        .o-flex-flow(row, nowrap);
-        border-top: 1px solid #ebebeb;
-        box-shadow: 0px 0px 10px #afafaf;
-        z-index: 1; // so that box shaddow is above thread's images
+        box-shadow: 0 0 8px @gray-lighter-darker;
+
         .o_mail_mobile_tab {
+            .o-flex-display();
             .o-flex(1, 1, 0);
-            padding: 8px 4px;
+            .o-flex-flow(column, nowrap);
+            .o-justify-content(space-between);
+            padding: @o-mail-chatter-mobile-gap @o-mail-chatter-mobile-gap*2;
+            box-shadow: 1px 0 0 @gray-lighter-darker;
             text-align: center;
-            &:not(:last-child) {
-               border-right: 1px solid #d7d7d7;
-            }
+
             > span {
                display: block;
+               white-space: nowrap;
+               font-weight: 500;
+
                &.fa {
-                   font-size: 16px;
-               }
-               &.o_tab_title{
-                   font-size: 8px;
-                   padding-top: 8px;
+                   padding-bottom: @o-mail-chatter-mobile-gap*2;
+                   font-size: 1.3em;
                }
             }
+
             &.active > span {
-               color: @odoo-brand-optional;
+                color: @odoo-brand-optional;
             }
         }
     }
