@@ -5,7 +5,7 @@
         <xpath expr="//div[@id='order_total_untaxed']" position="before">
             <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
                   <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
-                  <span class="col-xs-6 text-right text-muted">
+                  <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
                       <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
                               "widget": "monetary",
                               "display_currency": website_sale_order.currency_id,
