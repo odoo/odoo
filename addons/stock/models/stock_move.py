@@ -256,7 +256,7 @@ class StockMove(models.Model):
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
-                raise UserError("Cannot set the done quantity from this stock move, work directly with the move lines.")
+                raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
 
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
