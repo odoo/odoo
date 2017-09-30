@@ -17,6 +17,7 @@ class StockMove(TransactionCase):
             ('usage', '=', 'transit'),
         ], limit=1)
         self.uom_unit = self.env.ref('product.product_uom_unit')
+        self.uom_dozen = self.env.ref('product.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
@@ -2167,6 +2168,39 @@ class StockMove(TransactionCase):
         move1.move_line_ids[1].qty_done = 5
         self.assertEqual(move1.product_uom_qty, 15.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 15.0)
+
+    def test_edit_done_move_line_12(self):
+        """ Test that editing a done stock move line linked a tracked product correctly and directly
+        adapts the transfer. In this case, we edit the lot to another one, but the original move line
+        is not in the default product's UOM.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product3.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product3.id,
+        })
+        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_done_move_line_12'})
+        move1 = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 1
+        move1.move_line_ids.lot_id = lot1.id
+        move1._action_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1), 12.0)
+
+        # Change the done quantity from 1 dozen to two dozen
+        move1.move_line_ids.qty_done = 2
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1), 24.0)
 
     def test_immediate_validate_1(self):
         """ Create a picking and simulates validate button effect.
