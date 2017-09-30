@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_maintenance = fields.Boolean("Maintenance")
     module_quality_mrp = fields.Boolean("Quality")
     module_mrp_repair = fields.Boolean("Repair")
-    group_mrp_routings = fields.Boolean("Work Orders",
+    group_mrp_routings = fields.Boolean("Work Orders & Quality",
         implied_group='mrp.group_mrp_routings')
 
     @api.model
