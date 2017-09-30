@@ -6119,7 +6119,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('focus is correctly reset after an onchange in an x2many', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.partner.onchanges = {
             int_field: function () {}
@@ -6133,7 +6133,9 @@ QUnit.module('relational_fields', {
                     '<field name="p">' +
                         '<tree editable="bottom">' +
                             '<field name="int_field"/>' +
+                            '<button string="hello"/>' +
                             '<field name="qux"/>' +
+                            '<field name="trululu"/>' +
                         '</tree>' +
                     '</field>' +
                 '</form>',
@@ -6157,6 +6159,11 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(document.activeElement, form.$('.o_field_widget[name=qux]')[0],
             "qux field should have the focus");
+
+        form.$('.o_field_many2one input').click();
+        form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'first record',
+            "the one2many field should have the expected value");
 
         form.destroy();
     });
