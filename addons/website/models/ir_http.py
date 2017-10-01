@@ -19,7 +19,7 @@ from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 
-from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import ModelConverter
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +37,20 @@ def sitemap_qs2dom(qs, route, field='name'):
         else:
             dom = FALSE_DOMAIN
     return dom
+
+
+def _guess_mimetype(ext=False, default=False):
+    exts = {
+        '.css': ['text/css', 'website.default_css'],
+        '.less': ['text/less', 'website.default_less'],
+        '.js': ['text/javascript', 'website.default_javascript'],
+        '.xml': ['text/xml', 'website.default_xml'],
+        '.csv': ['text/csv', 'website.default_csv'],
+        '.html': ['text/html', False],
+    }
+    if not default:
+        default = exts['.html']
+    return ext is not False and exts.get(ext, default) or exts
 
 
 class Http(models.AbstractModel):
