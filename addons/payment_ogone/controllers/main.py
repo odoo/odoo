@@ -10,10 +10,10 @@ _logger = logging.getLogger(__name__)
 
 
 class OgoneController(http.Controller):
-    _accept_url = '/payment/ogone/test/accept'
-    _decline_url = '/payment/ogone/test/decline'
-    _exception_url = '/payment/ogone/test/exception'
-    _cancel_url = '/payment/ogone/test/cancel'
+    _accept_url = '/payment/ogone/accept'
+    _decline_url = '/payment/ogone/decline'
+    _exception_url = '/payment/ogone/exception'
+    _cancel_url = '/payment/ogone/cancel'
 
     @http.route([
         '/payment/ogone/accept', '/payment/ogone/test/accept',
