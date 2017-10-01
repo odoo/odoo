@@ -26,7 +26,6 @@
 # Iván Todorovich <ivan.todorovich@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Javier Ramirez <elbomba887@gmail.com>, 2016
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
@@ -35,6 +34,7 @@
 # Denis Ledoux <dle@odoo.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Roberto Lizana <robertolizana@trey.es>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Hugo Adan <hugo@vauxoo.com>, 2016
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2016
 # Miguel Mendez <migmen@virtuellhandel.no>, 2016
@@ -1078,13 +1078,13 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1399
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
-msgstr "Una Condición de pago debería tener una última línea de tipo Balance."
+msgstr "Un plazo de pago debe tener la última línea de tipo Saldo."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1402
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
-msgstr "Una Condición de pago debería tener sólo una línea de tipo Balance."
+msgstr "Un plazo de pago debe tener sólo una línea de tipo Saldo."
 
 #. module: account
 #: code:addons/account/models/account.py:535
@@ -1136,7 +1136,7 @@ msgstr "Una lista de impuestos comunes y sus tarifas."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr "Una lista de las condiciones de pago de sus clientes y proveedores."
+msgstr "Una lista de los plazos de pago de sus clientes y proveedores."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4798,7 +4798,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
 msgid "Gives the sequence order when displaying a list of payment term lines."
-msgstr "Proporciona el orden de secuencia al listar las condiciones de pago."
+msgstr "Proporciona el orden de las líneas del plazo de pago."
 
 #. module: account
 #. openerp-web
@@ -7367,12 +7367,12 @@ msgstr "Referencia del pago"
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term
 msgid "Payment Term"
-msgstr "Condiciones de pago"
+msgstr "Plazo de pago"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Term Line"
-msgstr "Línea de condición de pago"
+msgstr "Línea de plazo de pago"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -7387,7 +7387,7 @@ msgstr "Línea de condición de pago"
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 #: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Terms"
-msgstr "Términos de pago"
+msgstr "Plazos de pago"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_type
@@ -7409,32 +7409,32 @@ msgstr "Referencia de pago"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Payment term explanation for the customer..."
-msgstr "Explicación de la condición de pago para el cliente ..."
+msgstr "Explicación del plazo de pago para el cliente..."
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment term: 15 Days"
-msgstr "Condición de pago: 15 días"
+msgstr "Plazo de pago: 15 días"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "Payment term: 30 Net Days"
-msgstr "Condición de pago: 30 días hábiles"
+msgstr "Plazo de pago: 30 días"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment term: 30% Advance End of Following Month"
-msgstr "Condición de pago: 30% adelanto a fin del siguiente mes"
+msgstr "Plazo de pago: 30% adelanto a final del mes siguiente"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term
 msgid "Payment term: End of Following Month"
-msgstr "Condición de pago: fin de mes siguiente"
+msgstr "Plazo de pago: fin del mes siguiente"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment term: Immediate Payment"
-msgstr "Condición de pago: pago al contado."
+msgstr "Plazo de pago: pago al contado"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
@@ -7527,7 +7527,8 @@ msgstr "Porcentaje sobre el saldo"
 #: code:addons/account/models/account_invoice.py:1470
 #, python-format
 msgid "Percentages for Payment Terms Line must be between 0 and 100."
-msgstr "Porcentaje de líneas en términos de pago debe estar entre 0 y 100."
+msgstr ""
+"El porcentaje de las líneas del plazo de pago debe estar entre 0 y 100."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8486,8 +8487,8 @@ msgstr "Seleccione un asociado o elija una contrapartida"
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
 msgid "Select here the kind of valuation related to this payment term line."
 msgstr ""
-"Seleccione aquí el tipo de valoración relacionada con esta condición de "
-"pago."
+"Seleccione aquí el tipo de valoración relacionada con esta línea de plazo de"
+" pago."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:42
@@ -9872,8 +9873,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Se utilizará esta condición de pago, en lugar de la predeterminada, para los"
-" pedidos de compra y las facturas de proveedor."
+"Se utilizará este plazo de pago, en lugar del predeterminado, para los "
+"pedidos de compra y las facturas de proveedor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_payment_term_id
@@ -9882,8 +9883,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
-"Se utilizará esta condición de pago, en lugar de la predeterminada, para los"
-" pedidos de venta y facturas de clientes"
+"Se usará este plazo de pago en lugar del predeterminado para los pedidos de "
+"venta y las facturas de cliente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_purchase_tax_id
@@ -10483,7 +10484,7 @@ msgstr "Pago a proveedor"
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Términos de Pago"
+msgstr "Plazo de pago de proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
