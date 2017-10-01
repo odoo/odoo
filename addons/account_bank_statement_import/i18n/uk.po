@@ -6,13 +6,15 @@
 # Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# Роман Яхненко <bsap132@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Роман Яхненко <bsap132@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +111,7 @@ msgstr "Рядок банківської виписки"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Належить до поточної компанії користувача"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -239,7 +241,7 @@ msgstr "Послідовність записів"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
 msgid "Filename"
-msgstr ""
+msgstr "Назва файлу"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -429,6 +431,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Виберіть \"Продаж\" для журналів рахунків клієнтів.\n"
+"Виберіть \"Купівля\" для журналів рахунків постачальників.\n"
+"Виберіть \"Готівка\" або \"Банк\" для журналів, які використовуються у платежах клієнтів або постачальників.\n"
+"Виберіть \"Загальні\" для журналів різних операцій."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -566,6 +572,8 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
+"Ви повинні встановити дебетовий рахунок за замовчуванням і кредитну рахунок "
+"за замовчуванням для журналу:"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

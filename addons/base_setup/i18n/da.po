@@ -8,13 +8,15 @@
 # Morten Schou <ms@msteknik.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:35+0000\n"
 "PO-Revision-Date: 2016-09-19 12:35+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +27,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "(reload fonts)"
-msgstr ""
+msgstr "(genindlæs fonte)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -92,6 +94,8 @@ msgid ""
 "Check this to define the report footer manually. Otherwise it will be filled"
 " in automatically."
 msgstr ""
+"Check her for at definere sidefod i rapporter manuelt. Alternativt vil de "
+"blive udfyldt automatisk."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
@@ -121,12 +125,12 @@ msgstr "Oprettet den"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
 msgid "Custom Report Footer *"
-msgstr ""
+msgstr "Brugerdefineret sidefod i rapporter *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
 msgid "Custom footer *"
-msgstr ""
+msgstr "Brugerdefineret sidefod *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
@@ -136,7 +140,7 @@ msgstr "Vis navn"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Edit default access rights for new users"
-msgstr ""
+msgstr "Tilret default brugerrettigheder for nye brugere"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -146,13 +150,13 @@ msgstr "E-mail"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
 msgid "Font *"
-msgstr ""
+msgstr "Font *"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "Tekst i sidefod der vises i bunden af alle rapporter."
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -234,7 +238,7 @@ msgstr "Flere valutaer"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "New users access rights"
-msgstr ""
+msgstr "Rettigheder for nye brugere"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -248,7 +252,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
 msgid "Paper Format *"
-msgstr ""
+msgstr "Papirformat *"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -258,37 +262,37 @@ msgstr "Portal adgang"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Preview RML Report"
-msgstr ""
+msgstr "Vis RML rapport"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
 msgid "RML Header *"
-msgstr ""
+msgstr "RML sidehoved *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
 msgid "RML Internal Header *"
-msgstr ""
+msgstr "RML internt sidehoved *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
 msgid "RML Internal Header for Landscape Reports *"
-msgstr ""
+msgstr "RML internt sidehoved for liggende rapporter *"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "RML Report Configuration"
-msgstr ""
+msgstr "RML rapport konfiguration"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Report Configuration"
-msgstr ""
+msgstr "Konfiguration af rapport"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
 msgid "Report Footer *"
-msgstr ""
+msgstr "Sidefod i rapporter *"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_font
@@ -296,11 +300,13 @@ msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
 msgstr ""
+"Angiv fonten til sidehoved i rapporter. Den vil blive brugt som default font"
+" i RML rapporter i brugerens virksomhed"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
 msgid "Share or embed any screen of Odoo."
-msgstr ""
+msgstr "Del eller indlejr et skærmbillede fra Odoo."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
@@ -345,7 +351,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "Brug ekstern authentication providers (OAuth)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration

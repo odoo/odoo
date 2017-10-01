@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
 
             created_invoice.action_invoice_open()
             if tx.acquirer_id.journal_id:
-                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+                created_invoice.with_context(tx_currency_id=tx.currency_id.id).pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
                 if created_invoice.payment_ids:
                     created_invoice.payment_ids[0].payment_transaction_id = tx
             else:
@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
                 amount_matches = float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0
                 if amount_matches:
                     if not acquirer_name:
-                        acquirer_name = tx.sale_order_id.payment_acquirer_id.provider or 'unknown'
+                        acquirer_name = tx.acquirer_id.provider or 'unknown'
                     if tx.state == 'authorized' and tx.acquirer_id.auto_confirm == 'authorize':
                         _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
                         tx.sale_order_id.with_context(send_email=True).action_confirm()

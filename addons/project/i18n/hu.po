@@ -5,6 +5,7 @@
 # Translators:
 # gezza <geza.nagy@oregional.hu>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
@@ -151,7 +152,7 @@ msgstr "# Napok a hozzárendelésig"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr "# Lezárásig hátralévő napok"
+msgstr "# Napok a lezárásig"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -172,7 +173,7 @@ msgstr "# Munkanapok "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr "# számú feladat"
+msgstr "# Feladatok száma"
 
 #. module: project
 #: code:addons/project/models/project.py:240
@@ -187,8 +188,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
-"Egy projekt aktiválása automatikusan aktiválja a projekt feladatait és "
-"ügyeit is. Folytatja?"
+"Egy projekt (in)aktiválása automatikusan (in)aktiválja a projekt feladatait "
+"és ügyeit. Folytatja?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -224,7 +225,7 @@ msgstr ""
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
 "<b>Kattintson a mentés gombra</b> a feladaton elvégzett változtatások "
-"elmentéséhez."
+"alkalmazásához."
 
 #. module: project
 #. openerp-web
@@ -232,7 +233,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
-"<b>Fogd &amp; vidd</b> módszerrel mozgathatja a feladatokat az oszlopok "
+"<b>Húzd &amp; ejtsd</b> módszerrel mozgathatja a feladatokat az oszlopok "
 "között munkája során."
 
 #. module: project
@@ -242,8 +243,8 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"<b>Hívjon meg munkatársakat</b> e-mailen.<br/><i>Soronként egy e-mail címet "
-"adjon meg.</i>"
+"<b>Hívjon meg munkatársakat</b> e-mailen keresztül.<br/><i>Soronként egy "
+"e-mail címet adjon meg.</i>"
 
 #. module: project
 #. openerp-web
@@ -251,7 +252,8 @@ msgstr ""
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
-"<b>Kedvenc feladatok</b> megjelölésével jelezheti a csapat prioritásait."
+"<b>Jelölje meg csillaggal a feladatokat</b> a csapat prioritásainak "
+"meghatározása érdekében."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -270,8 +272,8 @@ msgid ""
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                         Dokumentumok vannak mellékelve a projekt feladataihoz és ügyeihez.</p><p>\n"
-"                        Küldjön üzenetet vagy naplózzon belső jegyzeteket mellékletekkel, így dokumentumokat\n"
-"                        fűzhet a projekthez.\n"
+"                        Küldjön üzeneteket vagy naplózzon belső jegyzeteket mellékletekkel a dokumentumok\n"
+"                        projekthez való hozzáfűzéséhez.\n"
 "                    </p>"
 
 #. module: project
@@ -279,7 +281,7 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
-"<p class=\"oe_view_nocontent_create\">Kattintson új projekt "
+"<p class=\"oe_view_nocontent_create\">Kattintson egy új projekt "
 "létrehozásához.</p>"
 
 #. module: project
@@ -295,18 +297,18 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Telepítés most"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr "<span class=\"fa fa-comment-o\"/>  Weboldal élő társalgás"
+msgstr "<span class=\"fa fa-comment-o\"/>  Élő csevegés a weboldalon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/>  Weboldal élő társalgás be"
+msgstr "<span class=\"fa fa-comment-o\"/>  Élő csevegés a weboldalon bekapcsolva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
 msgstr ""
-"<span class=\"fa fa-envelope-o\"/> E-mail küldése projekt alkalmazás "
+"<span class=\"fa fa-envelope-o\"/> Küldjön egy e-mailt projektalkalmazás-"
 "szakértőnknek"
 
 #. module: project
@@ -315,7 +317,7 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-down\"/> A projekt alkalmazás <strong>rossz "
+"<span class=\"fa fa-thumbs-o-down\"/> A projektek <strong>helytelen "
 "használata</strong>:"
 
 #. module: project
@@ -324,7 +326,7 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
 msgstr ""
-"<span class=\"fa fa-thumbs-o-up\"/> A projekt alkalmazás<strong> jó "
+"<span class=\"fa fa-thumbs-o-up\"/> A projektek <strong> helyes "
 "használata</strong>:"
 
 #. module: project
@@ -342,7 +344,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> Képernyő testreszabás</strong>\n"
+"                                            <strong> Képernyő testreszabása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -355,7 +357,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-mobile\"/>\n"
-"                                            <strong> Mobiltelefonjáról</strong>\n"
+"                                            <strong> A mobiltelefonjáról</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -368,7 +370,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
-"                                            <strong> Egyedi kimutatások létrehozása</strong>\n"
+"                                            <strong> Egyéni riportok létrehozása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -381,7 +383,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-puzzle-piece\"/>\n"
-"                                            <strong> Chrome kiterjesztéssel</strong>\n"
+"                                            <strong> Chrome kiterjesztésen keresztül</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -394,7 +396,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> Munkafolyamat testreszabás</strong>\n"
+"                                            <strong> Munkafolyamat testreszabása</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -407,7 +409,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-tasks\"/>\n"
-"                                            <strong> Odoo rendszerből közvetlenül</strong>\n"
+"                                            <strong> Közvetlenül az Odoo rendszerben</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -422,7 +424,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-thumb-tack\"/>\n"
 "                                            <strong>1. gyakorlat</strong><br/>\n"
-"                                            <span class=\"small\">Munkaterheltség ellenőrzés</span>\n"
+"                                            <span class=\"small\">Munkaterhelés ellenőrzése</span>\n"
 "                                        </span>"
 
 #. module: project
@@ -437,7 +439,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-thumb-tack\"/>\n"
 "                                            <strong> 2. gyakorlat</strong><br/>\n"
-"                                            <span class=\"small\">Ügy késleltetett lezárása</span>\n"
+"                                            <span class=\"small\">Ügy lezárásának késleltetése</span>\n"
 "                                        </span>"
 
 #. module: project
@@ -932,13 +934,13 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr "<strong>Milyen Tevékenységeket</strong> szeretne kezelni?"
+msgstr "<strong>Milyen tevékenységeket</strong> szeretne kezelni?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
 msgstr ""
-"<strong>Mit vár el</strong> az Odoo rendszer Projekt alkalmazás "
+"<strong>Mit vár el</strong> az Odoo rendszer projektalkalmazásának "
 "használatától?"
 
 #. module: project
@@ -1254,8 +1256,8 @@ msgid ""
 "Back at the office, the manager splits the customer's requests into several "
 "tasks and delegates them to several employees."
 msgstr ""
-"Vissza az irodába, a vezető szétválasztja a vásárlói igényt egy pár "
-"feladatra és megbíz vele számos munkavállalót."
+"Visszatérve az irodájába a menedzser különböző feladatokra bontja az ügyfél "
+"kéréseit, és hozzárendeli azokat különböző alkalmazottakhoz."
 
 #. module: project
 #. openerp-web
@@ -1303,9 +1305,9 @@ msgid ""
 "                        For example, you'll understand why you shouldn’t use Odoo to plan but instead to\n"
 "                        collaborate, or why organizing your projects by role is wrong."
 msgstr ""
-"Azért mer a változás sohasem könnyű, létrehoztuk ezt a  tervezőt az irányításhoz.<br/>\n"
-"                        Például, meg fogja érteni, hogy miért használja az Odoo rendszert inkább együttműködésre és nem\n"
-"                        tervezésre, és miért hiba szerepkörönként szervezni a projekt témáit."
+"Mivel a változás sohasem könnyű, létrehoztuk ezt az útmutatóként szolgáló tervezőt.<br/>\n"
+"                        Például meg fogja érteni, hogy miért ne használja az Odoo rendszert tervezésre,\n"
+"                        hanem helyette együttműködésre, vagy miért helytelen szerepek szerint szerveznie a projekteket."
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -1435,7 +1437,7 @@ msgstr "Szín jegyzék"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Communication campaign"
-msgstr "Közlemény kampány"
+msgstr "Kommunikációs kampány"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1482,8 +1484,8 @@ msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
 msgstr ""
-"Gratulálunk az Odoo rendszer Projekt alkalmazásának kiválasztásához! Az "
-"alkalmazás segíti vállalatát hatékonyabban irányítani!"
+"Gratulálunk az Odoo rendszer projektalkalmazásának kiválasztásához! Az "
+"alkalmazás segíti Önt vállalatának hatékonyabb irányításában."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1493,7 +1495,7 @@ msgstr "Gratulálok, elvégezte !"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Consulting mission"
-msgstr "Tanácsadó küldetés"
+msgstr "Tanácsadói megbízás"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
@@ -1510,7 +1512,7 @@ msgstr "Szerződés/Gyüjtő,elemző"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Control projects quality and satisfaction"
-msgstr "Projekt témák minőségét és elégedettségét felügyelheti"
+msgstr "A projektminőség és az elégedettség ellenőrzése"
 
 #. module: project
 #. openerp-web
@@ -1670,7 +1672,7 @@ msgstr "Ügyfél szolgálat új ügyet talált"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr "Vásárlói támogató jegyek"
+msgstr "Ügyféltámogatási kérések"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1723,10 +1725,10 @@ msgid ""
 "ways to work with Odoo. First, decide if you want to think in terms of tasks"
 " or issues. Then, activate the Timesheets app if you need it."
 msgstr ""
-"Igényétől és műveleteinek elvégzésétől függően, többféle módon tud az Odoo "
-"rendszerrel dolgozni. Először, határozza el, hogy a feladatokat vagy ügyeket"
-" feltételekkel szeretné megadni. Ezután, ha kívánja aktiválja a Munkaidő "
-"kiosztás alkalmazást."
+"Attól függően, hogy mire van szüksége, és hogyan akar dolgozni, különböző "
+"módon tudja használni az Odoo rendszert. Először döntse el, hogy feladatok "
+"vagy ügyek jegyében akar-e gondolkodni. Ezután aktiválja a munkaidő-"
+"kimutatás alkalmazást, amennyiben szüksége van rá."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1858,8 +1860,8 @@ msgid ""
 "During a meeting, a customer asks a manager for a few modifications to a "
 "project."
 msgstr ""
-"Találkozó közben egy ügyfél kéri a menedzsert a projekt kapcsán néhány "
-"változtatásra."
+"Találkozó közben egy ügyfél megkéri a menedzsert a projekt néhány elemének "
+"módosítására."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1867,7 +1869,7 @@ msgid ""
 "Each employee will have his own task, while the manager will be able to "
 "follow the global progress in the Kanban view of the project."
 msgstr ""
-"Mindegyik alkalmazottnak saját feladata van, míg az irányító a teljes "
+"Mindegyik alkalmazottnak saját feladata van, míg a menedzser a teljes "
 "folyamatot tudja követni a projekt kanban nézetében."
 
 #. module: project
@@ -2037,7 +2039,7 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"Az Oddo rendszer csapatának,<br/>\n"
+"Az Oddo rendszer csapata nevében,<br/>\n"
 "                          Fabien Pinckaers, Alapító"
 
 #. module: project
@@ -2225,7 +2227,7 @@ msgstr "Ötletek"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr "Sokkal könnyebben határozza meg a problémákat és blokkoló pontokat"
+msgstr "A problémák és blokkoló pontok sokkal könnyebb azonosítása"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
@@ -2286,7 +2288,7 @@ msgstr "Fejlessze"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr "Fejlessze az együttműködést a vásárlókkal"
+msgstr "A vásárlókkal történő együttműködés fejlesztése"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2406,8 +2408,8 @@ msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
 "                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
-"Fontos tisztában lenni azzal, hogy miért használja az Odoo rendszer Projekt alkalmazását, hogy milyen céljai vannak vele.\n"
-"                        Több útja is van a projektek szervezésének, pontosan tudnia kell, mit akar elérni ahhoz, hogy megtalálja a lehető legjobbat. Miután megismeri az alkalmazást, könnyebben tudja majd céljait elérni és fejleszteni vállalkozását."
+"Fontos tisztában lennie azzal, hogy miért akarja használni az Odoo rendszer projektalkalmazását, és hogy milyen céljai vannak vele.\n"
+"                        Több módja van a projektek kezelésének, pontosan tudnia kell, mit akar elérni ahhoz, hogy megtalálja az Ön számára legjobbat. Később remélhetőleg át tudjuk alakítani célkitűzéseit a vállalata valós fejlesztéseivé."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2465,12 +2467,12 @@ msgstr "Kanban tényleges magyarázata"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Keep track of messages and conversations"
-msgstr "Kövesse nyomon az üzeneteit és párbeszédeit"
+msgstr "Az üzenetek és beszélgetések nyomon követése"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr "Tudja az alkalmazottaim min dolgoznak"
+msgstr "Tudjam, hogy min dolgoznak az alkalmazottaim"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2549,7 +2551,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr "Elvégzendő feladatok listája, terve és követése"
+msgstr "Teendők listázása, tervezése és nyomon követése"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -2618,7 +2620,7 @@ msgstr "További információ"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr "Sokkal hatékonyabb munkavállaló közti kommunikáció"
+msgstr "Hatékonyabb kommunikáció a munkavállalók között"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2739,9 +2741,9 @@ msgid ""
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
 msgstr ""
-"Odoo Projekt alkalmazás egy gyors és könnyen használható módja a vállalatán belül a tevékenységek és feladatok mindenki \n"
-"                        számára láthatóvá tételéhez. Figyelje a dolgok alakulását, lássa, mi akadt el, tudja mindig, hogy ki\n"
-"                        a felelős, kezelje a feladatokat egy helyen."
+"Az Odoo projektalkalmazása egy gyors és könnyen használható módja annak, hogy a tevékenységek és feladatok mindenki \n"
+"                        számára láthatóvá váljanak a vállalatán belül . Kövesse a dolgok előrehaladását, lássa, ha valami elakadt, legyen tisztában azzal, hogy\n"
+"                        ki a felelős, mindezt egy helyen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
@@ -3289,7 +3291,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Software development"
-msgstr "Szoftver fejlesztés"
+msgstr "Szoftverfejlesztés"
 
 #. module: project
 #. openerp-web
@@ -3574,12 +3576,12 @@ msgid ""
 " mean it's always a good idea: let's start by helping you understand what "
 "can be a good project."
 msgstr ""
-"Az Odoo Projekt alkalmazást több tevékenység kezelésére használhatja, egy új"
-" termék fejlesztésén keresztül egészen a mindennapos ügyféltámogatáshoz. "
-"Némi kreativitással a marketing kommunikációhoz is használható vagy akár "
-"személyes projektekhez is. De csak azért, mert valami megoldható az "
-"alkalmazással még nem jelenti azt, hogy jó ötlet is: Első lépésként ezért "
-"segítünk megérteni, hogy mire lehet egy jó projekt."
+"Az Odoo projektalkalmazását sok tevékenység kezelésére használhatja, egy új "
+"termék fejlesztésétől a mindennapos ügyféltámogatásig. Némi kreativitással a"
+" marketing kommunikációhoz is használható vagy akár személyes projektekhez "
+"is. De csak azért, mert valami megoldható az alkalmazással még nem jelenti "
+"azt, hogy mindig jó ötlet is: első lépésként ezért segítünk megérteni, hogy "
+"milyen egy jó projekt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3686,8 +3688,8 @@ msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
 "                        return to it at any time: your progress is automatically saved."
 msgstr ""
-"Ez az egész folyamat csak egy pár órát vesz igénybe, de ne bosszankodjon, tarthat szünetet és\n"
-"                        visszatérhet bármikor: a folyamata automatikusan mentésre kerül."
+"Ez az egész folyamat csak néhány órát vesz igénybe, de ne aggódjon, tarthat szünetet és\n"
+"                        visszatérhet bármikor: az előrehaladása automatikusan mentésre kerül."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3891,7 +3893,7 @@ msgstr "Érvényesítés"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr "Nézettségi statisztika (eltöltött idő, hatékonyság, stb.)"
+msgstr "Statisztika megtekintése (eltöltött idő, hatékonyság, stb.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3978,7 +3980,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr "Üdvözlet"
+msgstr "Üdvözöljük"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4115,12 +4117,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr "Tevékenységei"
+msgstr "Tevékenységek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr "Célkitűzései"
+msgstr "Célkitűzések"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
@@ -4130,12 +4132,12 @@ msgstr "Az Odoo rendszer Projekt alkalmazása fut"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr "Projekt témái"
+msgstr "Projektek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr "Projekt témái:"
+msgstr "Projektek:"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all

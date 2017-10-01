@@ -35,7 +35,7 @@ from odoo.tools.misc import str2bool, xlwt
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 
 _logger = logging.getLogger(__name__)
@@ -657,7 +657,7 @@ class Database(http.Controller):
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception, e:
-            error = "Database creation error: %s" % str(e) or repr(e)
+            error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
@@ -668,7 +668,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database duplication error: %s" % str(e) or repr(e)
+            error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
@@ -678,7 +678,7 @@ class Database(http.Controller):
             request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database deletion error: %s" % str(e) or repr(e)
+            error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
@@ -696,7 +696,7 @@ class Database(http.Controller):
             return response
         except Exception, e:
             _logger.exception('Database.backup')
-            error = "Database backup error: %s" % str(e) or repr(e)
+            error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
@@ -706,7 +706,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database restore error: %s" % str(e) or repr(e)
+            error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
@@ -715,7 +715,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Master password update error: %s" % str(e) or repr(e)
+            error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/list', type='json', auth='none')
@@ -999,8 +999,8 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
-        height = int(height)
-        width = int(width)
+        height = int(height or 0)
+        width = int(width or 0)
         if content and (width or height):
             # resize maximum 500*500
             if width > 500:
@@ -1410,6 +1410,9 @@ class ExcelExport(ExportFormat, http.Controller):
         return base + '.xls'
 
     def from_data(self, fields, rows):
+        if len(rows) > 65535:
+            raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
+
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 

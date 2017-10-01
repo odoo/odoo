@@ -8,6 +8,7 @@
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2016
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 msgid ""
@@ -170,7 +171,7 @@ msgstr ""
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "Neaktivno"
+msgstr "Neaktivan"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -346,6 +347,12 @@ msgstr "Početni datum odsustva po mjesecima"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Nedjelja"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:714
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency

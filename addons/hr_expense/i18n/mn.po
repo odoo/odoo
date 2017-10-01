@@ -198,6 +198,11 @@ msgid "Analytic Account"
 msgstr "Шинжилгээний данс"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr "Зарлагын данс оруулна уу"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
 msgstr "Хэрэглэх"
@@ -1376,7 +1381,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:566
 #, python-format
 msgid "You cannot add expense lines of another employee."
-msgstr ""
+msgstr "Та өөр ажилтаны зардлын мөр нэмэх боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:433
@@ -1385,11 +1390,17 @@ msgid "You cannot delete a posted expense."
 msgstr "Илгээсэн зардлыг устгах боломжгүй."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:559
+#: code:addons/hr_expense/models/hr_expense.py:446
+#, python-format
+msgid "You cannot delete a posted or paid expense."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:576
 #, python-format
 msgid ""
 "You cannot have a positive and negative amounts on the same expense report."
-msgstr ""
+msgstr "Нэг зардлын тайлан дээр эерэг ба сөрөг тоо байх боломжгүй."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106

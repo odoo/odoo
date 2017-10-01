@@ -7,7 +7,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
@@ -23,13 +23,15 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Kiko <kiko@comunitea.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
+# Gustavo Valverde <g.valverde02@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Kiko <kiko@comunitea.com>, 2016\n"
+"Last-Translator: Gustavo Valverde <g.valverde02@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -695,6 +697,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr "Entrega gratuita"
 
@@ -960,9 +963,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
-"Establecer manualmente las cantidades en pedido: Factura basada en la cantidad introducida manualmente, sin crear una cuenta analítica.\n"
-"Hojas de tiempo en contrato: factura basada en las horas imputadas en la hoja de horas relacionada.\n"
-"Crear tarea y controlar horas: Crear una tarea en la validación de la orden de venta y realizar un seguimiento de las horas trabajadas."
+"Establecer la cantidad en el pedido de forma manual:  La factura se crea según cantidad introducida manualmente en el pedido, sin crear una cuenta analítica\n"
+"Partes de horas en contrato: La factura se crea según las horas registradas en el parte de horas relacionado.\n"
+"Crear tarea y controlar horas: Crea una tarea a la hora de validar el pedido de venta y la factura se crea según las horas registradas en dicha tarea."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -1086,6 +1089,7 @@ msgstr "Coste normal - Coste total"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Gastos de entrega normales."
 
@@ -1628,6 +1632,7 @@ msgstr "Técnico: se utiliza para calcular las cantidades."
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "The Poste"
 
@@ -1675,8 +1680,8 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Estos métodos permiten calcular automáticamente el precio de la entrega\n"
-"                de acuerdo a su configuración; en el pedido de venta (basada en el\n"
-"                presupuesto) o la factura (basada en las órdenes de entrega)."
+"                de acuerdo a su configuración; en el pedido de venta (basada en la\n"
+"                cotización) o la factura (basada en las órdenes de entrega)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id

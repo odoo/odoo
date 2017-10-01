@@ -17,10 +17,12 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
+# Gustavo Valverde <g.valverde02@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
 # Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # Jose Manuel <admin@jaboweb.com>, 2016
@@ -35,7 +37,7 @@
 # Soluntec <abraham@soluntec.es>, 2017
 # Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
+# David Vidal <david.vidal@trespinos.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
 msgid ""
 msgstr ""
@@ -66,8 +68,6 @@ msgstr ""
 "========================\n"
 "\n"
 "Permitir al vendedor reimprimir recibos\n"
-"\n"
-"\n"
 "\n"
 
 #. module: base
@@ -209,6 +209,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Módulo de localización para la república dominicana\n"
+"===================================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -367,6 +434,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Imprima la cantidad en palabras en los cheques emitidos para gastos\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_calendar
@@ -660,7 +730,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Añade los documentos de venta en el frontend del portal. Sus clientes podrán conectar a su portal para consultar la lista (y el estado) de sus facturas (en pdf), sus presupuestos y pedidos de venta (por página web)"
+"Añade los documentos de venta en el frontend del portal. Sus clientes podrán conectar a su portal para consultar la lista (y el estado) de sus facturas (en pdf), sus cotizaciones y pedidos de venta (por página web)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1461,7 +1531,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Muestra la planilla de horas de tareas en el portal del sitio.\n"
+"Muestra los partes de horas en el portal web.\n"
 "=========================================================="
 
 #. module: base
@@ -1637,7 +1707,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Activar parámetros UTM en enlaces"
+"Activar rastreadores UTM en enlaces compartidos.\n"
+"================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_crypt
@@ -2188,14 +2259,14 @@ msgstr ""
 "Gestione los requisitos de bienes a través de pedidos de compra fácilmente\n"
 "==========================================================================\n"
 "\n"
-"La gestión de compras le permite gestionar las solicitudes de presupuesto de sus proveedores y convertirlas en pedidos de compra si fuera necesario. \n"
+"La gestión de compras le permite gestionar las solicitudes de cotizaciones de sus proveedores y convertirlas en pedidos de compra si fuera necesario. \n"
 "Odoo tiene varios métodos de monitorizar las facturas y gestionar la recepción de los bienes pedidos. Puede manejar entregas parciales, para mantener la pista de los elementos que aún faltan por ser entregados en sus pedidos, y puede enviar recordatorios automáticamente.\n"
 "\n"
 "Las reglas de gestión de reposiciones de Odoo habilitan un sistema para generar pedidos de compra en borrador automáticamente, o puede configurarlo para ejecutar un proceso ligero conducido enteramente por sus necesidades de producción.\n"
 "\n"
 "El tablero y los informes para la gestión de compras incluyen:\n"
 "--------------------------------------------------------------\n"
-"* Solicitudes de presupuesto\n"
+"* Solicitudes de cotizaciones\n"
 "* Pedidos de compra esperando aprobación\n"
 "* Compras mensuales por categoría\n"
 "* Análisis de recepciones\n"
@@ -2676,6 +2747,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web vista kanban.\n"
+"======================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -4101,7 +4176,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"Este módulo añade soporte para partes de tiempo para la gestión de incidencias/errores en el proyecto.\n"
+"Este módulo añade soporte para partes de horaspara la gestión de incidencias/errores en el proyecto.\n"
 "=================================================================================\n"
 "\n"
 "Se pueden mantener registros de trabajo para resaltar el número de horas gastadas por los usuarios para manejar una incidencia.\n"
@@ -5254,6 +5329,10 @@ msgid ""
 "env[\"res.partner\"].create({\"name\": partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -5607,7 +5686,7 @@ msgstr "Contabilidad y finanzas"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
 msgid "Accounting &amp; Finance"
-msgstr ""
+msgstr "Contabilidad y finanzas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -6057,7 +6136,7 @@ msgstr "Argelia"
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
@@ -6396,7 +6475,7 @@ msgstr "Lista de archivos adjuntos y indexación de documentos"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_attendance
 msgid "Attendance"
-msgstr "Servicio"
+msgstr "Asistencias"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
@@ -7092,7 +7171,7 @@ msgstr "Impresión de cheques"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr ""
+msgstr "Comprobar la impresión en gastos"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
@@ -7575,6 +7654,11 @@ msgid ""
 "expression, like 'record.list_price > 5000'. A void condition is considered "
 "as always True. Help about python expression is given in the help tab."
 msgstr ""
+"Condición verificada antes de ejecutar la acción de servidor. Si no esta "
+"verificada, la acción no será ejecutada. La condición es una expresión "
+"Python, como 'record.list_price > 5000'. Una condición vacía es considerada "
+"siempre verdadera. La ayuda con las expresiones Python es dada en la pestaña"
+" ayuda."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
@@ -8292,7 +8376,7 @@ msgstr "Clientes"
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
 msgid "Customers, Vendors, Partners,..."
-msgstr "Clientes, vendedores, socios,..."
+msgstr "Clientes, proveedores, empresas,..."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
@@ -8454,12 +8538,15 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
-"Estimado Señor / Señora, Nuestros registros indican que tiene pagos "
-"pendientes de su cuenta. Encontrará los detalles a continuación. Si ya ha "
-"pagado la cantidad, por favor ignore este aviso. De lo contrario, por favor "
-"envíe la cantidad total que se indica a continuación. Si tiene cualquier "
-"pregunta relacionada con su cuenta, por favor póngase en contacto con "
-"nosotros. Gracias de antemano por su colaboración. Atentamente,"
+"Estimado/a Señor/Señora, \n"
+"\n"
+"Nuestros registros indican que tiene pagos pendientes de su cuenta. Encontrará los detalles a continuación. \n"
+"Si ya ha pagado la cantidad, por favor ignore este aviso. \n"
+"De lo contrario, por favor envíe la cantidad total que se indica a continuación. \n"
+"Si tiene cualquier pregunta relacionada con su cuenta, por favor póngase en contacto con nosotros. \n"
+"\n"
+"Gracias de antemano por su colaboración. \n"
+"Atentamente,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -9111,7 +9198,7 @@ msgstr "Detalles de error:"
 #: code:addons/models.py:1069
 #, python-format
 msgid "Error while validating constraint"
-msgstr "Error mientras se validavan las restricciones"
+msgstr "Error mientras se validaban las restricciones"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_menu.py:88
@@ -9566,7 +9653,7 @@ msgstr "Descripción de campos"
 #: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid "Fields:"
-msgstr ""
+msgstr "Campos:"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -9857,7 +9944,7 @@ msgstr "Francia - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
 msgid "France - Accounting - Certified CGI 286 I-3 bis"
-msgstr ""
+msgstr "Francia - Contabilidad - Certificado CGI 286 I-3 bis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -10984,7 +11071,7 @@ msgstr "India - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
 msgid "Indian - Schedule VI Accounting"
-msgstr ""
+msgstr "India - Contabilidad del Anexo VI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -12478,7 +12565,7 @@ msgstr "Falta el valor requerido para el campo '%s'."
 #: code:addons/base/ir/ir_ui_view.py:345
 #, python-format
 msgid "Missing view architecture."
-msgstr ""
+msgstr "Falta la vista de la arquitectura."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -12769,7 +12856,7 @@ msgstr "Multi-compañías"
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr "Multi-divisa"
+msgstr "Multi Monedas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -13327,7 +13414,7 @@ msgstr "Abrir una ventana"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Oportunidad a presupuesto"
+msgstr "Oportunidad a Cotización"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_domain
@@ -13995,7 +14082,7 @@ msgstr "Precisión del precio"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_check
 msgid "Print amount in words on checks issued for expenses"
-msgstr ""
+msgstr "Imprima la cantidad en palabras en los cheques emitidos para gastos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_priority
@@ -14115,7 +14202,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
 msgid "Provides support for customer facing displays"
-msgstr ""
+msgstr "Proporciona soporte para pantallas orientadas al cliente"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -14238,12 +14325,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_expense
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr "Presupuesto, órdenes de venta, entrega y control de facturación"
+msgstr "Cotización, órdenes de venta, entrega y control de facturación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr "Presupuesto, pedidos de venta, facturación"
+msgstr "Cotizaciones, pedidos de venta, facturación"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:307
@@ -18466,7 +18553,7 @@ msgstr "email@yourcompany.com"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "env: Odoo Environement on which the action is triggered"
-msgstr ""
+msgstr "entorno: El entorno de Odoo donde la acción es activada"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:328
@@ -18797,17 +18884,17 @@ msgstr "pos_cache"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record.partner_id"
-msgstr ""
+msgstr "record.partner_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record.partner_id.currency_id"
-msgstr ""
+msgstr "record.partner_id.currency_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record: browse_record of the record on which the action is triggered"
-msgstr ""
+msgstr "registro: browse_record del registro en el que se activa la acción"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
@@ -18932,7 +19019,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "time, datetime, timezone: Python module"
-msgstr ""
+msgstr "time, datetime, timezone: Módulo Python"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer

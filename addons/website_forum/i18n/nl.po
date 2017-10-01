@@ -94,7 +94,7 @@ msgstr ""
 "                \"${object.company_id.name}\" V/A Forum.</p>\n"
 "                <p>Om uw e-mail te valideren, klik op de volgende link:</p>\n"
 "                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
-"                    Valideer mijn account voor ${object.company_id.name}\" V/A Forum\n"
+"                    Bevestig mijn account voor ${object.company_id.name}\" V/A Forum\n"
 "                </a>\n"
 "                <p>Bedankt voor uw aanmelding!</p>\n"
 "            </td>\n"
@@ -949,6 +949,11 @@ msgid "Close"
 msgstr "Sluiten"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
+msgstr "Afsluiten bericht"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
 msgid "Close all posts"
 msgstr "Sluit alle berichten"
@@ -957,6 +962,11 @@ msgstr "Sluit alle berichten"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
 msgstr "Sluit eigen bericht"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
+msgstr "Afsluiten bericht"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
@@ -1368,6 +1378,7 @@ msgid "First upvote"
 msgstr "Eerst omhoog stemming"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
 msgstr "Markeren"
@@ -1381,6 +1392,7 @@ msgstr "Kenmerk een bericht als beledigend"
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr "Gemarkeerd"
@@ -1790,6 +1802,11 @@ msgid "Links"
 msgstr "Links"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
+msgstr "Markeer als beledigend"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
 msgid "Moderate posts"
 msgstr "Modereer berichten"
@@ -1957,6 +1974,11 @@ msgstr "Aantal berichten die wachten op bevestiging"
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
 msgstr "Beledigend"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
+msgstr "Beledigend bericht"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -3055,12 +3077,12 @@ msgstr "bevat beledigende of kwaadaardige opmerkingen"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any comment"
-msgstr "verwijder eender welk bericht"
+msgstr "verwijder ieder bericht"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any question or answer"
-msgstr "verwijder eender welke vraag of antwoord"
+msgstr "verwijder iedere vraag of antwoord"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -3258,7 +3280,7 @@ msgid ""
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
 "krijg op sociale media een antwoord binnen de\n"
-"5 uren. Vragen gedeeld op twee sociale netwerken hebben"
+"5 uur. Vragen gedeeld op twee sociale netwerken hebben"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header

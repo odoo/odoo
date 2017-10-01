@@ -82,7 +82,7 @@ class AccountVoucher(models.Model):
 
     @api.model
     def _get_currency(self):
-        journal = self.env['account.journal'].browse(self._context.get('journal_id', False))
+        journal = self.env['account.journal'].browse(self.env.context.get('default_journal_id', False))
         if journal.currency_id:
             return journal.currency_id.id
         return self.env.user.company_id.currency_id.id
@@ -393,7 +393,7 @@ class AccountVoucherLine(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = price_unit or product.lst_price
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -403,7 +403,7 @@ class AccountVoucherLine(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = product.standard_price
+                    values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}

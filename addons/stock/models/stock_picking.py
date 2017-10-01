@@ -572,8 +572,11 @@ class Picking(models.Model):
                 'location_dest_id': mapping.location_dst_id,
                 'product_uom_id': uom.id,
                 'pack_lot_ids': [
-                    (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
-                    for lot in lots_grouped.get(mapping, {}).keys()],
+                    (0, 0, {
+                        'lot_id': lot,
+                        'qty': 0.0,
+                        'qty_todo': mapping.product.uom_id._compute_quantity(lots_grouped[mapping][lot], uom)
+                    }) for lot in lots_grouped.get(mapping, {}).keys()],
             }
             product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
 

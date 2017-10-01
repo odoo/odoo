@@ -16,13 +16,14 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 # m_aciek <maciej.olko@gmail.com>, 2016
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Karol Rybak <karolrybak85@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Paweł Michoń <michon.pawel@wp.pl>, 2017\n"
+"Last-Translator: Karol Rybak <karolrybak85@gmail.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgid ""
 "% endif\n"
 msgstr ""
 "\n"
-"<p>Drogi ${object.partner_id.name}\n"
+"<p>Drogi(a) ${object.partner_id.name}\n"
 "% set access_action = object.get_access_action()\n"
 "% set access_url = access_action['type'] == 'ir.actions.act_url' and access_action['url'] or '/report/pdf/account.report_invoice/' + str(object.id)\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
@@ -91,7 +92,7 @@ msgstr ""
 "% if is_online:\n"
 "    <br/><br/>\n"
 "    <center>\n"
-"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Zobacz fakturę</a>\n"
 "    </center>\n"
 "% endif\n"
 "    <br/><br/>\n"
@@ -235,7 +236,7 @@ msgstr ": Księga główna"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Korekta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -607,8 +608,8 @@ msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
 msgstr ""
-"<strong>Interfejs bankowy:</strong> z aktualną synchronizacją zasilenia "
-"konta i importem wyciągów bankowych"
+"<strong>Interfejs bankowy:</strong> z aktualną synchronizacją konta i "
+"importem wyciągów bankowych"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1551,7 +1552,7 @@ msgstr "Adres"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
-msgstr "Korygowany podatek"
+msgstr "Podatek korekcyjny"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -4325,7 +4326,7 @@ msgstr "Konto księgowe"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr "Raport Finansów"
+msgstr "Raport finansowy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
@@ -4663,7 +4664,7 @@ msgstr "Przejdź do panelu konfiguracji"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Good Debtor"
-msgstr "dobry dłużnik"
+msgstr "Dobry dłużnik"
 
 #. module: account
 #. openerp-web
@@ -7152,7 +7153,7 @@ msgstr "Różnica w płatności"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr ""
+msgstr "Informacje o płatności"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -9259,7 +9260,7 @@ msgstr "Nr faktury u partnera"
 #: code:addons/account/models/account_payment.py:55
 #, python-format
 msgid "The payment amount must be strictly positive."
-msgstr ""
+msgstr "Kwota płatności musi być dodatnia."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:342
@@ -10686,7 +10687,7 @@ msgid ""
 "payment entries first."
 msgstr ""
 "Nie możesz zapłacić za fakturę, która jest opłacona częściowo. Musisz "
-"najpierw skasować zapisy płatności."
+"najpierw uzgodnić zapisy płatności."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -10728,6 +10729,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
 msgstr "Masz"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -10959,7 +10966,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "faktura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -10988,7 +10995,7 @@ msgstr "uzgodnienia za pomocą skrótu ctrl-enter."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "refund"
-msgstr ""
+msgstr "zwrot"
 
 #. module: account
 #. openerp-web
