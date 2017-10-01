@@ -775,11 +775,21 @@ class StockMove(models.Model):
 
         taken_quantity = min(available_quantity, need)
 
+        quants = []
+        try:
+            quants = self.env['stock.quant']._update_reserved_quantity(
+                self.product_id, location_id, taken_quantity, lot_id=lot_id,
+                package_id=package_id, owner_id=owner_id, strict=strict
+            )
+        except UserError:
+            # If it raises here, it means that the `available_quantity` brought by a done move line
+            # is not available on the quants itself. This could be the result of an inventory
+            # adjustment that removed totally of partially `available_quantity`. When this happens, we
+            # chose to do nothing. This situation could not happen on MTS move, because in this case
+            # `available_quantity` is directly the quantity on the quants themselves.
+            taken_quantity = 0
+
         # Find a candidate move line to update or create a new one.
-        quants = self.env['stock.quant']._update_reserved_quantity(
-            self.product_id, location_id, taken_quantity, lot_id=lot_id,
-            package_id=package_id, owner_id=owner_id, strict=strict
-        )
         for reserved_quant, quantity in quants:
             to_update = self.move_line_ids.filtered(lambda m: m.location_id.id == reserved_quant.location_id.id and m.lot_id.id == reserved_quant.lot_id.id and m.package_id.id == reserved_quant.package_id.id and m.owner_id.id == reserved_quant.owner_id.id)
             if to_update:
