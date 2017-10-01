@@ -152,6 +152,7 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Team', change_default=True, default=_get_default_team, oldname='section_id')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
@@ -625,8 +626,8 @@ class SaleOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            # If accounting_company_id is set, always filter taxes by the company
+            taxes = line.product_id.taxes_id.filtered(lambda r: not line.accounting_company_id or r.accounting_company_id == line.accounting_company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id) if fpos else taxes
 
     @api.multi
@@ -773,6 +774,7 @@ class SaleOrderLine(models.Model):
 
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')

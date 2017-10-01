@@ -49,7 +49,7 @@ class Pricelist(models.Model):
                        FROM ((
                                 SELECT pr.id, pr.name
                                 FROM product_pricelist pr JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE pr.name || ' (' || cur.name || ')' = %(name)s
                             )
@@ -62,7 +62,7 @@ class Pricelist(models.Model):
                                         tr.name = 'product.pricelist,name' AND
                                         tr.lang = %(lang)s
                                      ) JOIN
-                                     res_currency cur ON 
+                                     res_currency cur ON
                                          (pr.currency_id = cur.id)
                                 WHERE tr.value || ' (' || cur.name || ')' = %(name)s
                             )
@@ -299,7 +299,7 @@ class Pricelist(models.Model):
         Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
 
         p = Partner.browse(partner_id)
-        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
+        pl = Property.get('property_product_pricelist', Partner._name, False, '%s,%s' % (Partner._name, p.id))
         if pl:
             pl = pl[0].id
 
@@ -314,7 +314,7 @@ class Pricelist(models.Model):
             pl = pls and pls[0].id
 
         if not pl:
-            prop = Property.get('property_product_pricelist', 'res.partner')
+            prop = Property.get('property_product_pricelist', 'res.partner', False)
             pl = prop and prop[0].id
 
         if not pl:

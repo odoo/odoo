@@ -87,6 +87,7 @@
                             <field name="tax_ids" widget="many2many_tags"/>
                             <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            <field name="accounting_company_id" invisible="1"/>
                         </group>
                     </group>
                     <label for="name"/>
@@ -110,6 +111,7 @@
                     <field name="price_subtotal"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -231,6 +233,7 @@
                             <field name="voucher_type" invisible="True"/>
                             <field name="currency_id" invisible="True"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="accounting_company_id" invisible="1"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="pay_now" required="1"/>
                             <field name="account_id"/>
@@ -257,15 +260,16 @@
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
+                                    <field name="accounting_company_id" invisible="1"/>
                                 </tree>
                             </field>
-			                <group>
+                            <group>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="tax_amount"/>
                                     <field name="amount"/>
                                 </group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
-			                </group>
+                            </group>
                         </page>
                         <page string="Journal Items">
                             <group>
@@ -347,6 +351,7 @@
                             <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="reference"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="accounting_company_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date" string="Bill Date"/>
@@ -373,6 +378,7 @@
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
+                                    <field name="accounting_company_id" invisible="1"/>
                                 </tree>
                             </field>
                             <group>

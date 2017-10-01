@@ -46,6 +46,7 @@ class AccountVoucher(models.Model):
     narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', compute='_get_journal_currency',
         string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', 'Company',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         related='journal_id.company_id', default=lambda self: self._get_company())
@@ -110,7 +111,7 @@ class AccountVoucher(models.Model):
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
                 total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
+                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
@@ -334,6 +335,7 @@ class AccountVoucherLine(models.Model):
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
     currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')

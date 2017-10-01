@@ -20,6 +20,8 @@
                     </header>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
+                    <field name="is_accounting_company" invisible="1"/>
+                    <field name="accounting_company_id" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
                     <group string="Company" groups="base.group_multi_company">
                         <label for="id" string="Company"/>
@@ -101,7 +103,7 @@
                     <group string="Accounting &amp; Finance" name="accounting">
                         <label for="id" string="Options"/>
                         <div name="account_config">
-                            <div>
+                            <div attrs="{'invisible': [('is_accounting_company', '=', False)]}">
                                 <label for="currency_id"/>
                                 <field name="currency_id" options="{'no_create': True}" class="oe_inline"/>
                             </div>
@@ -187,9 +189,9 @@
                                 <label for="company_footer"/>
                                 <field name="company_footer"/>
                             </div>
-                            <div>
+                            <div attrs="{'invisible': [('is_accounting_company', '=', False)]}">
                                 <label for="transfer_account_id"/>
-                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}" domain="[('company_id', '=', company_id)]"/>
+                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                             </div>
                         </div>
                     </group>
@@ -233,13 +235,13 @@
                             <div>
                                 <label for="default_sale_tax_id"/>
                                 <field name="default_sale_tax_id"
-                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
+                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('accounting_company_id', '=', accounting_company_id)]"
                                     class="oe_inline"/>
                             </div>
                             <div>
                                 <label for="default_purchase_tax_id"/>
                                 <field name="default_purchase_tax_id"
-                                    domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
+                                    domain="[('type_tax_use', 'in', ('purchase', 'all')), ('accounting_company_id', '=', accounting_company_id)]"
                                     class="oe_inline"/>
                             </div>
                         </div>

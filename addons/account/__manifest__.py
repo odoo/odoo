@@ -36,6 +36,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_invoice_view.xml',
         'data/invoice_action_data.xml',
         'views/partner_view.xml',
+        'views/company_view.xml',
         'views/product_view.xml',
         'views/account_analytic_view.xml',
         'views/res_config_view.xml',

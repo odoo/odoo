@@ -63,7 +63,7 @@ class StockHistory(models.Model):
         if self.product_id.cost_method == 'real':
             self.inventory_value = self.quantity * self.price_unit_on_quant
         else:
-            self.inventory_value = self.quantity * self.product_id.get_history_price(self.company_id.id, date=self._context.get('history_date', fields.Datetime.now()))
+            self.inventory_value = self.quantity * self.product_id.get_history_price(self.company_id, date=self._context.get('history_date', fields.Datetime.now()))
 
     @api.model_cr
     def init(self):

@@ -7,6 +7,7 @@ class AccountCommonReport(models.TransientModel):
     _name = "account.common.report"
     _description = "Account Common Report"
 
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
     journal_ids = fields.Many2many('account.journal', string='Journals', required=True, default=lambda self: self.env['account.journal'].search([]))
     date_from = fields.Date(string='Start Date')

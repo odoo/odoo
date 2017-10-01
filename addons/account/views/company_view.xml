@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="company_view_currency">
+            <field name="name">company.view.currency</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <field name="currency_id" position="before">
+                    <field name="is_accounting_company" invisible="1"/>
+                </field>
+                <field name="currency_id" position="attributes">
+                    <attribute name="attrs">
+                        {'readonly': [('is_accounting_company', '=', False)]}
+                    </attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

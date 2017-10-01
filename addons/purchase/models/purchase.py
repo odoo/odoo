@@ -158,6 +158,7 @@ class PurchaseOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     create_uid = fields.Many2one('res.users', 'Responsible')
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
     picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
@@ -537,8 +538,8 @@ class PurchaseOrderLine(models.Model):
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
-            # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            # If accounting_company_id is set, always filter taxes by the company
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.accounting_company_id or r.accounting_company_id == line.accounting_company_id)
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
     @api.depends('invoice_lines.invoice_id.state')
@@ -628,6 +629,7 @@ class PurchaseOrderLine(models.Model):
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    accounting_company_id = fields.Many2one('res.company', string="Accounting Company", related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
     state = fields.Selection(related='order_id.state', store=True)
 
@@ -775,8 +777,8 @@ class PurchaseOrderLine(models.Model):
 
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
-            company_id = self.env.user.company_id.id
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
+            company_id = self.env.user.company_id
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == company_id.accounting_company_id))
         else:
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
@@ -1121,7 +1123,7 @@ class ProductTemplate(models.Model):
         return True
 
     property_account_creditor_price_difference = fields.Many2one(
-        'account.account', string="Price Difference Account", company_dependent=True,
+        'account.account', string="Price Difference Account", company_dependent='accounting',
         help="This account will be used to value price difference between purchase price and cost price.")
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
     purchase_method = fields.Selection([
@@ -1157,7 +1159,7 @@ class ProductCategory(models.Model):
 
     property_account_creditor_price_difference_categ = fields.Many2one(
         'account.account', string="Price Difference Account",
-        company_dependent=True,
+        company_dependent='accounting',
         help="This account will be used to value price difference between purchase price and accounting cost.")
 
 
