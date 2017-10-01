@@ -340,6 +340,20 @@ class StockMove(models.Model):
                 else:
                     move.with_context(force_valuation_amount=corrected_value)._account_entry_move()
 
+    @api.model
+    def _run_fifo_vacuum(self):
+        # Call `_fifo_vacuum` on concerned moves
+        fifo_valued_products = self.env['product.product']
+        fifo_valued_products |= self.env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped(
+            'product_variant_ids')
+        fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
+        fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
+        moves_to_vacuum = self.env['stock.move']
+        for product in fifo_valued_products:
+            moves_to_vacuum |= self.search(
+                [('product_id', '=', product.id), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
+        moves_to_vacuum._fifo_vacuum()
+
     @api.multi
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for
@@ -520,3 +534,12 @@ class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
     to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        self.env['stock.move']._run_fifo_vacuum()

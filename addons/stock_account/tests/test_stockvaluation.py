@@ -479,7 +479,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Vacuum is called, we cleanup the negatives.
         # ---------------------------------------------------------------------
-        move5._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
 
         # account values after vacuum
         input_aml = self._get_stock_input_move_lines()
@@ -609,7 +609,7 @@ class TestStockValuation(TransactionCase):
         # -----------------------------------------------------------
         # vacuum, compensate in
         # -----------------------------------------------------------
-        move6._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
 
         # account values after vacuum
         input_aml = self._get_stock_input_move_lines()
@@ -1103,7 +1103,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Run the vacuum
         # ---------------------------------------------------------------------
-        move1._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
 
         # stock values for move1 and move2
         self.assertEqual(move1.value, -400.0)
@@ -1169,7 +1169,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Run the vacuum
         # ---------------------------------------------------------------------
-        move1._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
 
         # stock values for move1-3
         self.assertEqual(move1.value, -400.0)
@@ -1298,7 +1298,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Run the vacuum
         # ---------------------------------------------------------------------
-        move2._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
 
         self.assertEqual(move1.value, 100.0)
         self.assertEqual(move1.remaining_qty, 0.0)
@@ -1449,7 +1449,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Run the vacuum
         # ---------------------------------------------------------------------
-        (move1 + move2 + move3)._fifo_vacuum()
+        self.env['stock.move']._run_fifo_vacuum()
         self.assertEqual(len(move3.account_move_ids), 1)
 
         # the vacuum shouldn't do anything in this case
