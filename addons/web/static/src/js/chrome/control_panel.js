@@ -5,6 +5,37 @@ odoo.define('web.ControlPanelMixin', function (require) {
  * Mixin allowing widgets to communicate with the ControlPanel. Widgets needing a
  * ControlPanel should use this mixin and call update_control_panel(cp_status) where
  * cp_status contains information for the ControlPanel to update itself.
+ *
+ * Note that the API is slightly awkward.  Hopefully we will improve this when
+ * we get the time to refactor the control panel.
+ *
+ * For example, here is what a typical client action would need to do to add
+ * support for a control panel with some buttons:
+ *
+ * var ControlPanelMixin = require('web.ControlPanelMixin');
+ *
+ * var SomeClientAction = Widget.extend(ControlPanelMixin, {
+ *     ...
+ *     start: function () {
+ *         this._renderButtons();
+ *         this._updateControlPanel();
+ *         ...
+ *     },
+ *     do_show: function () {
+ *          ...
+ *          this._updateControlPanel();
+ *     },
+ *     _renderButtons: function () {
+ *         this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+ *         this.$buttons.on('click', ...);
+ *     },
+ *     _updateControlPanel: function () {
+ *         this.update_control_panel({
+ *             breadcrumbs: this.action_manager.get_breadcrumbs(),
+ *             cp_content: {
+ *                $buttons: this.$buttons,
+ *             },
+ *      });
  */
 var ControlPanelMixin = {
     need_control_panel: true,
