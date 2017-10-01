@@ -85,6 +85,7 @@ class AccountChartTemplate(models.Model):
     _description = "Templates for Account Chart"
 
     name = fields.Char(required=True)
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company')
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
@@ -342,7 +343,7 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def create_record_with_xmlid(self, company, template, model, vals):
-        # Create a record for the given model with the given vals and 
+        # Create a record for the given model with the given vals and
         # also create an entry in ir_model_data to have an xmlid for the newly created record
         # xmlid is the concatenation of company_id and template_xml_id
         ir_model_data = self.env['ir.model.data']
@@ -476,6 +477,7 @@ class AccountTaxTemplate(models.Model):
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
@@ -619,6 +621,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     _name = 'wizard.multi.charts.accounts'
     _inherit = 'res.config'
 
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.", required=True)
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
@@ -801,7 +804,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
                                'anglo_saxon_accounting': self.use_anglo_saxon,
                                'bank_account_code_prefix': self.bank_account_code_prefix,
                                'cash_account_code_prefix': self.cash_account_code_prefix,
-                               'chart_template_id': self.chart_template_id.id})
+                               'chart_template_id': self.chart_template_id.id,
+                               'accounting_company_id': self.company_id.id})
 
         #set the coa currency to active
         self.currency_id.write({'active': True})

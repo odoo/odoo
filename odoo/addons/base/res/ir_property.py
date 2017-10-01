@@ -119,8 +119,8 @@ class Property(models.Model):
         return False
 
     @api.model
-    def get(self, name, model, res_id=False):
-        domain = self._get_domain(name, model)
+    def get(self, name, model, mode, res_id=False):
+        domain = self._get_domain(name, model, mode)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
             #make the search with company_id asc to make sure that properties specific to a company are given first
@@ -129,16 +129,19 @@ class Property(models.Model):
                 return prop.get_by_record()
         return False
 
-    def _get_domain(self, prop_name, model):
+    def _get_domain(self, prop_name, model, mode):
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
         res = self._cr.fetchone()
         if not res:
             return None
         company_id = self._context.get('force_company') or self.env['res.company']._company_default_get(model, res[0]).id
-        return [('fields_id', '=', res[0]), ('company_id', 'in', [company_id, False])]
+        company_list = [company_id, False]
+        if mode == 'accounting' and hasattr(self.env['res.company'], '_get_accounting_subsidiaries'):
+            company_list.extend(self.env['res.company'].browse(company_id)._get_accounting_subsidiaries()._ids)
+        return [('fields_id', '=', res[0]), ('company_id', 'in', company_list)]
 
     @api.model
-    def get_multi(self, name, model, ids):
+    def get_multi(self, name, model, ids, mode):
         """ Read the property field `name` for the records of model `model` with
             the given `ids`, and return a dictionary mapping `ids` to their
             corresponding value.
@@ -146,7 +149,7 @@ class Property(models.Model):
         if not ids:
             return {}
 
-        domain = self._get_domain(name, model)
+        domain = self._get_domain(name, model, mode)
         if domain is None:
             return dict.fromkeys(ids, False)
 
@@ -172,7 +175,7 @@ class Property(models.Model):
         return result
 
     @api.model
-    def set_multi(self, name, model, values, default_value=None):
+    def set_multi(self, name, model, values, mode, default_value=None):
         """ Assign the property field `name` for the records of model `model`
             with `values` (dictionary mapping record ids to their value).
             If the value for a given record is the same as the default
@@ -189,16 +192,18 @@ class Property(models.Model):
             return
 
         if not default_value:
-            domain = self._get_domain(name, model)
+            domain = self._get_domain(name, model, mode)
             if domain is None:
                 raise Exception()
             # retrieve the default value for the field
-            default_value = clean(self.get(name, model))
+            default_value = clean(self.get(name, model, mode))
 
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
         company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id).id
+        if mode == 'accounting' and hasattr(self.env['res.company'], 'accounting_company_id'):
+            company_id = self.env['res.company'].browse(company_id).accounting_company_id.id or company_id
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),
@@ -229,7 +234,7 @@ class Property(models.Model):
                 })
 
     @api.model
-    def search_multi(self, name, model, operator, value):
+    def search_multi(self, name, model, operator, value, mode):
         """ Return a domain for the records that match the given condition. """
         default_matches = False
         include_zero = False
@@ -277,7 +282,7 @@ class Property(models.Model):
 
 
         # retrieve the properties that match the condition
-        domain = self._get_domain(name, model)
+        domain = self._get_domain(name, model, mode)
         if domain is None:
             raise Exception()
         props = self.search(domain + [(TYPE2FIELD[field.type], operator, value)])

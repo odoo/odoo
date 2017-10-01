@@ -8,7 +8,21 @@ from datetime import timedelta
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    @api.depends('parent_id.chart_template_id', 'parent_id.accounting_company_id')
+    def _compute_accounting_company(self):
+        for company in self:
+            company.accounting_company_id = company._get_parent_accounting_company()
+
+
+    @api.one
+    @api.depends('accounting_company_id')
+    def _get_is_accounting_company(self):
+        for company in self:
+            company.is_accounting_company = (company == company.accounting_company_id)
+
     #TODO check all the options/fields are in the views (settings + company form view)
+    accounting_company_id = fields.Many2one('res.company', compute='_compute_accounting_company', store=True, string="Accounting Company", help="Company that holds the general ledger of this subsidiary.")
+    is_accounting_company = fields.Boolean(readonly=True, compute='_get_is_accounting_company')
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
     period_lock_date = fields.Date(string="Lock Date for Non-Advisers", help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
@@ -44,6 +58,70 @@ If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
 Best Regards,''')
+
+    @api.multi
+    def _update_fields_values(self, fields):
+        """ Returns dict of write() values for synchronizing ``fields`` """
+        values = {}
+        for fname in fields:
+            field = self._fields[fname]
+            if field.type == 'many2one':
+                values[fname] = self[fname].id
+            elif field.type == 'one2many':
+                raise AssertionError(_('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`'))
+            elif field.type == 'many2many':
+                values[fname] = [(6, 0, self[fname].ids)]
+            else:
+                values[fname] = self[fname]
+        return values
+
+    @api.model
+    def _accounting_company_fields(self):
+        """ Returns the list of fields that are managed by the accounting company
+        to which this company belongs. These fields are meant to be hidden on
+        companies that aren't `accounting companies` themselves, and will be
+        delegated to the parent `accounting companies`. The list is meant to be
+        eventually extended by inheriting classes. """
+        return ['currency_id', 'transfer_account_id']
+
+    def _accounting_sync_from_accounting_company(self):
+        """ Handle sync of accounting company fields when a new accounting company is set,
+        as if they were related fields """
+        if not self.accounting_company_id:
+            return
+        if self.accounting_company_id != self:
+            sync_vals = self.accounting_company_id._update_fields_values(self._accounting_company_fields())
+            self.write(sync_vals)
+
+    def _accounting_sync_to_accounting_group(self):
+        """ Handle sync of accounting company fields to descendants """
+        if not self.accounting_company_id:
+            return
+        if self.accounting_company_id == self:
+            sync_vals = self.accounting_company_id._update_fields_values(self._accounting_company_fields())
+            sync_group = self._get_accounting_subsidiaries().filtered(lambda r: r != self)  # All of same accounting group, without self
+            sync_group.write(sync_vals)
+
+    @api.multi
+    def _fields_sync(self, values):
+        if values.get('parent_id'):
+            self._accounting_sync_from_accounting_company()
+        if self.child_ids:
+            self._accounting_sync_to_accounting_group()
+
+    def _get_parent_accounting_company(self):
+        parent = self.parent_id
+        if not self.chart_template_id:
+            if not parent:
+                return False
+            return parent._get_parent_accounting_company()
+        else:
+            return self
+
+    def _get_accounting_subsidiaries(self):
+        return self.env['res.company'].search([('id', 'child_of', [self.accounting_company_id.id])]
+                                             ).filtered(lambda r: r.accounting_company_id == self.accounting_company_id)
+
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
@@ -110,4 +188,13 @@ Best Regards,''')
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
             if values.get('accounts_code_digits'):
                 company.reflect_code_digits_change(digits)
-        return super(ResCompany, self).write(values)
+        res = super(ResCompany, self).write(values)
+        for company in self:
+            company._fields_sync(values)
+        return res
+
+    @api.model
+    def create(self, values):
+        res = super(ResCompany, self).create(values)
+        res._fields_sync(values)
+        return res

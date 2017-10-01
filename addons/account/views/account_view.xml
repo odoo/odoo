@@ -20,11 +20,12 @@
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="
                              {'no_create_edit': True}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                             <field name="accounting_company_id" invisible="1"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
                              <label for="reconcile"/>
                              <div>
-                                <field name="reconcile"/> 
+                                <field name="reconcile"/>
                                 <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
                              </div>
                              <field name="deprecated"/>
@@ -97,6 +98,7 @@
                     <field name="user_type_id"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -240,6 +242,7 @@
                     <field name="type"/>
                     <field name="belongs_to_company" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -275,6 +278,7 @@
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="accounting_company_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
@@ -337,6 +341,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -356,6 +361,7 @@
                             <field name="bank_id"/>
                             <field name="display_on_footer"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="accounting_company_id" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                             <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -766,11 +772,12 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="account_id" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
+                                <field name="tax_id" domain="[('accounting_company_id', '=', accounting_company_id)]" widget="selection"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="accounting_company_id" invisible="1"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -788,10 +795,10 @@
                         </div>
                         <group attrs="{'invisible':[('has_second_line','!=',True)]}">
                             <group>
-                                <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_account_id" string="Account" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                                 <field name="second_amount_type" string="Amount type"/>
-                                <field name="second_tax_id" string="Tax" domain="[('company_id', '=', company_id)]" widget="selection"/>
-                                <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_tax_id" string="Tax" domain="[('accounting_company_id', '=', accounting_company_id)]" widget="selection"/>
+                                <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                             </group>
                             <group>
                                 <field name="second_label" string="Journal Item Label"/>
@@ -924,6 +931,7 @@
                     <field name="type_tax_use"/>
                     <field name="description" string="Short Name"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -934,6 +942,7 @@
                 <search string="Search Taxes">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="accounting_company_id" invisible="1"/>
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
                     <group string="Group By">
@@ -992,6 +1001,7 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="accounting_company_id" invisible="1"/>
                                     <field name="active" groups="base.group_no_one"/>
                                 </group>
                                 <group name="advanced_booleans">
@@ -1036,13 +1046,14 @@
                                 <field name="journal_id"/>
                                 <field name="date"/>
                                 <field name="company_id" required="1" groups="base.group_multi_company"/>
+                                <field name="accounting_company_id" invisible="1"/>
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" domain="[('company_id', '=', company_id)]"/>
+                                        <field name="account_id" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                                         <field name="debit"/>
                                         <field name="credit"/>
                                         <field name="quantity"/>
@@ -1108,7 +1119,7 @@
                                 <field name="name"/>
                                 <field name="date"/>
                                 <field name="journal_id" readonly="False"/>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="account_id" domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                                 <field name="partner_id"
                                     domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                 <newline/>
@@ -1163,7 +1174,7 @@
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('accounting_company_id', '=', accounting_company_id)]"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="full_reconcile_id"/>
@@ -1174,6 +1185,7 @@
                     <field name="date_maturity"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="accounting_company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1218,7 +1230,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id"/> 
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1324,6 +1336,7 @@
                         <group>
                             <field name="ref"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <field name="accounting_company_id" invisible="1"/>
                             <field name="amount" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -1333,7 +1346,7 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
-                                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                                    <field name="account_id" domain="[('accounting_company_id', '=', parent.accounting_company_id), ('deprecated', '=', False)]"/>
                                     <field name="partner_id"
                                         domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                     <field name="name"/>
@@ -1506,6 +1519,7 @@
                         <field name="name"/>
                         <field name="active"/>
                         <field name="company_id" invisible="1"/>
+                        <field name="accounting_company_id" invisible="1"/>
                     </group>
                     <label for="note"/>
                     <field name="note" placeholder="Payment term explanation for the customer..."/>
@@ -1593,6 +1607,7 @@
                     <group col="4">
                         <field name="name"/>
                         <field name="company_id"/>
+                        <field name="accounting_company_id" invisible="1"/>
                         <field name="parent_id" />
                         <field name="bank_account_code_prefix"/>
                         <field name="cash_account_code_prefix"/>
@@ -1639,6 +1654,7 @@
                 <tree string="Chart of Accounts Template">
                     <field name="name"/>
                     <field name="company_id"/>
+                    <field name="accounting_company_id" invisible="1"/>
                     <field name="property_account_receivable_id" invisible="1"/>
                     <field name="property_account_payable_id" invisible="1"/>
                     <field name="property_account_expense_categ_id" invisible="1"/>
@@ -1708,6 +1724,7 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="accounting_company_id" invisible="1"/>
                                 </group>
                             </group>
                         </page>
@@ -1763,6 +1780,7 @@
                         </group>
                         <group invisible="1">
                             <field name="company_id" options="{'no_create': True}"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                            <field name="accounting_company_id" invisible="1"/>
                             <field name="currency_id" class="oe_inline"/>
                             <field name="use_anglo_saxon"/>
                             <field name="sale_tax_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','sale')]"/>

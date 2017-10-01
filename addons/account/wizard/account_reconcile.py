@@ -14,6 +14,7 @@ class AccountMoveLineReconcile(models.TransientModel):
     credit = fields.Float(string='Credit amount', readonly=True, digits=0)
     debit = fields.Float(string='Debit amount', readonly=True, digits=0)
     writeoff = fields.Float(string='Write-Off amount', readonly=True, digits=0)
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     @api.model

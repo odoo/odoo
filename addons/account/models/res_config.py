@@ -25,8 +25,17 @@ class AccountConfigSettings(models.TransientModel):
         if self.currency_id != self.company_id.currency_id:
             self.company_id.currency_id = self.currency_id
 
+    @api.depends('company_id')
+    def _get_is_accounting_company(self):
+        for config in self:
+            config.is_accounting_company = (config.company_id == config.company_id.accounting_company_id)
+
+
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
+    is_accounting_company = fields.Boolean(readonly=True,
+        compute='_get_is_accounting_company')
     has_default_company = fields.Boolean(readonly=True,
         default=lambda self: self._default_has_default_company())
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
@@ -96,7 +105,7 @@ class AccountConfigSettings(models.TransientModel):
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
              '-This installs the module account_asset.')
-    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition", 
+    module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition",
         help='This allows you to manage the revenue recognition on selling products. '
              'It keeps track of the installments occurred on those revenue recognitions, '
              'and creates account moves for those installment lines\n'
@@ -150,7 +159,6 @@ class AccountConfigSettings(models.TransientModel):
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
-
 
     @api.onchange('company_id')
     def onchange_company_id(self):

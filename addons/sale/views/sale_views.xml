@@ -235,7 +235,7 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('accounting_company_id','=',parent.accounting_company_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
@@ -279,7 +279,7 @@
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('accounting_company_id','=',parent.accounting_company_id)]"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
@@ -337,6 +337,7 @@
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="accounting_company_id" invisible="1"/>
                                     <field name="project_id" attrs="{'invisible':[('state','=','sale')]}" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" groups="analytic.group_analytic_accounting"/>
                                     <field name="related_project_id"
                                            attrs="{'readonly': ['|',('project_id','!=',False),('invoice_count','!=',0),('state','=','sale')],'invisible':[('state','!=','sale')]}"

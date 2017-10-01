@@ -212,7 +212,7 @@ class PosOrder(models.Model):
         for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
             current_company = order.sale_journal.company_id
             account_def = IrProperty.get(
-                'property_account_receivable_id', 'res.partner')
+                'property_account_receivable_id', 'res.partner', 'accounting')
             order_account = order.partner_id.property_account_receivable_id.id or account_def and account_def.id
             partner_id = ResPartner._find_accounting_partner(order.partner_id).id or False
             if move is None:
@@ -720,7 +720,7 @@ class PosOrder(models.Model):
         journal = self.env['account.journal'].browse(journal_id)
         # use the company of the journal and not of the current user
         company_cxt = dict(self.env.context, force_company=journal.company_id.id)
-        account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner')
+        account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner', 'accounting')
         args['account_id'] = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
 
         if not args['account_id']:
@@ -970,10 +970,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()

@@ -27,7 +27,7 @@ class Partner(models.Model):
             limit=1
         )
         default_for_country = pls and pls[0]
-        actual = self.env['ir.property'].get('property_product_pricelist', 'res.partner', 'res.partner,%s' % self.id)
+        actual = self.env['ir.property'].get('property_product_pricelist', 'res.partner', False, 'res.partner,%s' % self.id)
 
         # update at each change country, and so erase old pricelist
         if self.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
@@ -36,6 +36,7 @@ class Partner(models.Model):
                 'property_product_pricelist',
                 self._name,
                 {self.id: self.property_product_pricelist or default_for_country.id},
+                False,
                 default_value=default_for_country.id
             )
 

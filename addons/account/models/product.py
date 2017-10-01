@@ -4,14 +4,20 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
+class ProductPriceHistory(models.Model):
+    _inherit = "product.price.history"
+
+    accounting_company_id = fields.Many2one('res.company', related='company_id.accounting_company_id', store=True)
+
+
 class ProductCategory(models.Model):
     _inherit = "product.category"
 
-    property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_income_categ_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Income Account", oldname="property_account_income_categ",
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value sales.")
-    property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_expense_categ_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Expense Account", oldname="property_account_expense_categ",
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices to value expenses.")
@@ -19,6 +25,17 @@ class ProductCategory(models.Model):
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    @api.multi
+    def get_history_price(self, company_id, date=None):
+        history = self.env['product.price.history'].search([
+            ('accounting_company_id', '=', company_id.accounting_company_id.id),
+            ('product_id', 'in', self.ids),
+            ('datetime', '<=', date or fields.Datetime.now())], limit=1)
+        return history.cost or 0.0
+
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
@@ -26,11 +43,11 @@ class ProductTemplate(models.Model):
         domain=[('type_tax_use', '=', 'sale')])
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes',
         domain=[('type_tax_use', '=', 'purchase')])
-    property_account_income_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_income_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Income Account", oldname="property_account_income",
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices instead of the default one to value sales for the current product.")
-    property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
+    property_account_expense_id = fields.Many2one('account.account', company_dependent='accounting',
         string="Expense Account", oldname="property_account_expense",
         domain=[('deprecated', '=', False)],
         help="This account will be used for invoices instead of the default one to value expenses for the current product.")
