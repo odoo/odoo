@@ -1359,9 +1359,13 @@ class account_move(osv.osv):
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
+        obj_move_line = self.pool['account.move.line']
         for line in self.browse(cr, uid, ids, context=context):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error!'), _('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+            obj_move_line._update_journal_check(
+                cr, uid, line.journal_id.id, line.period_id.id,
+                context=context)
         if ids:
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
