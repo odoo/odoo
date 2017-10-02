@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- account.bank.statement inherit form view -->
+        <record model="ir.ui.view" id="account_bank_statement_line_tree">
+            <field name="name">Account bank statement line</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="l10n_be_coda.view_account_bank_statement_line_coda_tree"/>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="before">
+                    <field name="external_number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- account.bank.statement inherit search view -->
+        <record id="account_bank_statement_line_search" model="ir.ui.view">
+            <field name="name">Account bank statement line</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="l10n_be_coda.view_bank_statement_line_coda_filter" />
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="external_number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- account.bank.statement inherit search view -->
+        <record id="account_bank_statement_line_extensions_search" model="ir.ui.view">
+            <field name="name">Account bank statement line</field>
+            <field name="model">account.bank.statement.line</field>
+            <field name="inherit_id" ref="account_bank_statement_extensions.view_bank_statement_line_filter" />
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="external_number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--Rename menu item-->
+        <menuitem action="account_bank_statement_extensions.action_bank_statement_line"
+                  id="account_bank_statement_extensions.bank_statement_line"
+                  parent="account.menu_finance_bank_and_cash"
+                  sequence="20"
+                  groups="base.group_no_one"
+                  name="Bank Statement Lines (Batch)"/>
+    </data>
+</openerp>

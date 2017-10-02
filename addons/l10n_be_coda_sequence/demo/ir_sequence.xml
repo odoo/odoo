@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Sequence (ir.sequence) -->
+        <record id="ir_sequence_demo1" model="ir.sequence">
+            <field name="name">Demo Sequence Journal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="active" eval="True"/>
+            <field name="prefix">DMO%(year)s/</field>
+            <field name="padding" eval="4"/>
+            <field name="number_increment" eval="1"/>
+            <field name="number_next_actual" eval="1"/>
+            <field name="implementation">standard</field>
+        </record>
+    </data>
+</openerp>

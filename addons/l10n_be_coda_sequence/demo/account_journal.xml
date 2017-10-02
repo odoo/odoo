@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Journal for Demo -->
+        <record id="account_journal_demo1" model="account.journal">
+            <field name="code">DJ2</field>
+            <field name="name">Demo Jourjal 2</field>
+            <field name="type">sale</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="currency" ref="base.EUR"/>
+            <field name="force_sequence" eval="True"/>
+            <field name="sequence_id" ref="l10n_be_coda_sequence.ir_sequence_demo1"/>
+        </record>
+    </data>
+</openerp>
