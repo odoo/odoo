@@ -44,7 +44,7 @@ var KanbanView = BasicView.extend({
             if (isProgressBar) {
                 progressBar = _.clone(n.attrs);
                 progressBar.colors = JSON.parse(progressBar.colors);
-                progressBar.sum = progressBar.sum || false;
+                progressBar.sum_field = progressBar.sum_field || false;
             }
             return !isProgressBar;
         });

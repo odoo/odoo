@@ -2009,7 +2009,7 @@ QUnit.module('Views', {
                 '<kanban>' +
                     '<field name="bar"/>' +
                     '<field name="int_field"/>' +
-                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
                     '<templates><t t-name="kanban-box">' +
                         '<div>' +
                             '<field name="name"/>' +
