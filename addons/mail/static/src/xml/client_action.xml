@@ -34,7 +34,7 @@
             <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Channels</t>
-                <t t-set="channel_icon">fa-users</t>
+                <t t-set="channel_icon" t-value="fa-users"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_hash" t-value="true"/>
@@ -44,7 +44,7 @@
             <t t-set="channel_type" t-value="'dm'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Direct Messages</t>
-                <t t-set="channel_icon">fa-user</t>
+                <t t-set="channel_icon" t-value="fa-user"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_status" t-value="true"/>
@@ -54,7 +54,7 @@
             <t t-set="channel_type" t-value="'private'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Private Channels</t>
-                <t t-set="channel_icon">fa-eye-slash</t>
+                <t t-set="channel_icon" t-value="fa-eye-slash"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="input_placeholder">Add a private channel</t>
