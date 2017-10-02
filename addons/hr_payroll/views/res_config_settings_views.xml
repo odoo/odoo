@@ -53,7 +53,7 @@
         </record>
 
         <record id="action_hr_payroll_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Payroll</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -61,6 +61,6 @@
             <field name="context">{'module' : 'hr_payroll'}</field>
         </record>
 
-        <menuitem id="menu_hr_payroll_global_settings" name="Settings" 
+        <menuitem id="menu_hr_payroll_global_settings" name="Settings"
             parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration" groups="base.group_system"/>
 </odoo>

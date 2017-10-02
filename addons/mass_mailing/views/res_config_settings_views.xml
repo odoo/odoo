@@ -37,7 +37,7 @@
         </record>
 
         <record id="action_mass_mailing_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Mass Mailing</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -47,6 +47,6 @@
 
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
             sequence="100"/>
-        <menuitem id="menu_mass_mailing_global_settings" name="Settings" 
+        <menuitem id="menu_mass_mailing_global_settings" name="Settings"
             parent="menu_mass_mailing_configuration" sequence="0" action="action_mass_mailing_configuration" groups="base.group_system"/>
 </odoo>
