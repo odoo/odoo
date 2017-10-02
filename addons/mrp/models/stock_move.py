@@ -179,20 +179,22 @@ class StockMove(models.Model):
             })
         return self.env['stock.move']
 
-    def _set_consume_qty(self, qty_to_add, final_lot, lot=False):
-        ml = self.move_line_ids.filtered(lambda x: x.lot_id == lot and not x.lot_produced_id)
+    def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
+        if lot:
+            ml = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
+        else:
+            ml = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
         if ml:
-            ml = ml[0] 
-            qty_todo = qty_to_add + ml.qty_done
-            if qty_todo >= ml.product_uom_qty:
-                ml.write({'qty_done': qty_todo, 'lot_produced_id': final_lot.id})
+            new_quantity_done = (ml.qty_done + qty_to_add)
+            if new_quantity_done >= ml.product_uom_qty:
+                ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
             else:
-                new_qty_todo = ml.product_uom_qty - qty_todo
-                default = {'product_uom_qty': qty_todo,
-                           'qty_done': qty_todo,
+                new_qty_reserved = ml.product_uom_qty - new_quantity_done
+                default = {'product_uom_qty': new_quantity_done,
+                           'qty_done': new_quantity_done,
                            'lot_produced_id': final_lot.id}
                 ml.copy(default=default)
-                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_todo, 'qty_done': 0})
+                ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
         else:
             vals = {
                 'move_id': self.id,

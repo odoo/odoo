@@ -94,11 +94,11 @@ class MrpProductProduce(models.TransientModel):
             raise UserError(_('You should at least produce some quantity'))
         for move in self.production_id.move_raw_ids:
             # TODO currently not possible to guess if the user updated quantity by hand or automatically by the produce wizard.
-            rounding = move.product_uom.rounding
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel') and move.unit_factor:
-                if move.raw_material_production_id.product_id.tracking != 'none':
+                rounding = move.product_uom.rounding
+                if self.product_id.tracking != 'none':
                     qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
-                    move._set_consume_qty(qty_to_add, self.lot_id)
+                    move._generate_consumed_move_line(qty_to_add, self.lot_id)
                 else:
                     move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         for move in self.production_id.move_finished_ids:
@@ -136,7 +136,7 @@ class MrpProductProduce(models.TransientModel):
                   'product_uom_id': produce_move.product_uom.id,
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
-                  'location_id': produce_move.location_id.id, 
+                  'location_id': produce_move.location_id.id,
                   'location_dest_id': produce_move.location_dest_id.id,
                 }
                 self.env['stock.move.line'].create(vals)
@@ -155,25 +155,15 @@ class MrpProductProduce(models.TransientModel):
                         order = self.production_id
                         pl.move_id = self.env['stock.move'].create({
                                     'name': order.name,
-                                    'date': order.date_planned_start,
-                                    'date_expected': order.date_planned_start,
                                     'product_id': pl.product_id.id,
-                                    'product_uom_qty': 0.0,
                                     'product_uom': pl.product_uom_id.id,
                                     'location_id': order.location_src_id.id,
                                     'location_dest_id': self.product_id.property_stock_production.id,
                                     'raw_material_production_id': order.id,
-                                    'company_id': order.company_id.id,
-                                    'operation_id': False,
-                                    'price_unit': pl.product_id.standard_price,
-                                    'procure_method': 'make_to_stock',
-                                    'origin': order.name,
-                                    'warehouse_id': False,
                                     'group_id': order.procurement_group_id.id,
-                                    'propagate': order.propagate,
-                                    'unit_factor': 0.0,
+                                    'origin': order.name,
                                     'state': 'confirmed'})
-                pl.move_id._set_consume_qty(pl.qty_done, self.lot_id, lot=pl.lot_id)
+                pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id)
         return True
 
 
