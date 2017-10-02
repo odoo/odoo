@@ -4300,19 +4300,19 @@ class BaseModel(object):
         result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
+
+        done = []
         recs.env.recompute_old.extend(result)
+        while recs.env.recompute_old:
+            sorted_recompute_old = sorted(recs.env.recompute_old)
+            recs.env.clear_recompute_old()
+            for __, model_name, ids, fields2 in sorted_recompute_old:
+                if not (model_name, ids, fields2) in done:
+                    self.pool[model_name]._store_set_values(
+                        cr, user, ids, fields2, context)
+                    done.append((model_name, ids, fields2))
 
         if recs.env.recompute and context.get('recompute', True):
-            done = []
-            while recs.env.recompute_old:
-                sorted_recompute_old = sorted(recs.env.recompute_old)
-                recs.env.clear_recompute_old()
-                for __, model_name, ids, fields2 in sorted_recompute_old:
-                    if not (model_name, ids, fields2) in done:
-                        self.pool[model_name]._store_set_values(
-                            cr, user, ids, fields2, context)
-                        done.append((model_name, ids, fields2))
-
             # recompute new-style fields
             recs.recompute()
 
