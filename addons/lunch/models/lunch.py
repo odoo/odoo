@@ -245,7 +245,7 @@ class LunchAlert(models.Model):
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
-                                  string='Recurrency', required=True, index=True, default='specific')
+                                  string='Recurrence', required=True, index=True, default='specific')
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')
