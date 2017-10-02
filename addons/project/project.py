@@ -345,6 +345,7 @@ class project(osv.osv):
         for task in proj.tasks:
             # preserve task name and stage, normally altered during copy
             defaults = {'stage_id': task.stage_id.id,
+                        'project_id': False,
                         'name': task.name}
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, defaults, context=context)
         self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
