@@ -182,7 +182,7 @@ class StockMove(models.Model):
             has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
             consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
             if move.picking_id.picking_type_id.show_operations is False\
-                    and move.state != 'draft'\
+                    and (move.state != 'draft' or (not self._context.get('planned_picking') and move.state == 'draft'))\
                     and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
                 move.show_details_visible = True
             else:
@@ -206,12 +206,16 @@ class StockMove(models.Model):
                 move.is_initial_demand_editable = False
 
     @api.multi
-    @api.depends('state', 'picking_id')
+    @api.depends('state', 'picking_id', 'product_id')
     def _compute_is_quantity_done_editable(self):
         for move in self:
-            if self._context.get('planned_picking') and move.picking_id.state == 'draft':
+            if not move.product_id:
+                move.is_quantity_done_editable = False
+            elif self._context.get('planned_picking') and move.picking_id.state == 'draft':
                 move.is_quantity_done_editable = False
             elif move.picking_id.is_locked and move.state in ('done', 'cancel'):
+                move.is_quantity_done_editable = False
+            elif move.show_details_visible:
                 move.is_quantity_done_editable = False
             else:
                 move.is_quantity_done_editable = True
