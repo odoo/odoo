@@ -3,27 +3,25 @@
 # * stock_landed_costs
 # 
 # Translators:
-# oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Miguel Orueta <mo@landoo.es>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
+# Gustavo Valverde <g.valverde02@gmail.com>, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Jesus Zapata <jesus@vauxoo.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Sergio Flores <vitavitae1@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,10 +30,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:328
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:332
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:349
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr " ya fuera"
@@ -121,7 +119,7 @@ msgid "Cost Lines"
 msgstr "Líneas de coste"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:90
 #, python-format
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
@@ -142,7 +140,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_date
 msgid "Created on"
-msgstr "Creado el"
+msgstr "Creado en"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_date
@@ -160,7 +158,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -181,6 +179,7 @@ msgid "Equal"
 msgstr "Igual"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product_split_method
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
 msgid ""
 "Equal : Cost will be equally divided.\n"
@@ -220,12 +219,18 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_id
 msgid "ID"
-msgstr "ID"
+msgstr "ID (identificación)"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Información"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -239,6 +244,7 @@ msgstr "Asiento contable"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
 msgstr "Coste en destino"
@@ -254,9 +260,14 @@ msgid "Landed Cost Type"
 msgstr "Tipo de coste en destino"
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Landed Cost Types"
+msgstr "Tipos de Costos en Destino"
+
+#. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
-#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
@@ -287,14 +298,14 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Última actualización de"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Última actualización en"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -308,7 +319,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
@@ -317,7 +328,7 @@ msgstr ""
 "costos de transporte."
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr "Sólo costes de proyecto descargados pueden ser validados"
@@ -328,7 +339,7 @@ msgid "Pickings"
 msgstr "Albaranes"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -337,7 +348,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
 msgid "Posted"
-msgstr "Publicado"
+msgstr "Contabilizado"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_product_id
@@ -367,6 +378,7 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
 msgid "Split Method"
@@ -393,6 +405,7 @@ msgid "Stock Landed Cost Lines"
 msgstr "Líneas de coste en destino"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_move_id
 msgid "Stock Move"
 msgstr "Movimiento de existencias"
@@ -403,7 +416,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Líneas de ajuste de valorización de existencias"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:147
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -423,12 +436,17 @@ msgid "Total"
 msgstr "Total"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_total_value
+msgid "Total Value"
+msgstr "Valor total"
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Validar"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:80
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "

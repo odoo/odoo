@@ -35,17 +35,17 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Terug naar mijn account"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Betaal</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\"> Nieuwe kaart toevoegen</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Verwijder"
 
 #. module: payment
 #. openerp-web
@@ -53,21 +53,21 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:219
 #, python-format
 msgid "<p>Please fill all the inputs required.</p>"
-msgstr ""
+msgstr "<p>U moet alle verplichte velden invullen.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:180
 #, python-format
 msgid "<p>Please select a payment method.</p>"
-msgstr ""
+msgstr "<p>Selecteer een betalingsmethode.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:274
 #, python-format
 msgid "<p>Please select the option to add a new payment method.</p>"
-msgstr ""
+msgstr "<p>Selecteer deze optie om nieuwe betalingsmethode aan te maeken.</p>"
 
 #. module: payment
 #. openerp-web
@@ -75,6 +75,7 @@ msgstr ""
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr ""
+"<p>Deze creditcard is momenteel verbonden aan de volgende gegevens:<p/>"
 
 #. module: payment
 #. openerp-web
@@ -84,7 +85,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:267
 #, python-format
 msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>We konden de betaalmethode niet toevoegen op dit moment.</p>"
 
 #. module: payment
 #. openerp-web
@@ -92,7 +93,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:333
 #, python-format
 msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>We konden de betaalmethode niet verwijderen op dit moment.</p>"
 
 #. module: payment
 #. openerp-web
@@ -100,14 +101,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:161
 #, python-format
 msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr ""
+msgstr "<p>We konden u niet doorverwijzen naar het betaalformulier.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:169
 #, python-format
 msgid "<p>We're unable to process your payment.</p>"
-msgstr ""
+msgstr "<p>We konden uw betaling niet verwerken.</p>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -228,12 +229,12 @@ msgstr "Verwerver referentie"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Verwervers"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Verweverslijst"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -278,7 +279,7 @@ msgstr "Bedrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr ""
+msgstr "Autorisatie mechanisme ondersteund"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -316,7 +317,7 @@ msgstr "Callback document model"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Callback hash"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
@@ -345,12 +346,12 @@ msgstr "Geannuleerd"
 #: code:addons/payment/static/src/js/payment_form.js:168
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "Kan de betaling niet verwerken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Bepaal bedrag handmatig"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -404,7 +405,7 @@ msgstr "Configureren"
 #: code:addons/payment/static/src/js/payment_form.js:322
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Bevestig verwijdering"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -547,7 +548,7 @@ msgstr "Foutmelding"
 #: code:addons/payment/static/src/js/payment_form.js:372
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Fout:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
@@ -627,6 +628,7 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
+"Indien u het leeg, is de betalingsverwerker beschikbaar in alle landen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -637,7 +639,7 @@ msgstr "Afbeelding"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Afbeelding dat wordt weergegeven in het betaalformulier"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -697,7 +699,7 @@ msgstr "Laat de klant beslissen"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Lijst van betalingsverwerkers die dit betaling icoon ondersteunen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -707,7 +709,7 @@ msgstr "Maak deze betaalverwerver beschikbaar (Klant facturen, etc.)"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Beheer uw betaalmethodes"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -795,6 +797,7 @@ msgstr "Berichten"
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
+"Ontbrekende relatie referentie bij het aanmaken van een nieuwe betaal token"
 
 #. module: payment
 #. openerp-web
@@ -802,7 +805,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:218
 #, python-format
 msgid "Missing values"
-msgstr ""
+msgstr "Missende waardes"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
@@ -830,7 +833,7 @@ msgstr "Nooit"
 #: code:addons/payment/static/src/js/payment_form.js:273
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Geen betalingsmethode geselecteerd"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
@@ -848,6 +851,8 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"Opmerking: Abonnementen houden geen rekening met dit veld, het gebruikt "
+"standaard server naar server."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -920,13 +925,13 @@ msgstr "Betaling verwervers"
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "Betaal icoon"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Betaal iconen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
@@ -971,7 +976,7 @@ msgstr "Betalingstransacties"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
 msgid "Payment flow"
-msgstr ""
+msgstr "Betaal flow"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -1029,13 +1034,13 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Gelieve de ordernaam te gebruiken als communicatie referentie."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Processed by"
-msgstr ""
+msgstr "Verwerkt door"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -1064,12 +1069,12 @@ msgstr "Referentie van de TX zoals opgeslagen in de verwervers database"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunded"
-msgstr ""
+msgstr "Gecrediteerd"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunding"
-msgstr ""
+msgstr "Creditering"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -1084,7 +1089,7 @@ msgstr "S2S formulier sjabloon"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Bewaar creditcards"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1167,7 +1172,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Specifieke landen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1183,7 +1188,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Ondersteunde betaal iconen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -1238,6 +1243,8 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Dit veld bevat de afbeelding welke wordt gebruikt als schermafbeelding voor "
+"deze betaling. Beperk het formaat op 1024x1024px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -1255,6 +1262,10 @@ msgid ""
 "invoicing), you need it to automatically charge the customer when you issue "
 "an invoice."
 msgstr ""
+"Deze optie staat het klanten toe om een credit card op te slaan als betaling"
+" token and het later opnieuw te gebruiken. Wanneer uw abonnementen beheert "
+"(terugkerende factuur), heeft u het nodig om klanten de factuur in rekening "
+"te brengen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1262,6 +1273,8 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"Deze betaal gateway is beschikbaar voor de geselecteerde landen. Indien geen"
+" land is geselecteerd is deze beschikbaar voor alle landen."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1289,7 +1302,7 @@ msgstr "Bevestigingsdatum"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Validation of the bank card"
-msgstr ""
+msgstr "Validatie van de bank rekening"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
@@ -1304,7 +1317,7 @@ msgstr "Variabele internationale vergoedingen (in percentage)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
 msgid "Verified"
-msgstr ""
+msgstr "Geverifieerd"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
@@ -1417,7 +1430,7 @@ msgstr "Bedrag: het transactiebedrag, een decimaal getal"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "en meer"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

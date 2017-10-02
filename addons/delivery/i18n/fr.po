@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Simon CARRIER <carrier.sim@gmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,84 @@ msgstr ""
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
 msgid "${object.subject}"
 msgstr "${object.subject}"
+
+#. module: delivery
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name},</p>\n"
+"<p>We are glad to inform you that your order has been shipped.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Your tracking reference:\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Find your delivery order attached for more details.</p>\n"
+"<p>Thank you,</p>\n"
+"      </data>"
+msgstr ""
+
+#. module: delivery
+#: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">Powered by <a href=\"https://www.odoo.com\">Odoo</a>.</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:76
@@ -406,8 +484,8 @@ msgstr ""
 #, python-format
 msgid ""
 "Info:\n"
-"Total amount of this order is above %.2f, free shipping!\n"
-"(actual cost: %.2f)"
+"The shipping is free because the order amount exceeds %.2f.\n"
+"(The actual shipping cost is: %.2f)"
 msgstr ""
 
 #. module: delivery
@@ -519,7 +597,7 @@ msgid "No carrier integration"
 msgstr "Aucune intégration avec un transporteur"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:72
+#: code:addons/delivery/models/sale_order.py:73
 #, python-format
 msgid "No carrier set for this order."
 msgstr "Aucun transporteur fixé pour cette commande."
@@ -529,6 +607,12 @@ msgstr "Aucun transporteur fixé pour cette commande."
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+
+#. module: delivery
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Frais de livraison normaux"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -578,7 +662,7 @@ msgid "Physical Packages"
 msgstr "Colis physiques"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:74
+#: code:addons/delivery/models/sale_order.py:75
 #, python-format
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
@@ -627,6 +711,11 @@ msgid "Quantity"
 msgstr "Quantité"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Quotation"
+msgstr "Devis"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Retour de marchandise"
@@ -640,11 +729,6 @@ msgstr "Prix de vente de base"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
 msgid "Sale Price"
 msgstr "Prix de vente"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sales Order"
-msgstr "Bon de commande"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -723,6 +807,12 @@ msgstr "Mouvement de stock"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Stock Quant Package"
 msgstr ""
+
+#. module: delivery
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "La Poste"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -847,7 +937,7 @@ msgstr ""
 "Types d'emballages: %s"
 
 #. module: delivery
-#: code:addons/delivery/models/sale_order.py:70
+#: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
@@ -871,18 +961,6 @@ msgstr "À partir de"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
 msgstr "Destinataire"
-
-#. module: delivery
-#: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
-msgid ""
-"\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c703e4465617220247b6f626a6563742e706172746e65725f69642e6e616d657d2c3c2f703e0a3c703e57652061726520676c616420746f20696e666f726d20796f75207468617420796f7572206f7264657220686173206265656e20736869707065642e3c2f703e0a3c703e0a256966206f626a6563742e636172726965725f747261636b696e675f7265663a0a2020596f757220747261636b696e67207265666572656e63653a0a2020256966206f626a6563742e636172726965725f747261636b696e675f75726c3a0a202020203c6120687265663d22247b6f626a6563742e636172726965725f747261636b696e675f75726c7d22207461726765743d225f626c616e6b223e247b6f626a6563742e636172726965725f747261636b696e675f7265667d3c2f613e2e0a202025656c73653a0a20202020247b6f626a6563742e636172726965725f747261636b696e675f7265667d2e0a202025656e6469660a25656e6469660a3c2f703e0a3c703e46696e6420796f75722064656c6976657279206f7264657220617474616368656420666f72206d6f72652064657461696c732e3c2f703e0a3c703e5468616e6b20796f752c3c2f703e0a2020202020203c2f646174613e"
-msgstr ""
-
-#. module: delivery
-#: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
-msgid ""
-"\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c7461626c6520626f726465723d2230222077696474683d2231303025222063656c6c70616464696e673d223022206267636f6c6f723d222365646564656422207374796c653d22666f6e742d66616d696c793a417269616c2c48656c7665746963612c73616e732d73657269663b2070616464696e673a20323070783b206261636b67726f756e642d636f6c6f723a2023656465646564222073756d6d6172793d226f5f6d61696c5f6e6f74696669636174696f6e223e0a202020202020202020203c74626f64793e0a2020202020202020202020203c212d2d20484541444552202d2d3e0a2020202020202020202020203c74723e0a20202020202020202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a202020202020202020202020202020203c7461626c652077696474683d223635302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222338373541374222207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283133352c39302c313233293b2070616464696e673a20323070783b223e0a2020202020202020202020202020202020203c74723e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c65223e0a202020202020202020202020202020202020202020203c7370616e207374796c653d22666f6e742d73697a653a323070783b20636f6c6f723a77686974653b20666f6e742d7765696768743a20626f6c643b223e247b6f626a6563742e7265636f72645f6e616d657d3c2f7370616e3e0a20202020202020202020202020202020202020203c2f74643e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d227269676874223e0a202020202020202020202020202020202020202020203c696d67207372633d222f6c6f676f2e706e6722207374796c653d2270616464696e673a203070783b206d617267696e3a203070783b206865696768743a206175746f3b2077696474683a20383070783b2220616c743d22247b757365722e636f6d70616e795f69642e6e616d657d222f3e0a20202020202020202020202020202020202020203c2f74643e0a2020202020202020202020202020202020203c2f74723e0a202020202020202020202020202020203c2f7461626c653e0a20202020202020202020202020203c2f74643e0a2020202020202020202020203c2f74723e0a2020202020202020202020203c212d2d20434f4e54454e54202d2d3e0a2020202020202020202020203c74723e0a20202020202020202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a202020202020202020202020202020203c7461626c652077696474683d223635302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222366666666666622207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283235352c203235352c20323535293b2070616464696e673a20323070783b223e0a2020202020202020202020202020202020203c74626f64793e0a20202020202020202020202020202020202020203c74642076616c69676e3d22746f7022207374796c653d22636f6c6f723a20233535353b20666f6e742d73697a653a20313470783b223e247b6f626a6563742e626f6479207c20736166657d3c2f74643e0a2020202020202020202020202020202020203c2f74626f64793e0a202020202020202020202020202020203c2f7461626c653e0a20202020202020202020202020203c2f74643e0a2020202020202020202020203c2f74723e0a2020202020202020202020203c212d2d20464f4f544552202d2d3e0a2020202020202020202020203c74723e0a20202020202020202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a202020202020202020202020202020203c7461626c652077696474683d223635302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222338373541374222207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283133352c39302c313233293b2070616464696e673a20323070783b223e0a2020202020202020202020202020202020203c74723e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d226c65667422207374796c653d22636f6c6f723a20236666663b2070616464696e672d746f703a20313070783b2070616464696e672d626f74746f6d3a20313070783b20666f6e742d73697a653a20313270783b223e247b757365722e636f6d70616e795f69642e6e616d657d3c62722f3e247b757365722e636f6d70616e795f69642e70686f6e65206f722027277d3c2f74643e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d22726967687422207374796c653d22636f6c6f723a20236666663b2070616464696e672d746f703a20313070783b2070616464696e672d626f74746f6d3a20313070783b20666f6e742d73697a653a20313270783b223e0a202020202020202020202020202020202020202020202520696620757365722e636f6d70616e795f69642e656d61696c3a0a202020202020202020202020202020202020202020203c6120687265663d226d61696c746f3a247b757365722e636f6d70616e795f69642e656d61696c7d22207374796c653d22746578742d6465636f726174696f6e3a6e6f6e653b20636f6c6f723a2077686974653b223e247b757365722e636f6d70616e795f69642e656d61696c7d3c2f613e3c62722f3e0a202020202020202020202020202020202020202020202520656e6469660a202020202020202020202020202020202020202020202520696620757365722e636f6d70616e795f69642e776562736974653a0a2020202020202020202020202020202020202020202020203c6120687265663d22247b757365722e636f6d70616e795f69642e776562736974657d22207374796c653d22746578742d6465636f726174696f6e3a6e6f6e653b20636f6c6f723a2077686974653b223e247b757365722e636f6d70616e795f69642e776562736974657d3c2f613e0a202020202020202020202020202020202020202020202520656e6469660a20202020202020202020202020202020202020203c2f74643e0a2020202020202020202020202020202020203c2f74723e0a202020202020202020202020202020203c2f7461626c653e0a20202020202020202020202020203c2f74643e0a2020202020202020202020203c2f74723e0a2020202020202020202020203c74723e0a20202020202020202020202020203c746420616c69676e3d2263656e746572223e506f7765726564206279203c6120687265663d2268747470733a2f2f7777772e6f646f6f2e636f6d223e4f646f6f3c2f613e2e3c2f74643e0a2020202020202020202020203c2f74723e0a202020202020202020203c2f74626f64793e0a20202020202020203c2f7461626c653e0a202020202020"
-msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

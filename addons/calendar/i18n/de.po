@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-10-02 11:27+0000\n"
+"PO-Revision-Date: 2017-10-02 11:27+0000\n"
 "Last-Translator: Katharina Moritz <kmo@e2f.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -318,7 +318,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Aktualisiert am"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:695
+#: code:addons/calendar/models/calendar.py:703
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -328,7 +328,7 @@ msgstr ""
 " %s um %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:693
+#: code:addons/calendar/models/calendar.py:694
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s um (%s bis %s) (%s)"
@@ -428,7 +428,7 @@ msgid "Availability"
 msgstr "Frühester Beginn"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1569
+#: code:addons/calendar/models/calendar.py:1588
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -648,13 +648,13 @@ msgid "Ending at"
 msgstr "Ende am"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:884
+#: code:addons/calendar/models/calendar.py:905
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "Enddatum kann nicht vor Startdatum gesetzt werden."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:882
+#: code:addons/calendar/models/calendar.py:903
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -675,7 +675,7 @@ msgid "Event alarm"
 msgstr "Veranstaltungserinnerung"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1127
+#: code:addons/calendar/models/calendar.py:1148
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Das Interval der Ereigniswiederholung darf nicht negativ sein."
@@ -702,7 +702,7 @@ msgid "First"
 msgstr "Erster"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:924
+#: code:addons/calendar/models/calendar.py:945
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Zunächst müssen Sie das Datum der Einladung akzeptieren."
@@ -739,7 +739,7 @@ msgid "Group By"
 msgstr "Gruppieren nach"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1514
+#: code:addons/calendar/models/calendar.py:1533
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "Gruppieren nach Datum fehlt, es wird der Kalender-View verwendet."
@@ -1015,7 +1015,7 @@ msgid "Partner-related data of the user"
 msgstr "Partnerbezogene Daten des Benutzers"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1140
+#: code:addons/calendar/models/calendar.py:1161
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Bitte wählen Sie einen passenden Tag für dieses Monat aus."
@@ -1027,14 +1027,14 @@ msgid "Privacy"
 msgstr "Privatsphäre"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
+msgid "Recurrence"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
 msgid "Recurrence Termination"
 msgstr "Erneute Absage"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
-msgid "Recurrency"
-msgstr "Häufigkeit"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
@@ -1366,7 +1366,7 @@ msgid "e.g. Business Lunch"
 msgstr "evtl. Geschäftsessen"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1125
+#: code:addons/calendar/models/calendar.py:1146
 #, python-format
 msgid "interval cannot be negative."
 msgstr "Das Intervall darf nicht negativ sein."

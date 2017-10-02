@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll_account
-#
+# 
 # Translators:
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-03 12:16+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr_payroll_account
 #: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
@@ -31,8 +32,8 @@ msgid "Accounting Entry"
 msgstr "Zapis księgowy"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:154
-#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Zapis korygujący"
@@ -63,9 +64,8 @@ msgstr "Konto Winien"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Umowa"
+msgstr "Umowa pracownika"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -76,7 +76,8 @@ msgstr "Generuj odcinki wypłaty dla wybranych pracowników"
 #: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
-"Pozostaw puste żeby zastosować okresu z daty zatwierdzenia (odcinka wypłaty)."
+"Pozostaw puste żeby zastosować okresu z daty zatwierdzenia (odcinka "
+"wypłaty)."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -90,12 +91,11 @@ msgstr "Pozycja paska wypłaty"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-#, fuzzy
 msgid "Payslip Run"
-msgstr "Pozycja paska wypłaty"
+msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:105
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
 msgstr "Odcinek wypłaty %s"
@@ -114,18 +114,16 @@ msgid "Tax"
 msgstr "Podatek"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr ""
 "Dziennik wydatków \"%s\" nie został poprawnie skonfigurowany dla konta Ma!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
-msgid ""
-"The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr ""
 "Dziennik wydatków \"%s\" nie został prawidłowo skonfigurowany dla konta "
 "Winien!"
@@ -134,6 +132,3 @@ msgstr ""
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr "hr.salary.rule"
-
-#~ msgid "Payslip Batches"
-#~ msgstr "Listy płac"

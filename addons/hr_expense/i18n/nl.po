@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -94,14 +94,14 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:31
 #, python-format
 msgid "<p>Once your Expense is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Eenmaal uw uitgave klaar is kan u ze opslaan.</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:39
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Selecteer uitgaven en leg deze voor aan uw manager</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -209,6 +209,8 @@ msgid ""
 "<strong>Hotel</strong><br/>\n"
 "                                    Cost: 0.00 <i>(the cost of the ticket will be recorded on every expense)</i>"
 msgstr ""
+"<strong>Hotel</strong><br/>\n"
+"                                    Kost: 0.00 <i>(de kost van het ticket wordt geregistreerd op elke uitgave)</i>"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -303,6 +305,12 @@ msgid "Agree in advance with the customer:"
 msgstr "Ga op voorhand akkoord met de klant:"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "Vlucht"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
 msgstr "Alle declaratieformulieren"
@@ -355,7 +363,7 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tour.js:35
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Voeg uw bon hier toe."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -388,6 +396,12 @@ msgstr "Declaratie product"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "Annuleer"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "Autokosten"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -804,7 +818,7 @@ msgid "Expenses must belong to the same Employee."
 msgstr "Declaraties moeten dot dezelfde werknemer behoren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:562
+#: code:addons/hr_expense/models/hr_expense.py:565
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -925,19 +939,25 @@ msgid "Hide Payment Method"
 msgstr "Verberg betaalmethode"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.hotel_rent
+#: model:product.template,name:hr_expense.hotel_rent_product_template
+msgid "Hotel Accommodation"
+msgstr "Hotel accommodatie"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "HR declaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "HR declaratieformulier"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7632
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7678
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_id
 msgid "ID"
 msgstr "ID"
@@ -1038,7 +1058,7 @@ msgstr "Mijn in te dienen declaraties"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_refused
 msgid "My Refused Reports"
-msgstr ""
+msgstr "Mijn geweigerde rapporten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1096,7 +1116,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
 msgid "No refused reports to display."
-msgstr ""
+msgstr "Geen geweigerde rapportages om weer te geven."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -1301,12 +1321,12 @@ msgstr "Reden"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Reden :"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Reden om declaratie te weigeren"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1316,7 +1336,7 @@ msgstr "Registreer een eerste uitgave"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Neemt op"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1354,7 +1374,7 @@ msgstr "Geweigerde declaratie"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports_refused
 msgid "Refused Reports"
-msgstr ""
+msgstr "Geweigerde rapporten"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
@@ -1715,10 +1735,10 @@ msgstr "Wanneer u in rekening"
 #: code:addons/hr_expense/static/src/js/tour.js:26
 #, python-format
 msgid "Write the name of the product, or select an existing one."
-msgstr ""
+msgstr "Schrijf de naam van het product of selecteer een bestaand product."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:559
+#: code:addons/hr_expense/models/hr_expense.py:562
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
@@ -1735,7 +1755,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:589
+#: code:addons/hr_expense/models/hr_expense.py:592
 #, python-format
 msgid "You cannot add expense lines of another employee."
 msgstr ""
@@ -1782,7 +1802,7 @@ msgstr "U registreert declaraties."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Uw uitgave"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1827,7 +1847,7 @@ msgstr "Bijv. Reis naar New York"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "is geweigerd"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:343

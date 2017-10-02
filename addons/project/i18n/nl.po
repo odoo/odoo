@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2017-10-02 11:25+0000\n"
+"PO-Revision-Date: 2017-10-02 11:25+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -130,6 +130,21 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p>Beste ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Bedankt voor uw aanvraag.<br /></p>\n"
+"<p>Indien u vragen heeft kan u ons steeds contacteren.</p>\n"
+"<p>Met vriendelijke groeten,</p>"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
 msgstr "# Dagen tot deadline"
@@ -179,7 +194,7 @@ msgstr "- Het Odoo Team"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks and Timesheets."
-msgstr ""
+msgstr "1. Leer over taken en urenstaten."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -527,6 +542,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and is extremely useful for several cases."
 msgstr ""
+"<strong>Een geweldige optie in Odoo is de integratie van een samenwerkende Notepad genaamd Etherpad.</strong><br/>\n"
+"Het vervangt de standaard omschrijving in Taken en Issues en is extreem handig voor sommige zaken."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1100,7 +1117,7 @@ msgstr "Gearchiveerd"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Aan mij toewijzen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1211,6 +1228,13 @@ msgstr ""
 "korter dan een uur te houden."
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_15
+#: model:project.task,legend_blocked:project.project_task_16
+#: model:project.task,legend_blocked:project.project_task_18
+#: model:project.task,legend_blocked:project.project_task_19
+#: model:project.task,legend_blocked:project.project_task_24
+#: model:project.task,legend_blocked:project.project_task_3
+#: model:project.task,legend_blocked:project.project_task_8
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -1224,6 +1248,8 @@ msgstr ""
 #: model:project.task,legend_blocked:project.project_task_data_7
 #: model:project.task,legend_blocked:project.project_task_data_8
 #: model:project.task,legend_blocked:project.project_task_data_9
+#: model:project.task.type,legend_blocked:project.project_stage_2
+#: model:project.task.type,legend_blocked:project.project_stage_3
 #: model:project.task.type,legend_blocked:project.project_stage_data_0
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
@@ -1243,6 +1269,24 @@ msgstr ""
 "samen te werken, of waarom projecten organiseren op rol fout is."
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_10
+#: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_13
+#: model:project.task,legend_done:project.project_task_14
+#: model:project.task,legend_done:project.project_task_17
+#: model:project.task,legend_done:project.project_task_2
+#: model:project.task,legend_done:project.project_task_21
+#: model:project.task,legend_done:project.project_task_22
+#: model:project.task,legend_done:project.project_task_23
+#: model:project.task,legend_done:project.project_task_4
+#: model:project.task,legend_done:project.project_task_5
+#: model:project.task,legend_done:project.project_task_6
+#: model:project.task,legend_done:project.project_task_7
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz of stel in als gereed"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Op verantwoordelijke"
@@ -1257,6 +1301,7 @@ msgstr "Annuleer"
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #: code:addons/project/static/src/js/web_planner_project.js:85
 #: code:addons/project/static/src/js/web_planner_project.js:99
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Geannuleerd"
@@ -1446,7 +1491,7 @@ msgstr "Aanmaken"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "Maak & bewerk"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1781,6 +1826,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:69
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Gereed"
@@ -1982,7 +2028,7 @@ msgstr "Prognoses"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "Toekomstige activiteiten"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2236,6 +2282,32 @@ msgid "Improve collaboration with customers"
 msgstr "Verbeter het samenwerken met klanten"
 
 #. module: project
+#: model:project.task,legend_normal:project.project_task_1
+#: model:project.task,legend_normal:project.project_task_10
+#: model:project.task,legend_normal:project.project_task_11
+#: model:project.task,legend_normal:project.project_task_12
+#: model:project.task,legend_normal:project.project_task_13
+#: model:project.task,legend_normal:project.project_task_14
+#: model:project.task,legend_normal:project.project_task_15
+#: model:project.task,legend_normal:project.project_task_16
+#: model:project.task,legend_normal:project.project_task_17
+#: model:project.task,legend_normal:project.project_task_18
+#: model:project.task,legend_normal:project.project_task_19
+#: model:project.task,legend_normal:project.project_task_2
+#: model:project.task,legend_normal:project.project_task_20
+#: model:project.task,legend_normal:project.project_task_21
+#: model:project.task,legend_normal:project.project_task_22
+#: model:project.task,legend_normal:project.project_task_23
+#: model:project.task,legend_normal:project.project_task_24
+#: model:project.task,legend_normal:project.project_task_25
+#: model:project.task,legend_normal:project.project_task_26
+#: model:project.task,legend_normal:project.project_task_3
+#: model:project.task,legend_normal:project.project_task_4
+#: model:project.task,legend_normal:project.project_task_5
+#: model:project.task,legend_normal:project.project_task_6
+#: model:project.task,legend_normal:project.project_task_7
+#: model:project.task,legend_normal:project.project_task_8
+#: model:project.task,legend_normal:project.project_task_9
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
 #: model:project.task,legend_normal:project.project_task_data_11
@@ -2249,9 +2321,14 @@ msgstr "Verbeter het samenwerken met klanten"
 #: model:project.task,legend_normal:project.project_task_data_7
 #: model:project.task,legend_normal:project.project_task_data_8
 #: model:project.task,legend_normal:project.project_task_data_9
+#: model:project.task.type,legend_normal:project.project_stage_0
+#: model:project.task.type,legend_normal:project.project_stage_1
+#: model:project.task.type,legend_normal:project.project_stage_2
+#: model:project.task.type,legend_normal:project.project_stage_3
 #: model:project.task.type,legend_normal:project.project_stage_data_0
 #: model:project.task.type,legend_normal:project.project_stage_data_1
 #: model:project.task.type,legend_normal:project.project_stage_data_2
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "In behandeling"
@@ -2448,7 +2525,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "Te late activiteiten"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2583,7 +2660,7 @@ msgstr "Mijn favorieten"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Door mij gevolgde taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -2606,7 +2683,25 @@ msgstr "Naam"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Naam van de taken:"
+
+#. module: project
+#: model:project.task,legend_blocked:project.project_task_10
+#: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_13
+#: model:project.task,legend_blocked:project.project_task_14
+#: model:project.task,legend_blocked:project.project_task_17
+#: model:project.task,legend_blocked:project.project_task_2
+#: model:project.task,legend_blocked:project.project_task_21
+#: model:project.task,legend_blocked:project.project_task_22
+#: model:project.task,legend_blocked:project.project_task_23
+#: model:project.task,legend_blocked:project.project_task_4
+#: model:project.task,legend_blocked:project.project_task_5
+#: model:project.task,legend_blocked:project.project_task_6
+#: model:project.task,legend_blocked:project.project_task_7
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Functionele of technische hulp nodig"
 
 #. module: project
 #. openerp-web
@@ -2655,6 +2750,17 @@ msgid "Normal"
 msgstr "Normaal"
 
 #. module: project
+#: model:project.task,legend_blocked:project.project_task_1
+#: model:project.task,legend_blocked:project.project_task_12
+#: model:project.task,legend_blocked:project.project_task_20
+#: model:project.task,legend_blocked:project.project_task_25
+#: model:project.task,legend_blocked:project.project_task_26
+#: model:project.task,legend_blocked:project.project_task_9
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Niet bevestigd"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
 msgstr "Notities"
@@ -2674,12 +2780,12 @@ msgstr "Nu dat het project is ingesteld, <b>maak een paar taken</b>."
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Aantal werkdagen tot openen taak"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Aantal werkdagen tot openen taak"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2973,11 +3079,27 @@ msgid "Projects"
 msgstr "Projecten"
 
 #. module: project
+#: model:mail.channel,name:project.mail_channel_project_task
+msgid "Projects & Tasks"
+msgstr "Projecten & Taken"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
 msgstr "Beoordeling op taken"
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_1
+#: model:project.task,legend_done:project.project_task_12
+#: model:project.task,legend_done:project.project_task_15
+#: model:project.task,legend_done:project.project_task_18
+#: model:project.task,legend_done:project.project_task_20
+#: model:project.task,legend_done:project.project_task_24
+#: model:project.task,legend_done:project.project_task_25
+#: model:project.task,legend_done:project.project_task_26
+#: model:project.task,legend_done:project.project_task_3
+#: model:project.task,legend_done:project.project_task_8
+#: model:project.task,legend_done:project.project_task_9
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2991,6 +3113,8 @@ msgstr "Beoordeling op taken"
 #: model:project.task,legend_done:project.project_task_data_7
 #: model:project.task,legend_done:project.project_task_data_8
 #: model:project.task,legend_done:project.project_task_data_9
+#: model:project.task.type,legend_done:project.project_stage_0
+#: model:project.task.type,legend_done:project.project_stage_2
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
@@ -3031,12 +3155,24 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Klaar om te tonen, publiceren of verzenden"
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_16
+#: model:project.task,legend_done:project.project_task_19
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Gereed om te heropenen"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:77
 #: code:addons/project/static/src/js/web_planner_project.js:106
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "De reden van annulering is gedocumenteerd"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr "Ontvangst van ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3046,7 +3182,7 @@ msgstr "Record Thread ID"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Stelt kleur in"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3177,7 +3313,7 @@ msgstr "Zoek in berichten"
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Zoek in fases"
 
 #. module: project
 #. openerp-web
@@ -3256,6 +3392,9 @@ msgid ""
 "So if you're looking for the history of a Task, or the latest message on a "
 "Task, simply go to the corresponding Document and you'll find it!"
 msgstr ""
+"Dus als u zoekt naar de geschiedenis van een taak, of het laatste bericht op"
+" een taak, ga naar simpelweg naar het corresponderende document en u vind "
+"het!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3286,7 +3425,7 @@ msgstr "Specificatie van taak is geschreven"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Deel uw taken op, om zo uw werk op te delen in sub-milestones"
 
 #. module: project
 #. openerp-web
@@ -3393,7 +3532,7 @@ msgstr "Labels"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks"
-msgstr ""
+msgstr "Labels van projecttaken"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
@@ -3428,7 +3567,7 @@ msgstr "Taak geblokkeerd"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Taakbeheer"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3812,6 +3951,7 @@ msgstr "Titel"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Te doen"
@@ -3869,7 +4009,7 @@ msgstr "Ongelezen berichten"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "Gebruik subtaak project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -3884,7 +4024,7 @@ msgstr "Gebruik urenstaten"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Gebruik rijke tekst voor samenwerking op taken"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3892,6 +4032,8 @@ msgid ""
 "Use separate meetings to solve big tasks or tasks that aren’t important for "
 "the entire team."
 msgstr ""
+"Gebruik verschillende afspraken om grote taken op te lossen of problemen die"
+" belangrijk zijn voor het hele team."
 
 #. module: project
 #. openerp-web
@@ -3911,6 +4053,11 @@ msgstr ""
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
 "Gebruik het kruimelpad om <b> terug te gaan naar uw taken pijplijn</b>."
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the star for tasks related to gold customers"
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4044,12 +4191,12 @@ msgstr "Welkom"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average number of working hours necessary to close a task?"
-msgstr ""
+msgstr "Wat is het gemiddeld aantal werkuren nodig om een taak te sluiten?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before a task is assigned / closed?"
-msgstr ""
+msgstr "Wat is de gemiddelde tijd voor een taak toegewezen / gesloten is?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4105,22 +4252,22 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Werkdagen om toe te wijzen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Werkdagen om te sluiten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Werkuren om toe te wijzen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Werkuren om te sluiten"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload

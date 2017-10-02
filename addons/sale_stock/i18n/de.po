@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:164
+#: code:addons/sale_stock/models/sale_order.py:170
 #, python-format
 msgid ""
 "\n"
@@ -184,7 +184,7 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:168
+#: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Nicht genug Bestand!"
@@ -195,7 +195,7 @@ msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:182
+#: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestellte Menge verringert!"
@@ -224,6 +224,11 @@ msgstr "Bedarfsmeldung"
 #: model:ir.model,name:sale_stock.model_procurement_rule
 msgid "Procurement Rule"
 msgstr "Beschaffungsregel"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
+msgid "Quotation"
+msgstr "Angebot"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -260,7 +265,6 @@ msgid "Sales"
 msgstr "Verkauf"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
@@ -355,7 +359,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:267
+#: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
@@ -373,7 +377,7 @@ msgid "Warehouse"
 msgstr "Lager"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:266
+#: code:addons/sale_stock/models/sale_order.py:272
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
@@ -389,7 +393,7 @@ msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:183
+#: code:addons/sale_stock/models/sale_order.py:189
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -399,7 +403,7 @@ msgstr ""
 "manuell zu aktualisieren falls notwendig."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:160
+#: code:addons/sale_stock/models/sale_order.py:166
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."

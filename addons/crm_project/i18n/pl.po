@@ -1,115 +1,98 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * crm_project_issue
-#
+# * crm_project
+# 
 # Translators:
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-06-09 04:27+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
-"                            <span class=\"o_stat_text\">Issue</span>"
+"                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Konwertuj do</span>\n"
-"                            <span class=\"o_stat_text\">Sprawa</span>"
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
 msgstr "Anuluj"
 
-#. module: crm_project_issue
-#: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Convert to Issue"
-msgstr "Konwertuj do problemu"
+#. module: crm_project
+#: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+msgid "Convert to Task"
+msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Create Issue"
-msgstr "Utwórz problem"
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+msgid "Create Task"
+msgstr ""
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
 msgid "Created by"
 msgstr "Utworzone przez"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
 msgid "Created on"
 msgstr "Utworzono"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
 msgid "Display Name"
-msgstr "Wyświetlana nazwa "
+msgstr "Nazwa wyświetlana"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
 msgid "ID"
 msgstr "ID"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
 msgid "Last Modified on"
-msgstr "Ostatnio modyfikowano"
+msgstr "Data ostatniej modyfikacji"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio modyfikowane przez"
+msgstr "Ostatnio aktualizowane przez"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
 msgid "Last Updated on"
-msgstr "Ostatnia zmiana"
+msgstr "Ostatnia aktualizacja"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
 msgid "Lead"
 msgstr "Sygnał"
 
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
 msgid "Project"
-msgstr "Projekty"
+msgstr "Projekt"
 
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "crm.lead2projectissue.wizard"
+#. module: crm_project
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "crm.lead.convert2task"
 msgstr ""
-
-#~ msgid "Create a new customer"
-#~ msgstr "Utwórz nowego klienta"
-
-#~ msgid "Customer"
-#~ msgstr "Klient"
-
-#~ msgid "Do not link to a customer"
-#~ msgstr "Nie łącz z klientem"
-
-#~ msgid "Handle partner binding or generation in CRM wizards."
-#~ msgstr ""
-#~ "Obsługa połączenia z klientem lub generowanie klienta z kreatora CRM"
-
-#~ msgid "Link to an existing customer"
-#~ msgstr "Link do istniejącego klienta"
-
-#~ msgid "Related Customer"
-#~ msgstr "Powiązany klient"

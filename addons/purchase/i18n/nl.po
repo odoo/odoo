@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -378,6 +378,11 @@ msgid "<strong>Taxes</strong>"
 msgstr "<strong>BTW</strong>"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "<strong>The ordered quantity has been updated.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Totaal:</strong>"
@@ -478,7 +483,7 @@ msgstr "Gemiddelde prijs"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
 msgid "Bill Control"
-msgstr ""
+msgstr "Factuurcontrole"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
@@ -489,6 +494,11 @@ msgstr "Factuurregels"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
 msgstr "Gefactureerde Hvh"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Billed Quantity:"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -564,7 +574,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:731
+#: code:addons/purchase/models/purchase.py:737
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -836,7 +846,7 @@ msgstr "Fiscale positie"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Toekomstige activiteiten"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -973,7 +983,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Te late activiteiten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
@@ -1127,7 +1137,7 @@ msgstr "Nieuwste"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "No Bill to Receive"
-msgstr ""
+msgstr "Geen factuur te ontvangen"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1146,6 +1156,8 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
+"Niet opgeslagen gekoppeld veld om ene portaal gebruiker de mogelijkheid te "
+"geven om de afbeelding van het bestelde product te zien."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1219,6 +1231,11 @@ msgid "Order of Day"
 msgstr "Order van dag"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Ordered Quantity:"
+msgstr ""
+
+#. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
 msgstr "Bestelde hoeveelheden"
@@ -1226,7 +1243,7 @@ msgstr "Bestelde hoeveelheden"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Aanvulregel"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1394,7 +1411,7 @@ msgstr "Koop analytics"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase Bills"
-msgstr ""
+msgstr "Leveranciersfacturen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1483,7 +1500,7 @@ msgstr "Inkooporders"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr ""
+msgstr "Inkooporder #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1599,6 +1616,11 @@ msgstr "Producten ontvangen"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_received
 msgid "Received Qty"
 msgstr "Ontvangen aantal"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Received Quantity:"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1851,7 +1873,7 @@ msgstr ""
 "inkoopproces te verbeteren: prijzen, verwervingslogistiek, rekeninggegevens, beschikbare leveranciers, enz."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:643
+#: code:addons/purchase/models/purchase.py:649
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1879,7 +1901,7 @@ msgstr ""
 "geconverteerd in een inkooporder kunt u de ontvangen producten beheren en de leveranciersfactuur."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:872
+#: code:addons/purchase/models/purchase.py:878
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -2126,11 +2148,6 @@ msgid "Vendor Bills"
 msgstr "Facturen"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
-msgid "Vendor Bills."
-msgstr "Facturen."
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
@@ -2185,7 +2202,7 @@ msgstr "Waarschuwing"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:802
+#: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
