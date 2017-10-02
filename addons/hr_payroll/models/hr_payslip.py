@@ -156,7 +156,7 @@ class HrPayslip(models.Model):
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
             contract_ids = payslip.contract_id.ids or \
                 self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
-            lines = [(0, 0, line) for line in self.get_payslip_lines(contract_ids, payslip.id)]
+            lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -226,7 +226,7 @@ class HrPayslip(models.Model):
         return res
 
     @api.model
-    def get_payslip_lines(self, contract_ids, payslip_id):
+    def _get_payslip_lines(self, contract_ids, payslip_id):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
@@ -327,9 +327,9 @@ class HrPayslip(models.Model):
                 localdict['result_qty'] = 1.0
                 localdict['result_rate'] = 100
                 #check if the rule can be applied
-                if rule.satisfy_condition(localdict) and rule.id not in blacklist:
+                if rule._satisfy_condition(localdict) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount, qty, rate = rule.compute_rule(localdict)
+                    amount, qty, rate = rule._compute_rule(localdict)
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
