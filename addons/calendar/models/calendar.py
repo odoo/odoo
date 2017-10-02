@@ -1296,8 +1296,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        data['start_date' if data['allday'] else 'start_datetime'] = data['start']
-        data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
         if data.get('rrule'):
             data.update(
                 values,

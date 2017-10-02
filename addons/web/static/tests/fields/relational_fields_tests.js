@@ -6791,6 +6791,53 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many checkboxes with default values', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.turtles.default = [3];
+        this.data.partner.fields.turtles.type = "many2many";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles" widget="many2many_checkboxes">' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0].turtles, [[6, false, [1]]],
+                        "correct values should have been sent to create");
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.notOk(form.$('.o_checkbox input').eq(0).prop('checked'),
+            "first checkbox should not be checked");
+        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+        assert.ok(form.$('.o_checkbox input').eq(2).prop('checked'),
+            "third checkbox should be checked");
+
+        form.$('.o_checkbox input:checked').click();  // Uncheck default record
+        form.$('.o_checkbox input').first().click();  // Check first record
+        form.$('.o_checkbox input').first().click();  // Uncheck first record
+        form.$('.o_checkbox input').first().click();  // Recheck first record
+
+        assert.ok(form.$('.o_checkbox input').eq(0).prop('checked'),
+            "first checkbox should be checked");
+        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+        assert.notOk(form.$('.o_checkbox input').eq(2).prop('checked'),
+            "third checkbox should not be checked");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list with x2many: add a record', function (assert) {
         assert.expect(18);
 
