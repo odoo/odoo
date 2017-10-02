@@ -21,6 +21,7 @@
 
 import time
 
+from openerp import api
 from openerp.osv import fields, osv
 
 class account_statement_from_invoice_lines(osv.osv_memory):
@@ -32,6 +33,37 @@ class account_statement_from_invoice_lines(osv.osv_memory):
     _columns = {
         'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
     }
+
+    @api.model
+    def _prepare_statement_line_vals(self, statement, line):
+        amount = 0.0
+
+        if line.debit > 0:
+            amount = line.debit
+        elif line.credit > 0:
+            amount = -line.credit
+
+        if line.amount_currency:
+            if line.company_id.currency_id != statement.currency:
+                # In the specific case where the company currency and the statement currency are the same
+                # the debit/credit field already contains the amount in the right currency.
+                # We therefore avoid to re-convert the amount in the currency, to prevent Gain/loss exchanges
+                amount = line.currency_id.compute(
+                    statement.currency, line.amount_currency)
+        elif (line.invoice and line.invoice.currency_id != statement.currency):
+            amount = line.invoice.currency_id.compute(
+                statement.currency, amount)
+
+        return {
+            'name': line.name or '?',
+            'amount': amount,
+            'partner_id': line.partner_id.id,
+            'statement_id': statement.id,
+            'ref': line.ref,
+            'date': statement.date,
+            'amount_currency': line.amount_currency,
+            'currency_id': line.currency_id.id,
+        }
 
     def populate_statement(self, cr, uid, ids, context=None):
         context = dict(context or {})
@@ -46,46 +78,23 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         line_obj = self.pool.get('account.move.line')
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
-        currency_obj = self.pool.get('res.currency')
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
         line_date = statement.date
 
+        ctx = context.copy()
+        #  take the date for computation of currency => use payment date
+        ctx['date'] = line_date
+
         # for each selected move lines
         for line in line_obj.browse(cr, uid, line_ids, context=context):
-            ctx = context.copy()
-            #  take the date for computation of currency => use payment date
-            ctx['date'] = line_date
-            amount = 0.0
 
-            if line.debit > 0:
-                amount = line.debit
-            elif line.credit > 0:
-                amount = -line.credit
-
-            if line.amount_currency:
-                if line.company_id.currency_id.id != statement.currency.id:
-                    # In the specific case where the company currency and the statement currency are the same
-                    # the debit/credit field already contains the amount in the right currency.
-                    # We therefore avoid to re-convert the amount in the currency, to prevent Gain/loss exchanges
-                    amount = currency_obj.compute(cr, uid, line.currency_id.id,
-                        statement.currency.id, line.amount_currency, context=ctx)
-            elif (line.invoice and line.invoice.currency_id.id != statement.currency.id):
-                amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
-                    statement.currency.id, amount, context=ctx)
+            st_line_vals = self._prepare_statement_line_vals(
+                cr, uid, ids, statement, line, context=ctx)
 
             context.update({'move_line_ids': [line.id],
                             'invoice_id': line.invoice.id})
 
-            statement_line_obj.create(cr, uid, {
-                'name': line.name or '?',
-                'amount': amount,
-                'partner_id': line.partner_id.id,
-                'statement_id': statement_id,
-                'ref': line.ref,
-                'date': statement.date,
-                'amount_currency': line.amount_currency,
-                'currency_id': line.currency_id.id,
-            }, context=context)
+            statement_line_obj.create(cr, uid, st_line_vals, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 
