@@ -30,7 +30,7 @@ var MessagingMenu = Widget.extend({
     },
     init: function () {
         this._super.apply(this, arguments);
-        this.isMobile = config.isMobile; // used by the template
+        this.isMobile = config.device.isMobile; // used by the template
     },
     start: function () {
         this.$filter_buttons = this.$('.o_filter_button');

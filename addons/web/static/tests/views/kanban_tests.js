@@ -342,6 +342,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create and change state in grouped mode', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.kanban_state = {
+            string: "Kanban State",
+            type: "selection",
+            selection: [["normal", "Grey"], ["done", "Green"], ["blocked", "Red"]],
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                        '<div class="oe_kanban_bottom_right">' +
+                        '<field name="kanban_state" widget="state_selection"/>' +
+                        '</div>' +
+                        '</t></templates>' +
+                  '</kanban>',
+            groupBy: ['foo'],
+        });
+
+        // Quick create kanban record
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        var $quickAdd = kanban.$('.o_kanban_quick_create');
+        $quickAdd.find('.o_input').val('Test');
+        $quickAdd.find('.o_kanban_add').click();
+
+        // Select state in kanban
+        kanban.$('.o_status').first().click();
+        kanban.$('.o_selection ul:first li:first').click();
+        assert.ok(kanban.$('.o_status').first().hasClass('o_status_green'),
+            "Kanban state should be done (Green)");
+        kanban.destroy();
+    });
+
     QUnit.test('quick create in grouped mode', function (assert) {
         assert.expect(8);
 
@@ -534,7 +572,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<kanban class="o_kanban_test">' +
                         '<templates><t t-name="kanban-box">' +
-                            '<div>' +
+                            '<div class="oe_kanban_global_click">' +
                                 '<field name="category_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                                 '<field name="foo"/>' +
                                 '<field name="state" widget="priority"/>' +
@@ -546,11 +584,13 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             intercepts: {
-                add_filter: function (event) {
+                switch_view: function (event) {
                     assert.deepEqual(event.data, {
-                        domain: "[['category_ids','=','gold']]",
-                        help: 'gold',
-                    }, "should trigger an 'add_filter' event with correct data");
+                        mode: 'readonly',
+                        model: 'partner',
+                        res_id: 1,
+                        view_type: 'form',
+                    }, "should trigger an event to open the clicked record in a form view");
                 },
             },
         });
@@ -579,44 +619,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_record:first()').find('.o_field_many2manytags .o_tag').length, 2,
             'first record should still contain only 2 tags');
 
-        // click on a tag to trigger a search by tag
-        kanban.$('.o_tag:contains(gold):first').click();
-
-        kanban.destroy();
-    });
-
-    QUnit.test('many2many_tags with no color field and search by tag', function (assert) {
-        assert.expect(3);
-
-        delete this.data.category.fields.color;
-        this.data.partner.records[0].category_ids = [6, 7];
-
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban><templates><t t-name="kanban-box">' +
-                    '<div>' +
-                        '<field name="category_ids" widget="many2many_tags"/>' +
-                        '<field name="foo"/>' +
-                    '</div>' +
-                '</t></templates></kanban>',
-            intercepts: {
-                add_filter: function (event) {
-                    assert.deepEqual(event.data, {
-                        domain: "[['category_ids','=','gold']]",
-                        help: 'gold',
-                    }, "should trigger an 'add_filter' event with correct data");
-                },
-            },
-        });
-
-        var $first_record = kanban.$('.o_kanban_record:first()');
-        assert.strictEqual($first_record.find('.o_field_many2manytags .o_tag').length, 2,
-            'first record should contain 2 tags');
-        assert.ok($first_record.find('.o_tag.o_tag_color_0').hasClass('o_tag_color_0'),
-            'both tags should have the default color');
-        // click on a tag to trigger a search by tag
+        // click on a tag (should trigger switch_view)
         kanban.$('.o_tag:contains(gold):first').click();
 
         kanban.destroy();
@@ -2006,7 +2009,7 @@ QUnit.module('Views', {
                 '<kanban>' +
                     '<field name="bar"/>' +
                     '<field name="int_field"/>' +
-                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
                     '<templates><t t-name="kanban-box">' +
                         '<div>' +
                             '<field name="name"/>' +
@@ -2021,6 +2024,70 @@ QUnit.module('Views', {
 
         assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side').last().text()), 36,
             "counter should display the sum of int_field values");
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars: creating a new column should create a new progressbar', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="product_id"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        var nbProgressBars = kanban.$('.o_kanban_counter').length;
+
+        // Create a new column: this should create an empty progressbar
+        var $columnQuickCreate = kanban.$('.o_column_quick_create');
+        $columnQuickCreate.click();
+        $columnQuickCreate.find('input').val('test');
+        $columnQuickCreate.find('.btn-primary').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_counter').length, nbProgressBars + 1,
+            "a new column with a new column progressbar should have been created");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars on quick create properly update counter', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        var initialCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
+        kanban.$('.o_kanban_quick_add').eq(1).click();
+        kanban.$('.o_input').val('Test');
+        kanban.$('.o_kanban_add').click();
+        var lastCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
+        assert.strictEqual(lastCount, initialCount + 1,
+            "kanban counters should have updated on quick create");
+
         kanban.destroy();
     });
 
@@ -2082,9 +2149,7 @@ QUnit.module('Views', {
                     '</t></templates>' +
                 '</kanban>',
             groupBy: ['product_id'],
-            config: {
-                isMobile: true
-            }
+            config: {device: {isMobile: true}},
         }).then(function (kanban) {
 
             // Dummy dom update trigger for activate mobile tabs and move to first column

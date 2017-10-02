@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Rojas Pablo <rojaspablo88@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -399,6 +399,11 @@ msgid "<strong>Taxes</strong>"
 msgstr "<strong>Impuestos</strong>"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "<strong>The ordered quantity has been updated.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Total:</strong>"
@@ -513,6 +518,11 @@ msgid "Billed Qty"
 msgstr "Cant. facturada"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Billed Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
 msgstr "Estado de facturación"
@@ -586,7 +596,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:731
+#: code:addons/purchase/models/purchase.py:737
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -1240,6 +1250,11 @@ msgid "Order of Day"
 msgstr "Orden del día"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Ordered Quantity:"
+msgstr ""
+
+#. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
 msgstr "Cantidades pedidas"
@@ -1621,6 +1636,11 @@ msgid "Received Qty"
 msgstr "Ctdad recibida"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Received Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1873,7 +1893,7 @@ msgstr ""
 "proveedores disponibles, etc."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:643
+#: code:addons/purchase/models/purchase.py:649
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1903,7 +1923,7 @@ msgstr ""
 "de los productos y la factura de proveedor."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:872
+#: code:addons/purchase/models/purchase.py:878
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -2149,11 +2169,6 @@ msgid "Vendor Bills"
 msgstr "Facturas de proveedor"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
-msgid "Vendor Bills."
-msgstr "Facturas de proveedor."
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
@@ -2208,7 +2223,7 @@ msgstr "Aviso"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:802
+#: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
 msgstr "Aviso para %s"

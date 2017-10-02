@@ -4,7 +4,7 @@
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.crm</field>
         <field name="model">res.config.settings</field>
-        <field name="priority" eval="2"/>
+        <field name="priority" eval="5"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
@@ -83,7 +83,7 @@
     </record>
 
     <record id="crm_config_settings_action" model="ir.actions.act_window">
-        <field name="name">Configure CRM</field>
+        <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_id" ref="res_config_settings_view_form"/>

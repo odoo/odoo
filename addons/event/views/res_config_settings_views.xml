@@ -4,7 +4,7 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.event</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="13"/>
+            <field name="priority" eval="65"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
@@ -68,7 +68,7 @@
         </record>
 
         <record id="action_event_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Event</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -76,7 +76,7 @@
             <field name="context">{'module' : 'event'}</field>
         </record>
 
-        <menuitem id="menu_event_global_settings" name="Settings" 
+        <menuitem id="menu_event_global_settings" name="Settings"
             parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
     </data>
 </odoo>

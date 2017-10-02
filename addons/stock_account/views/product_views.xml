@@ -38,16 +38,16 @@
                         <field name="property_cost_method" invisible="1"/>
                     </field>
                     <field name="standard_price" position="replace">
-                        <field name="standard_price"
-                            attrs="{'readonly':[('valuation','=','real_time')]}"
-                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                    </field>
-                    <div name="standard_price_uom" position="after">
-                        <button string="Update Cost" type="action"
+                        <div class="o_row">
+                            <field name="standard_price"
+                                attrs="{'readonly':[('valuation','=','real_time')]}"
+                                widget='monetary' options="{'currency_field': 'currency_id'}" />
+                            <button string="Update Cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
                             class="oe_link oe_read_only" colspan="2"/>
-                    </div>
+                        </div>
+                    </field>
                     <group name="accounting" position="inside">
                         <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': ['|', ('type','=','service'), ('valuation', '!=', 'real_time')]}" groups="account.group_account_user">
                             <field name="property_valuation" invisible="1"/>
@@ -92,7 +92,7 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name" string="Product"/>
+                    <field name="display_name" string="Product"/>
                     <field name="qty_available" context="{'company_owned': True}" string="Quantity on Hand"/>
                     <field name="uom_id" groups="product.group_uom"/>
                     <field name="currency_id" invisible="1"/>
@@ -122,7 +122,7 @@
              <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
              <field name="arch" type="xml">
                  <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
-                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
+                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': ['|', ('cost_method', '=', 'standard'), ('id', '=', False)]}"/>
                  </xpath>
              </field>
         </record>
@@ -136,6 +136,47 @@
                     <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
                  </xpath>
              </field>
+        </record>
+
+        <!-- stock move valuation view -->
+        <record id="view_move_tree_valuation" model="ir.ui.view">
+            <field name="name">stock.move.tree.valuation</field>
+            <field name="model">stock.move</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
+                    <field name="name"/>
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
+                    <field name="product_id"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="date" groups="base.group_no_one"/>
+                    <field name="state" invisible="1"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="price_unit"/>
+                    <field name="value" sum="Stock Valuation"/>
+                    <field name="remaining_qty" invisible="context.get('is_avg')"/>
+                    <field name="remaining_value" sum="Stock Valuation" invisible="context.get('is_avg')"/>
+                </tree>
+            </field>
+        </record>
+        <record id="stock_move_valuation_action" model="ir.actions.act_window">
+            <field name="name">Stock Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_move_tree_valuation"/>
+            <field name="search_view_id" ref="stock.view_move_search"/>
+            <field name="context">{'search_default_outgoing': 1, 'search_default_incoming': 1, 'search_default_done': 1, 'search_default_group_by_product': 1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a stock movement.
+              </p>
+            </field>
         </record>
     </data>
 </odoo>

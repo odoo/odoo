@@ -18,13 +18,15 @@
 # Antonio Trueba <atgayol@gmail.com>, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
+# luis galaviz galindo <luisg-96@hotmail.com>, 2017
+# Cristian Salamea <ovnicraft@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +74,12 @@ msgid ""
 msgstr ""
 "Escoja un ticket de evento y se creará automáticamente un registro para el "
 "mismo."
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Conferencia sobre aplicaciones de negocio"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -181,6 +189,18 @@ msgid "Events"
 msgstr "Eventos"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:226
+#, python-format
+msgid "Free"
+msgstr "Libre"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Seminario funcional en línea"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
@@ -236,8 +256,10 @@ msgid "Maximum Available Seats"
 msgstr "Plazas máximas disponibles"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:222
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_name
+#, python-format
 msgid "Name"
 msgstr "Nombre"
 
@@ -254,6 +276,18 @@ msgid "No more available seats for this ticket"
 msgstr "No mas sitios disponibles para este ticket"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:223
+#, python-format
+msgid "None"
+msgstr "Ninguno"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Open Days en Los Ángeles"
+
+#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
 msgstr "Origen"
@@ -262,6 +296,18 @@ msgstr "Origen"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
 msgid "Original Registration"
 msgstr "registro original"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:231
+#, python-format
+msgid "Paid"
+msgstr "Pagado"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:232
+#, python-format
+msgid "Payment"
+msgstr "Pagos"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
@@ -293,6 +339,11 @@ msgstr "Producto"
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
 msgstr "Plantilla de producto"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Quotation"
+msgstr "Cotización"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:19
@@ -330,7 +381,6 @@ msgid "Sales End"
 msgstr "Final de las ventas"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
 msgid "Sales Order"
 msgstr "Pedido de venta"
@@ -363,6 +413,32 @@ msgid "Source Sales Order"
 msgstr ""
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Estándar"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Formación técnica"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:229
+#, python-format
+msgid "The registration must be paid"
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:223
+#, python-format
+msgid "Ticket"
+msgstr "Tiquet"
+
+#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
@@ -387,6 +463,12 @@ msgid "Tickets"
 msgstr "Tickets"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:228
+#, python-format
+msgid "To pay"
+msgstr "Pagar"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Reservas de plazas no confirmadas"
@@ -395,6 +477,13 @@ msgstr "Reservas de plazas no confirmadas"
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
 msgstr "Ilimitado"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

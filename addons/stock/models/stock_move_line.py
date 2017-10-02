@@ -155,6 +155,27 @@ class StockMoveLine(models.Model):
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')
+
+        # If the move line is directly create on the picking view.
+        # If this picking is already done we should generate an
+        # associated done move.
+        if 'picking_id' in vals and 'move_id' not in vals:
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if picking.state == 'done':
+                product = self.env['product.product'].browse(vals['product_id'])
+                new_move = self.env['stock.move'].create({
+                    'name': _('New Move:') + product.display_name,
+                    'product_id': product.id,
+                    'product_uom_qty': 'qty_done' in vals and vals['qty_done'] or 0,
+                    'product_uom': vals['product_uom_id'],
+                    'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
+                    'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
+                    'state': 'done',
+                    'additional': True,
+                    'picking_id': picking.id,
+                })
+                vals['move_id'] = new_move.id
+
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
             if ml.product_id.type == 'product':
@@ -248,9 +269,10 @@ class StockMoveLine(models.Model):
         if updates or 'qty_done' in vals:
             for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product'):
                 # undo the original move line
-                in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -ml.qty_done, lot_id=ml.lot_id,
-                                                      package_id=ml.package_id, owner_id=ml.owner_id)[1]
-                Quant._update_available_quantity(ml.product_id, ml.location_id, ml.qty_done, lot_id=ml.lot_id,
+                qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
+                                                      package_id=ml.result_package_id, owner_id=ml.owner_id)[1]
+                Quant._update_available_quantity(ml.product_id, ml.location_id, qty_done_orig, lot_id=ml.lot_id,
                                                       package_id=ml.package_id, owner_id=ml.owner_id, in_date=in_date)
 
                 # move what's been actually done
@@ -285,6 +307,12 @@ class StockMoveLine(models.Model):
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
 
         res = super(StockMoveLine, self).write(vals)
+
+        # Update scrap object linked to move_lines to the new quantity.
+        if 'qty_done' in vals:
+            for move in self.mapped('move_id'):
+                if move.scrapped:
+                    move.scrap_ids.write({'scrap_qty': move.quantity_done})
 
         # As stock_account values according to a move's `product_uom_qty`, we consider that any
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and

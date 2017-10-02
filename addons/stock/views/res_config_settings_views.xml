@@ -4,7 +4,7 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.stock</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="6"/>
+            <field name="priority" eval="30"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside" >
@@ -68,10 +68,10 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_delivery_ups"/>
                                     <div class="text-muted">
-                                        Ship with UPS
+                                        Compute shipping costs and ship with UPS
                                     </div>
                                     <div class="content-group">
-                                        <div id="delivery_ups"/>
+                                        <div id="stock_delivery_ups"/>
                                     </div>
                                 </div>
                             </div>
@@ -82,10 +82,10 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_delivery_dhl"/>
                                     <div class="text-muted">
-                                        Ship with DHL USA
+                                        Compute shipping costs and ship with DHL
                                     </div>
                                     <div class="content-group">
-                                        <div id="delivery_dhl"/>
+                                        <div id="stock_delivery_dhl"/>
                                     </div>
                                 </div>
                             </div>
@@ -96,10 +96,10 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_delivery_fedex"/>
                                     <div class="text-muted">
-                                        Ship with FedEx
+                                        Compute shipping costs and ship with FedEx
                                     </div>
                                     <div class="content-group">
-                                        <div id="delivery_fedex"/>
+                                        <div id="stock_delivery_fedex"/>
                                     </div>
                                 </div>
                             </div>
@@ -110,10 +110,10 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_delivery_usps"/>
                                     <div class="text-muted">
-                                        Ship with USPS
+                                        Compute shipping costs and ship with USPS
                                     </div>
                                     <div class="content-group">
-                                        <div id="delivery_usps"/>
+                                        <div id="stock_delivery_usps"/>
                                     </div>
                                 </div>
                             </div>
@@ -124,10 +124,10 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_delivery_bpost"/>
                                     <div class="text-muted">
-                                        Ship with bpost
+                                        Compute shipping costs and ship with bpost
                                     </div>
                                     <div class="content-group">
-                                        <div id="delivery_bpost"/>
+                                        <div id="stock_delivery_bpost"/>
                                     </div>
                                 </div>
                             </div>
@@ -298,7 +298,7 @@
         </record>
 
         <record id="action_stock_config_settings" model="ir.actions.act_window">
-            <field name="name">Configure Warehouse</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>

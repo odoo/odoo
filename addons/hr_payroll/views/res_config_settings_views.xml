@@ -11,7 +11,7 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="9"/>
+            <field name="priority" eval="45"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
@@ -53,7 +53,7 @@
         </record>
 
         <record id="action_hr_payroll_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Payroll</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -61,6 +61,6 @@
             <field name="context">{'module' : 'hr_payroll'}</field>
         </record>
 
-        <menuitem id="menu_hr_payroll_global_settings" name="Settings" 
+        <menuitem id="menu_hr_payroll_global_settings" name="Settings"
             parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration" groups="base.group_system"/>
 </odoo>

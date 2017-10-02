@@ -722,59 +722,61 @@
                 <div class="container oe_website_sale">
                     <div class="row">
                         <div class="col-md-8 col-md-offset-2 oe_cart">
-                          <div class='row'>
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="30"/>
-                            </t>
-                            <h2 class="mb32 ml16">Extra Step</h2>
-                          </div>
+                            <div class='row'>
+                                <t t-call="website_sale.wizard_checkout">
+                                    <t t-set="step" t-value="30"/>
+                                </t>
+                            </div>
+                            <div class="row">
+                                <div class='col-md-12 o_website_sale_rightfit'>
+                                    <h2 class="mb8 mt8">Extra Step</h2>
+                                    <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
+                                        <div class="form-group form-field o_website_form_custom">
+                                            <div class="col-md-3 col-sm-4 text-right-not-xs">
+                                                <label class="control-label" for="client_order_ref">Your Reference</label>
+                                            </div>
+                                            <div class="col-md-7 col-sm-8">
+                                                <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-field o_website_form_custom">
+                                            <div class="col-md-3 col-sm-4 text-right-not-xs">
+                                                <label class="control-label" for="Give us your feedback...">Give us your feedback...</label>
+                                            </div>
+                                            <div class="col-md-7 col-sm-8">
+                                                <textarea class="form-control o_website_form_input" name="Give us your feedback..." />
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-field o_website_form_custom">
+                                            <div class="col-md-3 col-sm-4 text-right-not-xs">
+                                                <label class="control-label" for="a_document">A document to provide</label>
+                                            </div>
+                                            <div class="col-md-7 col-sm-8">
+                                                <input type="file" class="form-control o_website_form_input" name="a_document" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3 col-sm-4">
+                                            </div>
+                                            <div class="col-md-7 col-sm-8">
+                                                <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-long-arrow-left" /> Previous</a>
+                                                <a class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!--
+                                Sample Code to re-inject previous value is needed.
+                                <script>
+                                    $("input[name='client_order_ref']").val(_.unescape('<t t-esc="escape(website_sale_order.client_order_ref or '') or ''"/>'));
+                                </script>
+                            -->
                         </div>
                     </div>
                 </div>
-                <div class="oe_structure row">
-                    <div class='col-md-6 col-md-offset-3'>
-                        <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
-                            <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-3 col-sm-4 text-right-not-xs">
-                                    <label class="control-label" for="client_order_ref">Your Reference</label>
-                                </div>
-                                <div class="col-md-7 col-sm-8">
-                                    <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
-                                </div>
-                            </div>
-                            <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-3 col-sm-4 text-right-not-xs">
-                                    <label class="control-label" for="Give us your feedback...">Give us your feedback...</label>
-                                </div>
-                                <div class="col-md-7 col-sm-8">
-                                    <textarea class="form-control o_website_form_input" name="Give us your feedback..." />
-                                </div>
-                            </div>
-                            <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-3 col-sm-4 text-right-not-xs">
-                                    <label class="control-label" for="a_document">A document to provide ? </label>
-                                </div>
-                                <div class="col-md-7 col-sm-8">
-                                    <input type="file" class="form-control o_website_form_input" name="a_document" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-4">
-                                </div>
-                                <div class="col-md-7 col-sm-8">
-                                    <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-long-arrow-left" /> Previous</a>
-                                    <a class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!--
-                        <script>
-                            $("input[name='client_order_ref']").val(_.unescape('<t t-esc="escape(website_sale_order.client_order_ref or '') or ''"/>'));
-                        </script>
-                    -->
-                </div>
             </div>
+            <div class="oe_structure row" />
         </t>
     </template>
 
@@ -872,47 +874,39 @@
             <div id="wrap">
                 <div class="container oe_website_sale">
                     <div class="row">
-                        <t t-call="website_sale.wizard_checkout">
-                            <t t-set="step" t-value="10" />
-                        </t>
-                        <h2 class="mb32 ml16">Shopping Cart</h2>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8 col-sm-9 oe_cart">
-                            <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info"> <!-- abandoned cart choices -->
-                                <t t-if="abandoned_proceed">
-                                    <p>Your previous cart has already been completed.</p>
-                                    <p t-if="website_sale_order">Please proceed your current cart.</p>
-                                </t>
-                                <t t-if="access_token">
-                                    <p>This is your current cart.</p>
-                                    <p>
-                                        <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a></strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.</p>
-                                    <p>
-                                        <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a></strong> if you want to merge your previous cart into current cart.
-                                    </p>
+                        <div class="col-md-8 col-md-offset-2 oe_cart">
+                            <div class="row">
+                                <t t-call="website_sale.wizard_checkout">
+                                    <t t-set="step" t-value="10" />
                                 </t>
                             </div>
-                            <t t-call="website_sale.cart_lines" />
-                            <div class="clearfix" />
-                            <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32" href="/shop/checkout">
-                                <span class="hidden-xs">Process Checkout</span>
-                                <span class="visible-xs-inline">Checkout</span>
-                                <span class="fa fa-long-arrow-right" />
-                            </a>
-                            <div class="oe_structure" />
-                        </div>
-                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 col-md-3 text-muted" id="right_column">
-                            <h4 class='hidden-xs'>Policies</h4>
-                            <ul class="hidden-xs list-unstyled mb32">
-                                <li>☑ 30-days money-back guarantee</li>
-                                <li>☑ Invoice sent by e-Mail</li>
-                            </ul>
-                            <h4 class='hidden-xs'>Secure Payment</h4>
-                            <ul class="hidden-xs list-unstyled mb32">
-                                <li>☑ 256 bit encryption</li>
-                                <li>☑ Processed by Ogone</li>
-                            </ul>
+                            <div class="row">
+                                <div class="col-md-12 o_website_sale_rightfit">
+                                    <h2 class="mb8 mt8">Shopping Cart</h2>
+                                    <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info"> <!-- abandoned cart choices -->
+                                        <t t-if="abandoned_proceed">
+                                            <p>Your previous cart has already been completed.</p>
+                                            <p t-if="website_sale_order">Please proceed your current cart.</p>
+                                        </t>
+                                        <t t-if="access_token">
+                                            <p>This is your current cart.</p>
+                                            <p>
+                                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a></strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.</p>
+                                            <p>
+                                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a></strong> if you want to merge your previous cart into current cart.
+                                            </p>
+                                        </t>
+                                    </div>
+                                    <t t-call="website_sale.cart_lines" />
+                                    <div class="clearfix" />
+                                    <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout">
+                                        <span class="hidden-xs">Process Checkout</span>
+                                        <span class="visible-xs-inline">Checkout</span>
+                                        <span class="fa fa-long-arrow-right" />
+                                    </a>
+                                    <div class="oe_structure" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1042,7 +1036,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <h3 class="page-header">Billing Address</h3>
+                                    <h2 class="page-header mt8">Billing Address</h2>
                                 </div>
                                 <div class="col-md-6 one_kanban">
                                     <t t-call="website_sale.address_kanban">
@@ -1055,8 +1049,8 @@
                             <t t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h3 class="page-header mt16">Shipping Address
-                                        </h3>
+                                        <h2 class="page-header mt16 mb4">Shipping Address
+                                        </h2>
                                     </div>
                                 </div>
                                 <div class="row all_shipping">
@@ -1140,17 +1134,16 @@
                     </div>
                             <div class="row">
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h3 class="page-header mt32 ml16">Your Address
+                                    <h2 class="page-header mt8 ml16">Your Address
                                         <small> or </small>
-                                        <t t-set='connect' t-value="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and ('signup', 'Sign Up') or ('login', 'Log In')"/>
-                                        <a t-attf-href='/web/{{connect[0]}}?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px"><t t-esc='connect[1]'/></a>
-                                    </h3>
+                                        <a href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
+                                    </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h3 class="page-header mt32 ml16">Your Address</h3>
+                                    <h2 class="page-header mt8 ml16">Your Address</h2>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h3 class="page-header mt32 ml16">Shipping Address </h3>
+                                    <h2 class="page-header mt8 ml16">Shipping Address </h2>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
@@ -1265,7 +1258,7 @@
             <div id="wrap">
                 <div class="container oe_website_sale">
                     <div class="row">
-                        <div class="col-md-offset-2 col-lg-8 col-sm-9">
+                        <div class="col-md-offset-2 col-lg-8 col-sm-9" t-if="errors">
                             <t t-foreach="errors" t-as="error">
                                 <div class="alert alert-danger" t-if="error">
                                     <h4>
@@ -1280,10 +1273,10 @@
                             <t t-call="website_sale.wizard_checkout">
                                 <t t-set="step" t-value="40" />
                             </t>
-                            <h2 class="mb32 ml16">Confirm Order</h2>
                          </div>
                          <div class="row">
-                            <div class='col-md-12'>
+                            <div class='col-md-12 o_website_sale_rightfit'>
+                                <h2 class="mb8 mt8">Confirm Order</h2>
                                 <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                                     <thead>
                                         <tr>
@@ -1333,13 +1326,13 @@
                                     </t>
                                 </div>
                                 <t t-call="website_sale.total">
-                                    <t t-set='extra_class' t-value='"col-md-5 col-md-offset-7 col-xs-8 col-xs-offset-4"'/>
+                                    <t t-set='extra_class' t-value='"col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
                                 </t>
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
 
-                            <div id="payment_method" class="mb64 col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                            <div id="payment_method" class="col-md-12 o_website_sale_rightfit" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
                                 <h3 class="mb24">Pay with </h3>
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
@@ -1353,10 +1346,10 @@
                             </div>
 
                             <div t-if="not (form_acquirers or s2s_acquirers)">
-                                <a class="btn btn-default btn-block"
+                                <a class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Configure payment acquirers
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i> Add payment acquirers
                                 </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
@@ -1417,7 +1410,7 @@
                                     <table class="table table-striped table-condensed">
                                         <thead>
                                             <tr>
-                                                <th class='td-product_name'>Products</th>
+                                                <th class='td-product_name'>Product</th>
                                                 <th class='td-qty'>Quantity</th>
                                                 <th class="text-right td-price">Unit Price</th>
                                                 <th class="text-right td-price-total">Subtotal</th>
@@ -1460,8 +1453,8 @@
                                     <table class='table'>
                                       <tr>
                                           <td class="col-md-8"></td>
-                                          <td class="text-right col-sm-2 col-xs-3">Subtotal:</td>
-                                          <td class="text-right-not-xs text-left-xs col-sm-2 col-xs-3">
+                                          <td class="text-right-not-xs text-left-xs col-sm-2 col-xs-3">Subtotal:</td>
+                                          <td class="text-right col-sm-2 col-xs-3">
                                               <span t-field="order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                                           </td>
                                       </tr>
@@ -1484,7 +1477,7 @@
                                     <div class="clearfix" />
                                     <div class="oe_structure" />
                                     <h3 class="text-left">
-                                        <strong>Payment information:</strong>
+                                        <strong>Payment Information:</strong>
                                     </h3>
                                     <table class="table">
                                         <tbody>
@@ -1502,6 +1495,12 @@
                                         </tbody>
                                     </table>
                                     <t t-call="website_sale.payment_confirmation_status" />
+                                    <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and request.website.is_public_user()">
+                                        <p class='alert alert-info mt16'>
+                                            <a t-att-href='order.partner_id.signup_prepare() and order.partner_id.signup_url' class='btn btn-primary'>Sign Up</a>
+                                             Now to Follow Your Order
+                                        </p>
+                                    </t>
                                 </div>
                             </div>
                             <div class="col-md-3 hidden-sm hidden-xs text-muted">
@@ -1532,8 +1531,9 @@
                 </span>
             </div>
             <div class="row" id="order_total">
-                <span class="col-xs-6 text-right h4">Total:</span>
-                <span class="col-xs-6 text-right-not-xs text-left-xs h4" style="white-space: nowrap;">
+                <hr class="mt8 mb0"/>
+                <span class="col-xs-6 text-right h4 mt0">Total:</span>
+                <span class="col-xs-6 text-right-not-xs text-left-xs h4 mt0" style="white-space: nowrap;">
                     <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                 </span>
             </div>
@@ -1546,9 +1546,9 @@
                     (order.payment_tx_id.state == 'pending' and 'panel-info') or
                     (order.payment_tx_id.state == 'done' and 'panel-success') or
                     'panel-danger')">
-                <a groups="base.group_system" class="btn btn-primary pull-right" target="_blank"
+                <a groups="base.group_system" class="btn pull-right" target="_blank"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
-                    <i class="fa fa-cog"></i>
+                    <i class="fa fa-pencil"></i>
                 </a>
                 <div class="panel-heading">
                     <t t-if="order.payment_tx_id.state == 'pending'">

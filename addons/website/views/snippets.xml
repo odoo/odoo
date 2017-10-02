@@ -149,18 +149,24 @@
             <div class="row mt16 mb16">
                 <div class="col-md-4 text-center">
                     <span class="fa fa-suitcase fa-5x"></span>
-                    <h3 class="mt8 mb0">First Feature</h3>
-                    <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
+                    <div>
+                        <h3 class="mt8 mb0">First Feature</h3>
+                        <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
+                    </div>
                 </div>
                 <div class="col-md-4 text-center">
                     <span class="fa fa-lock fa-5x"></span>
-                    <h3 class="mt8 mb0">Second Feature</h3>
-                    <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
+                    <div>
+                        <h3 class="mt8 mb0">Second Feature</h3>
+                        <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
+                    </div>
                 </div>
                 <div class="col-md-4 text-center">
                     <span class="fa fa-heart fa-5x"></span>
-                    <h3 class="mt8 mb0">Third Feature</h3>
-                    <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
+                    <div>
+                        <h3 class="mt8 mb0">Third Feature</h3>
+                        <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -892,7 +898,7 @@
 
     <div data-js='resize'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
-        data-drop-in=".oe_structure, [data-oe-type=html]">
+        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]">
     </div>
 
     <div data-js='margin-x'

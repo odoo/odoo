@@ -177,7 +177,7 @@ database
 built-in HTTP
 -------------
 
-.. option:: --no-xmlrpc
+.. option:: --no-http
 
     do not start the HTTP or long-polling workers (may still start cron
     workers)
@@ -185,12 +185,12 @@ built-in HTTP
     .. warning:: has no effect if :option:`--test-enable` is set, as tests
                  require an accessible HTTP server
 
-.. option:: --xmlrpc-interface <interface>
+.. option:: --http-interface <interface>
 
     TCP/IP address on which the HTTP server listens, defaults to ``0.0.0.0``
     (all addresses)
 
-.. option:: --xmlrpc-port <port>
+.. option:: --http-port <port>
 
     Port on which the HTTP server listens, defaults to 8069.
 
@@ -375,7 +375,7 @@ and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
 Some conversions don't match the pattern:
 
 * :option:`--db-filter` becomes ``dbfilter``
-* :option:`--no-xmlrpc` corresponds to the ``xmlrpc`` boolean
+* :option:`--no-http` corresponds to the ``http_enable`` boolean
 * logging presets (all options starting with ``--log-`` except for
   :option:`--log-handler` and :option:`--log-db`) just add content to
   ``log_handler``, use that directly in the configuration file

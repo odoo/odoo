@@ -19,7 +19,7 @@ _default_parameters = {
     "database.secret": lambda: pycompat.text_type(uuid.uuid4()),
     "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
-    "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
+    "web.base.url": lambda: "http://localhost:%s" % config.get('http_port'),
 }
 
 

@@ -10,7 +10,7 @@ for (var k=0; k<steps.length; k++) {
     if (steps[k].content === "click on add to cart") {
         steps.splice(k+1, 0, {
             content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'a:contains("Proceed to checkout")',
+            trigger: 'a:contains("Proceed to Checkout")',
         });
         break;
     }
@@ -56,7 +56,7 @@ tour.register('shop_customize', {
         {
             content: "click in modal on 'Proceed to checkout' button",
             extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-            trigger: '.modal-dialog a:contains("Proceed to checkout")',
+            trigger: '.modal-dialog a:contains("Proceed to Checkout")',
         },
         {
             content: "check quantity",

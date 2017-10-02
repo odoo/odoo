@@ -134,6 +134,11 @@ class PickingType(models.Model):
             self.default_location_src_id = self.env.ref('stock.stock_location_stock').id
             self.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
 
+    @api.onchange('show_operations')
+    def onchange_show_operations(self):
+        if self.show_operations is True:
+            self.show_reserved = True
+
     def _get_action(self, action_xmlid):
         # TDE TODO check to have one view + custo in methods
         action = self.env.ref(action_xmlid).read()[0]
@@ -389,7 +394,7 @@ class Picking(models.Model):
                 float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding)
                 for move in picking.move_lines
             )
-            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting') and has_moves_to_reserve
+            picking.show_check_availability = picking.is_locked and picking.state in ('confirmed', 'waiting', 'assigned') and has_moves_to_reserve
 
     @api.multi
     @api.depends('state', 'move_lines')
@@ -509,8 +514,7 @@ class Picking(models.Model):
             .filtered(lambda move: move.state == 'draft')\
             ._action_confirm()
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
-        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production'))\
-            .filtered(lambda move: move.state == 'confirmed')\
+        self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
         return True
 
@@ -539,6 +543,7 @@ class Picking(models.Model):
     @api.multi
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
+        self.is_locked = True
         return True
 
     @api.multi
@@ -805,6 +810,10 @@ class Picking(models.Model):
 
     def button_scrap(self):
         self.ensure_one()
+        products = self.env['product.product']
+        for move in self.move_lines:
+            if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
+                products |= move.product_id
         return {
             'name': _('Scrap'),
             'view_type': 'form',
@@ -812,7 +821,7 @@ class Picking(models.Model):
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': self.move_line_ids.mapped('product_id').ids},
+            'context': {'default_picking_id': self.id, 'product_ids': products.ids},
             'target': 'new',
         }
 

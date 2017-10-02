@@ -1504,7 +1504,9 @@ QUnit.module('Views', {
             default: {
                 foo: {},
                 bar: {
-                    modifiers:"{\"readonly\": true}",
+                    modifiers: {
+                        readonly: true,
+                    },
                 },
             }
         };
@@ -1524,7 +1526,6 @@ QUnit.module('Views', {
                 return this._super(route, args);
             },
         });
-
         model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
             assert.strictEqual(record.data.bar, 2,
@@ -1568,7 +1569,9 @@ QUnit.module('Views', {
             default: {
                 foo: {},
                 bar: {
-                    modifiers:"{\"readonly\": true}",
+                    modifiers: {
+                        readonly: true,
+                    },
                     force_save: true,
                 },
             }
@@ -2120,4 +2123,47 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('onchange on a boolean field', function (assert) {
+        assert.expect(2);
+
+        var newFields = {
+            foobool: {
+                type: 'boolean',
+                string: 'foobool',
+            },
+            foobool2: {
+                type: 'boolean',
+                string: 'foobool2',
+            },
+        };
+        _.extend(this.data.partner.fields, newFields);
+
+        this.data.partner.onchanges.foobool = function (obj) {
+            if (obj.foobool) {
+                obj.foobool2 = true;
+            }
+        };
+
+        this.data.partner.records[0].foobool = false;
+        this.data.partner.records[0].foobool2 = true;
+
+        this.params.res_id = 1;
+        this.params.fieldNames = ['foobool', 'foobool2'];
+        this.params.fields = this.data.partner.fields;
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            model.notifyChanges(resultID, {foobool2: false});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.foobool2, false, "foobool2 field should be false");
+            model.notifyChanges(resultID, {foobool: true});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.foobool2, true, "foobool2 field should be true");
+        });
+        model.destroy();
+    });
 });});

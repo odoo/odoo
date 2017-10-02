@@ -16,65 +16,175 @@ var BaseSettingRenderer = FormRenderer.extend({
         'keyup .searchInput': '_onKeyUpSearch',
     }),
 
-    init: function() {
+    init: function () {
+        this._super.apply(this, arguments);
         this.activeView = false;
         this.activeTab = false;
-        this._super.apply(this, arguments);
     },
 
-    start: function() {
+    start: function () {
         this._super.apply(this, arguments);
+        if (config.device.isMobile) {
+            core.bus.on("DOM_updated", this, function () {
+                this._moveToTab(this.currentIndex || this._currentAppIndex());
+            });
+        }
+    },
 
+    /**
+     * enable case insensitive search in jQuery contains function
+     *
+     * @private
+     */
+    _activeCaseInsensitiveSearch: function () {
+        $.expr[':'].contains = function (a, i, m) {
+            return $(a).text().toUpperCase()
+                .indexOf(m[3].toUpperCase()) >= 0;
+        };
+    },
+    /**
+     * initialize modules list.
+     * remove module that restricted in groups
+     * data contains
+     *  {
+     *     key: moduel key
+     *     string: moduel string
+     *     imgurl: icon url
+     *  }
+     *
+     * @private
+     */
+    _initModules: function () {
         var self = this;
         this.modules = [];
-
-        _.each(this.$('.app_settings_block'),function(settingView, index) {
+        _.each(this.$('.app_settings_block'), function (settingView, index) {
             var group = !$(settingView).hasClass('o_invisible_modifier');
-            if(group) {
-                var string = $(settingView).attr('data-string');
-                var key = $(settingView).attr('data-key');
-                var imgurl = self._getAppIconUrl(key);
-                var view = $(settingView);
+            var isNotApp = $(settingView).hasClass('o_not_app');
+            if(group && !isNotApp) {
+                var data = $(settingView).data();
                 self.modules.push({
-                    key: key,
-                    string: string,
-                    settingView: view,
-                    imgurl: imgurl,
-                    order: key=== self.activeSettingTab ? 0 : index+1
+                    key: data.key,
+                    string: data.string,
+                    imgurl: self._getAppIconUrl(data.key),
                 });
-                view.addClass("o_hidden");
-                view.prepend($("<div>").html('<img class="icon" src="'+imgurl+'"><span class="appName">'+string+'</span>').addClass('settingSearchHeader o_hidden'));
             } else {
                 $(settingView).remove();
             }
         });
-
-        this.modules = _.sortBy(this.modules,function(m){return m.order});
-        var tabs = $(QWeb.render('BaseSetting.Tabs',{tabItems : this.modules}));
-        tabs.appendTo(this.$(".settings_tab"));
-
-        $.expr[':'].contains = function(a, i, m) {
-            return jQuery(a).text().toUpperCase()
-                .indexOf(m[3].toUpperCase()) >= 0;
-        };
-
-        this.searchText = "";
+    },
+    /**
+     * initialize searchtext variable
+     * initialize jQuery search input element
+     *
+     * @private
+     */
+    _initSearch: function () {
         this.searchInput = this.$('.searchInput');
-        core.bus.on("DOM_updated", this, function() {
-            if (!this.activeTab)
-                this._moveToTab(_.findIndex(this.modules,function(m){
-                    return m.key === self.activeSettingTab
-                }));
+        if (this.searchText) {
+            this.searchInput.val(this.searchText);
+            this._onKeyUpSearch();
+        } else {
+            this.searchText = "";
+        }
+    },
+    /**
+     * In mobile view behaviour is like swipe content left / right and apps tab will be shown on the top.
+     * This method will set the required properties (styling and css).
+     *
+     * @private
+     * @param {int} currentTab
+     */
+    _activateSettingMobileTab: function (currentTab) {
+        var self = this;
+        var moveTo = currentTab;
+        var next = moveTo + 1;
+        var previous = moveTo - 1;
+
+        this.$(".settings .app_settings_block").removeClass("previous next current before after");
+        this.$(".settings_tab .tab").removeClass("previous next current before after");
+        _.each(this.modules, function (module, index) {
+            var tab = self.$(".tab[data-key='" + module.key + "']");
+            var view = module.settingView;
+
+            if (index === previous) {
+                tab.addClass("previous");
+                tab.css("margin-left", "0px");
+                view.addClass("previous");
+            } else if (index === next) {
+                tab.addClass("next");
+                tab.css("margin-left", "-" + tab.outerWidth() + "px");
+                view.addClass("next");
+            } else if (index < moveTo) {
+                tab.addClass("before");
+                tab.css("margin-left", "-" + tab.outerWidth() + "px");
+                view.addClass("before");
+            } else if (index === moveTo) {
+                var marginLeft = tab.outerWidth() / 2;
+                tab.css("margin-left", "-" + marginLeft + "px");
+                tab.addClass("current");
+                view.addClass("current");
+            } else if (index > moveTo) {
+                tab.addClass("after");
+                tab.css("margin-left", "0");
+                view.addClass("after");
+            }
         });
     },
-
-    _getAppIconUrl: function(module) {
+    /**
+     * find current app index in modules
+     *
+     */
+    _currentAppIndex: function () {
+        var self = this;
+        var index = _.findIndex(this.modules, function (module) {
+            return module.key === self.activeSettingTab;
+        });
+        return index;
+    },
+    /**
+     *
+     * @private
+     * @param {string} module
+     * @returns {string} icon url
+     */
+    _getAppIconUrl: function (module) {
         return module === "general_settings" ? "/base/static/description/settings.png" : "/"+module+"/static/description/icon.png";
     },
-
+    /**
+     *
+     * @private
+     * @param {string} imgurl
+     * @param {string} string(moduel name)
+     * @returns {object}
+     */
+    _getSearchHeader: function (imgurl, string) {
+        return $(QWeb.render('BaseSetting.SearchHeader', {
+            imgurl: imgurl,
+            string: string
+        }));
+    },
+    /**
+     * add placeholder attr in input element
+     * @override
+     * @private
+     * @param {jQueryElement} $el
+     * @param {Object} node
+     */
+    _handleAttributes: function ($el, node) {
+        this._super.apply(this, arguments);
+        if (node.attrs.placeholder) {
+            $el.attr('placeholder', node.attrs.placeholder);
+        }
+    },
+    /**
+     * move to selected setting
+     *
+     * @private
+     * @param {int} index
+     */
     _moveToTab: function (index) {
-        this.currentIndex = index === -1 ? 0 : (index === this.modules.length ? index-1 : index);
-        if (this.currentIndex != -1) {
+        this.currentIndex = !index || index === -1 ? 0 : (index === this.modules.length ? index - 1 : index);
+        if (this.currentIndex !== -1) {
             if (this.activeView) {
                 this.activeView.addClass("o_hidden");
             }
@@ -87,110 +197,43 @@ var BaseSettingRenderer = FormRenderer.extend({
             this.activeView = view;
             this.activeTab = tab;
 
-            if (config.isMobile) {
+            if (config.device.isMobile) {
                 this._activateSettingMobileTab(this.currentIndex);
             } else {
                 tab.addClass("selected");
             }
         }
     },
-    _activateSettingMobileTab: function (currentTab) {
-        var self = this;
-        var moveTo = currentTab;
-        var next = moveTo + 1;
-        var previous = moveTo - 1;
 
-        this.$(".settings .app_settings_block").removeClass("previous next current before after");
-        this.$(".settings_tab .tab").removeClass("previous next current before after");
-        _.each(this.modules, function(module, index) {
-            var tab = self.$(".tab[data-key='" + module.key + "']");
-            var view = module.settingView;
-
-            if (index == previous) {
-                tab.addClass("previous");
-                tab.css("margin-left", "0px");
-                view.addClass("previous");
-            } else if (index == next) {
-                tab.addClass("next");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
-                view.addClass("next");
-            } else if (index < moveTo) {
-                tab.addClass("before");
-                tab.css("margin-left", "-" + tab.outerWidth() + "px");
-                view.addClass("before");
-            } else if (index == moveTo) {
-                var marginLeft = tab.outerWidth() / 2;
-                tab.css("margin-left", "-" + marginLeft + "px");
-                tab.addClass("current");
-                view.addClass("current");
-            } else if (index > moveTo) {
-                tab.addClass("after");
-                tab.css("margin-left", "0");
-                view.addClass("after");
-            }
-        });
-    },
-
-    _onSettingTabClick: function(event) {
-        if(this.searchText.length > 0) {
+    _onSettingTabClick: function (event) {
+        if (this.searchText.length > 0) {
             this.searchInput.val('');
             this.searchText = "";
             this._searchSetting();
         }
         var settingKey = this.$(event.currentTarget).data('key');
-        this._moveToTab(_.findIndex(this.modules, function(m){ return m.key === settingKey}))
+        this._moveToTab(_.findIndex(this.modules, function (m) {
+            return m.key === settingKey;
+        }));
     },
 
-    _onKeyUpSearch: function(event) {
+    _onKeyUpSearch: function (event) {
         this.searchText = this.searchInput.val();
         this.activeTab.removeClass('selected');
-        if(config.isMobile) {
+        if (config.device.isMobile) {
             this.$('.settings_tab').addClass('o_hidden');
             this.$('.settings').addClass('d-block');
         }
         this._searchSetting();
     },
-
-    _searchSetting: function() {
-        var self = this;
-        this.count = 0;
-        _.each(this.modules,function(module) {
-            module.settingView.find('.o_setting_box').addClass('o_hidden');
-            module.settingView.find('h2').addClass('o_hidden');
-            module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').removeClass('mt16');
-            var resultSetting = module.settingView.find("label:contains('" + self.searchText + "')");
-            if (resultSetting.length > 0) {
-                resultSetting.each(function() {
-                    $(this).closest('.o_setting_box').removeClass('o_hidden');
-                    $(this).html(self._wordHighlighter($(this).html(),self.searchText));
-                });
-                module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
-                module.settingView.removeClass('o_hidden');
-            } else {
-                ++self.count;
-            }
-        });
-        this.count === _.size(this.modules) ? this.$('.notFound').removeClass('o_hidden') : this.$('.notFound').addClass('o_hidden');
-        if(this.searchText.length == 0) {
-            this._resetSearch();
-        }
-    },
-
-    _wordHighlighter: function(text,word) {
-        if (text.indexOf('highlighter') !== -1) {
-            text = text.replace('<span class="highlighter">', "");
-            text = text.replace("</span>", "");
-        }
-        var match = text.search(new RegExp(word, "i"));
-        word = text.substring(match, match + word.length);
-        var hilitedWord = "<span class='highlighter'>" + word + '</span>';
-        return text.replace(word,hilitedWord);
-    },
-
-    _resetSearch: function() {
+    /**
+     * reset setting view
+     *
+     * @private
+     */
+    _resetSearch: function () {
         this.searchInput.val("");
-        _.each(this.modules,function(module) {
+        _.each(this.modules, function (module) {
             module.settingView.addClass('o_hidden');
             module.settingView.find('.o_setting_box').removeClass('o_hidden');
             module.settingView.find('h2').removeClass('o_hidden');
@@ -199,17 +242,92 @@ var BaseSettingRenderer = FormRenderer.extend({
         });
         this.activeTab.removeClass('o_hidden').addClass('selected');
         this.activeView.removeClass('o_hidden');
-        if(config.isMobile) {
+        if (config.device.isMobile) {
             this.$('.settings_tab').removeClass('o_hidden');
             this.$('.settings').removeClass('d-block');
         }
     },
 
-    _handleAttributes: function ($el, node) {
-        this._super.apply(this, arguments);
-        if (node.attrs.placeholder) {
-            $el.attr('placeholder', node.attrs.placeholder);
+    _render: function () {
+        var res = this._super.apply(this, arguments);
+        if (!this.modules) {
+            this._initModules();
+            this._activeCaseInsensitiveSearch();
         }
+        this._renderLeftPanel();
+        this._initSearch();
+        return res;
+    },
+
+    _renderLeftPanel: function () {
+        var self = this;
+        _.each(this.modules, function (module) {
+            module.settingView = self.$('.app_settings_block[data-key="' + module.key + '"]');
+            module.settingView.addClass("o_hidden");
+            module.settingView.prepend(self._getSearchHeader(module.imgurl, module.string));
+        });
+        this._renderTabs();
+        this._moveToTab(this.currentIndex || this._currentAppIndex());
+    },
+
+    _renderTabs: function () {
+        var tabs = $(QWeb.render('BaseSetting.Tabs', {tabItems : this.modules}));
+        tabs.appendTo(this.$(".settings_tab"));
+    },
+    /**
+     * search setting in DOM
+     *
+     * @private
+     */
+    _searchSetting: function () {
+        var self = this;
+        this.count = 0;
+        _.each(this.modules, function (module) {
+            self.inVisibleCount = 0;
+            module.settingView.find('.o_setting_box').addClass('o_hidden');
+            module.settingView.find('h2').addClass('o_hidden');
+            module.settingView.find('.settingSearchHeader').addClass('o_hidden');
+            module.settingView.find('.o_settings_container').removeClass('mt16');
+            var resultSetting = module.settingView.find("label:contains('" + self.searchText + "')");
+            if (resultSetting.length > 0) {
+                resultSetting.each(function () {
+                    var settingBox = $(this).closest('.o_setting_box');
+                    if (!settingBox.hasClass('o_invisible_modifier')) {
+                        settingBox.removeClass('o_hidden');
+                        $(this).html(self._wordHighlighter($(this).text(), self.searchText));
+                    } else {
+                        self.inVisibleCount++;
+                    }
+                });
+                if (self.inVisibleCount !== resultSetting.length) {
+                    module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
+                    module.settingView.removeClass('o_hidden');
+                }
+            } else {
+                ++self.count;
+            }
+        });
+        this.count === _.size(this.modules) ? this.$('.notFound').removeClass('o_hidden') : this.$('.notFound').addClass('o_hidden');
+        if (this.searchText.length === 0) {
+            this._resetSearch();
+        }
+    },
+    /**
+     * highlight search word
+     *
+     * @private
+     * @param {string} text
+     * @param {string} word
+     */
+    _wordHighlighter: function (text, word) {
+        if (text.indexOf('highlighter') !== -1) {
+            text = text.replace('<span class="highlighter">', "");
+            text = text.replace("</span>", "");
+        }
+        var match = text.search(new RegExp(word, "i"));
+        word = text.substring(match, match + word.length);
+        var hilitedWord = "<span class='highlighter'>" + word + '</span>';
+        return text.replace(word, hilitedWord);
     },
 });
 

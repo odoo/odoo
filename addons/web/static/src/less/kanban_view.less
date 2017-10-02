@@ -88,13 +88,12 @@
     position: relative;
     background: white;
     border-color: @gray-lighter-darker;
-    z-index: 2; // Make the dropdown link appear over the dropdown-menu
+    z-index: @zindex-dropdown + 1;
 }
 .o-kanban-dropdown-menu() {
     .o-position-absolute(@right: -1px);
     margin-top: -1px;
     border-color: @gray-lighter-darker;
-    z-index: 1; // Make the dropdown-menu appear under the dropdown link
 }
 .o-kanban-colorpicker() {
     max-width: 150px;
@@ -309,7 +308,6 @@
                 font-weight: 500;
                 background-color: transparent;
                 .o-kanban-tag-color();
-                .o-hover-opacity(0.7);
 
                 span {
                     display: inline-block;

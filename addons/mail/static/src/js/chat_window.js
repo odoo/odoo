@@ -43,7 +43,7 @@ return Widget.extend({
         this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
-        this.isMobile = config.isMobile;
+        this.isMobile = config.device.isMobile;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -63,7 +63,7 @@ return Widget.extend({
         } else if (this.options.autofocus) {
             this.focus_input();
         }
-        if (!config.isMobile) {
+        if (!config.device.isMobile) {
             this.$el.css('margin-right', $.position.scrollbarWidth());
         }
         var def = this.thread.replace(this.$('.o_chat_content'));

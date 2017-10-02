@@ -315,21 +315,23 @@
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <group>
                                     <div style="margin-top: 4px;">
-                                        <h3>Help with Python expressions.</h3>
+                                        <h3>Help with Python expressions</h3>
                                         <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
                                         <ul>
-                                            <li>env: Odoo Environement on which the action is triggered</li>
-                                            <li>model: Odoo Model of the record on which the action is triggered; is a void recordset</li>
-                                            <li>record: browse record on which the action is triggered</li>
-                                            <li>records: record set of records on which the action is triggered in multi mode</li>
-                                            <li>time, datetime, timezone: Python module</li>
-                                            <li>log(message, level='info'): a logging function to create ir_logging records</li>
+                                            <li><code>env</code>: Odoo Environment on which the action is triggered</li>
+                                            <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                            <li><code>record</code>: record on which the action is triggered; may be be void</li>
+                                            <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
+                                            <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                            <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
+                                            <li><code>Warning</code>: Warning Exception to use with <code>raise</code></li>
+                                            <li>To return an action, assign: <code>action = {...}</code></li>
                                         </ul>
                                         <div attrs="{'invisible': [('state', '!=', 'code')]}">
-                                            <p>Example of python code</p>
+                                            <p>Example of Python code</p>
 <code style='white-space: pre-wrap'>
 partner_name = record.name + '_code'
-env["res.partner"].create({"name": partner_name})
+env['res.partner'].create({'name': partner_name})
 </code>
                                         </div>
                                     </div>

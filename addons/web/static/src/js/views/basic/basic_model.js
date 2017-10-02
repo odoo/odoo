@@ -948,6 +948,17 @@ var BasicModel = AbstractModel.extend({
         record.fieldsInfo = _.defaults(record.fieldsInfo, viewInfo.fieldsInfo);
     },
     /**
+     * Manually sets a resource as dirty. This is used to notify that a field
+     * has been modified, but with an invalid value. In that case, the value is
+     * not sent to the basic model, but the record should still be flagged as
+     * dirty so that it isn't discarded without any warning.
+     *
+     * @param {string} id a resource id
+     */
+    setDirty: function (id) {
+        this.localData[id]._isDirty = true;
+    },
+    /**
      * For list resources, this changes the orderedBy key.
      *
      * @param {string} list_id id for the list resource
@@ -1235,7 +1246,7 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
-            var oldValue = record._changes[name] || record.data[name];
+            var oldValue = name in record._changes ? record._changes[name] : record.data[name];
             var id;
             if (field.type === 'many2one') {
                 id = false;
@@ -1688,6 +1699,9 @@ var BasicModel = AbstractModel.extend({
         }
         if ('invisible' in modifiers) {
             result.invisible = evalModifier(modifiers.invisible);
+        }
+        if ('column_invisible' in modifiers) {
+            result.column_invisible = evalModifier(modifiers.column_invisible);
         }
         if ('readonly' in modifiers) {
             result.readonly = evalModifier(modifiers.readonly);
@@ -2847,7 +2861,7 @@ var BasicModel = AbstractModel.extend({
     _isFieldProtected: function (record, fieldName, viewType) {
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         if (fieldInfo) {
-            var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+            var rawModifiers = fieldInfo.modifiers || {};
             var modifiers = this._evalModifiers(record, rawModifiers);
             return modifiers.readonly && !fieldInfo.force_save;
         } else {
@@ -2899,7 +2913,7 @@ var BasicModel = AbstractModel.extend({
             _.each(element.getFieldNames(), function (fieldName) {
                 var field = element.fields[fieldName];
                 var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
-                var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+                var rawModifiers = fieldInfo.modifiers || {};
                 var modifiers = self._evalModifiers(record, rawModifiers);
                 if (modifiers.required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
@@ -3179,8 +3193,18 @@ var BasicModel = AbstractModel.extend({
                             }
                             if (value[0] === 6) {
                                 // REPLACE_WITH
-                                x2manyList.res_ids = value[2];
-                                x2manyList.count = x2manyList.res_ids.length;
+                                _.each(value[2], function (res_id) {
+                                    r = self._makeDataPoint({
+                                        modelName: x2manyList.model,
+                                        context: x2manyList.context,
+                                        fieldsInfo: fieldsInfo,
+                                        fields: fields,
+                                        parentID: x2manyList.id,
+                                        res_id: res_id,
+                                        viewType: viewType,
+                                    });
+                                    x2manyList._changes.push({operation: 'ADD', id: r.id});
+                                });
                                 var def = self._readUngroupedList(x2manyList).then(function () {
                                     return $.when(
                                         self._fetchX2ManysBatched(x2manyList),

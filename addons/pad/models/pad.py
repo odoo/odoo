@@ -85,7 +85,7 @@ class PadCommon(models.AbstractModel):
             except:
                 _logger.warning("No url found '%s'.", url)
             else:
-                mo = re.search('<body>(.*)</body>', r.content, re.DOTALL)
+                mo = re.search('<body>(.*)</body>', r.content.decode(), re.DOTALL)
                 if mo:
                     content = mo.group(1)
 

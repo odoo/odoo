@@ -58,7 +58,6 @@ def _deduplicate_loggers(loggers):
         for logger, level in dict(it.split(':') for it in loggers).items()
     )
 
-
 class configmanager(object):
     def __init__(self, fname=None):
         """Constructor.
@@ -120,24 +119,33 @@ class configmanager(object):
                          help="Directory where to store Odoo data")
         parser.add_option_group(group)
 
-        # XML-RPC / HTTP
-        group = optparse.OptionGroup(parser, "XML-RPC Configuration")
-        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", my_default='',
-                         help="Specify the TCP IP address for the XML-RPC protocol. The empty string binds to all interfaces.")
-        group.add_option("--xmlrpc-port", dest="xmlrpc_port", my_default=8069,
-                         help="specify the TCP port for the XML-RPC protocol", type="int")
-        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
-                         help="disable the XML-RPC protocol")
-        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
-                         help="Enable correct behavior when behind a reverse proxy")
+        # HTTP
+        group = optparse.OptionGroup(parser, "HTTP Service Configuration")
+        group.add_option("--http-interface", dest="http_interface", my_default='',
+                         help="Listen interface address for HTTP services. "
+                              "Keep empty to listen on all interfaces (0.0.0.0)")
+        group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
+                         help="Listen port for the main HTTP service", type="int", metavar="PORT")
         group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
-                         help="specify the TCP port for longpolling requests", type="int")
+                         help="Listen port for the longpolling HTTP service", type="int", metavar="PORT")
+        group.add_option("--no-http", dest="http_enable", action="store_false", my_default=True,
+                         help="Disable the HTTP and Longpolling services entirely")
+        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
+                         help="Activate reverse proxy WSGI wrappers (headers rewriting) "
+                              "Only enable this when running behind a trusted web proxy!")
+        # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
+        hidden = optparse.SUPPRESS_HELP
+        group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)
+        group.add_option("--xmlrpc-port", dest="http_port", type="int", help=hidden)
+        group.add_option("--no-xmlrpc", dest="http_enable", action="store_false", help=hidden)
+
         parser.add_option_group(group)
 
         # WEB
         group = optparse.OptionGroup(parser, "Web interface Configuration")
-        group.add_option("--db-filter", dest="dbfilter", my_default='',
-                         help="Filter listed database", metavar="REGEXP")
+        group.add_option("--db-filter", dest="dbfilter", my_default='', metavar="REGEXP",
+                         help="Regular expressions for filtering available databases for Web UI. "
+                              "The expression can use %d (domain) and %h (host) placeholders.")
         parser.add_option_group(group)
 
         # Testing Group
@@ -383,12 +391,12 @@ class configmanager(object):
             self.options['server_wide_modules'] = 'web'
 
         # if defined dont take the configfile value even if the defined value is None
-        keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
+        keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'db_maxconn', 'import_partial', 'addons_path',
-                'xmlrpc', 'syslog', 'without_demo',
+                'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
         ]
@@ -410,7 +418,7 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
+            'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
@@ -503,10 +511,16 @@ class configmanager(object):
         setattr(parser.values, option.dest, ",".join(ad_paths))
 
     def load(self):
+        outdated_options_map = {
+            'xmlrpc_port': 'http_port',
+            'xmlrpc_interface': 'http_interface',
+            'xmlrpc': 'http_enable',
+        }
         p = ConfigParser.RawConfigParser()
         try:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
+                name = outdated_options_map.get(name, name)
                 if value=='True' or value=='true':
                     value = True
                 if value=='False' or value=='false':

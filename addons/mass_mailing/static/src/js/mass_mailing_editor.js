@@ -59,6 +59,10 @@ options.registry["width-x"] = options.Class.extend({
                     self.change_width(event, self.$target, target_width, offset, true);
                 }
             });
+
+            $body.one("mouseup", function(){
+                $body.off('.mass_mailing_width_x');
+            });
         });
     },
     change_width: function (event, target, target_width, offset, grow) {

@@ -97,7 +97,6 @@ class Website(models.Model):
             :param template : potential xml_id of the page to create
             :param namespace : module part of the xml_id if none, the template module name is used
         """
-
         if namespace:
             template_module = namespace
         else:
@@ -105,6 +104,7 @@ class Website(models.Model):
         # completely arbitrary max_length
         page_url = '/' + slugify(name, max_length=200, path=True)
         page_key = self.get_unique_path(slugify(name, 50))
+        result = dict({'url': page_url, 'view_id': False})
 
         if not name:
             name = 'Home'
@@ -125,6 +125,7 @@ class Website(models.Model):
                 'website_ids': [(6, None, [self.get_current_website().id])],
                 'view_id': view.id
             })
+            result['view_id'] = view.id
         if add_menu:
             self.env['website.menu'].create({
                 'name': name,
@@ -133,7 +134,7 @@ class Website(models.Model):
                 'page_id': page.id,
                 'website_id': self.get_current_website().id,
             })
-        return page_url
+        return result
 
     def get_unique_path(self, page_url):
         """ Given an url, return that url suffixed by counter if it already exists
@@ -299,6 +300,10 @@ class Website(models.Model):
     @api.model
     def is_user(self):
         return self.env['ir.model.access'].check('ir.ui.menu', 'read', False)
+
+    @api.model
+    def is_public_user(self):
+        return request.env.user.id == request.website.user_id.id
 
     @api.model
     def get_template(self, template):
@@ -710,8 +715,9 @@ class Menu(models.Model):
         else:
             url = self.url
             if not self.url.startswith('/'):
-                if '@' in self.url and not self.url.startswith('mailto'):
-                    url = 'mailto:%s' % self.url
+                if '@' in self.url:
+                    if not self.url.startswith('mailto'):
+                        url = 'mailto:%s' % self.url
                 elif not self.url.startswith('http'):
                     url = '/%s' % self.url
         return url

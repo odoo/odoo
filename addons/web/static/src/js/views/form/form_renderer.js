@@ -13,7 +13,7 @@ var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
-        'click .oe_title, .o_group': '_onClick',
+        'click .oe_title, .o_inner_group': '_onClick',
     }),
     /**
      * @override

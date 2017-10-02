@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-10-02 11:27+0000\n"
+"PO-Revision-Date: 2017-10-02 11:27+0000\n"
 "Last-Translator: Philipp Hug <philipp@hug.cx>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -298,6 +298,43 @@ msgid "%s has refused the challenge"
 msgstr ""
 
 #. module: gamification
+#: model:mail.template,body_html:gamification.email_template_badge_received
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><div>\n"
+"    <p>Congratulations ${object.user_id.name} !</p>\n"
+"    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>\n"
+"</div>\n"
+"<div>\n"
+"% if object.badge_id.description\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"    </td>\n"
+"    <td valign=\"center\">\n"
+"        <cite>${object.badge_id.description}</cite>\n"
+"    </td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"% endif\n"
+"</div>\n"
+"<div>\n"
+"    <p>\n"
+"% if object.sender_id\n"
+"        This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"% endif\n"
+"    </p>\n"
+"    <p>\n"
+"% if object.comment\n"
+"        <em>${object.comment}</em>\n"
+"% endif\n"
+"    </p>\n"
+"</div>\n"
+"</data>"
+msgstr ""
+
+#. module: gamification
 #: code:addons/gamification/models/challenge.py:655
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
@@ -356,7 +393,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3116
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3120
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
@@ -721,7 +758,7 @@ msgstr ""
 "der Berechnung wird im Feld 'Aktuell' angezeigt."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3115
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3119
 msgid "Definition Description"
 msgstr "Definitionsbeschreibung"
 
@@ -936,7 +973,7 @@ msgstr "Ziel"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3100
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3104
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
@@ -967,7 +1004,7 @@ msgstr "Zielauflistung"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3116
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3120
 msgid "Goal Performance"
 msgstr "Zielerreichung"
 
@@ -1671,7 +1708,7 @@ msgstr "Abonnements"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3117
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3121
 msgid "Suffix"
 msgstr "Endung"
 
@@ -1704,7 +1741,7 @@ msgstr "Die Zielvorgabe ist zu %s erfüllt."
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3117
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3121
 msgid "The currency and suffix field"
 msgstr "Das Feld für die Währung und die Einheiten"
 
@@ -2079,12 +2116,6 @@ msgstr "Sie haben diese Auszeichnung in diesem Monat bereits zu oft vergeben."
 #: model:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
 msgstr "Sie haben eine verborgene Auszeichnung gefunden."
-
-#. module: gamification
-#: model:mail.template,body_html:gamification.email_template_badge_received
-msgid ""
-"\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c6469763e0a202020203c703e436f6e67726174756c6174696f6e7320247b6f626a6563742e757365725f69642e6e616d657d20213c2f703e0a202020203c703e596f75206a757374207265636569766564206261646765203c7374726f6e673e247b6f626a6563742e62616467655f69642e6e616d657d3c2f7374726f6e673e20213c2f703e0a3c2f6469763e0a3c6469763e0a25206966206f626a6563742e62616467655f69642e6465736372697074696f6e0a3c7461626c652063656c6c73706163696e673d2230222063656c6c70616464696e673d22302220626f726465723d223022207374796c653d2277696474683a2036303070783b206d617267696e2d746f703a203570783b223e0a3c74626f64793e3c74723e0a202020203c74642076616c69676e3d2263656e746572223e0a20202020202020203c696d67207372633d222f7765622f696d6167652f67616d696669636174696f6e2e62616467652f247b6f626a6563742e62616467655f69642e69647d2f696d6167652f383078383022207374796c653d2270616464696e673a203070783b206d617267696e3a203070783b206865696768743a206175746f3b2077696474683a20383070783b2220616c743d22247b757365722e636f6d70616e795f69642e6e616d657d222f3e0a202020203c2f74643e0a202020203c74642076616c69676e3d2263656e746572223e0a20202020202020203c636974653e247b6f626a6563742e62616467655f69642e6465736372697074696f6e7d3c2f636974653e0a202020203c2f74643e0a3c2f74723e3c2f74626f64793e0a3c2f7461626c653e0a2520656e6469660a3c2f6469763e0a3c6469763e0a202020203c703e0a25206966206f626a6563742e73656e6465725f69640a20202020202020205468697320626164676520776173206772616e746564206279203c7374726f6e673e247b6f626a6563742e73656e6465725f69642e6e616d657d3c2f7374726f6e673e2e0a2520656e6469660a202020203c2f703e0a202020203c703e0a25206966206f626a6563742e636f6d6d656e740a20202020202020203c656d3e247b6f626a6563742e636f6d6d656e747d3c2f656d3e0a2520656e6469660a202020203c2f703e0a3c2f6469763e0a3c2f646174613e"
-msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view

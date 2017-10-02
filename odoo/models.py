@@ -3669,6 +3669,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
             args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
+        if expression.is_false(self, args):
+            # optimization: no need to query, as no record satisfies the domain
+            return 0 if count else []
+
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
         order_by = self._generate_order_by(order, query)

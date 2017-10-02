@@ -679,7 +679,7 @@ var ViewEditor = Widget.extend({
 
         if (!resID || !this.editingSessions[type][resID]) return;
 
-        var $option = this.$lists[type].find('[value=' + resID + ']');
+        var $option = this.$lists[type].find('[value="' + resID + '"]');
         if (isDirty === undefined) {
             isDirty = this.editingSessions[type][resID].getUndoManager().hasUndo();
         }

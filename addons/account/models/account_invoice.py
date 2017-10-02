@@ -1069,6 +1069,8 @@ class AccountInvoice(models.Model):
 
             if not inv.date_invoice:
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
+            if not inv.date_due:
+                inv.with_context(ctx).write({'date_due': inv.date_invoice})
             company_currency = inv.company_id.currency_id
 
             # create move lines (one per invoice line + eventual taxes and analytic lines)

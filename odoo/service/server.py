@@ -157,11 +157,10 @@ class FSWatcher(object):
 
 class CommonServer(object):
     def __init__(self, app):
-        # TODO Change the xmlrpc_* options to http_*
         self.app = app
         # config
-        self.interface = config['xmlrpc_interface'] or '0.0.0.0'
-        self.port = config['xmlrpc_port']
+        self.interface = config['http_interface'] or '0.0.0.0'
+        self.port = config['http_port']
         # runtime
         self.pid = os.getpid()
 
@@ -276,7 +275,7 @@ class ThreadedServer(CommonServer):
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if test_mode or (config['xmlrpc'] and not stop):
+        if test_mode or (config['http_enable'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -402,8 +401,8 @@ class PreforkServer(CommonServer):
     """
     def __init__(self, app):
         # config
-        self.address = config['xmlrpc'] and \
-            (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
+        self.address = config['http_enable'] and \
+            (config['http_interface'] or '0.0.0.0', config['http_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -537,7 +536,7 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        if config['xmlrpc']:
+        if config['http_enable']:
             while len(self.workers_http) < self.population:
                 self.worker_spawn(WorkerHTTP, self.workers_http)
             if not self.long_polling_pid:

@@ -127,7 +127,7 @@ class MrpProduction(models.Model):
         ('assigned', 'Available'),
         ('partially_available', 'Partially Available'),
         ('waiting', 'Waiting'),
-        ('none', 'None')], string='Availability',
+        ('none', 'None')], string='Materials Availability',
         compute='_compute_availability', store=True)
 
     unreserve_visible = fields.Boolean(
@@ -526,7 +526,7 @@ class MrpProduction(models.Model):
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
 
-        self.write({'state': 'cancel'})
+        self.write({'state': 'cancel', 'is_locked': True})
         return True
 
     def _cal_price(self, consumed_moves):

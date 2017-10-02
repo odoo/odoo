@@ -48,7 +48,7 @@
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
                     <span class="label label-danger" attrs="{'invisible': ['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
                     <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
-                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="If the manufacturing order is unlocked you can add to the initial demand."/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', '|', ('state', '=', 'cancel'), ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="If the manufacturing order is unlocked you can add to the initial demand."/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="mrp.group_mrp_manager" type="object"/>
                 </header>
                 <sheet>
@@ -154,7 +154,7 @@
                                     <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 </group>
                                 <group>
-                                    <field name="availability"/>
+                                    <field name="availability" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>

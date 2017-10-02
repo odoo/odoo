@@ -46,6 +46,10 @@
         .td-price
             width: 80px
 
+    @media (min-width: 768px)
+        .o_website_sale_rightfit
+            padding-right: 0px
+
     @media (max-width: 476px)
         .td-qty
             width: 60px
@@ -61,7 +65,6 @@
 
         .oe_cart a span.visible-xs-inline, #modal_optional_products a span.visible-xs-inline
             display: inline !important
-
 
 /* ---- Default Styles ---- */
 
@@ -426,57 +429,62 @@ ul.wizard
     -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065)
 
-ul.wizard li
-    border: 1px solid #d4d4d4
-    border-right-width: 0
-    position: relative
-    float: left
-    padding: 0 10px 0 20px
-    margin: 0
-    line-height: 38px
-    background: #fbfbfb
+    li
+        border: 1px solid #d4d4d4
+        border-right-width: 0
+        position: relative
+        float: left
+        padding: 0 10px 0 20px
+        margin: 0
+        line-height: 38px
+        background: #fbfbfb
 
-ul.wizard li .chevron
-    position: absolute
-    top: 0
-    right: -10px
-    z-index: 1
-    display: block
-    border: 20px solid transparent
-    border-right: 0
-    border-left: 10px solid #d4d4d4
+        .chevron
+            position: absolute
+            top: 0
+            right: -10px
+            z-index: 1
+            display: block
+            border: 20px solid transparent
+            border-right: 0
+            border-left: 10px solid #d4d4d4
 
-ul.wizard li .chevron:before
-    position: absolute
-    top: -20px
-    right: 1px
-    display: block
-    border: 20px solid transparent
-    border-right: 0
-    border-left: 10px solid #fbfbfb
-    content: ""
+        .chevron:before
+            position: absolute
+            top: -20px
+            right: 1px
+            display: block
+            border: 20px solid transparent
+            border-right: 0
+            border-left: 10px solid #fbfbfb
+            content: ""
 
-ul.wizard li.text-success
-    background: #f3f4f5
+        .o_link_disable
+            text-decoration: none
+            color: inherit
+            cursor: text
 
-ul.wizard li.text-success .chevron:before
-    border-left: 10px solid #f5f5f5
+        &.text-success
+            background: #f3f4f5
 
-ul.wizard li.text-primary
-    background: #f1f6fc
+        &.text-success .chevron:before
+            border-left: 10px solid #f5f5f5
 
-ul.wizard li.text-primary .chevron:before
-    border-left: 10px solid #f1f6fc
+        &.text-primary
+            background: #f1f6fc
 
-ul.wizard li:first-child
-    padding-left: 15px
-    border-radius: 4px 0 0 4px
+        &.text-primary .chevron:before
+            border-left: 10px solid #f1f6fc
 
-ul.wizard li:last-child
-    border-radius: 0 4px 4px 0
-    border-right-width: 1px
-    .chevron
-        display: none
+        &:first-child
+            padding-left: 15px
+            border-radius: 4px 0 0 4px
+
+        &:last-child
+            border-radius: 0 4px 4px 0
+            border-right-width: 1px
+            .chevron
+                display: none
 
 /* Shipping & Billing */
 .label-optional
@@ -558,7 +566,7 @@ a.no-decoration
     word-wrap: break-word
 
 #coupon_box form
-  max-width: 300px
+    max-width: 300px
 
 .font-weight-normal
     font-weight: normal

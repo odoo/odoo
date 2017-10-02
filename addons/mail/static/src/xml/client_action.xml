@@ -34,7 +34,7 @@
             <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Channels</t>
-                <t t-set="channel_icon">fa-users</t>
+                <t t-set="channel_icon" t-value="fa-users"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_hash" t-value="true"/>
@@ -44,7 +44,7 @@
             <t t-set="channel_type" t-value="'dm'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Direct Messages</t>
-                <t t-set="channel_icon">fa-user</t>
+                <t t-set="channel_icon" t-value="fa-user"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="display_status" t-value="true"/>
@@ -54,7 +54,7 @@
             <t t-set="channel_type" t-value="'private'"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Private Channels</t>
-                <t t-set="channel_icon">fa-eye-slash</t>
+                <t t-set="channel_icon" t-value="fa-eye-slash"/>
             </t>
             <t t-call="mail.chat.SidebarItems">
                 <t t-set="input_placeholder">Add a private channel</t>
@@ -197,7 +197,7 @@
     <t t-name="mail.chat.ChannelPreview">
         <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
              t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
-            <div class="o_mail_channel_image">
+            <div t-attf-class="o_mail_channel_image #{channel.model? 'o_mail_channel_app' : ''}">
                 <img class="o_mail_channel_image" t-att-src="channel.image_src"/>
                 <i t-if="channel.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
                 <i t-if="channel.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>

@@ -35,7 +35,7 @@ var KanbanView = BasicView.extend({
         this.loadParams.limit = this.loadParams.limit || 40;
         // in mobile, columns are lazy-loaded, so set 'openGroupByDefault' to
         // false so that they will won't be loaded by the initial load
-        this.loadParams.openGroupByDefault = config.isMobile ? false : true;
+        this.loadParams.openGroupByDefault = config.device.isMobile ? false : true;
         this.loadParams.type = 'list';
         this.loadParams.groupBy = arch.attrs.default_group_by ? [arch.attrs.default_group_by] : (params.groupBy || []);
         var progressBar;
@@ -44,7 +44,7 @@ var KanbanView = BasicView.extend({
             if (isProgressBar) {
                 progressBar = _.clone(n.attrs);
                 progressBar.colors = JSON.parse(progressBar.colors);
-                progressBar.sum = progressBar.sum || false;
+                progressBar.sum_field = progressBar.sum_field || false;
             }
             return !isProgressBar;
         });
@@ -62,7 +62,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.column_options = {
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
-            group_creatable: activeActions.group_create && !config.isMobile,
+            group_creatable: activeActions.group_create && !config.device.isMobile,
             quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(viewInfo),
             hasProgressBar: !!progressBar,
         };
@@ -77,7 +77,7 @@ var KanbanView = BasicView.extend({
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
 
-        if (config.isMobile) {
+        if (config.device.isMobile) {
             this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
         }
     },

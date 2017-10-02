@@ -157,26 +157,18 @@ return {
         return $to_detach.detach();
     },
     /**
-     * Returns the input or textarea cursor offset
+     * Returns the selection range of an input or textarea
      *
      * @param {Object} DOM item input or texteara
-     * @returns {Object}
+     * @returns {Object} range
+     * @returns {integer} range.start
+     * @returns {integer} range.end
      */
-    getCursor: function (node) {
-        node = $(node)[0];
-        var offset = 0;
-        var length = 0;
-        if ('selectionStart' in node) {
-            offset = node.selectionStart;
-            length = node.selectionEnd - offset;
-        } else if ('selection' in document) {
-            node.focus();
-            var sel = document.selection.createRange();
-            length = document.selection.createRange().text.length;
-            sel.moveStart('character', -node.value.length);
-            offset = sel.text.length - length;
-        }
-        return { offset: offset, length: length };
+    getSelectionRange: function (node) {
+        return {
+            start: node.selectionStart,
+            end: node.selectionEnd,
+        };
     },
     /**
      * Returns the distance between a DOM element and the top-left corner of the
@@ -265,37 +257,37 @@ return {
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var $container = $('<div class="checkbox o_checkbox"><label><input type="checkbox"/><span/></label></div>');
+        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
         if (options && options.prop) {
-            $container.find('input').prop(options.prop);
+            $container.children('input').prop(options.prop);
         }
         if (options && options.text) {
-            $container.find('label').append(
+            $container = $('<label/>').append(
+                $container,
                 $('<span/>', {
+                    class: 'ml8',
                     text: options.text,
-                    class: 'o_checkbox_label',
                 })
             );
         }
-
         return $container;
     },
     /**
-     * Moves the cursor position in a DOM element (input or texteara)
+     * Sets the selection range of a given input or textarea
      *
      * @param {Object} node DOM element (input or textarea)
-     * @param {Int} pos cursor position
+     * @param {integer} range.start
+     * @param {integer} range.end
      */
-    setCursor: function (node, pos) {
-        node = $(node).first().focus()[0];
-        if ('createTextRange' in node) {
-            var textRange = node.createTextRange();
-            textRange.collapse(true);
-            textRange.moveEnd(pos);
-            textRange.moveStart(pos);
-            textRange.select();
-        } else if ('setSelectionRange' in node) {
-            node.setSelectionRange(pos, pos);
+    setSelectionRange: function (node, range) {
+        if (node.setSelectionRange){
+            node.setSelectionRange(range.start, range.end);
+        } else if (node.createTextRange){
+            node.createTextRange()
+                .collapse(true)
+                .moveEnd('character', range.start)
+                .moveStart('character', range.end)
+                .select();
         }
     },
 };

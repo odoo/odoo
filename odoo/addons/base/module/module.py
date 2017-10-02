@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 from collections import defaultdict
+from decorator import decorator
 from operator import attrgetter
 import importlib
 import io
@@ -25,6 +26,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tools.parse_version import parse_version
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -50,6 +52,23 @@ def backup(path, raise_exception=True):
             return bck
         cnt += 1
 
+
+def assert_log_admin_access(method):
+    """Decorator checking that the calling user is an administrator, and logging the call.
+
+    Raises an AccessDenied error if the user does not have administrator privileges, according
+    to `user._is_admin()`.
+    """
+    def check_and_log(method, self, *args, **kwargs):
+        user = self.env.user
+        origin = request.httprequest.remote_addr if request else 'n/a'
+        log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
+        if not self.env.user._is_admin():
+            _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
+            raise AccessDenied()
+        _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
+        return method(self, *args, **kwargs)
+    return decorator(check_and_log, method)
 
 class ModuleCategory(models.Model):
     _name = "ir.module.category"
@@ -319,7 +338,7 @@ class Module(models.Model):
             raise UserError(msg % (module_name, e.args[0]))
 
     @api.multi
-    def state_update(self, newstate, states_to_update, level=100):
+    def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
 
@@ -338,7 +357,7 @@ class Module(models.Model):
                     update_mods += dep.depend_id
 
             # update dependency modules that require it, and determine demo for module
-            update_demo = update_mods.state_update(newstate, states_to_update, level=level-1)
+            update_demo = update_mods._state_update(newstate, states_to_update, level=level-1)
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
@@ -349,6 +368,7 @@ class Module(models.Model):
 
         return demo
 
+    @assert_log_admin_access
     @api.multi
     def button_install(self):
         # domain to select auto-installable (but not yet installed) modules
@@ -365,7 +385,7 @@ class Module(models.Model):
         modules = self
         while modules:
             # Mark the given modules and their dependencies to be installed.
-            modules.state_update('to install', ['uninstalled'])
+            modules._state_update('to install', ['uninstalled'])
 
             # Determine which auto-installable modules must be installed.
             modules = self.search(auto_domain).filtered(must_install)
@@ -404,6 +424,7 @@ class Module(models.Model):
 
         return dict(ACTION_DICT, name=_('Install'))
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
@@ -415,11 +436,13 @@ class Module(models.Model):
         _logger.info('User #%d triggered module installation', self.env.uid)
         return self._button_immediate_function(type(self).button_install)
 
+    @assert_log_admin_access
     @api.multi
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
+    @assert_log_admin_access
     @api.multi
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
@@ -521,6 +544,7 @@ class Module(models.Model):
             'params': {'menu_id': menu.id},
         }
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_uninstall(self):
         """
@@ -530,6 +554,7 @@ class Module(models.Model):
         _logger.info('User #%d triggered module uninstallation', self.env.uid)
         return self._button_immediate_function(type(self).button_uninstall)
 
+    @assert_log_admin_access
     @api.multi
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
@@ -538,6 +563,7 @@ class Module(models.Model):
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
+    @assert_log_admin_access
     @api.multi
     def button_uninstall_wizard(self):
         """ Launch the wizard to uninstall the given module. """
@@ -555,6 +581,7 @@ class Module(models.Model):
         self.write({'state': 'installed'})
         return True
 
+    @assert_log_admin_access
     @api.multi
     def button_immediate_upgrade(self):
         """
@@ -563,6 +590,7 @@ class Module(models.Model):
         """
         return self._button_immediate_function(type(self).button_upgrade)
 
+    @assert_log_admin_access
     @api.multi
     def button_upgrade(self):
         Dependency = self.env['ir.module.module.dependency']
@@ -593,6 +621,7 @@ class Module(models.Model):
         self.browse(to_install).button_install()
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
+    @assert_log_admin_access
     @api.multi
     def button_upgrade_cancel(self):
         self.write({'state': 'installed'})
@@ -630,6 +659,7 @@ class Module(models.Model):
         return new
 
     # update the list of available packages
+    @assert_log_admin_access
     @api.model
     def update_list(self):
         res = [0, 0]    # [update, add]
@@ -672,10 +702,12 @@ class Module(models.Model):
 
         return res
 
+    @assert_log_admin_access
     @api.multi
     def download(self, download=True):
         return []
 
+    @assert_log_admin_access
     @api.model
     def install_from_urls(self, urls):
         if not self.env.user.has_group('base.group_system'):
@@ -806,7 +838,7 @@ class Module(models.Model):
             self.write({'category_id': cat_id})
 
     @api.multi
-    def update_translations(self, filter_lang=None):
+    def _update_translations(self, filter_lang=None):
         if not filter_lang:
             langs = self.env['res.lang'].search([('translatable', '=', True)])
             filter_lang = [lang.code for lang in langs]
@@ -816,7 +848,7 @@ class Module(models.Model):
         self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
 
     @api.multi
-    def check(self):
+    def _check(self):
         for module in self:
             if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)

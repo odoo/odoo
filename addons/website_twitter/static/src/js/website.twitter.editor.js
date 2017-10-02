@@ -16,7 +16,7 @@ options.registry.twitter = options.registry.marginAndResize.extend({
              window.location = e.target.href;
         });
         if (this.$target.data("snippet-view")) {
-            this.$target.data("snippet-view").stop();
+            this.$target.data("snippet-view").destroy();
         }
     },
     twitter_reload: function(){

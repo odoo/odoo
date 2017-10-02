@@ -569,9 +569,9 @@ class Meeting(models.Model):
 
     @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child 
-        
-        date_field: the field containing the reference date information for recurrency computation
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child
+
+        date_field: the field containing the reference date information for recurrence computation
         """
         self.ensure_one()
         if date_field in self._fields and self._fields[date_field].type in ('date', 'datetime'):
@@ -766,7 +766,7 @@ class Meeting(models.Model):
         ('weekly', 'Week(s)'),
         ('monthly', 'Month(s)'),
         ('yearly', 'Year(s)')
-    ], string='Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
+    ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
     recurrent_id_date = fields.Datetime('Recurrent ID date')
@@ -1296,8 +1296,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        data['start_date' if data['allday'] else 'start_datetime'] = data['start']
-        data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
         if data.get('rrule'):
             data.update(
                 values,

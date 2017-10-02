@@ -1,28 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * bus
-#
+# 
 # Translators:
-# Deddy ddr <deddy.ddr@gmail.com>, 2016
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Deddy Ddr <deddy.ddr@gmail.com>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# Andhitia Rama <andhitia.r@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-24 03:41+0000\n"
-"Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
-"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
-"id/)\n"
-"Language: id\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Andhitia Rama <andhitia.r@gmail.com>, 2017\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: bus
 #: sql_constraint:bus.presence:0
 msgid "A user can only have one IM status."
-msgstr "Seorang pengguna hanya dapat memiliki satu statusnya IM."
+msgstr "Pengguna hanya dapat memiliki satu status IM."
 
 #. module: bus
 #: selection:bus.presence,status:0
@@ -33,6 +37,11 @@ msgstr "Menjauh"
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
 msgstr "Saluran"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -51,21 +60,6 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
-
-#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
 #: model:ir.model.fields,field_description:bus.field_bus_presence_id
 msgid "ID"
@@ -82,7 +76,7 @@ msgstr "Status IM"
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr "Terakhir Dimodifikasi pada"
+msgstr "Terakhir diubah pada"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -97,12 +91,12 @@ msgstr "Kehadiran terakhir"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
 msgid "Last Updated by"
-msgstr "Diperbaharui oleh"
+msgstr "Terakhir diperbarui oleh"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
 msgid "Last Updated on"
-msgstr "Diperbaharui pada"
+msgstr "Terakhir diperbarui pada"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_message
@@ -120,11 +114,6 @@ msgid "Online"
 msgstr "Online"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Rekanan"
-
-#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
 msgstr "Kehadiran Pengguna"
@@ -139,6 +128,3 @@ msgstr "Pengguna"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr "bus.bus"
-
-#~ msgid "Created on"
-#~ msgstr "Dibuat pada"

@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
     module_mrp_maintenance = fields.Boolean("Maintenance")
     module_quality_mrp = fields.Boolean("Quality")
     module_mrp_repair = fields.Boolean("Repair")
-    group_mrp_routings = fields.Boolean("Work Orders",
+    group_mrp_routings = fields.Boolean("Work Orders & Quality",
         implied_group='mrp.group_mrp_routings')
 
     @api.model
@@ -35,3 +35,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_use_manufacturing_lead(self):
         if not self.use_manufacturing_lead:
             self.manufacturing_lead = 0.0
+
+    @api.onchange('group_mrp_routings')
+    def _onchange_group_mrp_routings(self):
+        self.module_quality_mrp = self.group_mrp_routings

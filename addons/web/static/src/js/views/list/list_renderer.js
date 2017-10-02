@@ -47,16 +47,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        var self = this;
         this.hasHandle = false;
         this.handleField = 'sequence';
-        this.columns = _.reject(this.arch.children, function (c) {
-            if (c.attrs.widget === 'handle') {
-                self.hasHandle = true;
-                self.handleField = c.attrs.name;
-            }
-            return !!JSON.parse(c.attrs.modifiers || "{}").tree_invisible;
-        });
+        this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
                 return DECORATIONS.indexOf(key) >= 0;
@@ -66,6 +59,18 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateState: function (state, params) {
+        this._processColumns(params.columnInvisibleFields || {});
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -159,6 +164,29 @@ var ListRenderer = BasicRenderer.extend({
     _getNumberOfCols: function () {
         var n = this.columns.length;
         return this.hasSelectors ? n+1 : n;
+    },
+    /**
+     * Removes the columns which should be invisible.
+     *
+     * @param  {Object} columnInvisibleFields contains the column invisible modifier values
+     */
+    _processColumns: function (columnInvisibleFields) {
+        var self = this;
+        self.hasHandle = false;
+        self.handleField = null;
+        this.columns = _.reject(this.arch.children, function (c) {
+            var reject = c.attrs.modifiers.column_invisible;
+            // If there is an evaluated domain for the field we override the node
+            // attribute to have the evaluated modifier value.
+            if (c.attrs.name in columnInvisibleFields) {
+                reject = columnInvisibleFields[c.attrs.name];
+            }
+            if (!reject && c.attrs.widget === 'handle') {
+                self.hasHandle = true;
+                self.handleField = c.attrs.name;
+            }
+            return reject;
+        });
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed

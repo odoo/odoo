@@ -8,6 +8,9 @@ class TestInventory(TransactionCase):
     def setUp(self):
         super(TestInventory, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.pack_location = self.env.ref('stock.location_pack_zone')
+        self.pack_location.active = True
+        self.customer_location = self.env.ref('stock.stock_location_customers')
         self.uom_unit = self.env.ref('product.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -165,3 +168,102 @@ class TestInventory(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 5)
         self.assertEqual(quant.owner_id.id, owner1.id)
+
+    def test_inventory_6(self):
+        """ Test that for chained moves, making an inventory adjustment to reduce a quantity that
+        has been reserved correctly free the reservation. After that, add products in stock and check
+        that they're used if the user encodes more than what's available through the chain
+        """
+        # add 10 products in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'add 10 products 1',
+            'filter': 'product',
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'exhausted': True,  # should be set by an onchange
+        })
+        inventory.action_start()
+        inventory.line_ids.product_qty = 10
+        inventory.action_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
+
+        # Make a chain of two moves, validate the first and check that 10 products are reserved
+        # in the second one.
+        move_stock_pack = self.env['stock.move'].create({
+            'name': 'test_link_2_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move_pack_cust = self.env['stock.move'].create({
+            'name': 'test_link_2_2',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        (move_stock_pack + move_pack_cust)._action_confirm()
+        move_stock_pack._action_assign()
+        self.assertEqual(move_stock_pack.state, 'assigned')
+        move_stock_pack.move_line_ids.qty_done = 10
+        move_stock_pack._action_done()
+        self.assertEqual(move_stock_pack.state, 'done')
+        self.assertEqual(move_pack_cust.state, 'assigned')
+        self.assertEqual(self.env['stock.quant']._gather(self.product1, self.pack_location).quantity, 10.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0.0)
+
+        # Make and inventory adjustment and remove two products from the pack location. This should
+        # free the reservation of the second move.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'remove 2 products 1',
+            'filter': 'product',
+            'location_id': self.pack_location.id,
+            'product_id': self.product1.id,
+        })
+        inventory.action_start()
+        inventory.line_ids.product_qty = 8
+        inventory.action_done()
+        self.assertEqual(self.env['stock.quant']._gather(self.product1, self.pack_location).quantity, 8.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)
+        self.assertEqual(move_pack_cust.state, 'partially_available')
+        self.assertEqual(move_pack_cust.reserved_availability, 8)
+
+        # If the user tries to assign again, only 8 products are available and thus the reservation
+        # state should not change.
+        move_pack_cust._action_assign()
+        self.assertEqual(move_pack_cust.state, 'partially_available')
+        self.assertEqual(move_pack_cust.reserved_availability, 8)
+
+        # Make a new inventory adjustment and bring two now products.
+        inventory = self.env['stock.inventory'].create({
+            'name': 'remove 2 products 1',
+            'filter': 'product',
+            'location_id': self.pack_location.id,
+            'product_id': self.product1.id,
+        })
+        inventory.action_start()
+        inventory.line_ids.product_qty = 10
+        inventory.action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 2)
+
+        # Nothing should have changed for our pack move
+        self.assertEqual(move_pack_cust.state, 'partially_available')
+        self.assertEqual(move_pack_cust.reserved_availability, 8)
+
+        # Running _action_assign will now find the new available quantity. Indeed, as the products
+        # are not discernabl (not lot/pack/owner), even if the new available quantity is not directly
+        # brought by the chain, the system fill take them into account.
+        move_pack_cust._action_assign()
+        self.assertEqual(move_pack_cust.state, 'assigned')
+
+        # move all the things
+        move_pack_cust.move_line_ids.qty_done = 10
+        move_stock_pack._action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)

@@ -407,6 +407,7 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
+            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
             return $.Deferred().reject();
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {

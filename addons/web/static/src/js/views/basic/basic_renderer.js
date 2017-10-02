@@ -101,8 +101,9 @@ var BasicRenderer = AbstractRenderer.extend({
         // which are configured to always be reset on any change
         var resetWidgets = [];
         _.each(this.allFieldWidgets[id], function (widget) {
-            if (_.contains(fields, widget.name) || widget.resetOnAnyFieldChange) {
-                defs.push(widget.reset(record, ev));
+            var fieldChanged = _.contains(fields, widget.name);
+            if (fieldChanged || widget.resetOnAnyFieldChange) {
+                defs.push(widget.reset(record, ev, fieldChanged));
                 resetWidgets.push(widget);
             }
         });
@@ -127,7 +128,7 @@ var BasicRenderer = AbstractRenderer.extend({
         this.editRecord(id);
         if (typeof offset === "number") {
             var field = _.findWhere(this.allFieldWidgets[id], {name: fieldName});
-            dom.setCursor(field.getFocusableElement(), offset);
+            dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
 
@@ -406,7 +407,7 @@ var BasicRenderer = AbstractRenderer.extend({
         // If not, check the modifiers to see if it needs registration
         var modifiersData = this._getModifiersData(node);
         if (!modifiersData) {
-            var modifiers = JSON.parse(node.attrs.modifiers || "{}"); // FIXME parsed multiple times (record switching, no modifiers, ...)
+            var modifiers = node.attrs.modifiers || {};
             modifiersData = {
                 node: node,
                 modifiers: modifiers,

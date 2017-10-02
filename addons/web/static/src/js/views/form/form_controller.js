@@ -195,10 +195,12 @@ var FormController = BasicController.extend({
                 // need to make sure changed fields that should be translated
                 // are displayed with an alert
                 var fields = self.renderer.state.fields;
+                var data = self.renderer.state.data;
                 var alertFields = [];
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
-                    if (field.translate) {
+                    var fieldData = data[changedFields[k]];
+                    if (field.translate && fieldData) {
                         alertFields.push(field);
                     }
                 }

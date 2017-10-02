@@ -319,12 +319,12 @@ class IrActionsServer(models.Model):
     _order = 'sequence,name'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
-#  - time, datetime, dateutil, timezone: Python libraries
-#  - env: Odoo Environement
+#  - env: Odoo Environment on which the action is triggered
 #  - model: Odoo Model of the record on which the action is triggered; is a void recordset
-#  - record: record set of the current record on which the action is triggered; may be be void
-#  - records: record set of all records on which the action is triggered; may be void
-#  - log : log(message), function to log debug information in logging table
+#  - record: record on which the action is triggered; may be be void
+#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
 
