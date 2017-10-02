@@ -437,7 +437,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             view_manager = view_manager.getParent();
         }
 
-        if (view_manager) {
+        if (view_manager instanceof instance.web.ViewManager) {
             this.view_manager = view_manager;
             view_manager.on('switch_mode', this, function (e) {
                 self.drawer.toggle(e === 'graph');
