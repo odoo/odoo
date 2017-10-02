@@ -236,7 +236,7 @@ record.
                 <field name="{a field name}">{a value}</field>
             </record>
         </data>
-    <openerp>
+    </openerp>
 
 * ``model`` is the name of the Odoo model for the record
 * ``id`` is an :term:`external identifier`, it allows referring to the record
