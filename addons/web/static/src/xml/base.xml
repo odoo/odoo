@@ -1262,9 +1262,12 @@
     </span>
 </t>
 <t t-name="FieldProgressBar">
-    <span class="oe_form_field oe_form_field_progressbar" t-att-style="widget.node.attrs.style">
-        <span></span>
-    </span>
+    <div class="progress oe_form_field_progressbar">
+      <div class="progress-bar progress-bar-striped" role="progressbar" t-att-aria-valuenow="widget.value" t-att-aria-valuemin="widget.min"
+       t-att-aria-valuemax="widget.max" t-attf-style="width: #{widget.value}%;">
+        <t t-esc="widget.value + '%'"/>
+      </div>
+    </div>
 </t>
 <t t-name="FieldPercentPie">
     <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
