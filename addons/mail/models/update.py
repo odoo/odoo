@@ -13,8 +13,7 @@ from odoo import api, release, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
-from odoo.tools import config
-from odoo.tools import misc
+from odoo.tools import config, misc, ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -71,7 +70,7 @@ class PublisherWarrantyContract(AbstractModel):
         Utility method to send a publisher warranty get logs messages.
         """
         msg = self._get_message()
-        arguments = {'arg0': msg, "action": "update"}
+        arguments = {'arg0': ustr(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 
