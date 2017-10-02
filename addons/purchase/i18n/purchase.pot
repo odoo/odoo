@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -275,6 +275,11 @@ msgid "<strong>Taxes</strong>"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "<strong>The ordered quantity has been updated.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
 msgstr ""
@@ -383,6 +388,11 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Billed Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
 msgstr ""
@@ -450,7 +460,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:731
+#: code:addons/purchase/models/purchase.py:737
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -1065,6 +1075,11 @@ msgid "Order of Day"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Ordered Quantity:"
+msgstr ""
+
+#. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
 msgstr ""
@@ -1435,6 +1450,11 @@ msgid "Received Qty"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Received Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1663,7 +1683,7 @@ msgid "The product form contains detailed information to improve the\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:643
+#: code:addons/purchase/models/purchase.py:649
 #, python-format
 msgid "The quantities on your purchase order indicate less than billed. You should ask for a refund. "
 msgstr ""
@@ -1683,7 +1703,7 @@ msgid "The request for quotation is the first step of the purchases flow. Once\n
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:872
+#: code:addons/purchase/models/purchase.py:878
 #, python-format
 msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
 msgstr ""
@@ -1888,11 +1908,6 @@ msgid "Vendor Bills"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
-msgid "Vendor Bills"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
@@ -1942,7 +1957,7 @@ msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:802
+#: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,6 +38,50 @@ msgid "30-day money-back guarantee<br/>\n"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "75 percent less reflection."
+msgstr ""
+
+#. module: website_sale
+#: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
+msgid "<?xml version=\"1.0\"?>\n"
+"<div style=\"margin:auto;width:100%;\">\n"
+"                    <img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
+"                    <p>Would you like to complete your purchase?</p><br/><br/>\n"
+"                    % if object.order_line:\n"
+"                    % for line in object.order_line:\n"
+"                    <hr/>\n"
+"                    <table width=\"100%\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 10px; width:150px;\">\n"
+"                                <img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                            </td>\n"
+"                            <td width=\"100px\" align=\"right\">\n"
+"                                ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % endfor\n"
+"                    <hr/>\n"
+"                    % endif\n"
+"                    <br/><br/>\n"
+"                    <center>\n"
+"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Resume order</a><br/><br/><br/>\n"
+"                        <p><b>Thank you for shopping with ${user.company_id.name}!</b></p>\n"
+"                    </center>\n"
+"                </div>\n"
+"            "
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<br/>\n"
 "                                <strong>Payment Status:</strong>"
@@ -47,6 +91,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<br/>\n"
 "                                e.g. for computers:"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment
+msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add payment acquirers"
 msgstr ""
 
 #. module: website_sale
@@ -62,11 +111,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "<i class=\"fa fa-plus-square\" aria-hidden=\"true\"/> Add an address"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment
-msgid "<i class=\"fa fa-plus-square\" aria-hidden=\"true\"/> Configure payment acquirers"
 msgstr ""
 
 #. module: website_sale
@@ -101,7 +145,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
-msgid "<span class=\"col-xs-6 text-right h4\">Total:</span>"
+msgid "<span class=\"col-xs-6 text-right h4 mt0\">Total:</span>"
 msgstr ""
 
 #. module: website_sale
@@ -169,8 +213,8 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "<span class=\"hidden-xs\">Process Checkout</span>\n"
-"                                <span class=\"visible-xs-inline\">Checkout</span>\n"
-"                                <span class=\"fa fa-long-arrow-right\"/>"
+"                                        <span class=\"visible-xs-inline\">Checkout</span>\n"
+"                                        <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -410,7 +454,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<strong>Payment information:</strong>"
+msgid "<strong>Payment Information:</strong>"
 msgstr ""
 
 #. module: website_sale
@@ -506,7 +550,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "A document to provide ?"
+msgid "A document to provide"
 msgstr ""
 
 #. module: website_sale
@@ -515,8 +559,18 @@ msgid "A few % discount can bring you twice more customers! Here are a few kinds
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_12
+msgid "A great Keyboard. Cordless."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "A screen worthy of iPad."
 msgstr ""
 
 #. module: website_sale
@@ -550,6 +604,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "Abandoned Delay"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "About the size of a credit card — and just 5.4 mm thin — iPod nano is the thinnest iPod ever made.\n"
+"                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
+"                                    so you can see more of the music, photos, and videos you love."
 msgstr ""
 
 #. module: website_sale
@@ -627,6 +688,22 @@ msgid "Amount of Abandoned Carts"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "And at the Apple Online Store, you can configure your iMac with an even more powerful Intel Core i7 processor, up to 3.5GHz."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "And because it’s so easy to use, it’s easy to love."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
 msgstr ""
@@ -639,11 +716,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Apply shipping costs on orders"
 msgstr ""
 
 #. module: website_sale
@@ -686,6 +758,30 @@ msgid "Average Order"
 msgstr ""
 
 #. module: website_sale
+#: model:res.country.group,name:website_sale.benelux
+msgid "BeNeLux"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Beautiful 7.9‑inch display."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Beautiful widescreen display."
+msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:104
 #, python-format
@@ -705,6 +801,22 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Brilliance onscreen. And behind it."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Buttons let you quickly play, pause, change songs, or adjust the volume.\n"
+"                                    The smooth anodized aluminum design makes iPod nano feel as good as it sounds.\n"
+"                                    And iPod nano wouldn’t be iPod nano without gorgeous, hard-to-choose-from color."
 msgstr ""
 
 #. module: website_sale
@@ -802,6 +914,11 @@ msgid "Children Categories"
 msgstr ""
 
 #. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "City"
 msgstr ""
@@ -868,6 +985,11 @@ msgid "Company Name"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Components
+msgid "Components"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr ""
@@ -890,6 +1012,21 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs on orders"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Computer_all_in_one
+msgid "Computer all-in-one"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.sub_computers
+msgid "Computers"
 msgstr ""
 
 #. module: website_sale
@@ -983,6 +1120,15 @@ msgid "Created on"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Creating such a stunningly thin design took some equally stunning feats of technological innovation. We refined,re-imagined,or re-engineered everything about iMac from the inside out. The result is an advanced, elegant all-in-one computer that’s as much a work of art as it is state of the art."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Currencies"
@@ -1059,9 +1205,19 @@ msgid "Delivery methods are selectable on the website: the customer pays for shi
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Design. The thinnest iPod ever."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template_website_sequence
 msgid "Determine the display order in the Website E-commerce"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.devices
+msgid "Devices"
 msgstr ""
 
 #. module: website_sale
@@ -1096,6 +1252,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_code
 msgid "E-commerce Promotional Code"
+msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "EUR"
 msgstr ""
 
 #. module: website_sale
@@ -1137,7 +1298,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Email for Abandonned carts"
+msgid "Email for Abandoned carts"
 msgstr ""
 
 #. module: website_sale
@@ -1164,6 +1325,38 @@ msgid "Error ! You cannot create recursive categories."
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Everything you love about iPad — the beautiful\n"
+"                                    screen, fast Colors are vivid and text is sharp on the iPad mini display.\n"
+"                                    But what really makes it stand out is its size. At 7.9 inches,\n"
+"                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "Everything you love about iPad — the beautiful\n"
+"                                    screen, fast and fluid performance, FaceTime and\n"
+"                                    iSight cameras, thousands of amazing apps, 10-hour\n"
+"                                    battery life* — is everything you’ll love about\n"
+"                                    iPad mini, too. And you can hold it in one hand."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Everything you love about iPad — the beautiful screen,\n"
+"                                        fast and fluid performance, FaceTime and iSight cameras, \n"
+"                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
+"                                        you’ll love about iPad mini, too. And you can hold it in one hand."
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.External_Hard_Drive
+msgid "External Hard Drive"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
 msgid "Extra Info<span class=\"chevron\"/>"
 msgstr ""
@@ -1171,6 +1364,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra Step"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Fast connections.The world over."
 msgstr ""
 
 #. module: website_sale
@@ -1194,6 +1392,15 @@ msgid "Free delivery (see Delivery Strategy section)"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Friendly to the environment."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
 msgstr ""
@@ -1201,6 +1408,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the order is confirmed"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Genius. Your own personal DJ."
 msgstr ""
 
 #. module: website_sale
@@ -1234,9 +1446,19 @@ msgid "HTTP routing"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Have Genius call the tunes."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Headset
+msgid "Headset"
 msgstr ""
 
 #. module: website_sale
@@ -1247,6 +1469,29 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
 msgid "Here you can set a specific HTML color index (e.g. #ff0000) to display the color on the website if the attibute type is 'Color'."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Highly rated designs."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "How did we make an already gorgeous widescreen display even better? By making it 75 percent less reflective. And by re-architecting the LCD and moving it right up against the cover glass. So you see your photos, games, movies, and everything else in vivid, lifelike detail."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "How to get your groove on."
 msgstr ""
 
 #. module: website_sale
@@ -1264,6 +1509,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
 msgid "ID"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "If it's made for iPad, it's made for iPad mini."
 msgstr ""
 
 #. module: website_sale
@@ -1305,6 +1555,15 @@ msgid "Imagine a new customer adds a product to cart and leaves your website bec
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Individually calibrated for true-to-life color."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Install Optional Products (cross-selling)"
 msgstr ""
@@ -1320,7 +1579,7 @@ msgid "Installs *e-Commerce Inventory*"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:496
+#: code:addons/website_sale/controllers/main.py:501
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -1355,6 +1614,25 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "It's difficult to recommend one over the others. So, simply pick the one that is more popular in your country!"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Key Features"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Keyboard_Mouse
+msgid "Keyboard / Mouse"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.laptops
+msgid "Laptops"
 msgstr ""
 
 #. module: website_sale
@@ -1439,6 +1717,11 @@ msgid "List displaying"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Log In"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Logo"
 msgstr ""
@@ -1484,6 +1767,15 @@ msgid "Min. qty or period"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "More energy efficient."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_group_website_multiimage
 msgid "Multi-Images"
 msgstr ""
@@ -1491,6 +1783,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Multi-buy offers (2 products sold together for less than their individual price)"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Music. It's what beats inside."
 msgstr ""
 
 #. module: website_sale
@@ -1518,8 +1815,13 @@ msgid "Name - Z to A"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.network
+msgid "Network"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:959
+#: code:addons/website_sale/controllers/main.py:964
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1549,6 +1851,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "None website"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Now to Follow Your Order"
 msgstr ""
 
 #. module: website_sale
@@ -1649,12 +1956,17 @@ msgid "Orders/Day"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Over 375,000 apps."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
 msgid "Parent Category"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:747
+#: code:addons/website_sale/controllers/main.py:752
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -1704,6 +2016,11 @@ msgid "Payments to Capture"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Pen_Drive
+msgid "Pen Drive"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr ""
@@ -1714,13 +2031,22 @@ msgid "Pictures gallery:"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Playlists. The perfect mix for every mood."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "Policies"
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Powered by fourth-generation Intel Core processors, this iMac is the fastest yet. Every model in the lineup comes standard with a quad-core Intel Core i5 processor, starting at 2.7GHz and topping out at 3.4GHz."
 msgstr ""
 
 #. module: website_sale
@@ -1780,10 +2106,16 @@ msgid "Pricing &amp; Discounts"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.printer
+msgid "Printer"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:107
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
+#: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Product"
@@ -1801,7 +2133,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_comparison
-msgid "Product Comparator"
+msgid "Product Comparison Tool"
 msgstr ""
 
 #. module: website_sale
@@ -1874,7 +2206,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
-#: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Products"
 msgstr ""
@@ -1951,6 +2282,11 @@ msgid "Quick and easy to set up"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order
+msgid "Quotation"
+msgstr ""
+
+#. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Radio"
 msgstr ""
@@ -2011,6 +2347,33 @@ msgid "Review your catalog"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Right from the start, apps made for iPad also work with iPad mini.\n"
+"                                    They’re immersive, full-screen apps that let you do almost anything\n"
+"                                    you can imagine. And with automatic updates,\n"
+"                                    you're always getting the best experience possible."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "Right from the start, there’s a lot to love about\n"
+"                                    iPad. It’s simple yet powerful. Thin and light yet\n"
+"                                    full-featured. It can do just about everything and\n"
+"                                    be just about anything."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Right from the start, there’s a lot to love about iPad.\n"
+"                                   It’s simple yet powerful. Thin and light yet full-\n"
+"                                   featured. It can do just about everything and be just\n"
+"                                   about anything.And because it’s so easy to use, it’s\n"
+"                                   easy to love."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Rounding Method"
 msgstr ""
@@ -2023,11 +2386,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
-msgid "Sale: Send a Cart Recovery Email"
 msgstr ""
 
 #. module: website_sale
@@ -2051,11 +2409,6 @@ msgid "Sales Channel"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_sale_order
-msgid "Sales Order"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Report"
 msgstr ""
@@ -2075,8 +2428,18 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "Secure Payment"
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Say you’re listening to a song you love and you want to stay in the mood.\n"
+"                                        Just tap Genius. It finds other songs on iPod nano that go great together\n"
+"                                        and makes a Genius playlist for you. For more song combinations\n"
+"                                        you wouldn’t have thought of yourself, create Genius Mixes in iTunes\n"
+"                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
+"                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Screen
+msgid "Screen"
 msgstr ""
 
 #. module: website_sale
@@ -2157,6 +2520,11 @@ msgid "Sell in several currencies"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
+msgid "Send a Cart Recovery Email"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
 msgstr ""
@@ -2176,6 +2544,16 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.server
+msgid "Server"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.services
+msgid "Services"
 msgstr ""
 
 #. module: website_sale
@@ -2253,6 +2631,11 @@ msgid "Show multi image on eCommerce"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Size"
 msgstr ""
@@ -2280,6 +2663,11 @@ msgid "Small-sized image of the category. It is automatically resized as a 64x64
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.Software
+msgid "Software"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:76
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:109
@@ -2293,7 +2681,7 @@ msgid "Some acquirers like Authorize.net and Ingenico can be used as payment gat
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:512
+#: code:addons/website_sale/controllers/main.py:517
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -2311,6 +2699,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.Speakers
+msgid "Speakers"
 msgstr ""
 
 #. module: website_sale
@@ -2387,8 +2780,21 @@ msgid "Suggested Accessories:"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Sync to your heart’s content."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "TIN / VAT"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "Tap to play your favorite songs. Or entire albums.\n"
+"                                    Or everything by one artist. You can even browse by genres or composers.\n"
+"                                    Flip through your music: Album art looks great on the bigger screen.\n"
+"                                    Or to keep things fresh, give iPod nano a shake and it shuffles to a different song in your music library."
 msgstr ""
 
 #. module: website_sale
@@ -2427,6 +2833,15 @@ msgid "The <b>Intellectual Property</b> disclosure will inform users that the co
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "The desktop. In its most advanced form ever"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "The first step is to set up your company's information. This is used in several places: Contact us page, website header &amp; footer, printed business documents like orders and invoices, etc."
 msgstr ""
@@ -2437,12 +2852,27 @@ msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "The full iPad experience."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_12
+msgid "The incredibly thin Apple Wireless Keyboard uses Bluetooth technology,\n"
+"                                    which makes it compatible with iPad. And you’re free to type wherever\n"
+"                                    you like — with the keyboard in front of your iPad or on your lap."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "The mode selected here applies as invoicing policy of any new product created but not of products already existing."
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:245
+#: code:addons/website_sale/models/sale_order.py:247
 #, python-format
 msgid "The quote should be sent and the payment acquirer type should be manual or wire transfer"
 msgstr ""
@@ -2453,10 +2883,30 @@ msgid "There are two strategies to sell more to a customer:"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "There is less of it, but no less to it."
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:53
 #, python-format
 msgid "There is no recent confirmed order."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "There's less of it, but no less to it."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "There’s another way to get a good mix of music on iPod: Let Genius do the work.\n"
+"                                        Activate Genius in iTunes on your computer, and it automatically finds songs that sound\n"
+"                                        great together. Then it creates Genius Mixes, which you can easily sync to your iPod.\n"
+"                                        It’s the perfect way to rediscover songs you haven’t listened to in forever."
 msgstr ""
 
 #. module: website_sale
@@ -2518,6 +2968,20 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "Ultrafast wireless."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_4
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_6
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
+msgid "Ultrathin design"
 msgstr ""
 
 #. module: website_sale
@@ -2635,8 +3099,30 @@ msgid "Websites using this sales channel"
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "When one playlist isn’t enough."
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
+msgid "Why you'll love an iPad."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_wishlist
 msgid "Wishlists"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
+msgid "With advanced Wi‑Fi that’s up to twice as fast as\n"
+"                                   any previous-generation iPad and access to fast\n"
+"                                   cellular data networks around the world, iPad mini\n"
+"                                   lets you download content, stream video,\n"
+"                                   and browse the web at amazing speeds."
 msgstr ""
 
 #. module: website_sale
@@ -2677,6 +3163,15 @@ msgid "You left items in your cart."
 msgstr ""
 
 #. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "You probably have multiple playlists in iTunes on your computer.\n"
+"                                        One for your commute. One for the gym. Sync those playlists\n"
+"                                        to iPod, and you can play the perfect mix for whatever\n"
+"                                        mood strikes you. VoiceOver tells you the name of each playlist,\n"
+"                                        so it’s easy to switch between them and find the one you want without looking."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 msgid "You should send an email to revive them!"
 msgstr ""
@@ -2714,11 +3209,6 @@ msgid "Zip Code"
 msgstr ""
 
 #. module: website_sale
-#: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
-msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646976207374796c653d226d617267696e3a6175746f3b77696474683a313030253b223e0a20202020202020202020202020202020202020203c696d67207372633d222f7765622f696d6167652f7265732e636f6d70616e792f247b757365722e636f6d70616e795f69642e69647d2f6c6f676f22207374796c653d226865696768743a206175746f3b2077696474683a20383070783b206d617267696e2d746f703a333070783b2220616c743d22247b757365722e636f6d70616e795f69642e6e616d657d222f3e0a20202020202020202020202020202020202020203c6831207374796c653d22636f6c6f723a234139413941393b223e5448455245275320534f4d455448494e4720494e20594f555220434152542e3c2f68313e0a20202020202020202020202020202020202020203c703e576f756c6420796f75206c696b6520746f20636f6d706c65746520796f75722070757263686173653f3c2f703e3c62722f3e3c62722f3e0a202020202020202020202020202020202020202025206966206f626a6563742e6f726465725f6c696e653a0a20202020202020202020202020202020202020202520666f72206c696e6520696e206f626a6563742e6f726465725f6c696e653a0a20202020202020202020202020202020202020203c68722f3e0a20202020202020202020202020202020202020203c7461626c652077696474683d2231303025223e0a2020202020202020202020202020202020202020202020203c74723e0a202020202020202020202020202020202020202020202020202020203c7464207374796c653d2270616464696e673a20313070783b2077696474683a31353070783b223e0a20202020202020202020202020202020202020202020202020202020202020203c696d67207372633d222f7765622f696d6167652f70726f647563742e70726f647563742f247b6c696e652e70726f647563745f69642e69647d2f696d61676522206865696768743d223130307078222077696474683d223130307078222f3e0a202020202020202020202020202020202020202020202020202020203c2f74643e0a202020202020202020202020202020202020202020202020202020203c74643e0a20202020202020202020202020202020202020202020202020202020202020203c7374726f6e673e247b6c696e652e70726f647563745f69642e646973706c61795f6e616d657d3c2f7374726f6e673e3c62722f3e247b6c696e652e6e616d657d0a202020202020202020202020202020202020202020202020202020203c2f74643e0a202020202020202020202020202020202020202020202020202020203c74642077696474683d2231303070782220616c69676e3d227269676874223e0a2020202020202020202020202020202020202020202020202020202020202020247b286c696e652e70726f647563745f756f6d5f71747929207c20696e747d20247b286c696e652e70726f647563745f756f6d2e6e616d65297d0a202020202020202020202020202020202020202020202020202020203c2f74643e0a2020202020202020202020202020202020202020202020203c2f74723e0a20202020202020202020202020202020202020203c2f7461626c653e0a20202020202020202020202020202020202020202520656e64666f720a20202020202020202020202020202020202020203c68722f3e0a20202020202020202020202020202020202020202520656e6469660a20202020202020202020202020202020202020203c62722f3e3c62722f3e0a20202020202020202020202020202020202020203c63656e7465723e0a2020202020202020202020202020202020202020202020203c6120687265663d222f73686f702f636172743f6163636573735f746f6b656e3d247b6f626a6563742e6163636573735f746f6b656e7d22207461726765743d225f626c616e6b22207374796c653d226261636b67726f756e642d636f6c6f723a20233161626339633b2070616464696e673a20323070783b20746578742d6465636f726174696f6e3a206e6f6e653b20636f6c6f723a20236666663b20626f726465722d7261646975733a203570783b20666f6e742d73697a653a20313670783b2220636c6173733d226f5f64656661756c745f736e69707065745f74657874223e526573756d65206f726465723c2f613e3c62722f3e3c62722f3e3c62722f3e0a2020202020202020202020202020202020202020202020203c703e3c623e5468616e6b20796f7520666f722073686f7070696e67207769746820247b757365722e636f6d70616e795f69642e6e616d657d213c2f623e3c2f703e0a20202020202020202020202020202020202020203c2f63656e7465723e0a202020202020202020202020202020203c2f6469763e0a202020202020202020202020"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "all angles, detailed view, package, etc."
 msgstr ""
@@ -2753,6 +3243,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours"
+msgstr ""
+
+#. module: website_sale
+#: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
+msgid "iTunes on your Mac or PC makes it easy to load up\n"
+"                                        your iPod. Just choose the playlists, audiobooks,\n"
+"                                        podcasts, and other audio files you want, then sync."
 msgstr ""
 
 #. module: website_sale
@@ -2823,25 +3320,5 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "what do the customers think of the product"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "☑ 256 bit encryption"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "☑ 30-days money-back guarantee"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "☑ Invoice sent by e-Mail"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.cart
-msgid "☑ Processed by Ogone"
 msgstr ""
 
