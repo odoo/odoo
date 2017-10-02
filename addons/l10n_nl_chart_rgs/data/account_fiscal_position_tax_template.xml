@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- account.fiscal.position.tax.template -->
+        
+        <!-- Position 2 - NON-EU Countries -->
+        <!--  All sales tax will become 0 -->
+        <record
+            id="rgs_position_tax_extracom_1"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_0"/>
+            <field name="tax_dest_id" ref="rgs_btw_x1"/>
+        </record>
+        <record
+            id="rgs_position_tax_extracom_2"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_6"/>
+            <field name="tax_dest_id" ref="rgs_btw_x1"/>
+        </record>
+        <record
+            id="rgs_position_tax_extracom_3"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_21"/>
+            <field name="tax_dest_id" ref="rgs_btw_x1"/>
+        </record>
+        <record
+            id="rgs_position_tax_extracom_4"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_overig"/>
+            <field name="tax_dest_id" ref="rgs_btw_x1"/>
+        </record>
+        
+        <!-- VAT on buying from outside the EU -->
+        <!-- VAT low -->
+        <record
+            id="rgs_position_tax_extracom_5"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_6_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_e1"/>
+        </record>
+        <!-- VAT high -->
+        <record
+            id="rgs_position_tax_extracom_6"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_21_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_e2"/>
+        </record>
+        <!-- VAT other -->
+        <record
+            id="rgs_position_tax_extracom_7"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_overig_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_e_overig"/>
+        </record>
+        
+        <!-- Position 3 - EU Countries -->
+        <record
+            id="rgs_position_tax_intracom_1"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_0"/>
+            <field name="tax_dest_id" ref="rgs_btw_x0"/>
+        </record>
+        <record
+            id="rgs_position_tax_intracom_2"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_6"/>
+            <field name="tax_dest_id" ref="rgs_btw_x0"/>
+        </record>
+        <record
+            id="rgs_position_tax_intracom_3"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_21"/>
+            <field name="tax_dest_id" ref="rgs_btw_x0"/>
+        </record>
+        <record
+            id="rgs_position_tax_intracom_4"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_overig"/>
+            <field name="tax_dest_id" ref="rgs_btw_x0"/>
+        </record>
+        
+        <!-- In source-tax we lack the separation of goods and services,
+             therefore no lines now for "Installatie/Afstandsverkopen. -->
+             
+        <!-- Buying from other EU countries (only goods = VAT 0 -->
+        <record
+            id="rgs_position_tax_intracom_5"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_6_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_i_6"/>
+        </record>
+        <record
+            id="rgs_position_tax_intracom_6"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_21_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_i_21"/>
+        </record>
+        <record
+            id="rgs_position_tax_intracom_7"
+            model="account.fiscal.position.tax.template"
+            >
+            <field name="position_id" ref="rgs_fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="rgs_btw_overig_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_i_overig"/>
+        </record>
+        
+        <record
+            id="rgs_position_tax_transferred"
+            model="account.fiscal.position.tax.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_transferred"
+                />
+            <field name="tax_src_id" ref="rgs_btw_21_buy"/>
+            <field name="tax_dest_id" ref="rgs_btw_ink_0"/>
+        </record>
+
+    </data>
+</openerp>

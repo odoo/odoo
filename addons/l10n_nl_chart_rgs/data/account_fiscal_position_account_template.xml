@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Fiscal Position Account Templates -->
+
+        <!-- TODO: For the moment no automatic translation of
+             purchase (import) accounts. This should really be
+             done programmatically, because it would be extremely difficult
+             to get this correct or complete.
+             -->
+
+        <!-- For sales we have records for three dimensions:
+             Inside Eu / Outside EU
+             Fabricated goods / Traded goods / Services
+             High VAT / Low VAT / Other VAT
+
+             So we should have 12 records for sales.
+            -->
+
+        <!-- Outside EU/ Fabricated goods.
+
+             Netto-omzet, per opbrengstcategorie,
+             verkoop van geproduceerde goederen
+             -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_non_eu_production_sales_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolh"/>
+            <field name="account_dest_id" ref="womznopoln"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_non_eu_production_sales_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolv"/>
+            <field name="account_dest_id" ref="womznopoln"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_non_eu_sales_production_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolo"/>
+            <field name="account_dest_id" ref="womznopoln"/>
+        </record>
+
+        <!-- Outside EU / Traded goods
+
+        Netto-omzet, per opbrengstcategorie, verkoop van handelsgoederen
+        -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_non_eu_sales_trade_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholh"/>
+            <field name="account_dest_id" ref="womznoholn"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_non_eu_sales_trade_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholv"/>
+            <field name="account_dest_id" ref="womznoholn"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_non_eu_sales_trade_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholo"/>
+            <field name="account_dest_id" ref="womznoholn"/>
+        </record>
+
+        <!-- Outside EU / Services
+
+            Netto-omzet, per opbrengstcategorie, verlening van diensten
+            -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_non_eu_sales_service_production_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododh"/>
+            <field name="account_dest_id" ref="womznododb"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_non_eu_sales_service_production_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododv"/>
+            <field name="account_dest_id" ref="womznododb"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_non_eu_sales_service_production_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododo"/>
+            <field name="account_dest_id" ref="womznododb"/>
+        </record>
+
+        <!-- Inside EU/ Fabricated goods.
+
+             Netto-omzet, per opbrengstcategorie,
+             verkoop van geproduceerde goederen
+             -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_eu_production_sales_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolh"/>
+            <field name="account_dest_id" ref="womznopoli"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_eu_production_sales_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolv"/>
+            <field name="account_dest_id" ref="womznopoli"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_eu_sales_production_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznopolo"/>
+            <field name="account_dest_id" ref="womznopoli"/>
+        </record>
+
+        <!-- Inside EU / Traded goods
+
+        Netto-omzet, per opbrengstcategorie, verkoop van handelsgoederen
+        -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_eu_sales_trade_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholh"/>
+            <field name="account_dest_id" ref="womznoholi"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_eu_sales_trade_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholv"/>
+            <field name="account_dest_id" ref="womznoholi"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_eu_sales_trade_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznoholo"/>
+            <field name="account_dest_id" ref="womznoholi"/>
+        </record>
+
+        <!-- Inside EU / Services
+
+            Netto-omzet, per opbrengstcategorie, verlening van diensten
+            -->
+        <!-- verkopen hoog -->
+        <record
+            id="rgs_position_account_eu_sales_service_production_high"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododh"/>
+            <field name="account_dest_id" ref="womznododi"/>
+        </record>
+        <!-- verkopen laag -->
+        <record
+            id="rgs_position_account_eu_sales_service_production_low"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododv"/>
+            <field name="account_dest_id" ref="womznododi"/>
+        </record>
+        <!-- verkopen overig -->
+        <record
+            id="rgs_position_account_eu_sales_service_production_other"
+            model="account.fiscal.position.account.template"
+            >
+            <field
+                name="position_id"
+                ref="rgs_fiscal_position_template_non_eu"
+                />
+            <field name="account_src_id" ref="womznododo"/>
+            <field name="account_dest_id" ref="womznododi"/>
+        </record>
+    </data>
+</openerp>
