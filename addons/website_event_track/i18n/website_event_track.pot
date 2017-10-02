@@ -6,14 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid "<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    <p>\n"
+"        Dear <t t-esc=\"object.partner_name\"/>\n"
+"    </p><p>\n"
+"        We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.\n"
+"    </p><p>\n"
+"        You will find more details here:\n"
+"        <div style=\"margin-top: 16px;\">\n"
+"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                View Event\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"    <p>Sincerely,</p>\n"
+"</div>\n"
+"            "
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -80,6 +101,11 @@ msgid "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 msgstr ""
 
 #. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+msgid "A technical explanation of Odoo as a CMS and a eCommerce platform for version 8."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_kanban_state
 msgid "A track's kanban state indicates special situations affecting it:\n"
 " * Grey is the default situation\n"
@@ -100,6 +126,16 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_active
 msgid "Active"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+msgid "Advanced lead management with Odoo: tips and tricks from the fields"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr ""
 
 #. module: website_event_track
@@ -228,6 +264,21 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Delete"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+msgid "Detailed roadmap of accounting new modules and improvements for version 8."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+msgid "Discover Odoo CRM: How to optimize your sales, from leads to sales orders."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+msgid "Discover Odoo Point-of-Sale: Your shop ready to use in 30 minutes."
 msgstr ""
 
 #. module: website_event_track
@@ -385,6 +436,36 @@ msgid "Highest"
 msgstr ""
 
 #. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+msgid "How to build your marketing strategy for the purpose of generating leads with Odoo."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+msgid "How to develop a website module."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+msgid "How to develop automated tests in the Odoo web client."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+msgid "How to develop real time apps, the website live chat module explained."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+msgid "How to integrate hardware materials with the Odoo point of sale."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+msgid "How to use Odoo for your HR process: recruitment, leaves management, appraisals, expenses, etc."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_id
@@ -412,6 +493,11 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_kanban_state
 msgid "Kanban State"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+msgid "Key Success factors selling Odoo."
 msgstr ""
 
 #. module: website_event_track
@@ -465,6 +551,21 @@ msgid "Low"
 msgstr ""
 
 #. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+msgid "Lunch"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+msgid "Manage your KPIs (recomended to openERP partners)."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+msgid "Manage your events with Odoo, the new training modules."
+msgstr ""
+
+#. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
 msgstr ""
@@ -476,8 +577,33 @@ msgid "Medium-sized image of this contact. It is automatically resized as a 128x
 msgstr ""
 
 #. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+msgid "Merge proposals review, code sprint (entire afternoon)"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+msgid "Merge proposals review, code sprint (entire day)."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+msgid "Morning break"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Activities"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+msgid "New Certification Program (valid from Oct. 2013)."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+msgid "New Paypal modules (portal, handling, installments)."
 msgstr ""
 
 #. module: website_event_track
@@ -498,6 +624,26 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "No tracks found!"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+msgid "Odoo Mobile for Notes, Meetings and Messages."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+msgid "Odoo Status & Strategy 2014"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+msgid "Odoo as your Enterprise Social Network."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+msgid "Odoo in 2014"
 msgstr ""
 
 #. module: website_event_track
@@ -548,6 +694,16 @@ msgid "Put here the list of documents, like slides of\n"
 msgstr ""
 
 #. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+msgid "Raising qualitive insights with the survey app"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+msgid "Recruiting high skilled talents with Odoo HR apps"
+msgstr ""
+
+#. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Red"
 msgstr ""
@@ -564,7 +720,7 @@ msgid "Responsible"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10881
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10951
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr ""
@@ -658,7 +814,7 @@ msgid "Sponsors"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_id_10876
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_id_10946
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
 msgstr ""
@@ -728,6 +884,21 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Thank you for your proposal."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+msgid "The Art of Making an Odoo Demo."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track29
+msgid "The new marketing strategy."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+msgid "The new way to promote your modules in the Apps platform and Odoo website."
 msgstr ""
 
 #. module: website_event_track
@@ -907,11 +1078,6 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Phone"
-msgstr ""
-
-#. module: website_event_track
-#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
-msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c6469763e0a202020203c703e0a202020202020202044656172203c7420742d6573633d226f626a6563742e706172746e65725f6e616d65222f3e0a202020203c2f703e3c703e0a202020202020202057652061726520706c656173656420746f20696e666f726d20796f75207468617420796f75722070726f706f73616c20247b6f626a6563742e6e616d657d20686173206265656e20616363657074656420616e6420636f6e6669726d656420666f7220746865206576656e7420247b6f626a6563742e6576656e745f69642e6e616d657d2e0a202020203c2f703e3c703e0a2020202020202020596f752077696c6c2066696e64206d6f72652064657461696c7320686572653a0a20202020202020203c646976207374796c653d226d617267696e2d746f703a20313670783b223e0a2020202020202020202020203c6120687265663d222f6576656e742f247b6f626a6563742e6576656e745f69642e69647d2f22207374796c653d2270616464696e673a2038707820313270783b20666f6e742d73697a653a20313270783b20636f6c6f723a20234646464646463b20746578742d6465636f726174696f6e3a206e6f6e652021696d706f7274616e743b20666f6e742d7765696768743a203430303b206261636b67726f756e642d636f6c6f723a20233837354137423b20626f726465723a2030707820736f6c696420233837354137423b20626f726465722d7261646975733a337078223e0a2020202020202020202020202020202056696577204576656e740a2020202020202020202020203c2f613e0a20202020202020203c2f6469763e0a202020203c2f703e0a202020203c703e53696e636572656c792c3c2f703e0a3c2f6469763e0a202020202020202020202020"
 msgstr ""
 
 #. module: website_event_track

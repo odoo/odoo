@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgid "%d transactions were automatically reconciled."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:785
+#: code:addons/account/models/account.py:794
 #, python-format
 msgid "%s (Copy)"
 msgstr ""
@@ -133,6 +133,11 @@ msgid "30 Net Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "5) For setup, you will need the following information:"
 msgstr ""
@@ -151,6 +156,137 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
+msgstr ""
+
+#. module: account
+#: model:mail.template,body_html:account.mail_template_data_payment_receipt
+msgid "<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name},</p>\n"
+"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>\n"
+"<p>If you have any questions, please do not hesitate to contact us.</p>\n"
+"<p>Best regards,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
+msgstr ""
+
+#. module: account
+#: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
+msgid "<div>\n"
+"% set record = ctx.get('record')\n"
+"% set company = record and record.company_id or user.company_id\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                            Invoice ${object.record_name}\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"          </table>\n"
+"    </td>\n"
+"  </tr>\n"
+"  <!-- CONTENT -->\n"
+"  <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                <tbody>\n"
+"                    <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                        ${object.body | safe}\n"
+"                    </td>\n"
+"                </tbody>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        ${company.name}<br/>\n"
+"                        ${company.phone or ''}\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        % if company.email:\n"
+"                        <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                        % endif\n"
+"                        % if company.website:\n"
+"                        <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                        ${company.website}\n"
+"                        </a>\n"
+"                        % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div>"
+msgstr ""
+
+#. module: account
+#: model:mail.template,body_html:account.email_template_edi_invoice
+msgid "<div>\n"
+"<p>Dear ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Here is, in attachment, your \n"
+"% if object.number:\n"
+"invoice <strong>${object.number}</strong>\n"
+"% else:\n"
+"invoice\n"
+"% endif\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin})\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>This invoice is already paid.</p>\n"
+"% else:\n"
+"    <p>Please remit payment at your earliest convenience.</p>\n"
+"% endif\n"
+"\n"
+"<p>Thank you,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 msgstr ""
 
 #. module: account
@@ -747,19 +883,19 @@ msgid "A Cash transaction can't have a 0 amount."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1721
+#: code:addons/account/models/account_invoice.py:1728
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1724
+#: code:addons/account/models/account_invoice.py:1731
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:698
+#: code:addons/account/models/account.py:707
 #, python-format
 msgid "A bank account can only belong to one journal."
 msgstr ""
@@ -848,8 +984,8 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:493
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:495
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:494
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:496
 #: code:addons/account/static/src/xml/account_reconciliation.xml:170
 #: code:addons/account/static/src/xml/account_reconciliation.xml:228
 #: code:addons/account/static/src/xml/account_reconciliation.xml:253
@@ -1836,8 +1972,8 @@ msgid "Automated Entries"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:339
-#: code:addons/account/wizard/setup_wizards.py:66
+#: code:addons/account/models/company.py:349
+#: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr ""
@@ -1924,7 +2060,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:747
+#: code:addons/account/models/chart_template.py:749
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_id
 #: model:ir.model.fields,field_description:account.field_res_partner_bank_account_count
 #: model:ir.model.fields,field_description:account.field_res_users_bank_account_count
@@ -1938,7 +2074,7 @@ msgid "Bank &amp; Cash"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:153
+#: code:addons/account/models/company.py:163
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_bank_account_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_bank_account_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_partner_bank_id
@@ -2064,13 +2200,6 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
 msgid "Bank statements"
-msgstr ""
-
-#. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:34
-#, python-format
-msgid "Bank statements are fully reconciled."
 msgstr ""
 
 #. module: account
@@ -2284,7 +2413,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
 msgstr ""
@@ -2335,7 +2464,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.journal,type:0
-#: code:addons/account/models/chart_template.py:747
+#: code:addons/account/models/chart_template.py:749
 #, python-format
 msgid "Cash"
 msgstr ""
@@ -2486,7 +2615,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/company.py:206
+#: code:addons/account/models/company.py:216
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:13
 #: model:ir.actions.act_window,name:account.action_account_form
 #: model:ir.ui.menu,name:account.menu_action_account_form
@@ -2791,7 +2920,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/company.py:137
+#: code:addons/account/models/company.py:147
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:25
 #, python-format
 msgid "Company Data"
@@ -2861,8 +2990,8 @@ msgid "Configuration"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:616
-#: code:addons/account/models/account_payment.py:618
+#: code:addons/account/models/account_payment.py:622
+#: code:addons/account/models/account_payment.py:624
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -2989,7 +3118,7 @@ msgid "Cost of Revenue"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:860
+#: code:addons/account/models/chart_template.py:862
 #, python-format
 msgid "Could not install new chart of account as there are already accounting entries existing"
 msgstr ""
@@ -3236,14 +3365,14 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:439
-#: code:addons/account/models/account_invoice.py:1225
+#: code:addons/account/models/account_invoice.py:1228
 #: code:addons/account/wizard/account_invoice_refund.py:111
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 #: model:ir.model,name:account.model_account_invoice_refund
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -3383,7 +3512,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/models/account_payment.py:649
+#: code:addons/account/models/account_payment.py:656
 #, python-format
 msgid "Customer Credit Note"
 msgstr ""
@@ -3415,7 +3544,7 @@ msgid "Customer Invoices"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:647
+#: code:addons/account/models/account_payment.py:654
 #, python-format
 msgid "Customer Payment"
 msgstr ""
@@ -3893,7 +4022,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_invoice.py:437
 #: model:ir.ui.view,arch_db:account.invoice_form
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
@@ -3963,7 +4092,7 @@ msgid "Due date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1167
+#: code:addons/account/models/account_invoice.py:1170
 #, python-format
 msgid "Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note."
 msgstr ""
@@ -4026,6 +4155,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to_cmp
 msgid "End Date"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
 msgstr ""
 
 #. module: account
@@ -4297,7 +4431,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/company.py:179
+#: code:addons/account/models/company.py:189
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:17
 #, python-format
 msgid "Fiscal Year"
@@ -4523,7 +4657,6 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/xml/account_reconciliation.xml:34
 #: code:addons/account/static/src/xml/account_reconciliation.xml:46
 #, python-format
 msgid "Good Job!"
@@ -4939,7 +5072,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:627
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:628
 #, python-format
 msgid "Incorrect Operation"
 msgstr ""
@@ -4956,8 +5089,8 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/models/company.py:224
-#: code:addons/account/models/company.py:239
+#: code:addons/account/models/company.py:234
+#: code:addons/account/models/company.py:249
 #: code:addons/account/static/src/xml/account_dashboard_setup_bar.xml:9
 #, python-format
 msgid "Initial Balances"
@@ -5029,7 +5162,7 @@ msgid "Invite Users"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1223
+#: code:addons/account/models/account_invoice.py:1226
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5040,7 +5173,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 #: model:ir.ui.view,arch_db:account.invoice_tree
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -5125,31 +5257,31 @@ msgid "Invoice for which this invoice is the credit note"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:746
+#: code:addons/account/models/account_invoice.py:747
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:794
+#: code:addons/account/models/account_invoice.py:795
 #, python-format
 msgid "Invoice must be in draft or open state in order to be cancelled."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:768
+#: code:addons/account/models/account_invoice.py:769
 #, python-format
 msgid "Invoice must be in draft state in order to validate it."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:788
+#: code:addons/account/models/account_invoice.py:789
 #, python-format
 msgid "Invoice must be paid in order to set it to register payment."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:780
+#: code:addons/account/models/account_invoice.py:781
 #, python-format
 msgid "Invoice must be validated in order to set it to register payment."
 msgstr ""
@@ -5160,7 +5292,7 @@ msgid "Invoice paid"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1815
+#: code:addons/account/models/account_invoice.py:1822
 #, python-format
 msgid "Invoice sent"
 msgstr ""
@@ -5290,7 +5422,7 @@ msgid "It is mandatory to specify an account and a journal to create a write-off
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:442
+#: code:addons/account/models/account_payment.py:450
 #, python-format
 msgid "It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert."
 msgstr ""
@@ -5414,7 +5546,7 @@ msgid "Journal Item Label"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:391
+#: code:addons/account/models/account_payment.py:399
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
@@ -5545,7 +5677,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:494
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:495
 #: code:addons/account/static/src/xml/account_reconciliation.xml:189
 #: code:addons/account/static/src/xml/account_reconciliation.xml:230
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_name
@@ -6346,7 +6478,7 @@ msgid "No Message"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1381
+#: code:addons/account/models/account_invoice.py:1384
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
 msgstr ""
@@ -6357,7 +6489,7 @@ msgid "No detail"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:264
+#: code:addons/account/models/company.py:274
 #, python-format
 msgid "No miscellanous journal could be found. Please create one before proceeding."
 msgstr ""
@@ -6446,6 +6578,13 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Nothing to Reconcile"
+msgstr ""
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_reconciliation.xml:34
+#, python-format
+msgid "Nothing to do!"
 msgstr ""
 
 #. module: account
@@ -6592,13 +6731,13 @@ msgid "Only One Chart Template Available"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:456
+#: code:addons/account/models/account_payment.py:464
 #, python-format
-msgid "Only a draft payment can be posted. Trying to post a payment in state %s."
+msgid "Only a draft payment can be posted."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:853
+#: code:addons/account/models/chart_template.py:855
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr ""
@@ -6637,7 +6776,7 @@ msgid "Opening Journal"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:267
+#: code:addons/account/models/company.py:277
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_id
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_move_id
 #, python-format
@@ -6808,7 +6947,7 @@ msgid "Paid"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:403
+#: code:addons/account/models/account_payment.py:411
 #, python-format
 msgid "Paid Invoices"
 msgstr ""
@@ -7085,6 +7224,16 @@ msgid "Payment terms: 30 Net Days"
 msgstr ""
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment terms: End of Following Month"
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
 msgstr ""
@@ -7170,7 +7319,7 @@ msgid "Percentage of balance"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1797
+#: code:addons/account/models/account_invoice.py:1804
 #, python-format
 msgid "Percentages for Payment Terms Line must be between 0 and 100."
 msgstr ""
@@ -7208,7 +7357,7 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1063
+#: code:addons/account/models/account_invoice.py:1064
 #, python-format
 msgid "Please create some invoice lines."
 msgstr ""
@@ -7226,7 +7375,7 @@ msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1061
+#: code:addons/account/models/account_invoice.py:1062
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -8506,8 +8655,8 @@ msgid "Tax"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/chart_template.py:831
-#: code:addons/account/models/chart_template.py:834
+#: code:addons/account/models/chart_template.py:833
+#: code:addons/account/models/chart_template.py:836
 #, python-format
 msgid "Tax %.2f%%"
 msgstr ""
@@ -8685,7 +8834,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "TaxCloud Connection"
+msgid "TaxCloud"
 msgstr ""
 
 #. module: account
@@ -8957,7 +9106,7 @@ msgid "The amount expressed in the secondary currency must be positive when acco
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:780
+#: code:addons/account/models/account.py:789
 #, python-format
 msgid "The application scope of taxes in a group must be either the same as the group or \"None\"."
 msgstr ""
@@ -8974,7 +9123,7 @@ msgid "The bank statement used for bank reconciliation"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1156
+#: code:addons/account/models/account_invoice.py:1159
 #, python-format
 msgid "The cash rounding cannot be computed because the difference must be added on the biggest tax found and no tax are specified.\n"
 "Please set up a tax or change the cash rounding method."
@@ -9057,7 +9206,7 @@ msgid "The income or expense account related to the selected product."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:616
+#: code:addons/account/models/account_payment.py:622
 #, python-format
 msgid "The journal %s does not have a sequence, please specify one."
 msgstr ""
@@ -9071,6 +9220,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_opening_opening_move_id
 #: model:ir.model.fields,help:account.field_res_company_account_opening_move_id
 msgid "The journal entry containing the initial balance of all this company's accounts."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_year_op_fiscalyear_last_day
+#: model:ir.model.fields,help:account.field_account_financial_year_op_fiscalyear_last_month
+msgid "The last day of the month will be taken if the chosen day doesn't exist."
 msgstr ""
 
 #. module: account
@@ -9145,7 +9300,7 @@ msgid "The payment amount cannot be negative."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:459
+#: code:addons/account/models/account_payment.py:467
 #, python-format
 msgid "The payment cannot be processed because the invoice is not open!"
 msgstr ""
@@ -9167,7 +9322,7 @@ msgid "The selected account of your Journal Entry forces to provide a secondary 
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1634
+#: code:addons/account/models/account_invoice.py:1641
 #, python-format
 msgid "The selected unit of measure is not compatible with the unit of measure of the product."
 msgstr ""
@@ -9179,7 +9334,7 @@ msgid "The sequence field is used to define order in which the tax lines are app
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:618
+#: code:addons/account/models/account_payment.py:624
 #, python-format
 msgid "The sequence of journal %s is deactivated."
 msgstr ""
@@ -9195,7 +9350,7 @@ msgid "There are currently no invoices and payments for your account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:111
+#: code:addons/account/models/company.py:121
 #, python-format
 msgid "There are still unposted entries in the period you want to lock. You should either post or delete them."
 msgstr ""
@@ -9247,7 +9402,7 @@ msgid "These users handle billing specifically."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1356
+#: code:addons/account/models/account_invoice.py:1359
 #, python-format
 msgid "This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a>"
 msgstr ""
@@ -9377,14 +9532,14 @@ msgid "This label will be displayed on report to show the balance computed for t
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:504
+#: code:addons/account/models/account_payment.py:512
 #, python-format
 msgid "This method should only be called to process a single invoice's payment."
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:376
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:377
 #, python-format
 msgid "This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."
 msgstr ""
@@ -9649,19 +9804,19 @@ msgid "Transfer To"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:344
+#: code:addons/account/models/account_payment.py:350
 #, python-format
 msgid "Transfer account not defined on the company."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:589
+#: code:addons/account/models/account_payment.py:597
 #, python-format
 msgid "Transfer from %s"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:672
+#: code:addons/account/models/account_payment.py:678
 #, python-format
 msgid "Transfer to %s"
 msgstr ""
@@ -9708,14 +9863,14 @@ msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:294
+#: code:addons/account/models/company.py:304
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:373
+#: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:374
 #, python-format
 msgid "Undo the partial reconciliation."
 msgstr ""
@@ -9881,7 +10036,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Use this option if you want to cancel an invoice and create a new\n"
 "                                one. The credit note will be created, validated and reconciled\n"
-"                                with the current invoice. A new, draft, invoice will be created \n"
+"                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
 
@@ -9986,9 +10141,9 @@ msgstr ""
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
 #: code:addons/account/models/account_invoice.py:441
-#: code:addons/account/models/account_invoice.py:1224
+#: code:addons/account/models/account_invoice.py:1227
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Bill"
@@ -10013,8 +10168,8 @@ msgstr ""
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
 #: code:addons/account/models/account_invoice.py:443
-#: code:addons/account/models/account_payment.py:652
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
+#: code:addons/account/models/account_payment.py:659
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Credit Note"
@@ -10033,7 +10188,7 @@ msgid "Vendor Credit Notes"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1226
+#: code:addons/account/models/account_invoice.py:1229
 #, python-format
 msgid "Vendor Credit note"
 msgstr ""
@@ -10044,7 +10199,7 @@ msgid "Vendor Flow"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:654
+#: code:addons/account/models/account_payment.py:661
 #, python-format
 msgid "Vendor Payment"
 msgstr ""
@@ -10094,8 +10249,8 @@ msgid "Warning on the Invoice"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1574
-#: code:addons/account/models/account_invoice.py:1633
+#: code:addons/account/models/account_invoice.py:1581
+#: code:addons/account/models/account_invoice.py:1640
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -10242,13 +10397,13 @@ msgid "You can not change the unit of measure of a product that has been already
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:440
+#: code:addons/account/models/account_payment.py:448
 #, python-format
 msgid "You can not delete a payment that is already posted"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1655
+#: code:addons/account/models/account_invoice.py:1662
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
@@ -10277,7 +10432,7 @@ msgid "You cannot add/modify entries prior to and inclusive of the lock date %s.
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1205
+#: code:addons/account/models/account_invoice.py:1208
 #, python-format
 msgid "You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first."
 msgstr ""
@@ -10352,7 +10507,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:628
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:629
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr ""
@@ -10365,7 +10520,7 @@ msgid "You cannot modify a posted entry of this journal.\n"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:782
+#: code:addons/account/models/account_invoice.py:783
 #, python-format
 msgid "You cannot pay an invoice which is partially paid. You need to reconcile payment entries first."
 msgstr ""
@@ -10396,7 +10551,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:71
-#: code:addons/account/models/account_invoice.py:770
+#: code:addons/account/models/account_invoice.py:771
 #, python-format
 msgid "You cannot validate an invoice with a negative total amount. You should create a credit note instead."
 msgstr ""
@@ -10415,7 +10570,7 @@ msgid "You have"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_payment.py:477
+#: code:addons/account/models/account_payment.py:485
 #, python-format
 msgid "You have to define a sequence for %s in your company."
 msgstr ""
@@ -10427,7 +10582,7 @@ msgid "You must define a Start Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1575
+#: code:addons/account/models/account_invoice.py:1582
 #, python-format
 msgid "You must first select a partner!"
 msgstr ""
@@ -10534,21 +10689,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_zip_to
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_zip_to
 msgid "Zip Range To"
-msgstr ""
-
-#. module: account
-#: model:mail.template,body_html:account.mail_template_data_payment_receipt
-msgid "\\x3c3f786d6c2076657273696f6e3d22312e30223f3e0a3c646174613e3c703e4465617220247b6f626a6563742e706172746e65725f69642e6e616d657d2c3c2f703e0a3c703e5468616e6b20796f7520666f7220796f7572207061796d656e742e3c62722f3e4865726520697320796f7572207061796d656e742072656365697074203c7374726f6e673e247b286f626a6563742e6e616d65206f72202727292e7265706c61636528272f272c272d27297d3c2f7374726f6e673e20616d6f756e74696e6720746f203c7374726f6e673e247b6f626a6563742e616d6f756e747d20247b6f626a6563742e63757272656e63795f69642e6e616d657d3c2f7374726f6e673e2066726f6d20247b6f626a6563742e636f6d70616e795f69642e6e616d657d2e3c2f703e0a3c703e496620796f75206861766520616e79207175657374696f6e732c20706c6561736520646f206e6f7420686573697461746520746f20636f6e746163742075732e3c2f703e0a3c703e4265737420726567617264732c0a25206966207573657220616e6420757365722e7369676e61747572653a0a247b757365722e7369676e6174757265207c20736166657d0a2520656e6469660a3c2f703e0a3c2f646174613e"
-msgstr ""
-
-#. module: account
-#: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
-msgid "\\x3c6469763e0a2520736574207265636f7264203d206374782e67657428277265636f726427290a252073657420636f6d70616e79203d207265636f726420616e64207265636f72642e636f6d70616e795f6964206f7220757365722e636f6d70616e795f69640a3c7461626c6520626f726465723d2230222077696474683d2231303025222063656c6c70616464696e673d223022206267636f6c6f723d222365646564656422207374796c653d2270616464696e673a20323070783b206261636b67726f756e642d636f6c6f723a2023656465646564222073756d6d6172793d226f5f6d61696c5f6e6f74696669636174696f6e223e0a3c74626f64793e0a202020203c212d2d20484541444552202d2d3e0a202020203c74723e0a20202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a2020202020202020202020203c7461626c652077696474683d223539302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222338373541374222207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283133352c39302c313233293b2070616464696e673a20323070783b223e0a202020202020202020202020202020203c74723e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c65223e0a2020202020202020202020202020202020202020202020203c7370616e207374796c653d22666f6e742d73697a653a323070783b20636f6c6f723a77686974653b20666f6e742d7765696768743a20626f6c643b223e0a20202020202020202020202020202020202020202020202020202020496e766f69636520247b6f626a6563742e7265636f72645f6e616d657d0a2020202020202020202020202020202020202020202020203c2f7370616e3e0a20202020202020202020202020202020202020203c2f74643e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d227269676874223e0a2020202020202020202020202020202020202020202020203c696d67207372633d222f6c6f676f2e706e673f636f6d70616e793d247b636f6d70616e792e69647d22207374796c653d2270616464696e673a203070783b206d617267696e3a203070783b206865696768743a206175746f3b2077696474683a20383070783b2220616c743d22247b636f6d70616e792e6e616d657d222f3e0a20202020202020202020202020202020202020203c2f74643e0a202020202020202020202020202020203c2f74723e0a202020202020202020203c2f7461626c653e0a202020203c2f74643e0a20203c2f74723e0a20203c212d2d20434f4e54454e54202d2d3e0a20203c74723e0a20202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a2020202020202020202020203c7461626c652077696474683d223539302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222366666666666622207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283235352c203235352c20323535293b2070616464696e673a20323070783b223e0a202020202020202020202020202020203c74626f64793e0a20202020202020202020202020202020202020203c74642076616c69676e3d22746f7022207374796c653d22666f6e742d66616d696c793a417269616c2c48656c7665746963612c73616e732d73657269663b20636f6c6f723a20233535353b20666f6e742d73697a653a20313470783b223e0a202020202020202020202020202020202020202020202020247b6f626a6563742e626f6479207c20736166657d0a20202020202020202020202020202020202020203c2f74643e0a202020202020202020202020202020203c2f74626f64793e0a2020202020202020202020203c2f7461626c653e0a20202020202020203c2f74643e0a202020203c2f74723e0a202020203c212d2d20464f4f544552202d2d3e0a202020203c74723e0a20202020202020203c746420616c69676e3d2263656e74657222207374796c653d226d696e2d77696474683a2035393070783b223e0a2020202020202020202020203c7461626c652077696474683d223539302220626f726465723d2230222063656c6c70616464696e673d223022206267636f6c6f723d222338373541374222207374796c653d226d696e2d77696474683a2035393070783b206261636b67726f756e642d636f6c6f723a20726762283133352c39302c313233293b2070616464696e673a20323070783b223e0a202020202020202020202020202020203c74723e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d226c65667422207374796c653d22636f6c6f723a20236666663b2070616464696e672d746f703a20313070783b2070616464696e672d626f74746f6d3a20313070783b20666f6e742d73697a653a20313270783b223e0a202020202020202020202020202020202020202020202020247b636f6d70616e792e6e616d657d3c62722f3e0a202020202020202020202020202020202020202020202020247b636f6d70616e792e70686f6e65206f722027277d0a20202020202020202020202020202020202020203c2f74643e0a20202020202020202020202020202020202020203c74642076616c69676e3d226d6964646c652220616c69676e3d22726967687422207374796c653d22636f6c6f723a20236666663b2070616464696e672d746f703a20313070783b2070616464696e672d626f74746f6d3a20313070783b20666f6e742d73697a653a20313270783b223e0a2020202020202020202020202020202020202020202020202520696620636f6d70616e792e656d61696c3a0a2020202020202020202020202020202020202020202020203c6120687265663d226d61696c746f3a247b636f6d70616e792e656d61696c7d22207374796c653d22746578742d6465636f726174696f6e3a6e6f6e653b20636f6c6f723a2077686974653b223e247b636f6d70616e792e656d61696c7d3c2f613e3c62722f3e0a2020202020202020202020202020202020202020202020202520656e6469660a2020202020202020202020202020202020202020202020202520696620636f6d70616e792e776562736974653a0a2020202020202020202020202020202020202020202020203c6120687265663d22247b636f6d70616e792e776562736974657d22207374796c653d22746578742d6465636f726174696f6e3a6e6f6e653b20636f6c6f723a2077686974653b223e0a202020202020202020202020202020202020202020202020247b636f6d70616e792e776562736974657d0a2020202020202020202020202020202020202020202020203c2f613e0a2020202020202020202020202020202020202020202020202520656e6469660a20202020202020202020202020202020202020203c2f74643e0a202020202020202020202020202020203c2f74723e0a2020202020202020202020203c2f7461626c653e0a20202020202020203c2f74643e0a202020203c2f74723e0a202020203c74723e0a20202020202020203c746420616c69676e3d2263656e746572223e0a202020202020202020202020506f7765726564206279203c61207461726765743d225f626c616e6b2220687265663d2268747470733a2f2f7777772e6f646f6f2e636f6d223e4f646f6f3c2f613e2e0a20202020202020203c2f74643e0a202020203c2f74723e0a3c2f74626f64793e0a3c2f7461626c653e0a3c2f6469763e"
-msgstr ""
-
-#. module: account
-#: model:mail.template,body_html:account.email_template_edi_invoice
-msgid "\\x3c6469763e0a3c703e4465617220247b6f626a6563742e706172746e65725f69642e6e616d657d0a2520736574206163636573735f616374696f6e203d206f626a6563742e776974685f636f6e7465787428666f7263655f776562736974653d54727565292e6765745f6163636573735f616374696f6e28290a25207365742069735f6f6e6c696e65203d206163636573735f616374696f6e20616e64206163636573735f616374696f6e5b2774797065275d203d3d202769722e616374696f6e732e6163745f75726c270a2520736574206163636573735f75726c203d206f626a6563742e6765745f6d61696c5f75726c28290a0a25206966206f626a6563742e706172746e65725f69642e706172656e745f69643a0a20202020283c693e247b6f626a6563742e706172746e65725f69642e706172656e745f69642e6e616d657d3c2f693e290a2520656e6469660a2c3c2f703e0a3c703e486572652069732c20696e206174746163686d656e742c20796f7572200a25206966206f626a6563742e6e756d6265723a0a696e766f696365203c7374726f6e673e247b6f626a6563742e6e756d6265727d3c2f7374726f6e673e0a2520656c73653a0a696e766f6963650a2520656e6469660a25206966206f626a6563742e6f726967696e3a0a2877697468207265666572656e63653a20247b6f626a6563742e6f726967696e7d290a2520656e6469660a616d6f756e74696e6720696e203c7374726f6e673e247b6f626a6563742e616d6f756e745f746f74616c7d20247b6f626a6563742e63757272656e63795f69642e6e616d657d3c2f7374726f6e673e0a66726f6d20247b6f626a6563742e636f6d70616e795f69642e6e616d657d2e0a3c2f703e0a0a252069662069735f6f6e6c696e653a0a202020203c62722f3e3c62722f3e0a202020203c63656e7465723e0a2020202020203c6120687265663d22247b6163636573735f75726c7d22207374796c653d226261636b67726f756e642d636f6c6f723a20233161626339633b2070616464696e673a20323070783b20746578742d6465636f726174696f6e3a206e6f6e653b20636f6c6f723a20236666663b20626f726465722d7261646975733a203570783b20666f6e742d73697a653a20313670783b2220636c6173733d226f5f64656661756c745f736e69707065745f74657874223e5669657720496e766f6963653c2f613e0a202020203c2f63656e7465723e0a2520656e6469660a202020203c62722f3e3c62722f3e0a0a25206966206f626a6563742e73746174653d3d2770616964273a0a202020203c703e5468697320696e766f69636520697320616c726561647920706169642e3c2f703e0a2520656c73653a0a202020203c703e506c656173652072656d6974207061796d656e7420617420796f7572206561726c6965737420636f6e76656e69656e63652e3c2f703e0a2520656e6469660a0a3c703e5468616e6b20796f752c3c2f703e0a3c70207374796c653d22636f6c6f723a23383838383838223e0a25206966206f626a6563742e757365725f696420616e64206f626a6563742e757365725f69642e7369676e61747572653a0a20202020247b6f626a6563742e757365725f69642e7369676e6174757265207c20736166657d0a2520656e6469660a3c2f703e0a3c2f6469763e"
 msgstr ""
 
 #. module: account
