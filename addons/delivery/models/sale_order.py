@@ -40,6 +40,7 @@ class SaleOrder(models.Model):
         if self.state in ('draft', 'sent'):
             self.delivery_price = 0.0
             self.delivery_rating_success = False
+            self.delivery_message = False
 
     @api.onchange('partner_id')
     def onchange_partner_id_carrier_id(self):

@@ -33,16 +33,7 @@
             <field name="model_id" ref="product.model_product_product"></field>
             <field name="binding_model_id" ref="product.model_product_product"></field>
             <field name="code">
-# Call `_fifo_vacuum` on concerned moves
-fifo_valued_products = env['product.product']
-fifo_valued_products |= env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped('product_variant_ids')
-fifo_valued_categories = env['product.category'].search([('property_cost_method', '=', 'fifo')])
-fifo_valued_products |= env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
-moves_to_vacuum = env['stock.move']
-Move = env['stock.move']
-for product in fifo_valued_products:
-    moves_to_vacuum |= Move.search([('product_id', '=', product.id), ('remaining_qty', '&lt;', 0)] + Move._get_all_base_domain())
-moves_to_vacuum._fifo_vacuum()
+env['stock.move']._run_fifo_vacuum()
 action = env.ref('stock_account.product_valuation_action').read()[0]
             </field>
         </record>

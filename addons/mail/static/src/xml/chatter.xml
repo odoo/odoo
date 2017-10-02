@@ -57,7 +57,7 @@
             Log note
         </button>
         <button t-if="schedule_activity_btn" class="btn btn-sm btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity">
-            <i class="fa fa-clock-o"/> Schedule activity
+            <i class="fa fa-clock-o"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
     </t>
 

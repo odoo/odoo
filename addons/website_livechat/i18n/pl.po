@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_livechat
-#
+# 
 # Translators:
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-27 09:26+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>, 2017\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -25,9 +26,24 @@ msgid "<span>Livechat Channel</span>"
 msgstr "<span>Kanał czatu</span>"
 
 #. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Channel"
+msgstr "Kanał"
+
+#. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
 msgid "Description of the channel displayed on the website page"
-msgstr "opis dla kanału wystawiony na stronie internetowej"
+msgstr "Opis dla kanału widoczny na stronie internetowej"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live Chat"
+msgstr "Czat"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live chat channel of your website"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
@@ -75,8 +91,12 @@ msgid "Website"
 msgstr "Strona WWW"
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+msgid "Website Live Channel"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
-#: model:ir.model.fields,field_description:website_livechat.field_website_config_settings_channel_id
 msgid "Website Live Chat Channel"
 msgstr "Kanał czatu na stronie"
 
@@ -91,15 +111,6 @@ msgid "last feedbacks"
 msgstr "ostatnia opinia"
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Widoczny na stronie"
-
-#~ msgid "Website URL"
-#~ msgstr "Adres strony internetowej"
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

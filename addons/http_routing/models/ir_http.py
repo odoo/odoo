@@ -29,18 +29,6 @@ odoo._geoip_resolver = None
 # Slug API
 # ------------------------------------------------------------
 
-def _guess_mimetype(ext=False, default='text/html'):
-    exts = {
-        '.css': 'text/css',
-        '.less': 'text/less',
-        '.js': 'text/javascript',
-        '.xml': 'text/xml',
-        '.csv': 'text/csv',
-        '.html': 'text/html',
-    }
-    return ext is not False and exts.get(ext, default) or exts
-
-
 def slugify_one(s, max_length=None):
     """ Transform a string to a slug that can be used in a url path.
         This method will first try to do the job with python-slugify if present.

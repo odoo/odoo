@@ -31,7 +31,7 @@
         <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_nocontent">
-        <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
+        <p>Nothing to do!</p>
         <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
     </div>
 </t>
@@ -153,7 +153,7 @@
     <div class="quick_add">
         <div class="btn-group btn-group-sm o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
-                <button class="btn btn-default" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
+                <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
             </t>
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">there</a>.</p>
         </div>

@@ -31,7 +31,7 @@ class AutoVacuum(models.AbstractModel):
         _logger.info("GC'd %d user log entries", self._cr.rowcount)
 
     @api.model
-    def power_on(self):
+    def power_on(self, *args, **kwargs):
         self.env['ir.attachment']._file_gc()
         self._gc_transient_models()
         self._gc_user_logs()

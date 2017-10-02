@@ -332,16 +332,11 @@ var MentionManager = Widget.extend({
     // Cursor position and selection utils
     _get_selection_positions: function () {
         var el = this.composer.$input.get(0);
-        return el ? {start: el.selectionStart, end: el.selectionEnd} : {start: 0, end: 0};
+        return el ? dom.getSelectionRange(el) : {start: 0, end: 0};
     },
     _set_cursor_position: function (pos) {
         this.composer.$input.each(function (index, elem) {
-            if (elem.setSelectionRange){
-                elem.setSelectionRange(pos, pos);
-            }
-            else if (elem.createTextRange){
-                elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
-            }
+            dom.setSelectionRange(elem, {start: pos, end: pos});
         });
     },
 
@@ -379,7 +374,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
             send_text: _t('Send'),
             default_body: '',
             default_mention_selections: {},
-            isMobile: config.isMobile
+            isMobile: config.device.isMobile
         });
         this.context = this.options.context;
 

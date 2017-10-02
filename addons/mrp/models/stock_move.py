@@ -129,8 +129,8 @@ class StockMove(models.Model):
         return super(StockMove, self)._action_cancel()
 
     def _action_confirm(self, merge=True):
-        moves = self
-        for move in self.filtered(lambda m: m.production_id):
+        moves = self.env['stock.move']
+        for move in self:
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge)

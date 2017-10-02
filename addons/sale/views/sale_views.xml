@@ -185,7 +185,7 @@
                 <form string="Sales Order" class="o_sale_order">
                 <header>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', 'in', ['sent', 'sale']), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
                     <button name="action_confirm" id="action_confirm"
                         string="Confirm Sale" class="btn-primary" type="object"
@@ -257,13 +257,13 @@
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
                                             </div>
-                                            <label for="qty_delivered" string="Delivered Quantity" invisible="context.get('hide_sale')"/>
-                                            <div invisible="context.get('hide_sale')">
+                                            <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
                                                 <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                             </div>
-                                            <label for="qty_invoiced" string="Invoiced Quantity" invisible="context.get('hide_sale')"/>
-                                            <div invisible="context.get('hide_sale')">
-                                                <field name="qty_invoiced" invisible="context.get('hide_sale')"/>
+                                            <label for="qty_invoiced" string="Invoiced Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                            <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
+                                                <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
@@ -304,10 +304,10 @@
                                         string="Ordered Qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                     />
-                                    <field name="qty_delivered" invisible="context.get('hide_sale')"
-                                        attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                    <field name="qty_delivered"
+                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                     <field name="qty_invoiced"
-                                        invisible="context.get('hide_sale')"/>
+                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
@@ -366,8 +366,6 @@
                                 <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 <div class="oe_subtotal_footer_separator oe_inline o_td_label">
                                     <label for="amount_total" />
-                                    <button name="button_dummy"
-                                        states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
@@ -574,7 +572,6 @@
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
-            <field name="context">{'hide_sale': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Create a Quotation, the first step of a new sale.
@@ -862,7 +859,6 @@
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="context">{
-                    'hide_sale': True,
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
                     'show_address': 1,

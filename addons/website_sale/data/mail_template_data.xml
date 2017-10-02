@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="mail_template_sale_cart_recovery" model="mail.template">
-            <field name="name">Sale Order: Cart Recovery Email</field>
+            <field name="name">eCommerce: Cart Recovery Email</field>
             <field name="email_from">${(object.user_id.email or '')|safe}</field>
             <field name="subject">You left items in your cart.</field>
             <field name="partner_to">${object.partner_id.id}</field>

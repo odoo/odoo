@@ -91,7 +91,7 @@ class AccountAnalyticLine(models.Model):
                 'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
             }
             # set the revenue and billable type according to the product and the SO line
-            if timesheet.task_id and so_line.product_id.type == 'service' and so_line.product_id.service_type == 'timesheet':
+            if timesheet.task_id and so_line.product_id.type == 'service':
                 # find the analytic account to convert revenue into its currency
                 analytic_account = timesheet.account_id
                 # convert the unit of mesure into hours
@@ -101,7 +101,7 @@ class AccountAnalyticLine(models.Model):
                 # calculate the revenue on the timesheet
                 if so_line.product_id.invoice_policy == 'delivery':
                     values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
-                    values['timesheet_invoice_type'] = 'billable_time'
+                    values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
                 elif so_line.product_id.invoice_policy == 'order':
                     quantity_hour = unit_amount
                     if so_line.product_uom.category_id == timesheet_uom.category_id:

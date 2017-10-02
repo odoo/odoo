@@ -75,8 +75,11 @@
         by <span t-field="activity.user_id.name"/>:
         <span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <div t-field="activity.note"/>
-    <div t-if="activity.feedback"><strong> Feedback : </strong><p t-field="activity.feedback"></p></div>
+    <div t-field="activity.note" style="margin-left: 8px;"/>
+    <div t-if="activity.feedback" style="margin-top: 8px;">
+        <strong> Feedback</strong>
+    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
+    </div>
 </div>
         </template>
 

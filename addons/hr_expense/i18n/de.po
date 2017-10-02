@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Christian Körner <fipes.de@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -292,6 +292,12 @@ msgid "Agree in advance with the customer:"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "Flug"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
 msgstr ""
@@ -376,6 +382,12 @@ msgstr "Als Ausgabe verwendbar"
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "KFZ Reise Ausgaben"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -794,7 +806,7 @@ msgid "Expenses must belong to the same Employee."
 msgstr "Spesen müssen zum gleichen Mitarbeiter gehören."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:562
+#: code:addons/hr_expense/models/hr_expense.py:565
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -912,6 +924,12 @@ msgid "Hide Payment Method"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.hotel_rent
+#: model:product.template,name:hr_expense.hotel_rent_product_template
+msgid "Hotel Accommodation"
+msgstr "Übernachtungskosten"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_ids
 msgid "Hr Expense"
 msgstr ""
@@ -924,7 +942,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7632
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7678
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_id
 msgid "ID"
 msgstr "ID"
@@ -1705,7 +1723,7 @@ msgid "Write the name of the product, or select an existing one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:559
+#: code:addons/hr_expense/models/hr_expense.py:562
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
@@ -1723,7 +1741,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:589
+#: code:addons/hr_expense/models/hr_expense.py:592
 #, python-format
 msgid "You cannot add expense lines of another employee."
 msgstr ""

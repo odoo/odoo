@@ -17,6 +17,7 @@ class StockMove(TransactionCase):
             ('usage', '=', 'transit'),
         ], limit=1)
         self.uom_unit = self.env.ref('product.product_uom_unit')
+        self.uom_dozen = self.env.ref('product.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
@@ -2168,6 +2169,79 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 15.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 15.0)
 
+    def test_edit_done_move_line_12(self):
+        """ Test that editing a done stock move line linked a tracked product correctly and directly
+        adapts the transfer. In this case, we edit the lot to another one, but the original move line
+        is not in the default product's UOM.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product3.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product3.id,
+        })
+        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_done_move_line_12'})
+        move1 = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 1
+        move1.move_line_ids.lot_id = lot1.id
+        move1._action_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1), 12.0)
+
+        # Change the done quantity from 1 dozen to two dozen
+        move1.move_line_ids.qty_done = 2
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1), 24.0)
+
+    def test_edit_done_move_line_13(self):
+        """ Test that editing a done stock move line linked to a packed and tracked product correctly
+        and directly adapts the transfer. In this case, we edit the lot to another available one
+        that we put in the same pack.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product1.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product1.id,
+        })
+        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 1
+        move1.move_line_ids.lot_id = lot1.id
+        move1.move_line_ids.result_package_id = package1.id
+        move1._action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1, package_id=package1), 1.0)
+
+        move1.move_line_ids.write({'lot_id': lot2.id})
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot1, package_id=package1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot2, package_id=package1), 1.0)
+
     def test_immediate_validate_1(self):
         """ Create a picking and simulates validate button effect.
             Move line quantity should be set to their reservation quantity automatically
@@ -2510,7 +2584,7 @@ class StockMove(TransactionCase):
         """
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
         move1 = self.env['stock.move'].create({
-            'name': 'test_set_quantity_done_1',
+            'name': 'test_scrap_3',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -2530,6 +2604,49 @@ class StockMove(TransactionCase):
         scrap.do_scrap()
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(len(move1.move_line_ids), 0)
+
+    def test_scrap_4(self):
+        """ Scrap the product of a picking. Then modify the
+        done linked stock move and ensure the scrap quantity is also
+        updated.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+        partner = self.env['res.partner'].create({'name': 'Kimberley'})
+        picking = self.env['stock.picking'].create({
+            'name': 'A single picking with one move to scrap',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'A move to confirm and scrap its product',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking.id,
+        })
+        move1._action_confirm()
+
+        self.assertEqual(move1.state, 'confirmed')
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product1.id,
+            'product_uom_id': self.product1.uom_id.id,
+            'scrap_qty': 5,
+            'picking_id': picking.id,
+        })
+
+        scrap.action_validate()
+        self.assertEqual(len(picking.move_lines), 2)
+        scrapped_move = picking.move_lines.filtered(lambda m: m.state == 'done')
+        self.assertTrue(scrapped_move, 'No scrapped move created.')
+        self.assertEqual(scrapped_move.scrap_ids.ids, [scrap.id], 'Wrong scrap linked to the move.')
+        self.assertEqual(scrap.scrap_qty, 5, 'Scrap quantity has been modified and is not correct anymore.')
+
+        scrapped_move.quantity_done = 8
+        self.assertEqual(scrap.scrap_qty, 8, 'Scrap quantity is not updated.')
 
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
@@ -2861,9 +2978,7 @@ class StockMove(TransactionCase):
         move1._action_confirm()
         move1._action_assign()
         move1.product_uom_qty = 15
-        self.assertEqual(move1.state, 'partially_available')
-
-        move1._action_assign()
+        # _action_assign is automatically called
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 15)
         self.assertEqual(len(move1.move_line_ids), 1)
@@ -2884,11 +2999,141 @@ class StockMove(TransactionCase):
         })
         move1._action_confirm()
         move1._action_assign()
-        move1.product_uom_qty = 5
-        self.assertEqual(move1.state, 'confirmed')
-        self.assertEqual(len(move1.move_line_ids), 0)
-
-        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        move1.with_context(debug=True).product_uom_qty = 5
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)
+
+    def test_initial_demand_3(self):
+        """ Increase the initial demand on a receipt picking, the system should automatically
+        reserve the new quantity.
+        """
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking._autoconfirm_picking()
+        self.assertEqual(picking.state, 'assigned')
+        move1.product_uom_qty = 12
+        self.assertEqual(picking.state, 'assigned')
+
+    def test_initial_demand_4(self):
+        """ Increase the initial demand on a delivery picking, the system should not automatically
+        reserve the new quantity.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 12)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        self.assertEqual(picking.state, 'assigned')
+        move1.product_uom_qty = 12
+        self.assertEqual(picking.state, 'assigned')  # actually, partially available
+        self.assertEqual(move1.state, 'partially_available')
+        picking.action_assign()
+        self.assertEqual(move1.state, 'assigned')
+
+    def test_change_product_type(self):
+        """ Changing type of an existing product will raise a user error if some move
+        are reserved.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_customer',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        with self.assertRaises(UserError):
+            self.product1.type = 'consu'
+        move1._action_cancel()
+        self.product1.type = 'consu'
+
+        move2 = self.env['stock.move'].create({
+            'name': 'test_customer',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        move2._action_confirm()
+        move2._action_assign()
+
+        with self.assertRaises(UserError):
+            self.product1.type = 'product'
+        move2._action_cancel()
+        self.product1.type = 'product'
+
+    def test_edit_done_picking_1(self):
+        """ Add a new move line in a done picking should generate an
+        associated move.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 12)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        move1.quantity_done = 10
+        picking.action_done()
+
+        self.assertEqual(len(picking.move_lines), 1, 'One move should exist for the picking.')
+        self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
+
+        ml = self.env['stock.move.line'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 2.0,
+            'picking_id': picking.id,
+        })
+
+        self.assertEqual(len(picking.move_lines), 2, 'The new move associated to the move line does not exist.')
+        self.assertEqual(len(picking.move_line_ids), 2, 'It should be 2 move lines for the picking.')
+        self.assertTrue(ml.move_id in picking.move_lines, 'Links are not correct between picking, moves and move lines.')
+        self.assertEqual(picking.state, 'done', 'Picking should still done after adding a new move line.')
+        self.assertTrue(all(move.state == 'done' for move in picking.move_lines), 'Wrong state for move.')

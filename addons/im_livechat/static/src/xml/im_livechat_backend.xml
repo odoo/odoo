@@ -7,7 +7,7 @@
             <t t-set="disable_add_channel" t-value="true"/>
             <t t-call="mail.chat.SidebarTitle">
                 <t t-set="channel_title">Livechat</t>
-                <t t-set="channel_icon">fa-comments</t>
+                <t t-set="channel_icon" t-value="fa-comments"/>
             </t>
             <t t-call="mail.chat.SidebarItems"/>
         </t>
