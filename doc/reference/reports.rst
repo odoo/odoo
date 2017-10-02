@@ -34,8 +34,8 @@ can take the following attributes:
 ``id``
     the generated record's :term:`external id`
 ``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+    used to identify report in report templates, and as a mnemonic/description
+    of the report when looking for one in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
 ``report_type`` (mandatory)
