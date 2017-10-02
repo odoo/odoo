@@ -408,6 +408,9 @@ return core.Class.extend({
             if (!_.isObject(node.attrs.modifiers)) {
                 node.attrs.modifiers = node.attrs.modifiers ? JSON.parse(node.attrs.modifiers) : {};
             }
+            if (!_.isObject(node.attrs.options) && node.tag === 'button') {
+                node.attrs.options = node.attrs.options ? JSON.parse(node.attrs.options) : {};
+            }
             if (node.tag === 'field') {
                 fieldsInfo[node.attrs.name] = self._processField(viewType,
                     fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
