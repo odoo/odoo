@@ -13,8 +13,8 @@ class TestRecurrentEvent(common.TransactionCase):
         self.CalendarEvent = self.env['calendar.event']
 
     def test_recurrent_meeting1(self):
-        # In order to test recurrent meetings in Odoo, I create meetings with different recurrency using different test cases.
-        # I create a recurrent meeting with daily recurrency and fixed amount of time.
+        # In order to test recurrent meetings in Odoo, I create meetings with different recurrence using different test cases.
+        # I create a recurrent meeting with daily recurrence and fixed amount of time.
         self.CalendarEvent.create({
             'count': 5,
             'start': '2011-04-13 11:04:00',
