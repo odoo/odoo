@@ -673,6 +673,7 @@
                     <button name="action_assign" states="confirmed,picking_except" string="Check Availability" type="object" class="oe_highlight"/>
                     <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
+                    <button name="button_unreserve" states="ready" string="Unreserve" type="object"/>
                     <button name="button_cancel" states="draft,ready,in_production" string="Cancel Production"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"confirmed":"blue"}'/>
