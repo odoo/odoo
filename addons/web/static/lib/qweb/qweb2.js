@@ -28,8 +28,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var QWeb2 = {
     expressions_cache: { },
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,esc,raw,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,elif,else,call,set,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
+        // FUCKING CHM FOR FUCK'S SAKE
+        'not': '!',
         'and': '&&',
         'or': '||',
         'gt': '>',
@@ -76,9 +78,9 @@ var QWeb2 = {
             return s;
         },
         gen_attribute: function(o) {
-            if (o !== null && o !== undefined) {
+            if (o) {
                 if (o.constructor === Array) {
-                    if (o[1] !== null && o[1] !== undefined) {
+                    if (o[1]) {
                         return this.format_attribute(o[0], o[1]);
                     }
                 } else if (typeof o === 'object') {
@@ -718,36 +720,52 @@ QWeb2.Element = (function() {
         },
         compile_element : function() {
             for (var i = 0, ilen = this.engine.actions_precedence.length; i < ilen; i++) {
-                var a = this.engine.actions_precedence[i];
-                if (a in this.actions) {
-                    var value = this.actions[a];
-                    var key = 'compile_action_' + a;
+                var compiled_action = this.engine.actions_precedence[i];
+                if (compiled_action in this.actions) {
+                    var value = this.actions[compiled_action];
+                    var key = 'compile_action_' + compiled_action;
                     if (this[key]) {
                         this[key](value);
                     } else if (this.engine[key]) {
                         this.engine[key].call(this, value);
                     } else {
-                        this.engine.tools.exception("No handler method for action '" + a + "'");
+                        this.engine.tools.exception("No handler method for action '" + compiled_action + "'");
                     }
                 }
             }
+            function print_contents(self) {
+                var expr, esc, raw;
+                if (esc = self.actions['esc']) {
+                    expr = "context.engine.tools.html_escape(" + self.format_str(esc) + ");";
+                } else if(raw = self.actions['raw']) {
+                    expr = self.format_str(raw);
+                }
+                // print non-empty result of t-esc or t-raw, otherwise
+                // print/process body
+                if (expr) {
+                    self.top('var expr_result = ' + expr + ';');
+                    self.top('if (expr_result) {');
+                    self.top('    r.push(expr_result);');
+                    self.top('} else {');
+                    self.bottom('}');
+                }
+             }
             if (this.tag.toLowerCase() !== this.engine.prefix) {
                 var tag = "<" + this.tag;
-                for (var a in this.attributes) {
-                    tag += this.engine.tools.gen_attribute([a, this.attributes[a]]);
+                for (var att in this.attributes) {
+                    tag += this.engine.tools.gen_attribute([att, this.attributes[att]]);
                 }
                 this.top_string(tag);
                 if (this.actions.att) {
-                    this.top("r.push(context.engine.tools.gen_attribute(" + (this.format_expression(this.actions.att)) + "));");
+
                 }
                 for (var a in this.actions) {
-                    var v = this.actions[a];
-                    var m = a.match(/att-(.+)/);
-                    if (m) {
+                    var m, v = this.actions[a];
+                    if (a === 'att') {
+                        this.top("r.push(context.engine.tools.gen_attribute(" + (this.format_expression(v)) + "));");
+                    } else if (m = a.match(/att-(.+)/)) {
                         this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.format_expression(v)) + ")]));");
-                    }
-                    var m = a.match(/attf-(.+)/);
-                    if (m) {
+                    } else if (m = a.match(/attf-(.+)/)) {
                         this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.string_interpolation(v)) + ")]));");
                     }
                 }
@@ -755,11 +773,13 @@ QWeb2.Element = (function() {
                     // We do not enforce empty content on void elements
                     // because QWeb rendering is not necessarily html.
                     this.top_string("/>");
+                    return; // ensure we skip processing content
                 } else {
                     this.top_string(">");
                     this.bottom_string("</" + this.tag + ">");
                 }
             }
+            print_contents(this);
         },
         compile_action_if : function(value) {
             this.top("if (" + (this.format_expression(value)) + ") {");
@@ -816,14 +836,6 @@ QWeb2.Element = (function() {
                     this.bottom("return r.join('');");
                 }
             }
-        },
-        compile_action_esc : function(value) {
-            this.top("r.push(context.engine.tools.html_escape("
-                    + this.format_expression(value)
-                    + "));");
-        },
-        compile_action_raw : function(value) {
-            this.top("r.push(" + (this.format_str(value)) + ");");
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");
