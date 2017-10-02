@@ -37,13 +37,16 @@
 # Loic <loic.richard2@gmail.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# fr rev <e2ffr04@hotmail.com>, 2017
+# fr trans <e2ftrans1@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -406,6 +409,11 @@ msgid "<strong>Taxes</strong>"
 msgstr "<strong>Taxes</strong>"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "<strong>The ordered quantity has been updated.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Total :</strong>"
@@ -521,6 +529,11 @@ msgid "Billed Qty"
 msgstr "Qté Facturé"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Billed Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
 msgstr "État de facturation"
@@ -594,7 +607,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:731
+#: code:addons/purchase/models/purchase.py:737
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -866,7 +879,7 @@ msgstr "Régime fiscal"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Activités futures"
 
 #. module: purchase
 #: selection:res.company,po_double_validation:0
@@ -1004,7 +1017,7 @@ msgstr "Dernière mise à jour le"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Activités en retard"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
@@ -1249,6 +1262,11 @@ msgstr "État de la commande"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order of Day"
 msgstr "Commande du jour"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Ordered Quantity:"
+msgstr ""
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -1634,6 +1652,11 @@ msgid "Received Qty"
 msgstr "Qté reçue"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.track_po_line_template
+msgid "Received Quantity:"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1889,7 +1912,7 @@ msgstr ""
 "fournisseurs disponibles, etc."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:643
+#: code:addons/purchase/models/purchase.py:649
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1919,7 +1942,7 @@ msgstr ""
 "des produits et des notes du fournisseur."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:872
+#: code:addons/purchase/models/purchase.py:878
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1977,6 +2000,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Cette valeur par défaut s'applique à tout nouveau produit créé. Elle peut "
+"être modifiée dans la fiche de détails de l'article."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2163,11 +2188,6 @@ msgid "Vendor Bills"
 msgstr "Factures fournisseur"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
-msgid "Vendor Bills."
-msgstr "Factures Fournisseur."
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
@@ -2222,7 +2242,7 @@ msgstr "Avertissement"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:802
+#: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertissement pour %s"

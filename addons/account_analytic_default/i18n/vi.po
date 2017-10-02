@@ -1,42 +1,41 @@
-# #-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
-# Linh NGuyen <tanlinh2000@yahoo.com>, 2016
-# Tai Ha <vincentpt91@gmail.com>, 2016
-# #-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * account_analytic_default
-#
-# Translators:
-# Tai Ha <vincentpt91@gmail.com>, 2016
-#, fuzzy
+# fanha99 <fanha99@hotmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# son dang <son.dang@doda100.com>, 2017
+# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
+# Phạm Lân <phamquanglan@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-29 22:03+0000\n"
-"Last-Translator: Tai Ha <vincentpt91@gmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
-"vi/)\n"
-"Language: vi\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Phạm Lân <phamquanglan@gmail.com>, 2017\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  vi.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
-msgid "# Analytic Rules"
-msgstr "Quy tắc quản trị"
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -51,7 +50,6 @@ msgstr "Tài khoản quản trị"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
@@ -64,10 +62,9 @@ msgid "Analytic Distribution"
 msgstr "Phân tích Phân Phối"
 
 #. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
-#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
 msgstr "Quy tắc quản trị"
 
@@ -90,7 +87,12 @@ msgstr "Được tạo bởi"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr "Thời điểm tạo"
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+msgid "Default Analytic Values"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
@@ -113,11 +115,6 @@ msgid "End Date"
 msgstr "Ngày kết thúc"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "Bút toán"
-
-#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
@@ -126,7 +123,7 @@ msgstr "Chỉ ra thứ tự trình tự khi hiển thị một danh sách phân 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "Group By"
+msgstr "Nhóm theo"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
@@ -146,7 +143,7 @@ msgstr "Sửa lần cuối vào"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
@@ -160,16 +157,10 @@ msgid "Partner"
 msgstr "Đối tác"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_product
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Sản phẩm"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
-msgstr "Mẫu sản phẩm"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
@@ -195,8 +186,8 @@ msgid ""
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một đối tác mà sẽ sử dụng tài khoản quản trị chỉ định trong tài khoản "
-"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng "
-"ta chọn đối tác này, nó sẽ tự động thực hiện như là một tài khoản quản trị)"
+"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng"
+" ta chọn đối tác này, nó sẽ tự động thực hiện như là một tài khoản quản trị)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -206,9 +197,9 @@ msgid ""
 "product, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một sản phẩm mà sẽ sử dụng tài khoản quản trị chỉ định trong tài khoản "
-"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng "
-"ta chọn sản phẩm này, nó sẽ tự động thực hiện việc này như là một tài khoản "
-"quản trị)"
+"quản trị mặc định (ví dụ: tạo mới hóa đơn khách hàng hoặc đơn hàng nếu chúng"
+" ta chọn sản phẩm này, nó sẽ tự động thực hiện việc này như là một tài khoản"
+" quản trị)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
@@ -234,17 +225,7 @@ msgstr "Ngày bắt đầu"
 msgid "User"
 msgstr "Người dùng"
 
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Chính sách hóa đơn chi phí"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Nếu bạn xuất hóa đơn theo giá thành, chi phí sẽ được xuất hóa đơn trên "
-#~ "lệnh bán hàng theo chi phí của dòng thống kê; Nếu bạn xuất hóa đơn theo "
-#~ "giá bán, giá của sản phẩm sẽ được sử dụng thay thế"
-
-#~ msgid "Transfer"
-#~ msgstr "Dịch chuyển"
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
+msgstr "đến"

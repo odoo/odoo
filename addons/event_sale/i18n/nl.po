@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,12 @@ msgid ""
 msgstr ""
 "Kies een evenement ticket en het zal automatisch een registratie aanmaken "
 "voor dit evenement ticket."
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Conferentie over bedrijfsapplicaties"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -173,6 +179,18 @@ msgid "Events"
 msgstr "Evenementen"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:226
+#, python-format
+msgid "Free"
+msgstr "Gratis"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Functioneel webinar"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
@@ -194,7 +212,7 @@ msgstr "Is vervallen"
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "Is een evenement ticket"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
@@ -228,8 +246,10 @@ msgid "Maximum Available Seats"
 msgstr "Maximum beschikbare plaatsen"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:222
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_name
+#, python-format
 msgid "Name"
 msgstr "Naam"
 
@@ -246,6 +266,18 @@ msgid "No more available seats for this ticket"
 msgstr "Geen beschikbare plaatsen meer voor dit ticket"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:223
+#, python-format
+msgid "None"
+msgstr "Geen"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Open dagen in Los Angeles"
+
+#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
 msgstr "Bron"
@@ -254,6 +286,18 @@ msgstr "Bron"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
 msgid "Original Registration"
 msgstr "Originele registratie"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:231
+#, python-format
+msgid "Paid"
+msgstr "Betaald"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:232
+#, python-format
+msgid "Payment"
+msgstr "Betaling"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
@@ -285,6 +329,11 @@ msgstr "Product"
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
 msgstr "Productsjabloon"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Quotation"
+msgstr "Offerte"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:19
@@ -322,7 +371,6 @@ msgid "Sales End"
 msgstr "Einde verkoop"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
 msgid "Sales Order"
 msgstr "Verkooporder"
@@ -355,6 +403,32 @@ msgid "Source Sales Order"
 msgstr "Bron verkooporder"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Standaard"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Technische training"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:229
+#, python-format
+msgid "The registration must be paid"
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:223
+#, python-format
+msgid "Ticket"
+msgstr "Ticket"
+
+#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
@@ -380,6 +454,12 @@ msgid "Tickets"
 msgstr "Tickets"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:228
+#, python-format
+msgid "To pay"
+msgstr "Te betalen"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Onbevestigde gereserveerde plaatsen"
@@ -388,6 +468,13 @@ msgstr "Onbevestigde gereserveerde plaatsen"
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
 msgstr "Onbeperkt"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
