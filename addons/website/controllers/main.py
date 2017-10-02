@@ -248,9 +248,13 @@ class Website(Home):
     def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
-        mimetype_template = _guess_mimetype(ext)[1]
-        if not template:
-            template = mimetype_template
+        View = request.env['ir.ui.view']
+        ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
+
+        if not template and ext_special_case:
+            default_templ = 'website.default_%s' % ext.lstrip('.')
+            if request.env.ref(default_templ, False):
+                template = default_templ
 
         template = template and dict(template=template) or {}
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
@@ -258,7 +262,7 @@ class Website(Home):
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
 
-        if ext and ext != '.html': # redirect non html pages to backend to edit
+        if ext_special_case: # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
 

@@ -29,17 +29,15 @@ odoo._geoip_resolver = None
 # Slug API
 # ------------------------------------------------------------
 
-def _guess_mimetype(ext=False, default=False):
+def _guess_mimetype(ext=False, default='text/html'):
     exts = {
-        '.css': ['text/css', 'website.default_css'],
-        '.less': ['text/less', 'website.default_less'],
-        '.js': ['text/javascript', 'website.default_javascript'],
-        '.xml': ['text/xml', 'website.default_xml'],
-        '.csv': ['text/csv', 'website.default_csv'],
-        '.html': ['text/html', False],
+        '.css': 'text/css',
+        '.less': 'text/less',
+        '.js': 'text/javascript',
+        '.xml': 'text/xml',
+        '.csv': 'text/csv',
+        '.html': 'text/html',
     }
-    if not default:
-        default = exts['.html']
     return ext is not False and exts.get(ext, default) or exts
 
 
