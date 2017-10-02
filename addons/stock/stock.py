@@ -2555,7 +2555,7 @@ class stock_move(osv.osv):
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
                 #raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
-            uos_qty = quantity / move_qty * move.product_uos_qty
+            uos_qty = quantity / move_qty * move.product_uos_qty if move_qty else 0
             default_val = {
                 'location_id': source_location.id,
                 'product_uom_qty': quantity,
