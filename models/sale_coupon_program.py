@@ -173,7 +173,7 @@ class SaleCouponProgram(models.Model):
 
     def _compute_program_amount(self, field, currency_to):
         self.ensure_one()
-        return self.currency_id.compute(getattr(self, field), currency_to)
+        return self.currency_id._convert(getattr(self, field), currency_to, self.company_id, fields.Date.today())
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
