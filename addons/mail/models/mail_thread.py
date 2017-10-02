@@ -180,7 +180,7 @@ class MailThread(models.AbstractModel):
                              WHERE msg.model = %s AND msg.res_id in %s AND
                                    (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
-                         (partner_id, self._name, tuple(self.ids), partner_id,))
+                         (partner_id, self._name, tuple(self.ids) or (None,), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
