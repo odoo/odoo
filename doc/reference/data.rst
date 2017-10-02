@@ -140,7 +140,7 @@ has the following attributes:
     a :ref:`domain <reference/orm/domains>` to find records of the model to
     remove
 
-``id`` and ``search`` are exclusive
+``id`` and ``search`` are mutually exclusive
 
 ``function``
 ------------
