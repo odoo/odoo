@@ -285,7 +285,7 @@ class procurement_order(osv.osv):
     #
     # Scheduler
     #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
+    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
         the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
@@ -293,9 +293,9 @@ class procurement_order(osv.osv):
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
-        @param ids: List of selected IDs
         @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
             This is appropriate for batch jobs only.
+        @param company_id: Only process procurements within company passed.
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''

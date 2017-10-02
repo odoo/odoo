@@ -267,9 +267,9 @@ class procurement_order(osv.osv):
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
-        @param ids: List of selected IDs
         @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
             This is appropriate for batch jobs only.
+        @param company_id: Only process procurements within company passed.
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -327,7 +327,7 @@ class procurement_order(osv.osv):
                 [order_point.product_id.id],
                 context={'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
-    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
+    def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Create procurement based on Orderpoint
 
