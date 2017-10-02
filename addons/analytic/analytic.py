@@ -131,7 +131,7 @@ class account_analytic_account(osv.osv):
             parent_path = self._get_one_full_name(elmt.parent_id, level-1) + " / "
         else:
             parent_path = ''
-        return parent_path + elmt.name
+        return parent_path + (elmt.name or '')
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         result = {}
