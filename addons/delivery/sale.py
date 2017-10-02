@@ -81,6 +81,8 @@ class sale_order(osv.Model):
             fpos = order.fiscal_position or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes, context=context)
             price_unit = grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context)
+            if price_unit == 0.0:
+                continue
             if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
                 price_unit = currency_obj.compute(cr, uid, order.company_id.currency_id.id, order.pricelist_id.currency_id.id,
                     price_unit, context=dict(context or {}, date=order.date_order))
