@@ -34,10 +34,11 @@ class StockMove(models.Model):
             if move.picking_id and move.picking_id.group_id:
                 picking = move.picking_id
                 order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
-                picking.message_post_with_view(
-                    'mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                if not self._context.get('tracking_disable'):
+                    picking.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': picking, 'origin': order},
+                        subtype_id=self.env.ref('mail.mt_note').id)
         return result
 
 
