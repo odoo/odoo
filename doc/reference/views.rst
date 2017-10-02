@@ -867,7 +867,7 @@ Possible children of the view element are:
     JSON mapping the above field values to either "danger", "warning" or
     "success" colors
 
-  ``sum`` (optional)
+  ``sum_field`` (optional)
     the name of the field whose column's records' values will be summed and
     displayed next to the progressbar (if omitted, displays the total number of
     records)
