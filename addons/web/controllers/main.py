@@ -775,7 +775,7 @@ class Database(http.Controller):
 class Session(http.Controller):
 
     def session_info(self):
-        request.session.ensure_valid()
+        request.session.check_security()
         return {
             "session_id": request.session_id,
             "uid": request.session.uid,
