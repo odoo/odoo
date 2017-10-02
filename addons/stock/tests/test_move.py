@@ -3095,3 +3095,45 @@ class StockMove(TransactionCase):
             self.product1.type = 'product'
         move2._action_cancel()
         self.product1.type = 'product'
+
+    def test_edit_done_picking_1(self):
+        """ Add a new move line in a done picking should generate an
+        associated move.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 12)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        move1.quantity_done = 10
+        picking.action_done()
+
+        self.assertEqual(len(picking.move_lines), 1, 'One move should exist for the picking.')
+        self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
+
+        ml = self.env['stock.move.line'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 2.0,
+            'picking_id': picking.id,
+        })
+
+        self.assertEqual(len(picking.move_lines), 2, 'The new move associated to the move line does not exist.')
+        self.assertEqual(len(picking.move_line_ids), 2, 'It should be 2 move lines for the picking.')
+        self.assertTrue(ml.move_id in picking.move_lines, 'Links are not correct between picking, moves and move lines.')
+        self.assertEqual(picking.state, 'done', 'Picking should still done after adding a new move line.')
+        self.assertTrue(all(move.state == 'done' for move in picking.move_lines), 'Wrong state for move.')

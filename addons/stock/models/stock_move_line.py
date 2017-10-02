@@ -155,6 +155,27 @@ class StockMoveLine(models.Model):
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')
+
+        # If the move line is directly create on the picking view.
+        # If this picking is already done we should generate an
+        # associated done move.
+        if 'picking_id' in vals and 'move_id' not in vals:
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if picking.state == 'done':
+                product = self.env['product.product'].browse(vals['product_id'])
+                new_move = self.env['stock.move'].create({
+                    'name': _('New Move:') + product.display_name,
+                    'product_id': product.id,
+                    'product_uom_qty': 'qty_done' in vals and vals['qty_done'] or 0,
+                    'product_uom': vals['product_uom_id'],
+                    'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
+                    'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
+                    'state': 'done',
+                    'additional': True,
+                    'picking_id': picking.id,
+                })
+                vals['move_id'] = new_move.id
+
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
             if ml.product_id.type == 'product':
