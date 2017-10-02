@@ -40,14 +40,6 @@ class account_bank_statement(osv.osv):
                 line[2]['sequence'] = idx + 1
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
-        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        for statement in self.browse(cr, uid, ids, context):
-            for idx, line in enumerate(statement.line_ids):
-                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': idx + 1}, context=context)
-        return res
-
     def _default_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -431,6 +423,19 @@ class account_bank_statement(osv.osv):
 class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
+
+        if not vals.get('sequence'):
+            lines = self.search(
+                cr, uid,
+                [('statement_id', '=', vals.get('statement_id'))],
+                order='sequence desc', limit=1)
+            if lines:
+                line = self.browse(cr, uid, lines[0], context=context)
+                seq = line.sequence
+            else:
+                seq = 0
+            vals['sequence'] = seq + 1
+        
         if vals.get('amount_currency', 0) and not vals.get('amount', 0):
             raise osv.except_osv(_('Error!'), _('If "Amount Currency" is specified, then "Amount" must be as well.'))
         return super(account_bank_statement_line, self).create(cr, uid, vals, context=context)
