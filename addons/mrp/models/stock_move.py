@@ -68,6 +68,7 @@ class StockMove(models.Model):
         help='Technical Field to order moves')
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
+    finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
     @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
     def _compute_done_quantity(self):
@@ -75,9 +76,9 @@ class StockMove(models.Model):
 
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
-        for move in self:
-            if move.product_id.tracking != 'none' and move.raw_material_production_id:
-                move.order_finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+        for move in self.filtered(lambda m: m.raw_material_production_id.move_finished_ids):
+            move.order_finished_lot_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+            move.finished_lots_exist = move.order_finished_lot_ids and True or False
 
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
