@@ -531,8 +531,8 @@ class Meeting(models.Model):
 
     @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child 
-        
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child
+
         date_field: the field containing the reference date information for recurrency computation
         """
         self.ensure_one()
@@ -708,7 +708,7 @@ class Meeting(models.Model):
         ('weekly', 'Week(s)'),
         ('monthly', 'Month(s)'),
         ('yearly', 'Year(s)')
-    ], string='Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
+    ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
     recurrent_id_date = fields.Datetime('Recurrent ID date')
