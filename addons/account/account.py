@@ -1531,6 +1531,13 @@ class account_move(osv.osv):
 
         return True
 
+    def _check_date(self, cr, uid, ids, context=None):
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.journal_id.allow_date:
+                if not move.date >= move.period_id.date_start or not move.date <= move.period_id.date_stop:
+                    raise osv.except_osv(_('Date not in period'),
+                                         _('The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.'))
+
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
@@ -1543,6 +1550,7 @@ class account_move(osv.osv):
         obj_move_line = self.pool.get('account.move.line')
         obj_precision = self.pool.get('decimal.precision')
         prec = obj_precision.precision_get(cr, uid, 'Account')
+        self._check_date(cr, uid, ids, context=None)
         for move in self.browse(cr, uid, ids, context):
             journal = move.journal_id
             amount = 0
