@@ -1822,11 +1822,11 @@ openerp.mail = function (session) {
                 'message_ids': this.get_value(),
                 'show_compose_message': true,
             });
-            this.node.context = {
+            this.node.context = _.extend(this.session.user_context, {
                 'mail_read_set_read': true,  // set messages as read in Chatter
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
-            };
+            });
 
             if (this.root) {
                 $('<span class="oe_mail-placeholder"/>').insertAfter(this.root.$el);
