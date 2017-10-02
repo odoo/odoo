@@ -3,6 +3,7 @@
 import operator
 import simplejson
 import urllib2
+import uuid
 
 import openerp
 from openerp import tools
@@ -467,6 +468,7 @@ class google_calendar(osv.AbstractModel):
                 partner_record.append((4, attendee.get('id')))
                 attendee['partner_id'] = attendee.pop('id')
                 attendee['state'] = google_attendee['responseStatus']
+                attendee['access_token'] = uuid.uuid4().hex
                 attendee_record.append((0, 0, attendee))
         for google_alarm in single_event_dict.get('reminders', {}).get('overrides', []):
             alarm_id = calendar_alarm_obj.search(
