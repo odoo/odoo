@@ -464,6 +464,9 @@ class Home(http.Controller):
         except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
+        if not odoo.tools.config['list_db']:
+            values['disable_database_manager'] = True
+
         if request.httprequest.method == 'POST':
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
