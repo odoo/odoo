@@ -31,6 +31,8 @@
     </record>
 
     <!-- approve the first 2 leave allocations -->
+    <function model="hr.holidays" name="action_confirm" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour')]]"/>
+
     <function model="hr.holidays" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour')]]"/>
 
     <record id="hr_holidays_employee1_cl" model="hr.holidays">
@@ -54,6 +56,7 @@
     </record>
 
     <!-- approve the leave request -->
+    <function model="hr.holidays" name="action_confirm" eval="[[ref('hr_holidays.hr_holidays_employee1_sl')]]"/>
     <function model="hr.holidays" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_sl')]]"/>
 
 </data>

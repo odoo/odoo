@@ -8,7 +8,6 @@ from odoo.tools import mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
-
 class TestHolidaysFlow(TestHrHolidaysBase):
 
     @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
@@ -78,7 +77,10 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'number_of_days_temp': 1,
         })
         hol1_user_group = hol1_employee_group.sudo(self.user_hruser_id)
-        self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: newly created leave request should be in confirm state')
+        self.assertEqual(hol1_user_group.state, 'draft', 'hr_holidays: newly created leave request should be in draft state')
+        hol1_employee_group.action_confirm()
+
+        self.assertEqual(hol1_user_group.state, 'confirm', 'hr_holidays: created leave request should be in confirm state')
 
         # Employee validates its leave request -> should not work
         with self.assertRaises(UserError):
@@ -114,10 +116,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'date_to': (datetime.today() + relativedelta(days=1)),
                 'number_of_days_temp': 1,
             })
-
         # Clean transaction
         Holidays.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
-
         # HrUser allocates some leaves to the employee
         aloc1_user_group = Holidays.sudo(self.user_hruser_id).create({
             'name': 'Days for limited category',
@@ -126,11 +126,13 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'type': 'add',
             'number_of_days_temp': 2,
         })
+        aloc1_user_group.action_confirm()
         # HrUser validates the first step
         aloc1_user_group.action_approve()
         # HrManager validates the second step
         aloc1_user_group.sudo(self.user_hrmanager_id).action_validate()
         # Checks Employee has effectively some days left
+        # EMPLOYEE GROUP
         hol_status_2_employee_group = self.holidays_status_2.sudo(self.user_employee_id)
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
 
@@ -145,6 +147,10 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         })
         hol2_user_group = hol2.sudo(self.user_hruser_id)
         # Check left days: - 1 virtual remaining day
+        self.assertEqual(hol2_user_group.state, 'draft', 'hr_holidays: newly created leave request should be in draft state')
+        hol2_user_group.action_confirm()
+
+        self.assertEqual(hol2_user_group.state, 'confirm', 'hr_holidays: created leave request should be in confirm state')
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
 
         # HrUser validates the first step
@@ -200,15 +206,20 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'type': 'remove',
             'number_of_days_temp': 1
         })
+        # I set to draft and then confirm.
+        self.assertEqual(hol3.state, 'draft', 'hr_holidays: resetting should lead to draft state')
+        hol3.action_confirm()
+
+        self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
+
         # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
         hol3.action_refuse()
         self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
-        # I again set to draft and then confirm.
+        # I set to draft and then confirm again in order to approve.
         hol3.action_draft()
         self.assertEqual(hol3.state, 'draft', 'hr_holidays: resetting should lead to draft state')
         hol3.action_confirm()
         self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
-        # I validate the holiday request by clicking on "To Approve" button.
         hol3.action_approve()
         self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
         # Check left days for casual leave: 19 days left

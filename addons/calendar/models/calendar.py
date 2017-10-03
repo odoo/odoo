@@ -1546,11 +1546,13 @@ class Meeting(models.Model):
         select = [(x, calendar_id2real_id(x)) for x in self.ids]
         real_events = self.browse([real_id for calendar_id, real_id in select])
         real_data = super(Meeting, real_events).read(fields=fields2, load=load)
+        if not real_data:
+            return []
         real_data = dict((d['id'], d) for d in real_data)
 
         result = []
         for calendar_id, real_id in select:
-            res = real_data[real_id].copy()
+            res = real_id in real_data and real_data[real_id].copy() or {}
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
             if not isinstance(ls, (pycompat.string_types, pycompat.integer_types)) and len(ls) >= 2:
                 res['start'] = ls[1]
@@ -1570,12 +1572,12 @@ class Meeting(models.Model):
             result.append(res)
 
         for r in result:
-            if r['user_id']:
+            if r.get('user_id'):
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
                 partner_id = self.env.user.partner_id.id
                 if user_id == self.env.user.id or partner_id in r.get("partner_ids", []):
                     continue
-            if r['privacy'] == 'private':
+            if r.get('privacy') == 'private':
                 for f in r:
                     recurrent_fields = self._get_recurrent_fields()
                     public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
