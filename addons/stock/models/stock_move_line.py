@@ -109,6 +109,11 @@ class StockMoveLine(models.Model):
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
+    @api.constrains('qty_done')
+    def _check_positive_qty_done(self):
+        if any([ml.qty_done < 0 for ml in self]):
+            raise ValidationError(_('You can not enter negative quantities!'))
+
     @api.constrains('lot_id', 'lot_name', 'qty_done')
     def _check_unique_serial_number(self):
         for ml in self.filtered(lambda ml: ml.move_id.product_id.tracking == 'serial' and (ml.lot_id or ml.lot_name)):
