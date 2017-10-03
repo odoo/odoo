@@ -192,7 +192,7 @@ class KVM(object):
         l.append('-nographic')
         logging.info("Starting kvm: {}".format( " ".join(l)))
         self.pid=os.spawnvp(os.P_NOWAIT, l[0], l)
-        time.sleep(20)
+        time.sleep(50)
         signal.alarm(2400)
         signal.signal(signal.SIGALRM, self.timeout)
         try:
