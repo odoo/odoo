@@ -196,6 +196,7 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
             params: {
                 domain: data['domain'],
                 res_model: data['resModel'],
+                context: self.action && self.action.context,
             },
         }).then(function(action){
             self.do_action(action);

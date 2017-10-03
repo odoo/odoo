@@ -134,6 +134,7 @@ class SaleTimesheetController(http.Controller):
                 'view_type': 'tree',
                 'views': [[ts_view_tree_id, 'list'], [ts_view_form_id, 'form']],
                 'domain': domain,
+                'context': request.env.context,
             }
         elif res_model == 'project.task':
             action = request.env.ref('project.action_view_task').read()[0]
