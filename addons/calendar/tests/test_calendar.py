@@ -118,7 +118,11 @@ class TestCalendar(TransactionCase):
             'duration': 0.5,
             'stop': '2017-07-12 15:00:00',
         })
-
+        self.assertEqual(
+            (m.start_datetime, m.stop_datetime),
+            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+            "Sanity check"
+        )
         values = {
             'allday': False,
             'name': u'wheee',
