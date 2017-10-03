@@ -439,8 +439,8 @@ DebugManager.include({
                         return field.name === fieldToSet;
                     }).value;
                     self._rpc({
-                        model: 'ir.values',
-                        method: 'set_default',
+                        model: 'ir.default',
+                        method: 'set',
                         args: [
                             self._active_view.fields_view.model,
                             fieldToSet,
