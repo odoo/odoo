@@ -48,20 +48,20 @@ class SaleOrder(models.Model):
 
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
             available_carriers = self._get_delivery_methods()
-            if carrier:
-                if carrier not in available_carriers:
-                    carrier = DeliveryCarrier
-                else:
-                    # set the forced carrier at the beginning of the list to be verfied first below
-                    available_carriers -= carrier
-                    available_carriers = carrier + available_carriers
-            if force_carrier_id or not carrier or carrier not in available_carriers:
+
+            # Only if there is no carrier set on the sale order yet we are looking at the shipping partner default carrier
+            if not carrier:
+                partner_default_carrier = self.partner_shipping_id.property_delivery_carrier_id
+                if partner_default_carrier:
+                    carrier = partner_default_carrier._match_address(self.partner_shipping_id) and partner_default_carrier
+
+            if not carrier or carrier not in available_carriers:
                 for delivery in available_carriers:
                     verified_carrier = delivery._match_address(self.partner_shipping_id)
                     if verified_carrier:
                         carrier = delivery
                         break
-                self.write({'carrier_id': carrier.id})
+            self.carrier_id = carrier
             if carrier:
                 self.get_delivery_price()
                 if self.delivery_rating_success:
