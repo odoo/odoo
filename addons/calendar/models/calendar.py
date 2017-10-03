@@ -1543,6 +1543,8 @@ class Meeting(models.Model):
 
         result = []
         for calendar_id, real_id in select:
+            if not real_data.get(real_id):
+                continue
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
             if not isinstance(ls, (pycompat.string_types, pycompat.integer_types)) and len(ls) >= 2:
