@@ -155,6 +155,15 @@ class PaymentAcquirer(models.Model):
         ('form', 'The customer is redirected to the website of the acquirer')],
         default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    s2s_available = fields.Boolean(compute="_compute_s2s_support", string="S2S available")
+
+    def _compute_s2s_support(self):
+        for acquirer in self:
+            cust_method_name = '%s_s2s_form_process' % (acquirer.provider)
+            if hasattr(acquirer, cust_method_name):
+                acquirer.s2s_available = True
+            else:
+                acquirer.s2s_available = False
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
