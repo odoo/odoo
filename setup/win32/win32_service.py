@@ -8,11 +8,12 @@ import win32serviceutil
 
 import subprocess
 import sys
-from os.path import dirname, join, split
+from os.path import dirname, join
 
 
 exec(open(join(dirname(__file__), '..', 'server', 'odoo', 'release.py'), 'rb').read())
-
+WINPYPATH = join(__file__, '..', 'WinPython', 'scripts', 'python.bat')
+ODOO_PATH = join(__file__, '..', 'server', 'odoo-bin')
 
 class OdooService(win32serviceutil.ServiceFramework):
     _svc_name_ = nt_service_name
@@ -31,11 +32,8 @@ class OdooService(win32serviceutil.ServiceFramework):
 
     def SvcDoRun(self):
         # We start Odoo as an independent process, but we keep its handle
-        service_dir = dirname(sys.argv[0])
-        server_dir = split(service_dir)[0]
-        server_path = join(server_dir, 'server', 'odoo-bin.exe')
         self.odooprocess = subprocess.Popen(
-            [server_path], cwd=server_dir, creationflags=win32process.CREATE_NO_WINDOW
+            [WINPYPATH, ODOO_PATH], cwd=dirname(ODOO_PATH), creationflags=win32process.CREATE_NO_WINDOW
         )
         servicemanager.LogInfoMsg('Odoo up and running')
         # exit with same exit code as Odoo process

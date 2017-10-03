@@ -445,7 +445,12 @@ class configmanager(object):
             elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
+        if getattr(sys, 'frozen', False):
+            odoo_dirname = os.path.join(os.path.dirname(sys.executable), 'odoo')
+        elif __file__:
+            odoo_dirname = os.path.join(os.path.dirname(__file__),'..')
+
+        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(odoo_dirname)))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             default_addons = []
             base_addons = os.path.join(self.options['root_path'], 'addons')

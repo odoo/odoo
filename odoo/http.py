@@ -10,6 +10,7 @@ import functools
 import hashlib
 import hmac
 import inspect
+import io
 import logging
 import mimetypes
 import os
@@ -1311,7 +1312,10 @@ class Root(object):
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest = ast.literal_eval(open(manifest_path).read())
+                        if pycompat.PY2:
+                            manifest = ast.literal_eval(open(manifest_path).read())
+                        else:
+                            manifest = ast.literal_eval(open(manifest_path, encoding='utf-8').read())
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
