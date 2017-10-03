@@ -711,7 +711,7 @@ class AccountInvoice(models.Model):
             if tax_line.amount_rounding != 0.0:
                 tax_line.amount_rounding = 0.0
 
-        if self.cash_rounding_id:
+        if self.cash_rounding_id and self.type in ('out_invoice', 'out_refund'):
             rounding_amount = self.cash_rounding_id.compute_difference(self.currency_id, self.amount_total)
             if not self.currency_id.is_zero(rounding_amount):
                 if self.cash_rounding_id.strategy == 'biggest_tax':
@@ -1692,7 +1692,7 @@ class AccountInvoiceTax(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     amount = fields.Monetary()
     amount_rounding = fields.Monetary()
-    amount_total = fields.Monetary(compute='_compute_amount_total')
+    amount_total = fields.Monetary(string="Amount", compute='_compute_amount_total')
     manual = fields.Boolean(default=True)
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
