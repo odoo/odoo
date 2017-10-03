@@ -647,7 +647,7 @@ class Database(http.Controller):
 
     def _render_template(self, **d):
         d.setdefault('manage',True)
-        d['insecure'] = odoo.tools.config['admin_passwd'] == 'admin'
+        d['insecure'] = odoo.tools.config.verify_admin_password('admin')
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
