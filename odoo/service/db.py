@@ -32,7 +32,7 @@ class DatabaseExists(Warning):
 #----------------------------------------------------------
 
 def check_super(passwd):
-    if passwd and passwd == odoo.tools.config['admin_passwd']:
+    if passwd and odoo.tools.config.verify_admin_password(passwd):
         return True
     raise odoo.exceptions.AccessDenied()
 
@@ -296,7 +296,7 @@ def exp_rename(old_name, new_name):
     return True
 
 def exp_change_admin_password(new_password):
-    odoo.tools.config['admin_passwd'] = new_password
+    odoo.tools.config.set_admin_password(new_password)
     odoo.tools.config.save()
     return True
 
