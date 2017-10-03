@@ -92,7 +92,7 @@ def _create_empty_database(name):
     with closing(db.cursor()) as cr:
         chosen_template = odoo.tools.config['db_template']
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
-                   (name,))
+                   (name,), log_exceptions=False)
         if cr.fetchall():
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
