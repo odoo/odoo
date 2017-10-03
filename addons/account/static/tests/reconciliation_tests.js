@@ -802,7 +802,7 @@ QUnit.module('account', {
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
         assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
-        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 1, "should not display the right arrow");
+        assert.strictEqual(widget.$('.match .match_controls > .fa:not(.disabled)').length, 1, "should display the right arrow");
 
         clientAction.destroy();
     });
