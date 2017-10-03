@@ -279,7 +279,7 @@ class MrpWorkorder(models.Model):
 
     def _assign_default_final_lot_id(self):
         self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
-                                                                    order='create_date', limit=1)
+                                                                    order='create_date, id', limit=1)
 
     @api.multi
     def record_production(self):
