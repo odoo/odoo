@@ -158,10 +158,10 @@ def exp_drop(db_name):
     return True
 
 def exp_dump(db_name, format):
-    with tempfile.TemporaryFile() as t:
+    with tempfile.TemporaryFile(mode='w+b') as t:
         dump_db(db_name, t, format)
         t.seek(0)
-        return base64.b64encode(t.read())
+        return base64.b64encode(t.read()).decode()
 
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
