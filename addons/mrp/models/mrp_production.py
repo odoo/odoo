@@ -549,8 +549,10 @@ class MrpProduction(models.Model):
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
                 if moveline.move_id.has_tracking != 'none':
+                    if any([not ml.lot_produced_id for ml in consume_move_lines]):
+                        raise UserError(_('You can not consume without telling for which lot you consumed it'))
                     # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id
-                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id or not x.lot_produced_id)
+                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id)
                     moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
                 else:
                     # Link with everything
