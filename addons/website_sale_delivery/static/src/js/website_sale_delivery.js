@@ -16,10 +16,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
             $amount_tax.text(result.new_amount_tax);
-            var $carrier_badge = $(`#delivery_carrier input[name="delivery_type"][value=${result.carrier_id}] ~ .badge.hidden`);
+            var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
             $carrier_badge.children('span').text(result.new_amount_delivery);
             $carrier_badge.removeClass('hidden');
-            var $compute_badge = $(`#delivery_carrier input[name="delivery_type"][value=${result.carrier_id}] ~ .o_delivery_compute`);
+            var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
             $compute_badge.addClass('hidden');
         }
         else {
