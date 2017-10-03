@@ -3665,7 +3665,7 @@ QUnit.module('relational_fields', {
         form.$('input[name="turtle_int"]').val('10').trigger('input');
         // put the list back in non edit mode
         form.$('input[name="foo"]').click();
-        assert.strictEqual(form.$('.o_data_row').text(), "first10second-10",
+        assert.strictEqual(form.$('.o_data_row').text(), "first10",
             "should correctly refresh the records");
 
         // trigger the second onchange
@@ -3673,7 +3673,7 @@ QUnit.module('relational_fields', {
         form.$('input[name="turtle_int"]').val('20').trigger('input');
 
         form.$('input[name="foo"]').click();
-        assert.strictEqual(form.$('.o_data_row').text(), "first20second-20",
+        assert.strictEqual(form.$('.o_data_row').text(), "first20",
             "should correctly refresh the records");
 
         assert.strictEqual(form.$('.o_field_widget').length, delta,
@@ -4978,14 +4978,14 @@ QUnit.module('relational_fields', {
         // put list in readonly mode
         form.$('input.o_field_integer[name="int_field"]').click();
 
-        assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphonexenomorphe",
+        assert.strictEqual(form.$('.o_data_cell.o_required_modifier').text(), "xphone",
             'should display the product xphone and xenomorphe');
-        assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "first recordsecond record",
+        assert.strictEqual(form.$('.o_field_many2manytags:not(.o_input) .o_badge_text').text(), "first record",
             'should display the tag in readonly (first record and second record)');
 
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
 
-        assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record firstxenomorphe second record ",
+        assert.strictEqual(form.$('.o_data_row').text().replace(/\s+/g, ' '), "new linexphone first record ",
             'should display the name, one2many and many2many value');
 
         form.$buttons.find('.o_form_button_save').click();

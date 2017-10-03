@@ -707,7 +707,8 @@ var FieldX2Many = AbstractField.extend({
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this._reset(record, ev);
-                return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
+                this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
+                return $.when();
             }
         }
         return this._super.apply(this, arguments);
