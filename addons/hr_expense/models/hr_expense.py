@@ -582,7 +582,12 @@ class HrExpenseSheet(models.Model):
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
-        res['context'] = {'default_res_model': 'hr.expense.sheet', 'default_res_id': self.id}
+        res['context'] = {
+            'default_res_model': 'hr.expense.sheet',
+            'default_res_id': self.id,
+            'create': False,
+            'edit': False,
+        }
         return res
 
     @api.one
