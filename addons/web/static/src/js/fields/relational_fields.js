@@ -245,7 +245,8 @@ var FieldMany2One = AbstractField.extend({
                             self.reinitialize({id: result[0], display_name: result[1]});
                         }
                         def.resolve();
-                    }).fail(function () {
+                    }).fail(function (error, event) {
+                        event.preventDefault();
                         slowCreate();
                     });
                 },
