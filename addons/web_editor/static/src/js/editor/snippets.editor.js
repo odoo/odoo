@@ -973,7 +973,7 @@ var SnippetsMenu = Widget.extend({
         globalSelector.all = function ($from) {
             var $target = $();
             for (var i = 0, len = selectors.length ; i < len ; i++) {
-                $target.add(selectors[i].all($from));
+                $target = $target.add(selectors[i].all($from));
             }
             return $target;
         };
