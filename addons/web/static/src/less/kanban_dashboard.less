@@ -226,4 +226,11 @@
         left: 0;
         right: auto;
     }
+
+    // Emphasize recourds colors when necessary
+    &.o_emphasize_colours {
+        .o_kanban_record:after {
+            width: @o-kanban-color-border-width*2;
+        }
+    }
 }
