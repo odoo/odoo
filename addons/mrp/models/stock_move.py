@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
@@ -69,6 +69,14 @@ class StockMove(models.Model):
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
+
+    @api.model
+    def create(self, vals):
+        # quantity_done is only explicitly set when the user creates the move and specifies it manually
+        quantity_done = vals.get('quantity_done')
+        if vals.get('raw_material_production_id') and quantity_done is not None and quantity_done <= 0:
+            raise ValidationError(_('You have to consume positive quantities.'))
+        return super(StockMove, self).create(vals)
 
     @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
     def _compute_done_quantity(self):
