@@ -7,7 +7,10 @@ from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import mute_logger
 from odoo.fields import Datetime
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 
 class TestEventFlow(TestEventCommon):
