@@ -215,7 +215,10 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     # Give higher priority to module directories, which is
     # a more common case than zipped modules.
     if os.path.isfile(name):
-        fo = open(name, mode)
+        if 'b' in mode:
+            fo = open(name, mode)
+        else:
+            fo = io.open(name, mode, encoding='utf-8')
         if pathinfo:
             return fo, name
         return fo

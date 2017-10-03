@@ -139,13 +139,13 @@ def initialize_sys_path():
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
@@ -328,9 +328,9 @@ def load_information_from_description_file(module, mod_path=None):
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
 

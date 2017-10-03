@@ -171,6 +171,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
+    python_requires='>=3.5',
     extras_require={
         'SSL': ['pyopenssl'],
     },
