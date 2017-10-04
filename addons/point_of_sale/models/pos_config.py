@@ -325,6 +325,7 @@ class PosConfig(models.Model):
             result.append((config.id, config.name + ' (' + config.session_ids[0].user_id.name + ')'))
         return result
 
+    # rebuild me
     @api.model
     def create(self, values):
         if values.get('is_posbox') and values.get('iface_customer_facing_display'):
