@@ -308,7 +308,8 @@
             box-shadow: 0 2px 4px @gray-lighter-darker;
 
             .o_channel_inbox_item {
-                .o-flex(1, 1, 50%);
+                .o-flex(1, 1, auto);
+                width: 50%;
                 padding: 2%;
 
                 &.btn-default {
@@ -467,7 +468,8 @@
 
         .o_mail_mobile_tab {
             .o-flex-display();
-            .o-flex(1, 1, 0);
+            .o-flex(1, 1, auto);
+            width: 20%;
             .o-flex-flow(column, nowrap);
             .o-justify-content(space-between);
             padding: @o-mail-chatter-mobile-gap @o-mail-chatter-mobile-gap*2;
@@ -476,8 +478,8 @@
 
             > span {
                display: block;
-               white-space: nowrap;
                font-weight: 500;
+               font-size: 10px;
 
                &.fa {
                    padding-bottom: @o-mail-chatter-mobile-gap*2;
