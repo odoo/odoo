@@ -6,9 +6,9 @@
 
 .. _reference/upgrade-api:
 
-===========
-Upgrade API
-===========
+================
+Database Upgrade
+================
 
 Introduction
 ~~~~~~~~~~~~

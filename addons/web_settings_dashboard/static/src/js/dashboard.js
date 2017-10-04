@@ -345,6 +345,7 @@ core.action_registry.add('web_settings_dashboard.main', Dashboard);
 
 return {
     Dashboard: Dashboard,
+    DashboardApps: DashboardApps,
     DashboardInvitations: DashboardInvitations,
     DashboardPlanner: DashboardPlanner,
     DashboardShare: DashboardShare,

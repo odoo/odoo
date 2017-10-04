@@ -21,5 +21,4 @@ Reference
     reference/reports
     reference/mixins
     reference/guidelines
-    reference/upgrade_api
     reference/mobile

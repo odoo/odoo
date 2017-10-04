@@ -142,6 +142,11 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         if not self.section_level:
             self.body.append(u'</section>')
 
+    def visit_topic(self, node):
+        self.body.append(self.starttag(node, 'nav'))
+    def depart_topic(self, node):
+        self.body.append(u'</nav>')
+
     def is_compact_paragraph(self, node):
         parent = node.parent
         if isinstance(parent, (nodes.document, nodes.compound,
