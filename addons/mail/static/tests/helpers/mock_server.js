@@ -83,6 +83,9 @@ MockServer.include({
         if (route === '/mail/init_messaging') {
             return $.when(this._mockInitMessaging(args));
         }
+        if (route.indexOf('/web/static/lib/pdfjs/web/viewer.html') !== -1) {
+            return $.when(true);
+        }
         if (args.method === 'message_fetch') {
             return $.when(this._mockMessageFetch(args));
         }
