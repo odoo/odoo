@@ -145,6 +145,13 @@
                                         <label string="Customer Display" for="iface_customer_facing_display" class="col-md-3 o_light_label"/>
                                         <field name="iface_customer_facing_display"/>
                                     </div>
+                                    <field name="customer_facing_display_html" invisible="1"/>
+                                    <div class="text-muted" attrs="{'invisible' : ['|', ('iface_customer_facing_display', '=', False), '&amp;', ('id', '!=', False), ('customer_facing_display_html', '!=', '')]}">Save this configuration to see and edit the customer display</div>
+                                    <div class="row mt16 o_settings_container" attrs="{'invisible' : ['|', '|',('iface_customer_facing_display', '=', False), ('id', '=', False), ('customer_facing_display_html', '=', '')]}">
+                                        <div class="col-xs-12 col-md-6 o_setting_box">
+                                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -163,11 +170,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt16 o_settings_container" attrs="{'invisible' : [('iface_customer_facing_display', '=', False)]}">
-                      <div class="col-xs-12 col-md-6 o_setting_box">
-                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
-                      </div>
                     </div>
                     <h2>Taxes</h2>
                     <div class="row mt16 o_settings_container">
