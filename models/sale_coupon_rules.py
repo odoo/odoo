@@ -28,7 +28,9 @@ class SaleCouponRule(models.Model):
 
     @api.constrains('rule_date_to', 'rule_date_from')
     def _check_rule_date_from(self):
-        if self.filtered(lambda applicability: applicability.rule_date_to < applicability.rule_date_from):
+        if any(applicability for applicability in self
+               if applicability.rule_date_to and applicability.rule_date_from
+               and applicability.rule_date_to < applicability.rule_date_from):
             raise ValidationError(_('The start date must be before the end date'))
 
     @api.constrains('rule_minimum_amount')
