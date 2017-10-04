@@ -4,9 +4,9 @@
 
 :code-column:
 
-===============
-Web Service API
-===============
+===========================
+Odoo Remote Procedure Calls
+===========================
 
 Odoo is usually extended internally via modules, but many of its features and
 all of its data are also available from the outside for external analysis or
