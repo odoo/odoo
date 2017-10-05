@@ -245,6 +245,7 @@ Open the ``__manifest__.py`` you created and copy/paste the following:
     'data': [
     ],
     'category': 'Theme/Creative',
+    'application': True,
     'depends': ['website'],
   }
 
