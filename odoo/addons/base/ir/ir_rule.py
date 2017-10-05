@@ -100,6 +100,8 @@ class IrRule(models.Model):
         global_domains = []                     # list of domains
         group_domains = defaultdict(list)       # {group: list of domains}
         for rule in rules.sudo():
+            #TODO: Trescloud applying domain normalized into the rules.
+            rule._force_domain()
             dom = expression.normalize_domain(rule_domain[rule.id])
             if rule.groups & user.groups_id:
                 group_domains[rule.groups[0]].append(dom)
