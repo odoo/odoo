@@ -40,14 +40,14 @@
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['hours']['billable_time']" t-options="{'widget': 'float_time'}"/>
                                         </td>
-                                        <td>Time and material</td>
+                                        <td>Timesheets</td>
                                         <th rowspan="5">
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['rates']['billable_time']"/> %
                                         </td>
-                                        <td>Time and material</td>
+                                        <td>Timesheets</td>
                                         <th rowspan="5">
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
                                         </th>
