@@ -16,7 +16,6 @@ var ShareDocument = Widget.extend({
     init: function(options) {
         this._super.apply(this, arguments);
         this.url = options.url
-        console.log ("dddddddddd");
         },
 
     start: function(){
@@ -27,7 +26,6 @@ var ShareDocument = Widget.extend({
                 url: this.url
             })),
             buttons: [{text: _t('Send'), classes: 'btn-primary', close: true, click: function () {
-                console.log(this.$('.o_website_email').val());
                 // Todo
             }}, {text: _t('Cancel'), close: true}],
         });
@@ -44,38 +42,22 @@ var ShareDocument = Widget.extend({
             multiple: multi,
             selection_data: false,
             fetch_rpc_fnc : fetch_fnc,
-            formatSelection: function (data) {
-                if (data.tag) {
-                    data.text = data.tag;
-                }
-                return data.text;
-            },
-            createSearchChoice: function (term, data) {
-                var added_tags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(added_tags, data), function (tag) {
-                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
-                }).length === 0) {
-                    return {
-                        id: _.uniqueId('partner_'),
-                        create: true,
-                        tag: term,
-                        text: _.str.sprintf(_t("Create new partner '%s'"), term),
-                    };
+            formatResult: function (term) {
+                if (term.text) {
+                    return term.name + " "+"(" + term.text + ")";
                 }
             },
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
                 _.each(data, function (obj) {
-                    if (that.matcher(query.term, obj.name)) {
-                        console.log(obj);
-                        tags.results.push({id: obj.id, text: obj.name });
+                    if (that.matcher(query.term, obj.email)) {
+                        tags.results.push({id: obj.id, text: obj.email, name: obj.name});
                     }
                 });
                 query.callback(tags);
             },
             query: function (query) {
-                console.log("data", query)
                 var that = this;
                 // fetch data only once and store it
                 if (!this.selection_data) {
@@ -96,23 +78,11 @@ var ShareDocument = Widget.extend({
                 method: 'search_read',
                 args: [],
                 kwargs: {
-                    fields: ['name'],
+                    fields: ['id','name','email'],
                     context: weContext.get()
                 }
             });
         }));
-    },
-    get_partner_ids: function () {
-        var res = [];
-        _.each($('.partner_ids').select2('data'),
-            function (val) {
-                if (val.create) {
-                    res.push([0, 0, {'name': val.text}]);
-                } else {
-                    res.push([4, val.id]);
-                }
-            });
-        return res;
     },
     });
 return ShareDocument;
