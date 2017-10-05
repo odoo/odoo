@@ -253,8 +253,6 @@ These values will be used to identify your new theme in Odoo’s backend.
 
 The ``data`` property will contain the xml files list. Right now it’s empty, but we will add any new files created.
 
-``application: True`` is mandatory.
-
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
 
