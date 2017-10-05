@@ -833,6 +833,57 @@ class AccountInvoice(models.Model):
                 line.append((0, 0, val))
         return line
 
+    #Este metodo es agregado por TresCloud
+    def _get_payable_accounts(self, total, total_currency, iml, ctx):
+        """"
+            Se agrega el metodo get_payable_accounts para poder modificar la forma en que el sistema agrega los movimientos contables en cuentas por pagar.
+        """
+        name = self.name or '/'
+        diff_currency = self.currency_id != self.company_currency_id
+        if self.payment_term_id:
+            totlines = self.with_context(ctx).payment_term_id.with_context(currency_id=self.company_currency_id.id,
+                                                                           active_model='account.invoice',
+                                                                           active_id=self.id).compute(total,
+                                                                           self.date_invoice)[0][0]
+            res_amount_currency = total_currency
+            ctx['date'] = self.date_invoice
+            count = 0
+            for i, t in enumerate(totlines):
+                count += 1
+                diff_currency = False
+                if self.currency_id != self.company_currency_id:
+                    amount_currency = self.company_currency_id.with_context(ctx).compute(t[1], self.currency_id)
+                    diff_currency = True
+                else:
+                    amount_currency = False
+                # last line: add the diff
+                res_amount_currency -= amount_currency or 0
+                if i + 1 == len(totlines):
+                    amount_currency += res_amount_currency
+                iml.append({
+                    'type': 'dest',
+                    # Codigo modificado por TRESCLOUD
+                    'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
+                    'price': t[1],
+                    'account_id': self.account_id.id,
+                    'date_maturity': t[0],
+                    'amount_currency': diff_currency and amount_currency,
+                    'currency_id': diff_currency and self.currency_id.id,
+                    'invoice_id': self.id
+                })
+        else:
+            iml.append({
+                'type': 'dest',
+                'name': name,
+                'price': total,
+                'account_id': self.account_id.id,
+                'date_maturity': self.date_due,
+                'amount_currency': diff_currency and total_currency,
+                'currency_id': diff_currency and self.currency_id.id,
+                'invoice_id': self.id
+            })
+        return iml
+
     @api.multi
     def action_move_create(self):
         """ Creates invoice related analytics and financial move lines """
@@ -860,47 +911,8 @@ class AccountInvoice(models.Model):
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
-
-            name = inv.name or '/'
-            if inv.payment_term_id:
-                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=company_currency.id, active_model='account.invoice', active_id=self.id).compute(total, date_invoice)[0][0]
-                res_amount_currency = total_currency
-                ctx['date'] = date_invoice
-                count = 0
-                for i, t in enumerate(totlines):
-                    count += 1
-                    if inv.currency_id != company_currency:
-                        amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
-                    else:
-                        amount_currency = False
-
-                    # last line: add the diff
-                    res_amount_currency -= amount_currency or 0
-                    if i + 1 == len(totlines):
-                        amount_currency += res_amount_currency
-
-                    iml.append({
-                        'type': 'dest',
-                        #Codigo modificado por TRESCLOUD
-                        'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
-                        'price': t[1],
-                        'account_id': inv.account_id.id,
-                        'date_maturity': t[0],
-                        'amount_currency': diff_currency and amount_currency,
-                        'currency_id': diff_currency and inv.currency_id.id,
-                        'invoice_id': inv.id
-                    })
-            else:
-                iml.append({
-                    'type': 'dest',
-                    'name': name,
-                    'price': total,
-                    'account_id': inv.account_id.id,
-                    'date_maturity': inv.date_due,
-                    'amount_currency': diff_currency and total_currency,
-                    'currency_id': diff_currency and inv.currency_id.id,
-                    'invoice_id': inv.id
-                })
+            #La siguiente linea fue creada por TresCloud
+            iml = self._get_payable_accounts(total, total_currency, iml, ctx)
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
