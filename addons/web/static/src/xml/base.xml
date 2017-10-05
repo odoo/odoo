@@ -363,41 +363,6 @@
     </t>
 </t>
 
-<div t-name="ListView" class="table-responsive">
-    <table class="o_list_view table table-condensed table-striped">
-        <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
-        <thead>
-            <tr t-if="options.header">
-                <t t-foreach="columns" t-as="column">
-                    <th t-if="column.meta">
-                        <t t-esc="column.string"/>
-                    </th>
-                </t>
-                <th t-if="options.selectable" class="o_list_record_selector" width="1">
-                    <div class="o_checkbox">
-                        <input type="checkbox"/><span/>
-                    </div>
-                </th>
-                <t t-foreach="columns" t-as="column">
-                    <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                        t-attf-class="#{((options.sortable and column.sortable and column.tag !== 'button') ? 'o_column_sortable' : '')}"
-                            t-att-width="column.width()">
-                        <t t-if="column.tag !== 'button'"><t t-raw="column.heading()"/></t>
-                    </th>
-                </t>
-                <th t-if="options.deletable" class="o_list_record_delete"/>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td t-if="options.selectable"/>
-                <td t-foreach="aggregate_columns" t-as="column" t-att-data-field="column.id" t-att-title="column.label">
-                </td>
-                <td t-if="options.deletable" class="o_list_record_delete"/>
-            </tr>
-        </tfoot>
-    </table>
-</div>
 <t t-name="ListView.buttons">
     <div class="o_list_buttons">
         <t t-if="widget.is_action_enabled('create')">
@@ -571,10 +536,6 @@
     </p>
 </div>
 
-<t t-name="Widget">
-    Unhandled widget
-    <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
-</t>
 <t t-name="FormSelection">
     <div class="btn-group o_selection">
         <a href="#" data-toggle="dropdown"><span class="o_status"/></a>

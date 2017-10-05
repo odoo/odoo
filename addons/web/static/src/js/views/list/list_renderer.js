@@ -4,7 +4,6 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
