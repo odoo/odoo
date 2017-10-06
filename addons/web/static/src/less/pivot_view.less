@@ -35,15 +35,23 @@
         }
 
         .o_pivot_header_cell_closed {
-            .text-align(left);
             .o-pivot-header-cell;
-            .o_pivot_header_cell_closed_mixin();
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                .margin-right(8px);
+                display: inline-flex;
+            }
         }
 
         .o_pivot_header_cell_opened {
             .o-pivot-header-cell;
-            .text-align(left);
-            .o_pivot_header_cell_opened_mixin();
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                .margin-right(8px);
+                display: inline-flex;
+            }
         }
 
         .o_pivot_measure_row_sorted_asc::after {
