@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_openupgrade_analysis_wizard_form" model="ir.ui.view">
+        <field name="name">view.openupgrade.analysis_wizard.form</field>
+        <field name="model">openupgrade.analysis.wizard</field>
+        <field name="arch" type="xml">
+            <form string="OpenUpgrade Analysis Wizard">
+                <group>
+                    <field name="server_config" readonly="1"/>
+                    <field name="state"/>
+                    <field name="log" colspan="4"
+                           attrs="{'invisible': [('state', '!=', 'ready')]}"/>
+                    <field name="write_files"
+                           attrs="{'readonly': [('state', '!=', 'init')]}"/>
+                </group>
+                <footer>
+                    <button string="Create"
+                            name="get_communication"
+                            type="object"
+                            states="init"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Close" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

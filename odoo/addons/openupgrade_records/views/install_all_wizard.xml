@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_openupgrade_install_all_wizard_form" model="ir.ui.view">
+        <field name="name">view.openupgrade.install_all_wizard.form</field>
+        <field name="model">openupgrade.install.all.wizard</field>
+        <field name="arch" type="xml">
+            <form string="OpenUpgrade Install All Modules Wizard">
+                <field name="state" invisible="1"/>
+                <group states="init" colspan="4">
+                    <label string="This will install all modules on the database. Do not continue if you use this database in production." colspan="4"
+                           />
+                    <field name="to_install"/>
+                </group>
+                <group states="ready" colspan="4">
+                    <label string="Modules installed"
+                           />
+                </group>
+                <footer>
+                    <button class="btn-primary"
+                            string="Continue"
+                            name="install_all"
+                            type="object"
+                            states="init"
+                            />
+                    <button special="cancel"
+                            string="Close"
+                            class="btn-default"
+                            />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_install_all" model="ir.actions.act_window">
+        <field name="name">Install All Modules</field>
+	<field name="type">ir.actions.act_window</field>
+        <field name="res_model">openupgrade.install.all.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Install All Modules"
+              id="menu_openupgrade_install_all"
+              parent="menu_openupgrade"
+              action="action_install_all"
+              sequence="14"
+              />
+
+</odoo>
