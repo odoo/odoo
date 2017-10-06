@@ -1,6 +1,12 @@
 odoo.define('web.SwitchCompanyMenu', function(require) {
 "use strict";
 
+/**
+ * When Odoo is configured in multi-company mode, users should obviously be able
+ * to switch their interface from one company to the other.  This is the purpose
+ * of this widget, by displaying a dropdown menu in the systray.
+ */
+
 var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
@@ -11,34 +17,34 @@ var _t = core._t;
 
 var SwitchCompanyMenu = Widget.extend({
     template: 'SwitchCompanyMenu',
-    willStart: function() {
-        this.isMobile = config.device.isMobile;
-        if (!session.user_companies) {
-            return $.Deferred().reject();
-        }
-        return this._super();
+    events: {
+        'click .dropdown-menu li a[data-menu]': '_onClick',
     },
-    start: function() {
-        var self = this;
-        this.$el.on('click', '.dropdown-menu li a[data-menu]', _.debounce(function(ev) {
-            ev.preventDefault();
-            var company_id = $(ev.currentTarget).data('company-id');
-            self._rpc({
-                    model: 'res.users',
-                    method: 'write',
-                    args: [[session.uid], {'company_id': company_id}],
-                })
-                .then(function() {
-                    location.reload();
-                });
-        }, 1500, true));
-
-        var companies_list = '';
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.isMobile = config.device.isMobile;
+        this._onClick = _.debounce(this._onClick, 1500, true);
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        return session.user_companies ? this._super() : $.Deferred().reject();
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var companiesList = '';
         if (this.isMobile) {
-            companies_list = '<li class="bg-info">' + _t('Tap on the list to change company') + '</li>';
+            companiesList = '<li class="bg-info">' +
+                _t('Tap on the list to change company') + '</li>';
         }
         else {
-            self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
+            this.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
         }
         _.each(session.user_companies.allowed_companies, function(company) {
             var a = '';
@@ -47,10 +53,32 @@ var SwitchCompanyMenu = Widget.extend({
             } else {
                 a = '<span class="mr24"/>';
             }
-            companies_list += '<li><a href="#" data-menu="company" data-company-id="' + company[0] + '">' + a + company[1] + '</a></li>';
+            companiesList += '<li><a href="#" data-menu="company" data-company-id="' +
+                            company[0] + '">' + a + company[1] + '</a></li>';
         });
-        self.$('.dropdown-menu').html(companies_list);
+        this.$('.dropdown-menu').html(companiesList);
         return this._super();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.preventDefault();
+        var companyID = $(ev.currentTarget).data('company-id');
+        this._rpc({
+            model: 'res.users',
+            method: 'write',
+            args: [[session.uid], {'company_id': companyID}],
+        })
+        .then(function() {
+            location.reload();
+        });
     },
 });
 
