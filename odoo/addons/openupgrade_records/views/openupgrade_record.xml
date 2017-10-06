@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top level menu under 'Database structure' -->
+    <menuitem id="menu_openupgrade"
+              name="OpenUpgrade Development"
+              parent="base.menu_administration"
+              sequence="99"
+              />
+
+    <record id="view_openupgrade_record_search" model="ir.ui.view">
+        <field name="name">Search view for openupgrade records</field>
+        <field name="model">openupgrade.record</field>
+        <field name="arch" type="xml">
+            <search string="Search Records">
+                <field name="module"/>
+                <field name="model"/>
+                <field name="field"/>
+                <field name="type"/>
+                <separator/>
+                <filter name="mode_create" string="Create mode"
+                        filter_domain="[('mode', '=', 'create')]"/>
+                <filter name="mode_modify" string="Modify mode"
+                        filter_domain="[('mode', '=', 'modify')]"/>
+
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_module" context="{'group_by': 'module'}"/>
+                    <filter name="group_by_model" context="{'group_by': 'model'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_openupgrade_record_tree" model="ir.ui.view">
+        <field name="name">view.openupgrade.record.tree</field>
+        <field name="model">openupgrade.record</field>
+        <field name="arch" type="xml">
+            <tree string="OpenUpgrade Records">
+                <field name="module"/>
+                <field name="model"/>
+                <field name="field"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="mode"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_openupgrade_record_form" model="ir.ui.view">
+        <field name="name">view.openupgrade.record.form</field>
+        <field name="model">openupgrade.record</field>
+        <field name="arch" type="xml">
+            <form string="OpenUpgrade Record" version="6.1">
+                <field name="module"/>
+                <field name="model"/>
+                <field name="field"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="mode"/>
+                <separator string="Attributes" colspan="4"/>
+                <field name="attribute_ids" mode="tree" nolabel="1" colspan="4">
+                    <tree string="Attributes">
+                        <field name="name"/>
+                        <field name="value"/>
+                    </tree>
+                    <form string="Attribute">
+                        <field name="name"/>
+                        <field name="value"/>
+                    </form>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_openupgrade_record_tree" model="ir.actions.act_window">
+            <field name="name">OpenUpgrade Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">openupgrade.record</field>
+            <field name="view_type">form</field>
+    </record>
+
+    <menuitem action="action_openupgrade_record_tree"
+              id="menu_openupgrade_records"
+              name="Records"
+              parent="menu_openupgrade"
+              />
+
+</odoo>

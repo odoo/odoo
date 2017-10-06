@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_openupgrade_comparison_config_tree" model="ir.ui.view">
+        <field name="name">view.openupgrade.comparison_config.tree</field>
+        <field name="model">openupgrade.comparison.config</field>
+        <field name="arch" type="xml">
+            <tree string="OpenUpgrade Comparison Config">
+                <field name="name"/>
+                <field name="protocol"/>
+                <field name="server"/>
+                <field name="port"/>
+                <field name="database"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_openupgrade_comparison_config_form" model="ir.ui.view">
+        <field name="name">view.openupgrade.comparison_config.form</field>
+        <field name="model">openupgrade.comparison.config</field>
+        <field name="arch" type="xml">
+            <form string="OpenUpgrade Comparison Config" version="6.1">
+                <group>
+                    <field name="name"/>
+                    <field name="protocol"/>
+                    <field name="server"/>
+                    <field name="port"/>
+                    <field name="database"/>
+                    <field name="username"/>
+                    <field name="password"/>
+                </group>
+                <button
+                    name="test_connection"
+                    string="Test Connection"
+                    type="object" icon="fa-television"
+                    colspan="2"
+                    />
+                <newline/>
+                <button
+                    name="install_modules"
+                    string="Mark uninstalled modules as in remote DB for installation, needs manual review and installation"
+                    type="object" icon="fa-cogs"
+                    colspan="4"
+                    />
+                <newline/>
+                <button
+                    name="analyze"
+                    string="Perform Analysis"
+                    type="object" icon="fa-cogs"
+                    colspan="2"
+                    />
+                <separator string="Last log" colspan="4"/>
+                <field name="last_log" nolabel="1" colspan="4"/>
+            </form>
+        </field>
+    </record>
+)
+    <record id="action_openupgrade_comparison_config_tree" model="ir.actions.act_window">
+        <field name="name">OpenUpgrade Comparison Configs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">openupgrade.comparison.config</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <menuitem action="action_openupgrade_comparison_config_tree"
+              id="menu_openupgrade_comparison_config"
+              name="Comparison Configurations"
+              parent="menu_openupgrade"
+              />
+
+</odoo>

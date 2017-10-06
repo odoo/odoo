@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_openupgrade_generate_records_wizard_form" model="ir.ui.view">
+        <field name="name">view.openupgrade.generate_records_wizard.form</field>
+        <field name="model">openupgrade.generate.records.wizard</field>
+        <field name="arch" type="xml">
+            <form string="OpenUpgrade Generate Records Wizard">
+                <field name="state" invisible="1"/>
+                <group states="init" colspan="4">
+                    <label string="This will reinitialize all the modules installed on this database. Do not continue if you use this database in production."
+                           />
+                </group>
+                <group states="ready" colspan="4">
+                    <label string="Modules initialized and records created"
+                           />
+                </group>
+                <footer>
+                    <button string="Continue"
+                            name="generate"
+                            type="object"
+                            states="init"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Close" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_generate_records" model="ir.actions.act_window">
+        <field name="name">Generate Records</field>
+	<field name="type">ir.actions.act_window</field>
+        <field name="res_model">openupgrade.generate.records.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Generate Records"
+              id="menu_openupgrade_generate_records"
+              parent="menu_openupgrade"
+              action="action_generate_records"
+              sequence="15"/>
+
+</odoo>
