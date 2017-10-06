@@ -4,7 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
-var RainbowMan = require('web.rainbow_man');
+var RainbowMan = require('web.RainbowMan');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
