@@ -1219,7 +1219,7 @@ var FieldBinaryImage = FieldBinary.extend({
         var url = this.placeholder;
         if(this.get('value')) {
             if(!utils.is_bin_size(this.get('value'))) {
-                url = 'data:image/png;base64,' + this.get('value');
+                url = 'data:image/png;base64,' + this.get('value').replace(/\n/g, '');
             } else {
                 url = session.url('/web/image', {
                     model: this.view.dataset.model,
