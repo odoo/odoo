@@ -411,7 +411,7 @@ Source installation requires manually installing dependencies:
 
     .. code-block:: console
 
-        $ pip install -r requirements.txt
+        $ pip3 install -r requirements.txt
 
   - on OS X, you will need to install the Command Line Tools
     (``xcode-select --install``) then download and install a package manager
@@ -420,7 +420,7 @@ Source installation requires manually installing dependencies:
 
     .. code-block:: console
 
-        $ pip install -r requirements.txt
+        $ pip3 install -r requirements.txt
 
   - on Windows you need to install some of the dependencies manually, tweak the
     requirements.txt file, then run pip to install the remaning ones.
