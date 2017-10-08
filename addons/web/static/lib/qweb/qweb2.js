@@ -785,9 +785,9 @@ QWeb2.Element = (function() {
         },
         compile_action_call : function(value) {
             if (this.children.length === 0) {
-                return this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict));");
+                return this.top("r.push(context.engine.tools.call(context, " + (this.string_interpolation(value)) + ", dict));");
             } else {
-                this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict, null, function(context, dict) {");
+                this.top("r.push(context.engine.tools.call(context, " + (this.string_interpolation(value)) + ", dict, null, function(context, dict) {");
                 this.bottom("}));");
                 this.indent();
                 this.top("var r = [];");
