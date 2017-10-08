@@ -12,13 +12,14 @@
 # Volluta <volluta@tutanota.com>, 2016
 # Eric Geens <eric.geens@vitabiz.be>, 2016
 # Олег <pehotaolega.ru@mail.ru>, 2016
+# Melroy van den Berg <webmaster1989@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-17 08:17+0000\n"
 "PO-Revision-Date: 2017-07-17 08:17+0000\n"
-"Last-Translator: Олег <pehotaolega.ru@mail.ru>, 2016\n"
+"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4902,6 +4903,11 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Bij het gebruik van betalingstermijnen zal de vervaldatum automatisch "
+"berekend worden bij het genereren van de posten. Als u noch een "
+"betalingstermijn noch een vervaldatum gebruikt, dan veronderstelt het "
+"systeem een onmiddellijke betaling. De betalingstermijn kan meerdere "
+"vervaldata berekenen, bijvoorbeeld 50% nu en 50% over een maand."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -4912,6 +4918,13 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"Bij het gebruik van betalingscondities zal de vervaldatum automatisch "
+"berekend worden bij het genereren van de posten. De betalingsconditie kan "
+"meerdere vervaldata berekenen, bijvoorbeeld 50% nu en 50% over een maand, "
+"maar u kunt ook een vervaldatum forceren. Zorg er dan voor dat er geen "
+"betalingsconditie is ingesteld op de factuur.  Als u noch een "
+"betalingsconditie noch een vervaldatum gebruikt, dan veronderstelt het "
+"systeem een onmiddellijke betaling."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6928,7 +6941,7 @@ msgstr "Voorraadafname rekening voor voorraadwaardering"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding Credits Debits Widget"
-msgstr ""
+msgstr "Widget voor uitstaande inkomsten en uitgaven"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7815,7 +7828,7 @@ msgstr "Handmatig invoeren"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "Record transactions in foreign currencies"
-msgstr ""
+msgstr "Transacties registreren in vreemde valuta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8522,7 +8535,7 @@ msgstr "Kleinste tekst"
 #: code:addons/account/report/account_report_financial.py:149
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Formulier inhoud ontbreekt, dit rapport kan niet afgedrukt worden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_sortby
@@ -10131,7 +10144,7 @@ msgstr "Aankomende activiteiten (7 dagen)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "Update exchange rates automatically"
-msgstr ""
+msgstr "Automatisch wisselkoersen updaten"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
