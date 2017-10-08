@@ -563,6 +563,7 @@
                 <search string="Search Leave Type">
                     <field name="name" string="Leave Types"/>
                     <field name="categ_id"/>
+                    <field name="code"/>
                 </search>
             </field>
         </record>
@@ -575,6 +576,7 @@
                     <group>
                         <group name="selection">
                             <field name="name"/>
+                            <field name="code"/>
                             <field name="double_validation"/>
                             <field name="limit"/>
                         </group>
@@ -595,6 +597,7 @@
             <field name="arch" type="xml">
                 <tree string="Leave Type">
                     <field name="name"/>
+                    <field name="code"/>
                     <field name="max_leaves"/>
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
@@ -609,6 +612,7 @@
             <field name="arch" type="xml">
                 <tree string="Leave Type">
                     <field name="name"/>
+                    <field name="code"/>
                     <field name="limit"/>
                 </tree>
             </field>
@@ -621,6 +625,7 @@
                 <search string="Leave Type">
                     <field name="name" string="Leave Types"/>
                     <field name="categ_id"/>
+                    <field name="code"/>
                 </search>
             </field>
         </record>

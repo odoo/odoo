@@ -360,7 +360,7 @@ class HrPayslip(models.Model):
                         leaves[holiday.holiday_status_id.name] = {
                             'name': holiday.holiday_status_id.name,
                             'sequence': 5,
-                            'code': holiday.holiday_status_id.name,
+                            'code': holiday.holiday_status_id.code,
                             'number_of_days': 0.0,
                             'number_of_hours': hours,
                             'contract_id': contract.id,
