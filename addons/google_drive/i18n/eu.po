@@ -1,39 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-#
+# 
 # Translators:
+# ibinka lete <ilete@fpbidasoa.net>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# Gorka Toledo <gorka.toledo@gmail.com>, 2017
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-08 18:25+0000\n"
-"Last-Translator: Oihane Crucelaegui <oihanecruce@gmail.com>\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
-"Language: eu\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to "
-"filter. For instance, go to Opportunities and search on Sales Department.<br/"
-">\n"
-"                                - In this \"Search\" view, select the option "
-"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", "
-"link of google document in \"More\" options will appear for all users in "
-"opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users"
-"\", link of google document in \"More\" options will not appear for other "
-"users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google "
-"document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
+"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 
 #. module: google_drive
@@ -55,8 +52,8 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. gdoc_"
-"%(field_name)s"
+"Choose how the new google drive will be named, on google side. Eg. "
+"gdoc_%(field_name)s"
 msgstr ""
 
 #. module: google_drive
@@ -77,7 +74,7 @@ msgstr "Nork sortua"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_date
 msgid "Created on"
-msgstr "Created on"
+msgstr "Noiz sortua"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:159
@@ -98,7 +95,7 @@ msgstr "Izena erakutsi"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
 msgid "Filter"
-msgstr ""
+msgstr "Iragazki"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:59
@@ -115,7 +112,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
 msgid "Google Drive"
-msgstr ""
+msgstr "Google Drive"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -153,12 +150,12 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Nork eguneratua"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_date
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr "Noiz eguneratua"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -229,12 +226,9 @@ msgstr ""
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To "
-"distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. "
-"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document "
-"in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
 msgstr ""
 
@@ -249,7 +243,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:58
@@ -272,6 +266,6 @@ msgstr ""
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/"
-"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

@@ -1,20 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * project_issue
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
+# ibinka lete <ilete@fpbidasoa.net>, 2017
+# Ainara Galdona Usatorre <ainaragaldona@avanzosc.es>, 2017
+# Gorka Toledo <gorka.toledo@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-02-12 10:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
-"Language: eu\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2017\n"
+"Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project_issue
@@ -73,14 +79,11 @@ msgstr "Erantsi barne oharra"
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
 "\n"
-"                                           * Normal is the default "
-"situation\n"
+"                                           * Normal is the default situation\n"
 "\n"
-"                                           * Blocked indicates something is "
-"preventing the progress of this issue\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
 "\n"
-"                                           * Ready for next stage indicates "
-"the issue is ready to be pulled to the next stage"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
@@ -186,7 +189,7 @@ msgstr "Enpresa"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktua"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
@@ -209,7 +212,7 @@ msgstr "Nork sortua"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Noiz sortua"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -226,7 +229,7 @@ msgstr "Kidea"
 #: code:addons/project_issue/models/project_issue.py:298
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Kidearen emaila"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
@@ -281,7 +284,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Delete"
-msgstr ""
+msgstr "Ezabatu"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
@@ -343,7 +346,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr "Group By"
+msgstr "Taldekatu"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
@@ -351,7 +354,8 @@ msgid "Helpdesk & Support"
 msgstr ""
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "High"
 msgstr ""
 
@@ -494,15 +498,16 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Nork eguneratua"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Noiz eguneratua"
 
 #. module: project_issue
-#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr ""
 
@@ -604,8 +609,8 @@ msgstr "Kidea"
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
-"Please remove existing issues in the project linked to the accounts you want "
-"to delete."
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
 msgstr ""
 
 #. module: project_issue
@@ -630,7 +635,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Project"
-msgstr "Proiektua"
+msgstr "Proiektu"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
@@ -670,7 +675,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr ""
+msgstr "Bilatu"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -713,8 +718,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
 "The Odoo issues tracker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
@@ -722,8 +726,7 @@ msgstr ""
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
-"        and outbound emails for this record before being sent. Separate "
-"multiple email addresses with a comma"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 
 #. module: project_issue
