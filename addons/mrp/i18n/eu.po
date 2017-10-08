@@ -1,21 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp
-#
+# 
 # Translators:
-# ibinka lete <ilete@fpbidasoa.net>, 2016
+# ibinka lete <ilete@fpbidasoa.net>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# José Miguel Andonegi <jm.andonegi@gmail.com>, 2017
+# Gorka Toledo <gorka.toledo@gmail.com>, 2017
+# José Miguel Andoengi <jmandonegi@fpbidasoa.org>, 2017
+# Ainara Galdona Usatorre <ainaragaldona@avanzosc.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
-"Language: eu\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Ainara Galdona Usatorre <ainaragaldona@avanzosc.es>, 2017\n"
+"Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
@@ -72,8 +79,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                        Click to upload files to your product.\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
 
@@ -129,7 +135,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>Berria</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -139,12 +145,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Txostenak</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>Ikusi</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -272,7 +278,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "All"
-msgstr ""
+msgstr "Denak"
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
@@ -283,16 +289,14 @@ msgstr ""
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid ""
 "An unbuild order will do a reverse bill of materials, unbuilding products\n"
-"            you produced, but you can also use it to unbuild products you "
-"purchased."
+"            you produced, but you can also use it to unbuild products you purchased."
 msgstr ""
 
 #. module: mrp
@@ -310,13 +314,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr ""
+msgstr "Artxibatua"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_assembly
 #: model:product.template,name:mrp.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Muntaketa zerbitzuaren kostua"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:258
@@ -389,7 +393,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode_batch
 msgid "Based on"
-msgstr ""
+msgstr "Honetan oinarrituta"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -441,8 +445,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of Materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 
@@ -522,11 +525,6 @@ msgid "By-Products"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product_can_be_expensed
-msgid "Can be Expensed"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
 #, python-format
 msgid "Can't find any generic Manufacture route."
@@ -588,7 +586,7 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:9
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "Garbitu"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -644,7 +642,7 @@ msgstr "Kodea"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_color
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_color
 msgid "Color"
-msgstr ""
+msgstr "Kolorea"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -696,7 +694,7 @@ msgstr "Ekoizpena eratu"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Baieztatua"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
@@ -794,7 +792,7 @@ msgstr "Nork sortua"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_create_date
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_create_date
 msgid "Created on"
-msgstr "Created on"
+msgstr "Noiz sortua"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
@@ -804,7 +802,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Production"
-msgstr ""
+msgstr "Oraingo produktua"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -819,12 +817,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Arbela"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
@@ -925,14 +923,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: selection:mrp.unbuild,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Zirriborroa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_duration
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Duration"
-msgstr ""
+msgstr "Iraupena"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
@@ -1009,7 +1007,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Filters"
-msgstr ""
+msgstr "Iragazkiak"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -1020,7 +1018,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr ""
+msgstr "Bukatuta"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_id
@@ -1046,7 +1044,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "General Information"
-msgstr ""
+msgstr "Informazio Orokorra"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_sequence
@@ -1077,7 +1075,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Group By"
-msgstr "Group By"
+msgstr "Taldekatu"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
@@ -1092,7 +1090,7 @@ msgstr "Taldekatu..."
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Group by..."
-msgstr ""
+msgstr "Taldekatu..."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_19
@@ -1180,7 +1178,7 @@ msgstr ""
 #: selection:mrp.production,state:0 selection:mrp.workcenter,working_state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Lanean"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_lot_produced_qty
@@ -1205,8 +1203,14 @@ msgid "Inventory Post Visible"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Inventory Unreserve Visible"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
-msgid "Inventory moves for which you must scan a lot number at this work order"
+msgid ""
+"Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 
 #. module: mrp
@@ -1233,9 +1237,9 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
-"Keep empty if you produce at the location where you find the raw materials."
-"Set a location if you produce at a fixed location. This can be a partner "
-"location if you subcontract the manufacturing operations."
+"Keep empty if you produce at the location where you find the raw "
+"materials.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
 msgstr ""
 
 #. module: mrp
@@ -1308,7 +1312,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_write_uid
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Nork eguneratua"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_write_date
@@ -1327,7 +1331,7 @@ msgstr "Last Updated by"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_write_date
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_write_date
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr "Noiz eguneratua"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1543,8 +1547,7 @@ msgstr "Fabrikazio erreferentzia"
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid ""
 "Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule."
 msgstr ""
 
@@ -1567,13 +1570,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_message
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
 msgid "Message"
-msgstr ""
+msgstr "Mezua"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Messages can be configured to appear during any operation: receptions, "
-"delivery orders,\n"
+"Messages can be configured to appear during any operation: receptions, delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
 
@@ -1724,12 +1726,13 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,availability:0
 msgid "None"
-msgstr ""
+msgstr "Hutsa"
 
 #. module: mrp
 #: selection:ir.attachment,priority:0
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: selection:mrp.production,priority:0 selection:mrp.workcenter,working_state:0
+#: selection:mrp.production,priority:0
+#: selection:mrp.workcenter,working_state:0
 msgid "Normal"
 msgstr "Arrunta"
 
@@ -1927,8 +1930,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:269
 #, python-format
 msgid ""
-"Please set the quantity you produced in the Current Qty field. It can not be "
-"0!"
+"Please set the quantity you produced in the Current Qty field. It can not be"
+" 0!"
 msgstr ""
 
 #. module: mrp
@@ -2149,6 +2152,11 @@ msgid "Propagate cancel and split"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_location_path
+msgid "Pushed Flow"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
@@ -2249,7 +2257,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_name
 msgid "Reason"
-msgstr ""
+msgstr "Arrazoia"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -2280,7 +2288,8 @@ msgstr "Errefentzi bakarra enpresako"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
-msgid "Reference of the document that generated this production order request."
+msgid ""
+"Reference of the document that generated this production order request."
 msgstr "Dokumentu ekoizpenaren Erreferentzia"
 
 #. module: mrp
@@ -2317,7 +2326,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
 msgid "Resource"
-msgstr ""
+msgstr "Baliabide"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
@@ -2385,8 +2394,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
 msgstr ""
@@ -2396,7 +2404,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Save"
-msgstr ""
+msgstr "Gorde"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_finished
@@ -2450,7 +2458,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
-msgstr ""
+msgstr "Bilatu"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2550,12 +2558,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
 msgid "Source"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Iturria"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
@@ -2578,7 +2581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_state
 msgid "State"
-msgstr ""
+msgstr "Egoera"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_state
@@ -2599,7 +2602,7 @@ msgstr "Izakinen mugimendua"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
 msgid "Stock Moves"
-msgstr ""
+msgstr "Izakinen mugimenduak"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
@@ -2641,7 +2644,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_done_wo
-msgid "Technical Field which is False when temporarily filled in in work order"
+msgid ""
+"Technical Field which is False when temporarily filled in in work order"
 msgstr ""
 
 #. module: mrp
@@ -2652,6 +2656,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
+msgid "Technical field to check when we can unreserve"
 msgstr ""
 
 #. module: mrp
@@ -2742,8 +2751,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
 msgid ""
 "The routing contains all the Work Centers used and for how long. This will "
-"create work orders afterwardswhich alters the execution of the manufacturing "
-"order. "
+"create work orders afterwardswhich alters the execution of the manufacturing"
+" order. "
 msgstr ""
 
 #. module: mrp
@@ -2756,15 +2765,15 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "This Year"
-msgstr ""
+msgstr "This Year"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: mrp
@@ -2811,8 +2820,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid ""
-"Time in minutes. Is the time used in manual mode, or the first time supposed "
-"in real time when there are not any work orders yet."
+"Time in minutes. Is the time used in manual mode, or the first time supposed"
+" in real time when there are not any work orders yet."
 msgstr ""
 
 #. module: mrp
@@ -2825,7 +2834,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "To Do"
-msgstr ""
+msgstr "Egitekoa"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -2848,10 +2857,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 msgid ""
 "To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
@@ -2860,7 +2867,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Today"
-msgstr ""
+msgstr "Gaur"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -2978,7 +2985,7 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:6
 #, python-format
 msgid "Uploading..."
-msgstr ""
+msgstr "Igotzen..."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2995,10 +3002,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Use messages to warn manufacturing or inventory people about any change in "
-"the\n"
-"                products, process, or actions to take care of. (e.g; "
-"Warning, the bill of material changed,\n"
+"Use messages to warn manufacturing or inventory people about any change in the\n"
+"                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
 
@@ -3069,14 +3074,14 @@ msgstr "Biltegia"
 #: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:227
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Kontuz"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a picking type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same "
-"picking type. That allows to define procurement rules which trigger "
+"try to create a Manufacturing Order for that product using a BoM of the same"
+" picking type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
 
@@ -3084,8 +3089,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
+"                                will contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -3097,8 +3101,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
 msgid ""
-"Will determine if the next work order will be planned after the previous one "
-"or after the first Quantity To Process of the previous one."
+"Will determine if the next work order will be planned after the previous one"
+" or after the first Quantity To Process of the previous one."
 msgstr ""
 
 #. module: mrp
@@ -3163,8 +3167,7 @@ msgstr ""
 msgid ""
 "Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
 
@@ -3236,8 +3239,7 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced."
 msgstr ""
 
@@ -3328,7 +3330,8 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:458
 #, python-format
-msgid "You can not cancel production order, a work order is still in progress."
+msgid ""
+"You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
@@ -3346,9 +3349,33 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:110
+#, python-format
+msgid "You don't have in the stock the lot %s."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:125
+#, python-format
+msgid "You don't have in the stock the required lot/serial number for %s ."
 msgstr ""
 
 #. module: mrp
@@ -3371,8 +3398,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
-"Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
+" Productivity Losses."
 msgstr ""
 
 #. module: mrp

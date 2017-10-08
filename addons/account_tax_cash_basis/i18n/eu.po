@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_tax_cash_basis
-#
+# 
 # Translators:
+# Gorka Toledo <gorka.toledo@gmail.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# ibinka lete <ilete@fpbidasoa.net>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-02-02 19:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
-"Language: eu\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_cash_basis
@@ -35,11 +39,17 @@ msgstr "Enpresak"
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Eguneko gaia"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
 msgid "Partial Reconcile"
+msgstr ""
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:39
+#, python-format
+msgid "Please configure a Tax Received Account for tax %s"
 msgstr ""
 
 #. module: account_tax_cash_basis
@@ -73,9 +83,9 @@ msgstr ""
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This "
-"is needed when cancelling the source: it will post the inverse journal entry "
-"to cancel that part too."
+"Technical field used to keep track of the tax cash basis reconciliation.This"
+" is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
 msgstr ""
 
 #. module: account_tax_cash_basis

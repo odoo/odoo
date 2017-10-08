@@ -614,7 +614,7 @@ msgstr "<strong>Kommentar:</strong>"
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "<strong>Company:</strong>"
-msgstr "<strong>Företag:</strong> "
+msgstr "<strong>Bolag:</strong> "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1368,7 +1368,7 @@ msgstr "Affärshandlingar"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
-msgstr "Accounting Entries"
+msgstr "Verifikat"
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -1632,7 +1632,7 @@ msgstr "Tillåt fakturor och betalningar matchande"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
 msgid "Allow Reconciliation"
-msgstr "Allow Reconciliation"
+msgstr "Tillåt avstämning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_tax_cash_basis
@@ -1710,12 +1710,12 @@ msgstr "Att betala"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr "Belopp i Bolagsvaluta"
+msgstr "Belopp i bolagsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr "Belopp i Faktura Valuta"
+msgstr "Belopp i fakturad valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1732,12 +1732,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount currency"
-msgstr "Valutamängd"
+msgstr "Valutabelopp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
 msgid "Amount in Currency"
-msgstr "Mängd i valuta"
+msgstr "Belopp i valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
@@ -2597,7 +2597,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
 msgid "Check this box if this company is a legal entity."
-msgstr "Bocka i om det här företaget är en juridisk person."
+msgstr "Bocka i om det här bolaget är en juridisk person."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -2844,14 +2844,14 @@ msgstr "Associerade företag"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_company_currency_id
 msgid "Company Currency"
-msgstr "Företagets valuta"
+msgstr "Bolagsvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_company_currency_id
@@ -2861,7 +2861,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_chart_of_accounts
 msgid "Company has a chart of accounts"
-msgstr ""
+msgstr "Bolaget har en kontoplan"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_company_id
@@ -2872,7 +2872,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_company_id
 #: model:ir.model.fields,help:account.field_account_register_payments_company_id
 msgid "Company related to this journal"
-msgstr "Företag relaterat till denna journal"
+msgstr "Bolag relaterat till denna journal"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.accounting_report_view
@@ -2964,7 +2964,7 @@ msgstr "Ställ in bokföring"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Configure your company data"
-msgstr "Konfigurera ditt företags data"
+msgstr "Konfigurera dina bolagsdata"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -3576,7 +3576,7 @@ msgstr "Standardmoms"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_id
 msgid "Default company currency"
-msgstr "Företagets standardvaluta"
+msgstr "Bolagets standardvaluta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_purchase_tax_id
@@ -4559,7 +4559,7 @@ msgstr "Skatter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_has_default_company
 msgid "Has default company"
-msgstr "Har standardföretag"
+msgstr "Har standardbolag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_has_invoices
@@ -4787,9 +4787,9 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"Om du använder betalningsvillkor, förfallodagen kommer att beräknas "
+"Om du använder betalningsvillkor, kommer förfallodagen att beräknas "
 "automatiskt vid generering av bokföringsposter. Om du lämnar "
-"betalningsvillkor och förfallodagen tomma betyder det direkt betalning. "
+"betalningsvillkor och förfallodagen tomma betyder det direktbetalning. "
 "Betalningsvillkor kan beräkna flera förfallodatum, till exempel 50% nu, 50% "
 "efter en månad."
 
@@ -5911,7 +5911,7 @@ msgstr "Huvudtitel 1 (fet, understruken)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr "Företagets huvudsakliga valuta."
+msgstr "Bolagets huvudsakliga valuta."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
@@ -6173,7 +6173,7 @@ msgstr "Fler-valuta"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Multi Currency"
-msgstr "Fler Valut"
+msgstr "Flera valutor"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_config_multi_currency
@@ -6890,7 +6890,7 @@ msgstr "Betalningsdifferense"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr ""
+msgstr "Betalningsinformation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -6957,7 +6957,7 @@ msgstr "Payment Term Line"
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 #: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Terms"
-msgstr "Villkor för betalning"
+msgstr "Betalningsvillkor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_type
@@ -8315,7 +8315,7 @@ msgstr "Subtotal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "TIN:"
-msgstr "Skatteregistreringsnummer"
+msgstr "Momsregistreringsnummer"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8442,7 +8442,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Tax ID"
-msgstr "Skatteregistringsnummer"
+msgstr "Momsregistreringsnummer"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_tax
@@ -8794,7 +8794,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr "Kontots kod måste vara unik per företag."
+msgstr "Kontots kod måste vara unik per bolag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
@@ -8830,6 +8830,8 @@ msgid ""
 "The first step is to set up your company's information. This is mostly used "
 "in printed business documents like orders and invoices."
 msgstr ""
+"Första steget är att ställa in ditt bolags information. Detta används oftast"
+" vid utskrifter som t ex ordrar och fakturor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
@@ -9482,7 +9484,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
 msgid "Total in Company Currency"
-msgstr "Totalt i företagets valuta"
+msgstr "Totalt i bolagets valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_signed
@@ -10381,7 +10383,7 @@ msgstr "Dina bank-konton"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your Company"
-msgstr "Ditt företag"
+msgstr "Ditt bolag"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10611,7 +10613,7 @@ msgstr "skicka ett meddelande till oss via e-post"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "set company logo"
-msgstr "ställ in företagets logotyp"
+msgstr "ställ in bolagets logotyp"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10626,7 +10628,7 @@ msgstr "kundlistan"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "Moderföretaget"
+msgstr "Moderbolaget"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
