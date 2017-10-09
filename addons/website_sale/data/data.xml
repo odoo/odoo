@@ -18,6 +18,23 @@
             <field name="state">open</field>
         </record>
 
+        <record id="website_sale_theme_install_todo_action" model="ir.actions.server">
+            <field name="name">Config: Choose Your Theme</field>
+            <field name="model_id" ref="model_ir_module_module"/>
+            <field name="state">code</field>
+            <field name="code">
+action = {
+    'type': 'ir.actions.act_url',
+    'url': model.open_shop(),
+    'target': 'self',
+}
+            </field>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="website_sale.website_sale_theme_install_todo_action"/>
+        </record>
+
         <record id="website_sale.image_promo" model="product.style">
             <field name="name">Sale Ribbon</field>
             <field name="html_class">oe_ribbon_promo</field>
