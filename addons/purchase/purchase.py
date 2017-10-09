@@ -406,7 +406,7 @@ class PurchaseOrder(models.Model):
         result['context'] = {}
         pick_ids = sum([order.picking_ids.ids for order in self], [])
         #choose the view_mode accordingly
-        if len(pick_ids) > 1:
+        if not pick_ids or len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
         elif len(pick_ids) == 1:
             res = self.env.ref('stock.view_picking_form', False)
