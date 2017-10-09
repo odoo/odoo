@@ -2,24 +2,17 @@
     th,td {
         text-align: right;
     }
-    @media (min-width: @screen-sm-min) {
-        th:nth-last-child(2) {
-            width: 150px;
-        }
-        th:nth-last-child(1), {
-            width: 120px;
-        }
+    th:nth-last-child(2) {
+        width: 150px;
+    }
+    th:nth-last-child(1), {
+        width: 120px;
     }
     th:nth-child(1),
     td:nth-child(1) {
-        @media (min-width: @screen-sm-min) {
-            width: auto;
-            min-width: 150px;
-        }
+        width: auto;
+        min-width: 150px;
         text-align: left;
     }
-
-    #wrapwrap .table-responsive > & {
-        table-layout: auto;
-    }
+    table-layout: fixed;
 }

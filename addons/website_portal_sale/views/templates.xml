@@ -19,7 +19,7 @@
         <t t-if="not quotations">
             <p>There are currently no quotes for your account.</p>
         </t>
-        <div class="table-responsive" t-if="quotations">
+        <t t-if="quotations">
             <table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -51,7 +51,7 @@
                   <td colspan="5"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
                 </tr>
             </table>
-        </div>
+        </t>
     </template>
 
     <template id="sale_orders" name="Sales Orders">
@@ -59,7 +59,7 @@
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>
-        <div class="table-responsive" t-if="orders">
+        <t t-if="orders">
             <table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -93,7 +93,7 @@
                   <td colspan="4"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
                 </tr>
             </table>
-        </div>
+        </t>
     </template>
 
     <template id="invoices" name="Invoices and Payments">
@@ -101,7 +101,7 @@
         <t t-if="not invoices">
             <p>There are currently no invoices for your account.</p>
         </t>
-        <div class="table-responsive" t-if="invoices">
+        <t t-if="invoices">
             <table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -141,7 +141,7 @@
                   <td colspan="5"><a href="" class="o_my_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a></td>
                 </tr>
             </table>
-        </div>
+        </t>
     </template>
 
     <template id="orders_followup" name="Sales Order">

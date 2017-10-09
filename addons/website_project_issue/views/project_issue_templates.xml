@@ -6,7 +6,7 @@
             <t t-if="not issues">
                 <p>There are currently no issues for your account.</p>
             </t>
-            <div class="table-responsive" t-if="issues">
+            <t t-if="issues">
                 <table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
@@ -28,7 +28,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>
+            </t>
         </xpath>
     </template>
 
