@@ -30,21 +30,4 @@ Getting started with Odoo
 For a standard installation please follow the <a href="https://www.odoo.com/documentation/11.0/setup/install.html">Setup instructions</a>
 from the documentation.
 
-If you are a developer you may type the following command at your terminal:
-
-    wget -O- https://raw.githubusercontent.com/odoo/odoo/11.0/setup/setup_dev.py | python
-
 Then follow <a href="https://www.odoo.com/documentation/11.0/tutorials.html">the developer tutorials</a>
-
-
-For Odoo employees
-------------------
-
-To add the odoo-dev remote use this command:
-
-    $ ./setup/setup_dev.py setup_git_dev
-
-To fetch odoo merge pull requests refs use this command:
-
-    $ ./setup/setup_dev.py setup_git_review
-

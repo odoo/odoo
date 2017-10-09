@@ -178,7 +178,7 @@ latex_elements = {
 todo_include_todos = False
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/2/', None),
+    'python': ('https://docs.python.org/3/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
     'django': ('https://django.readthedocs.org/en/latest/', None),
