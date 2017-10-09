@@ -1990,12 +1990,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return '"%s"."%s"' % (alias, fname)
 
     @api.model_cr
-    def _parent_store_compute(self):
+    def _parent_store_create_functions(self):
         if not self._parent_store:
             return
-
-        _logger.info('Computing parent left and right for table %s...', self._table)
-        cr = self._cr
         query = """
 CREATE OR REPLACE FUNCTION process_parent_columns_{table}(root integer, lt integer) RETURNS integer AS $$
 DECLARE
@@ -2021,12 +2018,16 @@ BEGIN
 	END LOOP;
 END;
 $$
-LANGUAGE 'plpgsql';
+LANGUAGE 'plpgsql';""".format(table=self._table, parent_name=self._parent_name, parent_order=self._parent_order)
+        self._cr.execute(query)
 
-SELECT add_parent_columns_{table}();
-        """.format(table=self._table, parent_name=self._parent_name, parent_order=self._parent_order)
-
-        cr.execute(query)
+    @api.model_cr
+    def _parent_store_compute(self):
+        if not self._parent_store:
+            return
+        _logger.info('Computing parent left and right for table %s...', self._table)
+        query = "SELECT add_parent_columns_{table}();".format(table=self._table)
+        self._cr.execute(query)
         self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
@@ -2133,6 +2134,7 @@ SELECT add_parent_columns_{table}();
                 if not tools.column_exists(cr, self._table, 'parent_left'):
                     self._create_parent_columns()
                     parent_store_compute = True
+                self._parent_store_create_functions()
 
             self._check_removed_columns(log=False)
 
