@@ -1471,7 +1471,7 @@ class Meeting(models.Model):
         if not fields:
             fields = list(self._fields)
         fields2 = fields and fields[:]
-        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)

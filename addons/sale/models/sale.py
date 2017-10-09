@@ -391,11 +391,11 @@ class SaleOrder(models.Model):
             'state': 'draft',
             'procurement_group_id': False,
         })
-        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
+        return orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_quotation_send(self):
@@ -445,7 +445,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     @api.multi
     def action_unlock(self):

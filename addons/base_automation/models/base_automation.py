@@ -307,7 +307,7 @@ class BaseAutomation(models.Model):
         if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
             return action.trg_date_calendar_id.plan_days(
                 action.trg_date_range,
-                day_date=fields.Datetime.from_string(record_dt),
+                fields.Datetime.from_string(record_dt),
                 compute_leaves=True,
             )
         else:
