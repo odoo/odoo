@@ -10,7 +10,7 @@ from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools
-from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.tools import pycompat
@@ -136,6 +136,10 @@ class Website(models.Model):
             })
         return result
 
+    @api.model
+    def guess_mimetype(self):
+        return _guess_mimetype()
+
     def get_unique_path(self, page_url):
         """ Given an url, return that url suffixed by counter if it already exists
             :param page_url : the url to be checked for uniqueness
@@ -194,20 +198,21 @@ class Website(models.Model):
         website_id = self._context.get('website_id')
         url = page.url
 
-
-        page_key = _('Page')
-
         # search for website_page with link
         website_page_search_dom = [
             '|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('view_id.arch_db', 'ilike', url)
         ]
         pages = self.env['website.page'].search(website_page_search_dom)
+        page_key = _('Page')
+        if len(pages) > 1:
+            page_key = _('Pages')
         page_view_ids = []
         for page in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
                 'text': _('Page <b>%s</b> contains a link to this page') % page.url,
-                'link': page.url
+                'item': page.name,
+                'link': page.url,
             })
             page_view_ids.append(page.view_id.id)
 
@@ -217,23 +222,85 @@ class Website(models.Model):
             ('arch_db', 'ilike', url), ('id', 'not in', page_view_ids)
         ]
         views = self.env['ir.ui.view'].search(page_search_dom)
+        view_key = _('Template')
+        if len(views) > 1:
+            view_key = _('Templates')
         for view in views:
-            dependencies.setdefault(page_key, [])
-            dependencies[page_key].append({
-            'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (view.key or view.name, view.id),
-            'link': '#'
+            dependencies.setdefault(view_key, [])
+            dependencies[view_key].append({
+                'text': _('Template <b>%s (id:%s)</b> contains a link to this page') % (view.key or view.name, view.id),
+                'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
+                'item': _('%s (id:%s)') % (view.key or view.name, view.id),
             })
         # search for menu with link
         menu_search_dom = [
             '|', ('website_id', '=', website_id), ('website_id', '=', False), ('url', 'ilike', '%s' % url)
         ]
 
-        menu_key = _('Menu')
         menus = self.env['website.menu'].search(menu_search_dom)
+        menu_key = _('Menu')
+        if len(menus) > 1:
+            menu_key = _('Menus')
         for menu in menus:
             dependencies.setdefault(menu_key, []).append({
                 'text': _('This page is in the menu <b>%s</b>') % menu.name,
-                'link': False
+                'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
+                'item': menu.name,
+            })
+
+        return dependencies
+
+    @api.model
+    def page_search_key_dependencies(self, page_id=False):
+        """ Search dependencies just for information. It will not catch 100%
+            of dependencies and False positive is more than possible
+            Each module could add dependences in this dict
+            :returns a dictionnary where key is the 'categorie' of object related to the given
+                view, and the value is the list of text and link to the resource using given page
+        """
+        dependencies = {}
+        if not page_id:
+            return dependencies
+
+        page = self.env['website.page'].browse(int(page_id))
+        website_id = self._context.get('website_id')
+        key = page.key
+
+        # search for website_page with link
+        website_page_search_dom = [
+            '|', ('website_ids', 'in', website_id), ('website_ids', '=', False), ('view_id.arch_db', 'ilike', key),
+            ('id', '!=', page.id),
+        ]
+        pages = self.env['website.page'].search(website_page_search_dom)
+        page_key = _('Page')
+        if len(pages) > 1:
+            page_key = _('Pages')
+        page_view_ids = []
+        for p in pages:
+            dependencies.setdefault(page_key, [])
+            dependencies[page_key].append({
+                'text': _('Page <b>%s</b> is calling this file') % p.url,
+                'item': p.name,
+                'link': p.url,
+            })
+            page_view_ids.append(p.view_id.id)
+
+        # search for ir_ui_view (not from a website_page) with link
+        page_search_dom = [
+            '|', ('website_id', '=', website_id), ('website_id', '=', False),
+            ('arch_db', 'ilike', key), ('id', 'not in', page_view_ids),
+            ('id', '!=', page.view_id.id),
+        ]
+        views = self.env['ir.ui.view'].search(page_search_dom)
+        view_key = _('Template')
+        if len(views) > 1:
+            view_key = _('Templates')
+        for view in views:
+            dependencies.setdefault(view_key, [])
+            dependencies[view_key].append({
+            'text': _('Template <b>%s (id:%s)</b> is calling this file') % (view.key or view.name, view.id),
+            'item': _('%s (id:%s)') % (view.key or view.name, view.id),
+            'link': '/web#id=%s&view_type=form&model=ir.ui.view' % view.id,
             })
 
         return dependencies
