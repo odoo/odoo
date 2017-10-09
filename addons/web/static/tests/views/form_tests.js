@@ -7036,7 +7036,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
