@@ -53,18 +53,23 @@ def _check_value(value):
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    todo, done = set(records), set()
+    src = records.env
+    todo = defaultdict(set)             # {model_name: ids}
+    done = defaultdict(set)             # {model_name: ids}
+    todo[records._name].update(records._ids)
     while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for name in record._cache:
-                field = record._fields[name]
-                value = record[name]
-                if isinstance(value, BaseModel):
-                    todo.update(value)
-                target._cache[name] = field.convert_to_cache(value, target, validate=False)
+        model_name = next(iter(todo))
+        record_ids = todo.pop(model_name) - done[model_name]
+        done[model_name].update(record_ids)
+        for name, field in src[model_name]._fields.items():
+            src_cache = src.cache[field]
+            dst_cache = env.cache[field]
+            for record_id in record_ids:
+                if record_id in src_cache:
+                    # copy the cached value as such
+                    value = dst_cache[record_id] = src_cache[record_id]
+                    if field.relational and isinstance(value, tuple):
+                        todo[field.comodel_name].update(value)
 
 
 def resolve_mro(model, name, predicate):
