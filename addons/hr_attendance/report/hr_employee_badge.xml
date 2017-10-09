@@ -20,12 +20,12 @@
                                 <table style="width:77pt; height:150pt">
                                     <tr style="height:30%">
                                         <td align="center" valign="center">
-                                            <img t-if="employee.company_id and employee.company_id.logo" t-att-src="'data:image/png;base64,%s' % (employee.company_id.logo,)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                            <img t-if="employee.company_id and employee.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(employee.company_id.logo)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
                                         </td>
                                     </tr>
                                     <tr style="height:70%;">
                                         <td align="center" valign="center">
-                                            <img t-if="employee.image" t-att-src="'data:image/png;base64,%s' % (employee.image,)" style="max-height:85pt;max-width:90%" alt="Employee Image"/>
+                                            <img t-if="employee.image" t-att-src="'data:image/png;base64,%s' % to_text(employee.image)" style="max-height:85pt;max-width:90%" alt="Employee Image"/>
                                         </td>
                                     </tr>
                                 </table>
