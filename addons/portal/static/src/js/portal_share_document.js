@@ -15,22 +15,40 @@ var ShareDocument = Widget.extend({
 
     init: function(options) {
         this._super.apply(this, arguments);
-        this.url = options.url
+        this.url = options.url;
+        this.model = options.res_model;
+        this.res_id = options.res_id;
         },
 
     start: function(){
         this._super.apply(this, arguments);
+        var self = this;
         var dialog = new Dialog(this, {
             title: _t("Share Document"),
             $content: $(qweb.render('portal.portal_share_document',{
-                url: this.url
+                url: this.url,
             })),
             buttons: [{text: _t('Send'), classes: 'btn-primary', close: true, click: function () {
-                // Todo
+                var data = this.$el.find('.partner_ids').select2('data')
+                var partner_list = []
+                _.each(data, function(obj){
+                    partner_list.push(obj.id)
+                });
+                ajax.jsonRpc('/portal/send_share_email', 'call', {
+                    partner_ids: partner_list ,
+                    model: self.model,
+                    res_id: self.res_id,
+                }).then(function () {
+                    this.$el.html($('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>'));
+                });
             }}, {text: _t('Cancel'), close: true}],
         });
         dialog.open();
         this.set_partner_ids(dialog.$content);
+
+        dialog.$content.find('textarea').summernote({
+            height: 150
+        });
     },
 
     select2_wrapper: function (tag, multi, fetch_fnc) {

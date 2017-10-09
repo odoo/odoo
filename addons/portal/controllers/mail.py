@@ -100,3 +100,8 @@ class PortalChatter(http.Controller):
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
             'message_count': Message.search_count(domain)
         }
+
+    @http.route(['/portal/send_share_email'], type='json', auth='user', website=True)
+    def send_share_email(self, partner_ids, model, res_id):
+        # partners = request.env['res.partner'].browse(partner_ids)
+        print "------", partner_ids

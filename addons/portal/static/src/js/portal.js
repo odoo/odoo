@@ -49,7 +49,6 @@ var ShareDocument = require("portal.share_document");
 
 // bind the event to the button
     $('.share_doc').click(function(e){
-        console.log("sss");
         var url = $(this).data('url');
         var model = $(this).data('model');
         var active_id = $(this).data('res_id');
@@ -59,7 +58,6 @@ var ShareDocument = require("portal.share_document");
             'url': url
         });
         share.appendTo('body');
-
 
     });
 });
