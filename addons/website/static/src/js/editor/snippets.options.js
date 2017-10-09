@@ -186,6 +186,7 @@ options.registry.carousel = options.Class.extend({
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
+            self.trigger_up('deactivate_snippet');
             self._rebindEvents();
         });
     },
