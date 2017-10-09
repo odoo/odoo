@@ -41,7 +41,7 @@ var ProductCatalog = Widget.extend({
         };
         this.domains = {
             'all': [],
-            'category': ['public_categ_ids', '=', this.$target.data('catagory-id')],
+            'category': ['public_categ_ids', 'child_of', [this.$target.data('catagory-id')]],
             'manual': ['id', 'in', this._getProductIds()]
         };
         this.options = {

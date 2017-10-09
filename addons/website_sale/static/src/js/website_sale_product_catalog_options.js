@@ -31,7 +31,6 @@ options.registry.catalog = options.Class.extend({
         this._setGrid();
         this._bindGridEvents();
     },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -80,7 +79,7 @@ options.registry.catalog = options.Class.extend({
         this.$target.find('.s_no_resize_cols').remove();
         return this.productCatalog.appendTo(this.$target.find('.container')).then(function () {
             // cover the target element when dynamic grid size change.
-            self.buildingBlock.cover_target(self.$overlay, self.$target);
+            self.trigger_up('cover_update');
             // set default cursor in edit mode of snippet.
             self.$target.find('.product-image a, .product-details a, span.fa, i.fa').css('cursor', 'default');
             // prevent orignal events like add to cart etc in edit mode
@@ -116,11 +115,11 @@ options.registry.catalog = options.Class.extend({
      * Select product catalog size.
      */
     size: function (type, value, $li) {
-        if (type !== 'click') {
+        if (!this.__click) {
             return;
         }
         var self = this;
-        var $td = $li.find('.select:last');
+        var $td = this.$el.find('.select:last');
         if ($td.length) {
             var x = $td.index() + 1;
             var y = $td.parent().index() + 1;
@@ -152,7 +151,7 @@ options.registry.catalog = options.Class.extend({
      * Select products.
      */
     selection: function (type, value, $li) {
-        if (type !== 'click') {
+        if (!this.__click) {
             return;
         }
         var self = this;
@@ -195,7 +194,7 @@ options.registry.catalog = options.Class.extend({
                         self.$target.attr('data-selection', 'category');
                         self.$target.attr('data-catagory-id', categoryID);
 
-                        self.productCatalog.options.domain = ['public_categ_ids', '=', parseInt(categoryID)];
+                        self.productCatalog.options.domain = ['public_categ_ids', 'child_of', [parseInt(categoryID)]];
                         self._renderProductCatalog().then(function () {
                             self.$target.attr('data-reorder-ids', self.productCatalog._getProductIds().join(','));
                         });
@@ -213,14 +212,10 @@ options.registry.catalog = options.Class.extend({
             dialog.$content.find('[name="selection"]').change(function () {
                 rpc.query({
                     model: 'product.template',
-                    method: 'search_read',
-                    domain:[['public_categ_ids', '=', parseInt($(this).val())], ['website_published', '=', true]]
+                    method: 'search_count',
+                    args:[[['public_categ_ids', 'child_of', [parseInt($(this).val())]], ['website_published', '=', true]]]
                 }).then(function (result) {
-                    if (_.isEmpty(result)) {
-                        self.toggle_warning(dialog, false);
-                    } else {
-                        self.toggle_warning(dialog, true);
-                    }
+                    self.toggle_warning(dialog, result !== 0);
                 });
             });
             dialog.open();
@@ -277,7 +272,7 @@ options.registry.catalog = options.Class.extend({
      * Apply sorting.
      */
     sortby: function (type, value, $li) {
-        if (type !== 'click') {
+        if (!this.__click) {
             return;
         }
         var self = this;
