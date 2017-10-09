@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from functools import partial
 import logging
 import operator
@@ -1273,14 +1274,14 @@ class ir_actions_act_client(osv.osv):
         # Need to remove bin_size from context, to obtains the binary and not the length.
         context = dict(context, bin_size_params_store=False, bin_size=False)
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
+            result[record.id] = record.params_store or False
         return result
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         if isinstance(field_value, dict):
-            self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+            self.write(cr, uid, id, {'params_store': base64.b64encode(repr(field_value).encode("utf-8"))}, context=context)
         else:
-            self.write(cr, uid, id, {'params_store': field_value}, context=context)
+            self.write(cr, uid, id, {'params_store': base64.b64encode(field_value.encode("utf-8"))}, context=context)
 
     _columns = {
         'name': fields.char('Action Name', required=True, translate=True),
