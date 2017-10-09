@@ -22,6 +22,8 @@ class Partner(models.Model):
         arch = super(Partner, self)._fields_view_get_address(arch)
         # render the partner address accordingly to address_view_id
         doc = etree.fromstring(arch)
+        if doc.xpath("//field[@name='city_id']"):
+           return arch
         for city_node in doc.xpath("//field[@name='city']"):
             replacement_xml = """
             <div>
