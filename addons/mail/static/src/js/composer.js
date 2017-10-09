@@ -2,6 +2,7 @@ odoo.define('mail.composer', function (require) {
 "use strict";
 
 var chat_mixin = require('mail.chat_mixin');
+var attachmentMixin = require('mail.attachment_mixin');
 var DocumentViewer = require('mail.DocumentViewer');
 var utils = require('mail.utils');
 
@@ -342,7 +343,7 @@ var MentionManager = Widget.extend({
 
 });
 
-var BasicComposer = Widget.extend(chat_mixin, {
+var BasicComposer = Widget.extend(chat_mixin, attachmentMixin, {
     template: "mail.ChatComposer",
     events: {
         "keydown .o_composer_input textarea": "on_keydown",
@@ -578,37 +579,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
                 this.mention_manager.detect_delimiter();
         }
     },
-
-    // Attachments
-    on_attachment_change: function(event) {
-        var self = this,
-            files = event.target.files,
-            attachments = self.get('attachment_ids');
-
-        _.each(files, function(file){
-            var attachment = _.findWhere(attachments, {name: file.name});
-            // if the files already exits, delete the file before upload
-            if(attachment){
-                self.AttachmentDataSet.unlink([attachment.id]);
-                attachments = _.without(attachments, attachment);
-            }
-        });
-
-        this.$('form.o_form_binary_form').submit();
-        this.$attachment_button.prop('disabled', true);
-        var upload_attachments = _.map(files, function(file){
-            return {
-                'id': 0,
-                'name': file.name,
-                'filename': file.name,
-                'url': '',
-                'upload': true,
-                'mimetype': '',
-            };
-        });
-        attachments = attachments.concat(upload_attachments);
-        this.set('attachment_ids', attachments);
-    },
     on_attachment_loaded: function(event) {
         var self = this,
             attachments = this.get('attachment_ids'),
@@ -634,22 +604,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
         }.bind(this));
         this.set('attachment_ids', attachments);
         this.$attachment_button.prop('disabled', false);
-    },
-    on_attachment_delete: function(event){
-        event.stopPropagation();
-        var self = this;
-        var attachment_id = $(event.target).data("id");
-        if (attachment_id) {
-            var attachments = [];
-            _.each(this.get('attachment_ids'), function(attachment){
-                if (attachment_id !== attachment.id) {
-                    attachments.push(attachment);
-                } else {
-                    self.AttachmentDataSet.unlink([attachment_id]);
-                }
-            });
-            this.set('attachment_ids', attachments);
-        }
     },
     do_check_attachment_upload: function () {
         if (_.find(this.get('attachment_ids'), function (file) { return file.upload; })) {
@@ -776,13 +730,6 @@ var BasicComposer = Widget.extend(chat_mixin, {
      * @private
      * @param {MouseEvent} event
      */
-    _onAttachmentDownload: function (event) {
-        event.stopPropagation();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
     _onAttachmentView: function (event) {
         var activeAttachmentID = $(event.currentTarget).data('id');
         var attachments = this.get('attachment_ids');
@@ -841,6 +788,25 @@ var BasicComposer = Widget.extend(chat_mixin, {
         this.$input.focus();
         this._hideEmojis();
     },
+    /**This method is called from attachment mixing method on_attachment_change(), to check and unlink duplicate file.
+    */
+    unlink_duplicate_attachments: function (files, attachments) {
+        var self = this;
+        _.each(files, function (file) {
+            var attachment = _.findWhere(attachments, {name: file.name});
+            // if the files already exits, delete the file before upload
+            if (attachment) {
+                self.AttachmentDataSet.unlink([attachment.id]);
+                attachments = _.without(attachments, attachment);
+            }
+        });
+    },
+    /**This method is used in attachment mixin to unlink file from AttachmentDataSet.
+    */
+    unlink_attachment: function (attachment_id) {
+        this.AttachmentDataSet.unlink([attachment_id]);
+    },
+
 });
 
 var ExtendedComposer = BasicComposer.extend({
