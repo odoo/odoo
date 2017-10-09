@@ -537,12 +537,22 @@ class Page(models.Model):
     date_publish = fields.Datetime('Publishing Date')
     # This is needed to be able to display if page is a menu in /website/pages
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
-    is_homepage = fields.Boolean(compute='_compute_homepage', string='Homepage')
+    is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     @api.one
     def _compute_homepage(self):
         self.is_homepage = self == self.env['website'].get_current_website().homepage_id
+
+    @api.one
+    def _set_homepage(self):
+        website = self.env['website'].get_current_website()
+        if self.is_homepage:
+            if website.homepage_id != self:
+                website.write({'homepage_id': self.id})
+        else:
+            if website.homepage_id == self:
+                website.write({'homepage_id': None})
 
     @api.one
     def _compute_visible(self):
@@ -557,14 +567,6 @@ class Page(models.Model):
     @api.model
     def save_page_info(self, website_id, data):
         website = self.env['website'].browse(website_id)
-
-        if data['is_homepage'] and website.homepage_id.id != int(data['id']):
-            # If page is set as the new homepage, set it on website (only page can be set as homepage)
-            website.write({'homepage_id': data['id']})
-        else:
-            if not data['is_homepage'] and website.homepage_id.id == int(data['id']):
-                # If the page is not a homepage, check if it was the homepage
-                website.write({'homepage_id': None})
 
         #If URL has been edited, slug it
         page = self.browse(int(data['id']))
@@ -597,7 +599,8 @@ class Page(models.Model):
             'url': url,
             'website_published': data['website_published'],
             'website_indexed': data['website_indexed'],
-            'date_publish': data['date_publish'] or None
+            'date_publish': data['date_publish'] or None,
+            'is_homepage': data['is_homepage'],
         })
 
         # Create redirect if needed
