@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # * auth_signup
 # 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +53,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"<tbody><tr>\n"
+"<td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"<img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"</td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Sayın ${object.name},</p>\n"
+"<p>Bu e-postayla bağlantılı Odoo hesabı için bir şifre sıfırlaması istendi.</p>\n"
+"<p>24 saat boyunca geçerli kalacak olan bu bağlantıyı izleyerek şifrenizi değiştirebilirsiniz:</p>\n"
+"<div style=\"text-align: center; margin-top: 16px;\">\n"
+"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Şifre değiştir</a>\n"
+"</div>\n"
+"<p>Bunu beklemiyorsanız, bu e-postayı güvenle yok sayabilirsiniz.</p>\n"
+"<p>Saygılarımla,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"${user.signature | safe}\n"
+"<p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"<strong>Tarafından gönderildi ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"</p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -79,11 +113,40 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"<tbody><tr>\n"
+"<td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"<img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"</td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Sayın ${object.name},</p>\n"
+"<p>\n"
+"Bağlanmak üzere davet edildiniz \"${object.company_id.name}\" Odoo'daki belgelerinize erişebilmek için.\n"
+"</p>\n"
+"<p>\n"
+"Daveti kabul etmek için aşağıdaki bağlantıyı tıklayın:\n"
+"</p>\n"
+"<div style=\"text-align: center; margin-top: 16px;\">\n"
+"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\"> \"${object.company_id.name}\" Davetiyeyi kabul etme</a>\n"
+"</div>\n"
+"<p>Saygılarımla,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"${user.signature | safe}\n"
+"<p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"<strong> ${user.company_id.name} Tarafından  <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo Kullanarak  gönderdi </a> </strong>\n"
+"</p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} Odoo'ya bağlanmak için davet"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -129,6 +192,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"Bu kullanıcı için bir parola sıfırlanması istendi. Aşağıdaki bağlantıyı "
+"içeren bir eposta gönderilmiştir."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -136,6 +201,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
+"Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderilmiştir:"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -147,49 +213,51 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Parolanızı sıfırlamak için kimlik bilgileri içerenbir e-posta gönderildi"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Başka bir kullanıcı bu e-posta adresiyle zaten kayıtlı."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Kimlik Doğrulama Başarısız Oldu."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "Kullanıcı Girişine Dön"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
+"Eposta gönderilemedi: %s isimli kullanıcının eposta adresi bulunmuyor."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "Onayla"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Parolayı Doğrula"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Onaylandı"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontak"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -200,13 +268,13 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Yeni bir hesap açılamadı."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Parolanız sıfırlanamıyor"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
@@ -216,7 +284,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Varsayılan Erişim Hakları"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -227,7 +295,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Kullanıcı giriş sayfasından parola sıfırlamayı aktif et"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -237,18 +305,18 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP yönlendirme"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "İşaretli değilse, yalnızca davetli kullanıcılar kayıt olabilir."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Geçersiz kayıt belirteci"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -258,7 +326,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Hiç bağlanmadı"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:73
@@ -274,17 +342,17 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "Parola "
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "Parola Sıfırlama"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Parola sıfırlandı"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:121
@@ -295,58 +363,58 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Parolayı Sıfırla"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Parola sıfırlama: geçersiz kullanıcı ad ya da e-posta"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Parola Sıfırlama Yönergelerini gönder"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Bir Davet Epostası gönder"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Kayıt ol"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Kayıt Olma Süresi Aşımı"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Kayıt Olma Belirteçi"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Kayıt Olma Belirteçi Türü"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Kayıt Olma Belirteçi Geçerli"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "Kayıt URL"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:88
@@ -369,12 +437,13 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
-msgstr ""
+msgstr "Durumu"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
+"Yeni kullanıcılar için kayıt olma içinden oluşturulan şablon kullanıcı"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:119
@@ -385,7 +454,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -396,19 +465,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "E-Posta Adresiniz"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "Adınız"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "Örn. John Doe"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

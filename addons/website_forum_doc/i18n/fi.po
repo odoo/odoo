@@ -1,26 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum_doc
-#
+# 
 # Translators:
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
+# Miku Laitinen <miku.laitinen@gmail.com>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
+# salmemik <salmemik@gmail.com>, 2017
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-15 13:36+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
-"Language: fi\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -110,7 +119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -159,7 +168,8 @@ msgid "Employee Contract"
 msgstr "Työsopimus"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Virhe! Et voi luoda rekursiivisia ryhmiä."
 
@@ -181,7 +191,7 @@ msgstr "Keskustelupalsta"
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "Keskustelupalstan viesti"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
@@ -217,7 +227,7 @@ msgstr "Henkilöstöhallinto (HR)"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunniste (ID)"
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_ideas
@@ -227,7 +237,7 @@ msgstr "Ideat"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_introduction
 msgid "Introduction"
-msgstr ""
+msgstr "Esittely"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage___last_update
@@ -285,7 +295,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_post_ids
 msgid "Posts"
-msgstr ""
+msgstr "Julkaisuja"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -330,7 +340,7 @@ msgstr "Liittyvät aiheet"
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_review
 msgid "Review"
-msgstr ""
+msgstr "Tarkasta"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_right
@@ -373,7 +383,7 @@ msgstr "Hae..."
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_sequence
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_sequence
 msgid "Sequence"
-msgstr "Järjestysluku"
+msgstr "Järjestys"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_name
@@ -404,8 +414,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
-"                                        from the Q&amp;A section where you "
-"can\n"
+"                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
 msgstr ""
 
@@ -431,7 +440,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
 msgid "Website"
-msgstr "Verkkosivusto"
+msgstr "Verkkosivu"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -446,7 +455,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "cancel"
-msgstr ""
+msgstr "peruuta"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
@@ -456,23 +465,14 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
-msgstr ""
+msgstr "essee"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essays"
-msgstr ""
+msgstr "esseet"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr ""
-
-#~ msgid "Website meta description"
-#~ msgstr "Verkkosivuston metakuvaus"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Verkkosivuston meta avainsanat"
-
-#~ msgid "Website meta title"
-#~ msgstr "Verkkosivuston metaotsikko"
