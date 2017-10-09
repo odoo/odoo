@@ -397,7 +397,7 @@ var StatementModel = BasicModel.extend({
     /**
      * Load more bank statement line
      *
-     * @param {integer} quantity to load
+     * @param {integer} qty quantity to load
      * @returns {Deferred}
      */
     loadMore: function(qty) {
@@ -412,8 +412,8 @@ var StatementModel = BasicModel.extend({
     /**
      * RPC method to load informations on lines
      * 
-     * @param {Array} ids of bank statement line passed to rpc call
-     * @param {Array} list of move_line ids that needs to be excluded from search
+     * @param {Array} ids ids of bank statement line passed to rpc call
+     * @param {Array} excluded_ids list of move_line ids that needs to be excluded from search
      * @returns {Deferred}
      */
     loadData: function(ids, excluded_ids) {
