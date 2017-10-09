@@ -204,11 +204,13 @@ var Activity = AbstractActivityField.extend({
         var $popover_el = $(event.currentTarget);
         var activity_id = $popover_el.data('activity-id');
         var previous_activity_type_id = $popover_el.data('previous-activity-type-id');
+        var popover_direction = _t.database.parameters.direction == 'rtl' ? 'left' : 'right';
         if (!$popover_el.data('bs.popover')) {
             $popover_el.popover({
                 title : _t('Feedback'),
                 html: 'true',
                 trigger:'click',
+                placement: popover_direction,
                 content : function() {
                     var $popover = $(QWeb.render("mail.activity_feedback_form", {'previous_activity_type_id': previous_activity_type_id}));
                     $popover.on('click', '.o_activity_popover_done_next', function () {
