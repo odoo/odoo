@@ -17,6 +17,8 @@ var FormController = BasicController.extend({
         do_action: '_onDoAction',
         edited_list: '_onEditedList',
         open_one2many_record: '_onOpenOne2ManyRecord',
+        swipe_left: '_onSwipeLeft',
+        swipe_right: '_onSwipeRight',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
         focus_control_button: '_onFocusControlButton',
@@ -626,6 +628,22 @@ var FormController = BasicController.extend({
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
         this.saveRecord();
+    },
+    /**
+     * Called when user swipe left
+     *
+     * @private
+     */
+    _onSwipeLeft: function () {
+        this.pager.next();
+    },
+    /**
+     * Called when user swipe right
+     *
+     * @private
+     */
+    _onSwipeRight: function () {
+        this.pager.previous();
     },
     /**
      * This method is called when someone tries to sort a column, most likely

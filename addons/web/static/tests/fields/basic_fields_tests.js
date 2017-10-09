@@ -12,6 +12,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 var DebouncedField = basicFields.DebouncedField;
 var _t = core._t;
 
@@ -3145,9 +3146,10 @@ QUnit.module('basic_fields', {
     QUnit.module('PhoneWidget');
 
     QUnit.test('phone field in form view on extra small screens', function (assert) {
+        var done = assert.async();
         assert.expect(7);
 
-        var form = createView({
+        createAsyncView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -3164,35 +3166,36 @@ QUnit.module('basic_fields', {
                     size_class: config.device.SIZES.XS,
                 },
             },
+        }).then(function (form) {
+            var $phoneLink = form.$('a.o_form_uri.o_field_widget');
+            assert.strictEqual($phoneLink.length, 1,
+                "should have a anchor with correct classes");
+            assert.strictEqual($phoneLink.text(), 'yop',
+                "value should be displayed properly");
+            assert.strictEqual($phoneLink.attr('href'), 'tel:yop',
+                "should have proper tel prefix");
+
+            // switch to edit mode and check the result
+            form.$buttons.find('.o_form_button_edit').click();
+            assert.strictEqual(form.$('input[type="text"].o_field_widget').length, 1,
+                "should have an input for the phone field");
+            assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
+                "input should contain field value in edit mode");
+
+            // change value in edit mode
+            form.$('input[type="text"].o_field_widget').val('new').trigger('input');
+
+            // save
+            form.$buttons.find('.o_form_button_save').click();
+            $phoneLink = form.$('a.o_form_uri.o_field_widget');
+            assert.strictEqual($phoneLink.text(), 'new',
+                "new value should be displayed properly");
+            assert.strictEqual($phoneLink.attr('href'), 'tel:new',
+                "should still have proper tel prefix");
+
+            form.destroy();
+            done();
         });
-
-        var $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 1,
-            "should have a anchor with correct classes");
-        assert.strictEqual($phoneLink.text(), 'yop',
-            "value should be displayed properly");
-        assert.strictEqual($phoneLink.attr('href'), 'tel:yop',
-            "should have proper tel prefix");
-
-        // switch to edit mode and check the result
-        form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').length, 1,
-            "should have an input for the phone field");
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
-            "input should contain field value in edit mode");
-
-        // change value in edit mode
-        form.$('input[type="text"].o_field_widget').val('new').trigger('input');
-
-        // save
-        form.$buttons.find('.o_form_button_save').click();
-        $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.text(), 'new',
-            "new value should be displayed properly");
-        assert.strictEqual($phoneLink.attr('href'), 'tel:new',
-            "should still have proper tel prefix");
-
-        form.destroy();
     });
 
     QUnit.test('phone field in editable list view on extra small screens', function (assert) {
@@ -3334,9 +3337,10 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field does not allow html injections', function (assert) {
+        var done = assert.async();
         assert.expect(1);
 
-        var form = createView({
+        createAsyncView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -3356,17 +3360,18 @@ QUnit.module('basic_fields', {
                     size_class: config.device.SIZES.XS,
                 },
             },
+        }).then(function (form) {
+            var val = '<script>throw Error();</script><script>throw Error();</script>';
+            form.$('input').val(val).trigger('input');
+
+            // save
+            form.$buttons.find('.o_form_button_save').click();
+            assert.strictEqual(form.$('.o_field_widget').text(), val,
+                "value should have been correctly escaped");
+
+            form.destroy();
+            done();
         });
-
-        var val = '<script>throw Error();</script><script>throw Error();</script>';
-        form.$('input').val(val).trigger('input');
-
-        // save
-        form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_field_widget').text(), val,
-            "value should have been correctly escaped");
-
-        form.destroy();
     });
 
     QUnit.test('use TAB to navigate to a phone field', function (assert) {
