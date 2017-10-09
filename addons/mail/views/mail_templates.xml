@@ -43,7 +43,12 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/composer_attachment.scss"/>
+            </xpath>
+        </template>
+
+        <template id="assets_common" name="attachments assets common" inherit_id="web.assets_common">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" href="/mail/static/src/scss/composer_attachment.scss" type="text/scss"/>
             </xpath>
         </template>
 

@@ -35,16 +35,53 @@
                                 <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
                                 <input type='hidden' name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
                                 <input type='hidden' name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
+                                <input type='hidden' name="attachments" id="attachments"/>
                                 <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;">
                                     Oops! Something went wrong. Try to reload the page and log in.
                                 </div>
-                                <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
+                                <div class="o_portal_chatter_attachment mt16"/>
+                                <div class="btn-group mt8">
+                                    <button t-attf-class="o_portal_chatter_composer_btn btn btn-sm btn-primary o_website_message_post_helper" type="submit">Send</button>
+                                    <button class="btn btn-sm btn-default fa fa-paperclip o_portal_chatter_attachment_btn" type="button"/>
+                                </div>
                             </div>
                         </form>
+                        <span class="hide">
+                            <t t-call="HiddenInputFilePortal">
+                                <t t-set="fileuploadID" t-value="widget.fileuploadID"/>
+                                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                                <t t-set="multi_upload" t-value="true"/>
+                                <input type="hidden" name="model" value="mail.compose.message"/>
+                                <input type="hidden" name="id" value="0"/>
+                            </t>
+                        </span>
                     </div>
                 </div>
             </t>
             <hr/>
+        </div>
+    </t>
+
+    <t t-name="HiddenInputFilePortal">
+        <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
+            <form class="o_form_binary_form" t-att-target="fileuploadID"
+                  method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                <input type="hidden" name="callback" t-att-value="fileuploadID"/>
+                <input type="file" class="o_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
+                <t t-raw="0"/>
+            </form>
+            <iframe t-att-id="fileuploadID" t-att-name="fileuploadID" style="display: none"/>
+        </div>
+    </t>
+
+    <t t-name="portal.Chatter.Attachments">
+        <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
+            <t t-foreach="attachments" t-as='attachment'>
+                <t t-call="mail.Attachment">
+                     <t t-set="editable" t-value="true"/>
+                </t>
+            </t>
         </div>
     </t>
 
@@ -65,13 +102,12 @@
                         </div>
                         <t t-raw="message.body"/>
 
-                        <div class="o_portal_chatter_attachments">
-                            <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
-                                <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
-                                    <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
-                                    <div class='oe_attachment_name'><t t-raw='attachment.name'/></div>
-                                </a>
-                            </div>
+                        <div class="o_portal_chatter_attachments o_attachments_list">
+                            <t t-foreach='message.attachment_ids' t-as='attachment'>
+                                <t t-call="mail.Attachment">
+                                    <t t-set="attachment.url" t-value="'/web/content/'+ attachment.id + '?download=true'"/>
+                                </t>
+                            </t>
                         </div>
                     </div>
                 </div>
