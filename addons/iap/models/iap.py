@@ -6,7 +6,6 @@ import uuid
 
 import werkzeug.urls
 import requests
-from requests.packages import urllib3
 
 from odoo import api, fields, models, exceptions
 
@@ -64,7 +63,7 @@ def jsonrpc(url, method='call', params=None):
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, urllib3.exceptions.MaxRetryError) as e:
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema) as e:
         raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
 
 #----------------------------------------------------------
