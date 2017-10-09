@@ -216,7 +216,7 @@ class KVM(object):
 class KVMWinBuildExe(KVM):
     def run(self):
         with open(join(self.o.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s\n" % version.replace('~', '_'))
+            f.write("VERSION=%s\n" % version.replace('~', '_').replace('+', ''))
         with open(join(self.o.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.o.vm_winxp_python_version.replace('.', ''))
         with open(join(self.o.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:

@@ -312,6 +312,8 @@ Section "Uninstall"
 
     Rmdir /r "$INSTDIR\server"
     Rmdir /r "$INSTDIR\thirdparty"
+    Rmdir /r "$INSTDIR\python"
+    Rmdir /r "$INSTDIR\nssm"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 
