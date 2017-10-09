@@ -216,7 +216,7 @@ the :option:`normal HTTP port <odoo-bin --http-port>`
 
 .. warning:: The livechat worker requires the ``psycogreen`` Python module,
              which is not always included with all installation packages.
-             It can be manually installed with ``pip install psycogreen``.
+             Please ensure that the ``psycogreen`` Python module is installed.
 
 Configuration sample
 --------------------

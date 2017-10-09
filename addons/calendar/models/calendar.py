@@ -927,7 +927,7 @@ class Meeting(models.Model):
             # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
-            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Use 'pip install vobject' to install it")
+            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Please install the `vobject` Python module")
             return result
 
         for meeting in self:
