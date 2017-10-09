@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Martin Schmid m.schmid@equitania.de https://github.com/eqms
+Martin Schmid m.schmid@equitania.com https://github.com/eqms
 
 List of contributors:
 
