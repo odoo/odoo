@@ -198,7 +198,7 @@ var BasicModel = AbstractModel.extend({
      * behind must be applied. This function applies changes stored in
      * '_rawChanges' for a given viewType.
      *
-     * @param {string} id local resource id of a record
+     * @param {string} recordID local resource id of a record
      * @param {string} viewType the current viewType
      * @returns {Deferred<string>} resolves to the id of the record
      */
