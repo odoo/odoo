@@ -39,17 +39,23 @@ $('.oe_website_sale').each(function() {
     $(oe_website_sale).on('change', 'ul[data-attribute_value_ids]', function(event) {
         var $ul = $(event.target).closest('.js_add_cart_variants');
         var $parent = $ul.closest('.js_product');
-        var variant_ids = JSON.parse($ul.data("attribute_value_ids").replace(/'/g, '"'));
+        var variant_ids = $ul.data("attribute_value_ids");
+        if(_.isString(variant_ids)) {
+        	variant_ids = JSON.parse(variant_ids.replace(/'/g, '"'));
+        }
         var values = [];
         $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function() {
             values.push(+$(this).val());
         });
-        var qty = $parent.find('input[name="add_qty"]').val();
+        var qty = parseInt($parent.find('input[name="add_qty"]').val() || 1);
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                 var info = variant_ids[k][4];
                 if(_.contains(['always', 'threshold'], info['inventory_availability'])) {
-                    info['virtual_available'] -= parseInt(info['cart_qty']);
+                    if (info['cart_reduced'] != true){
+                        info['virtual_available'] -= parseInt(info['cart_qty']);
+                        info['cart_reduced'] = true;
+                    }
                     if (info['virtual_available'] < 0) {
                         info['virtual_available'] = 0;
                     }
