@@ -396,10 +396,20 @@ class HrPayslip(models.Model):
                 input_data = {
                     'name': input.name,
                     'code': input.code,
+                    #La siguiente línea fue agregada por TRESCLOUD
+                    'type': self.get_input_type(input),
                     'contract_id': contract.id,
                 }
                 res += [input_data]
         return res
+    
+    #El siguiente método fue agregado por TRESCLOUD
+    @api.model
+    def get_input_type(self, input):
+        '''
+        Este metodo devuelve el tipo de entrada de la nómina, va ser implementado en ecua_hr
+        '''
+        return False
 
     @api.model
     def get_payslip_lines(self, contract_ids, payslip_id):
@@ -493,7 +503,8 @@ class HrPayslip(models.Model):
         #get the rules of the structure and thier children
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
-        sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
+        #La siguiente línea fue modificada por TRESCLOUD
+        sorted_rule_ids = self.get_sorted_rules(rule_ids)
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
 
         for contract in contracts:
@@ -546,6 +557,14 @@ class HrPayslip(models.Model):
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
         return [value for code, value in result_dict.items()]
+    
+    #El siguiente método fue agregado por TRESCLOUD
+    @api.model
+    def get_sorted_rules(self, rule_ids):
+        '''
+        Este metodo ordena las reglas salariales en base a la secuencia, su logica va ser modificada en ecua_hr
+        '''
+        return [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records
