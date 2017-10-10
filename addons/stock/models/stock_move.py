@@ -486,8 +486,8 @@ class StockMove(models.Model):
                     to_assign[key] = self.env['stock.move']
                 to_assign[key] |= move
 
-        # create procurements for make to order moves
-        procurements = self.env['procurement.order']
+        # create procurements for make to order moves and do it in batch (no forward port beyond saas-16)
+        procurements = self.env['procurement.order'].with_context(procurements_autorun_defer=True)
         for move in move_create_proc:
             procurements |= procurements.create(move._prepare_procurement_from_move())
         if procurements:
