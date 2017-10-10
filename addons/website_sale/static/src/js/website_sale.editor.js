@@ -68,7 +68,7 @@ function set_dropzone() {
     _.each($products, function(product) {
         var $product = $(product);
         if (!$product.find(".oe_drop_zone").length) {
-            $product.append($("<div class='oe_drop_zone oe_insert oe_vertical hidden'/>"));
+            $product.append($("<div class='oe_drop_zone oe_insert oe_vertical hidden'/><div class='oe_drop_zone oe_insert oe_vertical hidden pull-right'/>"));
         }
     });
 };
@@ -196,6 +196,9 @@ options.registry.website_sale = options.Class.extend({
                 $product_grid.find('div.oe_product_cart[data-publish=on]').children('.oe_drop_zone').addClass('hidden');
                 return true;
             },
+            cursorAt: {left: 5, top: 5},
+            distance: 15,
+            cursor: 'move',
             revertDuration: 200,
             start: function(event, ui) {
                 starty = event.pageY;
@@ -203,7 +206,7 @@ options.registry.website_sale = options.Class.extend({
                 var $all_other_published_td = $product_grid.find('div.oe_product_cart[data-publish=on]').not(self.$target.find('div.oe_product_cart'));
                 $all_other_published_td.each(function() {
                     var $elem = $(this);
-                    $elem.find('.oe_drop_zone').removeClass('hidden').css({'height': $elem.height(), 'width': $elem.width()});
+                    $elem.find('.oe_drop_zone').removeClass('hidden').css({'height': $elem.height(), 'width': '15%'});
                 });
             },
             stop: function(event, ui) {

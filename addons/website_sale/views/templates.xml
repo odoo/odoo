@@ -84,7 +84,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
                 <div class="ribbon-wrapper">
-                    <div class="ribbon">Sale</div>
+                    <div class="ribbon bg-gamma">Sale</div>
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
