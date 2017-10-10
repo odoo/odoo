@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import cgitb
 import fnmatch
 import io
@@ -20,7 +21,7 @@ class Printer(Visitor):
         self.level = level
 
     def _print(self, text):
-        print '    ' * self.level, text
+        print('    ' * self.level, text)
 
     def enter_generic(self, node):
         self._print(node['type'])
