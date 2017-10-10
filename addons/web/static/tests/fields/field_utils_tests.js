@@ -148,6 +148,28 @@ QUnit.test('parse float', function(assert) {
     core._t.database.parameters = originalParameters;
 });
 
+QUnit.test('parse integer', function(assert) {
+    assert.expect(8);
+
+    assert.strictEqual(fieldUtils.parse.integer(""), 0);
+    assert.strictEqual(fieldUtils.parse.integer("0"), 0);
+    assert.strictEqual(fieldUtils.parse.integer("100"), 100);
+    assert.strictEqual(fieldUtils.parse.integer("-100"), -100);
+    assert.strictEqual(fieldUtils.parse.integer("1,000"), 1000);
+    assert.strictEqual(fieldUtils.parse.integer("1,000,000"), 1000000);
+    assert.throws(function() {fieldUtils.parse.integer("1,000,000.11")}, /is not a correct integer/);
+
+    var originalParameters = $.extend(true, {}, core._t.database.parameters);
+    _.extend(core._t.database.parameters, {
+        grouping: [3, 0],
+        decimal_point: ',',
+        thousands_sep: '.'
+    });
+    assert.strictEqual(fieldUtils.parse.float('1.234,00'), 1234);
+
+    core._t.database.parameters = originalParameters;
+});
+
 QUnit.test('parse monetary', function(assert) {
     assert.expect(11);
     var originalCurrencies = session.currencies;
