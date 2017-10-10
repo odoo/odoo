@@ -194,7 +194,6 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
             update_records('mail.message', src=partner)
-            update_records('marketing.campaign.workitem', src=partner, field_model='object_id.model')
             update_records('ir.model.data', src=partner)
 
         records = self.env['ir.model.fields'].search([('ttype', '=', 'reference')])
