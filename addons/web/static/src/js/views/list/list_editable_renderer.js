@@ -47,7 +47,6 @@ ListRenderer.include({
         this.addTrashIcon = params.addTrashIcon;
 
         this.currentRow = null;
-        this.currentCol = null;
         this.currentFieldIndex = null;
     },
     /**
@@ -175,7 +174,7 @@ ListRenderer.include({
             });
             if (self.currentRow !== null) {
                 self.currentRow = newRowIndex;
-                return self._selectCell(newRowIndex, self.currentCol, {force: true}).then(function () {
+                return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true}).then(function () {
                     // restore the cursor position
                     currentRowID = self.state.data[newRowIndex].id;
                     currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
@@ -458,7 +457,6 @@ ListRenderer.include({
      */
     _render: function () {
         this.currentRow = null;
-        this.currentCol = null;
         this.currentFieldIndex = null;
         return this._super.apply(this, arguments);
     },
@@ -560,22 +558,22 @@ ListRenderer.include({
      * is, if necessary.
      *
      * @param {integer} rowIndex
-     * @param {integer} colIndex
+     * @param {integer} fieldIndex
      * @param {Object} [options]
      * @param {Event} [options.event] original target of the event which
      * @param {boolean} [options.wrap=true] if true and no widget could be
      *   triggered the cell selection
-     *   selected from the colIndex to the last column, then we wrap around and
+     *   selected from the fieldIndex to the last column, then we wrap around and
      *   try to select a widget starting from the beginning
      * @param {boolean} [options.force=false] if true, force selecting the cell
      *   even if seems to be already the selected one (useful after a re-
      *   rendering, to reset the focus on the correct field)
      * @return {Deferred} fails if no cell could be selected
      */
-    _selectCell: function (rowIndex, colIndex, options) {
+    _selectCell: function (rowIndex, fieldIndex, options) {
         options = options || {};
         // Do nothing if the user tries to select current cell
-        if (!options.force && rowIndex === this.currentRow && colIndex === this.currentCol) {
+        if (!options.force && rowIndex === this.currentRow && fieldIndex === this.currentFieldIndex) {
             return $.when();
         }
         var wrap = options.wrap === undefined ? true : options.wrap;
@@ -584,32 +582,18 @@ ListRenderer.include({
         var self = this;
         return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
-            var correctedIndex = colIndex - getNbButtonBefore(colIndex);
-            if (correctedIndex >= (self.allFieldWidgets[record.id] || []).length) {
+            if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return $.Deferred().reject();
             }
-            var fieldIndex = self._activateFieldWidget(record, correctedIndex, {
+            fieldIndex = self._activateFieldWidget(record, fieldIndex, {
                 inc: 1,
                 wrap: wrap,
                 event: options && options.event,
             });
-
             if (fieldIndex < 0) {
                 return $.Deferred().reject();
             }
-
-            self.currentCol = fieldIndex + getNbButtonBefore(fieldIndex);
             self.currentFieldIndex = fieldIndex;
-
-            function getNbButtonBefore(index) {
-                var nbButtons = 0;
-                for (var i = 0 ; i < index ; i++) {
-                    if (self.columns[i].tag === 'button') {
-                        nbButtons++;
-                    }
-                }
-                return nbButtons;
-            }
         });
     },
     /**
@@ -682,8 +666,8 @@ ListRenderer.include({
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
         var rowIndex = this.$('.o_data_row').index($tr);
-        var colIndex = $tr.find('.o_data_cell').index($td);
-        this._selectCell(rowIndex, colIndex, {event: event});
+        var fieldIndex = Math.max($tr.find('.o_data_cell').not('.o_list_button').index($td), 0);
+        this._selectCell(rowIndex, fieldIndex, {event: event});
     },
     /**
      * We need to manually unselect row, because noone else would do it
@@ -725,35 +709,35 @@ ListRenderer.include({
         switch (ev.data.direction) {
             case 'up':
                 if (this.currentRow > 0) {
-                    this._selectCell(this.currentRow - 1, this.currentCol);
+                    this._selectCell(this.currentRow - 1, this.currentFieldIndex);
                 }
                 break;
             case 'right':
-                if (this.currentCol + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentCol + 1);
+                if (this.currentFieldIndex + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex + 1);
                 }
                 break;
             case 'down':
                 if (this.currentRow < this.state.data.length - 1) {
-                    this._selectCell(this.currentRow + 1, this.currentCol);
+                    this._selectCell(this.currentRow + 1, this.currentFieldIndex);
                 }
                 break;
             case 'left':
-                if (this.currentCol > 0) {
-                    this._selectCell(this.currentRow, this.currentCol - 1);
+                if (this.currentFieldIndex > 0) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex - 1);
                 }
                 break;
             case 'previous':
-                if (this.currentCol > 0) {
-                    this._selectCell(this.currentRow, this.currentCol - 1, {wrap: false})
+                if (this.currentFieldIndex > 0) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
                         .fail(this._moveToPreviousLine.bind(this));
                 } else {
                     this._moveToPreviousLine();
                 }
                 break;
             case 'next':
-                if (this.currentCol + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentCol + 1, {wrap: false})
+                if (this.currentFieldIndex + 1 < this.columns.length) {
+                    this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
                         .fail(this._moveToNextLine.bind(this));
                 } else {
                     this._moveToNextLine();

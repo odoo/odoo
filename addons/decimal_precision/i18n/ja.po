@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * decimal_precision
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: decimal_precision
@@ -33,13 +37,13 @@ msgstr "作成日"
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr "十進数の精度"
+msgstr "小数精度"
 
 #. module: decimal_precision
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
 #: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
-msgstr "十進数の精度"
+msgstr "小数精度"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_digits
@@ -51,6 +55,21 @@ msgstr "桁数"
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_display_name
 msgid "Display Name"
 msgstr "表示名"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
+msgid "Float"
+msgstr "浮動小数点数"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
+msgid "Float 2"
+msgstr "浮動小数点数 2"
+
+#. module: decimal_precision
+#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
+msgid "Float 4"
+msgstr "浮動小数点数 4"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
@@ -84,26 +103,19 @@ msgstr "それぞれの使い方には一つの値だけ定義できます！"
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name
 msgid "Usage"
-msgstr "使い方"
+msgstr "用途"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
-msgstr "十進数．精度"
+msgstr "decimal.precision"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision_test
 msgid "decimal.precision.test"
-msgstr ""
+msgstr "decimal.precision.test"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
 msgid "ir.qweb.field.float"
-msgstr ""
-
-#. module: decimal_precision
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
-#: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
-msgid "unknown"
-msgstr "不明"
+msgstr "ir.qweb.field.float"

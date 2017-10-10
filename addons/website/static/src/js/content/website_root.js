@@ -128,7 +128,7 @@ var WebsiteRoot = BodyManager.extend({
         var $wrapwrap = this.$('#wrapwrap');
         var defs = _.map(sAnimation.registry, function (Animation) {
             var selector = Animation.prototype.selector || '';
-            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector);
+            var $target = $initTarget ? $initTarget.filter(selector) : $wrapwrap.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
                 var $snippet = $(el);

@@ -198,7 +198,7 @@ var BasicModel = AbstractModel.extend({
      * behind must be applied. This function applies changes stored in
      * '_rawChanges' for a given viewType.
      *
-     * @param {string} id local resource id of a record
+     * @param {string} recordID local resource id of a record
      * @param {string} viewType the current viewType
      * @returns {Deferred<string>} resolves to the id of the record
      */
@@ -3666,10 +3666,16 @@ var BasicModel = AbstractModel.extend({
             var self = this;
 
             // sort records according to ordered_by[0]
-            var order = list.orderedBy[0];
             var data = list.data;
             var res_ids = list.res_ids;
-            data.sort(function (record1ID, record2ID) {
+            var compareRecords = function (record1ID, record2ID, level) {
+                if(!level) {
+                    level = 0;
+                }
+                if(list.orderedBy.length < level + 1) {
+                    return 0;
+                }
+                var order = list.orderedBy[level];
                 var r1 = self.localData[record1ID];
                 var r2 = self.localData[record2ID];
                 var data1 = _.extend({}, r1.data, r1._changes);
@@ -3680,8 +3686,9 @@ var BasicModel = AbstractModel.extend({
                 if (data1[order.name] > data2[order.name]) {
                     return order.asc ? 1 : -1;
                 }
-                return 0;
-            });
+                return compareRecords(record1ID, record2ID, level + 1);
+            };
+            data.sort(compareRecords);
 
             // sort res_ids accordingly (only the current range of ids, the one
             // mapping the data, needs to be sorted)

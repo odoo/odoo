@@ -34,4 +34,4 @@ author = 'OpenERP S.A.'
 author_email = 'info@odoo.com'
 license = 'LGPL-3'
 
-nt_service_name = "odoo-server-" + series
+nt_service_name = "odoo-server-" + series.replace('~','-')

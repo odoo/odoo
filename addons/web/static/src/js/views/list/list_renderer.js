@@ -4,6 +4,7 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
@@ -323,7 +324,15 @@ var ListRenderer = BasicRenderer.extend({
                 });
             });
         } else {
-            $button.prop('disabled', true);
+            if (node.attrs.options.warn) {
+                var self = this;
+                $button.on("click", function (e) {
+                    e.stopPropagation();
+                    self.do_warn(_t("Warning"), _t('Please click on the "save" button first'));
+                });
+            } else {
+                $button.prop('disabled', true);
+            }
         }
 
         return $button;

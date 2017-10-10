@@ -1,113 +1,90 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * crm_project_issue
-#
-# Translators:
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# * crm_project
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2015-10-01 21:44+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
-"Language: fi\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
-"                            <span class=\"o_stat_text\">Issue</span>"
+"                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Muuta</span>\n"
-"                            <span class=\"o_stat_text\">Issue</span>"
 
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: crm_project_issue
-#: model:ir.actions.act_window,name:crm_project_issue.convert_lead2projectissue_wizard_action
-#: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Convert to Issue"
-msgstr "Muuta tapaukseksi"
-
-#. module: crm_project_issue
-#: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
-msgid "Create Issue"
-msgstr "Luo uusi tapaus"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
-msgid "Created by"
-msgstr "Luonut"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_date
-msgid "Created on"
-msgstr "Luotu"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
-msgid "Display Name"
-msgstr "Näytä nimi"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
-msgid "ID"
-msgstr "ID"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
-msgid "Last Updated by"
-msgstr "Viimeksi päivittänyt"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
-msgid "Last Updated on"
-msgstr "Viimeksi päivitetty"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
-msgid "Lead"
-msgstr "Liidi"
-
-#. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
-msgid "Project"
-msgstr "Projekti"
-
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "crm.lead2projectissue.wizard"
 msgstr ""
 
-#~ msgid "Create a new customer"
-#~ msgstr "Luo uusi asiakas"
+#. module: crm_project
+#: model:ir.actions.act_window,name:crm_project.crm_lead_convert2task_action
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
+msgid "Convert to Task"
+msgstr ""
 
-#~ msgid "Customer"
-#~ msgstr "Asiakas"
+#. module: crm_project
+#: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
+msgid "Create Task"
+msgstr ""
 
-#~ msgid "Do not link to a customer"
-#~ msgstr "Älä liitä asiakkaaseen"
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+msgid "Created by"
+msgstr ""
 
-#~ msgid "Handle partner binding or generation in CRM wizards."
-#~ msgstr "Käsittele kumppaneiden yhdistäminen tai luonti CRM-avustajassa."
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+msgid "Created on"
+msgstr ""
 
-#~ msgid "Link to an existing customer"
-#~ msgstr "Yhdistetään olemassa olevaan asiakkaaseen"
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
+msgid "Display Name"
+msgstr ""
 
-#~ msgid "Related Customer"
-#~ msgstr "Yhteenkuuluva asiakas"
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+msgid "ID"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+msgid "Lead"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
+msgid "Project"
+msgstr ""
+
+#. module: crm_project
+#: model:ir.model,name:crm_project.model_crm_lead_convert2task
+msgid "crm.lead.convert2task"
+msgstr ""

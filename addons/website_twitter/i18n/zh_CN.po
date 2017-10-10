@@ -2,23 +2,12 @@
 # This file contains the translation of the following modules:
 # * website_twitter
 # 
-# Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Maie <m@maie.name>, 2016
-# SHOM <shanmuxin@yeah.net>, 2016
-# Liping Wang <lynn.config@gmail.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,144 +18,92 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
 msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter 滚动条</span>"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Callback URL: </strong> leave it blank"
-msgstr "<strong>URL回调: </strong> 保留空白"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Description: </strong> Odoo Tweet Scroller"
-msgstr "<strong>描述： </strong> Odoo Tweet滚动条"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Name: </strong> Odoo Tweet Scroller"
-msgstr "<strong>名称： </strong> Odoo Tweet滚动条"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Website: </strong>"
-msgstr "<strong>网站: </strong>"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API Key"
-msgstr "API Key"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Accept terms of use and click on the Create button at the bottom"
-msgstr "接受使用条款并单击在底部的创建按钮"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:14
+#: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
-msgstr "身份验证证书丢失或者错误。可能是名称为tweets的屏幕受保护。"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Close"
-msgstr "关闭"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Copy/Paste API Key and Secret below"
-msgstr "在下面复制/粘贴 API 密钥和匿名 "
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Create a new Twitter application on"
-msgstr "创建新的Twitter应用程序"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
 msgid "Display Name"
-msgstr "显示名称"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid ""
-"Enter the screen name from which you want to load favorite Tweets (does not "
-"need to be the same as the API keys)"
-msgstr "输入你想装入推特的屏幕名称（不需要于API Key 相同）"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
 msgid "Get favorites from this screen name"
-msgstr "显示这个名称以便获得收藏"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:46
+#: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
-msgstr "HTTP错误：某些配置错误。"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "How to configure the Twitter API access"
-msgstr "如何设置 Twitter API"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:57
+#: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr "网络连接被拒绝。"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:59
-#: code:addons/website_twitter/models/website_twitter_config.py:60
+#: code:addons/website_twitter/models/res_config_settings.py:61
+#: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr "请再次确认你的Twiiter API 密钥和密码!"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -174,130 +111,130 @@ msgstr "请再次确认你的Twiiter API 密钥和密码!"
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr "请设置一个网站设置的推特屏幕名称来装入你的喜好（它不必是你自己的）"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr "请网站设置Twitter API密钥和匿名。"
+msgstr ""
 
 #. module: website_twitter
 #. openerp-web
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
 #, python-format
 msgid "Reload"
-msgstr "重新载入"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:16
+#: code:addons/website_twitter/models/res_config_settings.py:18
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
 "exhausted for the resource."
-msgstr "无法为这个请求提供服务，因为资源的应用限制率已经达到极限。"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
 msgid "Screen Name"
-msgstr "显示名称"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_screen_name
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr "你想从中装入喜好的推特账号的屏幕名称。它不必与 API Key/私密 相匹配。"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr "告诉我如何获取Twitter API key和Secret"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "切换到API密钥选项："
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:19
+#: code:addons/website_twitter/models/res_config_settings.py:21
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
-msgstr "Twiiter服务器在线，但是请求过载。请稍后重试。"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:20
+#: code:addons/website_twitter/models/res_config_settings.py:22
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
-msgstr "Twiiter服务器在线，但是由于我们的栈中某些错误，无法为此请求提供服务。请稍后重试。"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:15
+#: code:addons/website_twitter/models/res_config_settings.py:17
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
-msgstr "该请求可以被理解，但是被拒绝服务或者拒绝接入。请核查你的Twitter API密钥和密码。"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:13
+#: code:addons/website_twitter/models/res_config_settings.py:15
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
-msgstr "请求无效或者无法提供此服务。没有认证请求被视为无效，并产生此响应。"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:12
+#: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
-msgstr "没有新数据返回。"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Tutorial"
 msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
 msgid "Tweet ID"
-msgstr "Tweet ID"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
 msgid "Tweets"
-msgstr "Tweets"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter API Credentials"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
 msgid "Twitter API Key"
-msgstr "Twitter API Key"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API Secret"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
 msgid "Twitter API key"
-msgstr "Twitter API key"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API secret"
+msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
 
@@ -306,27 +243,32 @@ msgstr ""
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
 #, python-format
 msgid "Twitter Configuration"
-msgstr "Twitter 配置"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:60
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Roller"
+msgstr ""
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
-msgstr "Twitter 授权错误!"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:18
+#: code:addons/website_twitter/models/res_config_settings.py:20
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr "Twitter关闭或者正在升级。"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:17
+#: code:addons/website_twitter/models/res_config_settings.py:19
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
-msgstr "Twitter似乎断开。请稍后重试。你可以考虑在Twitter的邮件列表中提出问题以获取帮助。"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -334,7 +276,7 @@ msgstr "Twitter似乎断开。请稍后重试。你可以考虑在Twitter的邮�
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
-msgstr "推特用户 @%(username)s少于12个的喜好推特。请加入更多或选择一个不同的屏幕名称。"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -344,39 +286,24 @@ msgid "Twitter: Fetch new favorites"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:56
-#: code:addons/website_twitter/models/website_twitter_config.py:57
+#: code:addons/website_twitter/models/res_config_settings.py:58
+#: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr "无法到达twitter服务器。"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
 msgid "Website"
-msgstr "网站"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "https://apps.twitter.com/"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "https://www.odoo.com"
-msgstr "https://www.odoo.com"
-
-#. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
+#: model:ir.model,name:website_twitter.model_res_config_settings
+msgid "res.config.settings"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr ""
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "with the following values:"
-msgstr "用下列值:"

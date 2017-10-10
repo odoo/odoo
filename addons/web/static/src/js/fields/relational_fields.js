@@ -245,7 +245,8 @@ var FieldMany2One = AbstractField.extend({
                             self.reinitialize({id: result[0], display_name: result[1]});
                         }
                         def.resolve();
-                    }).fail(function () {
+                    }).fail(function (error, event) {
+                        event.preventDefault();
                         slowCreate();
                     });
                 },
@@ -371,9 +372,14 @@ var FieldMany2One = AbstractField.extend({
                 }
                 // create and edit ...
                 if (create_enabled && !self.nodeOptions.no_create_edit) {
+                    var createAndEditAction = function () {
+                        // Clear the value in case the user clicks on discard
+                        self.$('input').val('');
+                        return self._searchCreatePopup("form", false, self._createContext(search_val));
+                    };
                     values.push({
                         label: _t("Create and Edit..."),
-                        action: self._searchCreatePopup.bind(self, "form", false, self._createContext(search_val)),
+                        action: createAndEditAction,
                         classname: 'o_m2o_dropdown_option',
                     });
                 } else if (values.length === 0) {

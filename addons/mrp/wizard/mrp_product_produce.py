@@ -42,7 +42,7 @@ class MrpProductProduce(models.TransientModel):
                     for move_line in move.move_line_ids:
                         if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
                             break
-                        if float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
+                        if move_line.lot_produced_id or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
                             continue
                         to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
                         lines.append({
@@ -96,7 +96,11 @@ class MrpProductProduce(models.TransientModel):
             # TODO currently not possible to guess if the user updated quantity by hand or automatically by the produce wizard.
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel') and move.unit_factor:
                 rounding = move.product_uom.rounding
-                move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                if self.product_id.tracking != 'none':
+                    qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                    move._generate_consumed_move_line(qty_to_add, self.lot_id)
+                else:
+                    move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         for move in self.production_id.move_finished_ids:
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
                 rounding = move.product_uom.rounding
@@ -132,7 +136,7 @@ class MrpProductProduce(models.TransientModel):
                   'product_uom_id': produce_move.product_uom.id,
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
-                  'location_id': produce_move.location_id.id, 
+                  'location_id': produce_move.location_id.id,
                   'location_dest_id': produce_move.location_dest_id.id,
                 }
                 self.env['stock.move.line'].create(vals)
@@ -150,39 +154,16 @@ class MrpProductProduce(models.TransientModel):
                         # create a move and put it in there
                         order = self.production_id
                         pl.move_id = self.env['stock.move'].create({
-                                        'name': order.name,
-                                        'product_id': pl.product_id.id,
-                                        'product_uom': pl.product_uom_id.id,
-                                        'location_id': order.location_src_id.id,
-                                        'location_dest_id': self.product_id.property_stock_production.id,
-                                        'raw_material_production_id': order.id,
-                                        'origin': order.name,
-                                        'group_id': order.procurement_group_id.id,
-                                        'state': 'confirmed',
-                                    })
-                ml = pl.move_id.move_line_ids.filtered(lambda ml: ml.lot_id == pl.lot_id and not ml.lot_produced_id)
-                if ml:
-                    if (ml.qty_done + pl.qty_done) >= ml.product_uom_qty:
-                        ml.write({'qty_done': ml.qty_done + pl.qty_done, 'lot_produced_id': self.lot_id.id})
-                    else:
-                        new_qty_todo = ml.product_uom_qty - (ml.qty_done + pl.qty_done)
-                        default = {'product_uom_qty': ml.qty_done + pl.qty_done,
-                                   'qty_done': ml.qty_done + pl.qty_done,
-                                   'lot_produced_id': self.lot_id.id}
-                        ml.copy(default=default)
-                        ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_todo, 'qty_done': 0})
-                else:
-                    self.env['stock.move.line'].create({
-                        'move_id': pl.move_id.id,
-                        'product_id': pl.product_id.id,
-                        'location_id': pl.move_id.location_id.id,
-                        'location_dest_id': pl.move_id.location_dest_id.id,
-                        'product_uom_qty': 0,
-                        'product_uom_id': pl.product_uom_id.id,
-                        'qty_done': pl.qty_done,
-                        'lot_id': pl.lot_id.id,
-                        'lot_produced_id': self.lot_id.id,
-                    })
+                                    'name': order.name,
+                                    'product_id': pl.product_id.id,
+                                    'product_uom': pl.product_uom_id.id,
+                                    'location_id': order.location_src_id.id,
+                                    'location_dest_id': self.product_id.property_stock_production.id,
+                                    'raw_material_production_id': order.id,
+                                    'group_id': order.procurement_group_id.id,
+                                    'origin': order.name,
+                                    'state': 'confirmed'})
+                pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id)
         return True
 
 

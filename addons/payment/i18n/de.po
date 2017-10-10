@@ -22,13 +22,14 @@
 # key six <mobile.umts@gmail.com>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Gab_Odoo <gab@odoo.com>, 2017\n"
+"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +55,12 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\">Neue Karte hinzufügen</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/>Löschen"
 
 #. module: payment
 #. openerp-web
@@ -67,14 +68,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:219
 #, python-format
 msgid "<p>Please fill all the inputs required.</p>"
-msgstr ""
+msgstr "<p>Fülle alle Felder aus</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:180
 #, python-format
 msgid "<p>Please select a payment method.</p>"
-msgstr ""
+msgstr "<p>Bitte wähle eine Zahlungsmethode aus.</p>"
 
 #. module: payment
 #. openerp-web
@@ -82,13 +83,14 @@ msgstr ""
 #, python-format
 msgid "<p>Please select the option to add a new payment method.</p>"
 msgstr ""
+"<p>Wähle bitte eine Option aus um eine neue Zahlungsoption hinzuzufügen.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:315
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Diese Karte ist bereits mit diesem Eintrag verbunden.<p/>"
 
 #. module: payment
 #. openerp-web
@@ -98,7 +100,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:267
 #, python-format
 msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>Wie können im Moment deine Zahlungsmethode nicht hinzufügen.</p> "
 
 #. module: payment
 #. openerp-web
@@ -106,7 +108,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:333
 #, python-format
 msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr ""
+msgstr "<p>Wie können im Moment deine Zahlungsmethode nicht entfernen</p>"
 
 #. module: payment
 #. openerp-web
@@ -115,13 +117,14 @@ msgstr ""
 #, python-format
 msgid "<p>We are not able to redirect you to the payment form.</p>"
 msgstr ""
+"<p>Wir können dich momentan nicht zum Zahlungsformular weiterleiten.</p>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:169
 #, python-format
 msgid "<p>We're unable to process your payment.</p>"
-msgstr ""
+msgstr "<p>Wir können deine Zahlung nicht verarbeiten.</p>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -138,6 +141,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Produktions</span>\n"
+"                             <span class=\"o_stat_text\">umfeld</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -355,7 +360,7 @@ msgstr "Abgebrochen"
 #: code:addons/payment/static/src/js/payment_form.js:168
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "Zahlung konnte nicht eingerichtet werden"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
@@ -424,7 +429,7 @@ msgstr "Kontakt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Dazugehöriges Modul"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
@@ -529,7 +534,7 @@ msgstr "E-Mail"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Elektronisch"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -716,7 +721,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr " Verwalten Sie Ihre Zahlungsmethoden "
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -812,7 +817,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:218
 #, python-format
 msgid "Missing values"
-msgstr ""
+msgstr "fehlende Werte"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
@@ -840,7 +845,7 @@ msgstr "Niemals"
 #: code:addons/payment/static/src/js/payment_form.js:273
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Keine Zahlungsmethode ausgewählt"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
@@ -1128,7 +1133,7 @@ msgstr "Nummernfolge"
 #: code:addons/payment/static/src/js/payment_form.js:332
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "Server fehler"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -1140,7 +1145,7 @@ msgstr "Server zu Server"
 #: code:addons/payment/static/src/js/payment_form.js:266
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Server fehler"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
@@ -1172,7 +1177,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Spezifische Länder"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1307,7 +1312,7 @@ msgstr "Variable Auslands-Gebühren (in Prozent)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
 msgid "Verified"
-msgstr ""
+msgstr "Bestätigt"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
@@ -1410,7 +1415,7 @@ msgstr "amount: der Transaktionsbetrag (float)"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "und weitere"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

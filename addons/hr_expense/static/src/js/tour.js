@@ -18,7 +18,7 @@ tour.register('hr_expense_tour' ,
 }, {
     trigger: '.o_list_button_add',
     extra_trigger: ".o_expense_tree",
-    content: _t('<p>Click here to create your first expense and add it to below.</p>'),
+    content: _t('<p>Click here to create your first expense and add it under here.</p>'),
     position: 'bottom'
 }, {
     trigger: ".o_required_modifier input",

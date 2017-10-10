@@ -279,7 +279,7 @@ class MrpWorkorder(models.Model):
 
     def _assign_default_final_lot_id(self):
         self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
-                                                                    order='create_date', limit=1)
+                                                                    order='create_date, id', limit=1)
 
     @api.multi
     def record_production(self):
@@ -294,11 +294,15 @@ class MrpWorkorder(models.Model):
         # For each untracked component without any 'temporary' move lines,
         # (the new workorder tablet view allows registering consumed quantities for untracked components)
         # we assume that only the theoretical quantity was used
-        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
-        for move in raw_moves:
-            if move.unit_factor and not move.move_line_ids.filtered(lambda m: not m.done_wo):
+        for move in self.move_raw_ids:
+            if move.has_tracking == 'none' and (move.state not in ('done', 'cancel')) and move.bom_line_id\
+                        and move.unit_factor and not move.move_line_ids.filtered(lambda ml: not ml.done_wo):
                 rounding = move.product_uom.rounding
-                move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
+                if self.product_id.tracking != 'none':
+                    qty_to_add = float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
+                    move._generate_consumed_move_line(qty_to_add, self.final_lot_id)
+                else:
+                    move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
 
         # Transfer quantities from temporary to final move lots or make them final
         for move_line in self.active_move_line_ids:

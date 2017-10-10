@@ -13,9 +13,9 @@ var _t = core._t;
 /**
  * Widget PortalChatter
  *
- *  - Fetch message fron controller
- *  - Display chatter: pager, total message, composer (according to access right)
- *  - Provider API to filter displayed messages
+ * - Fetch message fron controller
+ * - Display chatter: pager, total message, composer (according to access right)
+ * - Provider API to filter displayed messages
  */
 var PortalChatter = Widget.extend({
     template: 'portal.chatter',

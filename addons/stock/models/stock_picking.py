@@ -543,7 +543,7 @@ class Picking(models.Model):
     @api.multi
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
-        self.is_locked = True
+        self.write({'is_locked': True})
         return True
 
     @api.multi

@@ -112,8 +112,6 @@ def dispatch_rpc(service_name, method, params):
             dispatch = odoo.service.db.dispatch
         elif service_name == 'object':
             dispatch = odoo.service.model.dispatch
-        elif service_name == 'report':
-            dispatch = odoo.service.report.dispatch
         result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
@@ -1311,7 +1309,8 @@ class Root(object):
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
                     if manifest_path and os.path.isdir(path_static):
-                        manifest = ast.literal_eval(open(manifest_path).read())
+                        manifest_data = open(manifest_path, 'rb').read()
+                        manifest = ast.literal_eval(pycompat.to_native(manifest_data))
                         if not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path

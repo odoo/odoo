@@ -14,6 +14,9 @@ import odoo
 from .. import release, conf, loglevels
 from . import appdirs, pycompat
 
+from passlib.context import CryptContext
+crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
+                             deprecated=['plaintext'])
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
@@ -242,7 +245,9 @@ class configmanager(object):
 
         security = optparse.OptionGroup(parser, 'Security-related options')
         security.add_option('--no-database-list', action="store_false", dest='list_db', my_default=True,
-                            help="disable the ability to return the list of databases")
+                            help="Disable the ability to obtain or view the list of databases. "
+                                 "Also disable access to the database manager and selector, "
+                                 "so be sure to set a proper --database parameter first")
         parser.add_option_group(security)
 
         # Advanced options
@@ -624,5 +629,20 @@ class configmanager(object):
 
     def filestore(self, dbname):
         return os.path.join(self['data_dir'], 'filestore', dbname)
+
+    def set_admin_password(self, new_password):
+        self.options['admin_passwd'] = crypt_context.encrypt(new_password)
+
+    def verify_admin_password(self, password):
+        """Verifies the super-admin password, possibly updating the stored hash if needed"""
+        stored_hash = self.options['admin_passwd']
+        if not stored_hash:
+            # empty password/hash => authentication forbidden
+            return False
+        result, updated_hash = crypt_context.verify_and_update(password, stored_hash)
+        if result:
+            if updated_hash:
+                self.options['admin_passwd'] = updated_hash
+            return True
 
 config = configmanager()

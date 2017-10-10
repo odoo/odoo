@@ -451,13 +451,13 @@ class SaleOrder(models.Model):
     @api.multi
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
-        orders.write({
+        return orders.write({
             'state': 'draft',
         })
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_quotation_send(self):
@@ -508,7 +508,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     @api.multi
     def action_unlock(self):

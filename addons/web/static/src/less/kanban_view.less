@@ -24,8 +24,9 @@
     cursor: pointer;
     .o-hover-opacity(@base-opacity);
 }
-.o-kanban-tag-color(@size: 1) when (@size < @odoo-nb-ui-color) {
-    // Note: the 0 color is not defined as it is the 'no color' for kanban
+.o-kanban-tag-color(@size: 0) when (@size < @odoo-nb-ui-color) {
+    // Note: the 0 color is supposed to be invisible if there is a color field
+    // but it is used as a default color when there is no color field
     &.o_tag_color_@{size} span {
         background-color: ~"@{odoo-color-@{size}}";
     }

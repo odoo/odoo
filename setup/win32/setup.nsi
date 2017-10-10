@@ -41,7 +41,7 @@
 !define PUBLISHER 'Odoo S.A.'
 
 !ifndef MAJOR_VERSION
-    !define MAJOR_VERSION '10'
+    !define MAJOR_VERSION '11'
 !endif
 
 !ifndef MINOR_VERSION
@@ -49,7 +49,7 @@
 !endif
 
 !ifndef REVISION_VERSION
-    !define REVISION_VERSION '0'
+    !define REVISION_VERSION 'alpha1'
 !endif
 
 !ifndef VERSION
@@ -76,11 +76,11 @@
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
 OutFile "openerp-allinone-setup-${VERSION}.exe"
-#SetCompressor /final /solid lzma
+SetCompressor /FINAL lzma
 #SetCompress auto
 ShowInstDetails show
 
-XPStyle on
+#XPStyle on
 
 InstallDir "$PROGRAMFILES\Odoo ${VERSION}"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
@@ -116,7 +116,7 @@ Var HWNDPostgreSQLPassword
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
-!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.4-2-windows.exe"
+!define POSTGRESQL_EXE_FILENAME "postgresql-9.5.8-1-windows.exe"
 !define POSTGRESQL_EXE "${STATIC_PATH}\${POSTGRESQL_EXE_FILENAME}"
 
 !define MUI_ABORTWARNING
@@ -205,14 +205,20 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     SectionIn 1 2
 
     # TODO: install in a temp dir before
+    
+    # Installing winpython
+    SetOutPath "$INSTDIR\python"
+    File /r /x "__pycache__" "..\..\..\WinPython\python-3.6.2\*"
+
+    SetOutPath "$INSTDIR\nssm"
+    File /r /x "src" "..\..\..\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r "..\..\dist\*"
+    File /r /x "${POSTGRESQL_EXE_FILENAME}" /x "wkhtmltopdf" "..\..\*"
 
-    SetOutPath "$INSTDIR\service"
-    File /r "dist\*"
-    File "start.bat"
-    File "stop.bat"
+    # Install Visual C redistribuable files
+    DetailPrint "Installing Visual C++ redistributable files"
+    nsExec::Exec '"$INSTDIR\service\vcredist\vcredist_x86.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
     File /r "${STATIC_PATH}\wkhtmltopdf\*"
@@ -233,9 +239,11 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
         WriteIniStr "$INSTDIR\server\odoo.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
     ${EndIf}
 
-    nsExec::Exec '"$INSTDIR\server\odoo-bin.exe" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
-    nsExec::Exec '"$INSTDIR\service\win32_service.exe" -auto -install'
-
+    DetailPrint "Installing Windows service"
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe" "\"$INSTDIR\server\odoo-bin\""'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set AppDirectory "$\"$INSTDIR\server$\""'
+    
     nsExec::Exec "net stop ${SERVICENAME}"
     sleep 2
 
@@ -298,13 +306,14 @@ Section "Uninstall"
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
 
-    nsExec::Exec "net stop odoo-server-9.0"
-    nsExec::Exec "sc delete odoo-server-9.0"
+    nsExec::Exec "net stop ${SERVICENAME}"
+    nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
 
     Rmdir /r "$INSTDIR\server"
-    Rmdir /r "$INSTDIR\service"
     Rmdir /r "$INSTDIR\thirdparty"
+    Rmdir /r "$INSTDIR\python"
+    Rmdir /r "$INSTDIR\nssm"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 

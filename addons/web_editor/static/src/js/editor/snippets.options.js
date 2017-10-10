@@ -827,6 +827,7 @@ registry.background = SnippetOption.extend({
     start: function () {
         var res = this._super.apply(this, arguments);
         this.bindBackgroundEvents();
+        this.__customImageSrc = this._getSrcFromCssValue();
         return res;
     },
 
@@ -840,9 +841,16 @@ registry.background = SnippetOption.extend({
      * @see this.selectClass for parameters
      */
     background: function (previewMode, value, $li) {
+        if (previewMode === 'reset' && value === undefined) {
+            // No background has been selected and we want to reset back to the
+            // original custom image
+            this._setCustomBackground(this.__customImageSrc);
+            return;
+        }
+
         if (value && value.length) {
             this.$target.css('background-image', 'url(\'' + value + '\')');
-            this.$target.addClass('oe_img_bg');
+            this.$target.removeClass('oe_custom_bg').addClass('oe_img_bg');
         } else {
             this.$target.css('background-image', '');
             this.$target.removeClass('oe_img_bg oe_custom_bg');
@@ -868,11 +876,7 @@ registry.background = SnippetOption.extend({
         _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
         _editor.on('save', this, function () {
-            var value = $image.attr('src');
-            this.background(previewMode, value, $li);
-            this.$target.addClass('oe_custom_bg');
-            this._setActive();
-            this.$target.trigger('snippet-option-change', [this]);
+            this._setCustomBackground($image.attr('src'));
         });
         _editor.on('closed', this, function () {
             $image.remove();
@@ -908,16 +912,26 @@ registry.background = SnippetOption.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the src value from a css value related to a background image
+     * (e.g. "url('blabla')" => "blabla" / "none" => "").
+     *
+     * @private
+     * @param {string} value
+     * @returns {string}
+     */
+    _getSrcFromCssValue: function (value) {
+        if (value === undefined) {
+            value = this.$target.css('background-image');
+        }
+        return value.replace(/url\(['"]*|['"]*\)|^none$/g, '');
+    },
+    /**
      * @override
      */
     _setActive: function () {
         this._super.apply(this, arguments);
 
-        var src = this.$target.css('background-image').replace(/url\(['"]*|['"]*\)|^none$/g, '');
-        if (this.$target.hasClass('oe_custom_bg')) {
-            this.$el.find('li[data-choose-image]').data('background', src).attr('data-background', src);
-        }
-
+        var src = this._getSrcFromCssValue();
         this.$el.find('li[data-background]')
             .removeClass('active')
             .filter(function () {
@@ -925,7 +939,22 @@ registry.background = SnippetOption.extend({
                 return (bgOption === '' && src === '' || bgOption !== '' && src.indexOf(bgOption) >= 0);
             })
             .addClass('active');
-    }
+
+        this.$el.find('li[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
+    },
+    /**
+     * Sets the given value as custom background image.
+     *
+     * @private
+     * @param {string} value
+     */
+    _setCustomBackground: function (value) {
+        this.__customImageSrc = this._getSrcFromCssValue(value);
+        this.background(false, this.__customImageSrc);
+        this.$target.addClass('oe_custom_bg');
+        this._setActive();
+        this.$target.trigger('snippet-option-change', [this]);
+    },
 });
 
 /**
