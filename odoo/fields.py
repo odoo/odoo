@@ -39,18 +39,23 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    src, dst = records.env.cache, env.cache
-    todo, done = set(records), set()
+    src = records.env
+    todo = defaultdict(set)             # {model_name: ids}
+    done = defaultdict(set)             # {model_name: ids}
+    todo[records._name].update(records._ids)
     while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for field in src.get_fields(record):
-                value = src.get(record, field)
-                dst.set(target, field, value)
-                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
-                    todo.update(field.convert_to_record(value, record))
+        model_name = next(iter(todo))
+        record_ids = todo.pop(model_name) - done[model_name]
+        done[model_name].update(record_ids)
+        for name, field in src[model_name]._fields.items():
+            src_cache = src.cache[field]
+            dst_cache = env.cache[field]
+            for record_id in record_ids:
+                if record_id in src_cache:
+                    # copy the cached value as such
+                    value = dst_cache[record_id] = src_cache[record_id]
+                    if field.relational and isinstance(value, tuple):
+                        todo[field.comodel_name].update(value)
 
 
 def resolve_mro(model, name, predicate):
@@ -2245,14 +2250,13 @@ class One2many(_RelationalMulti):
                 elif act[0] == 6:
                     record = records[-1]
                     comodel.browse(act[2]).write({inverse: record.id})
-                    query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
-                    comodel._cr.execute(query, (record.id, act[2] or [0]))
-                    lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
+                    domain = self.domain(records) if callable(self.domain) else self.domain
+                    domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
                     inverse_field = comodel._fields[inverse]
                     if inverse_field.ondelete == 'cascade':
-                        lines.unlink()
+                        comodel.search(domain).unlink()
                     else:
-                        lines.write({inverse: False})
+                        comodel.search(domain).write({inverse: False})
 
 
 class Many2many(_RelationalMulti):

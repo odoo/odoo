@@ -805,7 +805,7 @@ var DomainLeaf = DomainNode.extend({
             if (_.isBoolean(this.value)) {
                 this.value = "";
             } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
-                this.value = this.value.id || "";
+                this.value = this.value.id || value || "";
             }
         }
 
