@@ -39,23 +39,18 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    src = records.env
-    todo = defaultdict(set)             # {model_name: ids}
-    done = defaultdict(set)             # {model_name: ids}
-    todo[records._name].update(records._ids)
+    src, dst = records.env.cache, env.cache
+    todo, done = set(records), set()
     while todo:
-        model_name = next(iter(todo))
-        record_ids = todo.pop(model_name) - done[model_name]
-        done[model_name].update(record_ids)
-        for name, field in src[model_name]._fields.items():
-            src_cache = src.cache[field]
-            dst_cache = env.cache[field]
-            for record_id in record_ids:
-                if record_id in src_cache:
-                    # copy the cached value as such
-                    value = dst_cache[record_id] = src_cache[record_id]
-                    if field.relational and isinstance(value, tuple):
-                        todo[field.comodel_name].update(value)
+        record = todo.pop()
+        if record not in done:
+            done.add(record)
+            target = record.with_env(env)
+            for field in src.get_fields(record):
+                value = src.get(record, field)
+                dst.set(target, field, value)
+                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
+                    todo.update(field.convert_to_record(value, record))
 
 
 def resolve_mro(model, name, predicate):
