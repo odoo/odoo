@@ -13,6 +13,7 @@
 # subclassing the Command object
 #
 #----------------------------------------------------------
+from __future__ import print_function
 import os
 import re
 import sys
@@ -28,7 +29,7 @@ if re.search('github.com[:/]odoo/odoo.git$', sys.argv[2]):
 """
 
 def printf(f,*l):
-    print "odoo:" + f % l
+    print("odoo:" + f % l)
 
 def run(*l):
     if isinstance(l[0], list):
