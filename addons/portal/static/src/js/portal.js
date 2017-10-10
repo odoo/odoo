@@ -52,10 +52,12 @@ var ShareDocument = require("portal.share_document");
         var url = $(this).data('url');
         var model = $(this).data('model');
         var active_id = $(this).data('res_id');
+        var name = $(this).data('name');
         var share = new ShareDocument({
             'res_id': active_id,
             'res_model': model,
-            'url': url
+            'url': url,
+            'name': name,
         });
         share.appendTo('body');
 

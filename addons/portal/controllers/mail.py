@@ -102,6 +102,9 @@ class PortalChatter(http.Controller):
         }
 
     @http.route(['/portal/send_share_email'], type='json', auth='user', website=True)
-    def send_share_email(self, partner_ids, model, res_id):
-        # partners = request.env['res.partner'].browse(partner_ids)
-        print "------", partner_ids
+    def send_share_email(self, partner_ids, model, res_id, body):
+        result = False
+        if partner_ids:
+            request.env[model].browse(res_id).message_post(body=body, partner_ids=partner_ids)
+            result = True
+        return result

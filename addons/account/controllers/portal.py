@@ -120,7 +120,8 @@ class PortalAccount(CustomerPortal):
         invoice = request.env['account.invoice'].browse(invoice_id)
         shared_doc = self._check_shared_document(invoice)
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
-        values.update({'shared_doc': shared_doc})
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        values.update({'shared_doc': shared_doc, 'url': base_url + '/my/invoices/' + str(invoice_id)})
         return request.render("account.portal_invoice_page", values)
 
     @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="public", website=True)

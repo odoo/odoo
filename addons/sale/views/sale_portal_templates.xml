@@ -169,7 +169,7 @@
                     <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
                         <i class="fa fa-download fa-2x" aria-hidden="true"/>
                     </a>
-                    <a href="#" class="ml8 pull-right share_doc" data-model="sale.order" t-att-data-url="url" t-att-data-res_id="order.id"><i class="fa fa-share-alt fa-2x"/></a>
+                    <a href="#" class="pull-right share_doc" data-model="sale.order" t-att-data-url="url" t-att-data-res_id="order.id" t-att-data-name="order.name"><i class="fa fa-share-alt fa-2x"/></a>
                     <!-- <t t-call='portal.share_link'/> -->
                 </div>
               </div>

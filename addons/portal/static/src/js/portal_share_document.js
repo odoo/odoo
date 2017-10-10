@@ -18,6 +18,7 @@ var ShareDocument = Widget.extend({
         this.url = options.url;
         this.model = options.res_model;
         this.res_id = options.res_id;
+        this.name = options.name;
         },
 
     start: function(){
@@ -34,12 +35,16 @@ var ShareDocument = Widget.extend({
                 _.each(data, function(obj){
                     partner_list.push(obj.id)
                 });
+                var that = this;
                 ajax.jsonRpc('/portal/send_share_email', 'call', {
                     partner_ids: partner_list ,
                     model: self.model,
                     res_id: self.res_id,
-                }).then(function () {
-                    this.$el.html($('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>'));
+                    body: that.$el.find('textarea').code()
+                }).then(function (result) {
+                    if (result) {
+                        that.$el.find('form').prepend('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>');
+                    }
                 });
             }}, {text: _t('Cancel'), close: true}],
         });
@@ -49,6 +54,7 @@ var ShareDocument = Widget.extend({
         dialog.$content.find('textarea').summernote({
             height: 150
         });
+        dialog.$content.find('textarea').code('<p> Dear, </p><p> A document '+ this.name +' has been shared with you </p><p><a href="'+this.url+'">'+ this.url+'</a><p> Thank you,</p>')
     },
 
     select2_wrapper: function (tag, multi, fetch_fnc) {
@@ -61,8 +67,8 @@ var ShareDocument = Widget.extend({
             selection_data: false,
             fetch_rpc_fnc : fetch_fnc,
             formatResult: function (term) {
-                if (term.text) {
-                    return term.name + " "+"(" + term.text + ")";
+                if (term.email) {
+                    return term.text + " "+"(" + term.email + ")";
                 }
             },
             fill_data: function (query, data) {
@@ -70,7 +76,7 @@ var ShareDocument = Widget.extend({
                     tags = {results: []};
                 _.each(data, function (obj) {
                     if (that.matcher(query.term, obj.email)) {
-                        tags.results.push({id: obj.id, text: obj.email, name: obj.name});
+                        tags.results.push({id: obj.id, text: obj.name, email: obj.email});
                     }
                 });
                 query.callback(tags);

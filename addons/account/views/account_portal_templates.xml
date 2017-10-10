@@ -92,6 +92,7 @@
                                 <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="pull-right" title="Download">
                                     <i class="fa fa-download fa-2x" aria-hidden="true"/>
                                 </a>
+                                <a href="#" class="mr8 pull-right share_doc" data-model="account.invoice" t-att-data-url="url" t-att-data-res_id="invoice.id" t-att-data-name="invoice.number"><i class="fa fa-share-alt fa-2x"/></a>
                             </div>
                         </div>
                     </div>
