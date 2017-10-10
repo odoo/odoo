@@ -20,6 +20,13 @@ class View(models.Model):
 
     customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
+    page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
+
+    @api.one
+    def _compute_page_ids(self):
+        self.page_ids = self.env['website.page'].search(
+            [('view_id', '=', self.id)]
+        )
 
     @api.multi
     def unlink(self):
@@ -142,3 +149,11 @@ class View(models.Model):
             return lang_code
         else:
             return super(View, self).get_default_lang_code()
+
+    @api.multi
+    def redirect_to_page_manager(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/website/pages',
+            'target': 'self',
+        }
