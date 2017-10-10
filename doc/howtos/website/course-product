@@ -27,11 +27,10 @@ new file mode 100644
 diff --git a/academy/demo.xml b/academy/demo.xml
 --- a/academy/demo.xml
 +++ b/academy/demo.xml
-@@ -9,5 +9,30 @@
-         <record id="vaughn" model="academy.teachers">
+@@ -10,4 +10,29 @@
              <field name="name">Lester Vaughn</field>
          </record>
-+
+ 
 +        <record id="course0" model="product.template">
 +            <field name="name">Course 0</field>
 +            <field name="teacher_id" ref="padilla"/>
@@ -56,7 +55,7 @@ diff --git a/academy/demo.xml b/academy/demo.xml
 +            <field name="list_price" type="float">0</field>
 +            <field name="type">service</field>
 +        </record>
-
++
  </odoo>
 diff --git a/academy/models.py b/academy/models.py
 --- a/academy/models.py
@@ -88,7 +87,7 @@ diff --git a/academy/security/ir.model.access.csv b/academy/security/ir.model.ac
 diff --git a/academy/views.xml b/academy/views.xml
 --- a/academy/views.xml
 +++ b/academy/views.xml
-@@ -25,55 +25,9 @@
+@@ -26,55 +26,9 @@
      </field>
    </record>
  
