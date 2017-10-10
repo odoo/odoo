@@ -163,9 +163,16 @@ var PivotController = AbstractController.extend({
             fields: fields
         }));
 
-        this.$fieldSelection.find('ul').first()
-            .css({top: top, left: left})
-            .show();
+        if (_t.database.parameters.direction == 'rtl') {
+            this.$fieldSelection.find('ul').first()
+                .css({top: top, right: left})
+                .show();
+        } else {
+            this.$fieldSelection.find('ul').first()
+                .css({top: top, left: left})
+                .show();
+        }
+
     },
     /**
      * @private
@@ -283,7 +290,7 @@ var PivotController = AbstractController.extend({
             this.lastHeaderSelected = id;
             var position = $target.position();
             var top = position.top + $target.height();
-            var left = position.left + event.offsetX;
+            var left = (_t.database.parameters.direction == 'rtl' ? (window.innerWidth - position.left - event.offsetX) : position.left + event.offsetX);
             this._renderFieldSelection(top, left);
             event.stopPropagation();
         }
