@@ -58,8 +58,19 @@ class ProjectTask(models.Model):
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id)]")
 
+    @api.model
+    def create(self, values):
+        # sub task has the same so line than their parent
+        if 'parent_id' in values:
+            values['sale_line_id'] = self.env['project.task'].browse(values['parent_id']).sudo().sale_line_id.id
+        return super(ProjectTask, self).create(values)
+
     @api.multi
     def write(self, values):
+        # sub task has the same so line than their parent
+        if 'parent_id' in values:
+            values['sale_line_id'] = self.env['project.task'].browse(values['parent_id']).sudo().sale_line_id.id
+
         result = super(ProjectTask, self).write(values)
         # reassign SO line on related timesheet lines
         if 'sale_line_id' in values:

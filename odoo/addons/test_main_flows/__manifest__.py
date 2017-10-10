@@ -5,7 +5,7 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-This mobule will test the main workflow of Odoo.
+This module will test the main workflow of Odoo.
 It will install some main apps and will try to execute the most important actions.
 """,
     'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase', 'mrp', 'account'],

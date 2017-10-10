@@ -109,16 +109,17 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report!"))
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'expense_line_ids': [(4, line.id) for line in self],
+            'name': self[0].name if len(self.ids) == 1 else '',
+            'employee_id': self[0].employee_id.id,
+        })
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'hr.expense.sheet',
             'target': 'current',
-            'context': {
-                'default_expense_line_ids': [line.id for line in self],
-                'default_employee_id': self[0].employee_id.id,
-                'default_name': self[0].name if len(self.ids) == 1 else ''
-            }
+            'res_id': expense_sheet.id,
         }
 
     def _prepare_move_line(self, line):
@@ -581,7 +582,12 @@ class HrExpenseSheet(models.Model):
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
-        res['context'] = {'default_res_model': 'hr.expense.sheet', 'default_res_id': self.id}
+        res['context'] = {
+            'default_res_model': 'hr.expense.sheet',
+            'default_res_id': self.id,
+            'create': False,
+            'edit': False,
+        }
         return res
 
     @api.one

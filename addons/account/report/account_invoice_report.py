@@ -135,7 +135,7 @@ class AccountInvoiceReport(models.Model):
                 JOIN (
                     -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                         WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1
                             ELSE 1
                         END) AS sign

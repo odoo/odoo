@@ -13,6 +13,7 @@
 # subclassing the Command object
 #
 #----------------------------------------------------------
+from __future__ import print_function
 import os
 import re
 import sys
@@ -28,7 +29,7 @@ if re.search('github.com[:/]odoo/odoo.git$', sys.argv[2]):
 """
 
 def printf(f,*l):
-    print "odoo:" + f % l
+    print("odoo:" + f % l)
 
 def run(*l):
     if isinstance(l[0], list):
@@ -117,7 +118,7 @@ def cmd_setup_git_review():
 def setup_deps_debian(git_dir):
     debian_control_path = os.path.join(git_dir, 'debian/control')
     debian_control = open(debian_control_path).read()
-    debs = re.findall('python-[0-9a-z]+',debian_control)
+    debs = re.findall('python3-[0-9a-z]+',debian_control)
     debs += ["postgresql"]
     proc = subprocess.Popen(['sudo','apt-get','install'] + debs, stdin=open('/dev/tty'))
     proc.communicate()

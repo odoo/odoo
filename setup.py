@@ -149,7 +149,6 @@ setup(
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
-        'psycogreen',
         'psycopg2 >= 2.2',
         'pydot',
         'pyldap',  # optional
@@ -171,6 +170,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
+    python_requires='>=3.5',
     extras_require={
         'SSL': ['pyopenssl'],
     },

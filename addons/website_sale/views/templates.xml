@@ -1008,18 +1008,6 @@
         </form>
     </template>
 
-    <template id="reduction_code" inherit_id="website_sale.cart" active="False" customize_show="True" name="Promo Code">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <h4>Promo Code</h4>
-            <p>
-              Have a promo code? Fill in this field and apply.
-            </p>
-            <t t-call='website_sale.coupon_form'>
-                <t t-set='redirect'>/shop/cart</t>
-            </t>
-        </xpath>
-    </template>
-
     <template id="checkout">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Checkout</t>
@@ -1538,6 +1526,20 @@
                 </span>
             </div>
         </div>
+    </template>
+
+    <template id="reduction_code" inherit_id="website_sale.total" active="False" customize_show="True" name="Promo Code">
+        <xpath expr="//div[@id='cart_total']" position="after">
+            <div class='col-md-offset-6 col-md-6'>
+                <h4>Promo Code</h4>
+                <p>
+                  Have a promo code? Fill in this field and apply.
+                </p>
+                <t t-call='website_sale.coupon_form'>
+                    <t t-set='redirect'>/shop/cart</t>
+                </t>
+            </div>
+        </xpath>
     </template>
 
     <template id="payment_confirmation_status">

@@ -2,15 +2,12 @@
 # This file contains the translation of the following modules:
 # * rating_project
 # 
-# Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +73,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -88,7 +85,7 @@ msgid ""
 "                % if object.project_id.rating_status == 'periodic':\n"
 "                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</p>\n"
 "                % endif\n"
-"                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"                <p>Email automatically sent by <a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -106,9 +103,14 @@ msgid "% On tasks"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
+msgstr ""
+
+#. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr "自动看板状态"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -119,12 +121,16 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr "客户点评"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+msgid "Customer Ratings from task"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -134,7 +140,7 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
 msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
@@ -143,12 +149,12 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr "客户点评"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr "每天"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -160,12 +166,12 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr "好 % 项目"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr "好 % 任务"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -186,34 +192,34 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
+msgid "Last 30 days"
+msgstr ""
+
+#. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr "最近点评：高度不满意"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr "最近点评：不满意"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr "最近点评：满意"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr "不点评"
-
-#. module: rating_project
-#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-msgid "No rating yet"
-msgstr "还没点评"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr "一个月一次"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -225,12 +231,13 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr "定期点评"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Project"
-msgstr "项目"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
@@ -242,22 +249,28 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr "每季度"
+msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_search
+msgid "Rated tasks"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
 msgid "Rating"
-msgstr "评级"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr "评价邮件的模板"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr "点评频率"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
@@ -265,42 +278,73 @@ msgid "Rating Request Deadline"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
+msgid "Rating for tasks"
+msgstr ""
+
+#. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr "在变更阶段时点评"
+msgstr ""
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr "评级"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings for tasks"
+msgstr ""
+
+#. module: rating_project
+#: code:addons/rating_project/models/project.py:107
+#, python-format
+msgid "Ratings of %s"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
+msgid "Set Email Template to Stages"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
 msgid "Task"
-msgstr "任务"
+msgstr ""
 
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr "任务点评"
+msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
 msgid "Task Stage"
-msgstr "任务阶段"
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
+msgid "There is no rating for tasks of this project at the moment."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating
+msgid "There is no rating for this object at the moment."
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr "一个月二次"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr "每周"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr "每年"
+msgstr ""

@@ -1,36 +1,63 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-#
+# 
 # Translators:
-#, fuzzy
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# salmemik <salmemik@gmail.com>, 2017
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
+# Joni Kivi <joni.kivi@sprintit.fi>, 2017
+# Sanna Edelman <direct@generare.com>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Topi Aura <topi@aurat.fi>, 2017
+# Miku Laitinen <miku.laitinen@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
+# Jussi Lehto <jussi@gulfeo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-15 04:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
-"Language: fi\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Jussi Lehto <jussi@gulfeo.com>, 2017\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  fi.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:219
-#, python-format
-msgid "%(month)s %(start_day)s%(end_day)s"
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "(Free)"
+msgstr "(Ilmainen)"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>End of Registration</b>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Price</b>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Quantity</b>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Ticket Type</b>"
 msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "<b>Upcoming Events</b>"
-msgstr ""
+msgstr "<b>Tulevat tapahtumat</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -38,15 +65,19 @@ msgid ""
 "<br/>\n"
 "                    <i class=\"fa fa-clock-o\"/> To"
 msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<em>Configure and Launch Event Registration</em>"
-msgstr ""
+"<br/>\n"
+"<i class=\"fa fa-clock-o\"/> Päättyy"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
+msgstr "<i class=\"fa fa-clock-o\"/> Alkaa"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"                    <em>Configure and Launch Event Registration</em>"
 msgstr ""
 
 #. module: website_event
@@ -58,32 +89,53 @@ msgstr "<i>-</i>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_quotes
 msgid "<small>Author</small>"
-msgstr ""
+msgstr "<small>Kirjoittaja</small>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Paikalliset tapahtumat</span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.ticket
+msgid ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Sold Out\n"
+"                    </span>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<span itemprop=\"name\">Event Registration</span>"
+msgstr ""
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Free\n"
+"                    </span>"
 msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
-msgstr ""
+msgstr "<span>Verkkotapahtumat</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>Rajoittamaton</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Attendees</strong>"
-msgstr ""
+msgstr "<strong>Osallistujat</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>Sähköposti</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -93,28 +145,31 @@ msgstr "<strong>Nimi</strong>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Participate on Twitter</strong>"
-msgstr ""
+msgstr "<strong>Osallistu Twitterissä</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
+msgstr "<strong>Puh</strong> <span class=\"text-muted\">(Vapaaehtoinen)</span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.ticket
+msgid "<strong>Ticket Type:</strong>"
 msgstr ""
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:25
-#, python-format
-msgid "Add Content"
-msgstr "Lisää sisältöä"
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<strong>Use this tag:</strong>"
+msgstr "<strong>Käytä tätä tunnistetta:</strong>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:106
+#: code:addons/website_event/controllers/main.py:96
 #, python-format
 msgid "All Categories"
 msgstr "Kaikki ryhmät"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:117
+#: code:addons/website_event/controllers/main.py:103
 #, python-format
 msgid "All Countries"
 msgstr "Kaikki maat"
@@ -125,9 +180,14 @@ msgid "All Events"
 msgstr "Kaikki tapahtumat"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+msgid "Ask questions to attendees when registering online"
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
-msgstr ""
+msgstr "Osallistuja #%s"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -135,111 +195,78 @@ msgid "Cancel Registration"
 msgstr "Peruuta rekisteröinti"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
+msgid ""
+"Check this option to have menus for your event on the\n"
+"                                website: registrations, schedule, map, ..."
+msgstr ""
+
+#. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:48
+#: code:addons/website_event/static/src/js/website.tour.event.js:24
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
 msgstr "Klikkaa <em>Jatka</em> luodaksesi tapahtuman."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/website.tour.event.js:15
 #, python-format
 msgid "Click here to create a new event."
 msgstr "Klikkaa tästä luodaksesi uuden tapahtuman."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:82
+#: code:addons/website_event/static/src/js/website.tour.event.js:43
 #, python-format
 msgid "Click here to customize your event further."
-msgstr "Klikkaa tästä muokataksesi tapahtumaa pidemmälle"
+msgstr "Klikkaa tästä muokataksesi tapahtumaa pidemmälle."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:75
+#: code:addons/website_event/static/src/js/website.tour.event.js:38
 #, python-format
 msgid "Click to publish your event."
 msgstr "Klikkaa julkaistaksesi tapahtuman."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:54
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-#, python-format
 msgid "Continue"
 msgstr "Jatka"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:47
-#, python-format
-msgid "Create Event"
-msgstr "Luo tapahtuma"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:41
+#: code:addons/website_event/static/src/js/website.tour.event.js:19
 #, python-format
 msgid ""
-"Create a name for your new event and click <em>'Continue'</em>. e.g: "
+"Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
-"Luo nimi tapahtumallesi ja paina <em>'Jatka'</em>. Esim. Tekninen koulutus"
+"Luo nimi tapahtumalle ja klikkaa <em>\"Jatka\"</em>. esim. Tekninen kouluts"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:18
-#, python-format
-msgid "Create an Event"
-msgstr "Luo tapahtuma"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:40
-#, python-format
-msgid "Create an Event Name"
-msgstr "Luo tapahtuman nimi"
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:15
-#, python-format
-msgid "Create an event"
-msgstr "Luo tapahtuma"
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_show_menu
+#: model:ir.model.fields,help:website_event.field_event_event_website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
-msgstr ""
+msgstr "Luo Esittely, Paikka ja Rekisteröidy-valikot tapahtuman sivulle."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:81
-#, python-format
-msgid "Customize your event"
-msgstr "Muokkaa tapahtumaasi"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
 msgid "Dedicated Menu"
+msgstr "Oma valikko"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+msgid "Display a dedicated menu on Website"
 msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:59
+#: code:addons/website_event/static/src/js/website.tour.event.js:28
 #, python-format
-msgid "Drag & Drop a block"
-msgstr ""
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:60
-#, python-format
-msgid "Drag the 'Image-Text' block and drop it in your page."
-msgstr ""
+msgid "Drag this block and drop it in your page."
+msgstr "Raahaa tämä lohko ja pudota sivustolle"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -247,19 +274,24 @@ msgid "E-mail"
 msgstr "Sähköposti"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.view_event_sale_form
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
-msgstr ""
+msgstr "Muokkaa nimilappuja"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "End of Subscription"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_event.ticket
+msgid "End of Registration"
+msgstr "Rekisteröinnin päättyminen"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 msgid "Event"
 msgstr "Tapahtuma"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_type
+msgid "Event Category"
+msgstr "Tapahtumaryhmä"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -279,17 +311,12 @@ msgstr "Tapahtuman sijainti"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
 msgid "Event Menu"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Subscription"
-msgstr "Tapahtumaan rekisteröityminen"
+msgstr "Tapahtumavalikko"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
-msgstr ""
+msgstr "Tapahtumaa ei löytynyt!"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_published
@@ -299,8 +326,13 @@ msgstr "Tapahtuma julkaistu"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "Event registration is closed."
+msgstr "Tapahtumaan rekisteröityminen on päättynyt."
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration not yet started."
-msgstr ""
+msgstr "Tapahtumarekisteröinti ei ole vielä alkanut"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -317,12 +349,12 @@ msgstr "Tapahtumat"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_country_event
 msgid "Events from Your Country"
-msgstr ""
+msgstr "Tapahtumia maassasi"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "Events in visitor's country"
-msgstr ""
+msgstr "Tapahtumat vierailijan maassa"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -339,26 +371,20 @@ msgstr ""
 "                            ja liity mukaan keskusteluun."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Free"
-msgstr "Vapaa"
-
-#. module: website_event
-#: code:addons/website_event/models/event.py:44
+#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:61
 #, python-format
 msgid "Introduction"
-msgstr ""
+msgstr "Esittely"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:19
-#, python-format
-msgid "Let's go through the first steps to publish a new event."
-msgstr "Käydään läpi ensimmäiset askeleet uuden tapahtuman julkaisemiseksi."
+#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+msgid "Is Participating"
+msgstr "Osallistuu"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:45
+#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:62
 #, python-format
 msgid "Location"
 msgstr "Sijainti"
@@ -375,35 +401,27 @@ msgstr "Nimi"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:201
-#: code:addons/website_event/static/src/js/website.tour.event.js:32
-#: code:addons/website_event/static/src/js/website_event.editor.js:14
+#: code:addons/website_event/controllers/main.py:183
+#: code:addons/website_event/static/src/js/website_event.editor.js:29
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
 msgid "New Event"
 msgstr "Uusi tapahtuma"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:52
-#, python-format
-msgid "New Event Created"
-msgstr "Uusi tapahtuma luotu"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:38
+#: code:addons/website_event/controllers/main.py:34
 #, python-format
 msgid "Next Events"
 msgstr "Seuraavat tapahtumat"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "Next Week"
 msgstr "Ensi viikolla"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "Next month"
 msgstr "Ensi kuussa"
@@ -414,14 +432,14 @@ msgid "No event found"
 msgstr "Ei tapahtumia"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:59
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Old Events"
 msgstr "Menneet tapahtumat"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:67
+#: code:addons/website_event/static/src/js/website.tour.event.js:33
 #, python-format
 msgid "Once you click on save, your event is updated."
 msgstr "Kun klikkaat \"tallenna\", tapahtuma päivitetään."
@@ -429,7 +447,7 @@ msgstr "Kun klikkaat \"tallenna\", tapahtuma päivitetään."
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Online"
-msgstr "Tavoitettavissa"
+msgstr "Paikalla"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -449,7 +467,13 @@ msgstr "Tapahtumamme"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_right_photos
 msgid "Our Trainings"
-msgstr ""
+msgstr "Koulutuksemme"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_details
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "Participating"
+msgstr "Osallistuvat"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -462,21 +486,19 @@ msgid "Photos of Past Events"
 msgstr "Valokuvia menneistä tapahtumista"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "Hinta"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:74
-#, python-format
-msgid "Publish your event"
-msgstr "Julkaise tapahtumasi"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Quantity"
 msgstr "Määrä"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+msgid "Questions"
+msgstr "Kysymykset"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -484,7 +506,8 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:53
+#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
 msgstr "Rekisteröidy"
@@ -492,24 +515,22 @@ msgstr "Rekisteröidy"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
+msgstr "Rekisteröidy nyt"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
 msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
 msgid "Return to the event list."
-msgstr ""
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:66
-#, python-format
-msgid "Save your modifications"
-msgstr "Tallenna muutokset"
+msgstr "Paluu tapahtumalistaukseen."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all events from"
-msgstr ""
+msgstr "Näytä kaikki tapahtumat"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -517,107 +538,67 @@ msgid "See all upcoming events"
 msgstr "Katso kaikki tulevat tapahtumat"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:20
-#, python-format
-msgid "Skip It"
-msgstr "Ohita"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Social Stream"
 msgstr "Sosiaalinen media"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Sold Out"
-msgstr "Loppuunmyyty"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
-msgstr ""
+msgstr "Valitettavasti tämä tapahtuma ei ole enää saatavilla."
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:20
-#, python-format
-msgid "Start Tutorial"
-msgstr "Käynnistä ohjattu opastus"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "This Week"
 msgstr "Tällä viikolla"
 
 #. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:26
-#, fuzzy, python-format
-msgid "This button allows you to create new pages, events, menus, etc."
-msgstr ""
-"<em>Sisältö</em>-valikon avulla voit luoda uusia sivuja, tapahtumia, "
-"valikkoja, etc."
-
-#. module: website_event
-#. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:53
-#, python-format
-msgid "This is your new event page. We will edit the event presentation page."
-msgstr ""
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "This month"
 msgstr "Tässä kuussa"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Ticket Type"
-msgstr "Lipputyyppi"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket Type #"
-msgstr ""
+msgstr "Lipputyyppi #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:35
 #, python-format
 msgid "Today"
 msgstr "Tänään"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_twitter_hashtag
-msgid "Twitter Hashtag"
-msgstr ""
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Use this tag:"
-msgstr "Käytä tätä tunnistetta:"
+msgstr "Käytä ylävalikkoa <i>'Sisältö'</i> luodaksesi ensimmäisen tapahtuman."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Näkyvillä verkkosivustolla"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Visualize on Google Maps"
+msgstr "Näytä Google Mapsissa"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your subscription to our event"
-msgstr ""
+msgid "We are glad to confirm your registration to our event"
+msgstr "Rekisteröitymisesi tapahtumaan on nyt vahvistettu"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
-msgstr ""
+msgstr "Etusivu"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Website Menu"
+msgstr "Verkkosivuston valikko"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -636,46 +617,20 @@ msgid ""
 "                        It gives confidence in your\n"
 "                        events."
 msgstr ""
+"Kirjoita tähän lainaus joltain osallistujalta. Lainaukset\n"
+"ovat mainio tapa rakentaa luottamusta tapahtumiisi."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your subscription"
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "not published"
-msgstr "julkaisematta"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "or"
-msgstr "tai"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "pull-right"
-msgstr "pull-right"
+msgid "Your registration"
+msgstr "Rekisteröitymisesi"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
-msgstr " - "
+msgstr " "
 
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website URL"
-#~ msgstr "Verkkosivuston osoite"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid "Website meta description"
-#~ msgstr "Verkkosivuston metakuvaus"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Verkkosivuston meta avainsanat"
-
-#~ msgid "Website meta title"
-#~ msgstr "Verkkosivuston metaotsikko"
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.index
+msgid "unpublished"
+msgstr "julkaisematon"

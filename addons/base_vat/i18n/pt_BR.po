@@ -3,15 +3,15 @@
 # * base_vat
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mateus Lopes <mateus1@gmail.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,11 +26,18 @@ msgstr "Empresas"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Parceiro"
+msgid "Contact"
+msgstr "Contato"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:126
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:134
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -40,7 +47,7 @@ msgstr ""
 "Nota: o formato esperado é %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:125
+#: code:addons/base_vat/models/res_partner.py:133
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -50,30 +57,23 @@ msgstr ""
 "está no formato esperado %s."
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
-msgid ""
-"Use VIES service to check VAT # of your customers rather than a simple "
-"format validation."
-msgstr ""
-
-#. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "Imposto"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
-msgid "VAT # check with European VIES service"
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+msgid "Verify VAT Numbers"
 msgstr ""
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_account_config_settings_vat_check_vies
-#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-msgid "VIES VAT Check"
-msgstr "Verificar VIES VAT"
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr ""
 
 #. module: base_vat
-#: model:ir.model,name:base_vat.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

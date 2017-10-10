@@ -12,6 +12,7 @@
                 <t t-call-assets="mass_mailing.assets_mail_themes"/>
                 <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_editor.js"></script>
             </t>
+            <base target="_parent"/>
         </t>
         <t t-set="head" t-value="head_mm_field_text_html_inline + (head or '')"/>
 

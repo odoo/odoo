@@ -662,12 +662,12 @@
             </field>
         </record>
 
-        <!-- Sector of Activity -->
+        <!-- Industry -->
         <record id="res_partner_industry_view_form" model="ir.ui.view">
-            <field name="name">Sector of Activity</field>
+            <field name="name">Industry</field>
             <field name="model">res.partner.industry</field>
             <field name="arch" type="xml">
-                <form string="Sector of Activity">
+                <form string="Industry">
                     <group col="4">
                         <field name="name"/>
                         <field name="full_name"/>
@@ -677,11 +677,11 @@
             </field>
         </record>
         <record id="res_partner_industry_view_tree" model="ir.ui.view">
-            <field name="name">Sector of Activity</field>
+            <field name="name">Industry</field>
             <field name="model">res.partner.industry</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Sector of Activity">
+                <tree string="Industry">
                     <field name="name"/>
                     <field name="full_name"/>
                     <field name="active"/>
@@ -689,14 +689,14 @@
             </field>
         </record>
         <record id="res_partner_industry_action" model="ir.actions.act_window">
-            <field name="name">Sector of Activity</field>
+            <field name="name">Industry</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.industry</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a new sector of activity.
+                    Click to create a new industry.
                 </p>
                 <p>
                     Manage sectors of activity to better classify partners for tracking and analysis purposes.

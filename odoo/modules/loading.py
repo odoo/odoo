@@ -166,7 +166,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             overwrite = odoo.tools.config["overwrite_existing_translations"]
             module.with_context(overwrite=overwrite)._update_translations()
 
-            registry._init_modules.add(package.name)
+            if package.name is not None:
+                registry._init_modules.add(package.name)
 
             if new_install:
                 post_init = package.info.get('post_init_hook')
@@ -201,7 +202,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-        registry._init_modules.add(package.name)
+        if package.name is not None:
+            registry._init_modules.add(package.name)
         cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)

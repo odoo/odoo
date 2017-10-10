@@ -10,14 +10,21 @@ class TestStockValuation(TransactionCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.partner = self.env['res.partner'].create({'name': 'xxx'})
         self.uom_unit = self.env.ref('product.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
+        self.product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
 
         self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product2.product_tmpl_id.valuation = 'real_time'
         Account = self.env['account.account']
         self.stock_input_account = Account.create({
             'name': 'Stock Input',
@@ -54,19 +61,16 @@ class TestStockValuation(TransactionCase):
 
     def _get_stock_input_move_lines(self):
         return self.env['account.move.line'].search([
-            ('product_id', '=', self.product1.id),
             ('account_id', '=', self.stock_input_account.id),
         ], order='date, id')
 
     def _get_stock_output_move_lines(self):
         return self.env['account.move.line'].search([
-            ('product_id', '=', self.product1.id),
             ('account_id', '=', self.stock_output_account.id),
         ], order='date, id')
 
     def _get_stock_valuation_move_lines(self):
         return self.env['account.move.line'].search([
-            ('product_id', '=', self.product1.id),
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
 
@@ -1480,6 +1484,272 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 310)
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
 
+    def test_fifo_add_move_in_done_picking_1(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        # ---------------------------------------------------------------------
+        # Receive 10@10
+        # ---------------------------------------------------------------------
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': self.partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+
+        move1 = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': '10 in',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 10.0,
+            })]
+        })
+        move1._action_confirm()
+        move1._action_done()
+
+        # stock values for move1
+        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.remaining_qty, 10.0)
+        self.assertEqual(move1.price_unit, 10.0)
+        self.assertEqual(move1.remaining_value, 100.0)
+
+        # ---------------------------------------------------------------------
+        # Add a stock move, receive 10@20 of another product
+        # ---------------------------------------------------------------------
+        self.product2.product_tmpl_id.cost_method = 'fifo'
+        self.product2.standard_price = 20
+        move2 = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': '10 in',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'state': 'done',  # simulate default_get override
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product2.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 10.0,
+            })]
+        })
+        self.assertEqual(move2.value, 200.0)
+        self.assertEqual(move2.remaining_qty, 10.0)
+        self.assertEqual(move2.price_unit, 20.0)
+        self.assertEqual(move2.remaining_value, 200.0)
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+        self.assertEqual(self.product2.qty_available, 10)
+        self.assertEqual(self.product2.stock_value, 200)
+
+        # ---------------------------------------------------------------------
+        # Edit the previous stock move, receive 11
+        # ---------------------------------------------------------------------
+        move2.quantity_done = 11
+
+        self.assertEqual(move2.value, 200.0)
+        self.assertEqual(move2.remaining_qty, 11.0)
+        self.assertEqual(move2.price_unit, 20.0)
+        self.assertEqual(move2.remaining_value, 220.0)
+
+        # ---------------------------------------------------------------------
+        # Send 11 product 2
+        # ---------------------------------------------------------------------
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': self.partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move3 = self.env['stock.move'].create({
+            'picking_id': delivery.id,
+            'name': '11 out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 11.0,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product2.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 11.0,
+            })]
+        })
+
+        move3._action_confirm()
+        move3._action_done()
+
+        self.assertEqual(move3.value, -220.0)
+        self.assertEqual(move3.remaining_qty, 0.0)
+        self.assertEqual(move3.price_unit, -20.0)
+        self.assertEqual(move3.remaining_value, 0.0)
+
+        # ---------------------------------------------------------------------
+        # Add one move of product 2
+        # ---------------------------------------------------------------------
+        move4 = self.env['stock.move'].create({
+            'picking_id': delivery.id,
+            'name': '1 out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'state': 'done',  # simulate default_get override
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product2.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 1.0,
+            })]
+        })
+        self.assertEqual(move4.value, -20.0)
+        self.assertEqual(move4.remaining_qty, -1.0)
+        self.assertEqual(move4.price_unit, -20.0)
+        self.assertEqual(move4.remaining_value, -20.0)
+
+        # ---------------------------------------------------------------------
+        # edit the created move, add 1
+        # ---------------------------------------------------------------------
+        move4.quantity_done = 2
+
+        self.assertEqual(move4.value, -20.0)
+        self.assertEqual(move4.remaining_qty, -2.0)
+        self.assertEqual(move4.price_unit, -20.0)
+        self.assertEqual(move4.remaining_value, -40.0)
+
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 0)
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 320) # 10*10 + 11*20
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 320)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 260)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 260)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+
+        self.env['stock.move']._run_fifo_vacuum()
+
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 0)
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 320) # 10*10 + 11*20
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 320)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 260)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 260)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+
+        # ---------------------------------------------------------------------
+        # receive 2 products 2 @ 30
+        # ---------------------------------------------------------------------
+        move1 = self.env['stock.move'].create({
+            'picking_id': receipt.id,
+            'name': '10 in',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'price_unit': 30,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product2.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 2.0,
+            })]
+        })
+        move1._action_confirm()
+        move1._action_done()
+
+        # ---------------------------------------------------------------------
+        # run vacuum
+        # ---------------------------------------------------------------------
+        self.env['stock.move']._run_fifo_vacuum()
+
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 0)
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 380) # 10*10 + 11*20
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 380)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 280) # 260/
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 280)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+
+        self.assertEqual(self.product2.qty_available, 0)
+        self.assertEqual(self.product2.stock_value, 0)
+        self.assertEqual(move4.remaining_value, 0)
+
+    def test_fifo_add_moveline_in_done_move_1(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        # ---------------------------------------------------------------------
+        # Receive 10@10
+        # ---------------------------------------------------------------------
+        move1 = self.env['stock.move'].create({
+            'name': '10 in',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 10.0,
+            })]
+        })
+        move1._action_confirm()
+        move1._action_done()
+
+        # stock values for move1
+        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.remaining_qty, 10.0)
+        self.assertEqual(move1.price_unit, 10.0)
+        self.assertEqual(move1.remaining_value, 100.0)
+
+        self.assertEqual(len(move1.account_move_ids), 1)
+
+        # ---------------------------------------------------------------------
+        # Add a new move line to receive 10 more
+        # ---------------------------------------------------------------------
+        self.assertEqual(len(move1.move_line_ids), 1)
+        self.env['stock.move.line'].with_context(debug=True).create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'qty_done': 10,
+            'product_uom_id': move1.product_uom.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.remaining_qty, 20.0)
+        self.assertEqual(move1.price_unit, 10.0)
+        self.assertEqual(move1.remaining_value, 200.0)
+
+        self.assertEqual(len(move1.account_move_ids), 2)
+
+        self.assertEqual(self.product1.qty_available, 20)
+        self.assertEqual(self.product1.stock_value, 200)
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 0)
+        self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 200)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 200)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 0)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 0)
+        self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+
     def test_fifo_edit_done_move1(self):
         """ Check that incrementing the done quantity will correctly re-run a fifo lookup.
         """
@@ -1648,6 +1918,94 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 148)
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 148)
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+
+    def test_fifo_edit_done_move2(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        # ---------------------------------------------------------------------
+        # Receive 10@10
+        # ---------------------------------------------------------------------
+        move1 = self.env['stock.move'].create({
+            'name': 'receive 10@10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 10.0,
+            })]
+        })
+        move1._action_confirm()
+        move1._action_done()
+
+        # stock values for move1
+        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.remaining_qty, 10.0)
+        self.assertEqual(move1.price_unit, 10.0)
+        self.assertEqual(move1.remaining_value, 100.0)
+
+        # ---------------------------------------------------------------------
+        # Send 10
+        # ---------------------------------------------------------------------
+        move2 = self.env['stock.move'].create({
+            'name': '12 out (2 negative)',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 0,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'qty_done': 10.0,
+            })]
+        })
+        move2._action_confirm()
+        move2._action_done()
+
+        # stock values for move2
+        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.remaining_qty, 0.0)
+        self.assertEqual(move2.remaining_value, 0.0)
+
+        # ---------------------------------------------------------------------
+        # Actually, send 8 in the last move
+        # ---------------------------------------------------------------------
+        move2.quantity_done = 8
+
+        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.remaining_qty, 0.0)
+        self.assertEqual(move2.remaining_value, 0.0)
+
+        self.assertEqual(move1.remaining_qty, 2.0)
+        self.assertEqual(move1.remaining_value, 20.0)
+
+        self.product1.qty_available = 2
+        self.product1.stock_value = 20
+
+        # ---------------------------------------------------------------------
+        # Actually, send 10 in the last move
+        # ---------------------------------------------------------------------
+        move2.with_context(debug=True).quantity_done = 10
+
+        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.remaining_qty, 0.0)
+        self.assertEqual(move2.remaining_value, 0.0)
+
+        self.assertEqual(move1.remaining_qty, 0.0)
+        self.assertEqual(move1.remaining_value, 0.0)
+
+        self.product1.qty_available = 2
+        self.product1.stock_value = 20
 
     def test_average_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/avco-method
