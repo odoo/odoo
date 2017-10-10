@@ -100,15 +100,20 @@ class SaleOrder(models.Model):
 
         order_lines = [(5, 0, 0)]
         for line in template.quote_line:
+            discount = 0
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
+                    discount = (line.price_unit - price) / line.price_unit * 100
+                    price = line.price_unit
+
             else:
                 price = line.price_unit
 
             data = {
                 'name': line.name,
                 'price_unit': price,
-                'discount': line.discount,
+                'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
                 'layout_category_id': line.layout_category_id,
