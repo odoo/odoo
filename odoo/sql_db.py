@@ -432,18 +432,26 @@ class TestCursor(Cursor):
     """
     def __init__(self, *args, **kwargs):
         super(TestCursor, self).__init__(*args, **kwargs)
+        # to stack correctly when used as context manager, we count the depth
+        # of stacking
+        self._depth = 0
+        # in order to simulate commit and rollback, the cursor maintains a
+        # savepoint at its last commit
+        self.execute("SAVEPOINT test_cursor%d" % self._depth)
         # we use a lock to serialize concurrent requests
         self._lock = threading.RLock()
 
     def acquire(self):
         self._lock.acquire()
+        self._depth += 1
         # the cursor maintains a savepoint at its last commit point
-        self.execute("SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor%d" % self._depth)
 
     def release(self):
         # the cursor should be right after the savepoint; release it to make
         # former savepoints directly accessible
-        self.execute("RELEASE SAVEPOINT test_cursor")
+        self.execute("RELEASE SAVEPOINT test_cursor%d" % self._depth)
+        self._depth -= 1
         self._lock.release()
 
     def force_close(self):
@@ -459,12 +467,13 @@ class TestCursor(Cursor):
 
     def commit(self):
         # move the savepoint to the current position
-        self.execute("RELEASE SAVEPOINT test_cursor")
-        self.execute("SAVEPOINT test_cursor")
+        self.execute("RELEASE SAVEPOINT test_cursor%d" % self._depth)
+        self.execute("SAVEPOINT test_cursor%d" % self._depth)
 
     def rollback(self):
         # this does not release the savepoint; release() will do it
-        self.execute("ROLLBACK TO SAVEPOINT test_cursor")
+        self.execute("ROLLBACK TO SAVEPOINT test_cursor%d" % self._depth)
+        self.execute("SAVEPOINT test_cursor%d" % self._depth)
 
 class LazyCursor(object):
     """ A proxy object to a cursor. The cursor itself is allocated only if it is
