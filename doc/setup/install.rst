@@ -177,6 +177,22 @@ Or ``dpkg`` (handles less dependencies automatically):
     # dpkg -i <path_to_installation_package>
 
 
+.. warning:: The 3 following python packages are only suggested by the Debian package.
+             Those packages are not available in Ubuntu Xenial (16.04).
+
+* python3-vobject: Used in calendars to produce ical files.
+* python3-pyldap: Used to authenticat users with LDAP.
+* python3-qrcode: Used by the hardware driver for ESC/POS
+
+If you need one or all of the packages mentioned in the above warning, you can install them manually.
+One way to do it, is simply using pip3 like this:
+
+.. code-block:: console
+
+    $ sudo pip3 install vobject qrcode
+    $ sudo apt install libldap2-dev libsasl2-dev
+    $ sudo pip3 install pyldap
+
 This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
