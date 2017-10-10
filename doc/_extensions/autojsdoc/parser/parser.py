@@ -2,7 +2,6 @@
 import collections
 
 import pyjsdoc
-from attr import attrs, Factory, attr, astuple
 
 from . import jsdoc
 from . import utils
@@ -97,21 +96,25 @@ def m2r(me, scope):
         utils._value(me['property'], strict=True)
     )
 
-@attrs(slots=True)
+NOTHING = object()
 class Declaration(object):
-    id = attr(default=None)
-    comments = attr(default=Factory(list))
-@attrs(slots=True)
+    __slots__ = ['id', 'comments']
+    def __init__(self, id=None, comments=NOTHING):
+        self.id = id
+        self.comments = [] if comments is NOTHING else comments
+
 class ModuleContent(object):
-    dependencies = attr(default=Factory(set))
-    post = attr(default=Factory(list))
+    __slots__ = ['dependencies', 'post']
+    def __init__(self, dependencies=NOTHING, post=NOTHING):
+        self.dependencies = set() if dependencies is NOTHING else dependencies
+        self.post = [] if post is NOTHING else post
     def __iter__(self):
         yield self.dependencies
         yield self.post
 
-@attrs # needs dict as it's replacing a ModuleProxy
 class Nothing(object):
-    name = attr()
+    def __init__(self, name):
+        self.name = name
     def __bool__(self):
         return False
     __nonzero__ = __bool__
@@ -389,7 +392,7 @@ class ValueExtractor(Visitor):
         return SKIP
 
     def enter_FunctionExpression(self, node):
-        name, comments = astuple(self.declaration)
+        name, comments = (self.declaration.id, self.declaration.comments)
         self.result = jsdoc.parse_comments(comments, jsdoc.FunctionDoc)
         self.result.parsed['name'] = node['id'] and node['id']['name']
         self._update_result_meta()
@@ -437,7 +440,7 @@ class ValueExtractor(Visitor):
             },
         }):  # creates a new class, but may not actually return it
             obj = node['callee']['object']
-            _, comments = astuple(self.declaration)
+            comments = self.declaration.comments
             self.result = cls = jsdoc.parse_comments(comments, jsdoc.ClassDoc)
             cls.parsed['extends'] = self.parent.refify(obj)
             self._update_result_meta()
