@@ -174,6 +174,26 @@ QUnit.module('DomainSelector', {
 
         domainSelector.destroy();
     });
+
+    QUnit.test("building a domain with a m2o without following the relation", function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        var domainSelector = new DomainSelector(null, "partner", [["product_id", "ilike", 1]], {
+            debugMode: true,
+            readonly: false,
+        });
+        testUtils.addMockEnvironment(domainSelector, {data: this.data});
+        domainSelector.appendTo($target);
+
+        domainSelector.$('.o_domain_leaf_value_input').val('pad').trigger('input').trigger('change');
+        assert.strictEqual(domainSelector.$('.o_domain_debug_input').val(), '[["product_id","ilike","pad"]]',
+            "string should have been allowed as m2o value");
+
+        domainSelector.destroy();
+    });
 });
 });
 });
