@@ -174,7 +174,7 @@ class NSDoc(CommentDoc):
                     for p in self.get_as_list('property')
                 )
             ]
-        return self.members.items() or self['_members'] or []
+        return list(self.members.items()) or self['_members'] or []
 
     def has_property(self, name):
         return self.get_property(name) is not None
