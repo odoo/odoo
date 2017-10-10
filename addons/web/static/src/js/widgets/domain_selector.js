@@ -800,6 +800,8 @@ var DomainLeaf = DomainNode.extend({
             } else {
                 this.value = this.value.toJSON(); // toJSON to get date with server format
             }
+        } else if (selectedField.type === "many2one" && isNaN(this.value.id)) {
+            this.value = value;
         } else {
             // Never display "true" or "false" strings from boolean value
             if (_.isBoolean(this.value)) {
