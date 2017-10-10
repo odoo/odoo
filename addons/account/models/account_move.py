@@ -1509,7 +1509,18 @@ class AccountPartialReconcile(models.Model):
         #then, if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding
 
-        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0:
+        # Preventing the case of a false-positive full-reconcile situation, see commit message
+        proceed_full_reconcile = True
+        if currency:
+            for aml in aml_to_balance:
+                rate_aml = aml.currency_id.with_context(date=aml.date).rate
+                for partial_rec in aml.matched_credit_ids | aml.matched_debit_ids:
+                    rate_partial = partial_rec.currency_id.with_context(date=partial_rec.create_date).rate
+                    if float_compare((1 / rate_partial) * partial_rec.amount_currency, (1 / rate_aml) * aml.amount_currency, precision_rounding=digits_rounding_precision) == 0:
+                        proceed_full_reconcile = False
+                        break
+
+        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or (proceed_full_reconcile and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
             exchange_move_id = False
             exchange_partial_rec_id = False
             if currency and aml_to_balance:
