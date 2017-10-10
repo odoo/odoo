@@ -95,7 +95,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
             arguments = json.loads(e.args[0])
             arguments['body'] = env['ir.qweb'].render(credit_template)
             e.args = (json.dumps(arguments),)
-
+        raise e
     try:
         yield
     except Exception as e:
