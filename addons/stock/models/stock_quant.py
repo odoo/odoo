@@ -695,6 +695,17 @@ class QuantPackage(models.Model):
         return True
 
     @api.multi
+    def action_view_related_picking(self):
+        """ Returns an action that display the picking related to this
+        package (source or destination).
+        """
+        self.ensure_one()
+        pickings = self.env['stock.picking'].search(['|', ('pack_operation_ids.package_id', '=', self.id), ('pack_operation_ids.result_package_id', '=', self.id)])
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
+
+    @api.multi
     def unpack(self):
         for package in self:
             # TDE FIXME: why superuser ?
