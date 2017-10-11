@@ -27,12 +27,11 @@
             }
         }
     }
-
     // Button box
     .oe_button_box {
         width: 400px;
-        text-align: right;
-        float: right;
+        .text-align(right);
+        .float(right);
 
         &, & + .oe_avatar {
             + .oe_title {
@@ -41,10 +40,10 @@
         }
 
         .oe_stat_button {
-            text-align: left;
+            .text-align(left);
             width: 132px !important;
             height: 40px;
-            margin: 0px -1px -1px 0px;
+            .margin(0px, -1px, -1px, 0px);
             padding: 0;
             border-radius: 0;
             border-color: #ccc;
@@ -92,7 +91,7 @@
             }
 
             > div {
-                text-align: left;
+                .text-align(left);
                 padding: 0;
                 line-height: 120%;
                 vertical-align: middle;
@@ -114,7 +113,7 @@
 
     // Avatar
     .oe_avatar {
-        float: left;
+        .float(left);
         > img {
             max-height: 90px;
             max-width: 90px;
@@ -123,18 +122,18 @@
             border: none;
         }
         + .oe_title {
-            padding-left: 95px;
-            margin-left: 5px;
+            .padding-left(95px);
+            .margin-left(5px);
         }
     }
 
     // Groups
     .o_group {
         .o_td_label {
-            border-right: 1px solid #ddd;
+            .border-right(1px solid #ddd);
         }
         .o_td_label + td {
-            padding: 2px 36px 2px 8px;
+            .padding(2px, 36px, 2px, 8px);
         }
         .o_field_widget.o_text_overflow {
             width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
@@ -150,7 +149,7 @@
 
     // Translate icon
     .o_field_translate {
-        margin-left: -15px;
+        .margin-left(-15px);
     }
 
     // Specific style classes
@@ -159,7 +158,7 @@
             border-top: 1px solid #cacaca;
         }
         .o_td_label {
-            border-right: none;
+            .border-right(none);
         }
     }
 

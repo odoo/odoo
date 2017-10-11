@@ -1,7 +1,7 @@
 .o_livechat_button {
     position: fixed;
     bottom: 0px;
-    right: 6px;
+    .right(6px);
     min-width: 100px;
     cursor: pointer;
     white-space: nowrap;
@@ -14,8 +14,8 @@
     text-shadow: rgb(59, 76, 88) 1px 1px 0px;
     border: 1px solid rgb(80, 80, 80);
     border-bottom: 0px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    .border-top-left-radius(5px);
+    .border-top-right-radius(5px);
     z-index: 5;
 }
 
@@ -33,7 +33,7 @@
 
         .o_livechat_no_feedback {
             padding-top: 20px;
-            text-align: right;
+            .text-align(right);
             font-size: 12px;
 
             > em {
@@ -73,7 +73,7 @@
         }
 
         .o_livechat_rating_reason_button > input {
-            float: right;
+            .float(right);
         }
     }
 }

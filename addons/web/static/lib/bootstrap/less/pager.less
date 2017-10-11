@@ -4,7 +4,7 @@
 
 
 .pager {
-  padding-left: 0;
+  .padding-left(0);
   margin: @line-height-computed 0;
   list-style: none;
   text-align: center;
@@ -17,7 +17,7 @@
       padding: 5px 14px;
       background-color: @pager-bg;
       border: 1px solid @pager-border;
-      border-radius: @pager-border-radius;
+      .border-radius(@pager-border-radius);
     }
 
     > a:hover,
@@ -30,14 +30,14 @@
   .next {
     > a,
     > span {
-      float: right;
+      .float(right);
     }
   }
 
   .previous {
     > a,
     > span {
-      float: left;
+      .float(left);
     }
   }
 

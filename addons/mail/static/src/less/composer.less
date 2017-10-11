@@ -22,7 +22,7 @@
         > input {
             .o-flex(1, 1, auto);
             padding: 5px;
-            margin-right: 30px;
+            .margin-right(30px);
         }
     }
 
@@ -60,13 +60,13 @@
         }
 
         .o_mail_emoji_container {
-            padding: 0 @o-mail-chatter-gap @o-mail-chatter-gap 0;
+            .padding(0, @o-mail-chatter-gap, @o-mail-chatter-gap, 0);
             border: 1px solid @gray-lighter-dark;
             border-width: 1px 0 0 0;
             background-color: @gray-lighter;
 
             .o_mail_emoji {
-                margin: @o-mail-chatter-gap 0 0 @o-mail-chatter-gap;
+                .margin(@o-mail-chatter-gap, 0, 0, @o-mail-chatter-gap);
                 cursor: pointer; // only in the popover
             }
         }
@@ -75,7 +75,7 @@
     // Both inline and not-inline design. Mini-composer disabled.
     &:not(.o_chat_mini_composer) {
         padding:  @mail-thread-avatar-size*0.5;
-        padding-left: @grid-gutter-width*0.5 + @mail-thread-avatar-size + @o-mail-chatter-gap;
+        .padding-left(@grid-gutter-width*0.5 + @mail-thread-avatar-size + @o-mail-chatter-gap);
         border: 1px solid @gray-lighter-dark;
         border-top: none;
 
@@ -95,7 +95,7 @@
         .o_composer {
             border-radius: 2px;
             textarea {
-                padding-right: @grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
+                .padding-right(@grid-gutter-width); // avoid overlaps betwenn textarea and o_composer_button_full_composer
             }
 
             .o_mail_emoji_container {
@@ -113,7 +113,7 @@
         }
         .o_composer_subject {
             border-bottom: 0;
-            border-radius: 2px 2px 0 0;
+            .border-radius(2px, 2px, 0, 0);
         }
 
         .o_chatter_composer_tools {
@@ -139,13 +139,13 @@
                 .o-flex(1, 0, auto);
             }
             .o_composer {
-                padding: @o-mail-chatter-gap @o-mail-chatter-gap 0 @o-mail-chatter-gap;
-                border-radius: 2px 0 0 2px;
-                border-right-width: 0;
+                .padding(@o-mail-chatter-gap, @o-mail-chatter-gap, 0, @o-mail-chatter-gap);
+                .border-radius(2px, 0, 0, 2px);
+                .border-right-width(0);
 
                 .o_mail_emoji_container {
-                    text-align: right;
-                    border-right-width: 1px;
+                    .text-align(right);
+                    .border-right-width(1px);
                 }
             }
             .o_composer_input {
@@ -166,17 +166,17 @@
 
             .o_chatter_composer_tools {
                 border: none;
-                border-left: 1px solid @gray-lighter-dark;
-                padding-left: @o-mail-chatter-gap*0.5;
+                .border-left(1px solid @gray-lighter-dark);
+                .padding-left(@o-mail-chatter-gap*0.5);
                 .o-transform(translateY(-@o-mail-chatter-gap*0.5));
             }
 
             .o_composer_button_send {
-                border-radius: 0 3px 3px 0;
+                .border-radius(0, 3px, 3px, 0);
                 // Make the button appear as the same size as the subject input
                 padding: 10px @padding-base-horizontal;
                 border: 1px solid darken(@odoo-brand-optional, 5%);
-                border-left-width: 0;
+                .border-left-width(0);
             }
         }
     }
@@ -357,7 +357,7 @@
         .o_loading_img {
             .o-position-absolute(@top: 50%);
             width: 25px;
-            right: 50%;
+            .right(50%);
             z-index: 1;
         }
         .o_viewer_img_wrapper {
@@ -390,7 +390,7 @@
             .o-position-absolute(@left: 50%);
             bottom: 15px;
             transform: translate(-50%, -50%);
-            padding: 8px 10px 0px 10px;
+            .padding(8px, 10px, 0px, 10px);
             background-color: rgba(0, 0, 0, 0.6);
             border-radius: 4px;
         }
@@ -400,11 +400,11 @@
         color: #FFFFFF;
     }
     .arrow-left {
-        left: 0;
+        .left(0);
     }
 
     .arrow-right {
-        right: 0;
+        .right(0);
     }
     i.fa {
         color: #FFFFFF;

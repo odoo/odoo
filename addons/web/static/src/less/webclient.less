@@ -26,7 +26,7 @@
 
     .o_notification {
         padding: 0;
-        margin: 5px 0 0 0;
+        .margin(5px, 0, 0, 0);
 
         opacity: 0;
 
@@ -45,13 +45,13 @@
             .o-align-items(center);
 
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            padding: 10px 10px 10px 20px;
+            .padding(10px, 10px, 10px, 20px);
 
             font-weight: bold;
 
             .o_icon {
                 display: inline-block;
-                margin-right: 20px;
+                .margin-right(20px);
                 color: rgba(0, 0, 0, 0.3);
             }
         }
@@ -95,8 +95,8 @@ div.o_boolean_toggle {
             position: absolute;
             cursor: pointer;
             top: 0;
-            left: 0;
-            right: 0;
+            .left(0);
+            .right(0);
             bottom: 0;
             background-color: #a0a0a0;
             border-radius: 24px;
@@ -106,7 +106,7 @@ div.o_boolean_toggle {
                 content: "";
                 height: 12px;
                 width: 12px;
-                left: 3px;
+                .left(3px);
                 bottom: 3px;
                 background-color: white;
                 border-radius: 50%;

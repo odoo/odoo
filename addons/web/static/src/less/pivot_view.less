@@ -35,38 +35,32 @@
         }
 
         .o_pivot_header_cell_closed {
+            .text-align(left);
             .o-pivot-header-cell;
-            &::before {
-                font-family: FontAwesome;
-                content: "";
-                margin-right: 8px;
-            }
+            .o_pivot_header_cell_closed_mixin();
         }
 
         .o_pivot_header_cell_opened {
             .o-pivot-header-cell;
-            &::before {
-                font-family: FontAwesome;
-                content: "";
-                margin-right: 8px;
-            }
+            .text-align(left);
+            .o_pivot_header_cell_opened_mixin();
         }
 
         .o_pivot_measure_row_sorted_asc::after {
             .o-caret-down;
-            margin-left: 5px;
+            .margin-left(5px);
         }
 
         .o_pivot_measure_row_sorted_desc::after {
             .o-caret-up;
-            margin-left: 5px;
+            .margin-left(5px);
         }
     }
 
     .o_pivot_field_selection::after {
         .o-caret-right;
         position: absolute;
-        right: 6px;
+        .right(6px);
         top: 9px;
     }
 }
