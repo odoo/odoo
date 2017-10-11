@@ -31,6 +31,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(AccessError):
             HolidaysStatus.sudo(self.user_hruser_id).create({
                 'name': 'UserCheats',
+                'code': 'UC',
                 'limit': True,
             })
 
@@ -38,15 +39,18 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         HolidayStatusManagerGroup = HolidaysStatus.sudo(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
+            'code': 'WMT',
             'limit': True,
             'categ_id': self.env['calendar.event.type'].sudo(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id
         })
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimited',
+            'code': 'NL',
             'limit': True,
         })
         self.holidays_status_2 = HolidayStatusManagerGroup.create({
             'name': 'Limited',
+            'code': 'LL',
             'limit': False,
             'double_validation': True,
         })

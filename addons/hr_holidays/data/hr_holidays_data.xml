@@ -17,6 +17,7 @@
         <!-- Casual leave -->
         <record id="holiday_status_cl" model="hr.holidays.status">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="code">LEGALLEAVES</field>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
@@ -24,6 +25,7 @@
         <!-- Sick leave -->
         <record id="holiday_status_sl" model="hr.holidays.status">
             <field name="name">Sick Leaves</field>
+            <field name="code">SICK</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
         </record>
@@ -31,6 +33,7 @@
         <!-- Compensatory Days -->
         <record id="holiday_status_comp" model="hr.holidays.status">
             <field name="name">Compensatory Days</field>
+            <field name="code">COMPENSATION</field>
             <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
         </record>
@@ -38,6 +41,7 @@
         <!--Unpaid Leave -->
         <record id="holiday_status_unpaid" model="hr.holidays.status">
             <field name="name">Unpaid</field>
+            <field name="code">UNPAID</field>
             <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
         </record>
