@@ -371,7 +371,7 @@
     <template id="products_list_view" inherit_id="website_sale.product_table" active="False" customize_show="True" name="List View">
         <xpath expr="//table[@id='product_table']" position="replace">
             <t t-foreach="products" t-as="product">
-                <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+                <div t-attf-class="oe_product oe_list oe_product_cart #{' '.join(x.html_class for x in product.website_style_ids if x.html_class)}" t-att-data-publish="product.website_published and 'on' or 'off'">
                     <t t-call="website_sale.products_item">
                         <t t-set="show_publish" t-value="True" />
                     </t>

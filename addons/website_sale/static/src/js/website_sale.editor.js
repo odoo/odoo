@@ -149,9 +149,8 @@ options.registry.website_sale = options.Class.extend({
             var x = $td.index()+1;
             var y = $td.parent().index()+1;
             self._rpc({
-                route: '/shop/change_size',
+                route: '/shop/change_size/' + self.product_tmpl_id,
                 params: {
-                    id: self.product_tmpl_id,
                     x: x,
                     y: y,
                 },
@@ -200,6 +199,7 @@ options.registry.website_sale = options.Class.extend({
             distance: 15,
             cursor: 'move',
             revertDuration: 200,
+            zIndex: 1000,
             start: function(event, ui) {
                 starty = event.pageY;
                 startx = event.pageX;
@@ -210,9 +210,25 @@ options.registry.website_sale = options.Class.extend({
                 });
             },
             stop: function(event, ui) {
+
+                var offset = $(event.target).offset()
+                var offset_top = offset.top;
+                var offset_bottom = offset.top + $(event.target).height();
+                var offset_left = offset.left;
+                var offset_right = offset.left + $(event.target).width();
+
                 stopx = event.pageX;
                 stopy = event.pageY;
-                direction = (starty > stopy && startx > stopx) ? "up" : "down";
+
+                if(stopy - offset_top < 0) {
+                    direction = "up";
+                } else if(offset_bottom - stopy  < 0) {
+                    direction = "down";
+                } else if(stopx - offset_left < 0) {
+                    direction = "up";
+                } else if(offset_right - stopx  < 0) {
+                    direction = "down";
+                }
                 if (is_dragged) {
                     is_dragged = false;
                     self._rpc({

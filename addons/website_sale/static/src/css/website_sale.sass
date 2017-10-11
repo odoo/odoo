@@ -161,6 +161,21 @@
         cursor: default
 
 
+.oe_product.oe_list
+    .ribbon-wrapper
+        left: 0
+    .ribbon
+        -webkit-transform: rotate(-45deg)
+        -moz-transform: rotate(-45deg)
+        -ms-transform: rotate(-45deg)
+        -o-transform: rotate(-45deg)
+        left: -30px
+
+body.editor_enable
+    .oe_product:hover
+        outline: 2px solid #86eefb
+        z-index: 6
+
 /* ---- Product Sizes ---- */
 
 #products_grid
@@ -585,3 +600,16 @@ a.no-decoration
 
 .o_shadow_animation
     box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important
+
+/*Drag and Drop product size helper*/
+.ui-resizable-helper
+    border: 2px dotted #999
+
+#wrapwrap #product_table
+    .oe_drop_zone.oe_insert.oe_vertical
+        margin: 0 0px
+        width: 20px
+
+#wrapwrap #product_table
+    .oe_drop_zone.oe_insert.oe_vertical:after
+        width: 0%
