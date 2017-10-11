@@ -59,11 +59,11 @@
         </li>
         <li t-if="widget.attrs.context || widget.field.context" data-item="context">
             <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.attrs.context || widget.field.context"/>
+            <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
         </li>
         <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
             <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.attrs.domain || widget.field.domain"/>
+            <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
         <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
