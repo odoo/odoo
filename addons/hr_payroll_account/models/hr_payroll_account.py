@@ -73,7 +73,8 @@ class HrPayslip(models.Model):
                 if float_is_zero(amount, precision_digits=precision):
                     continue
                 debit_account_id = line.salary_rule_id.account_debit.id
-                credit_account_id = line.salary_rule_id.account_credit.id
+                #La siguiente línea fue modificada por TRESCLOUD
+                credit_account_id = self.get_credit_account_id(line)
 
                 if debit_account_id:
                     debit_line = (0, 0, {
@@ -139,6 +140,14 @@ class HrPayslip(models.Model):
             slip.write({'move_id': move.id, 'date': date})
             move.post()
         return super(HrPayslip, self).action_payslip_done()
+    
+    #El siguiente método fue agregado TRESCLOUD
+    @api.model
+    def get_credit_account_id(self, line):
+        '''
+        Este metodo devuelve la cuenta acreedora configurada en la regla salarial, va ser modificado en ecua_hr
+        '''
+        return line.salary_rule_id.account_credit.id
 
 
 class HrSalaryRule(models.Model):
