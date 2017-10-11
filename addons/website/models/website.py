@@ -103,7 +103,7 @@ class Website(models.Model):
             template_module, _ = template.split('.')
         page_url = '/' + slugify(name, max_length=1024, path=True)
         page_url = self.get_unique_path(page_url)
-        page_key = self.get_unique_path(slugify(name))
+        page_key = slugify(name)
         result = dict({'url': page_url, 'view_id': False})
 
         if not name:
@@ -112,7 +112,7 @@ class Website(models.Model):
 
         template_record = self.env.ref(template)
         website_id = self._context.get('website_id')
-        key = '%s.%s' % (template_module, page_key)
+        key = self.get_unique_key(page_key, template_module)
         view = template_record.copy({'website_id': website_id, 'key': key})
 
         view.with_context(lang=None).write({
@@ -148,6 +148,28 @@ class Website(models.Model):
             inc += 1
             page_temp = page_url + (inc and "-%s" % inc or "")
         return page_temp
+
+    def get_unique_key(self, string, template_module=False):
+        """ Given a string, return an unique key including module prefix.
+            It will be suffixed by a counter if it already exists to garantee uniqueness.
+            :param string : the key to be checked for uniqueness, you can pass it with 'website.' or not
+            :param template_module : the module to be prefixed on the key, if not set, we will use website
+        """
+        website_id = self.get_current_website().id
+        if template_module:
+            string = template_module + '.' + string
+        else:
+            if not string.startswith('website.'):
+                string = 'website.' + string
+
+        #Look for unique key
+        key_copy = string
+        inc = 0
+        domain_static = ['|', ('website_ids', '=', False), ('website_ids', 'in', website_id)]
+        while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+            inc += 1
+            key_copy = string + (inc and "-%s" % inc or "")
+        return key_copy
 
     def key_to_view_id(self, view_id):
         return self.env['ir.ui.view'].search([
@@ -568,13 +590,22 @@ class Page(models.Model):
     @api.model
     def save_page_info(self, website_id, data):
         website = self.env['website'].browse(website_id)
+        page = self.browse(int(data['id']))
 
         #If URL has been edited, slug it
-        page = self.browse(int(data['id']))
         original_url = page.url
         url = data['url']
+        if not url.startswith('/'):
+            url = '/' + url
         if page.url != url:
-            url = slugify(url, max_length=200, path=True)
+            url = '/' + slugify(url, max_length=1024, path=True)
+            url = self.env['website'].get_unique_path(url)
+
+        #If name has changed, check for key uniqueness
+        if page.name != data['name']:
+            page_key = self.env['website'].get_unique_key(slugify(data['name']))
+        else:
+            page_key = page.key
 
         menu = self.env['website.menu'].search([('page_id', '=', int(data['id']))])
         if not data['is_menu']:
@@ -595,7 +626,7 @@ class Page(models.Model):
                 })
 
         page.write({
-            'key': 'website.' + slugify(data['name'], 50),
+            'key': page_key,
             'name': data['name'],
             'url': url,
             'website_published': data['website_published'],
