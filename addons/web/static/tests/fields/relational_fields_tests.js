@@ -6248,6 +6248,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('checkbox in an x2many that triggers an onchange', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {
+            bar: function () {}
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="bar"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        form.$('.o_field_widget[name=bar] input').click();
+        assert.notOk(form.$('.o_field_widget[name=bar] input').prop('checked'),
+            "the checkbox should be unticked");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many with default value: edit line to make it invalid', function (assert) {
         assert.expect(3);
 
