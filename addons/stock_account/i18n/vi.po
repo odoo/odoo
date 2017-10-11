@@ -10,10 +10,10 @@
 # son dang <son.dang@doda100.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
 "Last-Translator: son dang <son.dang@doda100.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgid "Cancel"
 msgstr "Hủy"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:380
+#: code:addons/stock_account/models/stock.py:409
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -80,7 +80,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:382
+#: code:addons/stock_account/models/stock.py:411
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -113,7 +113,7 @@ msgid "Click to create a stock movement."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:451
+#: code:addons/stock_account/models/stock.py:480
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -307,6 +307,11 @@ msgid "Price"
 msgstr "Giá"
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Yêu cầu thu mua"
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
 msgid "Product"
@@ -458,7 +463,7 @@ msgid "Templates for Account Chart"
 msgstr "Mẫu hệ thống tài khoản"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:406
+#: code:addons/stock_account/models/stock.py:435
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -616,7 +621,7 @@ msgstr ""
 "phẩm, tài khoản này sẽ giữ giá trị hiện tài của sản phẩm."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:378
+#: code:addons/stock_account/models/stock.py:407
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -625,7 +630,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:384
+#: code:addons/stock_account/models/stock.py:413
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

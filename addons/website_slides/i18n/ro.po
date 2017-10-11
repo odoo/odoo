@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * website_slides
 # 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +39,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Bună,</p>\n"
+"<p>\n"
+"    ${user.name} împarte ${object.slide_type} <strong>${object.name}</strong> cu tine!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Afișează <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -73,7 +93,7 @@ msgstr ""
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
-msgstr ""
+msgstr "${user.name} împarte ${object.slide_type} cu tine!"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -107,11 +127,13 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Împarte</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<b>Share:</b>"
-msgstr ""
+msgstr "<b>Împarte:</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -147,7 +169,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-comments-o\"/> Comments"
-msgstr ""
+msgstr "<i class=\"fa fa-comments-o\"/> Comentarii"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -188,12 +210,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt\"/> Împarte"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
-msgstr ""
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> Încarcă ..."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -270,24 +292,24 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "Cheie API"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
-msgstr ""
+msgstr "Acțiuni"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
 msgid "Active"
-msgstr ""
+msgstr "Activ(a)"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhivat"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -320,7 +342,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
-msgstr ""
+msgstr "Categorii"
 
 #. module: website_slides
 #. openerp-web
@@ -332,7 +354,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
 #, python-format
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
@@ -341,7 +363,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
-msgstr ""
+msgstr "Canal"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
@@ -377,7 +399,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
-msgstr ""
+msgstr "Canale"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
@@ -387,7 +409,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
 msgid "Content"
-msgstr ""
+msgstr "Conținut"
 
 #. module: website_slides
 #. openerp-web
@@ -422,7 +444,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:219
 #, python-format
 msgid "Create new tag '%s'"
-msgstr ""
+msgstr "Crează o nouă etichetă '%s'"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
@@ -431,7 +453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
@@ -440,7 +462,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_public
@@ -458,14 +480,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
-msgstr ""
+msgstr "Descriere"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Abandonează"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
@@ -507,7 +529,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
@@ -519,7 +541,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #: selection:slide.slide,slide_type:0
 msgid "Document"
-msgstr ""
+msgstr "Document"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
@@ -534,12 +556,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Documents"
-msgstr ""
+msgstr "Documente"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Download"
-msgstr ""
+msgstr "Descarcă"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_5
@@ -599,12 +621,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Error Message"
-msgstr ""
+msgstr "Mesaj de eroare"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Everyone"
-msgstr ""
+msgstr "Toți"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -637,12 +659,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
 msgid "Full Access"
-msgstr ""
+msgstr "Acces Nelimitat"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
@@ -662,7 +684,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupează după"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
@@ -683,12 +705,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
 msgid "Image"
-msgstr ""
+msgstr "Imagine"
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -722,7 +744,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -731,7 +753,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
@@ -740,7 +762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -761,12 +783,12 @@ msgstr ""
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag2
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
-msgstr ""
+msgstr "Mediu"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
@@ -798,7 +820,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
@@ -808,7 +830,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
-msgstr ""
+msgstr "Cele mai noi"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -969,7 +991,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Private"
-msgstr ""
+msgstr "Personal"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
@@ -979,7 +1001,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Public"
-msgstr ""
+msgstr "Public"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
@@ -994,7 +1016,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
-msgstr ""
+msgstr "Publicat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
@@ -1004,7 +1026,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Related"
-msgstr ""
+msgstr "Asociat"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1040,7 +1062,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
-msgstr ""
+msgstr "Securitate"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
@@ -1056,12 +1078,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Secvență"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr ""
+msgstr "Împarte legatură"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1076,12 +1098,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Share with a friend"
-msgstr ""
+msgstr "Împarte cu un prieten"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
 msgid "Shared Template"
-msgstr ""
+msgstr "Șablon partajare"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1136,7 +1158,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
-msgstr ""
+msgstr "Etichetă"
 
 #. module: website_slides
 #. openerp-web
@@ -1148,17 +1170,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
 msgid "Tags"
-msgstr ""
+msgstr "Etichete"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
-msgstr ""
+msgstr "Etichete..."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "The"
-msgstr ""
+msgstr "-l"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
@@ -1204,13 +1226,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "Titlu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_total
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
@@ -1226,13 +1248,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:151
 #, python-format
 msgid "Uncategorized"
-msgstr ""
+msgstr "Neclasificat"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1248,7 +1270,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Nepublicat"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1290,7 +1312,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -1301,17 +1323,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
-msgstr ""
+msgstr "Vizualizări"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.related_slides
 msgid "Views ."
-msgstr ""
+msgstr "Vizualizări ."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
 msgid "Visibility"
-msgstr ""
+msgstr "Vizibilitate"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1329,7 +1351,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr ""
+msgstr "Pagină web"
 
 #. module: website_slides
 #. openerp-web
@@ -1398,7 +1420,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
