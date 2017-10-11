@@ -265,6 +265,10 @@ class ProductTemplate(models.Model):
         # TDE FIXME: context brol
         tools.image_resize_images(vals)
         template = super(ProductTemplate, self).create(vals)
+
+        # If we create a variant from an existing template, just return it
+        if 'current_template_id' in self._context:
+            return template
         if "create_product_product" not in self._context:
             template.with_context(create_from_tmpl=True).create_variant_ids()
 

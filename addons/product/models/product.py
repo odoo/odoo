@@ -313,18 +313,43 @@ class ProductProduct(models.Model):
 
     @api.model
     def default_get(self, fields):
+        def field_get_data(obj, field):
+            if obj._fields[field].type == 'many2one':
+                return obj[field].id
+            if obj._fields[field].type == 'many2many':
+                return [(6, 0, obj[field].ids)]
+            if obj._fields[field].type == 'one2many':
+                return False
+            return obj[field]
+
         defaults_super = super(ProductProduct, self).default_get(fields)
         if self._context.get('active_model') and self._context.get('active_model') == 'product.template':
             product_template_id = self._context.get('default_product_tmpl_id')
             if product_template_id:
                 product_template = self.env['product.template'].browse(product_template_id)
-                defaults_super['name'] = product_template.name
+                defaults = {'name': product_template.name}
+                for field in defaults_super.keys():
+                    if field in self._fields and field in product_template._fields:
+                        defaults[field] = field_get_data(product_template, field)
+                return defaults
         return defaults_super
-
 
     @api.model
     def create(self, vals):
-        product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
+        context_for_creation = {'create_product_product': True}
+        if self._context.get('active_model') and self._context.get('active_model') == 'product.template':
+            product_template_id = self._context.get('default_product_tmpl_id')
+            if product_template_id:
+                context_for_creation = {'current_template_id': product_template_id}
+        product = super(ProductProduct, self.with_context(context_for_creation)).create(vals)
+
+        # variants are created with their template,
+        # but here we want to assign this variant to the originating template
+        if 'current_template_id' in product._context:
+            old_prod_template = product.product_tmpl_id
+            product.write({'product_tmpl_id': product._context['current_template_id']})
+            if old_prod_template.id != product._context['current_template_id']:
+                old_prod_template.unlink()
         # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
         if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
             product._set_standard_price(vals.get('standard_price') or 0.0)
