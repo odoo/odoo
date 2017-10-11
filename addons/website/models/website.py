@@ -102,6 +102,7 @@ class Website(models.Model):
         else:
             template_module, _ = template.split('.')
         page_url = '/' + slugify(name, max_length=1024, path=True)
+        page_url = self.get_unique_path(page_url)
         page_key = self.get_unique_path(slugify(name))
         result = dict({'url': page_url, 'view_id': False})
 
