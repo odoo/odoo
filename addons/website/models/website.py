@@ -101,9 +101,8 @@ class Website(models.Model):
             template_module = namespace
         else:
             template_module, _ = template.split('.')
-        # completely arbitrary max_length
-        page_url = '/' + slugify(name, max_length=200, path=True)
-        page_key = self.get_unique_path(slugify(name, 50))
+        page_url = '/' + slugify(name, max_length=1024, path=True)
+        page_key = self.get_unique_path(slugify(name))
         result = dict({'url': page_url, 'view_id': False})
 
         if not name:
