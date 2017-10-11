@@ -176,7 +176,8 @@ class AccountAccount(models.Model):
 
     @api.onchange('internal_type')
     def onchange_internal_type(self):
-        self.reconcile = self.internal_type in ('receivable', 'payable')
+        if self.internal_type in ('receivable', 'payable'):
+            self.reconcile = True
 
     @api.onchange('code')
     def onchange_code(self):
@@ -226,22 +227,22 @@ class AccountAccount(models.Model):
 
     @api.multi
     def _toggle_reconcile_to_true(self):
+        '''Toggle the reconciled boolean from false -> true'''
         query = """
-            UPDATE account_move_line
-                SET reconciled = CASE
-                    WHEN debit = 0 AND credit = 0 AND amount_currency = 0
-                    THEN true
-                    ELSE false
-                    END,
-                full_reconcile_id = NULL,
-                amount_residual = (debit-credit),
-                amount_residual_currency = amount_currency
-            WHERE account_id IN %s
+            UPDATE account_move_line SET
+                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true ELSE false END,
+                amount_residual = CASE WHEN amount_residual = 0
+                    THEN (debit-credit) ELSE amount_residual END,
+                amount_residual_currency = CASE WHEN amount_residual_currency = 0
+                    THEN amount_currency ELSE amount_residual_currency END
+            WHERE full_reconcile_id IS NULL and account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
 
     @api.multi
     def _toggle_reconcile_to_false(self):
+        '''Toggle the reconciled boolean from true -> false'''
         partial_lines_count = self.env['account.move.line'].search_count([
             ('account_id', 'in', self.ids),
             ('full_reconcile_id', '=', False),
@@ -268,10 +269,10 @@ class AccountAccount(models.Model):
                 if (account.company_id.id != vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
         if 'reconcile' in vals:
-            if not self.reconcile and vals.get('reconcile'):
-                self._toggle_reconcile_to_true()
-            elif self.reconcile and not vals.get('reconcile'):
-                self._toggle_reconcile_to_false()
+            if vals['reconcile']:
+                self.filtered(lambda r: not r.reconcile)._toggle_reconcile_to_true()
+            else:
+                self.filtered(lambda r: r.reconcile)._toggle_reconcile_to_false()
         return super(AccountAccount, self).write(vals)
 
     @api.multi
