@@ -20,7 +20,7 @@ class ResCompany(models.Model):
     @api.model
     def create(self, values):
         if not values.get('resource_calendar_id'):
-            values['resource_calendar_id'] = self.env['resource.calendar'].create({'name': _('Standard 40 hours/week')}).id
+            values['resource_calendar_id'] = self.env['resource.calendar'].sudo().create({'name': _('Standard 40 hours/week')}).id
         company = super(ResCompany, self).create(values)
         # calendar created from form view: no company_id set because record was still not created
         if not company.resource_calendar_id.company_id:
