@@ -312,6 +312,17 @@ class ProductProduct(models.Model):
             self.uom_po_id = self.uom_id
 
     @api.model
+    def default_get(self, fields):
+        defaults_super = super(ProductProduct, self).default_get(fields)
+        if self._context.get('active_model') and self._context.get('active_model') == 'product.template':
+            product_template_id = self._context.get('default_product_tmpl_id')
+            if product_template_id:
+                product_template = self.env['product.template'].browse(product_template_id)
+                defaults_super['name'] = product_template.name
+        return defaults_super
+
+
+    @api.model
     def create(self, vals):
         product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
         # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
