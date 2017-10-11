@@ -300,11 +300,22 @@ def exp_change_admin_password(new_password):
     odoo.tools.config.save()
     return True
 
-def exp_migrate_databases(databases):
+def exp_migrate_databases(databases, modules=[]):
     for db in databases:
         _logger.info('migrate database %s', db)
-        odoo.tools.config['update']['base'] = True
-        odoo.modules.registry.Registry.new(db, force_demo=False, update_module=True)
+        if modules:
+            _logger.info('migrate modules %s', ','.join(modules))
+            for module in modules:
+                odoo.tools.config['update'][module] = True
+        else:
+            odoo.tools.config['update']['base'] = True
+        registry = odoo.modules.registry.Registry.new(db, force_demo=False, update_module=True)
+        # Fool registry into writing a signal to database
+        # for a possible remote server (in Prefork Mode) to pick it up
+        if not odoo.multi_process:
+            val, odoo.multi_process = odoo.multi_process, True
+            registry.signal_registry_change()
+            odoo.multi_process = val
     return True
 
 #----------------------------------------------------------
