@@ -1,11 +1,10 @@
 odoo.define('portal.share_document', function (require){
     "use strict";
 
-var ajax = require('web.ajax');
 var Widget = require("web.Widget");
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var weContext = require("web_editor.context");
+var rpc =  require('web.rpc');
 var qweb = core.qweb;
 var _t = core._t;
 
@@ -31,21 +30,29 @@ var ShareDocument = Widget.extend({
             })),
             buttons: [{text: _t('Send'), classes: 'btn-primary', close: true, click: function () {
                 var data = this.$el.find('.partner_ids').select2('data')
-                var partner_list = []
-                _.each(data, function(obj){
-                    partner_list.push(obj.id)
-                });
-                var that = this;
-                ajax.jsonRpc('/portal/send_share_email', 'call', {
-                    partner_ids: partner_list ,
-                    model: self.model,
-                    res_id: self.res_id,
-                    body: that.$el.find('textarea').code()
-                }).then(function (result) {
-                    if (result) {
-                        that.$el.find('form').prepend('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>');
-                    }
-                });
+                if (data.length) {
+                    var partner_list = []
+                    _.each(data, function(obj) {
+                        partner_list.push(obj.id)
+                    });
+                    var that = this;
+                    rpc.query({
+                        route: '/portal/send_share_email',
+                        params: {
+                            partner_ids: partner_list ,
+                            model: self.model,
+                            res_id: self.res_id,
+                            body: that.$el.find('textarea').code()
+                        }
+                    }).then(function (result) {
+                        var ack = result ? '<div class="alert alert-success">Done!!!</div>' : '<div class="alert alert-danger">Faile!!!</div>';
+                        var ack_message = new Dialog(self, {
+                            title: _t("Message sent"),
+                            $content: '<div>' + ack + '</div>'
+                        });
+                        ack_message.open();
+                    });
+                }
             }}, {text: _t('Cancel'), close: true}],
         });
         dialog.open();
@@ -97,14 +104,10 @@ var ShareDocument = Widget.extend({
     },
     set_partner_ids: function ($el) {
         $el.find('.partner_ids').select2(this.select2_wrapper(_t('partners'), true, function () {
-            return ajax.jsonRpc("/web/dataset/call_kw", 'call', {
+            return rpc.query({
                 model: 'res.partner',
                 method: 'search_read',
-                args: [],
-                kwargs: {
-                    fields: ['id','name','email'],
-                    context: weContext.get()
-                }
+                fields: ['id','name','email'],
             });
         }));
     },
