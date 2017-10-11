@@ -1061,6 +1061,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: default_get with x2many create and onchange', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.turtles = function (obj) {
+            assert.deepEqual(
+                obj.turtles,
+                [
+                    [0, false, {turtle_foo: 'blip', id: 2}],
+                    [0, false, {turtle_foo: 'kawa', id: 3}]
+                ],
+                "should have properly created the x2many command list");
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({turtles: [[6, 0, [2,3]]]});
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.destroy();
+    });
+
     QUnit.test('list in form: call button in sub view', function (assert) {
         assert.expect(6);
 

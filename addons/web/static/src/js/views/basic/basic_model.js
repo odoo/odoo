@@ -2433,7 +2433,12 @@ var BasicModel = AbstractModel.extend({
     _generateChanges: function (record, options) {
         options = options || {};
         var viewType = options.viewType || record.viewType;
-        var changes = _.extend({}, record._changes);
+        var changes;
+        if ('changesOnly' in options && !options.changesOnly) {
+            changes = _.extend({}, record.data, record._changes);
+        } else {
+            changes = _.extend({}, record._changes);
+        };
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
             changesOnly: 'changesOnly' in options ? options.changesOnly : true,
@@ -2479,10 +2484,14 @@ var BasicModel = AbstractModel.extend({
      * current value of the parent record.
      *
      * @param {Object} record
+     * @param {Object} [options] This option object will be given to the private
+     *   method _generateX2ManyCommands.  In particular, it is useful to be able
+     *   to send changesOnly:true to get all data, not only the current changes.
      * @returns {Object} the data
      */
-    _generateOnChangeData: function (record) {
-        var commands = this._generateX2ManyCommands(record, {withReadonly: true});
+    _generateOnChangeData: function (record, options) {
+        options = _.extend({}, options || {}, {withReadonly: true});
+        var commands = this._generateX2ManyCommands(record, options);
         var data = _.extend(this.get(record.id, {raw: true}).data, commands);
         // 'display_name' is automatically added to the list of fields to fetch,
         // when fetching a record, even if it doesn't appear in the view. However,
@@ -2601,6 +2610,7 @@ var BasicModel = AbstractModel.extend({
                             relRecord = _.findWhere(relRecordUpdated, {res_id: list.res_ids[i]});
                             changes = relRecord ? this._generateChanges(relRecord, options) : {};
                             if (!_.isEmpty(changes)) {
+                                delete changes.id;
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
@@ -3170,16 +3180,7 @@ var BasicModel = AbstractModel.extend({
                             if (value[0] === 6) {
                                 // REPLACE_WITH
                                 _.each(value[2], function (res_id) {
-                                    r = self._makeDataPoint({
-                                        modelName: x2manyList.model,
-                                        context: x2manyList.context,
-                                        fieldsInfo: fieldsInfo,
-                                        fields: fields,
-                                        parentID: x2manyList.id,
-                                        res_id: res_id,
-                                        viewType: viewType,
-                                    });
-                                    x2manyList._changes.push({operation: 'ADD', id: r.id});
+                                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
                                 });
                                 var def = self._readUngroupedList(x2manyList).then(function () {
                                     return $.when(
@@ -3291,7 +3292,7 @@ var BasicModel = AbstractModel.extend({
             options.fieldName = fields;
         }
         var context = this._getContext(record, options);
-        var currentData = this._generateOnChangeData(record);
+        var currentData = this._generateOnChangeData(record, {changesOnly: false});
 
         return self._rpc({
                 model: record.model,
