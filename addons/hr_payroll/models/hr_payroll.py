@@ -295,7 +295,11 @@ class HrPayslip(models.Model):
         for payslip in self:
             number = payslip.number or self.env['ir.sequence'].next_by_code('salary.slip')
             #delete old payslip lines
-            payslip.line_ids.unlink()
+            #La siguiente linea fue comentada por TRESCLOUD
+            #payslip.line_ids.unlink()
+            #La siguiente linea fue agregada por TRESCLOUD
+            line_ids = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
+            line_ids.unlink()
             # set the list of contract for which the rules have to be applied
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
             contract_ids = payslip.contract_id.ids or \
@@ -488,8 +492,10 @@ class HrPayslip(models.Model):
         for worked_days_line in payslip.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in payslip.input_line_ids:
-            inputs_dict[input_line.code] = input_line
-
+            if not input_line.code in inputs_dict:
+                inputs_dict[input_line.code] = [input_line]
+            else:
+                inputs_dict[input_line.code].append(input_line)
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
@@ -510,7 +516,11 @@ class HrPayslip(models.Model):
         for contract in contracts:
             employee = contract.employee_id
             localdict = dict(baselocaldict, employee=employee, contract=contract)
+            #Variable agregada por TRESCLOUD
+            sequence = 0
             for rule in sorted_rules:
+                #Variable modificada por TRESCLOUD
+                sequence += 1
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
@@ -534,7 +544,8 @@ class HrPayslip(models.Model):
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
-                        'sequence': rule.sequence,
+                        #La siguiente línea fue modificada por TRESCLOUD
+                        'sequence': sequence,
                         'appears_on_payslip': rule.appears_on_payslip,
                         'condition_select': rule.condition_select,
                         'condition_python': rule.condition_python,
