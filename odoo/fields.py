@@ -60,6 +60,8 @@ def copy_cache(records, env):
     while todo:
         model_name = next(iter(todo))
         record_ids = todo.pop(model_name) - done[model_name]
+        if not record_ids:
+            continue
         done[model_name].update(record_ids)
         for name, field in src[model_name]._fields.items():
             src_cache = src.cache[field]
