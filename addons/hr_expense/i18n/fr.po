@@ -16,8 +16,8 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Benelita Prauhart <internetinfo07@gmail.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# yterrettaz <yael.terrettaz@live.com>, 2017
 # Nancy Bolognesi <nb@microcom.ca>, 2017
+# yterrettaz <yael.terrettaz@live.com>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # Saad Thaifa <saad.thaifa@gmail.com>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
@@ -34,10 +34,10 @@
 # fr rev <e2ffr02@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
 "Last-Translator: fr rev <e2ffr02@hotmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -98,7 +98,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tour.js:21
 #, python-format
-msgid "<p>Click here to create your first expense and add it to below.</p>"
+msgid "<p>Click here to create your first expense and add it under here.</p>"
 msgstr ""
 
 #. module: hr_expense
@@ -439,7 +439,7 @@ msgid "Click here to create new expenses."
 msgstr "Cliquer ici pour créer de nouvelles dépenses."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:342
+#: code:addons/hr_expense/models/hr_expense.py:343
 #, python-format
 msgid "Click to add a new expense,"
 msgstr "Cliquez pour ajouter une nouvelle dépense"
@@ -468,11 +468,6 @@ msgstr "Société associée à ce journal"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
 msgstr "Configuration"
-
-#. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
-msgid "Configure Expense"
-msgstr "Configuration des dépenses"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -826,13 +821,13 @@ msgid "Expenses follow this flow:"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:437
+#: code:addons/hr_expense/models/hr_expense.py:438
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Les notes de frais doivent appartenir au même employé"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:565
+#: code:addons/hr_expense/models/hr_expense.py:566
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -842,7 +837,7 @@ msgstr ""
 "générer les entrées comptables."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:441
+#: code:addons/hr_expense/models/hr_expense.py:442
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -969,7 +964,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7678
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_7700
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_register_payment_wizard_id
 msgid "ID"
 msgstr "ID"
@@ -1105,7 +1100,7 @@ msgid "New Mail"
 msgstr "Nouveau message"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:265
+#: code:addons/hr_expense/models/hr_expense.py:266
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for its category), please "
@@ -1113,13 +1108,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:230
+#: code:addons/hr_expense/models/hr_expense.py:231
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Adresse personnelle de l'employé %s inconnue, la définir SVP."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:209
+#: code:addons/hr_expense/models/hr_expense.py:210
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr "Pas de compte de crédit pour le journal %s, en configurer un SVP."
@@ -1256,7 +1251,7 @@ msgid "Planner"
 msgstr "Planificateur"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:270
+#: code:addons/hr_expense/models/hr_expense.py:271
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -1495,6 +1490,7 @@ msgid "Set invoicing method on expense products"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
 msgid "Settings"
 msgstr "Configuration"
@@ -1745,7 +1741,7 @@ msgid "Write the name of the product, or select an existing one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:562
+#: code:addons/hr_expense/models/hr_expense.py:563
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
@@ -1763,19 +1759,19 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:592
+#: code:addons/hr_expense/models/hr_expense.py:598
 #, python-format
 msgid "You cannot add expense lines of another employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:314
+#: code:addons/hr_expense/models/hr_expense.py:315
 #, python-format
 msgid "You cannot delete a posted expense."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:468
+#: code:addons/hr_expense/models/hr_expense.py:469
 #, python-format
 msgid "You cannot delete a posted or paid expense."
 msgstr ""
@@ -1853,7 +1849,7 @@ msgid "has been refused"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:343
+#: code:addons/hr_expense/models/hr_expense.py:344
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""

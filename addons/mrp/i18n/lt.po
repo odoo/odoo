@@ -16,10 +16,10 @@
 # Arminas Grigonis <arminas@versada.lt>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
 "Last-Translator: Arminas Grigonis <arminas@versada.lt>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -259,7 +259,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>WorkCenter</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:468
+#: code:addons/mrp/models/mrp_workorder.py:472
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr "Gamybos užsakymas jau atliktas arba atšauktas! "
@@ -734,11 +734,6 @@ msgid "Configuration"
 msgstr "Nustatymai"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
-msgid "Configure Manufacturing"
-msgstr "Konfigūruoti gamybą"
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Confirmed"
@@ -1086,6 +1081,11 @@ msgstr "Pabaigta"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_lot_produced_id
 msgid "Finished Lot"
 msgstr "Pabaigtas lot"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_finished_lots_exist
+msgid "Finished Lots Exist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
@@ -1497,7 +1497,7 @@ msgid "Lock"
 msgstr "Užrakinti"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8215
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8237
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "Nuostolio priežastis"
@@ -2052,7 +2052,7 @@ msgid "Planning"
 msgstr "Planavimas"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:143
+#: code:addons/mrp/wizard/mrp_product_produce.py:147
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
 msgstr ""
@@ -2566,8 +2566,8 @@ msgid "Scheduled Month"
 msgstr "Suplanuotas mėnuo"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:588
-#: code:addons/mrp/models/mrp_workorder.py:477
+#: code:addons/mrp/models/mrp_production.py:590
+#: code:addons/mrp/models/mrp_workorder.py:481
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2674,6 +2674,7 @@ msgid "Set duration manually"
 msgstr "Trukmę nustatyti rankiniu būdu"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3012,7 +3013,7 @@ msgid "Time Tracking"
 msgstr "Laiko stebėjimas"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:398
+#: code:addons/mrp/models/mrp_workorder.py:402
 #, python-format
 msgid "Time Tracking: "
 msgstr "Laiko stebėjimas:"
@@ -3529,7 +3530,7 @@ msgid "Work Sheet"
 msgstr "Darbo lapas"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:565
+#: code:addons/mrp/models/mrp_production.py:567
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3608,6 +3609,12 @@ msgid "You can not change the finished work order."
 msgstr "Negalite pakeisti pabaigto darbo užsakymo."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:553
+#, python-format
+msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:92
 #, python-format
 msgid ""
@@ -3616,7 +3623,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:127
+#: code:addons/mrp/models/stock_move.py:134
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3625,7 +3632,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:223
+#: code:addons/mrp/wizard/mrp_product_produce.py:204
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3646,7 +3653,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:392
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3655,7 +3662,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:384
+#: code:addons/mrp/models/mrp_workorder.py:388
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3664,7 +3671,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:442
+#: code:addons/mrp/models/mrp_workorder.py:446
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3673,7 +3680,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:121
+#: code:addons/mrp/wizard/mrp_product_produce.py:125
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr ""
@@ -3685,7 +3692,7 @@ msgid "You should at least produce some quantity"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:310
+#: code:addons/mrp/models/mrp_workorder.py:314
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr ""

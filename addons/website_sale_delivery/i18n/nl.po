@@ -7,13 +7,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2017-10-10 11:35+0000\n"
+"PO-Revision-Date: 2017-10-10 11:35+0000\n"
+"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,11 +29,24 @@ msgid ""
 "%s does not ship to your address, please choose another one.\n"
 "(Error: %s)"
 msgstr ""
+"%s kan niet verzonden worden naar jou adres, selecteer alstublieft een andere.\n"
+"(Error: %s)"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
 msgstr ""
+"<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Voeg leveringsmethodes"
+" toe"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid ""
+"<span class=\"badge pull-right o_delivery_compute\">Select to compute "
+"delivery rate</span>"
+msgstr ""
+"<span class=\"badge pull-right o_delivery_compute\"> Selecteer om de "
+"geleverde hoeveelheid te berekenen </span>"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -86,11 +100,6 @@ msgid "Delivery Methods"
 msgstr "Verzendwijzes"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
-msgid "Delivery price will be updated after choosing a new delivery method"
-msgstr "Leveringsprijs wordt geüpdatet nadat u een nieuwe levermethode kiest"
-
-#. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
 msgstr "Omschrijving"
@@ -109,6 +118,11 @@ msgstr "Omschrijving voor online offertes"
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Delivery Methods"
 msgstr "FedEx leveringsmethodes"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid "Free"
+msgstr "Gratis"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
