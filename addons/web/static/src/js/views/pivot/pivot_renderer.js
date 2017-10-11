@@ -132,7 +132,7 @@ var PivotRenderer = AbstractRenderer.extend({
             $header = $('<td>')
                 .text(rows[i].title)
                 .data('id', rows[i].id)
-                .css(_t.database.parameters.direction == 'rtl' ? 'padding-right' : 'padding-left', (5 + rows[i].indent * 30) + 'px')
+                .css(_t.database.parameters.direction === 'rtl' ? 'padding-right' : 'padding-left', (5 + rows[i].indent * 30) + 'px')
                 .addClass(rows[i].expanded ? 'o_pivot_header_cell_opened' : 'o_pivot_header_cell_closed');
             if (rows[i].indent > 0) $header.attr('title', groupbyLabels[rows[i].indent - 1]);
             $header.appendTo($row);

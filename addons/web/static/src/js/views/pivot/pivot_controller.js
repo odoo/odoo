@@ -163,7 +163,7 @@ var PivotController = AbstractController.extend({
             fields: fields
         }));
 
-        if (_t.database.parameters.direction == 'rtl') {
+        if (_t.database.parameters.direction === 'rtl') {
             this.$fieldSelection.find('ul').first()
                 .css({top: top, right: left})
                 .show();
