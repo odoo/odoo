@@ -5920,5 +5920,36 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('proper context stringification in debug mode tooltip', function (assert) {
+        assert.expect(2);
+
+        var initialDebugMode = config.debug;
+        config.debug = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_id" context="{\'lang\': \'en_US\'}"/>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        var $field = form.$('[name="product_id"]');
+        $field.tooltip('show', true);
+        $field.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]').length,
+            1, 'context should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="context"]')[0].lastChild.wholeText.trim(),
+            "{'lang': 'en_US'}", "context should be properly stringified");
+
+        config.debug = initialDebugMode;
+        form.destroy();
+    });
+
+
 });
 });
