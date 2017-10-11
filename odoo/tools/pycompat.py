@@ -3,6 +3,7 @@
 # very strongly inspired by https://github.com/pallets/werkzeug/blob/master/werkzeug/_compat.py
 #pylint: disable=deprecated-module
 import csv
+import codecs
 import collections
 import io
 import sys
@@ -85,14 +86,16 @@ else:
             raise value.with_traceback(tb)
         raise value
 
+    _reader = codecs.getreader('utf-8')
+    _writer = codecs.getwriter('utf-8')
     def csv_reader(stream, **params):
         assert not isinstance(stream, io.TextIOBase),\
             "For cross-compatibility purposes, csv_reader takes a bytes stream"
-        return csv.reader(io.TextIOWrapper(stream, encoding='utf-8'), **params)
+        return csv.reader(_reader(stream), **params)
     def csv_writer(stream, **params):
         assert not isinstance(stream, io.TextIOBase), \
             "For cross-compatibility purposes, csv_writer takes a bytes stream"
-        return csv.writer(io.TextIOWrapper(stream, encoding='utf-8', line_buffering=True), **params)
+        return csv.writer(_writer(stream), **params)
 
 def to_text(source):
     """ Generates a text value (an instance of text_type) from an arbitrary 
