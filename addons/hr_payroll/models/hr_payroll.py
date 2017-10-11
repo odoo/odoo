@@ -189,7 +189,7 @@ class HrPayslip(models.Model):
                 \n* If the payslip is confirmed then status is set to \'Done\'.
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)]}, domain=[('appears_on_payslip', '=', True)])
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
         states={'draft': [('readonly', False)]})
@@ -295,7 +295,11 @@ class HrPayslip(models.Model):
         for payslip in self:
             number = payslip.number or self.env['ir.sequence'].next_by_code('salary.slip')
             #delete old payslip lines
-            payslip.line_ids.unlink()
+            #La siguiente linea fue comentada por TRESCLOUD
+            #payslip.line_ids.unlink()
+            #La siguiente linea fue agregada por TRESCLOUD
+            line_ids = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
+            line_ids.unlink()
             # set the list of contract for which the rules have to be applied
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
             contract_ids = payslip.contract_id.ids or \
@@ -396,10 +400,20 @@ class HrPayslip(models.Model):
                 input_data = {
                     'name': input.name,
                     'code': input.code,
+                    #La siguiente línea fue agregada por TRESCLOUD
+                    'type': self.get_input_type(input),
                     'contract_id': contract.id,
                 }
                 res += [input_data]
         return res
+    
+    #El siguiente método fue agregado por TRESCLOUD
+    @api.model
+    def get_input_type(self, input):
+        '''
+        Este metodo devuelve el tipo de entrada de la nómina, va ser implementado en ecua_hr
+        '''
+        return False
 
     @api.model
     def get_payslip_lines(self, contract_ids, payslip_id):
@@ -478,28 +492,35 @@ class HrPayslip(models.Model):
         for worked_days_line in payslip.worked_days_line_ids:
             worked_days_dict[worked_days_line.code] = worked_days_line
         for input_line in payslip.input_line_ids:
-            inputs_dict[input_line.code] = input_line
-
+            if not input_line.code in inputs_dict:
+                inputs_dict[input_line.code] = [input_line]
+            else:
+                inputs_dict[input_line.code].append(input_line)
         categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
         inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
         worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
         payslips = Payslips(payslip.employee_id.id, payslip, self.env)
         rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
-
-        baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
+        #La siguiente línea fue modificada por TRESCLOUD
+        baselocaldict = {'float_round': tools.float_round, 'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
         structure_ids = contracts.get_all_structures()
         #get the rules of the structure and thier children
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
-        sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
+        #La siguiente línea fue modificada por TRESCLOUD
+        sorted_rule_ids = self.get_sorted_rules(rule_ids)
         sorted_rules = self.env['hr.salary.rule'].browse(sorted_rule_ids)
 
         for contract in contracts:
             employee = contract.employee_id
             localdict = dict(baselocaldict, employee=employee, contract=contract)
+            #Variable agregada por TRESCLOUD
+            sequence = 0
             for rule in sorted_rules:
+                #Variable modificada por TRESCLOUD
+                sequence += 1
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
@@ -523,7 +544,8 @@ class HrPayslip(models.Model):
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
-                        'sequence': rule.sequence,
+                        #La siguiente línea fue modificada por TRESCLOUD
+                        'sequence': sequence,
                         'appears_on_payslip': rule.appears_on_payslip,
                         'condition_select': rule.condition_select,
                         'condition_python': rule.condition_python,
@@ -546,6 +568,14 @@ class HrPayslip(models.Model):
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
         return [value for code, value in result_dict.items()]
+    
+    #El siguiente método fue agregado por TRESCLOUD
+    @api.model
+    def get_sorted_rules(self, rule_ids):
+        '''
+        Este metodo ordena las reglas salariales en base a la secuencia, su logica va ser modificada en ecua_hr
+        '''
+        return [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records

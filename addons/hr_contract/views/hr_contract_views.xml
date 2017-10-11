@@ -175,8 +175,8 @@
             <field name="model">hr.contract.type</field>
             <field name="arch" type="xml">
                 <form string="Contract Type">
-                    <group col="4">
-                        <field colspan="4" name="name"/>
+                    <group>
+                        <field name="name"/>
                     </group>
                 </form>
             </field>
@@ -188,7 +188,7 @@
             <field name="arch" type="xml">
                 <tree string="Contract Type">
                     <field name="sequence" widget="handle"/>
-                    <field colspan="4" name="name"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
