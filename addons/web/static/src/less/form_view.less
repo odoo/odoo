@@ -64,12 +64,6 @@
                 .o-align-self(center);
             }
         }
-
-        .o_row .o_field_many2one, .o_field_many2one.oe_inline {
-            &.o_with_button:not(:last-child) { // If invisible element as last child, this line has no effect but that's not very important
-                margin-right: (35px + (@odoo-form-spacing-unit/2));
-            }
-        }
     }
 
     .o_row > div > .o_field_widget {
@@ -335,6 +329,17 @@
             > .btn {
                 .o-flex(0, 0, auto);
                 padding: 0 10px;
+            }
+        }
+
+        :not(.o_row) > .o_field_widget,
+        .o_row > .o_field_widget:last-child { // Note: this does not take care
+                                              // of an invisible last-child but
+                                              // it does not really matter
+            // Makes extra buttons (e.g. m2o external button) overflow on the
+            // right padding of the parent element
+            .o_input_dropdown {
+                .o-flex(1, 0, auto);
             }
         }
 
