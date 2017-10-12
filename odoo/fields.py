@@ -60,6 +60,8 @@ def copy_cache(records, env):
     while todo:
         model_name = next(iter(todo))
         record_ids = todo.pop(model_name) - done[model_name]
+        if not record_ids:
+            continue
         done[model_name].update(record_ids)
         for name, field in src[model_name]._fields.items():
             src_cache = src.cache[field]
@@ -70,6 +72,10 @@ def copy_cache(records, env):
                     value = dst_cache[record_id] = src_cache[record_id]
                     if field.relational and isinstance(value, tuple):
                         todo[field.comodel_name].update(value)
+
+def first(records):
+    """ Return the first record in ``records``, with the same prefetching. """
+    return next(iter(records)) if len(records) > 1 else records
 
 
 def resolve_mro(model, name, predicate):
@@ -580,12 +586,41 @@ class Field(object):
         """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
-        for record, other in zip(records, others):
-            if not record.id and record.env != other.env:
-                # draft records: copy record's cache to other's cache first
-                copy_cache(record, other.env)
-            other, field = self.traverse_related(other)
-            record[self.name] = other[field.name]
+        # copy the cache of draft records into others' cache
+        if records.env != others.env:
+            copy_cache(records - records.filtered('id'), others.env)
+        #
+        # Traverse fields one by one for all records, in order to take advantage
+        # of prefetching for each field access. In order to clarify the impact
+        # of the algorithm, consider traversing 'foo.bar' for records a1 and a2,
+        # where 'foo' is already present in cache for a1, a2. Initially, both a1
+        # and a2 are marked for prefetching. As the commented code below shows,
+        # traversing all fields one record at a time will fetch 'bar' one record
+        # at a time.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v2 = b2.bar         # fetch/compute bar for b2
+        #
+        # On the other hand, traversing all records one field at a time ensures
+        # maximal prefetching for each field access.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1, b2
+        #       v2 = b2.bar         # value already in cache
+        #
+        # This difference has a major impact on performance, in particular in
+        # the case where 'bar' is a computed field that takes advantage of batch
+        # computation.
+        #
+        values = list(others)
+        for name in self.related[:-1]:
+            values = [first(value[name]) for value in values]
+        # assign final values to records
+        for record, value in zip(records, values):
+            record[self.name] = value[self.related_field.name]
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
