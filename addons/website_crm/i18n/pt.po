@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 09:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -23,6 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
+#, python-format
+msgid "% Leads"
+msgstr ""
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;times;"
@@ -32,6 +39,37 @@ msgstr "&amp;times;"
 msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
+msgstr ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Enviar</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_team_id
+msgid "Default Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
+msgid "Default Sales Channels"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+msgid "Default Salesperson"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
+msgid ""
+"Default sales channel for new leads created through the Contact Us form."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_website_config_settings_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
@@ -51,9 +89,40 @@ msgid "Lead/Opportunity"
 msgstr "Prospecto / Oportunidade"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
+#, python-format
+msgid "Leads"
+msgstr "Prospectos"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
+#, python-format
+msgid "Leads Acquisition /"
+msgstr ""
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
+#, python-format
+msgid "Leads Analysis"
+msgstr "Análise de lead"
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr "Número de Telefone"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Sales Channel"
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.website_config_settings_view_form_inherit_website_crm
+msgid "Salesperson"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -66,9 +135,21 @@ msgid "Thanks!"
 msgstr "Obrigado!"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:15
+#, python-format
+msgid "There is no recent lead."
+msgstr ""
+
+#. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "Nós entraremos em contacto consigo em breve."
+
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website
+msgid "Website"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -95,8 +176,7 @@ msgstr "Sua Questão"
 msgid "Your message has been sent successfully."
 msgstr "A sua mensagem foi enviada com sucesso."
 
-#~ msgid "Send"
-#~ msgstr "Enviar"
-
-#~ msgid "e.g. (+32).81.81.37.00"
-#~ msgstr "e.g. (+351) 22.81.37.00"
+#. module: website_crm
+#: model:ir.model,name:website_crm.model_website_config_settings
+msgid "website.config.settings"
+msgstr ""
