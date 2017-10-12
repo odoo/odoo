@@ -6,7 +6,7 @@ import ast
 from odoo import models
 from odoo.http import request
 from lxml import etree
-from itertools import chain, ifilter
+from itertools import chain
 
 
 class QWeb(models.AbstractModel):
@@ -79,7 +79,14 @@ class QWeb(models.AbstractModel):
         for node in root:
             for name, value in node.attrib.iteritems():
                 node.attrib[name] = self._website_build_attribute(node.tag, name, value, options, values)
-        return u''.join(ifilter(None, chain([root.text], [etree.tostring(c, method='html', with_tail=True) for c in root.getchildren()], [root.tail])))
+
+        return u''.join([text
+                for text in chain(
+                    [root.text],
+                    [etree.tostring(c, method='html', with_tail=True) for c in root.getchildren()],
+                    [root.tail])
+                    if text
+            ])
 
     def _get_dynamic_att(self, tagName, atts, options, values):
         atts = super(QWeb, self)._get_dynamic_att(tagName, atts, options, values)
