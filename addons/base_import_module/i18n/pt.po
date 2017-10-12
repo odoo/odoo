@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-20 14:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -41,6 +41,12 @@ msgid "Close"
 msgstr "Fechar"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr "Não foi possível selecionar a base de dados '%s'"
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Criada por"
@@ -56,13 +62,13 @@ msgid "Display Name"
 msgstr "Nome a Mostrar"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:100
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "O ficheiro '%s' excede o máximo de tamanho permitido"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:92
 #, python-format
 msgid "File is not a zip file!"
 msgstr "O ficheiro não tem extensão .zip!"
@@ -90,17 +96,17 @@ msgid "Import App"
 msgstr "Importar App"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importar Módulo"
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr "Importar Mensagem"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -138,6 +144,18 @@ msgid "Module .ZIP file"
 msgstr "Módulo do ficheiro .ZIP"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:90
+#, python-format
+msgid "No file sent."
+msgstr "Nenhum ficheiro enviado."
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr "Apenas os administradores podem enviar um módulo"
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Abrir Módulos"
@@ -153,7 +171,7 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Dependências de módulo não encontradas: %s"
@@ -167,3 +185,8 @@ msgstr "Concluído"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "init"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
