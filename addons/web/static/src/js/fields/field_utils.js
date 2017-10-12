@@ -418,11 +418,19 @@ function parseDateTime(value, field, options) {
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
-function parseFloat(value) {
+function removeThousandsSep(value) {
     if (core._t.database.parameters.thousands_sep) {
         var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
+    else {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct number"), value));
+    }
+    return value;
+}
+
+function parseFloat(value) {
+    value = removeThousandsSep(value);
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
     if (isNaN(parsed)) {
@@ -492,7 +500,7 @@ function parseFloatTime(value) {
 }
 
 function parseInteger(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    value = removeThousandsSep(value);
     var parsed = Number(value);
     // do not accept not numbers or float values
     if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
