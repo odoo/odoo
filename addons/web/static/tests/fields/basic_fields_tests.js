@@ -2771,6 +2771,33 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('use TAB to navigate to a phone field', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="display_name"/>' +
+                            '<field name="foo" widget="phone"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('input[name=display_name]').click();
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused");
+        form.$('input[name="display_name"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+            "foo should be focused");
+
+        form.destroy();
+    });
+
     QUnit.module('PriorityWidget');
 
     QUnit.test('priority widget when not set', function (assert) {
