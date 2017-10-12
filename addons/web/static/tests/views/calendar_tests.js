@@ -8,6 +8,7 @@ var fieldUtils = require('web.field_utils');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 
+var createActionManager = testUtils.createActionManager;
 
 CalendarRenderer.include({
     getAvatars: function () {
@@ -1702,6 +1703,41 @@ QUnit.module('Views', {
         calendar.destroy();
         testUtils.unpatch(Dialog);
     });
+
+    QUnit.test('calendar is configured to hide the groupby menu', function (assert) {
+        assert.expect(2);
+
+        var archs = {
+            'event,1,calendar': '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            name: 'some action',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']]
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+        var $groupBy = actionManager.controlPanel.$('span.fa.fa-bars');
+        assert.strictEqual($groupBy.length, 1, 'just making sure we have the groupby menu');
+        assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
+        actionManager.destroy();
+    });
+
 });
 
 });

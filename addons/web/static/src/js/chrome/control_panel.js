@@ -154,7 +154,7 @@ var ControlPanel = Widget.extend({
             this._attach_content(new_cp_content);
 
             // Update the searchview and switch buttons
-            this._update_search_view(status.searchview, status.search_view_hidden);
+            this._update_search_view(status.searchview, status.search_view_hidden, status.groupable);
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
@@ -241,19 +241,25 @@ var ControlPanel = Widget.extend({
     /**
      * Private function that updates the SearchView's visibility and extend the
      * breadcrumbs area if the SearchView is not visible
-     * @param {openerp.web.SearchView} [searchview] the searchview Widget
-     * @param {Boolean} [is_hidden] visibility of the searchview
+     *
+     * @private
+     * @param {SearchView} [searchview] the searchview Widget
+     * @param {boolean} [isHidden] visibility of the searchview
+     * @param {boolean} [groupable] visibility of the groupable menu (only
+     *      relevant if searchview is visible)
      */
-    _update_search_view: function(searchview, is_hidden) {
+    _update_search_view: function (searchview, isHidden, groupable) {
         if (searchview) {
             // Set the $buttons div (in the DOM) of the searchview as the $buttons
             // have been appended to a jQuery node not in the DOM at SearchView initialization
             searchview.$buttons = this.nodes.$searchview_buttons;
-            searchview.toggle_visibility(!is_hidden);
+            searchview.toggle_visibility(!isHidden);
+            if (groupable !== undefined){
+                searchview.groupby_menu.do_toggle(groupable);
+            }
         }
-
-        this.nodes.$searchview.toggle(!is_hidden);
-        this.$el.toggleClass('o_breadcrumb_full', !!is_hidden);
+        this.nodes.$searchview.toggle(!isHidden);
+        this.$el.toggleClass('o_breadcrumb_full', !!isHidden);
     },
 });
 
