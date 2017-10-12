@@ -203,7 +203,7 @@ var ListRenderer = BasicRenderer.extend({
             var $cell = $('<td>');
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
-                var value = aggregateValues[column.attrs.name].value;
+                var value = self.state.data.length === 0 ? 0 : aggregateValues[column.attrs.name].value;
                 var help = aggregateValues[column.attrs.name].help;
                 var formattedValue = field_utils.format[field.type](value, field, {
                     escape: true,
