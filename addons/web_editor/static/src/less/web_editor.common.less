@@ -186,8 +186,8 @@ ul.oe_menu_editor {
 .o-margins-define(@name, @size: @name) {
     .mt@{name} {margin-top: ~"@{size}px"!important;}
     .mb@{name} {margin-bottom: ~"@{size}px"!important;}
-    .ml@{name} {margin-left: ~"@{size}px"!important;}
-    .mr@{name} {margin-right: ~"@{size}px"!important;}
+    .ml@{name} {.margin-left(~"@{size}px") !important;}
+    .mr@{name} {.margin-right(~"@{size}px") !important;}
 }
 
 // Generate all margins
