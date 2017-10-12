@@ -966,7 +966,7 @@ var FieldPhone = FieldEmail.extend({
      * @override
      */
     getFocusableElement: function () {
-        if (this._canCall()) {
+        if (this.mode !== 'readonly' || this._canCall()) {
             return this._super.apply(this, arguments);
         }
         return $();
