@@ -1863,7 +1863,7 @@ var FieldSelection = AbstractField.extend({
         for (var i = 0 ; i < this.values.length ; i++) {
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),
-                html: this.values[i][1]
+                text: this.values[i][1]
             }));
         }
         var value = this.value;
