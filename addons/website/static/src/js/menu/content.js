@@ -602,8 +602,8 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-
 var PageManagement = Widget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.xml'],
     events: {
         'click a.js_page_properties': '_onPagePropertiesButtonClick',
         'click a.js_clone_page': '_onClonePageButtonClick',
@@ -685,7 +685,6 @@ var PageManagement = Widget.extend({
         }, def.reject.bind(def));
     },
 });
-
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
 websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');
