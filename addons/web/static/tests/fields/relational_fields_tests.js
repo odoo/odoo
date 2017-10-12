@@ -7451,6 +7451,29 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many_tags can load more than 40 records', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+        this.data.partner.records[0].partner_ids = [];
+        for (var i = 15; i < 115; i++) {
+            this.data.partner.records.push({id: i, display_name: 'walter' + i});
+            this.data.partner.records[0].partner_ids.push(i);
+        }
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="partner_ids" widget="many2many_tags"/>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > span').length, 100,
+            'should have rendered 100 tags');
+        form.destroy();
+    });
+
     QUnit.test('field many2many_tags keeps focus when being edited', function (assert) {
         assert.expect(7);
 
