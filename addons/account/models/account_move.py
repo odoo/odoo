@@ -385,7 +385,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.", index=True, required=True, auto_join=True)
     narration = fields.Text(related='move_id.narration', string='Narration')
     ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True)
-    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry")
+    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry", copy=False)
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
