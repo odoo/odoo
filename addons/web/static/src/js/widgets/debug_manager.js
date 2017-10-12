@@ -2,6 +2,7 @@ odoo.define('web.DebugManager', function (require) {
 "use strict";
 
 var ActionManager = require('web.ActionManager');
+var ajax = require('web.ajax');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -199,6 +200,11 @@ var DebugManager = Widget.extend({
     },
     split_assets: function() {
         window.location = $.param.querystring(window.location.href, 'debug=assets');
+    },
+    clean_assets: function() {
+        var self = this;
+        ajax.jsonRpc('/web/clean_assets', 'call', {})
+            .then(self.split_assets());
     },
 });
 
