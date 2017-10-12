@@ -527,11 +527,8 @@ var RTEWidget = Widget.extend({
      * @private
      * @param {jQuery} $el - the element to save
      * @param {Object} context - the context to use for the saving rpc
-     * @param {boolean} [withLang=false]
-     *        false if the lang must be omitted in the context (saving "master"
-     *        page element)
      */
-    _saveElement: function ($el, context, withLang) {
+    _saveElement: function ($el, context) {
         return this._rpc({
             model: 'ir.ui.view',
             method: 'save',
@@ -539,7 +536,7 @@ var RTEWidget = Widget.extend({
                 $el.data('oe-id'),
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
-                withLang ? context : _.omit(context, 'lang')
+                context
             ],
         });
     },

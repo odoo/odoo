@@ -25,7 +25,7 @@ var RTETranslatorWidget = rte.Class.extend({
      *
      * @override
      */
-    _saveElement: function ($el, context, withLang) {
+    _saveElement: function ($el, context) {
         if ($el.data('oe-translation-id')) {
             return this._rpc({
                 model: 'ir.translation',
@@ -37,7 +37,7 @@ var RTETranslatorWidget = rte.Class.extend({
                 ],
             });
         }
-        return this._super($el, context, withLang === undefined ? true : withLang);
+        return this._super($el, context);
     },
 });
 
