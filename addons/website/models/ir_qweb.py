@@ -5,6 +5,8 @@ import ast
 
 from odoo import models
 from odoo.http import request
+from lxml import etree
+from itertools import chain, ifilter
 
 
 class QWeb(models.AbstractModel):
@@ -22,12 +24,6 @@ class QWeb(models.AbstractModel):
         'script':  'src',
         'img':     'src',
     }
-
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
-        website = getattr(request, 'website', None) if request else None
-        if website and website.cdn_activated:
-            values = dict(values, url_for=website.get_cdn_url)
-        return super(QWeb, self)._get_asset(xmlid, options, css, js, debug, async, values)
 
     def _website_build_attribute(self, tagName, name, value, options, values):
         """ Compute the value of an attribute while rendering the template. """
@@ -76,6 +72,14 @@ class QWeb(models.AbstractModel):
         return self._wrap_build_attributes(el, items, options)
 
     # method called by computing code
+
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
+        html = super(QWeb, self)._get_asset(xmlid, options, css=css, js=js, debug=debug, async=async, values=values)
+        root = etree.fromstring("<root>%s</root>" % html)
+        for node in root:
+            for name, value in node.attrib.iteritems():
+                node.attrib[name] = self._website_build_attribute(node.tag, name, value, options, values)
+        return u''.join(ifilter(None, chain([root.text], [etree.tostring(c, method='html', with_tail=True) for c in root.getchildren()], [root.tail])))
 
     def _get_dynamic_att(self, tagName, atts, options, values):
         atts = super(QWeb, self)._get_dynamic_att(tagName, atts, options, values)
