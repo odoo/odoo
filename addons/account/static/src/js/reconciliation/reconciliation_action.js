@@ -38,12 +38,14 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         // used to instanciate the action interface
         ActionRenderer: ReconciliationRenderer.StatementRenderer,
         // used to instanciate each widget line
-        LineRenderer: ReconciliationRenderer.LineRenderer
+        LineRenderer: ReconciliationRenderer.LineRenderer,
+        // used context params
+        params: ['statement_ids'],
     },
 
     /**
      * @override
-     * @param {Object} params
+     * @param {Widget} params
      * @param {Object} params.context
      *
      */
@@ -51,11 +53,25 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this._super.apply(this, arguments);
         this.action_manager = parent;
         this.params = params;
-        this.model = new this.config.Model(this, {modelName: "account.bank.statement.line"});
+        this.model = new this.config.Model(this, {
+            modelName: "account.bank.statement.line",
+            limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines || 5,
+        });
         this.widgets = [];
         if (!this.action_manager) {
             this.set_cp_bus(new Widget());
         }
+        // Adding values from the context ​​is necessary to put this information in the url via the action manager so that
+        // you can retrieve it if the person shares his url or presses f5
+        _.each(params.params, function (value, name) {
+            params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(), parseFloat) : value;
+        });
+        params.params = {};
+        _.each(this.config.params, function (name) {
+            if (params.context[name]) {
+                params.params[name] = name.indexOf('_ids') !== -1 && _.isArray(params.context[name]) ? params.context[name].join() : params.context[name];
+            }
+        });
     },
 
     /**
@@ -305,8 +321,14 @@ var ManualAction = StatementAction.extend({
     config: {
         Model: ReconciliationModel.ManualModel,
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
-        LineRenderer: ReconciliationRenderer.ManualLineRenderer
+        LineRenderer: ReconciliationRenderer.ManualLineRenderer,
+        params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
     /**
      * call 'validate' or 'autoReconciliation' model method then destroy the
      * reconcilied lines, update the not reconcilied and update the action
