@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="payment.payment_acquirer_mollie" model="payment.acquirer">
+            <field name="name">Mollie</field>
+            <field name="image" type="base64" file="payment_mollie_official/static/src/img/mollie_icon.png"/>
+            <field name="provider">mollie</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="payment_mollie_official.mollie_acquirer_button"/>
+            <field name="environment">test</field>
+            <field name="pre_msg"><![CDATA[
+<p>You will be redirected to the Mollie website after clicking on payment button.</p>]]></field>
+            <field name="mollie_api_key_test">mollie api test key</field>
+            <field name="mollie_api_key_prod">mollie api live key</field>
+            <field name="module_id" ref="base.module_payment_mollie_official"/>
+            <field name="description" type="html">
+                <p>
+                    A payment gateway to accept online payments via various payment methods (check https://www.mollie.com).
+                </p>
+                <ul>
+                    <li><i class="fa fa-check"/>eCommerce</li>
+                </ul>
+            </field>
+        </record>
+    </data>
+</odoo>
+
