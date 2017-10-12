@@ -82,6 +82,13 @@
 
     flex-flow: @direction @wrap;
 }
+.o-flex-grow(@grow) {
+    -webkit-box-flex: @grow;
+    -webkit-flex-grow: @grow;
+    -moz-box-flex: @grow;
+    -ms-flex-positive: @grow;
+    flex-grow: @grow;
+}
 .o-flex(@grow, @schrink, @basis) {
     -ms-flex: @grow @schrink @basis;
     -moz-flex: @grow @schrink @basis;
