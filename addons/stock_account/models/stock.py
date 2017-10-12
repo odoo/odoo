@@ -244,7 +244,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if self._is_in():
             if self.product_id.cost_method in ['fifo', 'average']:
-                price_unit = self.price_unit or self._get_price_unit()
+                price_unit = self._get_price_unit()
                 value = price_unit * (quantity or self.product_qty)
                 vals = {
                     'price_unit': price_unit,
