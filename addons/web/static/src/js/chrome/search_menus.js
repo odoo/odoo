@@ -37,7 +37,7 @@ return Widget.extend({
         this.query = query;
         this.target_model = target_model;
         this.action_id = action_id;
-        this.isMobile = config.isMobile;
+        this.isMobile = config.device.isMobile;
         this.filters = {};
         _.each(filters, this.add_filter.bind(this));
     },
@@ -317,7 +317,7 @@ return Widget.extend({
         this.filters = filters || [];
         this.searchview = parent;
         this.propositions = [];
-        this.isMobile = config.isMobile;
+        this.isMobile = config.device.isMobile;
         this.custom_filters_open = false;
         this.fields = _.pick(fields, function (field, name) {
             return field.selectable !== false && name !== 'id';
@@ -417,7 +417,7 @@ return Widget.extend({
         this._super(parent);
         this.searchview = parent;
         this.groups = groups || [];
-        this.isMobile = config.isMobile;
+        this.isMobile = config.device.isMobile;
         this.groupableFields = [];
         var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
         _.each(fields, function (field, name) {
