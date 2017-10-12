@@ -28,7 +28,7 @@ var ShareDocument = Widget.extend({
             $content: $(qweb.render('portal.portal_share_document',{
                 url: this.url,
             })),
-            buttons: [{text: _t('Send'), classes: 'btn-primary', close: true, click: function () {
+            buttons: [{text: _t('Send'), classes: 'btn-primary', close: false, click: function () {
                 var data = this.$el.find('.partner_ids').select2('data')
                 if (data.length) {
                     var partner_list = []
@@ -45,13 +45,18 @@ var ShareDocument = Widget.extend({
                             body: that.$el.find('textarea').code()
                         }
                     }).then(function (result) {
-                        var ack = result ? '<div class="alert alert-success">Done!!!</div>' : '<div class="alert alert-danger">Faile!!!</div>';
+                        var ack = result ? '<div class="alert alert-success">Done!!!</div>' : '<div class="alert alert-danger">Fail!!!</div>';
                         var ack_message = new Dialog(self, {
                             title: _t("Message sent"),
                             $content: '<div>' + ack + '</div>'
                         });
+                        dialog.close();
                         ack_message.open();
                     });
+                } else {
+                    if (!(this.$el.find('.alert-info').length)){
+                        this.$el.prepend($('<div class="alert alert-info" role="alert"><strong> Please select the Recipients.</strong></div>'));
+                    }
                 }
             }}, {text: _t('Cancel'), close: true}],
         });
