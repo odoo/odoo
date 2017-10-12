@@ -230,7 +230,6 @@ QUnit.test('chatter: filter chatter messages', function (assert) {
      form.destroy();
  });
 
-
 QUnit.test('chatter is not rendered in mode === create', function (assert) {
     assert.expect(4);
 
@@ -1293,8 +1292,6 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
 
     form.destroy();
 });
-
-
 
 });
 });

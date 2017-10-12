@@ -201,7 +201,7 @@ var Chatter = Widget.extend(chat_mixin, {
                 self.fields.activity.$el.appendTo(self.$el);
             }
             if (self.fields.followers) {
-                self.fields.followers.$el.prependTo(self.$topbar);
+                self.fields.followers.$el.appendTo(self.$topbar);
             }
             if (self.fields.thread) {
                 self.fields.thread.$el.appendTo(self.$el);
