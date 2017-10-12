@@ -345,7 +345,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         if (tour.skip_link) {
             tip_info = _.extend(_.omit(tip_info, 'content'), {
                 content: tip.content + tour.skip_link,
-                position: _t.database.parameters.direction === 'rtl' ? 'left' : 'right',
                 event_handlers: [{
                     event: 'click',
                     selector: '.o_skip_tour',
