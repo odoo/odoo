@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-10-21 12:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -124,27 +124,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr "Gelado de Chocolate"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-#, fuzzy
-msgid "Ice Cream Chocolate with sticks"
-msgstr "Ice Cream Chocolate with stucks"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr "Ice Cream Vanilla"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "Em Progresso"
@@ -178,7 +157,7 @@ msgid "Name of the picking wave"
 msgstr "Nome do Processo de Recolha"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr "Nada a imprimir."
@@ -189,10 +168,10 @@ msgid "Person responsible for this wave"
 msgstr "Responsável por este processo"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_10088
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -215,7 +194,7 @@ msgid "Picking Waves not finished"
 msgstr "Processo de Recolha por Terminar"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_10088
 msgid "Picking wave associated to this picking"
 msgstr "Processo de Recolha associados a esta recolha"
 
@@ -227,8 +206,8 @@ msgstr "Recolhas"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Imprimir todas as recolhas"
+msgid "Print"
+msgstr "Imprimir"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -251,7 +230,7 @@ msgid "Select a wave"
 msgstr "Seleccionar Processo"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -259,18 +238,6 @@ msgid ""
 msgstr ""
 "Algumas recolhas ainda estão à espera de mercadorias. Verifique ou force a "
 "sua disponibilidade antes de definir essa processo como a fazer."
-
-#. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_dry_specu
-#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr "Speculoos"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr "Speculoos - A belgian speciality"
 
 #. module: stock_picking_wave
 #: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
@@ -308,7 +275,7 @@ msgid "Transfer"
 msgstr "Transferir"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
@@ -322,62 +289,3 @@ msgstr "Utilizador"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "Processo"
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#, fuzzy
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "Se marcado, as novas mensagens requerem a sua atenção.\n"
-#~ "#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-#~ "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da Última Mensagem"
-
-#~ msgid "Messages"
-#~ msgstr "Mensagens"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Histórico de mensagens e comunicação"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requerem uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensagens por ler"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensagens por ler"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens por Ler"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Website"
