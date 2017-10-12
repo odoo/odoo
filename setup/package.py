@@ -144,7 +144,7 @@ class OdooDocker(object):
         )
         time.sleep(2)  # let the bash start
         self.docker.logfile_read = self.log_file
-        self.id = subprocess.check_output('docker ps -l -q', shell=True)
+        self.id = subprocess.check_output('docker ps -l -q', shell=True).strip().decode('ascii')
 
     def end(self):
         try:
@@ -339,14 +339,14 @@ def test_tgz(o):
     with docker('odoo-%s-src-nightly-tests' % docker_version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
-        wheezy.system('pip install /opt/release/%s' % wheezy.release)
+        wheezy.system('pip3 install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
         wheezy.system('mkdir /var/lib/odoo')
         wheezy.system('chown odoo:odoo /var/lib/odoo')
-        wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany -i base --stop-after-init"')
-        wheezy.system('su odoo -s /bin/bash -c "odoo --addons-path=/usr/local/lib/python2.7/dist-packages/odoo/addons -d mycompany &"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init"')
+        wheezy.system('su odoo -s /bin/bash -c "odoo -d mycompany &"')
 
 def test_deb(o):
     logging.info('Testing deb package in docker')
