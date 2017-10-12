@@ -15,6 +15,14 @@
         text-align: left;
     }
     table-layout: fixed;
+
+    @media (max-width: @screen-xs-max) {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
 }
 
 .o_my_home_content > .page-header > a:hover {
