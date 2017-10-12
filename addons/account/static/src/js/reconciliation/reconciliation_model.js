@@ -599,7 +599,7 @@ var StatementModel = BasicModel.extend({
             // see: get_statement_line_for_reconciliation_widget method in account/models/account_bank_statement.py for more details
             var currency = session.get_currency(line.st_line.currency_id);
             var balance = line.balance.amount;
-            if (!utils.float_is_zero(balance, currency.digits)) {
+            if (!utils.float_is_zero(balance, currency.digits[1])) {
                 var unreconciled_amount_dict = {
                     'account_id': line.st_line.open_balance_account_id,
                     'credit': balance > 0 ? balance : 0,
