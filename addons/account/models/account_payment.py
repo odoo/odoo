@@ -218,6 +218,19 @@ class account_payment(models.Model):
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
 
+    def open_payment_matching_screen(self):
+        # Open reconciliation view for customers/suppliers
+        action_context = {'company_ids': [self.company_id.id], 'partner_ids': [self.partner_id.commercial_partner_id.id]}
+        if self.partner_type == 'customer':
+            action_context.update({'mode': 'customers'})
+        elif self.partner_type == 'supplier':
+            action_context.update({'mode': 'suppliers'})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'manual_reconciliation_view',
+            'context': action_context,
+        }
+
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
