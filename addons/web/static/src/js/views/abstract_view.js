@@ -46,6 +46,11 @@ var AbstractView = Class.extend({
     searchable: true,
     // viewType is the type of the view, like 'form', 'kanban', 'list'...
     viewType: undefined,
+    // if searchable, this flag determines if the search view will display a
+    // groupby menu or not.  This is useful for the views which do not support
+    // grouping data.
+    groupable: true,
+
     config: {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
@@ -94,6 +99,7 @@ var AbstractView = Class.extend({
                 delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
                 duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
             },
+            groupable: this.groupable,
             controllerID: params.controllerID,
         };
         // AAB: these params won't be necessary as soon as the ControlPanel will
