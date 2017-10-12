@@ -7044,6 +7044,26 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('field selection with many2ones and special characters', function (assert) {
+        assert.expect(1);
+
+        // edit the partner with id=4
+        this.data.partner.records[2].display_name = '<span>hey</span>';
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="trululu" widget="selection"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+        });
+        assert.strictEqual(form.$('select option[value="4"]').text(), '<span>hey</span>');
+
+        form.destroy();
+    });
+
     QUnit.test('widget selection on a many2one: domain updated by an onchange', function (assert) {
         assert.expect(4);
 
