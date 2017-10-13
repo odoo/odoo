@@ -8,7 +8,8 @@ import sphinx.environment
 try:
     from sphinx.environment.adapters import toctree
 except ImportError:
-    pass
+    toctree = None
+
 import sphinx.builders.html
 from docutils import nodes
 def setup(app):
