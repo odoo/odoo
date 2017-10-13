@@ -159,6 +159,9 @@
                             </p>
                             <p t-field="o.note"/>
                         </div>
+                        <div t-if="o.picking_note">
+                            <strong>Note: </strong><span t-field="o.picking_note"/>
+                        </div>
                     </t>
                  </t>
              </t>

@@ -130,6 +130,9 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div t-if="o.delivery_note">
+                        <strong>Note: </strong><span t-field="o.delivery_note"/>
+                    </div>
                     <p t-if="o.backorder_id">
                         This shipment is a backorder of <t t-esc="o.backorder_id.name"/>.
                     </p>

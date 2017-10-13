@@ -59,6 +59,8 @@ class SaleOrder(models.Model):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
 
         pickings = self.mapped('picking_ids')
+        if not pickings.picking_note:
+            pickings.picking_note = self.note
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:
@@ -108,7 +110,6 @@ class SaleOrderLine(models.Model):
         if lines:
             lines._action_launch_procurement_rule()
         return res
-    
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
