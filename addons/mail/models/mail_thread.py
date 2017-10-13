@@ -269,6 +269,10 @@ class MailThread(models.AbstractModel):
         tracked_fields = None
         if not self._context.get('mail_notrack'):
             tracked_fields = track_self._get_tracked_fields(list(values))
+            # 'active' field tracked by default for all models.
+            # If you want to untrack 'active' field then use notrack=True attribute on field.
+            if 'active' not in tracked_fields.keys() and 'active' in self._fields and not getattr(self._fields['active'], 'notrack', False):
+                tracked_fields.update(self.fields_get(['active']))
         if tracked_fields:
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
