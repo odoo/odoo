@@ -215,7 +215,7 @@ class HrPayslip(models.Model):
     @api.multi
     def _compute_details_by_salary_rule_category(self):
         for payslip in self:
-            payslip.details_by_salary_rule_category = payslip.mapped('line_ids').filtered(lambda line: line.category_id)
+            payslip.details_by_salary_rule_category = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)]).filtered(lambda line: line.category_id)
 
     @api.multi
     def _compute_payslip_count(self):
@@ -663,13 +663,13 @@ class HrPayslip(models.Model):
         self.struct_id = self.contract_id.struct_id
 
         #computation of the salary input
-        worked_days_line_ids = self.get_worked_day_lines(contract_ids, date_from, date_to)
+        worked_days_line_ids = self.get_worked_day_lines([self.contract_id.id], date_from, date_to)
         worked_days_lines = self.worked_days_line_ids.browse([])
         for r in worked_days_line_ids:
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        input_line_ids = self.get_inputs(contract_ids, date_from, date_to)
+        input_line_ids = self.get_inputs([self.contract_id.id], date_from, date_to)
         input_lines = self.input_line_ids.browse([])
         for r in input_line_ids:
             input_lines += input_lines.new(r)
