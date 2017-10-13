@@ -145,7 +145,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -179,8 +179,9 @@ class AccountMove(models.Model):
     @api.multi
     def _post_validate(self):
         for move in self:
+            accounting_company_id = move.company_id._get_parent_accounting_company()
             if move.line_ids:
-                if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
+                if not all([x.company_id.id == accounting_company_id.id for x in move.line_ids]):
                     raise UserError(_("Cannot create moves for different companies."))
         self.assert_balanced()
         return self._check_lock_date()

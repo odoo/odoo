@@ -111,3 +111,14 @@ Best Regards,''')
             if values.get('accounts_code_digits'):
                 company.reflect_code_digits_change(digits)
         return super(ResCompany, self).write(values)
+
+    @api.multi
+    def _get_parent_accounting_company(self):
+        self.ensure_one()
+        parent = self.parent_id
+        if not self.chart_template_id:
+            if not parent:
+                raise ValidationError(_('No accounting parent: no parent company has a chart of accounts installed.'))
+            return parent._get_parent_accounting_company()
+        else:
+            return self
