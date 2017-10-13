@@ -24,13 +24,14 @@
 # Dhaman <dhaman@indonesian-odoo.com>, 2017
 # Hendro Yulianto <hyulianto@gmail.com>, 2017
 # Hendra So <mask783@gmail.com>, 2017
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Hendra So <mask783@gmail.com>, 2017\n"
+"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,6 +85,7 @@ msgstr "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Kwitansi Pembayaran (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -573,7 +575,7 @@ msgstr "<span>Rekonsiliasi</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Pelaporan</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -598,7 +600,7 @@ msgstr "<strong>2. Daftar Pembayaran yang Kurang Tepat</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Jumlah Jatuh Tempo</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -772,7 +774,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>From</strong>"
-msgstr ""
+msgstr "<strong>Dari</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -1054,19 +1056,20 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:383
 #, python-format
 msgid "A Cash transaction can't have a 0 amount."
-msgstr ""
+msgstr "Transaksi Tunai tidak dapat memiliki jumlah 0."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1728
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
 msgstr ""
+"Persyaratan Pembayaran harus memiliki baris terakhir dari jenis Saldo."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1731
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
-msgstr ""
+msgstr "Persyaratan Pembayaran hanya memiliki satu baris jenis Saldo."
 
 #. module: account
 #: code:addons/account/models/account.py:707
@@ -1203,7 +1206,7 @@ msgstr "Akun"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr ""
+msgstr "Akun Akuntan"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -1267,7 +1270,7 @@ msgstr "Pencatatan Akun"
 #: model:ir.ui.view,arch_db:account.view_account_group_form
 #: model:ir.ui.view,arch_db:account.view_account_group_tree
 msgid "Account Group"
-msgstr ""
+msgstr "Grup Akun"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_group_tree
@@ -1360,7 +1363,7 @@ msgstr "Hirarki laporan Akun"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Rounding"
-msgstr ""
+msgstr "Pembulatan akun"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1470,12 +1473,12 @@ msgstr "Pembatalan Rekonsiliasi Akun"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account group"
-msgstr ""
+msgstr "Grup Akun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_group_search
 msgid "Account groups"
-msgstr ""
+msgstr "Grup Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
@@ -1626,7 +1629,7 @@ msgstr "Tindakan"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr ""
+msgstr "Aktifkan Mata Uang Lain"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1655,7 +1658,7 @@ msgstr "Tambahkan"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "Tambahkan Catatan Kredit"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0

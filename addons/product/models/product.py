@@ -261,6 +261,8 @@ class ProductProduct(models.Model):
 
     @api.one
     def _set_image_value(self, value):
+        if isinstance(value, pycompat.text_type):
+            value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
         if self.product_tmpl_id.image:
             self.image_variant = image

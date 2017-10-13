@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * account_tax_python
 # 
+# Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +24,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "适用代码"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
@@ -33,6 +38,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"通过设置变量‘结果’来计算税的总额.\n"
+"\n"
+":参数 base_amount: 浮点型, 税的实际额度\n"
+":参数 price_unit: 浮点型\n"
+":参数 quantity: 浮点型\n"
+":参数 company: res.company 记录单\n"
+":参数 product: product.product 记录单或者空\n"
+":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -45,6 +58,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"通过设置变量‘结果’来计算税的总额.\n"
+"\n"
+":参数 base_amount: 浮点型, 税的实际额度\n"
+":参数 price_unit: 浮点型\n"
+":参数 quantity: 浮点型\n"
+":参数 company: res.company 记录单\n"
+":参数 product: product.product 记录单或者空\n"
+":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -57,6 +78,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"通过设置变量‘结果’的真或假来决定是否计算税的额度\n"
+"\n"
+":参数 price_unit: 浮点型\n"
+":参数 quantity: 浮点型\n"
+":参数 company: res.company 记录单\n"
+":参数 product: product.product 记录单或者空\n"
+":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -68,19 +96,26 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"通过设置变量‘结果’的真或假来决定是否计算税的额度\n"
+"\n"
+":参数 price_unit: 浮点型\n"
+":参数 quantity: 浮点型\n"
+":参数 company: res.company 记录单\n"
+":参数 product: product.product 记录单或者空\n"
+":参数 partner: res.partner 记录单或者空"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
 msgid "Python Code"
-msgstr ""
+msgstr "Python 代码"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "税"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "税金模板"

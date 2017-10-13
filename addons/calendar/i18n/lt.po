@@ -11,10 +11,10 @@
 # Rolandas <info@paninfo.lt>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2017-10-10 11:35+0000\n"
+"PO-Revision-Date: 2017-10-10 11:35+0000\n"
 "Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -412,7 +412,7 @@ msgid "Availability"
 msgstr "Prieinamumas"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1588
+#: code:addons/calendar/models/calendar.py:1583
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -630,13 +630,13 @@ msgid "Ending at"
 msgstr "Baigiasi"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:905
+#: code:addons/calendar/models/calendar.py:898
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "Pabaigos data negali būti nurodyta prieš pradžios datą."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:903
+#: code:addons/calendar/models/calendar.py:896
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -658,7 +658,7 @@ msgid "Event alarm"
 msgstr "Įvykio signalas"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1148
+#: code:addons/calendar/models/calendar.py:1141
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Įvykio pasikartojimo intervalas negali būti neigiamas."
@@ -685,7 +685,7 @@ msgid "First"
 msgstr "Pirmas"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:945
+#: code:addons/calendar/models/calendar.py:938
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Pirmiausia turite nurodyti pakvietimo datą."
@@ -722,7 +722,7 @@ msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1533
+#: code:addons/calendar/models/calendar.py:1526
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "Grupavimas pagal datą nepalaikomas, naudokite kalendoriaus vaizdą."
@@ -997,7 +997,7 @@ msgid "Partner-related data of the user"
 msgstr "Su partneriu susiję vartotojo duomenys"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1161
+#: code:addons/calendar/models/calendar.py:1154
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Pasirinkite tinkamą mėnesio dieną."
@@ -1084,6 +1084,11 @@ msgstr "Kiek kartų kartoti"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
 msgstr "Atsakingas"
+
+#. module: calendar
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
@@ -1346,7 +1351,7 @@ msgid "e.g. Business Lunch"
 msgstr "pvz. verslo pietūs"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1146
+#: code:addons/calendar/models/calendar.py:1139
 #, python-format
 msgid "interval cannot be negative."
 msgstr "intervalas negali būti neigiamas."

@@ -14,10 +14,10 @@
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
 "Last-Translator: Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -257,7 +257,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>作業区</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:468
+#: code:addons/mrp/models/mrp_workorder.py:472
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr "製造指図は終了、もしくは取消されました"
@@ -730,11 +730,6 @@ msgid "Configuration"
 msgstr "設定"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
-msgid "Configure Manufacturing"
-msgstr "製造を構成"
-
-#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Confirmed"
@@ -1082,6 +1077,11 @@ msgstr "完了"
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line_lot_produced_id
 msgid "Finished Lot"
 msgstr "終了ロット"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_finished_lots_exist
+msgid "Finished Lots Exist"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_finished_move_line_ids
@@ -1489,7 +1489,7 @@ msgid "Lock"
 msgstr "ロック"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8215
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8237
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "ロス理由"
@@ -2047,7 +2047,7 @@ msgid "Planning"
 msgstr "計画"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:143
+#: code:addons/mrp/wizard/mrp_product_produce.py:147
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
 msgstr ""
@@ -2561,8 +2561,8 @@ msgid "Scheduled Month"
 msgstr "予定月"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:588
-#: code:addons/mrp/models/mrp_workorder.py:477
+#: code:addons/mrp/models/mrp_production.py:590
+#: code:addons/mrp/models/mrp_workorder.py:481
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2669,6 +2669,7 @@ msgid "Set duration manually"
 msgstr "所要時間を手動で設定"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3004,7 +3005,7 @@ msgid "Time Tracking"
 msgstr "時間記録"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:398
+#: code:addons/mrp/models/mrp_workorder.py:402
 #, python-format
 msgid "Time Tracking: "
 msgstr "タイムトラッキング:"
@@ -3528,7 +3529,7 @@ msgid "Work Sheet"
 msgstr "ワークシート"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:565
+#: code:addons/mrp/models/mrp_production.py:567
 #, python-format
 msgid "Work order %s is still running"
 msgstr "作業オーダ %s は、現在実行中です。"
@@ -3604,6 +3605,12 @@ msgid "You can not change the finished work order."
 msgstr "完了した作業オーダを変更することはできません。"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:553
+#, python-format
+msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:92
 #, python-format
 msgid ""
@@ -3614,7 +3621,7 @@ msgstr ""
 "終了させるか、取り消してください"
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:127
+#: code:addons/mrp/models/stock_move.py:134
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3623,7 +3630,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:223
+#: code:addons/mrp/wizard/mrp_product_produce.py:204
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3644,7 +3651,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:392
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3654,7 +3661,7 @@ msgstr ""
 "カテゴリ「パフォーマンス」内で少なくとも1つの生産性ロスを定義する必要があります。製造アプリのメニュー 設定 / 生産性ロス で作成してください。"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:384
+#: code:addons/mrp/models/mrp_workorder.py:388
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3663,7 +3670,7 @@ msgid ""
 msgstr "カテゴリ「生産性」内で少なくとも1つの生産性ロスを定義する必要があります。製造アプリのメニュー 設定 / 生産性ロスで作成してください。"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:442
+#: code:addons/mrp/models/mrp_workorder.py:446
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3674,7 +3681,7 @@ msgstr ""
 "で作成してください。"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:121
+#: code:addons/mrp/wizard/mrp_product_produce.py:125
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr "完製品にロット番号を付与する必要があります "
@@ -3686,7 +3693,7 @@ msgid "You should at least produce some quantity"
 msgstr "少なくともいくらかの量を生成する必要があります"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:310
+#: code:addons/mrp/models/mrp_workorder.py:314
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr ""
