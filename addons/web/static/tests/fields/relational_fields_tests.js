@@ -1070,8 +1070,8 @@ QUnit.module('relational_fields', {
             assert.deepEqual(
                 obj.turtles,
                 [
-                    [0, false, {turtle_foo: 'blip', id: 2}],
-                    [0, false, {turtle_foo: 'kawa', id: 3}]
+                    [0, 2, {turtle_foo: 'blip', id: 2}],
+                    [0, 3, {turtle_foo: 'kawa', id: 3}]
                 ],
                 "should have properly created the x2many command list");
         };
