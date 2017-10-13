@@ -19,6 +19,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
         ['/website/static/src/xml/website.pageProperties.xml']
     ),
     events: _.extend({}, widget.Dialog.prototype.events, {
+        'keyup input#page_name': '_onNameChanged',
         'keyup input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
     }),
@@ -90,19 +91,39 @@ var PagePropertiesDialog = widget.Dialog.extend({
 
         this.$(".ask_for_redirect").hide();
         this.$(".redirect_type").hide();
+        this.$(".warn_about_call").hide();
 
-        //TODO: remove.html() & set self.var & display in view instead of controller (here)
         this._getPageDependencies(self.page_id, context)
         .then(function (dependencies) {
-            var dep = [];
-            _.each(dependencies, function( value, index ) {
-                if (dependencies[index].length > 0) {
-                    dep.push(dependencies[index].length + ' ' + index.toLowerCase() + (dependencies[index].length > 1 ? 's': ''));
+            var dep_text = [];
+            _.each(dependencies, function(value, index){
+                if (value.length > 0) {
+                    dep_text.push(value.length + ' ' + index.toLowerCase());
                 }
             });
-            if (dep.length > 0) {
-                $("#dependencies_redirect").html("(" + _("used in") + " " + dep.join(", ") + ")");
-            }
+            dep_text = dep_text.join(', ');
+            $('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
+            $('#dependencies_redirect [data-toggle="popover"]').popover({
+               container: 'body'
+            });
+        });
+        this._getSupportedMimetype(context)
+        .then(function (mimetypes) {
+            self.supportedMimetype = mimetypes;
+        });
+        this._getPageKeyDependencies(self.page_id, context)
+        .then(function (dependencies) {
+            var dep_text = [];
+            _.each(dependencies, function(value, index){
+                if (value.length > 0) {
+                    dep_text.push(value.length + ' ' + index.toLowerCase());
+                }
+            });
+            dep_text = dep_text.join(', ');
+            $('.warn_about_call').html(qweb.render('website.show_page_key_dependencies', { dependencies: dependencies, dep_text: dep_text }));
+            $('.warn_about_call [data-toggle="popover"]').popover({
+               container: 'body'
+            });
         });
 
         var l10n = _t.database.parameters;
@@ -132,6 +153,13 @@ var PagePropertiesDialog = widget.Dialog.extend({
          this.$("#date_publish_container").datetimepicker(datepickersOptions);
 
          return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function(){
+        $('.popover').popover('hide');
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -184,7 +212,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Retrieves the page dependencies for the given object id.
+     * Retrieves the page URL dependencies for the given object id.
      *
      * @private
      * @param {integer} moID
@@ -196,6 +224,36 @@ var PagePropertiesDialog = widget.Dialog.extend({
             model: 'website',
             method: 'page_search_dependencies',
             args: [moID],
+            context: context,
+        });
+    },
+    /**
+     * Retrieves the page's key dependencies for the given object id.
+     *
+     * @private
+     * @param {integer} moID
+     * @param {Object} context
+     * @returns {Deferred<Array>}
+     */
+    _getPageKeyDependencies: function (moID, context) {
+        return this._rpc({
+            model: 'website',
+            method: 'page_search_key_dependencies',
+            args: [moID],
+            context: context,
+        });
+    },
+    /**
+     * Retrieves supported mimtype
+     *
+     * @private
+     * @param {Object} context
+     * @returns {Deferred<Array>}
+     */
+    _getSupportedMimetype: function (context) {
+        return this._rpc({
+            model: 'website',
+            method: 'guess_mimetype',
             context: context,
         });
     },
@@ -225,6 +283,20 @@ var PagePropertiesDialog = widget.Dialog.extend({
         }
         else {
             this.$(".ask_for_redirect").hide();
+        }
+    },
+    _onNameChanged: function () {
+        var name = this.$('input#page_name').val();
+        //If the file type is a supported mimetype, check if it is t-called. If so, warn user
+        //Note: different from page_search_dependencies which check only for url and not key
+        var ext = '.' + this.page.name.split('.').pop();
+        if(ext in this.supportedMimetype && ext != '.html'){
+            if (name != this.page.name) {
+                this.$(".warn_about_call").show();
+            }
+            else {
+                this.$(".warn_about_call").hide();
+            }
         }
     },
     _onCreateRedirectChanged: function () {
@@ -602,8 +674,8 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 });
 
-
 var PageManagement = Widget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.xml'],
     events: {
         'click a.js_page_properties': '_onPagePropertiesButtonClick',
         'click a.js_clone_page': '_onClonePageButtonClick',
@@ -685,7 +757,6 @@ var PageManagement = Widget.extend({
         }, def.reject.bind(def));
     },
 });
-
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
 websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');

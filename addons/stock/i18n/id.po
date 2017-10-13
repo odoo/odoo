@@ -18,10 +18,10 @@
 # dimas indra <dprahastra@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:25+0000\n"
-"PO-Revision-Date: 2017-10-02 11:25+0000\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
 "Last-Translator: dimas indra <dprahastra@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
@@ -31,13 +31,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:304
+#: code:addons/stock/models/stock_move.py:308
 #, python-format
 msgid " (%s reserved)"
 msgstr "(%s dicadangkan)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:307
+#: code:addons/stock/models/stock_move.py:311
 #, python-format
 msgid " (reserved)"
 msgstr "Disimpan"
@@ -1058,7 +1058,7 @@ msgid "By Unique Serial Number"
 msgstr "Dengan nomor seri yang unik"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:596
+#: code:addons/stock/models/stock_move.py:600
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -1162,7 +1162,7 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:464
+#: code:addons/stock/models/stock_move.py:468
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr "Tidak unreserve yang bergerak dilakukan"
@@ -1400,11 +1400,6 @@ msgstr "Kondisi"
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
 msgid "Configuration"
 msgstr "Konfigurasi"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_config_settings
-msgid "Configure Warehouse"
-msgstr "Mengkonfigurasi gudang"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -2090,7 +2085,7 @@ msgid "Destination route"
 msgstr "Rute tujuan"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:442
+#: code:addons/stock/models/stock_move.py:446
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
@@ -2595,7 +2590,7 @@ msgstr "Bagaimana menggunakan banyak pelacakan:"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6880
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6902
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
@@ -3945,6 +3940,7 @@ msgid "New"
 msgstr "Baru"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:172
 #: code:addons/stock/models/stock_picking.py:584
 #, python-format
 msgid "New Move:"
@@ -3982,7 +3978,7 @@ msgid "No Tracking"
 msgstr "Tidak pelacakan"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:362
+#: code:addons/stock/models/stock_move_line.py:388
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Tidak ada jumlah negatif yang diperbolehkan"
@@ -5771,6 +5767,7 @@ msgstr ""
 "menjadi lokasi mitra jika operasi fabrikan anda disubkontrakan."
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_config_settings
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Settings"
@@ -6239,7 +6236,7 @@ msgstr ""
 "pengiriman produk jadi. Sekarang saatnya Anda berjanji untuk pelanggan Anda."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1029
+#: code:addons/stock/models/stock_move.py:1033
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -6368,7 +6365,7 @@ msgid "The quotation becomes a Sales Order and a Transfer Order is created"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:262
+#: code:addons/stock/models/stock_move.py:266
 #: code:addons/stock/models/stock_move_line.py:79
 #, python-format
 msgid ""
@@ -7290,7 +7287,7 @@ msgid "You are not allowed to create a lot for this picking type"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:618
+#: code:addons/stock/models/stock_move.py:622
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -7373,11 +7370,17 @@ msgstr ""
 "menonaktifkan produk ini."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:311
+#: code:addons/stock/models/stock_move_line.py:337
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:115
+#, python-format
+msgid "You can not enter negative quantities!"
 msgstr ""
 
 #. module: stock
@@ -7387,13 +7390,13 @@ msgid "You can only adjust stockable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1037
+#: code:addons/stock/models/stock_move.py:1041
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Anda hanya dapat menghapus rancangan bergerak."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:120
+#: code:addons/stock/models/stock_move_line.py:125
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
@@ -7404,7 +7407,7 @@ msgid "You can review and edit the predefined units via the"
 msgstr "Anda dapat meninjau dan mengedit unit standar melalui"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:909
+#: code:addons/stock/models/stock_move.py:913
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
@@ -7438,7 +7441,7 @@ msgstr ""
 " - qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1065
+#: code:addons/stock/models/stock_move.py:1069
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
@@ -7446,14 +7449,14 @@ msgstr ""
 "dahulu."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1061
+#: code:addons/stock/models/stock_move.py:1065
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Anda tidak bisa membagi bergerak dilakukan"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:146
-#: code:addons/stock/models/stock_move_line.py:152
+#: code:addons/stock/models/stock_move_line.py:151
+#: code:addons/stock/models/stock_move_line.py:157
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -7476,7 +7479,7 @@ msgstr ""
 "Silahkan klik tombol 'Cadangan' untuk memeriksa apakah produk tersedia."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:126
+#: code:addons/stock/models/stock_move_line.py:131
 #, python-format
 msgid ""
 "You have already assigned this serial number to this product. Please correct"
@@ -7549,7 +7552,7 @@ msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:360
+#: code:addons/stock/models/stock_move_line.py:386
 #: code:addons/stock/models/stock_picking.py:656
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
@@ -7564,7 +7567,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:314
+#: code:addons/stock/models/stock_move.py:318
 #, python-format
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"

@@ -226,7 +226,8 @@ var AbstractView = Class.extend({
                     return;
                 }
 
-                attrs.limit = attrs.mode === "tree" ? 80 : 40;
+                attrs.limit = attrs.mode === "tree" ? 80 :
+                         (attrs.widget === 'many2many_tags' ? 1000 : 40);
 
                 if (attrs.Widget.prototype.useSubview && !attrs.__no_fetch && !attrs.views[attrs.mode]) {
                     var context = {};

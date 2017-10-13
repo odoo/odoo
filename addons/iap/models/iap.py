@@ -81,7 +81,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
     :param int credit: cost of the body's operation
     :param str description:
     """
-    end_point = get_endpoint(env)
+    endpoint = get_endpoint(env)
     params = {
         'account_token': account_token,
         'credit': credit,
@@ -103,14 +103,14 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
             'token': transaction_token,
             'key': key,
         }
-        r = jsonrpc(end_point + '/iap/1/cancel', params=params)
+        r = jsonrpc(endpoint + '/iap/1/cancel', params=params)
         raise e
     else:
         params = {
             'token': transaction_token,
             'key': key,
         }
-        r = jsonrpc(end_point + '/iap/1/capture', params=params) # noqa
+        r = jsonrpc(endpoint + '/iap/1/capture', params=params) # noqa
 
 
 #----------------------------------------------------------

@@ -90,7 +90,7 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('favicon')
     def _compute_icon_src(self):
-        self.icon_src = b'data:image/png;base64,' + self.favicon
+        self.icon_src = 'data:image/png;base64,' + self.favicon
 
     @api.one
     @api.depends('url')

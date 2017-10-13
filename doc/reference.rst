@@ -1,3 +1,5 @@
+:types: reference
+
 =========
 Reference
 =========
