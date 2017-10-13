@@ -698,6 +698,154 @@ class StockMove(TransactionCase):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
 
+    def test_putaway_2(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply a putaway strategy by product on the stock location to put everything
+        # incoming in the sublocation shelf1.
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('product.product_product_5').id,
+                'fixed_location_id': shelf1_location.id,
+            })]
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_2',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('product.product_product_5').id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
+
+    def test_putaway_3(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply both the putaway strategy by product and category. We check here
+        # that the putaway by product takes precedence.
+
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'fixed_location_ids': [(0, 0, {
+                'category_id': self.env.ref('product.product_category_all').id,
+                'fixed_location_id': shelf1_location.id,
+            })],
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('stock.product_icecream').id,
+                'fixed_location_id': shelf2_location.id,
+            })],
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_3',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('stock.product_icecream').id,
+            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
+
+    def test_putaway_4(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply both the putaway strategy by product and category. We check here
+        # that if a putaway by product is not matched, the fallback to the category is correctly
+        # done.
+
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'fixed_location_ids': [(0, 0, {
+                'category_id': self.env.ref('product.product_category_all').id,
+                'fixed_location_id': shelf1_location.id,
+            })],
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('stock.product_icecream').id,
+                'fixed_location_id': shelf2_location.id,
+            })],
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_4',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
+
+
     def test_availability_1(self):
         """ Check that the `availability` field on a move is correctly computed when there is
         more than enough products in stock.
