@@ -325,7 +325,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
 QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
-    assert.expect(27);
+    assert.expect(28);
 
     // Remove the mention throttle to speed up the test
     var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
@@ -427,7 +427,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // send a message
     form.$('.o_chatter_button_new_message').click();
     assert.ok(!$('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be opened");
-    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_text_field:first()').text("My first message");
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two messages");
@@ -441,7 +441,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // log a note
     form.$('.o_chatter_button_log_note').click();
     assert.ok(!$('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be opened");
-    form.$('.oe_chatter .o_composer_text_field:first()').val("My first note");
+    form.$('.oe_chatter .o_composer_text_field:first()').text("My first note");
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 3, "thread should contain three messages");
@@ -467,10 +467,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // very basic test of mention
     form.$('.o_chatter_button_new_message').click();
     var $input = form.$('.oe_chatter .o_composer_text_field:first()');
-    $input.val('@');
-    // the cursor position must be set for the mention manager to detect that we are mentionning
-    $input[0].selectionStart = 1;
-    $input[0].selectionEnd = 1;
+    $input.text('@');
     $input.trigger('keyup');
 
     assert.strictEqual(getSuggestionsDef.state(), "pending",
@@ -487,6 +484,9 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                 "suggestion should be displayed correctly");
             assert.strictEqual(form.$('.o_mention_proposition .o_mention_info').text(), '(test@odoo.com)',
                 "suggestion should be displayed correctly");
+
+            $(".o_mention_proposition > a").trigger("click");
+            assert.strictEqual($(".o_composer_input a").length, 1, "mention is 'green' in edit mode");
 
             BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
             form.destroy();

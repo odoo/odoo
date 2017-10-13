@@ -132,13 +132,13 @@ return Widget.extend({
         event.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (event.which === 13) {
-            var content = _.str.trim(this.$input.val());
+            var content = _.str.trim(this.$input.text());
             var message = {
                 content: content,
                 attachment_ids: [],
                 partner_ids: [],
             };
-            this.$input.val('');
+            this.$input.text('');
             if (content) {
                 this.trigger('post_message', message, this.channel_id);
             }
