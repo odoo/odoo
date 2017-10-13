@@ -140,6 +140,8 @@ class TestStockValuation(TransactionCase):
         is set according to the last currency rate.
         """
         usd_currency = self.env.ref('base.USD')
+        self.env.user.company_id.currency_id = usd_currency.id
+
         eur_currency = self.env.ref('base.EUR')
 
         self.product1.product_tmpl_id.cost_method = 'average'
