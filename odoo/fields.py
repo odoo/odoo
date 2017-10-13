@@ -1480,6 +1480,50 @@ class Html(_String):
         return value
 
 
+class DateString(str):
+    def __ge__(self, other):
+        ge = super(DateString, self).__ge__
+        if isinstance(other, date):
+            return ge(other.strftime(DATE_FORMAT))
+        else:
+            return ge(other)
+
+    def __gt__(self, other):
+        gt = super(DateString, self).__gt__
+        if isinstance(other, date):
+            return gt(other.strftime(DATE_FORMAT))
+        else:
+            return gt(other)
+
+    def __le__(self, other):
+        le = super(DateString, self).__le__
+        if isinstance(other, date):
+            return le(other.strftime(DATE_FORMAT))
+        else:
+            return le(other)
+
+    def __lt__(self, other):
+        lt = super(DateString, self).__lt__
+        if isinstance(other, date):
+            return lt(other.strftime(DATE_FORMAT))
+        else:
+            return lt(other)
+
+    def __eq__(self, other):
+        eq = super(DateString, self).__eq__
+        if isinstance(other, date):
+            return eq(other.strftime(DATE_FORMAT))
+        else:
+            return eq(other)
+
+    def __ne__(self, other):
+        ne = super(DateString, self).__ne__
+        if isinstance(other, date):
+            return ne(other.strftime(DATE_FORMAT))
+        else:
+            return ne(other)
+
+
 class Date(Field):
     type = 'date'
     column_type = ('date', 'date')
@@ -1538,13 +1582,57 @@ class Date(Field):
             if validate:
                 # force parsing for validation
                 self.from_string(value)
-            return value[:DATE_LENGTH]
-        return self.to_string(value)
+            return DateString(value[:DATE_LENGTH])
+        return DateString(self.to_string(value))
 
     def convert_to_export(self, value, record):
         if not value:
             return ''
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+
+
+class DatetimeString(str):
+    def __ge__(self, other):
+        ge = super(DatetimeString, self).__ge__
+        if isinstance(other, datetime):
+            return ge(other.strftime(DATETIME_FORMAT))
+        else:
+            return ge(other)
+
+    def __gt__(self, other):
+        gt = super(DatetimeString, self).__gt__
+        if isinstance(other, datetime):
+            return gt(other.strftime(DATETIME_FORMAT))
+        else:
+            return gt(other)
+
+    def __le__(self, other):
+        le = super(DatetimeString, self).__le__
+        if isinstance(other, datetime):
+            return le(other.strftime(DATETIME_FORMAT))
+        else:
+            return le(other)
+
+    def __lt__(self, other):
+        lt = super(DatetimeString, self).__lt__
+        if isinstance(other, datetime):
+            return lt(other.strftime(DATETIME_FORMAT))
+        else:
+            return lt(other)
+
+    def __eq__(self, other):
+        eq = super(DatetimeString, self).__eq__
+        if isinstance(other, datetime):
+            return eq(other.strftime(DATETIME_FORMAT))
+        else:
+            return eq(other)
+
+    def __ne__(self, other):
+        ne = super(DatetimeString, self).__ne__
+        if isinstance(other, datetime):
+            return ne(other.strftime(DATETIME_FORMAT))
+        else:
+            return ne(other)
 
 
 class Datetime(Field):
@@ -1614,8 +1702,8 @@ class Datetime(Field):
             value = value[:DATETIME_LENGTH]
             if len(value) == DATE_LENGTH:
                 value += " 00:00:00"
-            return value
-        return self.to_string(value)
+            return DatetimeString(value)
+        return DatetimeString(self.to_string(value))
 
     def convert_to_export(self, value, record):
         if not value:
