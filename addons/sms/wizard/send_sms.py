@@ -3,7 +3,7 @@
 import logging
 
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.addons.iap.models import iap
 
