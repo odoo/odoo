@@ -23,10 +23,10 @@ class pos_cache(models.Model):
 
     @api.one
     def refresh_cache(self):
-        products = self.env['product.product'].search(self.get_product_domain())
+        Product = self.env['product.product'].sudo(self.compute_user_id.id)
+        products = Product.search(self.get_product_domain())
         prod_ctx = products.with_context(pricelist=self.config_id.pricelist_id.id, display_default_code=False,
                                          lang=self.compute_user_id.lang)
-        prod_ctx = prod_ctx.sudo(self.compute_user_id.id)
         res = prod_ctx.read(self.get_product_fields())
         datas = {
             'cache': base64.encodestring(json.dumps(res)),
