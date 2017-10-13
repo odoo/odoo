@@ -418,13 +418,36 @@ function parseDateTime(value, field, options) {
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
-function parseFloat(value) {
+/**
+ * Parse a String containing number in language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {float|NaN} the number value contained in the string representation
+ */
+function parseNumber(value) {
     if (core._t.database.parameters.thousands_sep) {
         var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
-    value = value.replace(core._t.database.parameters.decimal_point, '.');
-    var parsed = Number(value);
+    if (core._t.database.parameters.decimal_point) {
+        value = value.replace(core._t.database.parameters.decimal_point, '.');
+    }
+    return Number(value);
+}
+
+/**
+ * Parse a String containing float in language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {float}
+ * @throws {Error} if no float is found respecting the language configuration
+ */
+function parseFloat(value) {
+    var parsed = parseNumber(value);
     if (isNaN(parsed)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
     }
@@ -491,9 +514,17 @@ function parseFloatTime(value) {
     return factor * (hours + (minutes / 60));
 }
 
+/**
+ * Parse a String containing integer with language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {integer}
+ * @throws {Error} if no integer is found respecting the language configuration
+ */
 function parseInteger(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
-    var parsed = Number(value);
+    var parsed = parseNumber(value);
     // do not accept not numbers or float values
     if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
