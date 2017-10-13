@@ -109,17 +109,16 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report!"))
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'expense_line_ids': [(4, line.id) for line in self],
-            'name': self[0].name if len(self.ids) == 1 else '',
-            'employee_id': self[0].employee_id.id,
-        })
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'hr.expense.sheet',
             'target': 'current',
-            'res_id': expense_sheet.id,
+            'context': {
+                'default_expense_line_ids': [line.id for line in self],
+                'default_employee_id': self[0].employee_id.id,
+                'default_name': self[0].name if len(self.ids) == 1 else ''
+            }
         }
 
     def _prepare_move_line(self, line):
@@ -292,7 +291,7 @@ class HrExpense(models.Model):
             account_move.append(move_line)
 
             # Calculate tax lines and adjust base line
-            taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
+            taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             account_move[-1]['price'] = taxes['total_excluded']
             account_move[-1]['tax_ids'] = [(6, 0, expense.tax_ids.ids)]
             for tax in taxes['taxes']:

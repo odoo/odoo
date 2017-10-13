@@ -423,7 +423,7 @@ var FieldMany2One = AbstractField.extend({
     _updateExternalButton: function () {
         var has_external_button = !this.nodeOptions.no_open && !this.floating && this.isSet();
         this.$external_button.toggle(has_external_button);
-        this.$el.toggleClass('o_with_button', has_external_button);
+        this.$el.toggleClass('o_with_button', has_external_button); // Should not be required anymore but kept for compatibility
     },
 
 
@@ -1943,7 +1943,7 @@ var FieldSelection = AbstractField.extend({
         for (var i = 0 ; i < this.values.length ; i++) {
             this.$el.append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),
-                html: this.values[i][1]
+                text: this.values[i][1]
             }));
         }
         var value = this.value;

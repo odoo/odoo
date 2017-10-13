@@ -49,7 +49,7 @@
 
     // Dropdowns input (many2one, ...)
     .o_input_dropdown {
-        .o-flex(1, 0, auto);
+        .o-flex(1, 1, auto);
         position: relative;
         width: 100%;
 
@@ -176,14 +176,6 @@
     // Specific success color for toggle_button widget
     .fa.o_toggle_button_success {
         color: @brand-success;
-    }
-
-    // Many2One
-    &.o_field_many2one {
-        .o-inline-flex-display();
-        > span, > button {
-            .o-flex(0, 0, auto);
-        }
     }
 
     // Handle widget
