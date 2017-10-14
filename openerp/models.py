@@ -6034,15 +6034,6 @@ class BaseModel(object):
         if not all(name in self._fields for name in names):
             return {}
 
-        # determine subfields for field.convert_to_onchange() below
-        secondary = []
-        subfields = defaultdict(set)
-        for dotname in field_onchange:
-            if '.' in dotname:
-                secondary.append(dotname)
-                name, subname = dotname.split('.')
-                subfields[name].add(subname)
-
         # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
@@ -6052,8 +6043,8 @@ class BaseModel(object):
 
         # load fields on secondary records, to avoid false changes
         with env.do_in_onchange():
-            for field_seq in secondary:
-                record.mapped(field_seq)
+            for dotname in field_onchange:
+                record.mapped(dotname)
 
         # determine which field(s) should be triggered an onchange
         todo = list(names) or list(values)
@@ -6086,8 +6077,8 @@ class BaseModel(object):
                     record._onchange_eval(name, field_onchange[name], result)
 
                 # force re-evaluation of function fields on secondary records
-                for field_seq in secondary:
-                    record.mapped(field_seq)
+                for dotname in field_onchange:
+                    record.mapped(dotname)
 
                 # determine which fields have been modified
                 for name, oldval in values.iteritems():
@@ -6105,9 +6096,17 @@ class BaseModel(object):
                 self._fields[field_name].type in ('one2many', 'many2many'):
             dirty.discard(field_name)
 
+        # determine subfields for field.convert_to_onchange() below
+        Tree = lambda: defaultdict(Tree)
+        subnames = Tree()
+        for dotname in field_onchange:
+            subtree = subnames
+            for name in dotname.split('.'):
+                subtree = subtree[name]
+
         # collect values from dirty fields
         result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], subfields.get(name))
+            name: self._fields[name].convert_to_onchange(record[name], subnames[name])
             for name in dirty
         }
 
