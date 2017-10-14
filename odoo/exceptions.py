@@ -30,7 +30,7 @@ class except_orm(Exception):
 
 class UserError(except_orm):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg)
+        super(UserError, self).__init__(msg, value='')
 
 
 # deprecated due to collision with builtins, kept for compatibility

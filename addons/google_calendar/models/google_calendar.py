@@ -249,7 +249,8 @@ class GoogleCalendar(models.AbstractModel):
         if not self.get_need_synchro_attendee():
             data.pop("attendees")
         if isCreating:
-            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids
+                                if other_att.google_internal_event_id and not other_att.google_internal_event_id.startswith('_')]
             if other_google_ids:
                 data["id"] = other_google_ids[0]
         return data
@@ -513,7 +514,7 @@ class GoogleCalendar(models.AbstractModel):
         if type == "write":
             res = CalendarEvent.browse(event['id']).write(result)
         elif type == "copy":
-            result['recurrence'] = True
+            result['recurrency'] = True
             res = CalendarEvent.browse([event['id']]).write(result)
         elif type == "create":
             res = CalendarEvent.create(result).id
@@ -610,7 +611,8 @@ class GoogleCalendar(models.AbstractModel):
             ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
         ])
         for att in my_attendees:
-            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if other_att.google_internal_event_id and other_att.id != att.id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
+                                other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_')]
             for other_google_id in other_google_ids:
                 if self.get_one_event_synchro(other_google_id):
                     att.write({'google_internal_event_id': other_google_id})

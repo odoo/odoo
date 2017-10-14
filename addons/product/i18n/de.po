@@ -20,13 +20,14 @@
 # Philipp Hug <philipp@hug.cx>, 2016
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # key six <mobile.umts@gmail.com>, 2016
+# Andi <flimflam@salasar.de>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: key six <mobile.umts@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Andi <flimflam@salasar.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -854,7 +855,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -884,7 +884,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Kunden Ref"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -1432,6 +1432,7 @@ msgstr "Umlagerung"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Interne Kategorie"
 
@@ -2109,11 +2110,6 @@ msgid "Public Price"
 msgstr "Allgemeiner Preis"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Allgemeine Preisliste"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2244,6 +2240,7 @@ msgstr "Verkaufspreis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Verkaufspreisliste"
 
@@ -2777,6 +2774,7 @@ msgstr "Dieser Hinweis wird auf Angeboten gedruckt."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2821,6 +2819,11 @@ msgstr "Typ"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
+msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
 msgstr ""
 
 #. module: product
@@ -3105,14 +3108,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Arbeitszeit"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16

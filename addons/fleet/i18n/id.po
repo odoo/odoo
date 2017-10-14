@@ -4,18 +4,19 @@
 # 
 # Translators:
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Deddy Ddr <deddy.ddr@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,6 +186,11 @@ msgid "Brand model of the vehicle"
 msgstr "Model merek kendaraan"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "Istirahat"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
 msgid "CO2 Emissions"
 msgstr "Emisi CO2"
@@ -207,7 +213,7 @@ msgstr "Mencuci mobil"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Car value"
-msgstr ""
+msgstr "Nilai Mobil"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -319,6 +325,11 @@ msgid "Color of the vehicle"
 msgstr "Warna kendaraan"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "Kompak"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
 msgid "Company"
 msgstr "Perusahaan"
@@ -395,6 +406,11 @@ msgid "Contracts"
 msgstr "Kontrak"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "Konversi"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_id
@@ -457,6 +473,9 @@ msgid ""
 "Costs paid at regular intervals, depending on the cost frequency.If the cost"
 " frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
+"Biaya dibayar secara berkala, tergantung pada frekuensi biaya. Jika "
+"frekuensi biaya ditetapkan secara khusus, biaya akan masuk pada saat tanggal"
+" dimulai."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -624,6 +643,11 @@ msgstr "listrik"
 #: model:fleet.service.type,name:fleet.type_service_service_17
 msgid "Emissions"
 msgstr "Emisi"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "Mobil Karyawan"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet.py:37
@@ -909,6 +933,11 @@ msgid "Invoice Reference"
 msgstr "tagihan Referensi"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr "Junior"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Dalam Kilometer"
@@ -977,12 +1006,12 @@ msgstr "License Plate: dari '%s' untuk '%s'"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
 msgid "License plate"
-msgstr ""
+msgstr "Nomor Pelat"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr ""
+msgstr "Nomor plat kendaraan (i = nomor plat untuk mobil)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_liter
@@ -1373,7 +1402,12 @@ msgstr "Harga"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price per liter"
-msgstr ""
+msgstr "Harga per liter"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "Dibeli"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
@@ -1468,6 +1502,16 @@ msgstr "Rotor Penggantian"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
 msgid "Seats Number"
 msgstr "Kursi Nomor"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "Sedan"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "Senior"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
@@ -1825,7 +1869,7 @@ msgstr "Status kendaraan"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
 msgid "Vehicle Tags"
-msgstr ""
+msgstr "Tanda Kendaraan"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
@@ -1940,6 +1984,7 @@ msgstr "Tulis di sini semua informasi relatif lainnya untuk kontrak ini"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
 msgid "Write here all supplementary information relative to this contract"
 msgstr ""
+"Tulislah disini semua informasi tambahan yang berkaitan dengan kontrak ini"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form

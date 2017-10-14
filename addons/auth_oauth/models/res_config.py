@@ -33,7 +33,7 @@ class BaseConfigSettings(models.TransientModel):
 
     @api.model
     def get_oauth_providers(self, fields):
-        google_provider = self.env.ref('auth_oauth.provider_google')
+        google_provider = self.env.ref('auth_oauth.provider_google', False)
         return {
             'auth_oauth_google_enabled': google_provider.enabled,
             'auth_oauth_google_client_id': google_provider.client_id,
@@ -43,7 +43,7 @@ class BaseConfigSettings(models.TransientModel):
     @api.multi
     def set_oauth_providers(self):
         self.ensure_one()
-        google_provider = self.env.ref('auth_oauth.provider_google')
+        google_provider = self.env.ref('auth_oauth.provider_google', False)
         rg = {
             'enabled': self.auth_oauth_google_enabled,
             'client_id': self.auth_oauth_google_client_id,

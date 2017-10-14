@@ -19,11 +19,10 @@ class StockBackorderConfirmation(models.TransientModel):
 
     @api.one
     def _process(self, cancel_backorder=False):
-        for pack in self.pick_id.pack_operation_ids:
-            if pack.qty_done > 0:
-                pack.product_qty = pack.qty_done
-            else:
-                pack.unlink()
+        operations_to_delete = self.pick_id.pack_operation_ids.filtered(lambda o: o.qty_done <= 0)
+        for pack in self.pick_id.pack_operation_ids - operations_to_delete:
+            pack.product_qty = pack.qty_done
+        operations_to_delete.unlink()
         self.pick_id.do_transfer()
         if cancel_backorder:
             backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', self.pick_id.id)])

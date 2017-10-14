@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from odoo import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 
 class ReportJournal(models.AbstractModel):
@@ -95,6 +96,9 @@ class ReportJournal(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        if not data.get('form'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         target_move = data['form'].get('target_move', 'all')
         sort_selection = data['form'].get('sort_selection', 'date')
 

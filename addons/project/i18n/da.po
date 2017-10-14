@@ -5,18 +5,20 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # peso <peer.sommerlund@gmail.com>, 2016
-# Morten Schou <ms@msteknik.dk>, 2016
+# Ejner Sønniksen <ejner@vkdata.dk>, 2016
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
+# Morten Schou <ms@msteknik.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,11 +111,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -158,6 +159,7 @@ msgstr "# dage til deadline"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr "Antal opgaver"
 
@@ -324,6 +326,10 @@ msgid ""
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Tilpas skærmlayout</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -342,6 +348,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Opret brugerdefinerede rapporter</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -360,6 +370,10 @@ msgid ""
 "                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Tilpas workflow</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -722,7 +736,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>Anbefalede handlinger:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -820,6 +834,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"En Python-ordbog, der vil blive evalueret for at angive standardværdier, når"
+" du opretter nye poster til dette alias."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -919,7 +935,7 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias kontakt sikkerhed"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
@@ -939,7 +955,7 @@ msgstr "Alias domæne"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Aliased Model"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1162,6 +1178,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project_use_tasks
 msgid "Check this box to manage internal activities through this project"
 msgstr ""
+"Marker dette felt for at administrere interne aktiviteter gennem dette "
+"projekt"
 
 #. module: project
 #. openerp-web
@@ -1259,7 +1277,7 @@ msgstr "Virksomhed"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr ""
+msgstr "Virksomhed UOM"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1477,7 +1495,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr "Instrumentbræt"
+msgstr "Dashboard"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -1739,6 +1757,8 @@ msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
+"Forklarende tekst til at hjælpe brugere med at anvende stjernen og "
+"prioritetsmekanismen på faser eller emner, der er i denne fase."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1806,6 +1826,8 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"På vegne af Odoo Teamet, <br/>\n"
+"Fabien Pinckaers, Stifter"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1928,7 +1950,7 @@ msgstr ""
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Jeg tager opgaven"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -1946,6 +1968,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID for overordnet record indeholdende aliaset (eksempel: projekt, der "
+"indeholder opgaveoprettelses aliaset)"
 
 #. module: project
 #. openerp-web
@@ -2481,6 +2505,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2554,12 +2581,12 @@ msgstr "Pads"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Overordnet model"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Overordnet tråd (record) ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2568,6 +2595,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Overordnet model der holder aliaset. Modellen med aliasreferencen er ikke "
+"nødvendigvis den model, der er givet af alias_model_id (eksempel: projekt "
+"(parent_model) og opgave (model))."
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2582,7 +2612,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Planner"
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -2600,6 +2630,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politik til at oprette en besked på dokumentet ved hjælp af mailgatewayen.\n"
+"- alle: alle kan skrive\n"
+"- partnere: kun godkendte partnere\n"
+"- følgere: kun følgere af det relaterede dokument eller medlemmer af følgende kanaler\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2615,7 +2649,7 @@ msgstr "Prioritet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Forklaring på prioritetsstyring"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2649,7 +2683,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr ""
+msgstr "Projekttælling"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2783,7 +2817,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Record tråd ID"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2943,7 +2977,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Vis projekt på dashboard"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3160,6 +3194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3255,6 +3290,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modellen (Odoo Document Kind), som dette alias svarer til. Enhver indgående "
+"e-mail, der ikke svarer til en eksisterende post, vil medføre oprettelse af "
+"en ny rekord af denne model (fx en projektopgave)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3262,6 +3300,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Navnet på e-mail aliaset, f.eks. 'jobs', hvis du vil fange e-mails til "
+"<jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3271,6 +3311,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Ejeren af poster oprettet ved modtagelse af e-mails på dette alias. Hvis "
+"dette felt ikke er indstillet, forsøger systemet at finde den rigtige ejer "
+"baseret på afsenderens (Fra) adresse eller bruger administratorkontoen, hvis"
+" der ikke findes en systembruger for den pågældende adresse."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3318,6 +3362,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Denne fase er foldet i kanban visningen når der ikke er nogen poster i "
+"fasen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3343,6 +3389,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Dette sætter måleenheden, der anvendes i projekter og opgaver.\n"
+"Hvis du bruger timesedler knyttet til projekter, skal du huske at angive den rigtige måleenhed på dine medarbejdere."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3358,7 +3406,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Timeseddel enheder"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3561,7 +3609,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Vi kan automatisere trin i dit workflow, for eksempel:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3624,7 +3672,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Om dette projekt skal vises på dashboardet eller ej"
 
 #. module: project
 #. openerp-web
@@ -3667,6 +3715,8 @@ msgstr ""
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
 msgstr ""
+"Du kan sågar tilføje enhver rapport i dit dashboard så du har permanent "
+"adgang!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

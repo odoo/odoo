@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-09 13:04+0000\n"
-"PO-Revision-Date: 2016-12-09 13:04+0000\n"
+"POT-Creation-Date: 2017-07-18 14:21+0000\n"
+"PO-Revision-Date: 2017-07-18 14:21+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -529,7 +529,7 @@ msgid ""
 "<span>Sort by</span>\n"
 "                    <span class=\"caret\"/>"
 msgstr ""
-"<span>並べ替え順</span>\n"
+"<span>ソート順</span>\n"
 "                    <span class=\"caret\"/>"
 
 #. module: website_sale
@@ -758,8 +758,8 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
-"<b>終了条項</b> "
-"は、ウェブサイトとモバイルアプリのユーザーアカウント、またはウェブサイトとモバイルへのユーザーのアクセス(ユーザーがアカウントを作ることができない場)について、濫用の場合や、独自の裁量で終了することを通知します。"
+"<b>終了条項</b> は、ウェブサイトとモバイルアプリのユーザアカウント、またはウェブサイトとモバイルへのユーザのアクセス "
+"(ユーザがアカウントを作ることができない場)について、濫用の場合や、独自の裁量で終了することを通知します。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -789,6 +789,7 @@ msgid "Abandonned eCommerce Orders"
 msgstr "放棄されたeコマースの注文"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_accessory_product_ids
 msgid ""
@@ -805,6 +806,7 @@ msgid "Accessories: screen, mouse"
 msgstr "アクセサリー：スクリーン、マウス"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
@@ -842,6 +844,7 @@ msgid "Address"
 msgstr "アドレス"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_availability
 #: model:ir.model.fields,help:website_sale.field_product_product_availability
 #: model:ir.model.fields,help:website_sale.field_product_template_availability
 msgid "Adds an availability status on the web product page."
@@ -861,7 +864,7 @@ msgstr "全製品"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
 msgid "Allow the end user to choose this price list"
-msgstr "エンドユーザーがこの価格表を選択できるようにする"
+msgstr "エンドユーザがこの価格表を選択できるようにする"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
@@ -878,6 +881,7 @@ msgstr ""
 "例：小売業者向けに10％、本製品で5ユーロのプロモーションなど"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
 msgid "Alternative Products"
@@ -906,12 +910,14 @@ msgid "Apply multi-currencies"
 msgstr "多通貨を適用"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability
 msgid "Availability"
 msgstr "利用可能"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
 msgid "Availability Warning"
@@ -965,6 +971,16 @@ msgid "Catalog"
 msgstr "カタログ"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: decreasing order"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: increasing order"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -974,6 +990,7 @@ msgstr ""
 "製品をブラウズするために使用されます。"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
 msgid ""
@@ -988,7 +1005,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Change"
-msgstr "お釣り"
+msgstr "変更"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1064,7 +1081,7 @@ msgstr "色"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Community &amp; Enterprise users:"
-msgstr "コミュニティとエンタープライズユーザー："
+msgstr "コミュニティとエンタープライズユーザ:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1179,7 +1196,7 @@ msgstr "顧客セグメント"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Customers review:"
-msgstr "顧客レビュー："
+msgstr "顧客レビュー:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_dhl
@@ -1240,16 +1257,18 @@ msgstr ""
 "州や国によっては、バイヤーの住所(目的地)のレートか、あなたのオフィスまたは倉庫の住所(起点)で有効な料金のいずれかで販売税を徴収する必要があります。"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
 msgid "Description for the website"
 msgstr "ウェブサイト表示用説明"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template_website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "ウェブサイトの電子商取引における表示順序を決定"
+msgstr "ウェブサイトのeコマースにおける表示順序を決定"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.devices
@@ -1362,7 +1381,7 @@ msgstr "Fedexと連携"
 msgid ""
 "Follow the steps and advices in the Odoo Planner to deploy your e-Commerce "
 "website in no time!"
-msgstr "Odoo Plannerの手順とアドバイスに従って、すぐに電子商取引のWebサイトを展開してください！"
+msgstr "Odooプラナーの手順とアドバイスに従って、すぐにeコマースのWebサイトを展開してください！"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1479,8 +1498,10 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
-"あなたのウェブサイトやモバイルアプリでユーザーがコンテンツを作成し、そのコンテンツを他のユーザーに公開することができる場合、<b>コンテンツ</b>セクションは、自分が作成したコンテンツに対する権利を所有していることをユーザーに通知します。<br/>「コンテンツ」句では、通常、ユーザーはあなた(ウェブサイトまたはモバイルアプリの開発者)にライセンスを与えて、ウェブサイト/モバイルアプリでこのコンテンツを共有し、他のユーザーが利用できるようにする必要があると述べています。<br/>ユーザーが作成したコンテンツは他のユーザーにも公開されているため、DMCAの通知条項(または著作権侵害)セクションは、ユーザーが著作権侵害であると判明した場合、"
-" 受信通知を受け取り、コンテンツを削除します。"
+"あなたのウェブサイトやモバイルアプリでユーザがコンテンツを作成し、そのコンテンツを他のユーザーに公開することができる場合、<b>コンテンツ</b>セクションは、自分が作成したコンテンツに対する権利を所有していることをユーザに通知します。<br/>「コンテンツ」句では、通常、ユーザはあなた"
+" (ウェブサイトまたはモバイルアプリの開発者) "
+"にライセンスを与えて、ウェブサイト/モバイルアプリでこのコンテンツを共有し、他のユーザーが利用できるようにする必要があると述べています。<br/>ユーザが作成したコンテンツは他のユーザーにも公開されているため、DMCAの通知条項"
+" (または著作権侵害) セクションは、ユーザーが著作権侵害であると判明した場合、 受信通知を受け取り、コンテンツを削除します。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -1494,6 +1515,7 @@ msgid "Image Name"
 msgstr "イメージ名"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_product_image_ids
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1544,7 +1566,7 @@ msgstr "出荷コネクタのインストール"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_config_settings_module_website_sale_options
 msgid "Installs *e-Commerce Optional Products*"
-msgstr "*電子商取引オプション製品*をインストール"
+msgstr "*eコマースオプション製品*をインストール"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:474
@@ -1590,6 +1612,7 @@ msgstr "最終更新日"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
+#: model:ir.model.fields,field_description:website_sale.field_res_users_last_website_so_id
 msgid "Last Online Sale Order"
 msgstr "最後のオンライン受注"
 
@@ -1835,7 +1858,7 @@ msgstr "今支払う"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay Now <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "今すぐ支払い <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "今すぐ支払う <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -1909,7 +1932,7 @@ msgstr "電話"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Pictures gallery:"
-msgstr "写真ギャラリー："
+msgstr "写真ギャラリー:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -1927,20 +1950,16 @@ msgid "Prefered by some customers"
 msgstr "顧客によっては好まれる"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:65
+#, python-format
+msgid "Previous Sales"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Price"
 msgstr "価格"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Price <i class=\"fa fa-arrow-down\" aria-hidden=\"true\"/>"
-msgstr "価格 <i class=\"fa fa-arrow-down\" aria-hidden=\"true\"/>"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Price <i class=\"fa fa-arrow-up\" aria-hidden=\"true\"/>"
-msgstr "価格 <i class=\"fa fa-arrow-up\" aria-hidden=\"true\"/>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
@@ -2124,24 +2143,22 @@ msgstr "ラジオボタン"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_rating_rating
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_ids
 msgid "Rating"
 msgstr "評価"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_last_value
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
 msgid "Rating Last Value"
 msgstr "最後の評価"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_count
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_count
 msgid "Rating count"
 msgstr "評価数"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_rating_last_value
-msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "評価: 0=不幸せ, 10=しあわせ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
@@ -2166,6 +2183,12 @@ msgstr "カタログを確認"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale"
+msgstr "販売"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:61
+#, python-format
+msgid "Sales"
 msgstr "販売"
 
 #. module: website_sale
@@ -2423,12 +2446,14 @@ msgid "Size"
 msgstr "サイズ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_x
 msgid "Size X"
 msgstr "サイズ (横)"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_y
 msgid "Size Y"
@@ -2522,6 +2547,7 @@ msgid "Style Name"
 msgstr "スタイル名"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_style_ids
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -2539,6 +2565,7 @@ msgid "Subtotal:"
 msgstr "小計:"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
 msgid ""
@@ -2620,7 +2647,7 @@ msgid ""
 "contents, logo and other visual media you created is your property and is "
 "protected by copyright laws."
 msgstr ""
-"<b>知的財産権</b>開示は、あなたが作成したコンテンツ、ロゴ、その他のビジュアルメディアがあなたの財産であり、著作権法によって保護されていることをユーザーに通知します。"
+"<b>知的財産権</b>開示は、あなたが作成したコンテンツ、ロゴ、その他のビジュアルメディアがあなたの財産であり、著作権法によって保護されていることをユーザに通知します。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2633,6 +2660,7 @@ msgstr ""
 "フッター、注文や請求書などの印刷されたビジネスドキュメントなど。"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 msgid "The full URL to access the document through the website."
 msgstr "ウェブサイトを介してドキュメントにアクセスするために完全なURLです。"
@@ -2763,6 +2791,7 @@ msgid "View Cart ("
 msgstr "買い物かごの中身を見る("
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
 msgid "Visible in Website"
 msgstr "ウェブサイトに表示"
@@ -2789,6 +2818,7 @@ msgid "Website Categories"
 msgstr "ウェブサイトカテゴリ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
 msgid "Website Comments"
@@ -2802,6 +2832,7 @@ msgstr "ウェブサイト製品カテゴリ"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_public_categ_ids
 msgid "Website Product Category"
@@ -2813,6 +2844,7 @@ msgid "Website Public Categories"
 msgstr "ウェブサイト公開カテゴリ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
 msgid "Website Sequence"
@@ -2824,32 +2856,38 @@ msgid "Website Shop"
 msgstr "ウェブサイトショップ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_url
 msgid "Website URL"
 msgstr "ウェブサイトURL"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_description
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_description
 msgid "Website meta description"
 msgstr "ウェブサイトメタディスクリプション"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
 msgid "Website meta keywords"
 msgstr "ウェブサイトメタキーワード"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_title
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_title
 msgid "Website meta title"
 msgstr "ウェブサイトメタタイトル"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
 msgstr "ウェブサイト価格"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
 msgid "Website public price"
@@ -3006,11 +3044,6 @@ msgstr "アイテム)"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "or"
 msgstr "または"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.products
-msgid "pagination form-inline o_website_sale_search"
-msgstr "ページネーションフォームインラインo_website_sale_search"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner

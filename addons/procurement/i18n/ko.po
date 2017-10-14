@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * procurement
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-03-10 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: procurement
@@ -32,22 +36,20 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "A <b>procurement order</b> is used to record a need for a specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
-msgstr "동작"
+msgstr "실행"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
 msgid "Active"
-msgstr "활성"
+msgstr "사용"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -57,7 +59,7 @@ msgstr "일괄"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -82,11 +84,12 @@ msgstr "조달 확인"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
 msgstr ""
-"조달 해결을 위한 선택 규칙. 일반적으로 시스템에 의해 선택되지만 비정상적인 동"
-"작을 강제로 조달 관리자에 의해 수동으로 설정할 수 있습니다."
+"조달 해결을 위한 선택 규칙. 일반적으로 시스템에 의해 선택되지만 비정상적인 동작을 강제로 조달 관리자에 의해 수동으로 설정할 수 "
+"있습니다."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -131,6 +134,11 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
 msgstr "작성일"
+
+#. module: procurement
+#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
+msgid "Delivery Type"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -361,7 +369,7 @@ msgstr "조달"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Product"
-msgstr "제품"
+msgstr "상품"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
@@ -499,8 +507,7 @@ msgstr "매우 긴급"
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fulfill the need: "
-"purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
 

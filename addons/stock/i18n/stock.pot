@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 14:03+0000\n"
-"PO-Revision-Date: 2016-11-22 14:03+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1448,6 +1448,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
 msgstr ""
@@ -3328,6 +3329,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr ""
 
@@ -4744,9 +4746,14 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Received Qty"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Recheck Availability"
 msgstr ""
 
 #. module: stock
@@ -5138,6 +5145,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,help:stock.field_res_users_picking_warn
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 msgstr ""
 
@@ -5457,6 +5465,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
 msgstr ""
@@ -5886,11 +5895,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_customer
 msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_supplier
 msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
 msgstr ""
 
@@ -5964,6 +5975,11 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Today"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
+msgid "Total"
 msgstr ""
 
 #. module: stock
@@ -6253,6 +6269,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
 msgstr ""
@@ -6499,6 +6516,12 @@ msgid "Work with product variant allows you to define some variant of the same p
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
 msgid "You can define here the main routes that run through\n"
 "                    your warehouses and that define the flows of your products. These\n"
@@ -6566,7 +6589,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid "You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validatethe first inventory adjustement with this product before creating another one."
 msgstr ""
@@ -6682,6 +6711,12 @@ msgstr ""
 #: code:addons/stock/models/stock_pack_operation.py:238
 #, python-format
 msgid "You should provide a different serial number for each piece"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:371
+#, python-format
+msgid "You still have some active reordering rules on this product. Please archive or delete them first."
 msgstr ""
 
 #. module: stock

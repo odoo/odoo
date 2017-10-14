@@ -52,6 +52,11 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                     $modal.modal('hide');
                 });
 
+                $modal.on('click', '.css_attribute_color input', function (event) {
+                    $modal.find('.css_attribute_color').removeClass("active");
+                    $modal.find('.css_attribute_color:has(input:checked)').addClass("active");
+                });
+
                 $modal.on("click", "a.js_add, a.js_remove", function (event) {
                     event.preventDefault();
                     var $parent = $(this).parents('.js_product:first');
@@ -80,7 +85,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         var product_id = $($modal.find('span.oe_price[data-product-id]')).first().data('product-id');
                         var product_ids = [product_id];
                         var $products_dom = [];
-                        $modal.find(".js_add_cart_variants[data-attribute_value_ids]").each(function(){
+                        $("ul.js_add_cart_variants[data-attribute_value_ids]").each(function(){
                             var $el = $(this);
                             $products_dom.push($el);
                             _.each($el.data("attribute_value_ids"), function (values) {

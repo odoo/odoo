@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_repair
@@ -30,13 +35,10 @@ msgstr "(갱신)"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-"* The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.\n"
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.\n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
@@ -78,13 +80,18 @@ msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "<strong>Total Without Taxes</strong>"
+msgid "<strong>Shipping address :</strong>"
 msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<storng>부가가치세:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>합계</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -322,8 +329,7 @@ msgstr "ID"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the "
-"different\n"
+"                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
 
@@ -512,7 +518,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_id
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Product"
-msgstr "제품"
+msgstr "상품"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -687,6 +693,11 @@ msgid "Repairs order"
 msgstr "수리 주문"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Search Repair Orders"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
 msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
@@ -758,8 +769,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to "
-"the\n"
+"                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
 
@@ -781,7 +791,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_to_invoice
 msgid "To Invoice"
-msgstr "송장 발행 대상"
+msgstr "청구하기"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -791,7 +801,7 @@ msgstr "인보이스 예정"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
-msgstr "총계"
+msgstr "합계"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form

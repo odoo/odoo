@@ -454,7 +454,7 @@ class AccountInvoice(models.Model):
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
         taxes_grouped = self.get_taxes_values()
-        tax_lines = self.tax_line_ids.browse([])
+        tax_lines = self.tax_line_ids.filtered('manual')
         for tax in taxes_grouped.values():
             tax_lines += tax_lines.new(tax)
         self.tax_line_ids = tax_lines
@@ -508,6 +508,7 @@ class AccountInvoice(models.Model):
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
+        self.date_due = False
         self.fiscal_position_id = fiscal_position
 
         if type in ('in_invoice', 'out_refund'):
@@ -669,7 +670,7 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         credit_aml = self.env['account.move.line'].browse(credit_aml_id)
         if not credit_aml.currency_id and self.currency_id != self.company_id.currency_id:
-            credit_aml.with_context(allow_amount_currency=True).write({
+            credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
                 'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
@@ -701,7 +702,7 @@ class AccountInvoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self.date_invoice or fields.Date.context_today(self))
+                currency = self.currency_id.with_context(date=self.date or self.date_invoice or fields.Date.context_today(self))
                 if not (line.get('currency_id') and line.get('amount_currency')):
                     line['currency_id'] = currency.id
                     line['amount_currency'] = currency.round(line['price'])
@@ -792,8 +793,9 @@ class AccountInvoice(models.Model):
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
+                    'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
+                done_taxes.append(tax.id)
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
@@ -901,7 +903,6 @@ class AccountInvoice(models.Model):
 
             if not inv.date_invoice:
                 inv.with_context(ctx).write({'date_invoice': fields.Date.context_today(self)})
-            date_invoice = inv.date_invoice
             company_currency = inv.company_id.currency_id
 
             # create move lines (one per invoice line + eventual taxes and analytic lines)
@@ -913,6 +914,43 @@ class AccountInvoice(models.Model):
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
             #La siguiente linea fue creada por TresCloud
             iml = self._get_payable_accounts(total, total_currency, iml, ctx)
+            name = inv.name or '/'
+            if inv.payment_term_id:
+                totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=company_currency.id).compute(total, inv.date_invoice)[0]
+                res_amount_currency = total_currency
+                ctx['date'] = inv.date or inv.date_invoice
+                for i, t in enumerate(totlines):
+                    if inv.currency_id != company_currency:
+                        amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
+                    else:
+                        amount_currency = False
+
+                    # last line: add the diff
+                    res_amount_currency -= amount_currency or 0
+                    if i + 1 == len(totlines):
+                        amount_currency += res_amount_currency
+
+                    iml.append({
+                        'type': 'dest',
+                        'name': name,
+                        'price': t[1],
+                        'account_id': inv.account_id.id,
+                        'date_maturity': t[0],
+                        'amount_currency': diff_currency and amount_currency,
+                        'currency_id': diff_currency and inv.currency_id.id,
+                        'invoice_id': inv.id
+                    })
+            else:
+                iml.append({
+                    'type': 'dest',
+                    'name': name,
+                    'price': total,
+                    'account_id': inv.account_id.id,
+                    'date_maturity': inv.date_due,
+                    'amount_currency': diff_currency and total_currency,
+                    'currency_id': diff_currency and inv.currency_id.id,
+                    'invoice_id': inv.id
+                })
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
@@ -920,7 +958,7 @@ class AccountInvoice(models.Model):
             journal = inv.journal_id.with_context(ctx)
             line = inv.finalize_invoice_move_lines(line)
 
-            date = inv.date or date_invoice
+            date = inv.date or inv.date_invoice
             move_vals = {
                 'ref': inv.reference,
                 'line_ids': line,
@@ -960,7 +998,7 @@ class AccountInvoice(models.Model):
         return {
             'date_maturity': line.get('date_maturity', False),
             'partner_id': part,
-            'name': line['name'][:64],
+            'name': line['name'],
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
@@ -1147,7 +1185,7 @@ class AccountInvoice(models.Model):
         if self.origin:
             communication = '%s (%s)' % (communication, self.origin)
 
-        payment = self.env['account.payment'].create({
+        payment_vals = {
             'invoice_ids': [(6, 0, self.ids)],
             'amount': pay_amount or self.residual,
             'payment_date': date or fields.Date.context_today(self),
@@ -1159,7 +1197,11 @@ class AccountInvoice(models.Model):
             'payment_method_id': payment_method.id,
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
-        })
+        }
+        if self.env.context.get('tx_currency_id'):
+            payment_vals['currency_id'] = self.env.context.get('tx_currency_id')
+
+        payment = self.env['account.payment'].create(payment_vals)
         payment.post()
 
         return True
@@ -1515,6 +1557,12 @@ class AccountPaymentTerm(models.Model):
             last_date = result and result[-1][0] or fields.Date.today()
             result.append((last_date, dist))
         return result
+
+    @api.multi
+    def unlink(self):
+        property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in self])])
+        property_recs.unlink()
+        return super(AccountPaymentTerm, self).unlink()
 
 
 class AccountPaymentTermLine(models.Model):

@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * im_livechat
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Spike Lee <rurouni24@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-05-27 09:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: im_livechat
@@ -37,8 +42,7 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
 msgid ""
 "* 'Display the button' displays the chat button on the pages.\n"
-"* 'Auto popup' displays the button and automatically open the conversation "
-"pane.\n"
+"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
 
@@ -55,7 +59,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
 msgid "Action"
-msgstr "동작"
+msgstr "실행"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel_anonymous_name
@@ -78,7 +82,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
-msgstr ""
+msgstr "참석자"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -124,8 +128,7 @@ msgstr ""
 msgid ""
 "Canned responses allow you to insert prewritten responses in\n"
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
-"                replaced directly in your message, so that you can still "
-"edit\n"
+"                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
 
@@ -192,7 +195,7 @@ msgstr "코드"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
 msgid "Configuration"
-msgstr ""
+msgstr "환경 설정"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
@@ -318,8 +321,8 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"For website built with Odoo CMS, please install the website_livechat module. "
-"Then go to Settings &gt; Website Settings and select the Website Live Chat "
+"For website built with Odoo CMS, please install the website_livechat module."
+" Then go to Settings &gt; Website Settings and select the Website Live Chat "
 "Channel you want to add on your website."
 msgstr ""
 
@@ -448,7 +451,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "휴가"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -458,7 +461,7 @@ msgstr "채널 나오기"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 msgid "Live Chat"
-msgstr ""
+msgstr "실시간 채팅"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -528,9 +531,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
-"그룹을 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자"
-"동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식 화면 또는 다른 칸반 화면"
-"에 이 필드를 이용합니다."
+"그룹을 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식"
+" 화면 또는 다른 칸반 화면에 이 필드를 이용합니다."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -695,12 +697,11 @@ msgstr ""
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr ""
-"그룹을 나타내는 작은 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으"
-"로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은 이미지가 필요할 때는 "
-"이 필드를 이용합니다."
+"그룹을 나타내는 작은 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은"
+" 이미지가 필요할 때는 이 필드를 이용합니다."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
@@ -754,8 +755,7 @@ msgstr "사용자는 지원 채널에 가입할 수 있습니다."
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr ""
-"이 필드는 1024x1024px로 제한된 그룹 사진으로 사용하는 이미지를 포함합니다."
+msgstr "이 필드는 1024x1024px로 제한된 그룹 사진으로 사용하는 이미지를 포함합니다."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
@@ -828,8 +828,7 @@ msgstr "환영 메시지"
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing your "
-"website\n"
+"                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
 

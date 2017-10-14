@@ -510,7 +510,10 @@ class AccountJournal(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-        recs = self.search(['|', ('code', operator, name), ('name', operator, name)] + args, limit=limit)
+        connector = '|'
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            connector = '&'
+        recs = self.search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
     @api.multi
@@ -847,6 +850,14 @@ class AccountTax(models.Model):
         if incl_tax:
             return incl_tax.compute_all(price)['total_excluded']
         return price
+
+    @api.model
+    def _fix_tax_included_price_company(self, price, prod_taxes, line_taxes, company_id):
+        if company_id:
+            #To keep the same behavior as in _compute_tax_id
+            prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
+            line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
+        return self._fix_tax_included_price(price, prod_taxes, line_taxes)
 
 class AccountReconcileModel(models.Model):
     _name = "account.reconcile.model"

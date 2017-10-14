@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 13:41+0000\n"
-"PO-Revision-Date: 2016-12-14 13:41+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -109,11 +109,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover\n"
-"                                how to get the best out of Odoo CRM with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -132,7 +131,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"<div style=\"margin: 10px auto;\">\n"
+"            <div style=\"margin: 10px auto;\">\n"
 "            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
 "            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
 "                <tbody>\n"
@@ -141,63 +140,61 @@ msgstr ""
 "                            <img src=\"web/static/src/img/logo.png\"/>\n"
 "                        </td>\n"
 "                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Inici de sessió automàtic</a>\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Accés automàtic</a>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\">\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                        <p style=\"color:#875A7B;margin:0\" >Visca!</p><br>\n"
-"\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Visca!</p><br>\n"
 "                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>La teva aplicació de CRM Odoo està en marxa i funcionant</span></p><br>\n"
+"                                <span>La vostra aplicació CRM de Odoo està en funcionament.</span></p><br>\n"
 "                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">Que segueix?</span></p>\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">Que segueix?</span></p>\n"
 "                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Prova creant una avantatja enviant un e-mail a </span>\n"
-"                                            <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Intenta crear una iniciativa enviant un correu electrònic a </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>\n"
-"                                        Segueixi les seves oportunitats en el seu embut de venda simplement arrossegant i deixant anar les targetes d'una columna a una altra.</span>\n"
+"                                        <span>Seguiu les vostres oportunitats en l'embut de venda amb només arrossegar i deixar anar les targetes d'una columna a una altra</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul> <br>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Descobreix el </span>\n"
+"                                <span style=\"font-weight:bold;\">Descobreixi el </span>\n"
 "                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">planificador de CRM</span></a></span>\n"
-"                                <span> per activar caracteristiques extra</span>\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">planificador CRM</span></a></span>\n"
+"                                <span> per activar funcions addicionals</span>\n"
 "                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
 "                            </p>\n"
 "                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Asigni automaticament el seus client potencials als seus venedors amb la puntuació més añta</span>\n"
+"                                        <span>Assigneu automàticament els vostres clients als vostres venedors amb el marcador inicial, </span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Mantingui's amb contacte amb el client potencial amb eficients campanyes de correu electrònic,</span>\n"
+"                                        <span>Manteniu-vos en contacte amb el vostre client potencial amb campanyes de correu electrònic eficients,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Obtingui informació d'alta qualitat de les enquestes,</span>\n"
+"                                        <span>Obteniu una visió d'alta qualitat de les enquestes,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Obtingui informes intel·ligents i panells de control precisos,</span>\n"
+"                                        <span>Obteniu informes intel·ligents i taulers de control precisos,</span>\n"
 "                                    </p>\n"
 "                                </li>\n"
 "                                <li dir=\"ltr\">\n"
@@ -208,27 +205,27 @@ msgstr ""
 "                            </ul>\n"
 "                            <br>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Necessita ajuda?</span>\n"
-"                                <span style=\"font-style:italic;\">Vostè no està sol</span>\n"
+"                                <span style=\"font-weight:bold;\">Necessitar ajuda?</span>\n"
+"                                <span style=\"font-style:italic;\">No estàs sol</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Estarem encantats d'ajudar-lo en el camí. Poseu-vos en contacte amb nosaltres a \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> si vostè té qualsevol pregunta. També pot descobrir com treure el màxim partit al CRM Odoo amb la nostra </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
-"                                <span style=\"text-decoration:underline;\">documentació de l'usuari</span></a>\n"
-"                                </span><span> o amb la nostra </span>\n"
+"                                <span>Estarem encantats d'ajudar-vos en el camí. Contacti amb nosaltres a través del nostre\n"
+"                                <a href=\"https://www.odoo.com/help\">formulari de suport</a> si teniu alguna pregunta.\n"
+"                                També podeu descobrir com treure el màxim profit de Odoo CRM amb el nostre </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Documentació d'usuari</span></a>\n"
+"                                </span><span>o amb el nostre</span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">documentació de l'Api</span></a>\n"
+"                                <span style=\"text-decoration:underline;\">Documentació API</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Gaudeix de la seva experiència amb Odoo,</span></p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Gaudeix de la vostra experiència d'Odoo,</span></p>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>L'equip Odoo<br/>PS: Gent que li encanta Odoo, comprova </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">que hi tenen a dir.</span></a></span>\n"
+"                <span><br/>-- <br/>L'equip Odoo<br/>La gent adora Odoo, comprova </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">que en diuen.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 
@@ -1649,6 +1646,7 @@ msgstr "Crear una prova de concepte amb els consultors"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
 msgstr "Crear un nou client"
@@ -1765,9 +1763,10 @@ msgid "Current Line"
 msgstr "Línia actual"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1073
+#: code:addons/crm/models/crm_lead.py:1069
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1946,6 +1945,7 @@ msgstr "Mostri els seus fullets, fulles de producte, mostraris, etc."
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "No enllaçar un client"
@@ -2600,12 +2600,7 @@ msgid "Last Updated on"
 msgstr "Última actualització el"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr "Última notificació marcada com a llegida des de la base del calendari"
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:841
+#: code:addons/crm/models/crm_lead.py:837
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
@@ -2781,6 +2776,7 @@ msgstr "Línies"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
 msgstr "Enllaç a un client existent"
@@ -3511,6 +3507,11 @@ msgid "Overdue Activities"
 msgstr "Activitats endarrerides"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Overdue Opportunities"
+msgstr "Oportunitats endarrerides"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
 msgid "Overpassed Deadline"
 msgstr "Data límit sobrepassada"
@@ -3871,6 +3872,7 @@ msgstr "Referenciat per"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_action
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_action
 msgid "Related Customer"
 msgstr "Client relacionat"
@@ -4144,6 +4146,15 @@ msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
 "Mostra totes les oportunitats per la següent data de l'acció si és abans "
 "d'avui"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid ""
+"Show all opportunities with a deadline for which the next action date is "
+"before today"
+msgstr ""
+"Mostra totes les oportunitats amb un termini pel qual la pròxima data de "
+"l'acció és abans d'avui"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4541,12 +4552,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
-msgid ""
-"This report analyses the source of your leads\n"
-"(including those converted into opportunities)."
-msgstr ""
-"Aquest informe analitza l'origen de les seves iniciatives\n"
-"(incloent aquelles convertides a oportunitats)."
+msgid "This report analyses the source of your leads."
+msgstr "Aquest informe analitza l'origen de les seves iniciatives."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold

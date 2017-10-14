@@ -64,9 +64,9 @@
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                         t-att-style="line.discount and 'text-decoration: line-through' or None"
                                         t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"/>
-                                    <!-- TODO: apply monetary widget formating -->
                                     <div t-if="line.discount">
-                                        <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                                        <t t-esc="((1-line.discount / 100.0) * line.price_unit)"
+                                            t-options="{'widget': 'monetary', 'display_currency': quotation.pricelist_id.currency_id}"/>
                                     </div>
                               </td>
                               <td class="text-right" groups="sale.group_show_price_subtotal">
@@ -340,9 +340,7 @@
                                     <li t-foreach="acquirers or []" t-as="acquirer">
                                       <label t-if="buttons.get(acquirer.id)">
                                           <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
-                                          <img class="media-object" style="width: 60px; display: inline-block;"
-                                              t-att-title="acquirer.name"
-                                              t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
+                                          <span itemprop="image" t-field="acquirer.image_small" t-options="{'widget': 'image', 'style':'max-width: 60px; display: inline-block;'}"/>
                                               <span t-field="acquirer.name"/>
                                       </label>
                                     </li>

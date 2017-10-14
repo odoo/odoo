@@ -34,13 +34,13 @@ msgstr "決済サービス"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Add a new payment method:"
-msgstr "新しい支払い方法を追加："
+msgstr "新しい支払方法を追加:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Amount"
-msgstr "時間数"
+msgstr "金額"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
@@ -83,6 +83,12 @@ msgstr "開始日"
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
 msgstr "お支払い方法の管理"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
@@ -131,6 +137,14 @@ msgstr "この取引の処理会社"
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "ウェブサイト"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

@@ -282,7 +282,7 @@ class Report(models.Model):
                 active_ids = docids
             context = dict(self.env.context, active_ids=active_ids)
 
-        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
+        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)], limit=1)
         if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 

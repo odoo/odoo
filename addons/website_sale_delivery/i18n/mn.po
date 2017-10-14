@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2015-09-08 10:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -24,14 +26,19 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
+"updated after choosing a new delivery method\"> Хүргэлт:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Захиалагчтай харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь "
+"борлуулалтын захиалга, хүргэх захиалга, захиалагчийн нэхэмжлэл, буцаалт бүрд"
+" хуулагдана."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -40,31 +47,35 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Захиалагч сагсыг төлбөр хийхээсээ өмнө шалгах үед нэмэлт хэрэгслүүдийг санал"
+" болгоно (зөрүүлж худалдах бодлого, ж.нь. компьютерийн хувьд: хулгана, гар, "
+"г.м.). Сагсанд нэмэгдсэн бүх бараанд холбогдох хэрэгслүүдийг алгоритм бодож "
+"гаргаад жагсаана."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
 msgid "Accessory Products"
-msgstr ""
+msgstr "Дагалдах Бараа"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
 msgid "Adds an availability status on the web product page."
-msgstr ""
+msgstr "Вэб бүтээгдэхүүний хуудас дээр боломжийн төлөвийг нэмдэг."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
 msgid "Alternative Products"
-msgstr ""
+msgstr "Орлох Бараа"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
 msgid "Availability"
-msgstr ""
+msgstr "Боломжит хоног"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "Боломжийн Анхааруулга"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -79,26 +90,31 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
+"Захиалагчдыг ангилалд багтах бүх зүйлийг олоход туслахын тулд Дэлгүүрийн "
+"хуудас (онлайн каталогийн хүснэгт) дээр ангилалуудыг нийтлэх боломжтой. "
+"Эдгээрийг нийтлэхийн тулд Дэлгүүр хуудас руу очоод, Засах - ыг дарж, "
+"*Барааны Ангилалууд* - г идэвхижүүлнэ үү. Нэг бараа нь хэд хэдэн ангилалд "
+"хамаарах боломжтой."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr ""
+msgstr "Хүргэлтийн аргыг сонгоно уу"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Улс"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Хүргэлтийн Дүн"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Хүргэлтийн арга"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -108,22 +124,22 @@ msgstr "Тодорхойлолт"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Онлайн борлуулалт ба онлайн үнийн саналууд дээр харуулсан тайлбар."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Онлайн үнийн саналын тайлбар"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
 msgid "Description for the quote"
-msgstr ""
+msgstr "Үнийн саналын тайлбар"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr ""
+msgstr "Онлайн худалдааны вэбсайт дээр харуулах дарааллыг тодорхойлох"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
@@ -134,31 +150,36 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Тэнцүү : Өртөг тэнцүү хуваагдана.\n"
+"Тоогоор : Өртөг нь барааны тоо хэмжээгээр хуваарилагдана.\n"
+"Одоогийн өртөгөөр : Өртөг нь барааны одоогийн өртөгөөр хуваарилагдана.\n"
+"Жингээр : Өртөг барааны жингээр хуваарилагдана.\n"
+"Эзлэхүүнээр : Өртөг барааны эзлэхүүнээр хуваарилагдана."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Хүргэлтэд тохируулсан захиалгын мөртэй"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr ""
+msgstr "Хүргэлттэй"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
 msgid "Images"
-msgstr ""
+msgstr "Зураг"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
 msgid "Intrastat code"
-msgstr ""
+msgstr "Дотоод статистик код"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
@@ -169,14 +190,16 @@ msgstr "Газардсан Өртөгүүд"
 #: code:addons/website_sale_delivery/models/sale_order.py:99
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr ""
+"Таны энэ захиалга ба хүргэх хаягт хүргэлтийн арга боломжгүй. Бидэнтэй "
+"холбогдож дэлгэрэнгүй мэдээлэл авна уу."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Нэмэлт Бүтээгдэхүүнүүд"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
@@ -184,6 +207,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Захиалагчийг \"Сагс руу нэмэх\" дээр дарах болгонд нэмэлт бараануудыг санал "
+"болгоно (давуулж зарах бодлого, ж.нь. компьютерийн хувьд: баталгаа, програм "
+"хангамж, г.м)."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -193,27 +219,27 @@ msgstr "Татан авалт"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr ""
+msgstr "Нийтлэгдсэн"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
 msgid "Rating"
-msgstr ""
+msgstr "Үнэлгээ"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Үнэлгээний Сүүлчийн Утга"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Үнэлгээний тоо"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "Үнэлгээний утга: 0=Баяргүй, 10=Баяртай"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -223,18 +249,18 @@ msgstr "Борлуулалтын захиалга"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
 msgid "Size X"
-msgstr ""
+msgstr "Хэмжээ Х"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_y
 msgid "Size Y"
-msgstr ""
+msgstr "Хэмжээ У"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/models/sale_order.py:98
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Уучлаарай, бид таны захиалгыг хүргэх боломжгүй"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
@@ -244,7 +270,7 @@ msgstr "Хуваах Арга"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_style_ids
 msgid "Styles"
-msgstr ""
+msgstr "Загварууд"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_alternative_product_ids
@@ -252,6 +278,8 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Захиалагчдад илүү үнэтэй хувилбаруудыг санал болгох (нэмэлт борлуулалтын "
+"бодлого). Эдгээр бараанууд нь барааны хуудас дээр гарах болно."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -261,12 +289,12 @@ msgstr "Татваргүй дүн."
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.shipping_tracking
 msgid "Tracking:"
-msgstr ""
+msgstr "Хөтлөлт:"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Вебсайт дээр харагдах"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
@@ -276,12 +304,12 @@ msgstr "Вебсайтын сэтгэгдэлүүд"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
-msgstr ""
+msgstr "Вэбсайт Барааны Ангилал"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Website Sequence"
-msgstr ""
+msgstr "Вэбсайт Дараалал"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -301,9 +329,9 @@ msgstr "Вебсайт тодорхойлох гарчиг"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
 msgid "Website price"
-msgstr ""
+msgstr "Вэбсайт үнэ"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
 msgid "Website public price"
-msgstr ""
+msgstr "Вэбсайт нийтийн үнэ"

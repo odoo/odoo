@@ -138,22 +138,23 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': 2.0,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
             }), (0, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
             })]
         })
 
-        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (2*450 + 3*300 = 1800)
         context_make_payment = {
             "active_ids": [self.pos_order_pos1.id],
             "active_id": self.pos_order_pos1.id
         }
         self.pos_make_payment_2 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 1800
+            'amount': 1845
         })
 
         # I click on the validate button to register the payment.
@@ -200,22 +201,23 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': (-2.0),
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
             }), (0, 0, {
                 'name': "OL/0004",
                 'product_id': self.product4.id,
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': (-3.0),
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
             })]
         })
 
-        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (-2*450 + -3*300 = -1800)
         context_make_payment = {
             "active_ids": [self.pos_order_pos2.id],
             "active_id": self.pos_order_pos2.id
         }
         self.pos_make_payment_3 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': (-1800)
+            'amount': (-1845)
         })
 
         # I click on the validate button to register the payment.
@@ -262,22 +264,23 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': (-2.0),
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
             }), (0, 0, {
                 'name': "OL/0006",
                 'product_id': self.product4.id,
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
             })]
         })
 
-        # I click on the "Make Payment" wizard to pay the PoS order with the total amount (-2*450 + 3*300 = 0)
         context_make_payment = {
             "active_ids": [self.pos_order_pos3.id],
             "active_id": self.pos_order_pos3.id
         }
         self.pos_make_payment_4 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 0
+            'amount': 45,
         })
 
         # I click on the validate button to register the payment.
@@ -353,12 +356,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
 
         # I generate an invoice from the order
-        self.invoice = self.pos_order_pos1.action_pos_order_invoice()
+        res = self.pos_order_pos1.action_pos_order_invoice()
+        self.assertIn('res_id', res, "No invoice created")
 
         # I test that the total of the attached invoice is correct
-        self.amount_total = self.pos_order_pos1.amount_total
+        invoice = self.env['account.invoice'].browse(res['res_id'])
         self.assertEqual(
-            float_compare(self.amount_total, 1752.75, precision_digits=2), 0, "Invoice not correct")
+            float_compare(invoice.amount_total, 1752.75, precision_digits=2), 0, "Invoice not correct")
 
         """In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports"""
 

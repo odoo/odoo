@@ -5,16 +5,17 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Visti Kristensen <visti@vkdata.dk>, 2017
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +26,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "# of Products"
-msgstr "# produkter"
+msgstr "# af produkter"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Konto lager egenskaber"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -41,7 +42,7 @@ msgstr "Regnskabs information"
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
+msgstr "Tillader at konfigurere lagerværdi på produkter og produktkategorier."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -62,6 +63,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Kan ikke finde en lagertilgangskonto for dette produktet %s. Du skal "
+"definere en på produktkategorien eller på lokationen, før du fortsætter "
+"denne handling."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -71,6 +75,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Kan ikke finde lagerafgangskonto for dette produktet %s. Du skal definere en"
+" på produktkategorien eller på lokationen, før du fortsætter denne handling."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -87,7 +93,7 @@ msgstr "Skift standardpris"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
-msgstr ""
+msgstr "Vælg en dato tilbage i tiden for at se lageret på denne dato. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -95,11 +101,13 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
+"Vælg bogføringsdatoen som du vil anvende til at bogføre lagerbevægelser i "
+"stedet for standard datoen (lagerets slutdato)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "Vælg dato"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -108,18 +116,14 @@ msgid "Company"
 msgstr "Virksomhed"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Konfigurationsfejl. Venligst opsæt en konto for prisdifferencer på produktet"
+" eller dets kategori, for at fuldføre denne handling. "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -130,19 +134,19 @@ msgstr "Kostpris"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Kostpris metode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
-msgstr "Kost metode"
+msgstr "Kostpris metode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Modkonto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -171,7 +175,7 @@ msgstr "Vis navn"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Gennemtving bogføringsdato"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -191,6 +195,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
+"Hvis kostprisen øges, vil lagerkontoen for prisdifferencer blive debiteret, og lagerafgangskontoen blive krediteret med værdien = (prisdifference * lagerbeholdning). \n"
+"Hvis kostprisen nedsættes, vil prisdifferencekontoen bliver krediteret, og lagertilgangskontoen blive debiteret. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -202,6 +208,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Hvis der er valgt løbende (perpetual) værdiansættelse for et produkt, vil "
+"systemet automatisk generere journalposter iht. lagerbevægelser, med "
+"kostprisen som specificeret under \"Værdiansættelsesmetode\". Lagerets "
+"prisdifferencekonto repræsenterer laget aktuelle værdi, og lagertilgang og "
+"-afgangskonti vil indeholde modposterne til indgående og udgående produkter."
+" "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -214,11 +226,16 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Hvis Realtid er valgt som lagerværdiansættelse på et produkt, vil systemet "
+"automatisk generere journal bevægelser svarende til lagerbevægelser, til en "
+"pris angivet ved \"Kostpris metode\". Lagerkontoen der sættes på produktet "
+"vil vise den aktuelle lagerværdi, og lager ind/ud kontiene vil vise "
+"modposterne for indgående og udgående produkter. "
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Medtag \"Landed costs\" når beregningen af kostprisen"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -226,6 +243,8 @@ msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
 msgstr ""
+"Installer modulet som tillader at registrere \"Landed Costs\" på "
+"lagerflytninger, og splitte dem ud på de forskellige produkter. "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -244,7 +263,7 @@ msgstr "Lager lokationer"
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Lagerværdi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
@@ -256,7 +275,7 @@ msgstr "Lager værdi"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr ""
+msgstr "Lagerværdi den (dato)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -271,7 +290,7 @@ msgstr "Faktura linie"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Landed Costs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
@@ -307,46 +326,46 @@ msgstr "Lot/serienummer"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
-msgstr ""
+msgstr "Administrer Lagerværdi- og Lageromkostningsmetoder"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:109
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "Ingen forskel på standard prisen og ny pris!"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Ingen Landed Costs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
 msgid "Operation Date"
-msgstr ""
+msgstr "Udførselsdato"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Periodisk (manuelt)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Periodisk lagerværdiansættelse (anbefalet)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Løbende (automatisk)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
-msgstr ""
+msgstr "Løbende lagerværdiansættelse (lagerbevægelser genererer finansposter)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -388,23 +407,23 @@ msgstr "Kvantum"
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Real Price"
-msgstr ""
+msgstr "Real Price (reel pris)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the Inventory Value"
-msgstr ""
+msgstr "Hent lagerværdien"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the curent stock valuation."
-msgstr ""
+msgstr "Hent den aktuelle lagerværdi"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard price"
-msgstr ""
+msgstr "Angiv standardprisen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -422,7 +441,7 @@ msgstr "Standard pris"
 #: code:addons/stock_account/models/product.py:131
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "Standardprisen blev ændret"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -432,6 +451,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Standardpris: Kostprisen opdateres manuelt ved udgangen af en bestemt periode (normalt en gang om året).\n"
+"                Gennemsnitlig pris: Kostprisen genberegnes ved hver indkommende forsendelse og anvendes til produktets værdiansættelse.\n"
+"              Realtid: Kostprisen er prisen på det sidst udgående produkt (vil fx blive brugt i tilfælde af tab på lageret)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -440,11 +462,19 @@ msgid ""
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
+"Standard Pris: Kostprisen opdateres manuelt efter en endt periode (typisk årligt).\n"
+"Gennemsnitlig Pris: Kostprisen genberegnes ved hver leverance og anvendes ved værdiansættelsen af produktet.\n"
+"Real Price (reel pris): Kostprisen der vises er kostprisen på den sidst leverede vare (bruges fx også når man skrotter en vare)."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "Lagerregnskab"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr "Lagerhistorik"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -458,7 +488,7 @@ msgstr "Lager tilgangskonto"
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr ""
+msgstr "Lagerjournal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -477,17 +507,17 @@ msgstr "Lager afgangskonto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Konto for lagerværdien"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Konto for lagerværdien (indgående)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Konto for lagerværdien (udgående)"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/wizard_valuation_history.py:24
@@ -497,7 +527,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 #, python-format
 msgid "Stock Value At Date"
-msgstr ""
+msgstr "Lagerværdien den (dato)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -512,11 +542,13 @@ msgid ""
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"Den fundne værdi for produkt %s er nul. Dette betyder sandsynligvis at der "
+"er en konfigurationsfejl. Check kostprismetoden og standard prisen."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
-msgstr ""
+msgstr "Værdi i alt"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -527,6 +559,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel "
+"lokation (ikke-intern type), vil denne konto blive anvendt til at vise "
+"værdien af produkter der flyttes fra en intern lokation til denne lokation, "
+"i stedet for den generiske udgående lagerkonto der er sat på produktet. "
+"Dette har ingen effekt på interne lokationer. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -537,12 +574,17 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Bruges ved real-time lagerværdiansættelse. Når den er sat på en virtuel "
+"lokation (ikke-intern type), vil denne konto blive anvendt til at vise "
+"værdien af produkter der flyttes ud af denne lokation og ind på en intern "
+"lokation, i stedet for den generiske udgående lagerkonto der er sat på "
+"produktet. Dette har ingen effekt på interne lokationer. "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr "Vurdering"
+msgstr "Værdisætning"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -574,6 +616,11 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Når du foretager varelager værdiansættelse i realtid, vil "
+"kontoudskriftsposter for alle indgående lagerbevægelser blive bogført på "
+"denne konto, medmindre der er en specifik værdiansættelseskonto på kildens "
+"lokation. Når den ikke er sat på produktet, bruges den fra "
+"produktkategorien."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -584,6 +631,11 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
+"Når der anvendes real-time lagerværdiansættelse, vil modposter til alle "
+"udgående lagerbevægelser blive bogført på denne konto, medmindre der er sat "
+"en specifik konto for værdiansættelsen på lokationen. Dette er default "
+"værdien for all produkter i denne kategori. Kan også sættes direkte på hvert"
+" produkt. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -605,6 +657,9 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Når der anvendes real-time lagerværdiansættelse, er dette finansjournalen "
+"hvor posteringer vil blive automatisk bogført når der registreres "
+"lagerbevægelser. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -612,11 +667,13 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Når real-time lagerværdiansættelse er aktiveret på et produkt, vil denne "
+"konto angive den aktuelle værdi for produktet. "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "Wizard der åbner historikken på lagerværdi tabellen"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:242
@@ -625,6 +682,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
 msgstr ""
+"Du har ikke defineret en lagerjournal på din produktkategori. Undersøg om du"
+" har installeret en kontoplan. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
@@ -634,18 +693,20 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Du har ikke defineret en konto for lagerværdien på din produktkategori. Du "
+"skal definere en før du kan gennemføre denne handling. "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
-msgstr ""
+msgstr "_Anvend"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_config_settings
 msgid "stock.config.settings"
-msgstr ""
+msgstr "stock.config.settings"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"

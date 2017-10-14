@@ -678,7 +678,7 @@ class BaseModel(object):
                 field = cls._fields.get(name)
                 if not field:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
-                elif not (field.store or field.inverse):
+                elif not (field.store or field.inverse or field.inherited):
                     _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
             methods.append(func)
 
@@ -895,7 +895,7 @@ class BaseModel(object):
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except Exception as e:
-                message = (_('Unknown error during import:') + ' %s: %s' % (type(e), unicode(e)))
+                message = (_('Unknown error during import:') + ' %s: %s' % (type(e), unicode(e.message or e.name)))
                 moreinfo = _('Resolve other errors first')
                 messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                 # Failed for some reason, perhaps due to invalid data supplied,
@@ -2589,7 +2589,7 @@ class BaseModel(object):
 
     @api.model_cr
     def _table_exist(self):
-        query = "SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s"
+        query = "SELECT relname FROM pg_class WHERE relkind IN ('r','v','m') AND relname=%s"
         self._cr.execute(query, (self._table,))
         return self._cr.rowcount
 
@@ -3057,10 +3057,6 @@ class BaseModel(object):
                     fs.discard(f)
                 else:
                     records &= self._in_cache_without(f)
-
-        # prefetch at most PREFETCH_MAX records
-        if len(records) > PREFETCH_MAX:
-            records = records[:PREFETCH_MAX] | self
 
         # fetch records with read()
         assert self in records and field in fs
@@ -3928,14 +3924,6 @@ class BaseModel(object):
         id_new, = cr.fetchone()
         self = self.browse(id_new)
 
-        if self.env.lang and self.env.lang != 'en_US':
-            # add translations for self.env.lang
-            for name, val in vals.iteritems():
-                field = self._fields[name]
-                if field.store and field.column_type and field.translate is True:
-                    tname = "%s,%s" % (self._name, name)
-                    self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
-
         if self._parent_store and not self._context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
@@ -3997,6 +3985,15 @@ class BaseModel(object):
                 self.recompute()
 
         self.check_access_rule('create')
+
+        if self.env.lang and self.env.lang != 'en_US':
+            # add translations for self.env.lang
+            for name, val in vals.iteritems():
+                field = self._fields[name]
+                if field.store and field.column_type and field.translate is True:
+                    tname = "%s,%s" % (self._name, name)
+                    self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
+
         self.create_workflow()
         return id_new
 
@@ -4362,16 +4359,19 @@ class BaseModel(object):
                 # for translatable fields we copy their translations
                 trans_name, source_id, target_id = get_trans(field, old, new)
                 domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
+                new_val = new_wo_lang[name]
+                if old.env.lang and callable(field.translate):
+                    # the new value *without lang* must be the old value without lang
+                    new_wo_lang[name] = old_wo_lang[name]
                 for vals in Translation.search_read(domain):
                     del vals['id']
                     del vals['source']      # remove source to avoid triggering _set_src
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        # 'source' to force the call to _set_src
-                        # 'value' needed if value is changed in copy(), want to see the new_value
                         vals['source'] = old_wo_lang[name]
-                        vals['value'] = new_wo_lang[name]
+                        # the value should be the new value (given by copy())
+                        vals['value'] = new_val
                     Translation.create(vals)
 
     @api.multi
@@ -5229,13 +5229,16 @@ class BaseModel(object):
         return RecordCache(self)
 
     @api.model
-    def _in_cache_without(self, field):
-        """ Make sure ``self`` is present in cache (for prefetching), and return
-            the records of model ``self`` in cache that have no value for ``field``
-            (:class:`Field` instance).
+    def _in_cache_without(self, field, limit=PREFETCH_MAX):
+        """ Return records to prefetch that have no value in cache for ``field``
+            (:class:`Field` instance), including ``self``.
+            Return at most ``limit`` records.
         """
         ids = filter(None, self._prefetch[self._name] - set(self.env.cache[field]))
-        return self.browse(ids)
+        recs = self.browse(ids)
+        if limit and len(recs) > limit:
+            recs = self + (recs - self)[:(limit - len(self))]
+        return recs
 
     @api.model
     def refresh(self):

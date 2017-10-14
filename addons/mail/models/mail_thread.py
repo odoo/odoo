@@ -174,10 +174,10 @@ class MailThread(models.AbstractModel):
                              RIGHT JOIN mail_channel_partner cp
                              ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
                                 (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
-                             WHERE msg.model = %s AND msg.res_id in %s AND
+                             WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
                                    (msg.author_id IS NULL OR msg.author_id != %s) AND
                                    (msg.message_type != 'notification' OR msg.model != 'mail.channel')""",
-                         (partner_id, self._name, tuple(self.ids), partner_id,))
+                         (partner_id, self._name, list(self.ids), partner_id,))
         for result in self._cr.fetchall():
             res[result[0]] += 1
 
@@ -1721,6 +1721,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
+                'type': 'binary',
                 'datas_fname': name,
                 'description': name,
                 'res_model': message_data['model'],
@@ -2067,6 +2068,7 @@ class MailThread(models.AbstractModel):
                 partner_ids=[(4, pid) for pid in partner_ids],
                 auto_delete=True,
                 auto_delete_message=True,
+                parent_id=False, # override accidental context defaults
                 subtype_id=self.env.ref('mail.mt_note').id)
 
     @api.multi

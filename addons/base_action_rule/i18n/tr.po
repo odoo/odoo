@@ -16,10 +16,10 @@
 # MESUT TAVUKÇU <mesut@data-net.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: MESUT TAVUKÇU <mesut@data-net.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -71,6 +71,11 @@ msgid "Add Followers"
 msgstr "Takipçi Ekle"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr "Admin kullanıcısına atandı"
+
+#. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
@@ -79,7 +84,7 @@ msgstr "Otomatik İşlemler"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Form Değişikliği Tabanlı"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -89,7 +94,7 @@ msgstr "Zamanlı Koşula Dayalı"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Güncelleme Alanından Önce"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -119,7 +124,7 @@ msgstr "Kapalı"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Değişimi tetikleyen alan adlarının virgülle ayrılmış listesi."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -146,6 +151,11 @@ msgid "Days"
 msgstr "Günler"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_deadline
+msgid "Deadline"
+msgstr "Zaman Sınırı"
+
+#. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
 msgstr "Tetikleme Tarihi sonrası Gecikme"
@@ -157,6 +167,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Tetikleme tarihinden sonra gecikme. \\ N Tetikleyici tarihten önce, "
+"toplantıdan 15 dakika önce bir hatırlatıcı göndermek gibi bir gecikmeye "
+"ihtiyacınız varsa, negatif bir sayı koyabilirsiniz."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -330,7 +343,7 @@ msgstr "Yeni"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Değişiklik Alanlarında Tetikleyici"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -345,7 +358,7 @@ msgstr "oluşturma & Gğncelleme"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Silme İşlemi Üzerine"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -361,6 +374,11 @@ msgstr "İş Ortağı"
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
 msgstr "Bekleyen"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_priority
+msgid "Priority"
+msgstr "Öncelik"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
@@ -421,6 +439,16 @@ msgid "Subject"
 msgstr "Konu"
 
 #. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action
+msgid "Test Server Action"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action_context
+msgid "Test Server Action Context"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
 msgstr ""
@@ -475,6 +503,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Durum ne zaman tetiklenmelidir. \\ N Varsa, zamanlayıcı tarafından kontrol "
+"edilecektir. Boş ise, oluşturma ve güncelleme sırasında kontrol edilecektir."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind

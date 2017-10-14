@@ -1,20 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# Youngsoo Jung <youngsoo.j@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: survey
@@ -24,9 +29,7 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#875A7B; text-align:center; text-decoration:none; color:"
-"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
@@ -46,17 +49,17 @@ msgstr "%s (사본)"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp; 번"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<b>Question </b>"
-msgstr ""
+msgstr "질문"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\">123..</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x\">123..</i>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_matrix
@@ -134,9 +137,9 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-primary only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
@@ -162,17 +165,16 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-default only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
@@ -221,13 +223,16 @@ msgid "About your Odoo usage"
 msgstr "Odoo 사용에 대해서"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_active
+msgid "Active"
+msgstr "사용"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
 "Add list of email of recipients (will not converted in partner), separated "
 "by commas, semicolons or newline..."
-msgstr ""
-"받는 사람(파트너에 변환되지 않습니다)의 이메일 목록 추가하기. 쉼표, 세미콜론 "
-"또는 줄 바꿈으로 구분합니다"
+msgstr "받는 사람(파트너에 변환되지 않습니다)의 이메일 목록 추가하기. 쉼표, 세미콜론 또는 줄 바꿈으로 구분합니다"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -286,7 +291,7 @@ msgstr "응답"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -308,7 +313,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
-msgstr ""
+msgstr "설문 조사로 돌아가기"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
@@ -323,7 +328,7 @@ msgstr "취소"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Choices"
-msgstr ""
+msgstr "답변 선택"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.simple_choice
@@ -344,7 +349,7 @@ msgstr "설문 조사를 시작하려면 여기를 클릭 하십시오."
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
 msgid "Click to add a survey."
-msgstr ""
+msgstr "설문 조사를 추가하려면 여기를 클릭 하십시오."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -412,10 +417,9 @@ msgstr "제약 사항"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy and paste the HTML code below to add this web link to any webpage."
-msgstr ""
-"웹페이지에 해당 웹 링크를 추가하려면 아래 HTML 코드를 복사해서 붙여넣으십시"
-"오."
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
+msgstr "웹페이지에 해당 웹 링크를 추가하려면 아래 HTML 코드를 복사해서 붙여넣으십시오."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -484,8 +488,8 @@ msgstr "마감 시한"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty,        the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty,        the invitation is still valid."
 msgstr ""
 
 #. module: survey
@@ -518,7 +522,7 @@ msgstr "디자인"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Design Survey"
-msgstr ""
+msgstr "설문 조사 구성"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -662,6 +666,11 @@ msgid "How do you contribute or plan to contribute to Odoo?"
 msgstr "당신이 Odoo에 기여하고자 하는 계획이나 방법은 무엇입니까?"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Resources"
+msgstr "인사"
+
+#. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
 msgstr "새로운 기능을 개발합니다."
@@ -738,6 +747,25 @@ msgstr "선택하면 사용자는 이전 페이지로 돌아갈 수 있습니다
 #: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr "마감하면 사람들이 이 컬럼의 설문 조사에 응답할 수 없습니다."
+
+#. module: survey
+#: code:addons/survey/models/survey.py:473
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
+msgid "If other, please specify:"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -881,7 +909,7 @@ msgstr "로그인 필요"
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Manager"
-msgstr ""
+msgstr "관리자"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -1232,7 +1260,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
-msgstr ""
+msgstr "단일 선택 단추"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_result_url
@@ -1297,7 +1325,7 @@ msgstr "질문에 대한 점수"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_quizz_mark
 msgid "Score for this choice"
-msgstr ""
+msgstr "이 선택에 대한 점수"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_quizz_mark
@@ -1370,7 +1398,7 @@ msgstr "순서는 자연수여야 합니다"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Share &amp;amp; Invite"
-msgstr ""
+msgstr "공유 및 초대"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -1395,7 +1423,7 @@ msgstr "의견 필드 표시"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Line Text Box"
-msgstr ""
+msgstr "한줄 텍스트 박스"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_skipped
@@ -1512,7 +1540,7 @@ msgstr "설문 조사 단계"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Title"
-msgstr ""
+msgstr "설문 조사 제목"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -1586,7 +1614,7 @@ msgstr "감사합니다!"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
 msgid "Thanks Message"
-msgstr ""
+msgstr "감사 메시지"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1627,11 +1655,11 @@ msgstr "입력한 답변 형식이 잘못되었습니다."
 #: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
-"'__URL__'.                     __URL__을 포함하지 않은 문자 내용은 자동으로 "
-"설문조사의 특별한 URL로 변환됩니다."
+"'__URL__'.                     __URL__을 포함하지 않은 문자 내용은 자동으로 설문조사의 특별한 URL로 "
+"변환됩니다."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
@@ -1676,8 +1704,7 @@ msgstr "메뉴가 너무 많습니다. 이해하기가 복잡합니다."
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
 
@@ -1831,7 +1858,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -1928,9 +1955,7 @@ msgstr "사용자 그룹에 대해 어떻게 생각하십니까?"
 msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
-msgstr ""
-"당신은 웹 클라이언트에서 사용할 수 있는 Odoo의 프로세스 화면에 대해 어떻게 생"
-"각하십니까?"
+msgstr "당신은 웹 클라이언트에서 사용할 수 있는 Odoo의 프로세스 화면에 대해 어떻게 생각하십니까?"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
@@ -1957,8 +1982,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 
 #. module: survey
@@ -1987,10 +2011,10 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Login Required\" setting must "
-"be disabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Login Required\" setting "
+"must be disabled)."
 msgstr ""
 
 #. module: survey

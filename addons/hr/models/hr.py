@@ -110,28 +110,28 @@ class Employee(models.Model):
     # we need a related field in order to be able to sort the employee by name
     name_related = fields.Char(related='resource_id.name', string="Resource Name", readonly=True, store=True)
     country_id = fields.Many2one('res.country', string='Nationality (Country)')
-    birthday = fields.Date('Date of Birth')
-    ssnid = fields.Char('SSN No', help='Social Security Number')
-    sinid = fields.Char('SIN No', help='Social Insurance Number')
-    identification_id = fields.Char(string='Identification No', track_visibility='onchange')
+    birthday = fields.Date('Date of Birth', groups='hr.group_hr_user')
+    ssnid = fields.Char('SSN No', help='Social Security Number', groups='hr.group_hr_user')
+    sinid = fields.Char('SIN No', help='Social Insurance Number', groups='hr.group_hr_user')
+    identification_id = fields.Char(string='Identification No', groups='hr.group_hr_user')
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other')
-    ])
+    ], groups='hr.group_hr_user')
     marital = fields.Selection([
         ('single', 'Single'),
         ('married', 'Married'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
-    ], string='Marital Status')
-    department_id = fields.Many2one('hr.department', track_visibility='onchange', string='Department')
-    address_id = fields.Many2one('res.partner', track_visibility='onchange', string='Working Address')
-    address_home_id = fields.Many2one('res.partner', track_visibility='onchange', string='Home Address')
+    ], string='Marital Status', groups='hr.group_hr_user')
+    department_id = fields.Many2one('hr.department', string='Department')
+    address_id = fields.Many2one('res.partner', string='Working Address')
+    address_home_id = fields.Many2one('res.partner', string='Home Address')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account Number',
-        domain="[('partner_id', '=', address_home_id)]", track_visibility='onchange', help='Employee bank salary account')
-    work_phone = fields.Char('Work Phone', track_visibility='onchange')
-    mobile_phone = fields.Char('Work Mobile', track_visibility='onchange')
+        domain="[('partner_id', '=', address_home_id)]", help='Employee bank salary account', groups='hr.group_hr_user')
+    work_phone = fields.Char('Work Phone')
+    mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     notes = fields.Text('Notes')
@@ -139,10 +139,10 @@ class Employee(models.Model):
     category_ids = fields.Many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', string='Tags')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
     resource_id = fields.Many2one('resource.resource', string='Resource',
-        ondelete='cascade', required=True, auto_join=True, track_visibility='onchange')
-    coach_id = fields.Many2one('hr.employee', track_visibility='onchange', string='Coach')
-    job_id = fields.Many2one('hr.job', track_visibility='onchange', string='Job Title')
-    passport_id = fields.Char('Passport No', track_visibility='onchange')
+        ondelete='cascade', required=True, auto_join=True)
+    coach_id = fields.Many2one('hr.employee', string='Coach')
+    job_id = fields.Many2one('hr.job', string='Job Title')
+    passport_id = fields.Char('Passport No', groups='hr.group_hr_user')
     color = fields.Integer('Color Index', default=0)
     city = fields.Char(related='address_id.city')
     login = fields.Char(related='user_id.login', readonly=True)

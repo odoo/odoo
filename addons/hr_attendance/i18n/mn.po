@@ -24,33 +24,33 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:55
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr ""
+msgstr "\"Гарсан\" цаг \"Орсон\" цагаас эрт байж болохгүй."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:29
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s %(check_in)s-с"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:34
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s %(check_in)s-с %(check_out)sхүртэл"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr ""
+msgstr "Өдөрт нэг алим идсэнээр эмнэлэг зүглэх шаардлагагүй болно"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:106
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr ""
+msgstr "Бас нэгэн ажлын сайхан өдөр! Дараа уулзая!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
@@ -108,6 +108,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"%(empl_name)s ажилтанд шинэ ирж үүсгэх боломжгүй, ажилтан нь %(datetime)s-с "
+"хойш гараагүй."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -117,12 +119,14 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"%(empl_name)s ажилтанд ирж үүсгэх боломжгүй, ажилтан нь өмнө %(datetime)s-д "
+"аль хэдийнээ орсон байна"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:111
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
-msgstr ""
+msgstr "Олон ажилтан дээр орсон эсвэл гарсан үйлдлийг гүйцэтгэх боломжгүй."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:125
@@ -132,68 +136,70 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"%(empl_name)s дээр гарсан үйлдэл бүртгэх боломжгүй, харгалзах орсон үйлдэл "
+"алга. Таны ирцийг хүний нөөцөөс засварлаж байж болох юм."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr ""
+msgstr "Орсон"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
 msgid "Check Out"
-msgstr ""
+msgstr "Гарсан"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:53
 #, python-format
 msgid "Check in"
-msgstr ""
+msgstr "Орсон"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:49
 #, python-format
 msgid "Check out"
-msgstr ""
+msgstr "Гарсан"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked in"
-msgstr ""
+msgstr "Орсон"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:109
 #, python-format
 msgid "Checked in at"
-msgstr ""
+msgstr "Орсон"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked out"
-msgstr ""
+msgstr "Гарсан"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:97
 #, python-format
 msgid "Checked out at"
-msgstr ""
+msgstr "Гарсан"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:27
 #, python-format
 msgid "Click to check in"
-msgstr ""
+msgstr "Орохдоо дарна уу"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:31
 #, python-format
 msgid "Click to check out"
-msgstr ""
+msgstr "Гарахдаа дарна уу"
 
 #. module: hr_attendance
 #. openerp-web
@@ -215,6 +221,8 @@ msgid ""
 "Create a few employees to be able to select an employee here and perform his"
 " check in / check out."
 msgstr ""
+"Өөр ажилтныг сонгож гарсан / орсон -г бүртгэх боломжтой хэдэн ажилтанг "
+"үүсгэнэ үү."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
@@ -246,7 +254,7 @@ msgstr "Дэлгэцийн Нэр"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:123
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr ""
+msgstr "Эрт унтаж эрт босох нь хүний эрүүл, чийрэг, сэргэлэн байх үндэс"
 
 #. module: hr_attendance
 #. openerp-web
@@ -254,6 +262,8 @@ msgstr ""
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr ""
+"Өглөөний цайг хаан шиг, үдийн цайг наймаачин шиг, оройн хоолыг гуйлгачин шиг"
+" ид. "
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -296,11 +306,15 @@ msgid ""
 "Employees do not need to enter their PIN to check in manually in the \"Kiosk"
 " Mode\"."
 msgstr ""
+"\"Киоск Горим\"-д ажилтан нь орсон бүртгэл хийхдээ PIN кодыг гараараа "
+"оруулах шаардлагагүй."
 
 #. module: hr_attendance
 #: selection:base.config.settings,group_attendance_use_pin:0
 msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
 msgstr ""
+"\"Киоск Горим\"-д ажилтан нь орсон бүртгэл хийхдээ PIN кодыг гараараа "
+"оруулах ёстой."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
@@ -310,42 +324,42 @@ msgstr "PIN идэвхжүүлэх"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
 msgid "Enable or disable employee PIN identification at check in"
-msgstr ""
+msgstr "Орсон бүртгэл дээр ажилтны PIN кодыг идэвхжүүлэх эсвэл арилгах"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/my_attendances.js:29
 #, python-format
 msgid "Error : Could not find employee linked to user"
-msgstr ""
+msgstr "Алдаа : Хэрэглэгчтэй холбогдсон ажилтанг олсонгүй"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:35
 #, python-format
 msgid "Error : Could not find employee linked to user."
-msgstr ""
+msgstr "Алдаа : Хэрэглэгчтэй холбогдсон ажилтанг олсонгүй."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:81
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr ""
+msgstr "Алдаа: харгалзах ажилтанг олсонгүй."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:70
 #, python-format
 msgid "First come, first served"
-msgstr ""
+msgstr "Түрүүлж ирвэл түрүүлж үйлчлүүлнэ"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr ""
+msgstr "Таны эргэн ирсэн баяртай байна, нэлээд уджээ!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -429,21 +443,21 @@ msgstr "ID"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ажилтанг ялгахад хэрэглэддэг  ID."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:88
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr ""
+msgstr "Хэрэв ажил нь хийх үнэ цэнэтэй бол энэ нь сайн хийх үнэ цэнэтэй!"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Invalid request, please return to the main menu."
-msgstr ""
+msgstr "Буруу хүсэлт, үндсэн меню рүү буцна уу."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
@@ -468,7 +482,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last attendance id"
-msgstr ""
+msgstr "Сүүлийн ирц id"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
@@ -483,7 +497,7 @@ msgstr "Менежер"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
 msgid "Manual Attendance"
-msgstr ""
+msgstr "Гар Ирц"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -504,18 +518,18 @@ msgstr "Миний ирцүүд"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr ""
+msgstr "Гарсан алга"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
-msgstr ""
+msgstr "%(barcode)s зураасан кодод харгалзах ажилтан байхгүй"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr ""
+msgstr "Мэргэжилтэн"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
@@ -526,33 +540,37 @@ msgstr "PIN"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"Киоск горимд Гарсан/Орсон-д хэрэглэгдэх  PIN код (хэрэв тохиргоонд "
+"зөвшөөрсөн бол)."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr ""
+msgstr "Орохдоо PIN кодоо оруулна уу"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr ""
+msgstr "Гарахдаа PIN кодоо оруулна уу"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid ""
 "Please make sure you're using the correct filter if you expected to see any."
 msgstr ""
+"Ямар нэг зүйл харна гэж бодсон бол зөв шүүлтүүр хэрэглэж байгаа эсэхээ "
+"нягтлана уу."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:82
 #, python-format
 msgid "Please return to the main menu."
-msgstr ""
+msgstr "Үндсэн меню рүү буцна уу."
 
 #. module: hr_attendance
 #: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
@@ -569,7 +587,7 @@ msgstr "Тайлан"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "Үнэмлэхээ уншуулна уу"
 
 #. module: hr_attendance
 #. openerp-web
@@ -589,6 +607,8 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
+"Үнэмлэхний ID үл давтагдах байх ёстой, энэ нь өөр ажилтанд аль хэдийнээ "
+"олгогдсон байна."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:63
@@ -599,14 +619,14 @@ msgstr "PIN нь цифрүүдийн дараалал байх ёстой."
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "Танай ажилтнуудын ирцүүд энэ дэлгэцэнд энд харагдана."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:68
 #, python-format
 msgid "The early bird catches the worm"
-msgstr ""
+msgstr "Эртэч шувууд өтийг барьдаг"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_manual_attendance
@@ -614,6 +634,8 @@ msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
 msgstr ""
+"Ажилтан нь \"Миний ирц\" менюрүү хандаж чадах бөгөөд өөрийн орсон гарсан "
+"цагаа харах боломжтой"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -621,11 +643,13 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"Хэрэглэгч нь орсон гарснаа бүртгүүлэхдээ гараараа дэлгэц дээр PIN кодыг "
+"оруулах ёстой."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "To create employees go to the Employees menu."
-msgstr ""
+msgstr "Ажилчдыг үүсгэхдээ Ажилчид менюрүү очно уу."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -640,6 +664,8 @@ msgid ""
 "Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
 "please contact Human Resources."
 msgstr ""
+"Анхааруулга! Сүүлийн орсон цаг 12-с их цагийн өмнө байсан.<br/>хэрэв энэ зөв"
+" биш бол Хүний Нөөцдөө хандана уу."
 
 #. module: hr_attendance
 #. openerp-web
@@ -655,7 +681,7 @@ msgstr "Тавтай морил"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:11
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Тавтай морил"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -666,13 +692,13 @@ msgstr "Ажилласан цаг"
 #: code:addons/hr_attendance/models/hr_employee.py:79
 #, python-format
 msgid "Wrong PIN"
-msgstr ""
+msgstr "Буруу PIN"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:105
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
+msgstr "Ирцийг хувилах боломжгүй."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_base_config_settings
@@ -686,11 +712,12 @@ msgstr "base.config.settings"
 #, python-format
 msgid "employee presence<br/>green: checked in<br/>red: checked out"
 msgstr ""
+"ажилтан байгаа эсэх <br/>ногоон:  орсон, байгаа<br/>улаан: гарсан, байхгүй"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "ажилтны ирцийн жагсаалт"
 
 #. module: hr_attendance
 #. openerp-web

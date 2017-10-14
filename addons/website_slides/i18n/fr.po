@@ -19,13 +19,15 @@
 # Olivier Dony <odo@odoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Fabien Bourgeois <fabien@yaltik.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Jeanjean Noname <monsieur.spock@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Fabien Bourgeois <fabien@yaltik.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +54,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Bonjour,</p>\n"
+"<p>\n"
+"    ${user.name} a partagé ${object.slide_type} <strong>${object.name}</strong> avec vous!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Voir <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -332,6 +349,11 @@ msgstr "Réservé aux utilisateurs authentifiés"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag1
+msgid "CMS"
 msgstr ""
 
 #. module: website_slides
@@ -652,6 +674,7 @@ msgstr "Politique de mise en vedette"
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
+"Le fichier est trop gros. La taille du fichier ne peut pas excéder 25MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -772,6 +795,11 @@ msgid "Likes"
 msgstr "Aime"
 
 #. module: website_slides
+#: model:slide.tag,name:website_slides.tag2
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
 msgstr "Moyen"
@@ -876,6 +904,7 @@ msgstr ""
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
+#: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
 msgstr "Journées Odoo"
 
@@ -1315,7 +1344,7 @@ msgstr "Document inconnu"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "Non publié"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids

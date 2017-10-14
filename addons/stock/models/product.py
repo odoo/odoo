@@ -143,15 +143,15 @@ class Product(models.Model):
         Quant = self.env['stock.quant']
         domain_move_in_todo = [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_move_in
         domain_move_out_todo = [('state', 'not in', ('done', 'cancel', 'draft'))] + domain_move_out
-        moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id']))
-        moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id']))
-        quants_res = dict((item['product_id'][0], item['qty']) for item in Quant.read_group(domain_quant, ['product_id', 'qty'], ['product_id']))
+        moves_in_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+        moves_out_res = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_todo, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+        quants_res = dict((item['product_id'][0], item['qty']) for item in Quant.read_group(domain_quant, ['product_id', 'qty'], ['product_id'], orderby='id'))
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id']))
-            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id']))
+            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move.read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
@@ -272,6 +272,10 @@ class Product(models.Model):
         if value == 0.0 and operator in ('=', '>=', '<='):
             return self._search_product_quantity(operator, value, 'qty_available')
         product_ids = self._search_qty_available_new(operator, value, self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'))
+        if (value > 0 and operator in ('<=', '<')) or (value < 0 and operator in ('>=', '>')):
+            # include also unavailable products
+            domain = self._search_product_quantity(operator, value, 'qty_available')
+            product_ids += domain[0][2]
         return [('id', 'in', product_ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
@@ -284,7 +288,7 @@ class Product(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
+        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'], orderby='id')
         for quant in quants_groupby:
             if OPERATORS[operator](quant['qty'], value):
                 product_ids.add(quant['product_id'][0])
@@ -364,6 +368,12 @@ class Product(models.Model):
     def action_view_routes(self):
         return self.mapped('product_tmpl_id').action_view_routes()
 
+    @api.multi
+    def write(self, values):
+        res = super(Product, self).write(values)
+        if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
+            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        return res
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -527,7 +537,7 @@ class ProductTemplate(models.Model):
     def action_view_stock_moves(self):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.act_product_stock_move_open').read()[0]
-        if self:
+        if products:
             action['context'] = {'default_product_id': products.ids[0]}
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action

@@ -12,13 +12,16 @@
 # Duong Nguyen <supermanikin@yahoo.com>, 2016
 # PHAM QUOC MY <mypham2802@gmail.com>, 2016
 # file aio <fileaio@gmail.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2017
+# Thang Duong Bao <nothingctrl@gmail.com>, 2017
+# Jean-Charles Drubay <jcdrubay@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
-"Last-Translator: file aio <fileaio@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Jean-Charles Drubay <jcdrubay@gmail.com>, 2017\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +92,7 @@ msgstr "Số lượng dòng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr ""
+msgstr "# Đơn hàng"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -108,6 +111,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -115,11 +120,13 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1204,12 +1211,12 @@ msgstr "Mới"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Báo giá mới"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -1233,11 +1240,17 @@ msgid "No variants on products"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -1289,7 +1302,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "Chỉ có kiểu số nguyên có thể hợp lệ."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2214,7 +2227,6 @@ msgid "Total"
 msgstr "Tổng"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "Giá tổng"
@@ -2361,7 +2373,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Wrong value entered!"
-msgstr ""
+msgstr "Nhập giá trị sai!"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:165
@@ -2392,11 +2404,17 @@ msgid "You will find here all orders that are ready to be invoiced."
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale

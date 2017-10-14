@@ -3,6 +3,7 @@
 # * calendar
 # 
 # Translators:
+# Moshe Flam <pashute@gmail.com>, 2017
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # fishfurbanter <fishfurbanter@gmail.com>, 2017
@@ -290,17 +291,17 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - תזכורת"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} הזמנה"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: תאריך עדכון"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -309,18 +310,20 @@ msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s בשעה %s ל\n"
+" %s בשעה%s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:637
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s בשעה (%s ל%s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:191
 #, python-format
 msgid "%s has accepted invitation"
-msgstr "%s הסכים להזמנה"
+msgstr "%s קיבל את ההזמנה"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:199
@@ -337,7 +340,7 @@ msgstr "<span> שעות</span>"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr "אשר"
+msgstr "קבל"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
@@ -387,7 +390,7 @@ msgstr "מצב משתתף"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr "מידע משתתפים"
+msgstr "מידע על משתתפים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
@@ -419,7 +422,7 @@ msgstr "לפי יום"
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr "לוח שנה"
+msgstr "יומן"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -427,27 +430,27 @@ msgstr "לוח שנה"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "התראת יומן"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "הזמנה ביומן"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "הקש כאן, כדי לעדכן ארוע זה בלבד ולא את שאר ארועים אלו הנשנים בעתיד."
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr "לחץ לקבוע פגישה חדשה"
+msgstr "הקש כדי לקבוע פגישה חדשה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
 msgid "Color index of creator"
-msgstr ""
+msgstr "מספר סידורי של צבע היוצר"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
@@ -480,7 +483,7 @@ msgstr "נוצר על ידי"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_date
 msgid "Created on"
-msgstr "נוצר ב-"
+msgstr "נוצר בתאריך "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
@@ -559,7 +562,7 @@ msgstr "משך"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
 #: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "משך - בדקות"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -596,7 +599,7 @@ msgstr "תאריך סיום"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "תאריך וזמן סיום"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -606,7 +609,7 @@ msgstr "תאריך סיום"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "מסתיים ב -"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:821
@@ -618,7 +621,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "אין לקבוע את תאריך הסיום לפני תאריך התחילה."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -628,12 +631,12 @@ msgstr "אירוע"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_time
 msgid "Event Time"
-msgstr ""
+msgstr "זמן האירוע"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "התראת יומן"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1059
@@ -646,7 +649,7 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "היומנים של כולם"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0

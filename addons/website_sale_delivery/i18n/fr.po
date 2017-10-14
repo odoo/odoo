@@ -14,13 +14,16 @@
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Francis Ndong <francissimel@hotmail.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Simon Maillard <simon@ogesta.fr>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Xavier Belmere <Info@cartmeleon.com>, 2016\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +38,7 @@ msgid ""
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"La Livraison sera "
-"mise à jour après le choix du mode de livraison\"> Livraison :</span>"
+"mise à jour après le choix du mode de livraison\"> Livraison:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -55,6 +58,10 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Les accessoires s'affichent lorsque l'utilisateur passe en revue son panier "
+"avant de payer (stratégie de vente croisée, p.e. pour les ordinateurs : "
+"souris, clavier, etc.). Un algorithme détermine une liste d'accessoire en "
+"fonction des produits ajoutés au panier."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -64,7 +71,7 @@ msgstr "Accessoires "
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_availability
 msgid "Adds an availability status on the web product page."
-msgstr ""
+msgstr "Ajoute une information de disponibilité sur la page produit."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
@@ -79,7 +86,7 @@ msgstr "Disponibilité"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
 msgid "Availability Warning"
-msgstr ""
+msgstr "Avertissement de disponibilité"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
@@ -94,6 +101,11 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
+"Les catégories peuvent être publiées sur la page Boutique (catalogue en "
+"ligne) afin d'aider les clients à trouver tous les produits d'une catégorie."
+" Afin de les publiez, rendez-vous sur la page Boutique, cliquez sur « "
+"Personnaliser » et activez *Catégories Produits*. Un produit peut appartenir"
+" à plusieurs catégories."
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -168,7 +180,7 @@ msgstr "Livraison prévue"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
 msgid "Images"
-msgstr ""
+msgstr "Images"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
@@ -202,6 +214,8 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Les articles optionnels sont suggérés quand le client clique sur *Ajouter au"
+" Panier*"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -221,17 +235,17 @@ msgstr "Évaluation"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Dernier évaluation"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Nombre d'évaluations"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "Évaluation : 0 = Mécontent, 10 = Très satisfait"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -270,6 +284,8 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Suggérez des alternatives plus chères à vos clients. Ces produits "
+"s'afficheront sur les pages article."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -319,7 +335,7 @@ msgstr "Titre du site web"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
 msgid "Website price"
-msgstr ""
+msgstr "Prix web"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price

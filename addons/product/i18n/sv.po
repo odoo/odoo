@@ -8,19 +8,21 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
 # Haojun Zou <apollo_zhj@msn.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2016
-# larmar <martin.wilderoth@linserv.se>, 2016
 # Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
+# Kim Asplund <kim.asplund@gmail.com>, 2017
+# lynnliuying <lynn.liu1971@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Jonathan S <jonathan.c.strom@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: lynnliuying <lynn.liu1971@gmail.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +44,7 @@ msgstr "# Produktvarianter"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Produkter"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -149,7 +151,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Produkter</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -356,7 +358,7 @@ msgstr "Attribut"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Attribut namn"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -717,7 +719,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "Cost"
+msgstr "Kostnad"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -746,7 +748,7 @@ msgstr "Landsgrupp"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "Landsgrupp"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
@@ -802,7 +804,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -1362,6 +1363,7 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Intern kategori"
 
@@ -1630,7 +1632,7 @@ msgstr "Nytt pris ="
 #. module: product
 #: selection:base.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Inga variationer av produkt"
 
 #. module: product
 #: selection:product.category,type:0
@@ -2029,11 +2031,6 @@ msgid "Public Price"
 msgstr "Publikt pris"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Publik prislista"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2164,6 +2161,7 @@ msgstr "Säljpris"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Försäljingsprislista"
 
@@ -2661,6 +2659,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2699,6 +2698,11 @@ msgstr "Typ"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
+msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
 msgstr ""
 
 #. module: product
@@ -2873,7 +2877,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template_seller_ids
 msgid "Vendors"
-msgstr ""
+msgstr "leverantörer"
 
 #. module: product
 #: selection:product.category,type:0
@@ -2979,14 +2983,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Arbetstid"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16

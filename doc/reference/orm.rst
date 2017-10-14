@@ -45,14 +45,20 @@ Field access
 ------------
 
 Recordsets provide an "Active Record" interface: model fields can be read and
-written directly from the record, but only on singletons (single-record
-recordsets). Setting a field's value triggers an update to the database::
+written directly from the record as attributes, but only on singletons
+(single-record recordsets).
+Field values can also be accessed like dict items, which is more elegant and
+safer than ``getattr()`` for dynamic field names.
+Setting a field's value triggers an update to the database::
 
     >>> record.name
     Example Name
     >>> record.company_id.name
     Company Name
     >>> record.name = "Bob"
+    >>> field = "name"
+    >>> record[field]
+    Bob
 
 Trying to read or write a field on multiple records will raise an error.
 
@@ -910,13 +916,13 @@ and using them:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_inheritance.py
     :language: python
-    :lines: 8,12,9,19
+    :lines: 10,11,14,19
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_inheritance.py
     :language: text
-    :lines: 15,22
+    :lines: 16,21
 
 the second model has inherited from the first model's ``check`` method and its
 ``name`` field, but overridden the ``call`` method, as when using standard
@@ -964,19 +970,19 @@ model:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: python
-    :lines: 9-12,21,26
+    :lines: 11-14,23,28
 
 will result in:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: text
-    :lines: 23,28
+    :lines: 25,30
 
 and it's possible to write directly on the delegated field:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_delegation.py
     :language: python
-    :lines: 47
+    :lines: 45
 
 .. warning:: when using delegation inheritance, methods are *not* inherited,
              only fields

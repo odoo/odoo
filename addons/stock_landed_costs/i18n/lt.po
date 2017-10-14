@@ -8,13 +8,14 @@
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Arminas Grigonis <arminas@versada.lt>, 2016
 # Rolandas <info@paninfo.lt>, 2016
+# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Rolandas <info@paninfo.lt>, 2016\n"
+"Last-Translator: Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "Papildomos atvežimo išlaidos"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Pagal dabartinę savikainą"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -83,12 +84,12 @@ msgstr "Atšauktas"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti naują atvežimo savikainą."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Paspauskite, norėdami apibrėžti naują atvežimo savikainos rūšį."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -151,6 +152,8 @@ msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
 msgstr ""
+"Savikainos ir koregavimo eilutės nesutampa. Jums reikėtų perskaičiuoti "
+"atvežimo savikainas."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -238,7 +241,7 @@ msgstr "Atvežimo savikaina"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Atvežimo savikainos pavadinimas"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -304,12 +307,14 @@ msgstr "Pavadinimas"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Nėra reikšmės koregavimo eilučių. Jums reikėtų perskaičiuoti atvežimo "
+"savikainas."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Tik juodraštinės atvežimo savikainos gai būti patvirtintos"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -452,4 +457,4 @@ msgstr "aprašyti produkto charakteristikas..."
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
-msgstr ""
+msgstr "purchase.config.settings"

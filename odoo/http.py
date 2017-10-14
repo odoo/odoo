@@ -163,6 +163,8 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    if urlparse.urlparse(url, scheme='http').scheme not in ('http', 'https'):
+        url = 'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
@@ -1438,6 +1440,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+            threading.current_thread().url = httprequest.url
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
@@ -1501,8 +1504,14 @@ def db_filter(dbs, httprequest=None):
     d, _, r = h.partition('.')
     if d == "www" and r:
         d = r.partition('.')[0]
-    r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
-    dbs = [i for i in dbs if re.match(r, i)]
+    if odoo.tools.config['dbfilter']:
+        r = odoo.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
+    elif odoo.tools.config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will
+        # use the value of --database as a comma seperated list of exposed databases.
+        exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs
 
 def db_monodb(httprequest=None):

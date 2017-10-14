@@ -341,6 +341,8 @@ actual arch.
             else:
 
                 try:
+                    if not values.get('arch') and not values.get('arch_base'):
+                        raise ValidationError(_('Missing view architecture.'))
                     values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
                 except LxmlError:
                     # don't raise here, the constraint that runs `self._check_xml` will
@@ -402,6 +404,15 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        return [
+            ['inherit_id', '=', view_id],
+            ['model', '=', model],
+            ['mode', '=', 'extension'],
+            ['active', '=', True],
+        ]
+
+    @api.model
     def get_inheriting_views_arch(self, view_id, model):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
@@ -416,13 +427,8 @@ actual arch.
            :return: [(view_arch,view_id), ...]
         """
         user_groups = self.env.user.groups_id
+        conditions = self._get_inheriting_views_arch_domain(view_id, model)
 
-        conditions = [
-            ['inherit_id', '=', view_id],
-            ['model', '=', model],
-            ['mode', '=', 'extension'],
-            ['active', '=', True],
-        ]
         if self.pool._init and not self._context.get('load_all_views'):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
@@ -910,7 +916,7 @@ actual arch.
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model

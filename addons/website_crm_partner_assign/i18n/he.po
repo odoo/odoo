@@ -5,13 +5,17 @@
 # Translators:
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# fishfurbanter <fishfurbanter@gmail.com>, 2017
+# Mor Kir <morki@013.net.il>, 2017
+# ilan kl <ilan@qaroads.co.il>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017\n"
+"Last-Translator: ilan kl <ilan@qaroads.co.il>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,9 +50,8 @@ msgid ""
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
 "% if not ctx['partner_id'].user_id:\n"
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
@@ -58,7 +61,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
 msgid "# of Cases"
-msgstr ""
+msgstr "# הפניות"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_nbr_opportunities
@@ -134,6 +137,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -173,7 +177,7 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/controllers/main.py:223
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "כל המדינות"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
@@ -193,7 +197,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
 msgid "Assignation Date"
-msgstr ""
+msgstr "תאריך המחאה"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
@@ -225,7 +229,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
 msgid "Bronze"
-msgstr ""
+msgstr "ברונזה"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_report_assign
@@ -240,7 +244,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Campaign"
-msgstr ""
+msgstr "קמפיין"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -257,7 +261,7 @@ msgstr "עיר"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_closed
 msgid "Close Date"
-msgstr ""
+msgstr "תאריך סגירה"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_company_id
@@ -288,7 +292,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
 msgid "Contents"
-msgstr ""
+msgstr "תוכן"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -305,7 +309,7 @@ msgstr "מדינה"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "צור תאריך"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_uid
@@ -338,7 +342,7 @@ msgstr "לקוח"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Customer Name"
-msgstr ""
+msgstr "שם לקוח"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -364,12 +368,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
 msgid "Delay to Assign"
-msgstr ""
+msgstr "עיכוב בשיוך"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
 msgid "Delay to Close"
-msgstr ""
+msgstr "עיכוב עד לסגירה"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -409,12 +413,12 @@ msgstr "דוא\"ל"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr ""
+msgstr "תבנית דוא\"ל"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Expected Closing"
-msgstr ""
+msgstr "צפי סגירה"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -426,12 +430,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
 msgid "Expected Revenue"
-msgstr ""
+msgstr "הכנסה מתוכננת"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Extended Filters..."
-msgstr ""
+msgstr "מסננים מתקדמים..."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -483,6 +487,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
@@ -508,7 +513,7 @@ msgstr "קבץ לפי"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "High"
-msgstr ""
+msgstr "גבוה"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:203
@@ -534,11 +539,13 @@ msgstr "מזהה"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
 msgid "Implementation References"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
 
@@ -581,6 +588,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
 msgid "Latest Partner Review"
 msgstr "הערכת שותף אחרונה"
 
@@ -588,7 +596,7 @@ msgstr "הערכת שותף אחרונה"
 #: selection:crm.lead.report.assign,type:0
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_id
 msgid "Lead"
-msgstr ""
+msgstr "ליד (Lead)"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -619,20 +627,21 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "ליד/הזדמנות"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 msgid "Leads"
-msgstr ""
+msgstr "ליד (Lead)"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Leads Analysis"
-msgstr ""
+msgstr "ניתוח לידים"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9928
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr ""
@@ -645,6 +654,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
 msgstr ""
 
@@ -662,7 +672,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Low"
-msgstr ""
+msgstr "נמוך"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability_max
@@ -672,7 +682,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Medium"
-msgstr ""
+msgstr "בינוני"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -715,7 +725,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity"
-msgstr ""
+msgstr "הפעילות הבאה"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -724,7 +734,13 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
 msgid "Next Partner Review"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
+msgid "No more partner available"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -740,7 +756,7 @@ msgstr "רגיל"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
 msgid "Number of Days to close the case"
-msgstr ""
+msgstr "מספר ימים לסגירת התיק"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
@@ -761,7 +777,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 msgid "Opportunities"
-msgstr ""
+msgstr "הזדמנויות"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_graph
@@ -792,7 +808,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "תאריך היעד חלף"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner
@@ -856,7 +872,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Partners"
-msgstr ""
+msgstr "שותפים"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -866,6 +882,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
 msgid "Partnership Date"
 msgstr ""
 
@@ -883,7 +900,7 @@ msgstr "טלפון"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_planned_revenue
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
-msgstr ""
+msgstr "הכנסה מתוכננת"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
@@ -921,7 +938,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.references_block
 msgid "References"
-msgstr ""
+msgstr "הפניות"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
@@ -953,7 +970,7 @@ msgstr "חיפוש"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send"
-msgstr ""
+msgstr "שלח"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -990,11 +1007,16 @@ msgid "Silver"
 msgstr "כסף"
 
 #. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
+msgid "Spam"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:109
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
 msgid "Stage"
-msgstr ""
+msgstr "שלב"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1009,13 +1031,13 @@ msgstr "רחוב"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Street2"
-msgstr ""
+msgstr "רחוב2"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_tag_ids
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Tags"
-msgstr ""
+msgstr "תגיות"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:60
@@ -1084,7 +1106,7 @@ msgstr "משתמש"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "גובה מאוד"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
@@ -1110,7 +1132,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 msgid "World Map"
-msgstr ""
+msgstr "מפת העולם"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1169,7 +1191,7 @@ msgstr "מופעל"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "or"
-msgstr ""
+msgstr "או"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index

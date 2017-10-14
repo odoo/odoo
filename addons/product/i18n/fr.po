@@ -17,7 +17,7 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
@@ -36,13 +36,14 @@
 # Olivier Dony <odo@odoo.com>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,7 +180,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Articles</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -641,6 +642,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Cochez ceci si vous souhaitez définir plusieurs variantes pour cet attribut."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -875,7 +877,6 @@ msgstr ""
 "qu'une technologie de pointe."
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -1049,6 +1050,7 @@ msgstr "Erreur ! Vous ne pouvez pas créer de catégories récursives."
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
+"Erreur! Vous ne pouvez pas utiliser cet attribut avec la valeur suivante. "
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -1468,6 +1470,7 @@ msgstr "Interne"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Catégorie interne"
 
@@ -2147,11 +2150,6 @@ msgid "Public Price"
 msgstr "Prix public"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Liste de prix publique"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2283,6 +2281,7 @@ msgstr "Prix de vente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Liste de prix de vente"
 
@@ -2816,6 +2815,7 @@ msgstr "Cette note sera affichée dans les devis."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2861,6 +2861,11 @@ msgid ""
 msgstr ""
 "Port USB de la mise à jour logiciel pour assurer une compatibilité de "
 "l'appareil Bluetooth utilisé."
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -3151,14 +3156,6 @@ msgid "Working Time"
 msgstr "Temps de travail"
 
 #. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: product
 #: code:addons/product/models/decimal_precision.py:16
 #, python-format
 msgid ""
@@ -3191,6 +3188,9 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Vous devez définir un produit pour tout ce que vous vendez, qu'il s'agisse "
+"d'un produit physique, d'un consommable ou d'un service que vous offrez à "
+"vos clients."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11

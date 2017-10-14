@@ -163,8 +163,8 @@ class account_journal(models.Model):
             account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
             if account_ids:
                 amount_field = 'balance' if not self.currency_id else 'amount_currency'
-                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s;""" % (amount_field,)
-                self.env.cr.execute(query, (account_ids,))
+                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s AND date <= %%s;""" % (amount_field,)
+                self.env.cr.execute(query, (account_ids, fields.Date.today(),))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
                     account_sum = query_results[0].get('sum')

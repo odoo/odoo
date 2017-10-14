@@ -7,13 +7,15 @@
 # Arminas Grigonis <arminas@versada.lt>, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
+# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2016\n"
+"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +33,7 @@ msgstr " (kopijuoti)"
 #: code:addons/account_asset/models/account_asset.py:511
 #, python-format
 msgid " (grouped)"
-msgstr ""
+msgstr "(sugrupuota)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -46,12 +48,12 @@ msgstr "# nusidėvėjimo įrašų"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr ""
+msgstr "# partijos eilučių"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid "Account Date"
-msgstr ""
+msgstr "Sąskaitos data"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
@@ -85,7 +87,7 @@ msgstr "Aktyvus"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Papildomi nustatymai"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -101,7 +103,7 @@ msgstr "Nusidėvėjusi vertė"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr ""
+msgstr "Partijos eilučių kiekis"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -136,9 +138,9 @@ msgid "Asset Durations to Modify"
 msgstr "Pakeisti ilgalaikio turto nusidėvėjimo laikotarpį"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
-msgstr ""
+msgstr "Turto pabaigos data"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
@@ -151,22 +153,22 @@ msgid "Asset Name"
 msgstr "Ilgalaikio turto pavadinimas"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
-msgstr ""
+msgstr "Turto pradžios data"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
-msgstr ""
+msgstr "Turto tipas"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal_purchase
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal_purchase
 msgid "Asset Types"
-msgstr ""
+msgstr "Turto tipai"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_category
@@ -180,7 +182,7 @@ msgstr "Ilgalaikio turto kategorija"
 #: code:addons/account_asset/models/account_asset.py:263
 #, python-format
 msgid "Asset created"
-msgstr ""
+msgstr "Turtas sukurtas"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -192,11 +194,12 @@ msgstr "Ilgalaikio turto nusidevėjimo eilutė"
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
+"Turtas parduotas arba nurašytas. Apskaitos įrašas laukia patvirtinimo."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr ""
+msgstr "Turto / Pajamų atpažinimas"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -219,12 +222,12 @@ msgstr "Ilagalaikio turto analizė"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Ilgalaikio turto nusidėvėjimo eilutės"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr ""
+msgstr "Turtas ir pajamos"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -249,7 +252,7 @@ msgstr "Naudojamas ilgalaikis turtas"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Automatiškai patvirtinti ilgalaikį turtą"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -267,7 +270,7 @@ msgstr "Kategorija"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Category of asset"
-msgstr ""
+msgstr "Ilgalaikio turto kategorija"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_open_asset
@@ -281,7 +284,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
-msgstr ""
+msgstr "Pažymėkite, jei norite kategorijomis sugrupuoti sugeneruotus įrašus."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -348,7 +351,7 @@ msgstr "Skaičiuoti nusidėvėjimą"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Compute Depreciation"
-msgstr ""
+msgstr "Apskaičiuoti nusidėvėjimą"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -365,7 +368,7 @@ msgstr "Sukurti nusidevėjimo įrašai"
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr ""
+msgstr "Sukurti pajamų perkėlimai"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -388,7 +391,7 @@ msgstr "Sukurta"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
 msgid "Cumulative Depreciation"
-msgstr ""
+msgstr "Sukauptas nusidėvėjimas "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -416,7 +419,7 @@ msgstr "Data"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Date of asset"
-msgstr ""
+msgstr "Nusidėvėjimo pradžios data"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -431,18 +434,18 @@ msgstr "Nusidėvėjimo data"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr ""
+msgstr "Atidėtų pajamų sąskaita "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Atidėtų pajamų tipas"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Deferred Revenues"
-msgstr ""
+msgstr "Atidėtos pajamos"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -459,12 +462,12 @@ msgstr "Nusidėvėjimo procentas"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation"
-msgstr ""
+msgstr "Nusidėvėjimas"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr ""
+msgstr "Nusidėvėjusio ilgalaikio turto sąskaita "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -481,12 +484,12 @@ msgstr "Nusidėvėjimo data"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Nusidėvėjimo įrašai: turto sąskaita"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Nusidėvėjimo įrašai: išlaidų sąskaita"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -496,12 +499,12 @@ msgstr "Operacija"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr ""
+msgstr "Nusidėvėjimo išlaidų sąskaita "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Information"
-msgstr ""
+msgstr "Nusidėvėjimo informacija "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_depreciation_line_ids
@@ -528,13 +531,13 @@ msgstr "Nusidėvėjimo pavadinimas"
 #: code:addons/account_asset/wizard/asset_modify.py:85
 #, python-format
 msgid "Depreciation board modified"
-msgstr ""
+msgstr "Modifikuota nusidėvėjimo lenta "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:571
 #, python-format
 msgid "Depreciation line posted."
-msgstr ""
+msgstr "Nusidėvėjimo eilutė užregistruota. "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -550,19 +553,19 @@ msgstr "Vaizduojamas pavadinimas"
 #: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
-msgstr ""
+msgstr "Nurašymo įrašas "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
-msgstr ""
+msgstr "Nurašymo įrašai "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:550
 #, python-format
 msgid "Document closed."
-msgstr ""
+msgstr "Dokumentas uždarytas."
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -598,7 +601,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr ""
+msgstr "Generuoti nusidėvėjimo įrašus"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -618,7 +621,7 @@ msgstr "Įsigijimo kaina"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr ""
+msgstr "Bendra turto vertė"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -634,7 +637,7 @@ msgstr "Grupuoti pagal..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Grupiniai žurnalų įrašai "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -681,7 +684,7 @@ msgstr "Tai suma iki kurios gali būti nudėvėtas ilgalaikis turtas."
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr ""
+msgstr "Prekės ir paslaugos"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
@@ -732,7 +735,7 @@ msgstr "Tiesinis"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Susiję"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -749,7 +752,7 @@ msgstr "Pakeisti ilgalaikio turto nusidėvėjimo laikotarpį"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Modify Depreciation"
-msgstr ""
+msgstr "Modifikuoti nusidėvėjimą"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -759,7 +762,7 @@ msgstr "Mėnuo"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
 msgid "Monthly Recurring Revenue"
-msgstr ""
+msgstr "Pasikartojančios mėnesio pajamos"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
@@ -783,7 +786,7 @@ msgstr "Periodų skaičius"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr ""
+msgstr "Įrašų skaičius"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -793,7 +796,7 @@ msgstr "Mėnesių skaičius per periodą"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Vienas įrašas kiekvieną"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -812,12 +815,12 @@ msgstr "Periodo ilgis"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Periodicity"
-msgstr ""
+msgstr "Periodiškumas"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "Užregistruokite nusidėvėjimo įrašus "
 
 #. module: account_asset
 #. openerp-web
@@ -848,7 +851,7 @@ msgstr "Produkto šablonas"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_prorata
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Nudėvėjimas nuo pirkimo dienos"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:342
@@ -871,7 +874,7 @@ msgstr "Pirkimo mėnuo"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Purchase: Asset"
-msgstr ""
+msgstr "Pirkimai: Turtas"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_name
@@ -881,12 +884,12 @@ msgstr "Priežastis"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Nusidėvėjimo sąskaita "
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
-msgstr ""
+msgstr "Sukaupto nusidėvėjimo sąskaita "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
@@ -912,7 +915,7 @@ msgstr "Veikiantis"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Sale: Revenue Recognition"
-msgstr ""
+msgstr "Pardavimai: pajamų pripažinimas"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -932,7 +935,7 @@ msgstr "Ieškoti ilg. turto kategorijoje"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr ""
+msgstr "Parduoti arba nurašyti"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -1013,7 +1016,7 @@ msgstr "Nepaskelbta suma"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
-msgstr ""
+msgstr "Pardavėjas"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
@@ -1036,35 +1039,35 @@ msgstr "Metai"
 #: code:addons/account_asset/models/account_asset.py:107
 #, python-format
 msgid "You cannot delete a document is in %s state."
-msgstr ""
+msgstr "Negalite ištrinti dokumento jo %s būsenoje."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:110
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr ""
+msgstr "Negalite ištrinti dokumento, kuriame yra užregistruotų įrašų."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:579
 #, python-format
 msgid "You cannot delete posted depreciation lines."
-msgstr ""
+msgstr "Negalite ištrinti užregistruotų nusidėvėjimo eilučių. "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:581
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
+msgstr "Negalite ištrinti užregistruotų partijos eilučių. "
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "e.g. Computers"
-msgstr ""
+msgstr "pvz. kompiuteriai"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form

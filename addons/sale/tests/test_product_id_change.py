@@ -68,3 +68,51 @@ class TestOnchangeProductId(TransactionCase):
         so_line = so.order_line[0]
         so_line.product_id_change()
         self.assertEquals(100, so_line.price_unit, "The included tax must be subtracted to the price")
+
+    def test_pricelist_application(self):
+        """ Test different prices are correctly applied based on dates """
+        support_product = self.env.ref('product.product_product_2')
+        support_product.list_price = 100
+        partner = self.res_partner_model.create(dict(name="George"))
+
+        christmas_pricelist = self.env['product.pricelist'].create({
+            'name': 'Christmas pricelist',
+            'item_ids': [(0, 0, {
+                'date_start': "2017-12-01",
+                'date_end': "2017-12-24",
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 20,
+                'applied_on': '3_global',
+                'name': 'Pre-Christmas discount'
+            }), (0, 0, {
+                'date_start': "2017-12-25",
+                'date_end': "2017-12-31",
+                'compute_price': 'percentage',
+                'base': 'list_price',
+                'percent_price': 50,
+                'applied_on': '3_global',
+                'name': 'Post-Christmas super-discount'
+            })]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'date_order': '2017-12-20',
+            'pricelist_id': christmas_pricelist.id,
+        })
+
+        order_line = self.env['sale.order.line'].new({
+            'order_id': so.id,
+            'product_id': support_product.id,
+        })
+
+        # force compute uom and prices
+        order_line.product_id_change()
+        order_line.product_uom_change()
+
+        self.assertEqual(order_line.price_unit, 80, "First date pricelist rule not applied")
+
+        so.date_order = '2017-12-30'
+        order_line.product_id_change()
+        self.assertEqual(order_line.price_unit, 50, "Second date pricelist rule not applied")

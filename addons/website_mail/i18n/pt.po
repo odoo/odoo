@@ -3,17 +3,17 @@
 # * website_mail
 # 
 # Translators:
+# Manuela Silva <manuela.silva@sky.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
-# Manuela Silva <manuela.silva@sky.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,10 +99,9 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo with our </span>\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation/user\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
@@ -122,6 +121,7 @@ msgstr ""
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail_description
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_description
 #: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_description
 msgid "Description"
@@ -130,22 +130,12 @@ msgstr "Descrição"
 #. module: website_mail
 #: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
-msgstr "Grupo de discussão"
-
-#. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Assistente de criação de mensagem eletrónica"
-
-#. module: website_mail
-#: model:ir.model,name:website_mail.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Assistente de Composição de Email para os Inquéritos"
+msgstr "Grupo de Discussão"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "Leave a comment"
-msgstr ""
+msgstr "Deixe um comentário"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
@@ -154,6 +144,7 @@ msgstr "Mensagem"
 
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,help:website_mail.field_mail_mail_description
 #: model:ir.model.fields,help:website_mail.field_mail_message_description
 #: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_description
 msgid "Message description: either the subject, or the beginning of the body"
@@ -166,6 +157,7 @@ msgstr ""
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail_website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
 #: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
 msgid "Published"
@@ -200,6 +192,7 @@ msgstr "Cancelar Subscrição"
 
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,help:website_mail.field_mail_mail_website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message_website_published
 #: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_website_published
 msgid "Visible on the website as a comment"
@@ -225,12 +218,12 @@ msgstr ""
 #: code:addons/website_mail/static/src/xml/chatter_message.xml:8
 #, python-format
 msgid "just now"
-msgstr ""
+msgstr "agora mesmo"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
 msgid "logged in"
-msgstr ""
+msgstr "sessão iniciada"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread

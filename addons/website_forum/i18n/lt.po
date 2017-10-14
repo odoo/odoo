@@ -11,13 +11,15 @@
 # Arminas Grigonis <arminas@versada.lt>, 2016
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Monika Raciunaite <monika.raciunaite@gmail.com>, 2016\n"
+"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +68,43 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>${object.name},</p>\n"
+"                <p>Jūs buvote pakviestas patvirtinti savo el. pašto adresą, kad gautumėte prieigą prie\n"
+"                \"${object.company_id.name}\" Q/A forumų.</p>\n"
+"                <p>Kad patvirtintumėte savo el. pašto adresą, prašome paspausti ant nuorodos:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Patvirtinti mano paskyrą \"${object.company_id.name}\" Q/A forumams\n"
+"                </a>\n"
+"                <p>Ačiū už dalyvavimą!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_forum
 #. openerp-web
@@ -79,27 +118,27 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "# Užduotys"
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Forumų patvirtinimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -118,19 +157,19 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr ""
+msgstr "(votes - 1) **"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "/ (days + 2) **"
-msgstr ""
+msgstr "/ (days + 2) **"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
 #, python-format
 msgid "45% of questions shared"
-msgstr ""
+msgstr "45% klausimų pasidalinta"
 
 #. module: website_forum
 #. openerp-web
@@ -140,30 +179,32 @@ msgid ""
 "65% more chance to get an\n"
 "        answer"
 msgstr ""
+"65 % didesnė tikimybė gauti \n"
+"        atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Closed]</b>"
-msgstr ""
+msgstr "<b> [Uždaryta]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Deleted]</b>"
-msgstr ""
+msgstr "<b> [Ištrinta]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Offensive]</b>"
-msgstr ""
+msgstr "<b> [Įžeidžiantis]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.users
 msgid "<b> badges:</b>"
-msgstr ""
+msgstr "<b> pasiekimai:</b>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -171,6 +212,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
 msgstr ""
+"<b>Atsakymai neturėtų iškelti ar išplėsti klausimų</b>. Vietoje to,\n"
+"    redaguokite klausimą arba pridėkite komentarą."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -178,13 +221,15 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
+"<b>Atsakymai neturėtų iškelti ar išplėsti klausimų</b>. Vietoje to, "
+"redaguokite klausimą arba pridėkite komentarą."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -247,16 +292,19 @@ msgid ""
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
+"<b>Prieš klausiant - prašome pasitikrinti, ar tokio klausimo dar nėra.</b> Galite\n"
+"    ieškoti klausimų pagal pavadinimą arba žymą.  Taip pat galite\n"
+"atsakyti į savo klausimą."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<b>No badge yet!</b><br/>"
-msgstr ""
+msgstr "<b>Pasiekimų dar nėra!</b><br/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_votes
 msgid "<b>No vote given by you yet!</b>"
-msgstr ""
+msgstr "<b>Kols kas Jūsų balsavimo nėra!</b>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -264,6 +312,8 @@ msgid ""
 "<b>Please avoid asking questions that are too subjective\n"
 "    and argumentative</b> or not relevant to this community."
 msgstr ""
+"<b>Prašome išvengti klausimų, kurie yra pernelyg subjektyvūs\n"
+"    ir prieštaraujantys</b> ar nesusiję su šia bendruomene."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -277,22 +327,22 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "<b>Share</b> Something Awesome."
-msgstr ""
+msgstr "<b>Dalintis</b> Kažkuo puikiu."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 msgid "<b>[Answer]</b>"
-msgstr ""
+msgstr "<b>[Atsakymas]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
 msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr ""
+msgstr "<i class=\"text-muted\"> apdovanoti vartotojai</i>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<i class=\"text-muted\">awarded users</i>"
-msgstr ""
+msgstr "<i class=\"text-muted\">apdovanoti vartotojai</i>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -301,11 +351,14 @@ msgid ""
 "                    Flagged\n"
 "                </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                    Pažymėtas\n"
+"                </small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<small>profile</small>"
-msgstr ""
+msgstr "<small>profilis</small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -313,6 +366,8 @@ msgid ""
 "<span class=\"caret\"/>\n"
 "                                <span class=\"sr-only\">Select Post</span>"
 msgstr ""
+"<span class=\"caret\"/>\n"
+"                                <span class=\"sr-only\">Pasirinkti įrašą</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -321,27 +376,31 @@ msgid ""
 "                        <span class=\"icon-bar\"/>\n"
 "                        <span class=\"icon-bar\"/>"
 msgstr ""
+"<span class=\"sr-only\"> Perjungimo navigacija </span>\n"
+"                        <span class=\"icon-bar\"/>\n"
+"                        <span class=\"icon-bar\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "<span class=\"text-muted\">(only one answer per question is allowed)</span>"
 msgstr ""
+"<span class=\"text-muted\">(galimas tik vienas atsakymas į klausimą)</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<span class=\"text-muted\">bio</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">biografija</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">arba</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "<span class=\"text-muted\">stats</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">statistika</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -354,23 +413,25 @@ msgid ""
 "<span> • </span>\n"
 "                Flagged"
 msgstr ""
+"<span> • </span>\n"
+"                Pažymėta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>Pagal </span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr ""
+msgstr "Naujas atsakymas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
-msgstr ""
+msgstr "Naujas klausimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -383,32 +444,32 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "About This Community"
-msgstr ""
+msgstr "Apie šią bendruomenę"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Accept <i class=\"fa fa-check\"/>"
-msgstr ""
+msgstr "Priimti <i class=\"fa fa-check\"/>"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer_accept_own
 msgid "Accept an answer on own questions"
-msgstr ""
+msgstr "Priimti atsakymą į savo klausimus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer_accept_all
 msgid "Accept an answer to all questions"
-msgstr ""
+msgstr "Priimti atsakymą į visus klausimus"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Accepted Answer"
-msgstr ""
+msgstr "Priimti atsakymai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accept
 msgid "Accepting an answer"
-msgstr ""
+msgstr "Priima atsakymą"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -425,14 +486,14 @@ msgstr "Veikla"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Add a Comment"
-msgstr ""
+msgstr "Pridėti komentarą"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:25
 #, python-format
 msgid "Add page in menu"
-msgstr ""
+msgstr "Pridėti puslapį į meniu"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_share
@@ -451,7 +512,7 @@ msgstr "Viską"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_bump
 msgid "Allow Bump"
-msgstr ""
+msgstr "Leisti reljefą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -464,72 +525,72 @@ msgstr "Atsakymas"
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Atsakymas redaguotas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accepted
 msgid "Answer accepted"
-msgstr ""
+msgstr "Atsakymas priimtas"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_6
 msgid "Answer accepted with 15 or more votes"
-msgstr ""
+msgstr "Atsakymas priimtas su 15 ar daugiau balsų"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_downvote
 msgid "Answer downvoted"
-msgstr ""
+msgstr "Atsakymas įvertintas neigiamai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_flagged
 msgid "Answer flagged"
-msgstr ""
+msgstr "Atsakymas pažymėtas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer
 msgid "Answer questions"
-msgstr ""
+msgstr "Atsakyti klausimus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_upvote
 msgid "Answer upvoted"
-msgstr ""
+msgstr "Atsakymas įvertintas teigiamai"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_4
 msgid "Answer voted up 15 times"
-msgstr ""
+msgstr "Už atsakymą balsuota 15 kartų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_2
 msgid "Answer voted up 4 times"
-msgstr ""
+msgstr "Už atsakymą balsuota 4 kartus"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_3
 msgid "Answer voted up 6 times"
-msgstr ""
+msgstr "Už atsakymą balsuota 6 kartus"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_5
 msgid "Answer was accepted with 3 or more votes"
-msgstr ""
+msgstr "Atsakymas priimtas su 3 ar daugiau balsų"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Answered"
-msgstr ""
+msgstr "Atsakyta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answered Questions"
-msgstr ""
+msgstr "Atsakyti klausimai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Answered by"
-msgstr ""
+msgstr "Atsakyta"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_8
@@ -553,59 +614,59 @@ msgstr "Archyvuojamas"
 #. module: website_forum
 #: selection:forum.post,post_type:0
 msgid "Article"
-msgstr ""
+msgstr "Straipsnis"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Ask Your Question"
-msgstr ""
+msgstr "Užduokite savo klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Ask a Question"
-msgstr ""
+msgstr "Paklauskite klausimą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_ask
 msgid "Ask questions"
-msgstr ""
+msgstr "Klauskite klausimus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_post
 msgid "Ask questions without validation"
-msgstr ""
+msgstr "Klauskite klausimus be patvirtinimo"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:29
 #, python-format
 msgid "Ask the question in this forum by clicking on the button."
-msgstr ""
+msgstr "Užduokite klausimą šiame forume paspausdami mygtuką."
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_26
 msgid "Asked a question and accepted an answer"
-msgstr ""
+msgstr "Uždavė klausimą ir priėmė atsakymą"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_1
 msgid "Asked a question with at least 150 views"
-msgstr ""
+msgstr "Paklausė klausimo su mažiausiai 150 peržiūrų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_2
 msgid "Asked a question with at least 250 views"
-msgstr ""
+msgstr "Paklausė klausimo su mažiausiai 250 peržiūrų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_3
 msgid "Asked a question with at least 500 views"
-msgstr ""
+msgstr "Paklausė klausimo su mažiausiai 500 peržiūrų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_7
 msgid "Asked first question with at least one up vote"
-msgstr ""
+msgstr "Paklausė pirmojo klausimo su mažiausiai vienu teigiamu įvertinimu"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_create_date
@@ -615,12 +676,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "Paklausta:"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_new
 msgid "Asking a question"
-msgstr ""
+msgstr "Klausia klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -635,26 +696,27 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
-msgstr ""
+msgstr "Išvenkite nereikalingų įžangų (Sveiki,... Prašome... Ačiū...),"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Back to"
-msgstr ""
+msgstr "Grįžti į"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:323
 #: code:addons/website_forum/controllers/main.py:394
 #, python-format
 msgid "Bad Request"
-msgstr ""
+msgstr "Netinkamas prašymas"
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
 #: model:ir.ui.view,arch_db:website_forum.badge
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Pažymėjimai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
@@ -667,12 +729,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
-msgstr ""
+msgstr "Biografija"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "Bronzinių pasiekimų skaičiavimas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_bump_date
@@ -684,62 +746,62 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "Pasidalindami savo atsakymu, gausite papildomą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_accept
 msgid "Can Accept"
-msgstr ""
+msgstr "Gali priimti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_answer
 msgid "Can Answer"
-msgstr ""
+msgstr "Gali atsakyti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_ask
 msgid "Can Ask"
-msgstr ""
+msgstr "Gali klausti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_post
 msgid "Can Automatically be Validated"
-msgstr ""
+msgstr "Gali automatiškai būti patvirtinta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_close
 msgid "Can Close"
-msgstr ""
+msgstr "Gali uždaryti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_comment
 msgid "Can Comment"
-msgstr ""
+msgstr "Gali komentuoti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_comment_convert
 msgid "Can Convert to Comment"
-msgstr ""
+msgstr "Gali konvertuoti į komentarą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_downvote
 msgid "Can Downvote"
-msgstr ""
+msgstr "Gali įvertinti neigiamai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_edit
 msgid "Can Edit"
-msgstr ""
+msgstr "Gali redaguoti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_flag
 msgid "Can Flag"
-msgstr ""
+msgstr "Gali pažymėti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_moderate
 msgid "Can Moderate"
-msgstr ""
+msgstr "Gali moderuoti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_unlink
@@ -749,22 +811,22 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_upvote
 msgid "Can Upvote"
-msgstr ""
+msgstr "Gali įvertinti teigiamai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_view
 msgid "Can View"
-msgstr ""
+msgstr "Galima peržiūrėti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_retag
 msgid "Change question tags"
-msgstr ""
+msgstr "Keisti klausimo žymas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "Tikrinti galimus pasiekimus"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_bump
@@ -778,7 +840,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_p_4
 #: model:gamification.challenge,name:website_forum.challenge_chief_commentator
 msgid "Chief Commentator"
-msgstr ""
+msgstr "Vyriausias komentatorius"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -790,14 +852,14 @@ msgstr "Miestas"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:24
 #, python-format
 msgid "Click <em>Continue</em> to create the forum."
-msgstr ""
+msgstr "Paspauskite <em>Tęsti</em> norėdami sukurti forumą."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:71
 #, python-format
 msgid "Click here to accept this answer."
-msgstr ""
+msgstr "Paspauskite čia, norėdami priimti atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -805,53 +867,66 @@ msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
 msgstr ""
+"Paspauskite čia, norėdami siųsti patvirtinimo el. lašką, leidžiantį Jums "
+"dalyvauti forume."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get bad question samples"
-msgstr ""
+msgstr "Paspauskite, norėdami gauti blogų klausimų pavyzdžius"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get good question titles"
-msgstr ""
+msgstr "Paspauskite, norėdami gauti gerų klausimų pavadinimus"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:64
 #, python-format
 msgid "Click to post your answer."
-msgstr ""
+msgstr "Paspauskite, norėdami pasidalinti savo atsakymu"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:51
 #, python-format
 msgid "Click to post your question."
-msgstr ""
+msgstr "Paspauskite, norėdami pasidalinti savo klausimu"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
 msgstr "Uždaryti"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
+msgstr "Uždaryti įrašą"
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
 msgid "Close all posts"
-msgstr ""
+msgstr "Uždaryti visus įrašus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
-msgstr ""
+msgstr "Uždaryti savo įrašus"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
+msgstr "Uždaryti įrašą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
 msgid "Closed by"
-msgstr ""
+msgstr "Uždaryta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_date
@@ -861,7 +936,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_name
 msgid "Closing Reason"
-msgstr ""
+msgstr "Uždarymo priežastis"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_answer
@@ -875,17 +950,17 @@ msgstr "Komentaras"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_all
 msgid "Comment all posts"
-msgstr ""
+msgstr "Komentuoti visus įrašus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_own
 msgid "Comment own posts"
-msgstr ""
+msgstr "Komentuoti savo įrašus"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Komentuoti šį įrašą..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -894,7 +969,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_commentator
 #: model:gamification.goal.definition,name:website_forum.definition_commentator
 msgid "Commentator"
-msgstr ""
+msgstr "Komentatorius"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_answer
@@ -905,19 +980,19 @@ msgstr "Komentarai"
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_website_message_ids
 msgid "Comments on forum post"
-msgstr ""
+msgstr "Komentarai po forumo įrašu"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
 msgid "Complete own biography"
-msgstr ""
+msgstr "Pabaigti savo biografiją"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_1
 #: model:gamification.challenge.line,name:website_forum.line_configure_profile
 #: model:gamification.goal.definition,name:website_forum.definition_configure_profile
 msgid "Completed own biography"
-msgstr ""
+msgstr "Pabaigta biografija"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -925,6 +1000,8 @@ msgid ""
 "Congratulations! Your email has just been validated. You may now participate"
 " to our forums."
 msgstr ""
+"Sveikiname! Jūsų el. paštas buvo patvirtintas. Dabar galite dalyvauti mūsų "
+"forumuose."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content
@@ -935,27 +1012,37 @@ msgstr "Turinys"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_all
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "Konvertuoti visus atsakymus į komentarus ir atvirkščiai"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr "Konvertuoti kaip komentarą"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
+msgstr "Konvertuoti kaip atsakymą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
 msgid "Convert comment to answer"
-msgstr ""
+msgstr "Konvertuoti komentarą į atsakymą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_own
 msgid "Convert own answers to comments and vice versa"
-msgstr ""
+msgstr "Konvertuoti savo atsakymus į komentarus ir atvirkščiai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_is_correct
 msgid "Correct"
-msgstr ""
+msgstr "Teisingai"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_is_correct
 msgid "Correct answer or answer accepted"
-msgstr ""
+msgstr "Teisingas atsakymas arba atsakymas priimtas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -965,7 +1052,7 @@ msgstr "Valstybė"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Šalis..."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
@@ -975,12 +1062,12 @@ msgstr "Sukūrimo data"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
 msgid "Create new tags"
-msgstr ""
+msgstr "Sukurti naujas žymas"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
 msgid "Created a tag used by 15 questions"
-msgstr ""
+msgstr "Sukurta žyma, naudota 15-ai klausimų"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_create_uid
@@ -1002,7 +1089,7 @@ msgstr "Sukurta"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "Patikimas klausimas"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
@@ -1010,27 +1097,33 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "Kritika"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_order
 msgid "Default Order"
-msgstr ""
+msgstr "Numatytas užsakymas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_post_type
 msgid "Default Post"
-msgstr ""
+msgstr "Numatytas įrašas"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
+msgstr "Trinti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
 msgid "Delete all posts"
-msgstr ""
+msgstr "Ištrinti visus įrašus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_own
 msgid "Delete own posts"
-msgstr ""
+msgstr "Ištrinti savo klausimus"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_23
@@ -1058,12 +1151,12 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "Drausmingas"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 msgid "Discussion"
-msgstr ""
+msgstr "Diskusija"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_discussion
@@ -1082,57 +1175,59 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
 msgid "Display detailed user biography"
-msgstr ""
+msgstr "Rodyti išsamią vartotojo biografiją"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_downvote
 msgid "Downvote"
-msgstr ""
+msgstr "Neigiamas įvertinimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "Keisti"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Edit Profile"
-msgstr ""
+msgstr "Redaguoti profilį"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Edit Your Bio"
-msgstr ""
+msgstr "Redaguoti savo biografiją"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
-msgstr ""
+msgstr "Redaguoti Jūsų ankstesnį atsakymą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
 msgid "Edit all posts"
-msgstr ""
+msgstr "Redaguoti visus įrašus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
 msgid "Edit own posts"
-msgstr ""
+msgstr "Redaguoti savo įrašus"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit reply"
-msgstr ""
+msgstr "Redaguoti atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Edit your Link"
-msgstr ""
+msgstr "Redaguoti savo nuorodą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit your Post"
-msgstr ""
+msgstr "Redaguoti savo įrašą"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
@@ -1140,12 +1235,12 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_editor
 #: model:gamification.goal.definition,name:website_forum.definition_editor
 msgid "Editor"
-msgstr ""
+msgstr "Redaktorius"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_editor
 msgid "Editor Features: image and links"
-msgstr ""
+msgstr "Redaktoriaus galimybės: paveikslėliai ir nuorodos"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1165,13 +1260,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:19
 #, python-format
 msgid "Enter a name for your new forum."
-msgstr ""
+msgstr "Įveskite savo naujo forumo pavadinimą."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
-msgstr ""
+msgstr "Populiarus klausimas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_count
@@ -1182,87 +1277,95 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Parankinis klausimas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_ids
 msgid "Favourite"
-msgstr ""
+msgstr "Parankinis"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_favorite_question_1
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Parankinis klausimas (1)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_stellar_question_25
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Parankinis klausimas (25)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_favorite_question_5
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Parankinis klausimas (5)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Parankiniai klausimai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtras"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_post_vote
 msgid "First Relevance Parameter"
-msgstr ""
+msgstr "Pirmos svarbos parametras"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr ""
+msgstr "Pirmas neigiamas įvertinimas"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_7
 msgid "First edit"
-msgstr ""
+msgstr "Pirmas redagavimas"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_31
 msgid "First upvote"
-msgstr ""
+msgstr "Pirmas teigiamas įvertinimas"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
+msgstr "Pažymėti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "Pažymėti įrašą kaip įžeidžiantį"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
-msgstr ""
+msgstr "Pažymėta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_flag_user_id
 msgid "Flagged by"
-msgstr ""
+msgstr "Pažymėta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "Prenumeruota"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Prenumeruoti klausimai"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1287,13 +1390,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr ""
+msgstr "Forumas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_level
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user_level
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "Forumo pasiekimų lygis"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
@@ -1303,29 +1406,29 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_name
 msgid "Forum Name"
-msgstr ""
+msgstr "Forumo pavadinimas"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr ""
+msgstr "Forumo įrašas"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr ""
+msgstr "Forumo įrašai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Forum Settings"
-msgstr ""
+msgstr "Forumo nustatymai"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
 msgid "Forum Tag"
-msgstr ""
+msgstr "Forumo žyma"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
@@ -1333,75 +1436,75 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr ""
+msgstr "Foruma"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Sužaidybinimo pasiekimas"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Sužaidybinimo iššūkis"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr ""
+msgstr "Sužaidybinimo vartotojo pasiekimas"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:33
 #, python-format
 msgid "Give your question title."
-msgstr ""
+msgstr "Suteikite savo klausimui pavadinimą"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_gold_badge
 msgid "Gold badges count"
-msgstr ""
+msgstr "Auksinių pasiekimų skaičiavimas"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Geri atsakymai"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_answer
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Geras atsakymas (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Geras klausimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_graph
 msgid "Graph of Posts"
-msgstr ""
+msgstr "Įrašų diagrama"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr ""
+msgstr "Puikus atsakymas"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_great_answer
 #: model:gamification.goal.definition,name:website_forum.definition_great_answer
 msgid "Great Answer (15)"
-msgstr ""
+msgstr "Puikus atsakymas (15)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Puikus klausimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -1412,29 +1515,37 @@ msgstr "Grupuoti pagal"
 #: model:forum.forum,faq:website_forum.forum_help
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_faq
 msgid "Guidelines"
-msgstr ""
+msgstr "Gairės"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "Guru"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_guru
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "Guru (15)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_uid_has_answered
 msgid "Has Answered"
-msgstr ""
+msgstr "Atsakė"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
 msgstr "Pagalba"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"How to create a physical inventory at an anterior date?, How is the "
+"'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
@@ -1489,17 +1600,24 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr "Įterpti žymas, susijusias su Jūsų klausimu."
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Inventory Date Problem, Task remaining hours, Can you help solve solve my "
+"tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_favourite
 msgid "Is Favourite"
-msgstr ""
+msgstr "Yra parankinis"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_has_validated_answer
 msgid "Is answered"
-msgstr ""
+msgstr "Atsakyta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_display_biography
@@ -1509,23 +1627,23 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Atrodo, kad Jūsų el. pašto adresas nebuvo patvirtintas."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_karma
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "Karma"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Karma pranašumai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Related Rights"
-msgstr ""
+msgstr "Karma susijusios teisės"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_close
@@ -1555,7 +1673,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "Nuolat informuoti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum___last_update
@@ -1569,7 +1687,7 @@ msgstr "Paskutinį kartą keista"
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Last Updated"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_write_uid
@@ -1590,12 +1708,12 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Paskutinės veiklos data"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
@@ -1605,43 +1723,48 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0
 msgid "Link"
-msgstr ""
+msgstr "Nuoroda"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_link
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
-msgstr ""
+msgstr "Nuorodos"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
+msgstr "Pažymėti kaip įžeidžiantį"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
 msgid "Moderate posts"
-msgstr ""
+msgstr "Moderuoti įrašus"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation Tools"
-msgstr ""
+msgstr "Moderavimo įrankiai"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "More over:"
-msgstr ""
+msgstr "Dar daugiau:"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Most Voted"
-msgstr ""
+msgstr "Daugiausia balsuota"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Most answered"
-msgstr ""
+msgstr "Daugiausia atsakyta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "Daugiausia balsuoti"
 
 #. module: website_forum
 #. openerp-web
@@ -1650,11 +1773,12 @@ msgstr ""
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
 msgstr ""
+"Iškelti šį klausimą į sąrašo viršų besidalinant juo socialiniuose tinkluose."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
 msgid "My Vote"
-msgstr ""
+msgstr "Mano balsas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_name
@@ -1667,12 +1791,12 @@ msgstr "Pavadinimas"
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr ""
+msgstr "Naujas atsakymas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "New Discussion"
-msgstr ""
+msgstr "Nauja diskusija"
 
 #. module: website_forum
 #. openerp-web
@@ -1680,44 +1804,44 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.content_new_forum
 #, python-format
 msgid "New Forum"
-msgstr ""
+msgstr "Naujas forumas"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr ""
+msgstr "Naujas klausimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "New Topic"
-msgstr ""
+msgstr "Nauja tema"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Newest"
-msgstr ""
+msgstr "Naujausia"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
 #: model:gamification.challenge,name:website_forum.challenge_nice_answer
 msgid "Nice Answer"
-msgstr ""
+msgstr "Malonus atsakymas"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_nice_answer
 #: model:gamification.goal.definition,name:website_forum.definition_nice_answer
 msgid "Nice Answer (4)"
-msgstr ""
+msgstr "Malonus atsakymas (4)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_8
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
-msgstr ""
+msgstr "Malonus klausimas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_dofollow
@@ -1729,13 +1853,13 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:891
 #, python-format
 msgid "Not allowed to vote for its own post"
-msgstr ""
+msgstr "Neleidžiama balsuoti už savo įrašą"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:935
 #, python-format
 msgid "Not enough karma to create a new Tag"
-msgstr ""
+msgstr "Nepakankamai karmos sukurti naują žymą"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:494
@@ -1752,33 +1876,38 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
 msgid "Number of Posts"
-msgstr ""
+msgstr "Įrašų skaičius"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_views
 msgid "Number of Views"
-msgstr ""
+msgstr "Peržiūrų skaičius"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_child_count
 msgid "Number of answers"
-msgstr ""
+msgstr "Atsakymų skaičius"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_flagged_posts
 msgid "Number of flagged posts"
-msgstr ""
+msgstr "Pažymėtų įrašų skaičius"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr ""
+msgstr "Įrašų, laukiančių patvirtinimo, skaičius"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Offensive"
-msgstr ""
+msgstr "Įžeidžiantis"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
+msgstr "Įžeidžiantis įrašas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -1790,7 +1919,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
 #, python-format
 msgid "On average,"
-msgstr ""
+msgstr "Vidutiniškai,"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -1805,7 +1934,7 @@ msgstr "Pirkimai"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Mūsų forumai"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -1823,17 +1952,17 @@ msgstr "Laukianti"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Žmonės"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_plain_content
 msgid "Plain Content"
-msgstr ""
+msgstr "Paprastas turinys"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Please enter a descriptive question (should finish by a '?')"
-msgstr ""
+msgstr "Prašome įvesti aprašomąjį klausimą (jis turėtų baigtis ženklu '?')"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1841,30 +1970,32 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
+"Prašome įvesti galiojantį el. pašto adresą, kad gautumėte pranešimus apie "
+"atsakymus arba komentarus."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
 #: model:gamification.challenge,name:website_forum.challenge_popular_question
 msgid "Popular Question"
-msgstr ""
+msgstr "Populiarus klausimas"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_popular_question
 #: model:gamification.goal.definition,name:website_forum.definition_popular_question
 msgid "Popular Question (150)"
-msgstr ""
+msgstr "Populiarus klausimas (150)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_notable_question
 #: model:gamification.goal.definition,name:website_forum.definition_notable_question
 msgid "Popular Question (250)"
-msgstr ""
+msgstr "Populiarus klausimas (250)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_famous_question
 #: model:gamification.goal.definition,name:website_forum.definition_famous_question
 msgid "Popular Question (500)"
-msgstr ""
+msgstr "Populiarus klausimas (500)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_post_id
@@ -1878,57 +2009,57 @@ msgstr "Skelbti"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Post Answer"
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
 msgid "Post Messages"
-msgstr ""
+msgstr " "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Įrašo pavadinimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Post Types"
-msgstr ""
+msgstr "Įrašo tipai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Paskelbti savo klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Post Your Topic"
-msgstr ""
+msgstr "Paskelbti savo temą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Post:"
-msgstr ""
+msgstr "Įrašas:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_2
 msgid "Posted 10 comments"
-msgstr ""
+msgstr "Paskelbė 10 komentarų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_p_4
 msgid "Posted 100 comments"
-msgstr ""
+msgstr "Paskelbė 100 komentarų"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:438
@@ -1946,12 +2077,12 @@ msgstr "Pranešimai"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Provide enough details and, if possible, give an example."
-msgstr ""
+msgstr "Suteikite pakankamai detalių ir, jei įmanoma, pavyzdį."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Public profile"
-msgstr ""
+msgstr "Viešas profilis"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_25
@@ -1966,19 +2097,19 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:58
 #, python-format
 msgid "Put your answer here."
-msgstr ""
+msgstr "Atsakykite čia."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:37
 #, python-format
 msgid "Put your question here."
-msgstr ""
+msgstr "Klauskite čia."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
 msgid "Q&amp;amp;A"
-msgstr ""
+msgstr "Q&amp;amp;A"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
@@ -1992,62 +2123,62 @@ msgstr "Klausimas"
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Klausimas redaguotas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_downvote
 msgid "Question downvoted"
-msgstr ""
+msgstr "Klausimas įvertintas neigiamai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "Klausimas priėmė atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
 msgid "Question not found!"
-msgstr ""
+msgstr "Klausimas nerastas!"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_4
 msgid "Question set as favorite by 1 user"
-msgstr ""
+msgstr "Klausimas 1 vartotojo pažymėtas kaip mėgstamiausias "
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_6
 msgid "Question set as favorite by 25 users"
-msgstr ""
+msgstr "Klausimas 25 vartotojų pažymėtas kaip mėgstamiausias "
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_5
 msgid "Question set as favorite by 5 users"
-msgstr ""
+msgstr "Klausimas 5 vartotojų pažymėtas kaip mėgstamiausias "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Klausimo įrankiai"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_upvote
 msgid "Question upvoted"
-msgstr ""
+msgstr "Klausimas įvertintas teigiamai"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_10
 msgid "Question voted up 15 times"
-msgstr ""
+msgstr "Už klausimą balsuotą 15 kartų"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_8
 msgid "Question voted up 4 times"
-msgstr ""
+msgstr "Už klausimą balsuota 4 kartus"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_9
 msgid "Question voted up 6 times"
-msgstr ""
+msgstr "Už klausimą balsuota 6 kartus"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_question
@@ -2061,17 +2192,22 @@ msgstr "Klausimai"
 #: code:addons/website_forum/models/forum.py:525
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "Re: %s"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
+msgstr "Atnaujinti"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Read Guidelines"
-msgstr ""
+msgstr "Skaityti gaires"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "Tikras pavadinimas"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_reason_id
@@ -2081,7 +2217,7 @@ msgstr "Priežastis"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_reason_type
 msgid "Reason Type"
-msgstr ""
+msgstr "Priežasties tipas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -2096,24 +2232,29 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Peradresuoti į išorinę nuorodą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reject <i class=\"fa fa-times\"/>"
-msgstr ""
+msgstr "Atmesti <i class=\"fa fa-times\"/>"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_relevancy
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Relevance"
-msgstr ""
+msgstr "Svarbumas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
-msgstr ""
+msgstr "Svarbumo apskaičiavimas"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
+msgstr "Vėl atidaryti"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -2124,18 +2265,18 @@ msgstr "Atsakyti"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_self_reply
 msgid "Reply to own question"
-msgstr ""
+msgstr "Atsakyti į savo klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "Grįžti į klausimų sąrašą."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_moderator_id
 msgid "Reviewed by"
-msgstr ""
+msgstr "Peržiūrėta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
@@ -2153,34 +2294,34 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Ieškoti įraše"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_time_decay
 msgid "Second Relevance Parameter"
-msgstr ""
+msgstr "Antros svarbos parametras"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr ""
+msgstr "Žiūrėti įrašą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "See question"
-msgstr ""
+msgstr "Žiūrėti klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "Žiūrėta:"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:15
 #, python-format
 msgid "Select this menu item to create a new forum."
-msgstr ""
+msgstr "Pasirinkti šį meniu elementą naujam forumui sukurti."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -2188,7 +2329,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "Savamokslis"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2196,6 +2337,8 @@ msgid ""
 "Set a clear, explicit and concise question title\n"
 "                (check"
 msgstr ""
+"Nustatyti aiškų ir glaustą klausimo pavadinimą \n"
+"                "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2227,7 +2370,7 @@ msgstr "Dalinimosi pasirinktys"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "Bronzinių pasiekimų skaičiavimas"
 
 #. module: website_forum
 #. openerp-web
@@ -2235,6 +2378,8 @@ msgstr ""
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
 msgstr ""
+"Atsiprašome, bet Jūs turite būti prisijungęs, kad galėtumėte vykdyti šį "
+"veiksmą"
 
 #. module: website_forum
 #. openerp-web
@@ -2242,13 +2387,14 @@ msgstr ""
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr ""
+"Atsiprašome, bet Jūs turite būti prisijungęs, kad pažymėtumėte šį įrašą"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:118
 #, python-format
 msgid "Sorry you must be logged to vote"
-msgstr ""
+msgstr "Atsiprašome, bet Jūs turite būti prisijungęs, kad galėtumėte balsuoti"
 
 #. module: website_forum
 #. openerp-web
@@ -2256,18 +2402,19 @@ msgstr ""
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
+"Atsiprašome, anoniminiai vartotojai negali pasirinkti teisingo atsakymo."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
 msgid "Sorry, this question is not available anymore."
-msgstr ""
+msgstr "Atsiprašome, šis klausimas jau nebepasiekiamas."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:113
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
-msgstr ""
+msgstr "Atsiprašome, negalite balsuoti už savo įrašus"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
@@ -2277,7 +2424,7 @@ msgstr "Rūšiuoti pagal"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Stats"
-msgstr ""
+msgstr "Statistika"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_state
@@ -2294,13 +2441,13 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "Mokinys"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Submit a Link"
-msgstr ""
+msgstr "Pateikti nuorodą"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -2308,7 +2455,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "Rėmėjas"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
@@ -2347,7 +2494,7 @@ msgstr "Užduotys"
 #: model:gamification.challenge.line,name:website_forum.line_taxonomist
 #: model:gamification.goal.definition,name:website_forum.definition_taxonomist
 msgid "Taxonomist"
-msgstr ""
+msgstr "Taksonomistas"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_1
@@ -2355,7 +2502,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "Mokytojas"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_bump_date
@@ -2370,7 +2517,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:9
 #, python-format
 msgid "Thanks for posting!"
-msgstr ""
+msgstr "Ačiū, kad dalinatės!"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2380,7 +2527,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The flagged queue is empty."
-msgstr ""
+msgstr "Pažymėta eilė yra tuščia."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2388,16 +2535,18 @@ msgid ""
 "The goal of this site is create a relevant knowledge base that would answer\n"
 "    questions related to Odoo."
 msgstr ""
+"Šio puslapio tikslas yra sukurti atitinkamą žinių bazę, kuri atsakytų \n"
+"    į klausimus, susijusius su Odoo."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The offensive queue is empty."
-msgstr ""
+msgstr "Įžeidžianti eilė yra tuščia."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The validation queue is empty."
-msgstr ""
+msgstr "Patvirtinimo eilė yra tuščia."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2414,6 +2563,8 @@ msgid ""
 "This community is for professional and enthusiast users,\n"
 "    partners and programmers. You can ask questions about:"
 msgstr ""
+"Ši bendruomenė yra profesionaliems ir entuziastingiems vartotojams,\n"
+"    partneriams ir programuotojams. Galite klausti klausimų apie:"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -2435,31 +2586,38 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:414
 #, python-format
 msgid "This forum does not allow %s"
-msgstr ""
+msgstr "Šis forumas neleidžia %s"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:80
 #, python-format
 msgid "This post can not be flagged"
-msgstr ""
+msgstr "Šis įrašas negali būti pažymėtas"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:75
 #, python-format
 msgid "This post is already flagged"
+msgstr "Šis įrašas jau pažymėtas"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Šis profilis privatus!"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Threads"
-msgstr ""
+msgstr " Temos"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_name
@@ -2470,14 +2628,14 @@ msgstr "Antraštė"
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title must not be empty"
-msgstr ""
+msgstr "Pavadinimas negali būti tuščias"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:323
 #: code:addons/website_forum/controllers/main.py:394
 #, python-format
 msgid "Title should not be empty."
-msgstr ""
+msgstr "Pavadinimas neturi būti tuščias."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
@@ -2490,16 +2648,18 @@ msgid ""
 "To prevent your question from being flagged and possibly removed, avoid asking\n"
 "    subjective questions where …"
 msgstr ""
+"Norėdami išvengti klausimo pažymėjimo ar pašalinimo, venkite \n"
+"    subjektyvių klausimų, kur …"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
 msgid "Total Votes"
-msgstr ""
+msgstr "Visi balsai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Trending"
-msgstr ""
+msgstr "Tendencijos"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_post_type
@@ -2519,12 +2679,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "URL to Share"
-msgstr ""
+msgstr "Nuoroda dalinimuisi"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Neatsakyta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_all
@@ -2549,36 +2709,36 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_uid
 msgid "Updated by"
-msgstr ""
+msgstr "Atnaujinta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_upvote
 msgid "Upvote"
-msgstr ""
+msgstr "Įvertinti teigiamai"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_student
 #: model:gamification.goal.definition,name:website_forum.definition_student
 msgid "Upvoted question (1)"
-msgstr ""
+msgstr "Teigiamai įvertintas klausimas (1)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_great_question
 #: model:gamification.goal.definition,name:website_forum.definition_great_question
 msgid "Upvoted question (15)"
-msgstr ""
+msgstr "Teigiamai įvertintas klausimas (15)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_nice_question
 #: model:gamification.goal.definition,name:website_forum.definition_nice_question
 msgid "Upvoted question (4)"
-msgstr ""
+msgstr "Teigiamai įvertintas klausimas (4)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_question
 #: model:gamification.goal.definition,name:website_forum.definition_good_question
 msgid "Upvoted question (6)"
-msgstr ""
+msgstr "Teigiamai įvertintas klausimas (6)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
@@ -2596,11 +2756,13 @@ msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
 msgstr ""
+"Vartotojai į klausimą gali atsakyti tik kartą. Bendradarbiai gali redaguoti "
+"atsakymus ir pažymėti teisingus."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr ""
+msgstr "Patvirtinti klausimą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -2610,34 +2772,34 @@ msgstr "Rodinys"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "View Your Badges"
-msgstr ""
+msgstr "Rodyti Jūsų pasiekimus"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_vote
 msgid "Vote"
-msgstr ""
+msgstr "Balduoti"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_ids
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Balsai"
 
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr ""
+msgstr "Laukia patvirtinimo"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Laukia patvirtinimo"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Laukiantys įrašai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2654,22 +2816,22 @@ msgstr "Tinklapis"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
 msgid "Welcome Message"
-msgstr ""
+msgstr "Sutikimo pranešimas"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "What kinds of questions can I ask here?"
-msgstr ""
+msgstr "Kokio tipo klausimų aš čia galiu klausti?"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "What should I avoid in my answers?"
-msgstr ""
+msgstr "Ko man vertėtų vengti savo atsakymuose?"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "What should I avoid in my questions?"
-msgstr ""
+msgstr "Ko man vertėtų vengti savo klausimuose?"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2683,12 +2845,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
 msgid "When clicking on the post, it redirects to an external link"
-msgstr ""
+msgstr "Spaudžiant ant įrašo, jis nukreips į išorinę nuorodą"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "Why can other people edit my questions/answers?"
-msgstr ""
+msgstr "Kodėl kiti žmonės gali redaguoti mano klausimus / atsakymus?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2696,6 +2858,8 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
+"Jūs jau turite vieną laukiantį įrašą.<br/>\n"
+"            Prieš tęsiant prašome palaukti, kol moderatorius patvirtins Jūsų ankstesnį įrašą."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
@@ -2703,11 +2867,12 @@ msgstr ""
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
+"Jūs negalite pasirinkti %s kaip numatyto įrašo, nes forumas to neleidžia."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "Negalite dalintis tuščiu atsakymu"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2721,27 +2886,27 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Your Answer"
-msgstr ""
+msgstr "Jūsų atsakymas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Your Discussion Title..."
-msgstr ""
+msgstr "Jūsų diskusijos pavadinimas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Your Question Title..."
-msgstr ""
+msgstr "Jūsų klausimo pavadinimas..."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Your Reply"
-msgstr ""
+msgstr "Jūsų atsakymas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "accept any answer"
-msgstr ""
+msgstr "priimti bet kokį atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2751,87 +2916,87 @@ msgstr "ir"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "back to post"
-msgstr ""
+msgstr "grįžti į įrašą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "bad examples"
-msgstr ""
+msgstr "blogi pavyzdžiai"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr ""
+msgstr "bronza"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "pagal"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "pagal aktyvumo datą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by most answered"
-msgstr ""
+msgstr "pagal daugiausiai atsakytų"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by most voted"
-msgstr ""
+msgstr "pagal daugiausiai balsuota"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by newest"
-msgstr ""
+msgstr "pagal naujausią"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "by relevance"
-msgstr ""
+msgstr "pagal svarbą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "close any posts"
-msgstr ""
+msgstr "uždaryti bet kuriuos įrašus"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "yra įžeidžiančių at piktavališkų pastabų"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any comment"
-msgstr ""
+msgstr "ištrinti bet kokį komentarą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete any question or answer"
-msgstr ""
+msgstr "ištrinti bent kokį klausimą ar atsakymą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "delete own comment"
-msgstr ""
+msgstr "ištrinti savo komentarą"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "downvote"
-msgstr ""
+msgstr "įvertinti neigiamai"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate post"
-msgstr ""
+msgstr "Kurti įrašo kopiją"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "pvz. https://www.odoo.com"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -2842,6 +3007,8 @@ msgstr ""
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
 msgstr ""
+"kiekvienas atsakymas yra lygiai galiojantis: \"Koks Jūsų mėgstamiausias "
+"________?\""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -2851,32 +3018,32 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "flagged"
-msgstr ""
+msgstr "pažymėta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "follower(s)"
-msgstr ""
+msgstr "prenumeratorius(-iai)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "priežastis:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "gold"
-msgstr ""
+msgstr "auksas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "good examples"
-msgstr ""
+msgstr "geri pavyzdžiai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "has been closed"
-msgstr ""
+msgstr "buvo uždarytas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -2884,38 +3051,40 @@ msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
 msgstr ""
+"buvo paskelbta ir reikalauja Jūsų patvirtinimo. Paspauskite čia, norėdami "
+"pasiekti klausimą:"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
-msgstr ""
+msgstr "buvo paskelbta. Paspauskite čia,  norėdami pasiekti įrašą:"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr ""
+msgstr "buvo pasidalinta. Paspauskite čia, norėdami pasiekti klausimą:"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
 #, python-format
 msgid "here"
-msgstr ""
+msgstr "čia"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to configure or customize Odoo to specific business needs,"
-msgstr ""
+msgstr "kaip konfigūruoti ar pritaikyti Odoo konkretiems verslo poreikiams,"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to develop modules for your own need,"
-msgstr ""
+msgstr "kaip kurti modulius savo reikmėms,"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "how to install Odoo on a specific infrastructure,"
-msgstr ""
+msgstr "kaip diegti Odoo konkrečioje infrastruktūroje,"
 
 #. module: website_forum
 #. openerp-web
@@ -2925,21 +3094,23 @@ msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
+"jei Jūsų\n"
+"       atsakymas yra pasirinktas kaip teisingas. Pamatykite, ką galite daryti su karma"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "inappropriate and unacceptable statements"
-msgstr ""
+msgstr "netinkami ir nepriimtini teiginiai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
-msgstr ""
+msgstr "įterpti teksto nuorodą, įkelti failus"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
 msgid "insulting and offensive language"
-msgstr ""
+msgstr "įžeidžianti ir puolanti kalba"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2949,44 +3120,44 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "karma"
-msgstr ""
+msgstr "karma"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
 #, python-format
 msgid "karma points"
-msgstr ""
+msgstr "karma taškai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "paskutinis ryšys"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "location"
-msgstr ""
+msgstr "vieta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "member since"
-msgstr ""
+msgstr "narys nuo"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr ""
+msgstr "netikras įrašas"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "not relevant or out dated"
-msgstr ""
+msgstr "nesusijęs ar negaliojantis"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_2
 msgid "off-topic or not relevant"
-msgstr ""
+msgstr "ne į temą ar nesusiję"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3004,31 +3175,33 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"socialiniuose tinkluose gaukite atsakymą per\n"
+"        5 valandas. Klausimai, pasidalinti socialiniuose tinkluose, turi"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "post"
-msgstr ""
+msgstr "įrašai"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_15
 msgid "racist and hate speech"
-msgstr ""
+msgstr "rasistinė ar niekinanti kalba"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr ""
+msgstr "sidabras"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "spam or advertising"
-msgstr ""
+msgstr "brukalas ar reklama"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "specific questions about Odoo service offers, etc."
-msgstr ""
+msgstr "specifiniai klausimai apie Odoo paslaugų pasiūlymus ir t. t. "
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3036,31 +3209,33 @@ msgid ""
 "there is no actual problem to be solved: “I’m curious if other people feel "
 "like I do.”"
 msgstr ""
+"nėra jokios problemos, kurią reikėtų išspręsti: \"man smalsu, ar kiti žmonės"
+" jaučiasi taip pat, kaip aš.\""
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
 msgid "threatening language"
-msgstr ""
+msgstr "grasinanti kalba"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "laikas"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "laikai"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
 msgid "too localized"
-msgstr ""
+msgstr "pernelyg lokalizuota"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "pernelyg subjektyvu ir prieštaringa"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -3070,22 +3245,22 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "views"
-msgstr ""
+msgstr "peržiūros"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_12
 msgid "violent language"
-msgstr ""
+msgstr "smurtinė kalba"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "votes"
-msgstr ""
+msgstr "balsai"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
-msgstr ""
+msgstr "laukia patvirtinimo"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3097,12 +3272,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "tinklalapis"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "what's the best way to use Odoo for a specific business need,"
-msgstr ""
+msgstr "koks geriausias būdas naudoti Odoo specifiniam verslo poreikiui?"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

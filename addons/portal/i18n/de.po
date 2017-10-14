@@ -57,8 +57,8 @@ msgstr ""
 "                    Guten Tag ${object.user_id.name or ''},\n"
 "               \n"
 "                \n"
-"                    Wir haben für Sie einen Nutzerzugang \n"
-"                    Ihre Logindate nlauten:\n"
+"                    wir haben für Sie einen Nutzerzugang angelegt\n"
+"                    Ihre Logindaten lauten:\n"
 "                \n"
 "                <ul>\n"
 "                    <li>Nutzername: ${object.user_id.login or ''}</li>\n"
@@ -132,6 +132,12 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
 msgstr "E-Mail"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id

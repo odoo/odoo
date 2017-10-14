@@ -38,7 +38,7 @@
                                 <field name="price_unit" widget="monetary"/>
                                 <field name="discount" widget="monetary"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
-                                <field name="tax_ids" invisible="1"/>
+                                <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="price_subtotal_incl" widget="monetary"/>
                             </tree>
@@ -51,7 +51,7 @@
                                     <field name="price_subtotal" invisible="1" widget="monetary"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
-                                    <field name="tax_ids" invisible="1"/>
+                                    <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="notice"/>
                                 </group>
                             </form>

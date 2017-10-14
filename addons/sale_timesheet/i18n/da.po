@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Morten Schou <ms@msteknik.dk>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,18 +43,18 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
-"Opret en opgave under dette projekt på salgsordre validering. Denne "
+"Opret en opgave under dette projekt ved validering af salgsordre. Denne "
 "indstilling skal indstilles for hvert firma."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 msgid "Employee"
-msgstr "Ansat"
+msgstr "Medarbejder"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr "Ordre linie"
+msgstr "Ordrelinje"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
@@ -64,7 +65,7 @@ msgstr "Indkøb"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product"
-msgstr "Vare"
+msgstr "Produkt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
@@ -101,7 +102,7 @@ msgstr "Projekt"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Projekt tilknyttet dette salg"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -113,7 +114,7 @@ msgstr "Salgsordre"
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
-msgstr "Salgsordrelinie"
+msgstr "Salgsordrelinje"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -127,6 +128,8 @@ msgstr "Opgave"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Opgave oprettet (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -137,7 +140,7 @@ msgstr "Opgaver"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Opgaver tilknyttet dette salg"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/procurement.py:84
@@ -146,6 +149,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Denne opgave er oprettet fra: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -153,32 +158,34 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Dettesætter måleenheden, der anvendes i projekter og opgaver.\n"
+"Hvis du bruger timeskemaet knyttet til projekter, skal du huske at angive den rigtige måleenhed på dine medarbejdere."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Tidsskema kost"
+msgstr "Timeseddel kostpris"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Timeseddel UoM"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr "Tidsskema aktiviteter"
+msgstr "Timeseddels aktiviteter"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Aktiviteter knyttet til dette salg"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Timesheets"
-msgstr "Tidsskemaer"
+msgstr "Timesedler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
@@ -223,6 +230,8 @@ msgid ""
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
+"Du kan kun bruge et produkt på timesedler i samme salgsordre. Du skal opdele"
+" din ordre for kun at omfatte en kontrakt baseret på tid og materiale."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
@@ -231,3 +240,5 @@ msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Du kan ikke slette en opgave relateret til en salgsordre. Du kan kun "
+"arkivere denne opgave."

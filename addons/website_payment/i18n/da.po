@@ -5,14 +5,14 @@
 # Translators:
 # Jesper Carstensen <info@danodoo.dk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# jonas jensen <j.jensen@tcomp.dk>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: jonas jensen <j.jensen@tcomp.dk>, 2016\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2016\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,17 +23,17 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Tilbage til Min konto"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Acquirer"
-msgstr ""
+msgstr "Indløser"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Add a new payment method:"
-msgstr ""
+msgstr "Tilføje en ny betalingsmetode."
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -44,12 +44,12 @@ msgstr "Beløb"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
 msgid "Configure payment acquirers"
-msgstr ""
+msgstr "Konfigurer betalingsindløser"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr ""
+msgstr "Standard indløser"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
@@ -57,21 +57,23 @@ msgid ""
 "Default payment acquirer for website payments; your provider needs to be "
 "visible in the website."
 msgstr ""
+"Standard betalingsindløser til betaling på hjemmesider; Din udbyder skal "
+"være synlig på hjemmesiden."
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Slet <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete a payment method:"
-msgstr ""
+msgstr "Slet en betalingsmetode:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
 msgid "E-Commerce"
-msgstr "E-handel"
+msgstr "Webshop"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -81,7 +83,13 @@ msgstr "Fra"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "Administrer dine betalingsmetoder"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr "Ups! Der opstod et problem med din betaling."
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
@@ -98,7 +106,7 @@ msgstr "Betaling"
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betaling Indløser"
+msgstr "Betalingsindløser"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
@@ -113,7 +121,7 @@ msgstr "Betalingsmetoder"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
-msgstr ""
+msgstr "Betaling behandlet af"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -124,7 +132,7 @@ msgstr "Reference"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "This transaction will be processed by"
-msgstr ""
+msgstr "Denne overførsel vil blive behandlet af"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_website
@@ -132,12 +140,22 @@ msgid "Website"
 msgstr "Hjemmeside"
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
+"Din betaling er gennemført! Det kan tage lidt tid at blive valideret i vores"
+" ende."
+
+#. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings
 msgid "account.config.settings"
-msgstr "Konto konfigurations opsætninger"
+msgstr "account.config.settings"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
-msgstr ""
+msgstr "payment_provider_logo"
