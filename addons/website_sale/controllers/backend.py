@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, _
 from odoo.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
+from datetime import datetime, timedelta
 import babel
 
 from odoo.addons.website.controllers.backend import WebsiteBackend
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class WebsiteSaleBackend(WebsiteBackend):
@@ -58,11 +54,11 @@ class WebsiteSaleBackend(WebsiteBackend):
             'graph': [
                 {
                     'values': sales_graph,
-                    'key': 'Sales',
+                    'key': _('Sales'),
                 },
                 {
                     'values': previous_sales_graph,
-                    'key': 'Previous Sales',
+                    'key': _('Previous Sales'),
                 },
             ],
             'best_sellers': best_sellers,
@@ -87,7 +83,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_graph = [{
             '0': d.strftime(DEFAULT_SERVER_DATE_FORMAT) if not previous else (d + timedelta(days=days_between)).strftime(DEFAULT_SERVER_DATE_FORMAT),
             # Respect read_group format in models.py
-            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
+            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang') or 'en_US'), 0)
         } for d in date_list]
 
         return sales_graph

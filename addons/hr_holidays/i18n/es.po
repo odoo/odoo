@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#   * hr_holidays
+# * hr_holidays
 # 
 # Translators:
 # José Vicente <txusev@gmail.com>, 2016
@@ -21,13 +21,14 @@
 # luis galaviz galindo <luisg-96@hotmail.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2016
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-26 14:11+0000\n"
-"PO-Revision-Date: 2017-01-26 14:11+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +66,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_holidays.py:125
 #, python-format
 msgid "%g remaining out of %g"
-msgstr ""
+msgstr "%g restant de %g"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:331
@@ -128,6 +129,8 @@ msgid ""
 "Absent Employee(s), Whose leaves request are either confirmed or validated "
 "on today"
 msgstr ""
+"Empleado(s) ausente(s), cuya solicitud de ausencias se confirma o se valida "
+"hoy"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -244,7 +247,9 @@ msgid "Appraisal Analysis"
 msgstr "Análisis de evaluaciones"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:561
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Approve"
 msgstr "Aprobar"
 
@@ -275,6 +280,11 @@ msgid ""
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
 msgstr ""
+"Promedio de horas de trabajo al día.\n"
+"Se utiliza en una solicitud de licencia de empleado para calcular el número de días consumidos en función del calendario de recursos.\n"
+"Puede usarse para manejar varios tipos de contrato, por ejemplo:\n"
+"- 38 horas / semana, 5 días / semana: 1 día = 7,6 horas\n"
+"- 45 horas / semana, 5 días / semana: 1 día = 9.0 horas"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -864,8 +874,8 @@ msgstr "Ausencias/asignaciones primera aprobación"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2016"
-msgstr "Ausencias Legales 2016"
+msgid "Legal Leaves 2017"
+msgstr "Ausencias legales 2017"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1028,7 +1038,7 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
 msgstr ""
-"Sólo un administrador de HR puede aplicar una segunda aprobación en la "
+"Sólo un administrador de RRHH puede aplicar una segunda aprobación en la "
 "petición de ausencia."
 
 #. module: hr_holidays
@@ -1036,7 +1046,7 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
-"Sólo un administrador de HR o el propio empleado puede volver al estado "
+"Sólo un administrador de RRHH o el propio empleado puede volver al estado "
 "borrador."
 
 #. module: hr_holidays
@@ -1045,7 +1055,7 @@ msgstr ""
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
 msgstr ""
-"Sólo un oficial o un administrador de HR puede aprobar la solicitud de "
+"Sólo un oficial o un administrador de RRHH puede aprobar la solicitud de "
 "ausencia."
 
 #. module: hr_holidays
@@ -1053,7 +1063,7 @@ msgstr ""
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
 msgstr ""
-"Sólo un oficial o un administrador de HR puede rechazar la solicitud de "
+"Sólo un oficial o un administrador de RRHH puede rechazar la solicitud de "
 "ausencia."
 
 #. module: hr_holidays
@@ -1078,7 +1088,9 @@ msgid "Red"
 msgstr "Rojo"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:564
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Refuse"
 msgstr "Rechazar"
 
@@ -1231,6 +1243,8 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
+"La característica detrás del campo 'Ausencias legales restantes' sólo se puede utilizar cuando sólo hay un tipo de licencia con la opción 'Permitir reemplazar el límite' sin marcar. (%s Encontrado). De lo contrario, la actualización es ambigua, ya que no podemos decidir en qué tipo de licencia debe realizarse la actualización.\n"
+"Es posible que prefiera usar los menús clásicos \"Solicitudes de licencia\" y \"Solicitudes de asignación\" que se encuentran en la solicitud de ausencias para gestionar los días de vacaciones de los empleados si la configuración no permite utilizar este campo."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1260,6 +1274,10 @@ msgid ""
 "The status is 'Refused', when holiday request is refused by manager.\n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"El estado se establece en \"Enviar\" cuando se crea una solicitud de vacaciones.\n"
+"El estado es \"Aprobar\", cuando la solicitud de vacaciones es confirmada por el usuario.\n"
+"El estado es 'Rechazado', cuando la solicitud de vacaciones es rechazada por el administrador.\n"
+"El estado es 'Aprobado', cuando la solicitud de vacaciones es aprobada por el gerente."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id

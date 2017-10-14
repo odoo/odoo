@@ -15,7 +15,7 @@ class Repair(models.Model):
 
     @api.model
     def _default_stock_location(self):
-        warehouse = self.env.ref('stock.warehouse0', raise_if_not_found=False)
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
         if warehouse:
             return warehouse.lot_stock_id.id
         return False
@@ -226,11 +226,12 @@ class Repair(models.Model):
 
     @api.multi
     def action_repair_invoice_create(self):
-        self.action_invoice_create()
-        if self.invoice_method == 'b4repair':
-            self.action_repair_ready()
-        elif self.invoice_method == 'after_repair':
-            self.write({'state': 'done'})
+        for repair in self:
+            repair.action_invoice_create()
+            if repair.invoice_method == 'b4repair':
+                repair.action_repair_ready()
+            elif repair.invoice_method == 'after_repair':
+                repair.write({'state': 'done'})
         return True
 
     @api.multi

@@ -33,6 +33,7 @@ Cilene Oliveira cilene.oliveira@akretion.com https://github.com/cileneoliveira
 David Beal david.beal@akretion.com https://github.com/bealdav
 Florian da Costa florian.dacosta@akretion.com https://github.com/florian-dacosta
 Magno Barcelo da Costa magno.costa@akretion.com.br https://github.com/mbcosta
+Mourad El Hadj Mimoune mourad.elhadj.mimoune@akretion.com https://github.com/mourad-ehm
 Raphaël Reverdy raphael.reverdy@akretion.com https://github.com/hparfr
 Raphaël Valyi raphael.valyi@akretion.com https://github.com/rvalyi
 Renato Lima renato.lima@akretion.com https://github.com/renatonlima

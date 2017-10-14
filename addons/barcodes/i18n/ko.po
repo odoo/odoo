@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * barcodes
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-03-18 08:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"Last-Translator: 종현 엄 <whd5367@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
@@ -44,21 +48,17 @@ msgstr ""
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
-"categorized.\n"
-"                                When a barcode is scanned it is associated "
-"to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of "
-"regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix "
-"of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
 msgstr ""
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets "
-"barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
 msgstr ""
 
 #. module: barcodes
@@ -130,7 +130,7 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Client"
-msgstr ""
+msgstr "클라이언트"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
@@ -154,7 +154,7 @@ msgstr ""
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "폐기"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -231,12 +231,12 @@ msgstr "최근 갱신 날짜"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Location"
-msgstr ""
+msgstr "차고"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Lot"
-msgstr ""
+msgstr "작업 단위"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
@@ -251,21 +251,16 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Package"
-msgstr ""
+msgstr "꾸러미"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can "
-"be\n"
-"                                encoded into the barcode. They are indicated "
-"by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are "
-"encoded. Floats are also supported with the \n"
-"                                decimals indicated with D's, such as "
-"<code>{NNNDD}</code>. In these cases, \n"
-"                                the barcode field on the associated records "
-"<i>must</i> show these digits as \n"
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
 
@@ -289,7 +284,7 @@ msgstr "규칙"
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "선택하기"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
@@ -361,8 +356,8 @@ msgstr "유형"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in "
-"one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr ""
 
 #. module: barcodes
@@ -388,7 +383,8 @@ msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 
 #. module: barcodes

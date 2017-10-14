@@ -85,7 +85,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product']
+            P = request.env['product.product'].sudo()
             template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
             if res_id not in template_ids:
                 return redirect(self.orders_page)
@@ -101,6 +101,6 @@ class WebsiteSaleDigital(website_account):
                 return request.not_found()
         elif attachment["datas"]:
             data = StringIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'], as_attachment=True)
+            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
         else:
             return request.not_found()

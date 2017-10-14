@@ -128,16 +128,17 @@ class WebsiteSale(http.Controller):
            (variant id, [visible attribute ids], variant price, variant sale price)
         """
         # product attributes with at least two choices
-        product = product.with_context(quantity=1)
+        quantity = product._context.get('quantity') or 1
+        product = product.with_context(quantity=quantity)
 
         visible_attrs_ids = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id').ids
         to_currency = request.website.get_current_pricelist().currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:
             if to_currency != product.currency_id:
-                price = variant.currency_id.compute(variant.website_public_price, to_currency)
+                price = variant.currency_id.compute(variant.website_public_price, to_currency) / quantity
             else:
-                price = variant.website_public_price
+                price = variant.website_public_price / quantity
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
             attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
         return attribute_value_ids
@@ -268,7 +269,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        product_context = dict(request.env.context, active_id=product.id)
+        product_context = dict(request.env.context,
+                               active_id=product.id,
+                               partner=request.env.user.partner_id)
         ProductCategory = request.env['product.public.category']
         Rating = request.env['rating.rating']
 
@@ -354,7 +357,8 @@ class WebsiteSale(http.Controller):
             values['suggested_products'] = _order._cart_accessories()
 
         if post.get('type') == 'popover':
-            return request.render("website_sale.cart_popover", values)
+            # force no-cache so IE11 doesn't cache this XHR
+            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
 
         if post.get('code_not_available'):
             values['code_not_available'] = post.get('code_not_available')
@@ -492,7 +496,7 @@ class WebsiteSale(http.Controller):
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
-            partner_id = Partner.sudo().create(checkout)
+            partner_id = Partner.sudo().create(checkout).id
         elif mode[0] == 'edit':
             partner_id = int(all_values.get('partner_id', 0))
             if partner_id:

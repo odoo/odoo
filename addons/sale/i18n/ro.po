@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -282,7 +282,7 @@ msgstr "<strong>Total</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr ""
+msgstr "<strong>Refreința:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -417,7 +417,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "La preț vânzare"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -1251,11 +1251,19 @@ msgid "No variants on products"
 msgstr "Fără variante"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
+msgstr ""
+"Oferta transformată in Comandă de vânzare va fi mutată\n"
+"din lista de oferte în lista de comenzi"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
 msgstr ""
 "Oferta transformată in Comandă de vânzare va fi mutată\n"
 "din lista de oferte în lista de comenzi"
@@ -1456,7 +1464,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgstr "Va rugăm să definiți un jurnal de vânzări pentru această companie."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -2264,7 +2272,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "Preț total"
@@ -2449,11 +2456,19 @@ msgid "You will find here all orders that are ready to be invoiced."
 msgstr "Aici găsești toate comenzile care au fost deja facturate"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Urmatoarele dvs. acțiuni ar trebui sa se desfășoare eficient: confirmă oferta\n"
+"în comanda de vânzare, apoi crează factura și încaseaz-o"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Urmatoarele dvs. acțiuni ar trebui sa se desfășoare eficient: confirmă oferta\n"
 "în comanda de vânzare, apoi crează factura și încaseaz-o"

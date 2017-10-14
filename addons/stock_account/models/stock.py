@@ -312,8 +312,8 @@ class StockMove(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'ref': self.picking_id.name,
             'partner_id': partner_id,
-            'debit': debit_value,
-            'credit': 0,
+            'debit': debit_value if debit_value > 0 else 0,
+            'credit': -debit_value if debit_value < 0 else 0,
             'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -323,8 +323,8 @@ class StockMove(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'ref': self.picking_id.name,
             'partner_id': partner_id,
-            'credit': credit_value,
-            'debit': 0,
+            'credit': credit_value if credit_value > 0 else 0,
+            'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
         }
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]

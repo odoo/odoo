@@ -34,6 +34,9 @@ class PackOperation(models.Model):
     product_qty = fields.Float('To Do', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'))
+    qty_done_uom_ordered = fields.Float(
+        'Quantity Done', digits=dp.get_precision('Product Unit of Measure'), compute='_compute_qty_done_uom_ordered',
+        help='Quantity done in UOM ordered')
     is_done = fields.Boolean(compute='_compute_is_done', string='Done', readonly=False, oldname='processed_boolean')
     package_id = fields.Many2one('stock.quant.package', 'Source Package')
     pack_lot_ids = fields.One2many('stock.pack.operation.lot', 'operation_id', 'Lots/Serial Numbers Used')
@@ -90,7 +93,7 @@ class PackOperation(models.Model):
         res = self.package_id._get_all_products_quantities()
         # reduce by the quantities linked to a move
         for record in self.linked_move_operation_ids:
-            if record.move_id.product_id.id not in res:
+            if record.move_id.product_id not in res:
                 res[record.move_id.product_id] = 0
             res[record.move_id.product_id] -= record.qty
         return res
@@ -110,10 +113,11 @@ class PackOperation(models.Model):
                 qty -= record.qty
             self.remaining_qty = float_round(qty, precision_rounding=self.product_id.uom_id.rounding)
 
-    @api.one
+    @api.multi
     def _compute_location_description(self):
-        self.from_loc = '%s%s' % (self.location_id.name, self.product_id and self.package_id.name or '')
-        self.to_loc = '%s%s' % (self.location_dest_id.name, self.result_package_id.name or '')
+        for operation, operation_sudo in zip(self, self.sudo()):
+            operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
+            operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
     @api.one
     def _compute_lots_visible(self):
@@ -124,6 +128,14 @@ class PackOperation(models.Model):
             self.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
         else:
             self.lots_visible = self.product_id.tracking != 'none'
+
+    @api.multi
+    def _compute_qty_done_uom_ordered(self):
+        for pack in self:
+            if pack.product_uom_id and pack.linked_move_operation_ids:
+                pack.qty_done_uom_ordered = pack.product_uom_id._compute_quantity(pack.qty_done, pack.linked_move_operation_ids[0].move_id.product_uom)
+            else:
+                pack.qty_done_uom_ordered = pack.qty_done
 
     @api.onchange('pack_lot_ids')
     def _onchange_packlots(self):

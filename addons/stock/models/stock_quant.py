@@ -334,11 +334,14 @@ class Quant(models.Model):
                 # price update + accounting entries adjustments
                 solved_quants._price_update(solving_quant.cost)
                 # merge history (and cost?)
-                solved_quants.write({
-                    'history_ids': [(4, history_move.id) for history_move in solving_quant.history_ids]
-                })
+                solved_quants.write(solving_quant._prepare_history())
             solving_quant.with_context(force_unlink=True).unlink()
             solving_quant = remaining_solving_quant
+
+    def _prepare_history(self):
+        return {
+            'history_ids': [(4, history_move.id) for history_move in self.history_ids],
+        }
 
     @api.multi
     def _price_update(self, newprice):
@@ -690,6 +693,17 @@ class QuantPackage(models.Model):
             if len(locations) != 1:
                 raise UserError(_('Everything inside a package should be in the same location'))
         return True
+
+    @api.multi
+    def action_view_related_picking(self):
+        """ Returns an action that display the picking related to this
+        package (source or destination).
+        """
+        self.ensure_one()
+        pickings = self.env['stock.picking'].search(['|', ('pack_operation_ids.package_id', '=', self.id), ('pack_operation_ids.result_package_id', '=', self.id)])
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
 
     @api.multi
     def unpack(self):

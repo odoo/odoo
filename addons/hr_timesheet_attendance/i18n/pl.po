@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
@@ -21,12 +21,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr "<span class=\"o_stat_text\">lista obecności</span>"
+msgstr "<span class=\"o_stat_text\">Karta pracy</span>"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,help:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
@@ -42,7 +42,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_total_attendance
 msgid "Attendance"
-msgstr "Obecności"
+msgstr "Obecność"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_attendance
@@ -125,6 +125,8 @@ msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
 "no Check Out)."
 msgstr ""
+"Nie można zatwierdzać kart pracy, które zawierają rozpoczętą obecność bez "
+"rejestracji wyjścia."
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
@@ -244,7 +246,7 @@ msgstr ""
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
 #, python-format
 msgid "You cannot delete a timesheet that has attendance entries."
-msgstr ""
+msgstr "Nie można usuwać kart pracy z wpiaami obecności"
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:113

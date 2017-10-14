@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mass_mailing
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Youngsoo Jung <youngsoo.j@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2015-09-08 10:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Youngsoo Jung <youngsoo.j@gmail.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp; 번"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -64,7 +67,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
-msgstr ""
+msgstr "연락처"
 
 #. module: website_mass_mailing
 #: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
@@ -80,7 +83,7 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
 msgid "Mailing List"
-msgstr ""
+msgstr "메일 그룹"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
@@ -149,8 +152,18 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr ""
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:155
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+#, python-format
 msgid "Your changes have been saved."
+msgstr ""
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:158
+#, python-format
+msgid "Your changes have not been saved, try again later."
 msgstr ""
 
 #. module: website_mass_mailing

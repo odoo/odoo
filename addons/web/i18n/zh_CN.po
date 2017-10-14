@@ -6,10 +6,10 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -71,52 +71,45 @@ msgstr "%(view_type)s 视图"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:105
+#: code:addons/web/static/src/js/framework/translation.js:103
 #, python-format
 msgid "%d days ago"
 msgstr "%d 天前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:103
+#: code:addons/web/static/src/js/framework/translation.js:101
 #, python-format
 msgid "%d hours ago"
 msgstr "%d 小时前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:101
+#: code:addons/web/static/src/js/framework/translation.js:99
 #, python-format
 msgid "%d minutes ago"
 msgstr "%d 分钟前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:107
+#: code:addons/web/static/src/js/framework/translation.js:105
 #, python-format
 msgid "%d months ago"
 msgstr "%d 月前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:137
+#: code:addons/web/static/src/js/widgets/debug_manager.js:136
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
 msgstr "%d请求(%d ms)%d查询(%d ms)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:109
+#: code:addons/web/static/src/js/framework/translation.js:107
 #, python-format
 msgid "%d years ago"
 msgstr "%d 年前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1405
-#, python-format
-msgid "%s (%d)"
-msgstr "%s (%d)"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.webclient_bootstrap
@@ -369,14 +362,14 @@ msgstr "应用"
 #: code:addons/web/static/src/js/views/list_view.js:289
 #, python-format
 msgid "Archive"
-msgstr "存档"
+msgstr "归档"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:641
 #, python-format
 msgid "Archived"
-msgstr "已存档"
+msgstr "归档"
 
 #. module: web
 #. openerp-web
@@ -1105,32 +1098,41 @@ msgstr "ID："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1248
+#: code:addons/web/static/src/js/views/form_widgets.js:1252
 #, python-format
 msgid "Image"
 msgstr "图像"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1091
+#: code:addons/web/static/src/xml/base.xml:1093
 #, python-format
 msgid "Import-Compatible Export"
 msgstr "导入兼容导出"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:635
+#: code:addons/web/static/src/js/views/form_widgets.js:637
 #, python-format
 msgid "Inactive"
 msgstr "无效"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph_widget.js:199
-#: code:addons/web/static/src/js/views/graph_widget.js:206
+#: code:addons/web/static/src/js/views/graph_widget.js:209
+#: code:addons/web/static/src/js/views/graph_widget.js:217
 #, python-format
 msgid "Invalid data"
 msgstr "无效的数据"
+
+#. module: web
+#: code:addons/web/controllers/main.py:653
+#: code:addons/web/controllers/main.py:667
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1452,17 +1454,10 @@ msgstr "无选择的记录"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:324
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
 msgid "No value found for the field %s for value %s"
 msgstr "找不到该字段%s的值 %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/framework/utils.js:144
-#, python-format
-msgid "Node [%s] is not a JSONified XML node"
-msgstr "节点 [%s] 不是JSON化的XML节点"
 
 #. module: web
 #. openerp-web
@@ -2035,7 +2030,7 @@ msgstr "下列字段无效："
 msgid ""
 "The line has been modified, your changes will be discarded. Are you sure you"
 " want to discard the changes ?"
-msgstr "该生产线已被修改，你的更改将被丢弃。你确定要放弃更改？"
+msgstr "明细已被修改，你的更改将被丢弃。你确定要放弃更改？"
 
 #. module: web
 #: code:addons/web/controllers/main.py:718
@@ -2171,7 +2166,7 @@ msgstr "类型："
 #: code:addons/web/static/src/js/views/list_view.js:290
 #, python-format
 msgid "Unarchive"
-msgstr "取消存档"
+msgstr "取消归档"
 
 #. module: web
 #. openerp-web

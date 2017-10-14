@@ -90,3 +90,13 @@ class TestProductCommon(common.SavepointCase):
             'name': 'House',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
+
+        cls.product_9 = Product.create({
+            'name': 'Paper',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id})
+
+        cls.product_10 = Product.create({
+            'name': 'Stone',
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id})

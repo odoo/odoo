@@ -4,7 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Kenneth Hansen <kenneth@vkdata.dk>, 2017
 msgid ""
 msgstr ""
@@ -38,7 +40,7 @@ msgstr "<span class=\"o_stat_text\"> Ordrer</span>"
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
-msgstr "<span class=\"o_stat_text\"> Citat(er) </span>"
+msgstr "<span class=\"o_stat_text\"> Tilbud </span>"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
@@ -46,6 +48,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Et medlem med hvem du vil tilknytte dit medlemskab. Det vil tage hensyn til"
+"  medlemskabet af det tilknyttede medlem."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -67,7 +71,7 @@ msgstr "Klik her for at se flere valgmuligheder."
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Tæl betalings Token"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -92,7 +96,7 @@ msgstr "Dato for hvilket medlemskab er blevet annulleret."
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
 msgid "Date until which membership remains active."
-msgstr "Datoen, indtil medlemskabet forbliver aktive."
+msgstr "Datoen, indtil medlemskabet forbliver aktivt."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
@@ -107,7 +111,7 @@ msgstr "Faktura"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
 msgid "Invoiced in Sale Orders Target"
-msgstr ""
+msgstr "Faktureret i salgsordrer"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -131,19 +135,19 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Emne/Forventning"
+msgstr "Kundeemne/salgsmulighed"
 
 #. module: sale_crm
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Lad os se på tilbuddene fra dette salgsteam."
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Log ind chatteren fra hvilken salgsmuligheden stammer fra"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -153,7 +157,7 @@ msgstr "Medlemskab"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr "Mængde af medlemskab "
+msgstr "Medlemsbeløb"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
@@ -168,12 +172,12 @@ msgstr "Medlemskabets startdato"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Besked på salgsordre"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Meddelelse for lagerafhentning"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -183,12 +187,12 @@ msgstr "Nyt tilbud"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Antal tilbud"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
 msgid "Opportunity"
-msgstr "Kval. emne"
+msgstr "Salgsmulighed"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
@@ -230,16 +234,20 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Hvis du vælger indstillingen \"Advarsel\", vises meddelelsen til brugeren. "
+"Hvis du vælger \"Blokerende meddelelse\", vil der blive sendt en undtagelse "
+"sammen med meddelelsen og blokere flowet. Meddelelsen skal skrives i det "
+"næste felt."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
 msgid "Stock Picking"
-msgstr ""
+msgstr "Lagerafhentning"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Summen af ordre"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
@@ -257,6 +265,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
+"Denne lagerplacering vil blive brugt i stedet for standardværdien som "
+"destinationssted for varer, du sender til denne partner"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
@@ -264,6 +274,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
+"Denne lagerplacering vil blive brugt i stedet for standardværdien som "
+"kildeplacering for varer, du modtager fra den nuværende partner"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -273,4 +285,4 @@ msgstr "Brugere"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr ""
+msgstr "Leverandør placering"

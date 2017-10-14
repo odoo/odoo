@@ -20,7 +20,8 @@ class MailMailStats(models.Model):
         string='Mail ID (tech)',
         help='ID of the related mail_mail. This field is an integer field because '
              'the related mail_mail can be deleted separately from its statistics. '
-             'However the ID is needed for several action and controllers.'
+             'However the ID is needed for several action and controllers.',
+        index=True,
     )
     message_id = fields.Char(string='Message-ID')
     model = fields.Char(string='Document model')

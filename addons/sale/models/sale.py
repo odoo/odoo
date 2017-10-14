@@ -119,7 +119,7 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
-    validity_date = fields.Date(string='Expiration Date', readonly=True,
+    validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm")
@@ -259,7 +259,10 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or _('New')
+            if 'company_id' in vals:
+                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('sale.order') or _('New')
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or _('New')
 
         # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
         if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
@@ -386,11 +389,11 @@ class SaleOrder(models.Model):
             'state': 'draft',
             'procurement_group_id': False,
         })
-        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
+        return orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def action_quotation_send(self):
@@ -440,7 +443,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_done(self):
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     def _prepare_procurement_group(self):
         return {'name': self.name}
@@ -503,11 +506,14 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                amount = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes'][0]['amount']
-                res[group] += amount
+                # FORWARD-PORT UP TO SAAS-17
+                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
+                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
+                for t in taxes:
+                    res[group] += t['amount']
                 if tax.include_base_amount:
-                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
+                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
@@ -674,14 +680,21 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.model
-    def create(self, values):
+    def _prepare_add_missing_fields(self, values):
+        """ Deduce missing required fields from the onchange """
+        res = {}
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.product_id_change()
             for field in onchange_fields:
                 if field not in values:
-                    values[field] = line._fields[field].convert_to_write(line[field], line)
+                    res[field] = line._fields[field].convert_to_write(line[field], line)
+        return res
+
+    @api.model
+    def create(self, values):
+        values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             line._action_procurement_create()
@@ -778,8 +791,8 @@ class SaleOrderLine(models.Model):
     procurement_ids = fields.One2many('procurement.order', 'sale_line_id', string='Procurements')
 
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(related='layout_category_id.sequence', string='Layout Sequence', store=True)
-    #  Store is intentionally set in order to keep the "historic" order.
+    layout_category_sequence = fields.Integer(string='Layout Sequence')
+    # TODO: remove layout_category_sequence in master or make it work properly
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -867,16 +880,7 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        name = product.name_get()[0][1]
-        if product.description_sale:
-            name += '\n' + product.description_sale
-        vals['name'] = name
-
-        self._compute_tax_id()
-
-        if self.order_id.pricelist_id and self.order_id.partner_id:
-            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
-        self.update(vals)
+        result = {'domain': domain}
 
         title = False
         message = False
@@ -886,14 +890,27 @@ class SaleOrderLine(models.Model):
             message = product.sale_line_warn_msg
             warning['title'] = title
             warning['message'] = message
+            result = {'warning': warning}
             if product.sale_line_warn == 'block':
                 self.product_id = False
-            return {'warning': warning}
-        return {'domain': domain}
+                return result
+
+        name = product.name_get()[0][1]
+        if product.description_sale:
+            name += '\n' + product.description_sale
+        vals['name'] = name
+
+        self._compute_tax_id()
+
+        if self.order_id.pricelist_id and self.order_id.partner_id:
+            vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+        self.update(vals)
+
+        return result
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        if not self.product_uom:
+        if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return
         if self.order_id.pricelist_id and self.order_id.partner_id:
@@ -901,12 +918,12 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
                 partner=self.order_id.partner_id.id,
                 quantity=self.product_uom_qty,
-                date_order=self.order_id.date_order,
+                date=self.order_id.date_order,
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')
             )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
     def unlink(self):
@@ -982,7 +999,7 @@ class SaleOrderLine(models.Model):
 
         price, rule_id = self.order_id.pricelist_id.with_context(pricelist_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
-        new_list_price = self.env['account.tax']._fix_tax_included_price(new_list_price, self.product_id.taxes_id, self.tax_id)
+        new_list_price = self.env['account.tax']._fix_tax_included_price_company(new_list_price, self.product_id.taxes_id, self.tax_id, self.company_id)
 
         if new_list_price != 0:
             if self.product_id.company_id and self.order_id.pricelist_id.currency_id != self.product_id.company_id.currency_id:

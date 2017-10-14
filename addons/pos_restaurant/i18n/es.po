@@ -5,6 +5,7 @@
 # Translators:
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# alvaro hdz <alaherma@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -17,10 +18,10 @@
 # Pablo Fuentes <pablo@studio73.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Pablo Fuentes <pablo@studio73.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +73,7 @@ msgstr "Permitir imprimir la cuenta antes del pago"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
 msgid "An internal identification of a table"
-msgstr "Una identificación interna de una mesa"
+msgstr "Una identificador interno de una mesa"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_name
@@ -156,7 +157,7 @@ msgstr "CANCELADO"
 #: code:addons/pos_restaurant/static/src/js/floors.js:411
 #, python-format
 msgid "Changes could not be saved"
-msgstr "Los cambios no pueden ser guardados"
+msgstr "Los cambios no pudieron ser guardados"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -353,7 +354,7 @@ msgstr "Aceptar"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
 #, python-format
 msgid "Order"
-msgstr "Pedido"
+msgstr "Pedir"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
@@ -389,10 +390,14 @@ msgid "Payment"
 msgstr "Pagos"
 
 #. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_pos_order
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
 msgid "Point of Sale"
 msgstr "Punto de Venta"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Pedidos del TPV"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -447,7 +452,7 @@ msgstr "Mesa del Restaurante"
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
 msgid "Round"
-msgstr "Ronda"
+msgstr "Redonda"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_seats
@@ -531,7 +536,7 @@ msgstr "Tel.:"
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
 msgstr ""
-"La dirección IP o el nombre de host del proxy hardware de la impresora"
+"La dirección IP o el nombre del host del proxy hardware de la impresora"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count

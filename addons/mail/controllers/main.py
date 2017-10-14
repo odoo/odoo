@@ -66,10 +66,15 @@ class MailController(http.Controller):
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
         record_action = record_sudo.get_access_action()
+        record_target_type = record_action.pop('target_type', 'dummy')
 
-        # the record has an URL redirection: use it directly
+        # the record has a public URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return werkzeug.utils.redirect(record_action['url'])
+            if record_target_type == 'public' and not uid:
+                return werkzeug.utils.redirect(record_action['url'])
+            else:
+                # user connected or non-public URL, handled below
+                pass
         # other choice: act_window (no support of anything else currently)
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
@@ -82,6 +87,9 @@ class MailController(http.Controller):
                 record_sudo.sudo(uid).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
+
+        if record_action['type'] == 'ir.actions.act_url':
+            return werkzeug.utils.redirect(record_action['url'])
 
         url_params = {
             'view_type': record_action['view_type'],
@@ -117,7 +125,7 @@ class MailController(http.Controller):
         follower_id = None
         follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
         res_ids = follower_recs.mapped('res_id')
-        request.env[res_model].browse(res_ids).check_access_rule("write")
+        request.env[res_model].browse(res_ids).check_access_rule("read")
         for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id

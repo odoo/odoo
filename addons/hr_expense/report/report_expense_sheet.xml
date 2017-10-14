@@ -71,7 +71,7 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-field="line.total_amount"
-                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -90,7 +90,6 @@
                                 </table>
                             </div>
                         </div>
-
                         <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
                     </div>
                 </t>

@@ -2,9 +2,9 @@
 
 .. _reference/cmdline:
 
-===============================
+================================
 Command-line interface: odoo-bin
-===============================
+================================
 
 .. _reference/cmdline/server:
 
@@ -159,7 +159,11 @@ database
     - ``%h`` is replaced by the whole hostname the request is made on.
     - ``%d`` is replaced by the subdomain the request is made on, with the
       exception of ``www`` (so domain ``odoo.com`` and ``www.odoo.com`` both
-      match the database ``odoo``)
+      match the database ``odoo``).
+
+      These operations are case sensitive. Add option ``(?i)`` to match all
+      databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
+      ``Odoo``).
 
 .. option:: --db-template <template>
 

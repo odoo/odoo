@@ -10,10 +10,10 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Regla d'acció"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Prova de línia de regla d'acció"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -65,6 +65,11 @@ msgstr "Actiu"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
 msgid "Add Followers"
 msgstr "Afegir seguidors "
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr "Assignat a l'usuari administrador"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -144,6 +149,11 @@ msgid "Days"
 msgstr "Dies"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_deadline
+msgid "Deadline"
+msgstr "Data limit"
+
+#. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
 msgstr "Retard després de la data de llançament"
@@ -155,6 +165,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Endarreriment després de la data d'activació.Pot col·locar un número negatiu"
+" si necessita un retràs davant de la data d'activació, com enviar un "
+"recordatori de 15 min abans d'una reunió."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -207,6 +220,9 @@ msgid ""
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"Vagi a la pàgina de \"Model de document relacionat\" i estableixi els "
+"paràmetres de filtre en la vista de cerca (Exemple de filtre basat en "
+"Iniciatives/Oportunitats: Data de creació \"és igual a\" 01/01/2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -227,6 +243,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"Si està marcada aquesta casella, la condició ha de satisfer-se abans "
+"d'executar la regla d'acció."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -235,6 +253,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr ""
+"Si està present, aquesta condició ha de satisfer-se abans de l'actualització"
+" del registre."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -248,6 +268,9 @@ msgid ""
 " the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
+"En aquesta mateixa vista de cerca, seleccioni el menú \"Guardar filtre "
+"actual\", introdueixi un nom (Exemple: '01/01/2012') i afegeixi l'opció "
+"\"Compartir amb tots els usuaris\""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -283,17 +306,17 @@ msgstr "Última actualització el"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
 msgid "Last run"
-msgstr ""
+msgstr "Última execució"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "Id iniciativa"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "Line ids"
-msgstr ""
+msgstr "Ids de línies"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -323,7 +346,7 @@ msgstr "Nou"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Activar camps a modificar"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -356,6 +379,11 @@ msgid "Pending"
 msgstr "Pendent"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_priority
+msgid "Priority"
+msgstr "Prioritat"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
 msgid "Related Document Model"
 msgstr "Model de document relacionat"
@@ -376,6 +404,8 @@ msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
 msgstr ""
+"Seleccioni quan ha d'executar-se l'acció, i elegeixi registres i/o "
+"condicions temporals."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -391,17 +421,17 @@ msgstr "Accions del servidor"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Server actions to run"
-msgstr ""
+msgstr "Accions de servidor a executar"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
 msgid "Set Responsible"
-msgstr ""
+msgstr "Establir responsable"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Estableixi la selecció basada amb el filtre de cerca"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -414,19 +444,29 @@ msgid "Subject"
 msgstr "Assumpte"
 
 #. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action
+msgid "Test Server Action"
+msgstr "Context de l'acció de servidor de prova"
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action_context
+msgid "Test Server Action Context"
+msgstr "Context de l'acció de servidor de prova"
+
+#. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "Iniciativa de prova en estat 'realitzat'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "Iniciativa de prova en estat 'esborrany'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "Iniciativa de prova en estat 'obert'"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -447,11 +487,16 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Utilitzi accions automatitzades per activar automàticament les accions per "
+"diverses pantalles. Per exemple: una oportunitat creada per un determinat "
+"usuari podria ser assignada automàticament a un equip de vendes determinat, "
+"o una oportunitat que està en estat pendent després de 14 dies podria "
+"activar un recordatori automàtic per e-mail."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr ""
+msgstr "ID d'Usuari"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -459,6 +504,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Quan es calcula una condició basada en dies, es pot utilitzar un calendari "
+"per calcular la data basada en dies laborables."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
@@ -466,16 +513,18 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Quan la condició ha de ser activada.Si està present, serà revisada pel programador. \n"
+"Si està buida, serà revisada en la creació i actualització."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind
 msgid "When to Run"
-msgstr ""
+msgstr "Quan executar"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Si no està marcat, la regla està oculta i no s'executarà."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -483,3 +532,5 @@ msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
 msgstr ""
+"També pot utilitzar filtres en lloc de seleccionar registres. Per crear un "
+"nou filtre:"

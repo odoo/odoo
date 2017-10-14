@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
@@ -21,6 +22,20 @@ class TestCalendar(TransactionCase):
             'location': 'Odoo S.A.',
             'name': 'Technical Presentation'
         })
+
+    def test_calender_simple_event(self):
+        m = self.CalendarEvent.create({
+            'name': "Test compute",
+            'start': '2017-07-12 14:30:00',
+            'allday': False,
+            'stop': '2017-07-12 15:00:00',
+        })
+
+        self.assertEqual(
+            (m.start_datetime, m.stop_datetime),
+            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+            "Sanity check"
+        )
 
     def test_calender_event(self):
         # Now I will set recurrence for this event to occur monday and friday of week
@@ -97,3 +112,46 @@ class TestCalendar(TransactionCase):
         self.assertEqual(calendar_event_sprint_review.month_by, 'day', 'rrule_type should be mothly')
         self.assertEqual(calendar_event_sprint_review.byday, '1', 'rrule_type should be mothly')
         self.assertEqual(calendar_event_sprint_review.week_list, 'MO', 'rrule_type should be mothly')
+
+    def test_validation_error(self):
+        """
+        Ideally this should build the base event in such a way that calling
+        write() triggers detach_recurring_event, but I've no idea how that
+        actually works so just calling it directly for now
+        """
+        m = self.CalendarEvent.create({
+            'name': "wheee",
+            'start': '2017-07-12 14:30:00',
+            'allday': False,
+            'rrule': u'FREQ=WEEKLY;BYDAY=WE;INTERVAL=1;COUNT=100',
+            'duration': 0.5,
+            'stop': '2017-07-12 15:00:00',
+        })
+
+        values = {
+            'allday': False,
+            'name': u'wheee',
+            'attendee_ids': [
+                (0, 0, {'state': u'needsAction', 'partner_id': 8, 'email': u'bob@example.com'}),
+                (0, 0, {'state': u'needsAction', 'partner_id': 10, 'email': u'ed@example.com'}),
+            ],
+            'recurrency': True,
+            'privacy': u'public',
+            'stop': '2017-07-10 16:00:00',
+            'alarm_ids': [(6, 0, [])],
+            'start': '2017-07-10 15:30:00',
+            'location': u"XXX",
+            'duration': 0.5,
+            'partner_ids': [(4, 10), (4, 8)],
+            'description': u"A thing"
+        }
+
+        records = m.detach_recurring_event(values)
+        self.assertEqual(
+            (m.start_datetime, m.stop_datetime),
+            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+        )
+        self.assertEquals(
+            (records.start_datetime, records.stop_datetime),
+            (u'2017-07-10 15:30:00', u'2017-07-10 16:00:00'),
+        )

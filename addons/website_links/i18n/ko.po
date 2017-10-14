@@ -1,21 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_links
-#
+# 
 # Translators:
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2015-09-08 10:32+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.share_page_menu
@@ -103,9 +126,9 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the medium used to share your link. It might be an "
-"email, or a Facebook Ads for instance.\"/>"
+"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the medium used to share your link. It "
+"might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -133,9 +156,9 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
-"\"top\" title=\"Defines the source from which your traffic will come from, "
-"Facebook or Twitter for instance.\"/>"
+"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the source from which your traffic will "
+"come from, Facebook or Twitter for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -151,10 +174,19 @@ msgid "Stats"
 msgstr "통계"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 
 #. module: website_links
@@ -168,6 +200,13 @@ msgstr "URL"
 #, python-format
 msgid "Unable to get recent links"
 msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr "정의되지 않음"
 
 #. module: website_links
 #. openerp-web

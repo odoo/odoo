@@ -8,13 +8,14 @@
 # liAnGjiA <liangjia@qq.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Bo Cao <cao.poobo@hotmail.com>, 2017
+# guohuadeng <guohuadeng@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
-"Last-Translator: Bo Cao <cao.poobo@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +66,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>尊敬的${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = '报价单' if object.state in ('draft', 'sent') else '订单确认'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and '接受并且为%s在线支付' % doc_name or '查看 %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"这是 ${object.company_id.name}为您提供的 ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(参考编号: ${object.origin} )\n"
+"% endif\n"
+"，合计金额 <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"。\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(或则查看附件PDF文件)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>如果您有任何问题，可以回复这封邮件。</p>\n"
+"<p>谢谢，</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -278,7 +318,7 @@ msgstr "<strong>总计</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>你的参考:</strong>"
+msgstr "<strong>你的参照:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -293,7 +333,7 @@ msgstr "可以为产品和客户设置警告信息(销售)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr "存款的科目"
+msgstr "用于存款的科目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -423,7 +463,7 @@ msgstr "属性"
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr "受阻消息"
+msgstr "阻止消息"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -586,7 +626,7 @@ msgstr "客户"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_client_order_ref
 msgid "Customer Reference"
-msgstr "客户单号"
+msgstr "客户参照"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -817,7 +857,7 @@ msgstr "扩展筛选"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "更多明细 %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -880,7 +920,7 @@ msgstr "ID"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr ""
+msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具发票或交付。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1101,7 +1141,7 @@ msgstr "布局序列"
 msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
-msgstr ""
+msgstr "让我们创建一个新的报价单。<br/><i>请注意高亮的按键在点击后可前进至下一步操作。</i>"
 
 #. module: sale
 #. openerp-web
@@ -1148,7 +1188,7 @@ msgid ""
 "Manually set the expiration date of your quotation (offer), or it will set "
 "the date automatically based on the template if online quotation is "
 "installed."
-msgstr ""
+msgstr "手动设置你的报价单过期时间，否则系统将根据已安装的在线报价模板自动生成日期"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1234,14 +1274,20 @@ msgstr "不在报告显示国际贸易术语"
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "产品无任何变体"
+msgstr "产品无变体"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
+msgstr "注意一旦报价转为销售订单，它将从报价单列表移动到销售订单列表中。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
 msgstr "注意一旦报价转为销售订单，它将从报价单列表移动到销售订单列表中。"
 
 #. module: sale
@@ -1273,13 +1319,16 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"一旦报价单被确认，它将成为一个销售订单。\n"
+"你可以为此开具发票并汇总付款信息。\n"
+"从<i>销售订单</i>菜单中，你可以跟踪推送的订单或服务"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:59
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
-msgstr ""
+msgstr "一旦你的报价单完成，你可以保存、打印或通过电子邮件发送。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1330,7 +1379,7 @@ msgstr "订单号码"
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
-msgstr "订单关联"
+msgstr "订单参照"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
@@ -1356,6 +1405,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"订购数量：基于客户订购的数量开具发票。\n"
+"交付数量：基于供应商交付的数量开具发票(可以是工时或者货物)。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1379,14 +1430,14 @@ msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
-msgstr ""
+msgstr "追加销售的订单，是指在已开收据的订单基础上，又增加了销售并发货的订单，其数量超出<i>已预定数量</i>。"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr ""
+msgstr "通过<b>移动销售应用</b>组织你的销售活动"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1454,12 +1505,12 @@ msgstr "降价"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "减税前价格"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "减税后价格"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1672,7 +1723,7 @@ msgstr "报价单及销售"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "重新开票费用"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -1890,7 +1941,7 @@ msgid ""
 "Select a product, or create a new one on the fly. The product will define "
 "the default sale price (that you can change), taxes and description "
 "automatically."
-msgstr ""
+msgstr "选择产品，或者创建一个新的。产品将自动定义默认的销售价格 (可更改)、税和描述。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1903,7 +1954,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "选择此“警告“选项，将通知用户此消息。\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
+"选择“阻止消息“选项，将在流程受阻时将抛出一个消息。\n"
 "消息写入下一个字段。"
 
 #. module: sale
@@ -2059,7 +2110,7 @@ msgstr "税金显示B2C"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "税金"
+msgstr "税"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -2096,14 +2147,14 @@ msgstr "销售订单相关的分析会计账户。"
 msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
-msgstr ""
+msgstr "购数量减少了，请不要忘记考虑你的账单和收据。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
 msgid ""
 "The printed reports will display the incoterms for the sales orders and the "
 "related invoices"
-msgstr ""
+msgstr "订购数量减少了，请不要忘记考虑你的账单和收据。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:148
@@ -2207,7 +2258,6 @@ msgid "Total"
 msgstr "总计"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "总价"
@@ -2286,14 +2336,14 @@ msgstr "为每个客户使用价格表来适配你的价格"
 #: code:addons/sale/static/src/js/tour.js:69
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
-msgstr ""
+msgstr "使用面包屑导航，<b>返回之前的页面</b>。"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "使用此菜单处理报价单，销售订单以及客户。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2338,7 +2388,7 @@ msgstr "你要开什么发票？"
 msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "产品变体可以让你为同一个产品定义不同的规格属性，例如在电商业务中是一种简单的产品管理方式"
 
 #. module: sale
 #. openerp-web
@@ -2347,7 +2397,7 @@ msgstr ""
 msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
-msgstr ""
+msgstr "输入客户的名字进行创建，或者选择一个已存在的客户。"
 
 #. module: sale
 #. openerp-web
@@ -2362,7 +2412,7 @@ msgstr "错误值输入!"
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
-msgstr ""
+msgstr "你不能删除一个已发送的报价单或销售订单！请先进行取消。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:883
@@ -2378,19 +2428,29 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"你可以选择所有的订单并进行合并开票，或者检查\n"
+"每一个订单并挨个进行开票。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "你能在这里找到所有等待开票的订单。"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
 msgstr "你的下一步行动应该为：确认报价单并转为销售订单，然后创建发票和收取款项。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
+msgstr ""
+"你的下一步动作：确认报价单为销售订单，\n"
+"然后创建发票和付款。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order

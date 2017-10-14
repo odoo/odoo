@@ -120,6 +120,7 @@ return Widget.extend({
             model_id: this.target_model,
             context: results.context,
             domain: results.domain,
+            sort: JSON.stringify(this.searchview.dataset._sort),
             is_default: default_filter,
             action_id: this.action_id,
         };
@@ -237,6 +238,13 @@ return Widget.extend({
         }
         this.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
+
+        // Load sort settings on view
+        if (!_.isUndefined(filter.sort)){
+            var sort_items = JSON.parse(filter.sort);
+            this.searchview.dataset.set_sort(sort_items);
+        }
+
         this.$filters[this.key_for(filter)].addClass('selected');
     },
     remove_filter: function (filter, $filter, key) {
@@ -426,8 +434,8 @@ return Widget.extend({
         if (!this._fields_def) {
             this._fields_def = data_manager.load_fields(this.searchview.dataset).then(function (fields) {
                 var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
-                var filter_group_field = _.filter(fields, function(field, name) {
-                    if (field.store && _.contains(groupable_types, field.type)) {
+                var filter_group_field = _.filter(fields, function (field, name) {
+                    if (field.sortable && _.contains(groupable_types, field.type)) {
                         field.name = name;
                         return field;
                     }

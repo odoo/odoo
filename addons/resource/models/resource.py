@@ -304,6 +304,11 @@ class ResourceCalendar(models.Model):
         elif start_dt is None:
             start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         else:
+            # FORWARD-PORT UP TO SAAS-14
+            # Add a strict limit when searching for intervals
+            force_start_dt = self.env.context.get('force_start_dt')
+            if force_start_dt and force_start_dt < start_dt:
+                work_limits.append((force_start_dt.replace(hour=0, minute=0, second=0, microsecond=0), force_start_dt))
             work_limits.append((start_dt.replace(hour=0, minute=0, second=0, microsecond=0), start_dt))
         if end_dt is None:
             end_dt = start_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
@@ -335,7 +340,15 @@ class ResourceCalendar(models.Model):
                 dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
                 calendar_working_day.id
             )
-            working_intervals += self.interval_remove_leaves(working_interval, work_limits)
+
+            # FORWARD-PORT UP TO SAAS-14
+            # Add a strict limit when searching for intervals (yeah, once again!)
+            if self.env.context.get('force_start_dt'):
+                for wi in self.interval_remove_leaves(working_interval, work_limits):
+                    if wi[0] >= self.env.context['force_start_dt']:
+                        working_intervals += [wi]
+            else:
+                working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
         # find leave intervals
         if leaves is None and compute_leaves:
@@ -369,7 +382,7 @@ class ResourceCalendar(models.Model):
                           resource_id=None, default_interval=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0),
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self.get_weekdays()):
             day_start_dt = day.replace(hour=0, minute=0, second=0, microsecond=0)
             if start_dt and day.date() == start_dt.date():
@@ -423,6 +436,12 @@ class ResourceCalendar(models.Model):
         """
         if day_dt is None:
             day_dt = datetime.datetime.now()
+        elif day_dt is not None and hours > 0:
+            # FORWARD-PORT UP TO SAAS-14
+            # FIXME: think about a better fix... However, solved from saas-15 thanks to refactoring
+            # Make sure the to keep the original start date when searching for intervals, since a
+            # difference in day may occur depending on the TZ.
+            self = self.with_context(force_start_dt=day_dt)
         backwards = (hours < 0)
         hours = abs(hours)
         intervals = []
@@ -474,7 +493,11 @@ class ResourceCalendar(models.Model):
         """ Wrapper on _schedule_hours: return the beginning/ending datetime of
         an hours scheduling. """
         res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
-        return res and res[0][0] or False
+        if res and hours < 0.0:
+            return res[0][0]
+        elif res:
+            return res[-1][1]
+        return False
 
     @api.multi
     def schedule_hours(self, hours, day_dt=None,
@@ -682,6 +705,13 @@ class ResourceResource(models.Model):
     time_efficiency = fields.Float(string='Efficiency Factor', required=True, default=100,
         help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%.")
     calendar_id = fields.Many2one("resource.calendar", string='Working Time', help="Define the schedule of resource")
+
+    @api.multi
+    @api.constrains('time_efficiency')
+    def _check_time_efficiency(self):
+        for record in self:
+            if record.time_efficiency == 0:
+                raise ValidationError(_('The efficiency factor cannot be equal to 0.'))
 
     @api.multi
     def copy(self, default=None):

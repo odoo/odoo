@@ -1,73 +1,62 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum
-#
+# 
 # Translators:
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
+# Youngsoo Jung <youngsoo.j@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Youngsoo Jung <youngsoo.j@gmail.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_forum
 #: model:mail.template,body_html:website_forum.validation_email
 msgid ""
 "\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px; font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
-"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
-"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Dear ${object.name},</p>\n"
-"                <p>You have been invited to validate your email in order to "
-"get access to\n"
+"                <p>You have been invited to validate your email in order to get access to\n"
 "                \"${object.company_id.name}\" Q/A Forums.</p>\n"
-"                <p>To validate your email, please click on the following "
-"link:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
-"radius: 3px; background-color:#875A7B; text-align:center; text-decoration:"
-"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
-"                    Validate my account for \"${object.company_id.name}\" Q/"
-"A Forums\n"
+"                <p>To validate your email, please click on the following link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Validate my account for \"${object.company_id.name}\" Q/A Forums\n"
 "                </a>\n"
 "                <p>Thanks for your participation!</p>\n"
 "            </td>\n"
@@ -81,14 +70,14 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:21
 #, python-format
 msgid ""
-" karma is required to perform this action. You can earn karma by having your "
-"answers upvoted by the community."
+" karma is required to perform this action. You can earn karma by having your"
+" answers upvoted by the community."
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "업무"
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
@@ -103,7 +92,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp; 번"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -206,10 +195,8 @@ msgstr ""
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "<b>Answers should not start debates</b>\n"
-"    This community Q&amp;A is not a discussion group. Please avoid holding "
-"debates in\n"
-"    your answers as they tend to dilute the essence of questions and "
-"answers. For\n"
+"    This community Q&amp;A is not a discussion group. Please avoid holding debates in\n"
+"    your answers as they tend to dilute the essence of questions and answers. For\n"
 "    brief discussions please use commenting facility."
 msgstr ""
 
@@ -218,8 +205,8 @@ msgstr ""
 msgid ""
 "<b>Answers shouldn't just point to other Questions</b>. Instead add a "
 "question comment indication \"Possible duplicate of...\". However, it's ok "
-"to include links to other questions or answers providing relevant additional "
-"information."
+"to include links to other questions or answers providing relevant additional"
+" information."
 msgstr ""
 
 #. module: website_forum
@@ -245,8 +232,8 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the "
-"solution description text in your answer, even if it's just a copy/paste. "
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the"
+" solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
@@ -254,8 +241,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"<b>Before you ask - please make sure to search for a similar question.</b> "
-"You can\n"
+"<b>Before you ask - please make sure to search for a similar question.</b> You can\n"
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
@@ -280,12 +266,9 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid ""
-"<b>Please try to give a substantial answer.</b> If you wanted to comment on "
-"the question or answer, just\n"
-"        <b>use the commenting tool.</b> Please remember that you can always "
-"<b>revise your answers</b>\n"
-"        - no need to answer the same question twice. Also, please <b>don't "
-"forget to vote</b>\n"
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just\n"
+"        <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>\n"
+"        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
 msgstr ""
 
@@ -377,6 +360,25 @@ msgid "<span>By </span>"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "A new answer on"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid "A new question"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.tag
+msgid ""
+"A tag is a label that categorizes your question with other,\n"
+"            similar questions. Using the right tags makes it easier for\n"
+"            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "About This Community"
 msgstr ""
@@ -411,7 +413,7 @@ msgstr "답변 채택하기"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
-msgstr "활성"
+msgstr "사용"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -544,7 +546,7 @@ msgstr "응답"
 #: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: website_forum
 #: selection:forum.post,post_type:0
@@ -646,6 +648,7 @@ msgid "Bad Request"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
 #: model:ir.ui.view,arch_db:website_forum.badge
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -833,9 +836,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
 msgstr "마감"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close Post"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
@@ -845,6 +854,11 @@ msgstr "다른 게시물 마감하기"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Close post"
 msgstr ""
 
 #. module: website_forum
@@ -921,11 +935,9 @@ msgstr "완성된 자기 소개"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
-msgstr ""
-"축하합니다! 귀하의 이메일이 검증 되었습니다. 이제 게시판에 참여할 수 있습니"
-"다."
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
+msgstr "축하합니다! 귀하의 이메일이 검증 되었습니다. 이제 게시판에 참여할 수 있습니다."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content
@@ -936,6 +948,16 @@ msgstr "컨텐트"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_all
 msgid "Convert all answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
 msgstr ""
 
 #. module: website_forum
@@ -972,6 +994,11 @@ msgstr "국가..."
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
 msgid "Create Date"
 msgstr "작성일"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
+msgid "Create new tags"
+msgstr ""
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
@@ -1017,6 +1044,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_post_type
 msgid "Default Post"
 msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
+msgstr "삭제"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
@@ -1087,6 +1120,8 @@ msgstr "반대 투표"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "편집"
 
@@ -1234,6 +1269,12 @@ msgid "First upvote"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
@@ -1242,6 +1283,8 @@ msgstr "모욕 게시물 표시"
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr ""
 
@@ -1263,16 +1306,11 @@ msgstr "팔로우하는 질문"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"For example, if you ask an interesting question or give a helpful answer, "
-"your\n"
-"    input will be upvoted. On the other hand if the answer is misleading - "
-"it will\n"
-"    be downvoted. Each vote in favor will generate 10 points, each vote "
-"against\n"
-"    will subtract 10 points. There is a limit of 200 points that can be "
-"accumulated\n"
-"    for a question or answer per day. The table given at the end explains "
-"reputation point\n"
+"For example, if you ask an interesting question or give a helpful answer, your\n"
+"    input will be upvoted. On the other hand if the answer is misleading - it will\n"
+"    be downvoted. Each vote in favor will generate 10 points, each vote against\n"
+"    will subtract 10 points. There is a limit of 200 points that can be accumulated\n"
+"    for a question or answer per day. The table given at the end explains reputation point\n"
 "    requirements for each type of moderation task."
 msgstr ""
 
@@ -1438,6 +1476,14 @@ msgid "Help"
 msgstr "도움말"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"How to create a physical inventory at an anterior date?, How is the "
+"'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
@@ -1455,8 +1501,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"If this approach is not for you, please respect the community and use Google"
-"+\n"
+"If this approach is not for you, please respect the community and use Google+\n"
 "    communities instead."
 msgstr ""
 
@@ -1472,11 +1517,9 @@ msgstr ""
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
 "If you fit in one of these example or if your motivation for asking the\n"
-"    question is “I would like to participate in a discussion about ______”, "
-"then\n"
+"    question is “I would like to participate in a discussion about ______”, then\n"
 "    you should not be asking here but on our mailing lists.\n"
-"    However, if your motivation is “I would like others to explain ______ to "
-"me”,\n"
+"    However, if your motivation is “I would like others to explain ______ to me”,\n"
 "    then you are probably OK."
 msgstr ""
 
@@ -1493,6 +1536,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Inventory Date Problem, Task remaining hours, Can you help solve solve my "
+"tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
@@ -1615,6 +1665,11 @@ msgstr "링크"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_link
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Links"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Mark as offensive"
 msgstr ""
 
 #. module: website_forum
@@ -1785,6 +1840,11 @@ msgid "Offensive"
 msgstr "모욕"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Offensive Post"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
 msgstr ""
@@ -1844,8 +1904,7 @@ msgstr "서술식으로 질문을 입력해 주십시오('?'로 마침)"
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
-"답변 또는 의견에 대한 알림을 수신하기 위한 유효한 이메일 주소를 입력하십시오."
+msgstr "답변 또는 의견에 대한 알림을 수신하기 위한 유효한 이메일 주소를 입력하십시오."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2069,6 +2128,11 @@ msgid "Re: %s"
 msgstr "회신 : %s"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Read Guidelines"
 msgstr "지침 읽기"
@@ -2118,6 +2182,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
 msgstr ""
 
 #. module: website_forum
@@ -2171,6 +2240,11 @@ msgid "See post"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+msgid "See question"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Seen:"
 msgstr "조회 :"
@@ -2206,8 +2280,7 @@ msgstr "공유"
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
 "Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
-"            If the community vote on your post, it will get traction by "
-"being promoted\n"
+"            If the community vote on your post, it will get traction by being promoted\n"
 "            in the homepage."
 msgstr ""
 
@@ -2216,8 +2289,8 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
 #, python-format
 msgid ""
-"Share this content to increase your chances to be featured on the front page "
-"and attract more visitors."
+"Share this content to increase your chances to be featured on the front page"
+" and attract more visitors."
 msgstr ""
 
 #. module: website_forum
@@ -2340,7 +2413,7 @@ msgstr "태그"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_task_ids
 msgid "Tasks"
-msgstr ""
+msgstr "업무"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -2403,12 +2476,9 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"Therefore questions and answers can be edited like wiki pages by experienced "
-"users of\n"
-"    this site in order to improve the overall quality of the knowledge base "
-"content.\n"
-"    Such privileges are granted based on user karma level: you will be able "
-"to do the same\n"
+"Therefore questions and answers can be edited like wiki pages by experienced users of\n"
+"    this site in order to improve the overall quality of the knowledge base content.\n"
+"    Such privileges are granted based on user karma level: you will be able to do the same\n"
 "    once your karma gets high enough."
 msgstr ""
 
@@ -2456,6 +2526,13 @@ msgid "This post is already flagged"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
 msgid "This profile is private!"
 msgstr "비공개 프로필입니다!"
@@ -2491,8 +2568,7 @@ msgstr "받는 사람"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"To prevent your question from being flagged and possibly removed, avoid "
-"asking\n"
+"To prevent your question from being flagged and possibly removed, avoid asking\n"
 "    subjective questions where …"
 msgstr ""
 
@@ -2593,13 +2669,18 @@ msgstr "사용자"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
 msgid "Users"
-msgstr "사용자"
+msgstr "사용자 목록"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_question
 msgid ""
 "Users can answer only once per question. Contributors can edit answers and "
 "mark the right ones."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid "Validate question"
 msgstr ""
 
 #. module: website_forum
@@ -2642,8 +2723,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid ""
-"We keep a high level of quality in showcased posts, around 20% of the "
-"submited\n"
+"We keep a high level of quality in showcased posts, around 20% of the submited\n"
 "            posts will be featured."
 msgstr ""
 
@@ -2675,10 +2755,8 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid ""
-"When a question or answer is upvoted, the user who posted them will gain "
-"some\n"
-"    points, which are called \"karma points\". These points serve as a "
-"rough\n"
+"When a question or answer is upvoted, the user who posted them will gain some\n"
+"    points, which are called \"karma points\". These points serve as a rough\n"
 "    measure of the community trust to him/her. Various moderation tasks are\n"
 "    gradually assigned to the users based on those points."
 msgstr ""
@@ -2697,14 +2775,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "You already have one pending post.<br/>\n"
-"            Please wait for a moderator to validate your previous post "
-"before continuing."
+"            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
 #, python-format
-msgid "You cannot choose %s as default post since the forum does not allow it."
+msgid ""
+"You cannot choose %s as default post since the forum does not allow it."
 msgstr ""
 
 #. module: website_forum

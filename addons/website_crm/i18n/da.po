@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>, 2016\n"
+"POT-Creation-Date: 2017-06-26 14:46+0000\n"
+"PO-Revision-Date: 2017-06-26 14:46+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2016\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:35
 #, python-format
 msgid "% Leads"
-msgstr ""
+msgstr "% Kundeemner"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -37,6 +38,20 @@ msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
 msgstr ""
+"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
+"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:63
+#, python-format
+msgid "Campaign"
+msgstr "Kampagne"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:62
+#, python-format
+msgid "Create Date"
+msgstr "Oprettelsesdato"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -51,33 +66,52 @@ msgstr "Hvis det haster, kontakt os da hurtigst muligt på telefon:"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Emne/Forventning"
+msgstr "Emne/mulighed"
 
 #. module: website_crm
 #. openerp-web
+#: code:addons/website_crm/controllers/main.py:53
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
 #, python-format
 msgid "Leads"
-msgstr "Emner"
+msgstr "Kundeemner"
 
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:8
 #, python-format
 msgid "Leads Acquisition /"
-msgstr ""
+msgstr "Indhentning af kundeemner"
 
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
 #, python-format
 msgid "Leads Analysis"
-msgstr "Emne analyse"
+msgstr "Analyse af kundeemner"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:64
+#, python-format
+msgid "Medium"
+msgstr "Medium"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
-msgstr "Telefon nummer"
+msgstr "Telefonnummer"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:57
+#, python-format
+msgid "Previous Leads"
+msgstr "Tidligere kundeemner"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:65
+#, python-format
+msgid "Source"
+msgstr "Kilde"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -94,7 +128,7 @@ msgstr "Tak!"
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:15
 #, python-format
 msgid "There is no recent lead."
-msgstr ""
+msgstr "Der er ingen nylige kundeemner."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
@@ -104,7 +138,7 @@ msgstr "Vi kommer tilbage hurtigst muligt."
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
 msgid "Website Contact Form"
-msgstr "Web side kontakt form"
+msgstr "Kontaktformular"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

@@ -8,6 +8,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2016
@@ -33,7 +34,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:91
 #, python-format
 msgid "3 exp. closing"
-msgstr ""
+msgstr "3 Kapanmayı Bekleyen"
 
 #. module: sales_team
 #. openerp-web
@@ -54,7 +55,7 @@ msgstr "78,140.03€"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
 #, python-format
 msgid "80.000€"
-msgstr ""
+msgstr "80.000€"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -217,7 +218,7 @@ msgstr "Pano"
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Direct Sales"
-msgstr "Direk Satış"
+msgstr "Doğrudan Satış"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
@@ -271,6 +272,8 @@ msgid ""
 "If set, sale team used notably for sales and assignations related to this "
 "partner"
 msgstr ""
+"Eğer ayarlanırsa, satış ekibi özellikle bu iş ortağı ile ilgili satış ve "
+"atamalar için kullanılır"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -278,6 +281,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
 "team without removing it."
 msgstr ""
+"Etkin alanı boş bırakılırsa, satış ekibini silmeden gizlemenize izin verir."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -409,7 +413,7 @@ msgstr "Satış Fiyat Listesi"
 #: model:ir.ui.menu,name:sales_team.menu_base_partner
 #: model:ir.ui.menu,name:sales_team.menu_sales
 msgid "Sales"
-msgstr "Satışlar"
+msgstr "Satış"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -428,6 +432,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a sales "
 "team through the inverse one2many"
 msgstr ""
+"Satış ekibi kullanıcı üyesidir. Ters one2many üzerinden satış ekibinin "
+"hesaplamak için kullanılır"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -479,7 +485,7 @@ msgstr "Satış Ekip Üyeleri"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the team"
-msgstr ""
+msgstr "Ekibin Rengi"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -513,7 +519,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:76
 #, python-format
 msgid "To Activities"
-msgstr ""
+msgstr "Etkinlikler"
 
 #. module: sales_team
 #. openerp-web
@@ -521,7 +527,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:189
 #, python-format
 msgid "To Activity Report"
-msgstr ""
+msgstr "Etkinlik Raporu"
 
 #. module: sales_team
 #. openerp-web
@@ -529,7 +535,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:51
 #, python-format
 msgid "To Calendar"
-msgstr ""
+msgstr "Takvim"
 
 #. module: sales_team
 #. openerp-web
@@ -537,14 +543,14 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:199
 #, python-format
 msgid "To Invoice Report"
-msgstr ""
+msgstr "Fatura Raporu"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:86
 #, python-format
 msgid "To Opportunities"
-msgstr ""
+msgstr "Fırsatlar"
 
 #. module: sales_team
 #. openerp-web
@@ -552,7 +558,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:194
 #, python-format
 msgid "To Opportunity Report"
-msgstr ""
+msgstr "Fırsat Raporu"
 
 #. module: sales_team
 #. openerp-web
@@ -584,12 +590,12 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "Kullanıcı: Tüm Belgeler"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "Kullanıcı: Sadece Kendi Belgeleri"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -620,7 +626,7 @@ msgstr "Yanlış değer girildi!"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
 #, python-format
 msgid "exp. closing"
-msgstr ""
+msgstr "beklenen kapanış tarihi"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_ir_ui_view

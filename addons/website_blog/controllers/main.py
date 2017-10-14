@@ -35,7 +35,7 @@ class WebsiteBlog(http.Controller):
             group['date_begin'] = start
             group['date_end'] = end
 
-            locale = request.context.get('lang', 'en_US')
+            locale = request.context.get('lang') or 'en_US'
             start = pytz.UTC.localize(fields.Datetime.from_string(start))
             tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
 
@@ -178,6 +178,7 @@ class WebsiteBlog(http.Controller):
         v['blog'] = blog
         v['base_url'] = request.env['ir.config_parameter'].get_param('web.base.url')
         v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
+        v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
 

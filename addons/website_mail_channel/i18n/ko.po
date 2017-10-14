@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-#
+# 
 # Translators:
+# 최재호 <hwangtog@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 10:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_mail_channel
@@ -22,13 +24,10 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be subscribed to the mailing list <strong>${object."
-"name}</strong></p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
-"p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore "
-"this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
 
@@ -37,13 +36,10 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>"
-"${object.name}</strong></p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
-"p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore "
-"this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
 
@@ -94,7 +90,7 @@ msgstr "토론 목록 변경"
 #. module: website_mail_channel
 #: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
 msgid "Description"
-msgstr ""
+msgstr "설명"
 
 #. module: website_mail_channel
 #. openerp-web
@@ -304,3 +300,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr "귀하의 이메일..."
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr ""
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already unsubscribed or was never subscribed to the mailing list, you may"
+" want to check that the address was correct."
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:238
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""

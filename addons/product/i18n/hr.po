@@ -8,16 +8,16 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Bole <bole@dajmi5.com>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016
-# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2016\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -612,12 +612,12 @@ msgstr "Kategorije kćeri"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr "Klikni za dodavanje nove jedinice mjere kategorije."
+msgstr "Kliknite za dodavanje nove jedinice mjere kategorije."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr "Klikni za dodavanje nove jedinice mjere."
+msgstr "Kliknite za dodavanje nove jedinice mjere."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -631,7 +631,7 @@ msgstr "Klikni za izradu cjenika."
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr "Klikni za definiranje novog proizvoda."
+msgstr "Kliknite za definiranje novog proizvoda."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -826,7 +826,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -1395,6 +1394,7 @@ msgstr "Interno"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Interna kategorija"
 
@@ -2067,11 +2067,6 @@ msgid "Public Price"
 msgstr "Javna cijena"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Javni cjenik"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2202,6 +2197,7 @@ msgstr "Prodajna cijena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Prodajni cjenik"
 
@@ -2408,7 +2404,7 @@ msgstr "Datum početka ove cijene dobavljača"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr ""
+msgstr "Početni datum za potvrdu stavke cjenika"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2719,6 +2715,7 @@ msgstr "Napomena će se prikazivati na ponudama."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2762,6 +2759,11 @@ msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
 msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
+msgstr "USD"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -3043,14 +3045,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Radno vrijeme"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16

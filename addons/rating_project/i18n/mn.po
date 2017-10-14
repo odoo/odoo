@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -96,21 +96,93 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Сэтгэл ханамжийн санал асуулга\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Сайн байна уу,</p>\n"
+"                <p>Дараах даалгавартай холбоотой манай үйлчилгээнд санал өгнө үү \"<strong>${object.name}</strong>\"\n"
+"                   Даалгаврыг хариуцсан <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>Баярлалаа. Таны санал хүсэлт биднийг тогтмол хөгжихөд маш ихээр тусладаг.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                Та манай үйлчилгээний талаар саналаа хэлнэ үү:\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(эдгээрийн нэг дээр дарна уу)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>Таны даалгаврыг <b>${object.stage_id.name}</b>шат руу зөөсөн тул энэ захиалагчийн санал асуулгыг илгээсэн.</p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>Энэ захиалагчийн санал асуулгыг <b>${object.project_id.rating_status_period}</b>турш илгээнэ. Даалгавар нь <b>${object.stage_id.name}</b> шатанд байсаар байвал.\n"
+"                % endif\n"
+"                <p>Имэйлийг автоматаар илгээсэн <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Төсөл</a> <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Үйлчилгээний үнэлгээний хүсэлт"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "Даалгаврууд дээрх %"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Автомат канбан төлөв"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -119,6 +191,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Энэ шат дээр захиалагч санал хүсэлтэд хариулах үед автоматаар канбан төлөвийг өөрчлөнө.\n"
+"* Захиалагчийн сайн санал хүсэлт нь канбан төлөвийг 'шинэ шатанд бэлэн' төлөвтэй болгоно (ногоон цэг).\n"
+"* Дунд зэргийн эсвэл муу санал хүсэлт нь канбан төлөвийг 'хаагдсан' болгоно (улаан цэг).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -126,7 +201,7 @@ msgstr ""
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Захиалагчийн Үнэлгээнүүд"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -134,6 +209,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Даалгавар дээрх захиалагчийн үнэлгээнүүд. Хэрэв танд үнэлгээ байхгүй бол "
+"төслийн Тохиргоог өөрчилж идэвхижүүлнэ үү."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -141,11 +218,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Даалгавар/асуудал дээрх захиалагчийн үнэлгээнүүд. Хэрэв танд үнэлгээ байхгүй"
+" бол төслийн Тохиргоог өөрчилж идэвхижүүлнэ үү."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Захиалагч(ууд) -н Үнэлгээнүүд"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -158,16 +237,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Төслийн шатыг засаж, үнэлгээг идэвхижүүлэх \n"
+"хүсэлтэй шатууд дээр имэйл үлгэр тохируулна уу."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Төсөл дээрх баяртай %"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Даалгавар дээрх баяртай %"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -178,36 +259,41 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Хэрхэн захиалагчийн санал хүсэлтийг авах вэ?\n"
+"- Шатыг өөрчлөх үеийн үнэлгээ: Даалгавар/асуудлыг өөр шат руу чирэх үед имэйл илгээгдэнэ.\n"
+"- Мөчлөгөөрх Үнэлгээ: Мөчлөгөөр имэйл илгээгдэнэ.\n"
+"\n"
+"Захиалагчийн санал хүсэлтийг авахыг хүсч буй шатууд дээр мэйл үлгэрийг тохируулахаа бүү мартаарай."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Хамгийн сүүлийн үнэлгээ: Маш сэтгэл ханамжгүй"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Хамгийн сүүлийн үнэлгээ: Сэтгэл ханамжгүй"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Хамгийн сүүлийн үнэлгээ: Сэтгэл ханамжтай"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Үнэлгээ алга"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "No rating yet"
-msgstr ""
+msgstr "Одоогоор үнэлгээ алга"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Сард нэг удаа"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -215,11 +301,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Өнгөрөгч 30 өдрийн баяртай үнэлгээний хувь. Дэлгэрэнгүй цэсээс үнэлгэний "
+"дэлгэрэнгүйг аваарай."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Мөчлөгөөрх Үнэлгээ"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -239,22 +327,22 @@ msgstr "Үнэлгээ"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Үнэлгээний имэйл үлгэр"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Үнэлгээний давтамж"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating request deadline"
-msgstr ""
+msgstr "Үнэлгээний хүсэлтийн эцсийн огноо"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Шат өөрчлөх үеийн үнэлгээ"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
@@ -267,6 +355,8 @@ msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
 msgstr ""
+"Имэйл үлгэр сонгоно уу. Даалгавар энэ шатанд хүрэх үед захиалагч руу имэйл "
+"илгээх болно."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
@@ -277,7 +367,7 @@ msgstr "Даалгавар"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Даалгаврын Үнэлгээ"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -287,7 +377,7 @@ msgstr "Даалгаврын үе"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Сард хоёр удаа"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

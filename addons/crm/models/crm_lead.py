@@ -294,6 +294,11 @@ class Lead(FormatAddress, models.Model):
 
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
+
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner = self.env['res.partner'].browse(context['default_partner_id'])
+            vals['email_from'] = partner.email
+
         # context: no_log, because subtype already handle this
         return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
 
@@ -931,7 +936,7 @@ class Lead(FormatAddress, models.Model):
                     result['activity']['today'] += 1
                 if date.today() <= date_action <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date.today() and not opp.date_closed:
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:

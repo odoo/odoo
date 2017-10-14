@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -295,7 +295,7 @@ msgstr "製品ごとに単一の販売価格"
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "製品または顧客に対して警告を設定することができます(販売)"
+msgstr "製品または取引先に警告設定可 (販売)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -379,7 +379,7 @@ msgstr "請求書に対する売上金額"
 #: selection:sale.config.settings,group_warning_sale:0
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
-msgstr "製品や顧客での警告表示設定を有効可"
+msgstr "製品や取引先に情報またはブロック警告設定可"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -1250,11 +1250,17 @@ msgid "No variants on products"
 msgstr "製品バリアントなし"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
+msgstr "見積が販売注文になると、見積リストから販売注文リストに移動されます。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
 msgstr "見積が販売注文になると、見積リストから販売注文リストに移動されます。"
 
 #. module: sale
@@ -1956,7 +1962,7 @@ msgstr "サービス"
 #: code:addons/sale/static/src/js/sale.js:19
 #, python-format
 msgid "Set an invoicing target: "
-msgstr "請求対象の設定："
+msgstr "請求対象の設定:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2230,7 +2236,6 @@ msgid "Total"
 msgstr "合計"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "合計価格"
@@ -2363,7 +2368,7 @@ msgid ""
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
 "製品バリアントを使用すると、同じ製品のいくつかのバリアントを定義することができます。\n"
-"たとえば、電子商取引における製品管理等です"
+"たとえば、eコマースにおける製品管理等です"
 
 #. module: sale
 #. openerp-web
@@ -2414,11 +2419,17 @@ msgid "You will find here all orders that are ready to be invoiced."
 msgstr "あなたがここに請求する準備ができているすべての注文を検索します。"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
+msgstr "あなたの次の行動は効率的に流れなければなりません：販売注文への見積を確認し、請求書を作成し、回収を行います。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr "あなたの次の行動は効率的に流れなければなりません：販売注文への見積を確認し、請求書を作成し、回収を行います。"
 
 #. module: sale

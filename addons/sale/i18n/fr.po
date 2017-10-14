@@ -6,12 +6,12 @@
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
-# Nicolas JEUDY <nicolas@sudokeys.com>, 2016
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
-# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Nicolas Roussey <nro@odoo.com>, 2016
@@ -33,13 +33,14 @@
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -866,7 +867,7 @@ msgstr "Filtres étendus"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Ligne supplémentaire avec %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -1305,7 +1306,6 @@ msgid "No variants on products"
 msgstr "Pas de variantes sur les articles"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
@@ -1313,6 +1313,15 @@ msgid ""
 msgstr ""
 "Attention, une fois un devis transformé en bon de commande, il passera de la"
 " liste des devis à la liste des bons de commande."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
+"Attention, une fois un devis transformé en bon de commande, il passera\n"
+"de la liste des devis à la liste des bons de commande."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1370,7 +1379,7 @@ msgstr "Devis en ligne"
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr "Seul entier sera une valeur valide."
+msgstr "Un entier est attendu."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2203,6 +2212,8 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
 msgstr ""
+"Vous avez diminué la quantité commandée. N'oubliez pas d'en tenir compte sur"
+" vos factures et bons de livraison."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
@@ -2334,7 +2345,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "Prix total"
@@ -2523,11 +2533,20 @@ msgid "You will find here all orders that are ready to be invoiced."
 msgstr "Vous trouverez ici les bons de commande prêts à être facturés."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Vos prochaines actions devraient se dérouler avec fluidité : confirmez le "
+"devis pour le transformer en bon de commande, puis créez une facture et "
+"obtenez-en le règlement."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Vos prochaines actions devraient se dérouler avec fluidité : confirmez le "
 "devis pour le transformer en bon de commande, puis créez une facture et "

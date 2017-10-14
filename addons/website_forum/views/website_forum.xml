@@ -631,7 +631,10 @@
 <!-- Moderation: close a post -->
 <template id="close_post">
     <t t-call="website_forum.header">
-        <h1 class="mt0"><t t-esc="offensive and 'Offensive' or 'Close'"/> Post</h1>
+        <h1 class="mt0">
+            <t t-if="offensive">Offensive Post</t>
+            <t t-if="not offensive">Close Post</t>
+        </h1>
         <p class="text-muted" t-if="not offensive">
             If you close this post, it will be hidden for most users. Only
             users having a high karma can see closed posts to moderate
@@ -668,7 +671,10 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-8">
-                    <button type="submit" class="btn btn-primary"><t t-esc="offensive and 'Mark as offensive' or 'Close post'"/></button>
+                    <button type="submit" class="btn btn-primary">
+                        <t t-if="offensive">Mark as offensive</t>
+                        <t t-if="not offensive">Close post</t>
+                    </button>
                     <span class="text-muted">or</span>
                     <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">back to post</a>
                 </div>
@@ -787,9 +793,10 @@
                     </div>
                 </div>
                 <div class="text-muted mb16">
-                    <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" t-att-title="question.post_type.capitalize()" />
-                    <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
-                    <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
+                    <t t-set="type_labels" t-value="dict(question._fields['post_type']._description_selection(question.env))"/>
+                    <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" t-att-title="type_labels[question.post_type]" />
+                    <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="type_labels[question.post_type]" />
+                    <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="type_labels[question.post_type]" />
                     <span>By </span>
                     <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or None"
                         t-field="question.create_uid"
@@ -813,7 +820,7 @@
                     <div class="mt16 mb24 text-center">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
-                            <t t-set="label" t-value="'Reopen'"/>
+                            <t t-set="label">Reopen</t>
                             <t t-set="classes" t-value="'fa-arrow-right'"/>
                             <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                         </t>
@@ -826,7 +833,7 @@
                         <li t-if="question.state == 'close'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
-                                <t t-set="label" t-value="'Reopen'"/>
+                                <t t-set="label">Reopen</t>
                                 <t t-set="classes" t-value="'fa-undo'"/>
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
@@ -834,7 +841,7 @@
                         <li>
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
-                                <t t-set="label" t-value="'Edit'"/>
+                                <t t-set="label">Edit</t>
                                 <t t-set="classes" t-value="'fa-pencil-square-o'"/>
                                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                             </t>
@@ -842,7 +849,7 @@
                         <li t-if="question.state != 'close'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
-                                <t t-set="label" t-value="'Close'"/>
+                                <t t-set="label">Close</t>
                                 <t t-set="classes" t-value="'fa-times'"/>
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
@@ -850,7 +857,7 @@
                         <li t-if="question.active">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
-                                <t t-set="label" t-value="'Delete'"/>
+                                <t t-set="label">Delete</t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
@@ -858,7 +865,7 @@
                         <li t-if="not question.active and question.state != 'offensive'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
-                                <t t-set="label" t-value="'Reactivate'"/>
+                                <t t-set="label">Reactivate</t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
@@ -866,7 +873,7 @@
                         <li t-if="not question.active and question.state == 'offensive'">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
-                                <t t-set="label" t-value="'Reactivate'"/>
+                                <t t-set="label">Reactivate</t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
@@ -877,7 +884,12 @@
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                 t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
                                 >
-                                <t class="flag_flagged_label" t-esc="question.state == 'flagged' and 'Flagged' or 'Flag'"/>
+                                <t t-if="question.state == 'flagged'">
+                                    Flagged
+                                </t>
+                                <t t-if="question.state != 'flagged'">
+                                    Flag
+                                </t>
                             </a>
                         </li>
                     </ul>
@@ -964,7 +976,7 @@
                     <li>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
-                            <t t-set="label" t-value="'Edit'"/>
+                            <t t-set="label">Edit</t>
                             <t t-set="classes" t-value="'fa fa-pencil-square-o'"/>
                             <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
                         </t>
@@ -972,7 +984,7 @@
                     <li>
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
-                            <t t-set="label" t-value="'Delete'"/>
+                            <t t-set="label">Delete</t>
                             <t t-set="classes" t-value="'fa-trash-o'"/>
                             <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
                         </t>
@@ -981,15 +993,15 @@
                         <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'color:#999;' or ''}"
                             t-attf-class="flag fa fa-flag #{not answer.can_flag and 'karma_required' or ''}"
                             t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
-                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag"
-                            >
-                            <t class="flag_flagged_label" t-esc="answer.state == 'flagged' and 'Flagged' or 'Flag'"/>
+                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag">
+                            <t t-if="answer.state == 'flagged'">Flagged</t>
+                            <t t-if="answer.state != 'flagged'">Flag</t>
                         </a>
                     </li>
                     <li t-if="question.post_type == 'question'">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
-                            <t t-set="label" t-value="'Convert as a comment'"/>
+                            <t t-set="label">Convert as a comment</t>
                             <t t-set="classes" t-value="'fa-magic'"/>
                             <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
                         </t>
@@ -1057,7 +1069,7 @@
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
                     <t t-call="website_forum.link_button">
                         <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
-                        <t t-set="label" t-value="' '"/>
+                        <t t-set="label"> </t>
                         <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
                         <t t-set="classes" t-value="'close comment_delete fa-times'"/>
                     </t>
@@ -1070,7 +1082,7 @@
                     <t t-if="allow_post_comment">
                         <t t-call="website_forum.link_button" >
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/convert_to_answer'"/>
-                            <t t-set="label" t-value="'Convert as an answer'"/>
+                            <t t-set="label">Convert as an answer</t>
                             <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
                             <t t-set="classes" t-value="'fa-magic pull-right'"/>
                         </t>

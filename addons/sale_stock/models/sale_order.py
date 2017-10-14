@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        self.mapped('order_line').mapped('procurement_ids').cancel()
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -185,7 +185,7 @@ class SaleOrderLine(models.Model):
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id:
                     qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+            elif move.location_dest_id.usage != "customer" and move.to_refund_so:
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
 

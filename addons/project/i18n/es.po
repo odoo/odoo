@@ -9,8 +9,8 @@
 # Roberto Lizana <robertolizana@trey.es>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
@@ -25,6 +25,7 @@
 # Rafael Blasco <rafabn@antiun.com>, 2016
 # juani_aizean <juani@aizean.com>, 2016
 # Juan Cristobal Lopez Arrieta <juancristobal@gmail.com>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Jairo Llopis <yajo.sk8@gmail.com>, 2016
@@ -36,8 +37,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Janire Olagibel <janire.olaguibel@es.gt.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -131,11 +132,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -152,107 +152,6 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Ingreso automático</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Tu proyecto Odoo esta en marcha y funcionando.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">Que sigue?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Prueba en crear una tarea enviando un correo a </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
-"                                        <span>para colaborar</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Descubre el </span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">planificador de proyecto</span></a></span>\n"
-"                                <span> para activar características extra</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Siga las horas con el horario,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Planee tareas y recursos con previsiones,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Obtener informes precisos inteligentes y cuadros de comandos,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Facturar el tiempo en las facturas o incidencias,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Y mucho mas...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Necesita ayuda?</span>\n"
-"                                <span style=\"font-style:italic;\">No esta solo</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Estaremos encantados de ayudar-le en su camino. Pongase en contacto con nosotros en\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> si tiene usted cualquier pregunta. También puede descubrir como sacar el máximo partido al proyecto Odoo con nuestra </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">Documentación de usuario</span></a>\n"
-"                                </span><span> o con nuestra </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">Documentación de la API</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Disfrute de su experiencia Odoo,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>El equipo Odoo<br/>PS: Gente que le encanta Odoo, comprueve </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">que tenemos a decir.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -264,7 +163,7 @@ msgid ""
 "<p>Best regards,</p>"
 msgstr ""
 "\n"
-"<p>Querido ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Estimado/a ${object.partner_id.name or 'customer'},</p>\n"
 "<p>Gracias por adquirir.<br /></p>\n"
 "<p>Si tiene cualquier pregunta, por favor, háganoslo saber.</p>\n"
 "<p>Saludos cordiales,</p>"
@@ -286,6 +185,7 @@ msgstr "# Días para fecha límite"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr "Nº tareas"
 
@@ -944,7 +844,7 @@ msgstr "<strong>¿Necesita ayuda para estructurar sus proyectos?</strong><br/>"
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
 msgstr ""
-"<strong>Necesita ayuda con la gestión de horarios Contactenos "
+"<strong>¿Necesita ayuda con la gestión de los parte de horas? Contáctenos "
 "ahora:</strong><br/>"
 
 #. module: project
@@ -1840,7 +1740,7 @@ msgstr ""
 "Dependiendo de lo que necesita y de cómo desea operar, hay varias maneras de"
 " trabajar con Odoo. En primer lugar decida si desea pensar en términos de "
 "tareas o incidencias. A continuación active la aplicación  de partes de "
-"trabajo si la necesita."
+"horas si la necesita."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2384,8 +2284,8 @@ msgid ""
 "customer. To do that:"
 msgstr ""
 "Si trabaja en un proyecto \"Time &amp; Material\"  probablemente deseará "
-"extraer un parte de tiempo dedicado a las tareas e incidencias para facturar"
-" directamente al cliente. Para hacer eso:"
+"extraer un parte de horas dedicado a las tareas e incidencias para crear una"
+" Factura directamente al cliente. Para hacer eso:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2631,7 +2531,7 @@ msgid ""
 "Timesheets."
 msgstr ""
 "Aprenden como organizar mejor su compañía utilizando Proyectos, tareas, "
-"incidencias y horarios."
+"incidencias y partes de horas."
 
 #. module: project
 #. openerp-web
@@ -2658,8 +2558,8 @@ msgid ""
 msgstr ""
 "Enlace este proyecto a una cuenta analítica si necesita la gestión "
 "financiera de los proyectos. Le permite conectar los proyectos con "
-"presupuestos, planificación, análisis de costes e ingresos, tiempo dedicado "
-"en los proyectos, etc."
+"presupuestos, planificación, análisis de costes e ingresos, partes de horas "
+"de proyectos, etc."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2889,8 +2789,8 @@ msgid ""
 "Once a Timesheet is confirmed by an employee, it needs to be Approved by a "
 "manager in the"
 msgstr ""
-"Una vez el horario esta confirmado por un trabajador, necesita ser aprobado "
-"por un gerente en la"
+"Una vez el parte de horas está confirmado por un trabajador, necesita ser "
+"aprobado por un gerente en la"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2914,7 +2814,7 @@ msgid ""
 "Or, if you are using Issues, by activating 'Activate timesheets on issues', "
 "also in the"
 msgstr ""
-"O, si estas usando incidencias, activando 'Activar horarios en las "
+"O, si estas usando incidencias, activando 'Activar partes de horas en las "
 "incidencias' también en el"
 
 #. module: project
@@ -2928,8 +2828,8 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
-"Organice las actividades (tareas del plan, temas de seguimiento, hoja de "
-"horas de factura) para proyectos internos, personales o de cliente."
+"Organice las actividades (tareas del plan, temas de seguimiento, factura de "
+"partes de horas) para proyectos internos, personales o de cliente."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3607,6 +3507,7 @@ msgstr "Tarea lista para la siguiente etapa"
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3811,8 +3712,8 @@ msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
 msgstr ""
-"Això afegirà el menú Facturar tasques al mòdul de projecte, pot ser "
-"utilitzat per seleccionar les fulles d'hores a facturar."
+"Esto añadirá un menú para crear una factura de las tareas en el módulo de "
+"Proyectos, que se usará para seleccionar los Partes de Horas a facturar."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
@@ -3825,7 +3726,7 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Permite fijar la unidad de medida utilizada en proyectos y tareas.\n"
-"Si utilizáis las hojas de horarios relacionados con proyectos, no olvidéis configurar la unidad de medida correcta en vuestros empleados."
+"Si utilizáis los partes de horas relacionados con proyectos, no olvidéis configurar la unidad de medida correcta en vuestros empleados."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3862,7 +3763,7 @@ msgstr "Los partes de horas se pueden usar por varios motivos:"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets to Approve"
-msgstr "Hoja de Horas por aprobar"
+msgstr "Partes de horas por aprobar"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
@@ -3937,7 +3838,7 @@ msgstr "Usar tareas como"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr "Utilizar hojas de trabajo"
+msgstr "Utilizar partes de horas"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4091,7 +3992,7 @@ msgid ""
 "timesheets:<br/><br/>"
 msgstr ""
 "Hemos desarrollado una extensión súper sencilla y eficiente de Chrome para "
-"entrar en tus horarios"
+"introducir tus partes de horas"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
