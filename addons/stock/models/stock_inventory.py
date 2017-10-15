@@ -231,7 +231,7 @@ class Inventory(models.Model):
         if self.company_id:
             domain += ' AND company_id = %s'
             args += (self.company_id.id,)
-        
+
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'
@@ -388,7 +388,7 @@ class InventoryLine(models.Model):
         if existings:
             raise UserError(_("You cannot have two inventory adjustements in state 'in Progess' with the same product"
                               "(%s), same location(%s), same package, same owner and same lot. Please first validate"
-                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.name, res.location_id.name))
+                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.display_name, res.location_id.display_name))
         return res
 
     def _get_quants(self):
