@@ -1055,7 +1055,8 @@ var UrlWidget = InputField.extend({
     _renderReadonly: function () {
         this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
-            .attr('href', this.value);
+            .attr('href', this.value)
+            .attr('target', '_blank');
     }
 });
 
