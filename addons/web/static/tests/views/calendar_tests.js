@@ -975,6 +975,12 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            mockRPC: function (route, args) {
+                if (args.method === "get_formview_id") {
+                    return $.Deferred().resolve('A view');
+                }
+                return this._super(route, args);
+            },
         });
 
         // click on an existing event to open the form view
@@ -985,7 +991,7 @@ QUnit.module('Views', {
                     type: "ir.actions.act_window",
                     res_id: 4,
                     res_model: "event",
-                    views: [[false, "form"]],
+                    views: [['A view', "form"]],
                     target: "current",
                     context: {}
                 },
@@ -1102,6 +1108,12 @@ QUnit.module('Views', {
             archs: archs,
             viewOptions: {
                 initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "get_formview_id") {
+                    return $.when(false);
+                }
+                return this._super(route, args);
             },
         });
 
