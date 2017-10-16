@@ -367,9 +367,13 @@ class StockMove(models.Model):
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
             domain = [('location_from_id', '=', move.location_dest_id.id)]
-            # priority goes to the route defined on the product and product category
-            routes = move.product_id.route_ids | move.product_id.categ_id.total_route_ids
+            # first priority goes to the preferred routes defined on the move itself (e.g. coming from a PO)
+            routes = move.route_ids
             rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
+            # second priority goes to the route defined on the product and product category
+            if not rules:
+                routes = move.route_ids | move.product_id.route_ids | move.product_id.categ_id.total_route_ids
+                rules = Push.search(domain + [('route_id', 'in', routes.ids)], order='route_sequence, sequence', limit=1)
             if not rules:
                 # TDE FIXME/ should those really be in a if / elif ??
                 # then we search on the warehouse if a rule can apply
@@ -647,7 +651,7 @@ class StockMove(models.Model):
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                
+
                 quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
                 Quant.quants_reserve(quants, move)
 
