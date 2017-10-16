@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo. See LICENSE file for full copyright and licensing details.
+    Copyright (C) 2017 KMEE INFORMATICA LTDA (https://www.kmee.com.br)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_BALANCO" model="account.financial.report">
+        <field name="name">Balanço Patrimonial</field>
+        <field name="sequence" eval="0" />
+        <field name="type">sum</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" eval="False" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO" model="account.financial.report">
+        <field name="name">Ativo</field>
+        <field name="sequence" eval="1" />
+        <field name="type">sum</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_BALANCO" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO_CIRCULANTE" model="account.financial.report">
+        <field name="name">Circulante</field>
+        <field name="sequence" eval="2" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_DISPONIVEL')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_CONTAS_RECEBER')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_ESTOQUES')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_OUTROS_CREDITOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_OUTROS_DEPESAS_EXERCICIO_SEGUINTE'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO_REALIZAVEL_LONGO_PRAZO" model="account.financial.report">
+        <field name="name">Realizável a Longo Prazo</field>
+        <field name="sequence" eval="3" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_REALIZAVEL_LONGO_PRAZO_CONTAS_RECEBER')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_REALIZAVEL_LONGO_PRAZO_ESTOQUES'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO_PERMANENTE" model="account.financial.report">
+        <field name="name">Permanente</field>
+        <field name="sequence" eval="4" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_INVESTIMENTOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_IMOBILIZADO')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_INTANGIVEL')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_DIFERIDO')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_DEPRECIACAO_AMORTIZACAO'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" model="account.financial.report">
+        <field name="name">Passivo</field>
+        <field name="sequence" eval="5" />
+        <field name="type">sum</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_BALANCO" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO_CIRCULANTE" model="account.financial.report">
+        <field name="name">Circulante</field>
+        <field name="sequence" eval="6" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_IMPOSTOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_CONTAS_PAGAR')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_LUCROS_DISTRIBUIR')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_EMPRESTIMOS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO_EXIGIVEL_LONGO_PRAZO" model="account.financial.report">
+        <field name="name">Exigível a Longo Prazo</field>
+        <field name="sequence" eval="7" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_EXIGIVEL_LONGO_PRAZO_CONTAS_PAGAR')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_EXIGIVEL_LONGO_PRAZO_FINANCIAMENTOS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO" model="account.financial.report">
+        <field name="name">Resultados de Exercícios Futuros</field>
+        <field name="sequence" eval="8" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_RECEITAS_DIFERIDAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_CUSTOS_DIFERIDOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_DESPESAS_DIFERIDAS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO_PATRIMONIO" model="account.financial.report">
+        <field name="name">Patrimônio Líquido</field>
+        <field name="sequence" eval="9" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_CAPITAL_SOCIAL')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_RESERVAS_CAPITAL')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_AJUSTES')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_RESERVA_LUCROS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_ACOES_TESOURARIA'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO_LUCROS_PREJUIZOS" model="account.financial.report">
+        <field name="name">Lucros ou Prejuízos Acumulados</field>
+        <field name="sequence" eval="10" />
+        <field name="type">account_report</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="account_report_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_PREJUIZO_LIQUIDO" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_TOTAL" model="account.financial.report">
+        <field name="name">Total</field>
+        <field name="sequence" eval="10" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_BALANCO" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_ATIVO')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_BALANCO_PASSIVO'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+</odoo>

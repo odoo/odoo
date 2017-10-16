@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo. See LICENSE file for full copyright and licensing details.
+    Copyright (C) 2017 KMEE INFORMATICA LTDA (https://www.kmee.com.br)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" model="account.financial.report">
+        <field name="name">DRE</field>
+        <field name="sequence" eval="0" />
+        <field name="type">sum</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" eval="False" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITA_BRUTA_VENDA" model="account.financial.report">
+        <field name="name">(+) Receita Bruta de Vendas</field>
+        <field name="sequence" eval="1" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="-1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_MERCADORIAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_PRODUTOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_SERVICOS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DEDUCAO_RECEITA" model="account.financial.report">
+        <field name="name">(-) Deduções da Receita Bruta</field>
+        <field name="sequence" eval="2" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="-1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_IMPOSTOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_DEVOLUCOES')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_ABATIMENTOS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITA_LIQUIDA" model="account.financial.report">
+        <field name="name">(=) Receita Líquida</field>
+        <field name="sequence" eval="3" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITA_BRUTA_VENDA')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DEDUCAO_RECEITA'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_CUSTO_VENDAS" model="account.financial.report">
+        <field name="name">(-) Custo das Vendas</field>
+        <field name="sequence" eval="4" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_MERCADORIAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_PRODUTOS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_SERVICOS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_BRUTO" model="account.financial.report">
+        <field name="name">(=) Lucro Bruto</field>
+        <field name="sequence" eval="5" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITA_LIQUIDA')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_CUSTO_VENDAS'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DESPESAS_OPERACIONAIS" model="account.financial.report">
+        <field name="name">(-) Despesas Operacionais</field>
+        <field name="sequence" eval="6" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_PESSOAL')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_ADMINISTRATIVAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_COMERCIALIZACAO')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_TRIBUTARIAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_DEPRECIACAO_AMORTIZACAO')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_PERDAS_DIVERSAS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DESPESAS_FINANCEIRAS" model="account.financial.report">
+        <field name="name">(-) Despesas Financeiras Líquidas</field>
+        <field name="sequence" eval="7" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_FINANCEIRAS_DESPESAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_DESPESAS_FINANCEIRAS_RECEITAS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITAS_DIVERSAS" model="account.financial.report">
+        <field name="name">(+) Receitas Diversas</field>
+        <field name="sequence" eval="8" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RECEITAS_DIVERSAS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_OPERACIONAL" model="account.financial.report">
+        <field name="name">(=) Lucro Operacional</field>
+        <field name="sequence" eval="9" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_BRUTO')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DESPESAS_OPERACIONAIS')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DESPESAS_FINANCEIRAS')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RECEITAS_DIVERSAS'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RESULTADO_NAO_OPERACIONAL" model="account.financial.report">
+        <field name="name">(+) Resultado não Operacional</field>
+        <field name="sequence" eval="10" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RESULTADO_NAO_OPERACIONAL_RECEITAS')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_RESULTADO_NAO_OPERACIONAL_DESPESAS'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_ANTES_IRPJ_CSLL" model="account.financial.report">
+        <field name="name">(=) Lucro antes do IRPJ e CSLL</field>
+        <field name="sequence" eval="11" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_OPERACIONAL')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_RESULTADO_NAO_OPERACIONAL'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_PROVISAO_IRPJ_CSLL" model="account.financial.report">
+        <field name="name">(-) Provisão de IRPJ e CSLL</field>
+        <field name="sequence" eval="12" />
+        <field name="type">account_type</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="[(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_PROVISAO_IRPJ')),(4, ref('l10n_br.ACCOUNT_TYPE_CFC_DRE_PROVISAO_CSLL'))]" />
+        <field name="summary_report_ids" eval="False" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_PREJUIZO_LIQUIDO" model="account.financial.report">
+        <field name="name">(=) Lucro ou Prejuízo Líquido</field>
+        <field name="sequence" eval="13" />
+        <field name="type">account_report_summary</field>
+        <field name="sign" eval="1" />
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="parent_id" ref="l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_DRE" />
+        <field name="account_type_ids" eval="False" />
+        <field name="summary_report_ids" eval="[(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_LUCRO_ANTES_IRPJ_CSLL')),(4, ref('l10n_br.ACCOUNT_FINANCIAL_REPORT_CFC_DRE_PROVISAO_IRPJ_CSLL'))]" />
+        <field name="is_brazilian_financial_report" eval="True" />
+    </record>
+
+</odoo>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2016 Taŭga Tecnologia - Aristides Caldeira <aristides.caldeira@tauga.com.br>
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo>
+
+    <record id="account_account_form" model="ir.ui.view">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="replace">
+                <field name="is_brazilian_account" invisible="1" />
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"
+                       attrs="{'invisible': [('is_brazilian_account', '=', True)]}"/>
+                <field name="sped_empresa_id" string="Empresa"
+                       options="{'no_create': True}"
+                       groups="base.group_multi_company"
+                       attrs="{'required': [('is_brazilian_account', '=', True)], 'invisible': [('is_brazilian_account', '!=', True)]}"/>
+            </field>
+            <field name="user_type_id" position="replace">
+                <field name="user_type_id" domain="[('is_brazilian_account_type', '=', is_brazilian_account)]" context="{'default_is_brazilian_account_type': is_brazilian_account}" />
+            </field>
+            <field name="currency_id" position="attributes">
+                <attribute name="domain">[('is_currency', '=', True)]</attribute>
+                <attribute name="invisible">[('is_brazilian_account', '=', True)]</attribute>
+            </field>
+            <xpath expr="//sheet/group/group[2]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_account', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//sheet/group/group[2]" position="after">
+                <group name="contas_filhas">
+                    <separator string="Contas Inferiores" />
+                    <newline />
+                    <field name="child_ids" readonly="1" />
+                </group>
+                <newline />
+                <group name="dre_balanco" colspan="4" attrs="{'invisible': [('is_brazilian_account', '!=', True)]}">
+                   <div class="row" style="background-color: #eee">
+                       <p class="text-center">O tipo de conta é usado da seguinte forma:</p>
+                       <div class="col-md-5 col-md-offset-1 col-sm-6 no-margin-top">
+                           <div class="col-md-12 col-sm-12">
+                               <div class="oe_account_help">
+                                   <p class="oe_account_font_help text-center" style="font-weight: bold;">DRE</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: blue;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(+) RECEITA BRUTA</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Venda de Mercadorias</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Venda de Produtos</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Venda de Serviços</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) DEDUÇÕES DA RECEITA BRUTA</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Imposto</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Devoluções</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Abatimentos</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) RECEITA LÍQUIDA</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) CUSTO DAS VENDAS</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Custo das Mercadorias Vendidas</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Custo dos Produtos Vendidos</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Custo dos Serviços Prestados</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) LUCRO BRUTO</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) DESPESAS OPERACIONAIS</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas com Pessoal</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas Administrativas</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas de Comercialização</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas Tributárias</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Depreciação e Amortização</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Perdas Diversas</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) DESPESAS FINANCEIRAS</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas Financeiras</p>
+                                   <p class="oe_account_font_help oe_account_font_content">(-) Receitas Financeiras</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: blue;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(+) RECEITAS DIVERSAS</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Receitas Diversas</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) LUCRO OPERACIONAL</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: blue;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(+) RESULTADO NÃO OPERACIONAL</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Receitas não Operacionais</p>
+                                   <p class="oe_account_font_help oe_account_font_content">(-) Despesas não Operacionais</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) LUCRO ANTES DO IRPJ E CSLL</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) PROVISÃO DE IRPJ E CSLL</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Provisão para o IRPJ</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Provisão para a CSLL</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: green;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) LUCRO OU PREJUÍZO LÍQUIDO</p>
+                                    <!--<div style="position: relative; width: 250px; height: 277px;" id="layer">-->
+                                       <!--<div style="position: relative; left: 0px; top: 0px; visibility: visible; width: 250px; height: 277px;">-->
+                                         <!--<svg pointer-events="none" overflow="auto" width="712.5" height="265" viewBox="-4 -4 712.5 265" style="position: relative; top: -4px; left: -4px; overflow: auto; visibility: visible; width: 400.5px; height: 265px;">-->
+                                           <!--<defs>-->
+                                             <!--<marker id="arrow" markerWidth="70" markerHeight="70" refx="10" refy="6" orient="auto">-->
+                                                 <!--<path d="M2,1 L2,12 L10,6 L2,1" stroke="rgb(173,216,230)" fill="rgb(173,216,230)"/>-->
+                                             <!--</marker>-->
+                                           <!--</defs>-->
+                                           <!--<path pointer-events="visiblePainted" shape-rendering="auto" d="M 150 -110 q 270 100 150 150 t 160 120" fill="none" stroke-dasharray="8,3" stroke="rgb(173,216,230)" stroke-linecap="butt" stroke-width="4" stroke-opacity="1" stroke-linejoin="round" transform="matrix(1,0,0,1,0,0)" fill-opacity="1" style="marker-end: url(#arrow);">-->
+                                           <!--</path>-->
+                                         <!--</svg>-->
+                                       <!--</div>-->
+                                   <!--</div>-->
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-md-5 col-ml-offset-1 col-sm-6 no-margin-top">
+                           <div class="col-md-12 col-sm-12">
+                               <div class="oe_account_help">
+                                   <p class="oe_account_font_help text-center" style="font-weight: bold;">BALANÇO PATRIMONIAL</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: blue;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(+) ATIVO</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">CIRCULANTE</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Disponível</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Contas a Receber</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Estoques</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Outros Créditos</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Despesas do Exercício Seguinte</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">REALIZÁVEL A LONGO PRAZO</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Contas a Receber</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Estoques</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">PERMANENTE</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Investimentos</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Imobilizado</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Intangível</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Diferido</p>
+                                   <p class="oe_account_font_help oe_account_font_content">(-) Depreciação e Amortização Acumuladas</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: red;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(-) PASSIVO</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">CIRCULANTE</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Obrigações Sociais e Impostos a Recolher</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Contas a Pagar</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Lucros a Distribuir</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Empréstimos Bancários</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">REALIZÁVEL A LONGO PRAZO</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Contas a Pagar</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Financiamentos Bancários</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">RESULTADOS DE EXERCÍCIOS FUTUROS</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Receitas Diferidas</p>
+                                   <p class="oe_account_font_help oe_account_font_content">(-) Custos e Despesas Diferidas</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid;">PATRIMÔNIO LÍQUIDO</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Capital Social</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Reservas de Capital</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Ajustes de Avaliação Patrimonial</p>
+                                   <p class="oe_account_font_help oe_account_font_content">Reserva de Lucros</p>
+                                   <p class="oe_account_font_help oe_account_font_content">(-) Ações em Tesouraria</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: green;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(+) LUCRO OU PREJUÍZO LÍQUIDO</p>
+                                   <p class="oe_account_font_help oe_account_font_title" style="color: black;border-top: 2px solid;border-bottom: 2px solid; font-weight: bold;">(=) TOTAL</p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_account_tree" model="ir.ui.view">
+        <field name="name">account.account.tree</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="is_brazilian_account" invisible="1" />
+            </field>
+            <field name="company_id" position="attributes">
+                <attribute name="invisible">[('is_brazilian_account', '=', True)]</attribute>
+            </field>
+            <field name="company_id" position="after">
+                <field name="sped_empresa_id" string="Empresa"
+                       options="{'no_create': True}"
+                       groups="base.group_multi_company"
+                       attrs="{'required': [('is_brazilian_account', '=', True)], 'invisible': [('is_brazilian_account', '!=', True)]}"/>
+            </field>
+            <field name="currency_id" position="attributes">
+                <attribute name="domain">[('is_currency', '=', True)]</attribute>
+                <!--<attribute name="invisible">[('is_brazilian_account', '=', True)]</attribute>-->
+            </field>
+        </field>
+    </record>
+
+</odoo>

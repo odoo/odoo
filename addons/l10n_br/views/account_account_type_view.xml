@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2016 Taŭga Tecnologia - Aristides Caldeira <aristides.caldeira@tauga.com.br>
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo>
+
+    <record id="account_account_type_form" model="ir.ui.view">
+        <field name="name">account.account.type.form</field>
+        <field name="model">account.account.type</field>
+        <field name="inherit_id" ref="account.view_account_type_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="is_brazilian_account_type" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

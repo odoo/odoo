@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2016 Taŭga Tecnologia - Aristides Caldeira <aristides.caldeira@tauga.com.br>
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="CHART_TEMPLATE_PLANO_SIMPLIFICADO_CFC" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_1_1_2_1_01" />
+        <field name="property_account_payable_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_2_1_1_4_01" />
+        <field name="property_account_income_categ_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_6_1_1_1_01" />
+        <field name="property_account_expense_categ_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_5_1_1_1_01" />
+        <field name="property_account_income_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_6_1_1_1_01" />
+        <field name="property_account_expense_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_5_1_1_1_01" />
+        <field name="property_stock_account_input_categ_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_1_1_3_1_02" />
+        <field name="property_stock_account_output_categ_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_1_1_3_1_02" />
+        <field name="property_stock_valuation_account_id" ref="l10n_br_small_business.ACCOUNT_TEMPLATE_CFC_CONTA_1_1_3_1_02" />
+    </record>
+
+</odoo>

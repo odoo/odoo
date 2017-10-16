@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2016 Taŭga Tecnologia - Aristides Caldeira <aristides.caldeira@tauga.com.br>
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="code">1.1.2.2.03</field>
+        <field name="name">Transferências</field>
+        <field name="reconcile" eval="True" />
+        <field name="is_brazilian_account" eval="True" />
+        <field name="user_type_id" ref="l10n_br.ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_CONTAS_RECEBER" />
+        <field name="tipo">receber</field>
+    </record>
+
+
+    <record id="CHART_TEMPLATE_PLANO_SIMPLIFICADO_CFC" model="account.chart.template">
+        <field name="name">Plano de Contas Simplificado - Conselho Federal de Contabilidade</field>
+        <field name="is_brazilian_chart_template" eval="True" />
+        <field name="currency_id" ref="base.BRL" />
+        <field name="cash_account_code_prefix">1.1.1.1</field>
+        <field name="bank_account_code_prefix">1.1.1.2</field>
+        <field name="transfer_account_id" ref="transfer_account_id"/>
+        <field name="code_digits" eval="1" />
+        <field name="is_brazilian_chart_template" eval="True" />
+    </record>
+
+</odoo>

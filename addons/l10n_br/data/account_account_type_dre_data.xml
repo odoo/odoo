@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo. See LICENSE file for full copyright and licensing details.
+    Copyright (C) 2017 KMEE INFORMATICA LTDA (https://www.kmee.com.br)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="ACCOUNT_TYPE_CFC_DRE" model="account.account.type">
+        <field name="name">DRE (contas de resultado ou analíticas)</field>
+        <field name="note">DRE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_MERCADORIAS" model="account.account.type">
+        <field name="name">Venda de Mercadoria</field>
+        <field name="note">DRE / (+) RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_PRODUTOS" model="account.account.type">
+        <field name="name">Venda de Produtos</field>
+        <field name="note">DRE / (+) RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RECEITA_BRUTA_VENDA_SERVICOS" model="account.account.type">
+        <field name="name">Venda de Serviços</field>
+        <field name="note">DRE / (+) RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_IMPOSTOS" model="account.account.type">
+        <field name="name">Impostos</field>
+        <field name="note">DRE / (-) DEDUÇÕES DA RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_DEVOLUCOES" model="account.account.type">
+        <field name="name">Devoluções</field>
+        <field name="note">DRE / (-) DEDUÇÕES DA RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DEDUCAO_RECEITA_ABATIMENTOS" model="account.account.type">
+        <field name="name">Abatimentos</field>
+        <field name="note">DRE / (-) DEDUÇÕES DA RECEITA BRUTA</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_MERCADORIAS" model="account.account.type">
+        <field name="name">Custo das Mercadorias Vendidas</field>
+        <field name="note">DRE / (-) CUSTO DAS VENDAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_PRODUTOS" model="account.account.type">
+        <field name="name">Custo dos Produtos Vendidos</field>
+        <field name="note">DRE / (-) CUSTO DAS VENDAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_CUSTO_VENDAS_SERVICOS" model="account.account.type">
+        <field name="name">Custo dos Serviços Prestados</field>
+        <field name="note">DRE / (-) CUSTO DAS VENDAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_PESSOAL" model="account.account.type">
+        <field name="name">Despesas com Pessoal</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_ADMINISTRATIVAS" model="account.account.type">
+        <field name="name">Despesas Administrativas</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_COMERCIALIZACAO" model="account.account.type">
+        <field name="name">Despesas de Comercialização</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_TRIBUTARIAS" model="account.account.type">
+        <field name="name">Despesas Tributárias</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_DEPRECIACAO_AMORTIZACAO" model="account.account.type">
+        <field name="name">Depreciação e Amortização</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_OPERACIONAIS_PERDAS_DIVERSAS" model="account.account.type">
+        <field name="name">Perdas Diversas</field>
+        <field name="note">DRE / (-) DESPESAS OPERACIONAIS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_FINANCEIRAS_DESPESAS" model="account.account.type">
+        <field name="name">Despesas Financeiras</field>
+        <field name="note">DRE / (-) DESPESAS FINANCEIRAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_DESPESAS_FINANCEIRAS_RECEITAS" model="account.account.type">
+        <field name="name">(-) Receitas Financeiras</field>
+        <field name="note">DRE / (-) DESPESAS FINANCEIRAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RECEITAS_DIVERSAS" model="account.account.type">
+        <field name="name">Receitas Diversas</field>
+        <field name="note">DRE / (+) RECEITAS DIVERSAS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RESULTADO_NAO_OPERACIONAL_RECEITAS" model="account.account.type">
+        <field name="name">Receitas não Operacionais</field>
+        <field name="note">DRE / (+) RESULTADO NÃO OPERACIONAL</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_RESULTADO_NAO_OPERACIONAL_DESPESAS" model="account.account.type">
+        <field name="name">(-) Despesas não Operacionais</field>
+        <field name="note">DRE / (+) RESULTADO NÃO OPERACIONAL</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_PROVISAO_IRPJ" model="account.account.type">
+        <field name="name">Provisão para o IRPJ</field>
+        <field name="note">DRE / (-) PROVISÃO DE IRPJ E CSLL</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_DRE_PROVISAO_CSLL" model="account.account.type">
+        <field name="name">Provisão para a CSLL</field>
+        <field name="note">DRE / (-) PROVISÃO DE IRPJ E CSLL</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+</odoo>
