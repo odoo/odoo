@@ -66,6 +66,7 @@ var _t = core._t;
  *      }
  *      mv_lines: object - idem than reconciliation_proposition
  *      offset: integer
+ *      limitMoveLines: integer
  *      filter: string
  *      [createForm]: {
  *          account_id: {
@@ -95,8 +96,11 @@ var StatementModel = BasicModel.extend({
 
     /**
      * @override
+     *
+     * @param {Widget} parent
+     * @param {object} options
      */
-    init: function () {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
         this.reconcileModels = [];
         this.lines = {};
@@ -104,6 +108,7 @@ var StatementModel = BasicModel.extend({
         this.valuemax = 0;
         this.alreadyDisplayed = [];
         this.defaultDisplayQty = 10;
+        this.limitMoveLines = options && options.limitMoveLines || 5;
     },
 
     //--------------------------------------------------------------------------
@@ -162,7 +167,9 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     changeFilter: function (handle, filter) {
-        this.getLine(handle).filter = filter;
+        var line = this.getLine(handle);
+        line.filter = filter;
+        line.offset = 0;
         return this._performMoveLine(handle);
     },
     /**
@@ -217,7 +224,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     changeOffset: function (handle, offset) {
-        this.getLine(handle).offset += offset;
+        this.getLine(handle).offset += (offset > 0 ? 1 : -1) * this.limitMoveLines;
         return this._performMoveLine(handle);
     },
     /**
@@ -357,14 +364,14 @@ var StatementModel = BasicModel.extend({
                 self.context.journal_id = statement.journal_id;
                 _.each(statement.st_lines_ids, function (id) {
                     self.lines[_.uniqueId('rline')] = {
-                        'id': id,
-                        'reconciled': false,
-                        'mode': 'inactive',
-                        'mv_lines': [],
-                        'offset': 0,
-                        'filter': "",
-                        'reconciliation_proposition': [],
-                        'reconcileModels': []
+                        id: id,
+                        reconciled: false,
+                        mode: 'inactive',
+                        mv_lines: [],
+                        offset: 0,
+                        filter: "",
+                        reconciliation_proposition: [],
+                        reconcileModels: [],
                     };
                 });
             });
@@ -849,6 +856,7 @@ var StatementModel = BasicModel.extend({
                 return l.id === data.st_line.id;
             });
             line.visible = true;
+            line.limitMoveLines = self.limitMoveLines;
             _.extend(line, data);
             self._formatLineProposition(line, line.reconciliation_proposition);
             if (!line.reconciliation_proposition.length) {
@@ -987,7 +995,7 @@ var StatementModel = BasicModel.extend({
         })));
         var filter = line.filter || "";
         var offset = line.offset;
-        var limit = 6;
+        var limit = this.limitMoveLines+1;
         return this._rpc({
                 model: 'account.bank.statement.line',
                 method: 'get_move_lines_for_reconciliation_widget',
@@ -1263,15 +1271,16 @@ var ManualModel = StatementModel.extend({
      */
     _formatLine: function (type, data) {
         var line = this.lines[_.uniqueId('rline')] = _.extend(data, {
-            'type': type,
-            'reconciled': false,
-            'mode': 'inactive',
-            'offset': 0,
-            'filter': "",
-            'reconcileModels': [],
-            'account_id': this._formatNameGet([data.account_id, data.account_name]),
-            'st_line': data,
-            'visible': true
+            type: type,
+            reconciled: false,
+            mode: 'inactive',
+            offset: 0,
+            limitMoveLines: this.limitMoveLines,
+            filter: "",
+            reconcileModels: [],
+            account_id: this._formatNameGet([data.account_id, data.account_name]),
+            st_line: data,
+            visible: true
         });
         this._formatLineProposition(line, line.reconciliation_proposition);
         if (!line.reconciliation_proposition.length) {
@@ -1335,7 +1344,7 @@ var ManualModel = StatementModel.extend({
         })));
         var filter = line.filter || "";
         var offset = line.offset;
-        var limit = 6;
+        var limit = this.limitMoveLines+1;
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
         return this._rpc({
                 model: 'account.move.line',

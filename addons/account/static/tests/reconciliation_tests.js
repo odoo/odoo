@@ -475,7 +475,10 @@ var session = {
 var options = {
     context: {
         statement_ids: [4]
-    }
+    },
+    params: {
+        limitMoveLines: 5,
+    },
 };
 
 Datas.params = {
@@ -1051,7 +1054,7 @@ QUnit.module('account', {
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
+            data: this.params.data,
             session: this.params.session,
         });
         clientAction.appendTo($('#qunit-fixture'));
