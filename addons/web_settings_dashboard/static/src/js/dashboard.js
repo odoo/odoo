@@ -82,14 +82,31 @@ var DashboardInvitations = Widget.extend({
         this.parent = parent;
         return this._super.apply(this, arguments);
     },
-    send_invitations: function(e){
+    start: function (){
+        var def = this._super.apply(this, arguments);
+        this.s2input = this.parent.$('textarea#user_emails').select2({
+            tags: [],
+            tokenSeparators: [" ", ","],
+            dropdownCss: {display:'none'},
+            width: '100%',
+        })
+        .on("select2-open", function (){
+            $('.select2-drop-mask').remove();
+        })
+        .on('select2-blur', function (ev){
+            $(ev.target).data("select2").selectHighlighted({noFocus: true});
+        });
+        return def;
+    },
+    send_invitations: function (e){
         var self = this;
         var $target = $(e.currentTarget);
-        var user_emails =  _.filter($(e.delegateTarget).find('#user_emails').val().split(/[\n, ]/), function(email){
-            return email !== "";
+        var email_data = this.s2input.select2('data');
+        var user_emails = _.map(email_data, function (email) {
+            return email.text;
         });
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
-        var is_valid_emails = _.every(user_emails, function(email) {
+        var is_valid_emails = _.every(user_emails, function (email) {
             return re.test(email);
         });
         if (is_valid_emails) {
@@ -143,11 +160,13 @@ var DashboardInvitations = Widget.extend({
         var self = this;
         e.preventDefault();
         var action = {
+            name: _t('Users'),
             type: 'ir.actions.act_window',
             view_type: 'form',
             view_mode: 'tree,form',
             res_model: 'res.users',
             domain: [['log_ids', '=', false]],
+            context: {'search_default_no_share': true},
             views: [[false, 'list'], [false, 'form']],
         };
         this.do_action(action,{
