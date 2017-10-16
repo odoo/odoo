@@ -16,6 +16,7 @@ have real delivered quantities in sales orders.
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['sale_management', 'hr_timesheet'],
     'data': [
+        'security/sale_timesheet_security.xml',
         'views/account_invoice_views.xml',
         'views/sale_order_views.xml',
         'views/product_views.xml',
