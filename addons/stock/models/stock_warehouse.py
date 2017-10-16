@@ -8,7 +8,7 @@ from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import logging
 
@@ -843,7 +843,7 @@ class Orderpoint(models.Model):
             # These days will be substracted when creating the PO
             days += self.product_id._select_seller().delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
