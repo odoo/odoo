@@ -61,6 +61,7 @@ class MailMail(osv.Model):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
         mail = self.browse(cr, uid, ids[0], context=context)
+        body = re.sub('(<!--.*?-->)', '', body, 0, re.DOTALL)
 
         if mail.mailing_id and body and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
