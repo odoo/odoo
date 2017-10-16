@@ -291,7 +291,7 @@ class ResPartner(models.Model):
             self.total_invoiced = 0.0
             return True
 
-        user_currency_id = self.env.user.company_id.currency_id.id
+        user_currency_id = self.env.user.company_id.currency_id
         all_partners_and_children = {}
         all_partner_ids = []
         for partner in self:
@@ -314,15 +314,34 @@ class ResPartner(models.Model):
 
         # price_total is in the company currency
         query = """
-                  SELECT SUM(price_total) as total, partner_id
+                  SELECT SUM(price_total) as total, partner_id, currency_id, date
                     FROM account_invoice_report account_invoice_report
                    WHERE %s
-                   GROUP BY partner_id
+                   GROUP BY partner_id, currency_id, date
                 """ % where_clause
         self.env.cr.execute(query, where_clause_params)
         price_totals = self.env.cr.dictfetchall()
         for partner, child_ids in all_partners_and_children.items():
-            partner.total_invoiced = sum(price['total'] for price in price_totals if price['partner_id'] in child_ids)
+            total_invoiced = 0
+            currency = None
+            currency_date = None
+            for price in price_totals:
+                if price['partner_id'] not in child_ids:
+                    continue
+                total_invoiced += price['total']
+                # In case of account_invoice_report in another currency,
+                # browse this currency to show the amount in the user's company.
+                # This is necessary because the account_invoice_report is not recomputed when
+                # the user switch from one company to another. Furthermore, we cannot use the
+                # user_currency_price_total in account_invoice_report because
+                # _compute_amounts_in_user_currency don't depend of the user.
+                # see opw: 771256
+                if not currency and price['currency_id'] != user_currency_id:
+                    currency = self.env['res.currency'].browse(price['currency_id'])
+                    currency_date = price['date']
+            if currency:
+                total_invoiced = currency.with_context(date=currency_date).compute(total_invoiced, user_currency_id)
+            partner.total_invoiced = total_invoiced
 
     @api.multi
     def _journal_item_count(self):
@@ -396,10 +415,7 @@ class ResPartner(models.Model):
 
     @api.one
     def _get_company_currency(self):
-        if self.company_id:
-            self.currency_id = self.sudo().company_id.currency_id
-        else:
-            self.currency_id = self.env.user.company_id.currency_id
+        self.currency_id = self.env.user.company_id.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
