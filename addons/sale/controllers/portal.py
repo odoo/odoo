@@ -183,8 +183,7 @@ class CustomerPortal(CustomerPortal):
             order_sudo = self._order_check_access(order, access_token=access_token)
         except AccessError:
             return request.redirect('/my')
-        order_record = request.env['sale.order'].browse(order)
-        shared_doc = self._check_shared_document(order_record)
+        shared_doc = self._check_shared_document(order_sudo)
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         values.update({'shared_doc': shared_doc, 'url': base_url + '/my/orders/' + str(order)})
