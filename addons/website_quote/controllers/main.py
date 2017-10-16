@@ -168,7 +168,7 @@ class sale_quote(http.Controller):
 
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None):
+    def payment_transaction_token(self, acquirer_id, order_id, save_token=False,access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -193,7 +193,7 @@ class sale_quote(http.Controller):
         })
         request.session['quote_%s_transaction_id' % order.id] = tx.id
 
-        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, access_token) if access_token else '/quote/%s' % order_id,
                                      submit_txt=_('Pay & Confirm'), render_values={
                                          'type': order._get_payment_type(),
                                          'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
