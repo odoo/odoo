@@ -48,7 +48,7 @@ var History = function History ($editable) {
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
         $(".oe_overlay").remove();
         $(".note-control-selection").hide();
-        
+
         $editable.trigger("content_changed");
 
         try {
@@ -438,7 +438,7 @@ var RTE = Widget.extend({
     saveElement: function ($el, context) {
         // remove multi edition
         if ($el.data('oe-model')) {
-            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
+            var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression')+":"+$el.data('oe-xpath');
             if (this.__saved[key]) return true;
             this.__saved[key] = true;
         }
