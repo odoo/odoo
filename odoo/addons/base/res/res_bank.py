@@ -70,10 +70,6 @@ class ResPartnerBank(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
 
-    _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
-    ]
-
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
         for bank in self:
