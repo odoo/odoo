@@ -855,7 +855,6 @@ var FormRenderer = BasicRenderer.extend({
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
             this._activateNextFieldWidget(this.state, index);
-            debugger;
         } else if (ev.data.direction === "previous") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
             this._activatePreviousFieldWidget(this.state, index);
