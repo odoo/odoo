@@ -102,9 +102,7 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         lines = False
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            lines = self.filtered(lambda r: r.state == 'sale')
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_procurement_rule()
@@ -227,8 +225,6 @@ class SaleOrderLine(models.Model):
             qty = 0.0
             for move in line.move_ids:
                 qty += move.product_qty
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                continue
 
             if not line.order_id.procurement_group_id:
                 line.order_id.procurement_group_id = self.env['procurement.group'].create({
