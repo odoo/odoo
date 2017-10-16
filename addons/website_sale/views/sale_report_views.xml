@@ -34,7 +34,6 @@
             <pivot string="Sales Report">
                 <field name="date" type="row"/>
                 <field name="state" type="col"/>
-                <field name="price_subtotal" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -55,6 +54,7 @@
         <field name="res_model">sale.report</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>
+        <field name="context">{'pivot_measures': ['__count', 'price_subtotal']}</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
         <field name="help">You don't have any order from the website.</field>
     </record>
@@ -79,6 +79,7 @@
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('team_id.team_type', '=', 'website')]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
+        <field name="context">{'pivot_measures': ['__count', 'price_subtotal']}</field>
         <field name="help">You don't have any order from the website.</field>
     </record>
 
@@ -94,5 +95,29 @@
         <field name="view_mode">graph</field>
         <field name="view_id" ref="sale_report_view_graph_website"/>
         <field name="act_window_id" ref="sale_report_action_carts"/>
+    </record>
+
+    <record id="sale_report_action_sold" model="ir.actions.act_window">
+        <field name="name">Sales</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>
+        <field name="search_view_id" ref="sale_report_view_search_website"/>
+        <field name="context">{'pivot_measures': ['price_subtotal']}</field>
+        <field name="help">You don't have any order from the website.</field>
+    </record>
+
+    <record id="sale_report_action_view_pivot_sold" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_view_pivot_website"/>
+        <field name="act_window_id" ref="sale_report_action_sold"/>
+    </record>
+
+    <record id="sale_report_action_view_graph_sold" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_view_graph_website"/>
+        <field name="act_window_id" ref="sale_report_action_sold"/>
     </record>
 </odoo>
