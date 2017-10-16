@@ -257,13 +257,20 @@ var CalendarController = AbstractController.extend({
         id = id && parseInt(id).toString() === id ? parseInt(id) : id;
 
         if (!this.eventOpenPopup) {
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_id: id,
-                res_model: this.modelName,
-                views: [[this.formViewId || false, 'form']],
-                target: 'current',
-                context: event.context || self.context,
+            this._rpc({
+                model: self.modelName,
+                method: 'get_formview_id',
+                //The event can be called by a view that can have another context than the default one.
+                args: [[id], event.context || self.context],
+            }).then(function (viewId) {
+                self.do_action({
+                    type:'ir.actions.act_window',
+                    res_id: id,
+                    res_model: self.modelName,
+                    views: [[viewId || false, 'form']],
+                    target: 'current',
+                    context: event.context || self.context,
+                });
             });
             return;
         }
