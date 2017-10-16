@@ -2861,15 +2861,10 @@ msgid "It is also possible to import your initial inventory from an Excel or CSV
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:244
+#: code:addons/stock/models/stock_quant.py:254
+#: code:addons/stock/models/stock_quant.py:256
 #, python-format
-msgid "It is not possible to reserve more products than you have in stock."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:246
-#, python-format
-msgid "It is not possible to unreserve more products than you have in stock."
+msgid "It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
@@ -6707,6 +6702,12 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:656
 #, python-format
 msgid "You cannot validate a transfer if you have not processed any quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:672
+#, python-format
+msgid "You cannot validate a transfer if you have not processed any quantity for %s."
 msgstr ""
 
 #. module: stock
