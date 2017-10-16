@@ -2178,6 +2178,64 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('Check sequence after move records', function (assert) {
+        assert.expect(5);
+        var records = this.data.partner.records.concat([
+            {id: 5, bar: false, foo: "yup", int_field: 20, qux: 0.5, product_id: 5, state: "abc", category_ids: []},
+            {id: 6, bar: true, foo: "nope", int_field: 30, qux: 0.6, product_id: 5, state: "abc", category_ids: []},
+        ]);
+        this.data.partner.records = records;
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="foo"/>' +
+                                '<field name="id"/>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence'){
+                    return $.when(true);
+                } else {
+                    return this._super(route, args);
+                }
+            },
+            viewOptions: {
+                limit: 2,
+            },
+        });
+
+        assert.deepEqual(kanban.model.localData[kanban.handle].res_ids, [1, 3, 2, 4]);
+        // Load more records
+        kanban.$('.o_kanban_group:eq(1)').find('.o_kanban_load_more').click();
+        assert.deepEqual(kanban.model.localData[kanban.handle].res_ids, [1, 3, 2, 4, 5, 6]);
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        // move record to different column
+        testUtils.dragAndDrop($record, $group);
+        assert.deepEqual(kanban.model.localData[kanban.handle].res_ids, [3, 2, 4, 5, 6, 1]);
+        var $group_second = kanban.$('.o_kanban_group:nth-child(2) .o_kanban_header_title');
+        var $group_first = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_header_title');
+        kanban.$('.o_kanban_view').sortable("option", {delay: 0, revert: 0});
+        // swap columns
+        testUtils.dragAndDrop($group_second, $group_first);
+        assert.deepEqual(kanban.model.localData[kanban.handle].res_ids, [2, 4, 5, 6, 1, 3]);
+        var $first_record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $last_record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:last');
+        // move record in same column
+        testUtils.dragAndDrop($first_record, $last_record);
+        assert.deepEqual(kanban.model.localData[kanban.handle].res_ids, [4, 5, 6, 1, 2, 3]);
+        kanban.destroy();
+    });
+
 });
 
 });
