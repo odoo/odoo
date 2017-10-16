@@ -4,7 +4,6 @@ import time
 import math
 
 from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError, ValidationError
 from openerp import api, fields, models, _
@@ -619,6 +618,7 @@ class AccountTax(models.Model):
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
         self.ensure_one()
+        price_include = self._context.get('force_price_include', self.price_include)
         if self.amount_type == 'fixed':
             # Use copysign to take into account the sign of the base amount which includes the sign
             # of the quantity and the sign of the price_unit
@@ -632,11 +632,11 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.amount
             else:
                 return quantity * self.amount
-        if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
+        if (self.amount_type == 'percent' and not price_include) or (self.amount_type == 'division' and self.price_include):
             return base_amount * self.amount / 100
-        if self.amount_type == 'percent' and self.price_include:
+        if self.amount_type == 'percent' and price_include:
             return base_amount - (base_amount / (1 + self.amount / 100))
-        if self.amount_type == 'division' and not self.price_include:
+        if self.amount_type == 'division' and not price_include:
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.v8
@@ -659,23 +659,57 @@ class AccountTax(models.Model):
                 'analytic': boolean,
             }]
         } """
+
+        # 1) Flatten the taxes.
+
+        def collect_taxes(self, all_taxes=None):
+            # Collect all the taxes recursively ordered by the sequence.
+            # Example:
+            # group | seq | sub-group |
+            # ------------|-----------|
+            #       |  1  |           |
+            # ------------|-----------|
+            #   t   |  2  |  | seq |  |
+            #       |     |  |  4  |  |
+            #       |     |  |  5  |  |
+            #       |     |  |  6  |  |
+            #       |     |           |
+            # ------------|-----------|
+            #       |  3  |           |
+            # ------------|-----------|
+            # Result: 1-4-5-6-3
+            if not all_taxes:
+                all_taxes = self.env['account.tax']
+            for tax in self.sorted(key=lambda r: r.sequence):
+                if tax.amount_type == 'group':
+                    all_taxes = collect_taxes(tax.children_tax_ids, all_taxes)
+                else:
+                    all_taxes += tax
+            return all_taxes
+
+        taxes = collect_taxes(self)
+
+        # 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
+        # with price_include=True
+
+        base_excluded_flag = False  # price_include=False && include_base_amount=True
+        included_flag = False  # price_include=True
+        for tax in taxes:
+            if tax.price_include:
+                included_flag = True
+            elif tax.include_base_amount:
+                base_excluded_flag = True
+            if base_excluded_flag and included_flag:
+                raise UserError(_('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.'))
+
+        # 3) Deal with the rounding methods
+
         if len(self) == 0:
             company_id = self.env.user.company_id
         else:
             company_id = self[0].company_id
         if not currency:
             currency = company_id.currency_id
-        taxes = []
-        # By default, for each tax, tax amount will first be computed
-        # and rounded at the 'Account' decimal precision for each
-        # PO/SO/invoice line and then these rounded amounts will be
-        # summed, leading to the total amount for that tax. But, if the
-        # company has tax_calculation_rounding_method = round_globally,
-        # we still follow the same method, but we use a much larger
-        # precision when we round the tax amount for each line (we use
-        # the 'Account' decimal precision + 5), and that way it's like
-        # rounding after the sum of the tax amounts of each line
-        prec = currency.decimal_places
 
         # In some cases, it is necessary to force/prevent the rounding of the tax and the total
         # amounts. For example, in SO/PO line, we don't want to round the price unit at the
@@ -687,64 +721,235 @@ class AccountTax(models.Model):
             round_tax = bool(self.env.context['round'])
             round_total = bool(self.env.context['round'])
 
-        if not round_tax:
-            prec += 5
+        # 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
+        #
+        # At this step, we will follow the computation step by step based on a basic example:
+        #
+        # tax_1 = {'amount': 6.0, 'amount_type': 'percent', 'price_included': True}
+        # tax_2 = {'amount': 9.0, 'amount_type': 'fixed', 'price_included': False}
+        # tax_3 = {'amount': 6.0, 'amount_type': 'percent', 'price_included': True}
+        # (tax_1 + tax_2 + tax_3).compute_all(130.0)
+        #
+        # taxes_vals will be used to compute an array like:
+        #
+        #  ------------------------------------------------
+        #                 |     tax_1     | tax_2 | tax_3 |
+        # -------------------------------------------------
+        # exact_amount    |               |       |       |
+        # -------------------------------------------------
+        # round_amount    |               |       |       |
+        # ----------------------------------------------------------------
+        # exact_base      | starting_base |       |       | initial_base |
+        # ----------------------------------------------------------------
+        # round_base      |               |       |       | initial_base |
+        # ----------------------------------------------------------------
+        # included_amount |               |       |       |
+        # -------------------------------------------------
+        # Where:
+        # - starting_base is the very first base on which the computation can be performed.
+        # - initial_base is the very last base corresponding the amount passed to the compute_all. 130.0 in our example.
+        taxes_vals = [{} for _ in taxes]
 
-        base_values = self.env.context.get('base_values')
-        if not base_values:
-            total_excluded = total_included = base = round(price_unit * quantity, prec)
+        def recompute_base(base_amount, fixed_amount, percent_amount):
+            # Recompute the new base amount based on included fixed/percent amount and the current base amount.
+            # Example:
+            #  tax  |  amount  |
+            # ------------------
+            # tax_1 |   10%    |
+            # tax_2 |   15     |
+            # tax_3 |   20%    |
+            # ------------------
+            # if base_amount = 145, the new base is computed as:
+            # (145 - 15) / (1.0 + ((10 + 20) / 100.0)) = 130 / 1.3 = 100
+            if fixed_amount == 0.0 and percent_amount == 0.0:
+                return base_amount
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0)
+
+        # The initial_base is the base of all computation to perform.
+        initial_base = currency.round(price_unit * quantity)
+
+        # For the computation of move lines, we could have a negative base value.
+        # In this case, compute all with positive values and negative them at the end.
+        if initial_base < 0:
+            initial_base = -initial_base
+            sign = -1
         else:
-            total_excluded, total_included, base = base_values
+            sign = 1
 
-        # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
-        # search. However, the search method is overridden in account.tax in order to add a domain
-        # depending on the context. This domain might filter out some taxes from self, e.g. in the
-        # case of group taxes.
-        for tax in self.sorted(key=lambda r: r.sequence):
-            if tax.amount_type == 'group':
-                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
-                ret = children.compute_all(price_unit, currency, quantity, product, partner)
-                total_excluded = ret['total_excluded']
-                base = ret['base'] if tax.include_base_amount else base
-                total_included = ret['total_included']
-                tax_amount = total_included - total_excluded
-                taxes += ret['taxes']
-                continue
+        # Search the initial base at the initial_base value.
+        base = initial_base
 
-            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            if not round_tax:
-                tax_amount = round(tax_amount, prec)
-            else:
-                tax_amount = currency.round(tax_amount)
-
+        # Keep track of the accumulated included fixed/percent amount and store the new computed base in taxes_vals.
+        # We also store the new computed base in taxes_vals.
+        incl_fixed_amount = incl_percent_amount = 0
+        for i, tax in reversed(list(enumerate(taxes))):
+            tax_vals = taxes_vals[i]
+            if tax.include_base_amount and (incl_fixed_amount != 0.0 or incl_percent_amount != 0.0):
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
+                tax_vals['exact_base'] = base,
+                tax_vals['round_base'] = currency.round(base)
+                incl_fixed_amount = incl_percent_amount = 0
             if tax.price_include:
-                total_excluded -= tax_amount
-                base -= tax_amount
-            else:
-                total_included += tax_amount
+                if tax.amount_type == 'fixed':
+                    incl_fixed_amount += quantity * tax.amount
+                elif tax.amount_type == 'percent':
+                    incl_percent_amount += tax.amount
+                elif tax.amount_type != 'division':
+                    # The special amount_type, like Python tax, as considered as a fixed amount.
+                    # Since we want only one _compute_amount call by tax, the amount is directly stored.
+                    tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+                    tax_vals['exact_amount'] = tax_amount
+                    tax_vals['round_amount'] = currency.round(tax_amount)
+                    incl_fixed_amount += tax_amount
+            # First tax
+            if i == 0:
+                tax_vals['exact_base'] = base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
+                tax_vals['round_base'] = currency.round(base)
 
-            # Keep base amount used for the current tax
-            tax_base = base
+        # Based on our initial_base = 130.0, we computed:
+        # exact_starting_base = 130.0 / 1.12 = 116.07142857142856
+        # round_starting_base = round(116.07142857142856, 2) = 116.07
+        #
+        #  ---------------------------------------------
+        #                 |    tax_1   | tax_2 | tax_3 |
+        # ----------------------------------------------
+        # exact_amount    |            |       |       |
+        # ----------------------------------------------
+        # round_amount    |            |       |       |
+        # ------------------------------------------------------
+        # exact_base      | 116.071... |       |       | 130.0 |
+        # ------------------------------------------------------
+        # round_base      | 116.07     |       |       | 130.0 |
+        # ------------------------------------------------------
+        # included_amount |            |       |       |
+        # ----------------------------------------------
+        exact_starting_base = base
+        round_starting_base = currency.round(base)
+
+        # 5) Iterate the taxes in the sequence order to fill missing amount values.
+        #
+        #  ---------------------------------------------
+        #                 |    tax_1   | tax_2 | tax_3 |
+        # ----------------------------------------------
+        # exact_amount    | ?????????? | ????? | ????? |
+        # ----------------------------------------------
+        # round_amount    | ?????????? | ????? | ????? |
+        # ------------------------------------------------------
+        # exact_base      | 116.071... |       |       | 130.0 |
+        # ------------------------------------------------------
+        # round_base      | 116.07     |       |       | 130.0 |
+        # ------------------------------------------------------
+        # included_amount | ?????????? | ????? | ????? |
+        # ----------------------------------------------
+        #
+        # We are looking for the ???? values.
+
+        last_incl_tax_vals = None # The last price included tax vals
+
+        for i, tax in enumerate(taxes):
+            tax_vals = taxes_vals[i]
+
+            exact_base = tax_vals.get('exact_base')
+
+            if exact_base:
+                base = exact_base
+                if last_incl_tax_vals:
+                    # This is necessary to avoid some rounding issues.
+                    # In our case, we computed this array:
+                    #
+                    #  -------------------------------------------------------
+                    #                 |    tax_1   |    tax_2   | tax_3      |
+                    # --------------------------------------------------------
+                    # exact_amount    | 6.96428... | 6.96428... | 9.0        |
+                    # --------------------------------------------------------
+                    # round_amount    | 6.96       | 6.96       | 9.0        |
+                    # ----------------------------------------------------------------
+                    # exact_base      | 116.071... |            |            | 130.0 |
+                    # ----------------------------------------------------------------
+                    # round_base      | 116.07     |            |            | 130.0 |
+                    # ----------------------------------------------------------------
+                    # included_amount | 123.035... | 129.999... | 129.999... |
+                    # --------------------------------------------------------
+                    #
+                    # /!\ BIG PROBLEM: 116.07 + 6.96 + 6.96 = 129.99 != 130.0
+                    # To fix the problem, we had the residual amount to the last price included tax:
+                    #
+                    #              ----------------------
+                    #              |       tax_2        |
+                    # -----------------------------------
+                    # round_amount | 6.96 + 0.01 = 6.97 |
+                    # -----------------------------------
+                    residual = exact_base - last_incl_tax_vals['included_amount']
+                    last_incl_tax_vals['round_amount'] = currency.round(last_incl_tax_vals['exact_amount'] + residual)
+                    last_incl_tax_vals = None
+
+            exact_amount = tax_vals.get('exact_amount', tax.with_context(force_price_include=False)._compute_amount(
+                base, price_unit, quantity, product, partner))
+
+            included_amount = last_incl_tax_vals and last_incl_tax_vals['included_amount'] or currency.round(base)
+            round_amount = currency.round(exact_amount)
 
             if tax.include_base_amount:
-                base += tax_amount
+                base += exact_amount
 
-            taxes.append({
+            if tax.price_include and tax.amount_type != 'division':
+                included_amount += round_amount
+                last_incl_tax_vals = tax_vals
+
+            tax_vals.update({
+                'exact_amount': exact_amount,
+                'round_amount': round_amount,
+                'included_amount': included_amount,
+            })
+
+            # Last tax
+            if i == len(taxes) - 1 and last_incl_tax_vals:
+                # See comments above
+                residual = initial_base - last_incl_tax_vals['included_amount']
+                last_incl_tax_vals['round_amount'] = currency.round(last_incl_tax_vals['exact_amount'] + residual)
+
+        # 6) Compute the total_included, total_excluded, base
+        # /!\ In case of round_globally, the total_included is computed based only on EXACT values.
+        #
+        # For our example,
+        # total_excluded = base = round_starting_base = 116.07
+        # total_included = 116.07 + 6.96 + 6.97 + 9.0 = 139.0
+
+        total_included = total_excluded = round_starting_base
+        exact_total_included = exact_starting_base
+
+        taxes_res = []
+        for i, tax in enumerate(taxes):
+            tax_vals = taxes_vals[i]
+            tax_base = round_starting_base
+
+            # The total_included amount is computed as the sum of total_excluded with all tax_amount
+            total_included += tax_vals['round_amount']
+            exact_total_included += tax_vals['exact_amount']
+
+            # Compute the base as base + sum(tax_amount if tax.include_base_amount)
+            if tax.include_base_amount:
+                round_starting_base += tax_vals['round_amount']
+
+            taxes_res.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
-                'amount': tax_amount,
-                'base': tax_base,
+                'base': sign * tax_base,
+                'amount': sign * tax_vals['round_amount'],
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
 
+        if not round_tax:
+            total_included = exact_total_included
+
         return {
-            'taxes': sorted(taxes, key=lambda k: k['sequence']),
-            'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
-            'total_included': currency.round(total_included) if round_total else total_included,
-            'base': base,
+            'taxes': taxes_res,
+            'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
+            'total_included': sign * (currency.round(total_included) if round_total else total_included),
+            'base': currency.round(sign * round_starting_base),
         }
 
     @api.v7
