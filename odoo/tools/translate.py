@@ -1043,7 +1043,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             # Make a reader for the POT file and be somewhat defensive for the
             # stable branch.
-            if fileobj.name.endswith('.po'):
+
+            # when fileobj is a TemporaryFile, its name is an interget in P3, a string in P2
+            if isinstance(fileobj.name, str) and fileobj.name.endswith('.po'):
                 try:
                     # Normally the path looks like /path/to/xxx/i18n/lang.po
                     # and we try to find the corresponding
