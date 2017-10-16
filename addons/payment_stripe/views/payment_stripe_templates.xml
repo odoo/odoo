@@ -3,7 +3,6 @@
     <data>
         <template id="stripe_form">
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
-            <script src="https://checkout.stripe.com/checkout.js"></script>
             <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
             <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
             <input type='hidden' name='amount' t-att-value="amount"/>
