@@ -41,6 +41,8 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
         params: ['statement_ids'],
+        // number of moves lines displayed in 'match' mode
+        limitMoveLines: 5,
     },
 
     /**
@@ -55,7 +57,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.params = params;
         this.model = new this.config.Model(this, {
             modelName: "account.bank.statement.line",
-            limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines || 5,
+            limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
         if (!this.action_manager) {
@@ -323,6 +325,7 @@ var ManualAction = StatementAction.extend({
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
+        limitMoveLines: 10,
     },
 
     //--------------------------------------------------------------------------
