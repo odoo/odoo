@@ -39,7 +39,7 @@ class Forum(models.Model):
     @api.model
     def _get_default_faq(self):
         fname = modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
-        with open(fname, 'r') as f:
+        with open(fname, 'rb') as f:
             return f.read()
         return False
 
