@@ -1062,14 +1062,14 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('list in form: default_get with x2many create and onchange', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.partner.onchanges.turtles = function (obj) {
             assert.deepEqual(
                 obj.turtles,
                 [
-                    [0, false, {turtle_foo: 'blip', id: 2}],
-                    [0, false, {turtle_foo: 'kawa', id: 3}]
+                    [1, 2, {turtle_foo: 'blip'}],
+                    [1, 3, {turtle_foo: 'kawa'}]
                 ],
                 "should have properly created the x2many command list");
         };
@@ -1092,9 +1092,20 @@ QUnit.module('relational_fields', {
                 if (args.method === 'default_get') {
                     return $.when({turtles: [[6, 0, [2,3]]]});
                 }
+                if (args.method === 'create') {
+                    // it would be even better if we did not send the current
+                    // unchanged state with the command 1, but this seems more
+                    // difficult.
+                    assert.deepEqual(args.args[0].turtles, [
+                        [1, 2, {turtle_foo: 'blip'}],
+                        [1, 3, {turtle_foo: 'kawa'}]
+                    ], 'should send proper commands to create method');
+                }
                 return this._super.apply(this, arguments);
             },
         });
+
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });

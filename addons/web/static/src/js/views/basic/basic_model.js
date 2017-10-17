@@ -875,7 +875,10 @@ var BasicModel = AbstractModel.extend({
                 // id never changes, and should not be written
                 delete record._changes.id;
             }
-            var changes = self._generateChanges(record, {viewType: options.viewType});
+            var changes = self._generateChanges(record, {viewType: options.viewType, changesOnly: method !== 'create'});
+
+            // id field should never be written/changed
+            delete changes.id;
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -2438,7 +2441,7 @@ var BasicModel = AbstractModel.extend({
             changes = _.extend({}, record.data, record._changes);
         } else {
             changes = _.extend({}, record._changes);
-        };
+        }
         var withReadonly = options.withReadonly || false;
         var commands = this._generateX2ManyCommands(record, {
             changesOnly: 'changesOnly' in options ? options.changesOnly : true,
@@ -2475,6 +2478,7 @@ var BasicModel = AbstractModel.extend({
                 changes[fieldName] = false;
             }
         }
+
         return changes;
     },
     /**
@@ -2621,7 +2625,13 @@ var BasicModel = AbstractModel.extend({
                             // this is a new id
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
-                            commands[fieldName].push(x2ManyCommands.create(changes));
+                            if ('id' in changes) {
+                                var id = changes.id;
+                                delete changes.id;
+                                commands[fieldName].push(x2ManyCommands.update(id, changes));
+                            } else {
+                                commands[fieldName].push(x2ManyCommands.create(changes));
+                            }
                         }
                     }
                     if (options.changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
