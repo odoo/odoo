@@ -732,7 +732,7 @@ var StatementModel = BasicModel.extend({
                     return !p.is_tax || p.link !== prop.id;
                 });
 
-                var args = [[prop.tax_id.id], prop.base_amount, line.st_line.currency_id];
+                var args = [[prop.tax_id.id], prop.base_amount, formatOptions.currency_id];
                 tax_defs.push(self._rpc({
                         model: 'account.tax',
                         method: 'json_friendly_compute_all',
@@ -762,11 +762,7 @@ var StatementModel = BasicModel.extend({
                         });
                     }));
             } else {
-                var currencyData = {
-                    currency_id: line.st_line.currency_id
-                };
-
-                prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, currencyData);
+                prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                 prop.display = self._isDisplayedProposition(prop);
                 prop.invalid = !self._isValid(prop);
             }
@@ -778,17 +774,28 @@ var StatementModel = BasicModel.extend({
             });
             line.reconciliation_proposition = reconciliation_proposition;
 
+            var amount_currency = 0;
             var total = line.st_line.amount || 0;
-            _.each(line.reconciliation_proposition, function (prop) {
+            var isOtherCurrencyId = _.uniq(_.pluck(_.reject(reconciliation_proposition, 'invalid'), 'currency_id'));
+            isOtherCurrencyId = isOtherCurrencyId.length === 1 && !total && isOtherCurrencyId[0] !== formatOptions.currency_id ? isOtherCurrencyId[0] : false;
+
+            _.each(reconciliation_proposition, function (prop) {
                 if (!prop.invalid) {
                     total -= prop.amount;
+                    if (isOtherCurrencyId) {
+                        amount_currency -= prop.amount_currency;
+                    }
                 }
             });
             total = Math.round(total*1000)/1000 || 0;
             line.balance = {
-                'amount': total,
-                'amount_str': field_utils.format.monetary(Math.abs(total), {}, formatOptions),
-                'account_code': self.accounts[line.st_line.open_balance_account_id],
+                amount: total,
+                amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),
+                currency_id: isOtherCurrencyId,
+                amount_currency_str: isOtherCurrencyId ? field_utils.format.monetary(Math.abs(amount_currency), {}, {
+                    currency_id: isOtherCurrencyId
+                }) : false,
+                account_code: self.accounts[line.st_line.open_balance_account_id],
             };
             line.balance.type = line.balance.amount ? (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
         });
