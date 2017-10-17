@@ -119,24 +119,27 @@ class StockQuant(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = move._get_accounting_data_for_valuation()
             self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
-
+    
+    def move_lines(self, journal_id, move_lines, date, move):
+        '''hook para poder agrupar lineas del asiento contable'''
+        new_account_move = self.env['account.move'].create({
+            'journal_id': journal_id,
+            'line_ids': move_lines,
+            'date': date,
+            'ref': move.picking_id.name})
+        new_account_move.post()
+        
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
         # group quants by cost
         quant_cost_qty = defaultdict(lambda: 0.0)
         for quant in self:
             quant_cost_qty[quant.cost] += quant.qty
 
-        AccountMove = self.env['account.move']
         for cost, qty in quant_cost_qty.iteritems():
             move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
             if move_lines:
                 date = self._context.get('force_period_date', fields.Date.context_today(self))
-                new_account_move = AccountMove.create({
-                    'journal_id': journal_id,
-                    'line_ids': move_lines,
-                    'date': date,
-                    'ref': move.picking_id.name})
-                new_account_move.post()
+                self.move_lines(journal_id, move_lines, date, move)
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
