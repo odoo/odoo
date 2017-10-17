@@ -1202,6 +1202,8 @@ var ManualModel = StatementModel.extend({
                 if (line.reconciled) {
                     return;
                 }
+                line.filter = "";
+                line.offset = 0;
                 defs.push(self._performMoveLine(handle).then(function () {
                     if(!line.mv_lines.length) {
                         self.valuenow++;
