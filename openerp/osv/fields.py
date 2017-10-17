@@ -861,8 +861,13 @@ class one2many(_column):
                     # Must use write() to recompute parent_store structure if needed
                     obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
                     ids2 = act[2] or [0]
-                    cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
-                    ids3 = map(lambda x:x[0], cr.fetchall())
+                    # if the o2m has a static domain we must respect it when unlinking
+                    domain = (self._domain(original_obj)
+                              if callable(self._domain) else self._domain)
+                    extra_domain = domain or []
+                    ids3 = obj.search(cr, user, [(self._fields_id,'=',id), ('id','not in',ids2)] + extra_domain, context=context)
+                    # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                    # otherwise we only nullify the reverse foreign key column.
                     inverse_field = obj._fields.get(self._fields_id)
                     if getattr(inverse_field, "ondelete", None) == "cascade":
                         obj.unlink(cr, user, ids3, context=context)

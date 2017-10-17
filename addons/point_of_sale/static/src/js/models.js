@@ -1407,7 +1407,7 @@ exports.Orderline = Backbone.Model.extend({
         var recompute_base = function(base_amount, fixed_amount, percent_amount){
             if(fixed_amount === 0.0 && percent_amount === 0.0)
                 return base_amount;
-             return round_pr((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0), currency_rounding);
+             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0);
         }
 
         // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
@@ -1461,7 +1461,6 @@ exports.Orderline = Backbone.Model.extend({
 
             taxes_vals.push(tax_vals);
         });
-
         return {
             taxes: taxes_vals,
             total_excluded: round_pr(total_excluded, currency_rounding_bak),
