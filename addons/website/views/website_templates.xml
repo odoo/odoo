@@ -226,6 +226,10 @@
     </xpath>
 </template>
 
+<record id="portal.portal_show_sign_in" model="ir.ui.view">
+    <field name="customize_show" eval="True"/>
+</record>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
     <xpath expr="t" position="replace">
