@@ -340,7 +340,8 @@
                                      ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
                             ]"/>
                     <filter string="Overdue Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')),
+                                     ('date_closed', '=', False)]"
                             help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
