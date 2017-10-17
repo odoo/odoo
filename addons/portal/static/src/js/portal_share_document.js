@@ -42,7 +42,7 @@ var ShareDocument = Widget.extend({
                             partner_ids: partner_list ,
                             model: self.model,
                             res_id: self.res_id,
-                            body: that.$el.find('textarea').code()
+                            body: that.$el.find('textarea').val()
                         }
                     }).then(function (result) {
                         var ack = result ? '<div class="alert alert-success">Done!!!</div>' : '<div class="alert alert-danger">Fail!!!</div>';
@@ -62,19 +62,13 @@ var ShareDocument = Widget.extend({
         });
         dialog.open();
         this.set_partner_ids(dialog.$content);
-
-        dialog.$content.find('textarea').summernote({
-            height: 150
-        });
-        dialog.$content.find('textarea').code('<p> Dear, </p><p> A document '+ this.name +' has been shared with you </p><p><a href="'+this.url+'">'+ this.url+'</a><p> Thank you,</p>')
+        dialog.$content.find('textarea').val('<p> Dear, </p><p> A document '+ this.name +' has been shared with you </p><p><a href="'+this.url+'">'+ this.url+'</a><p> Thank you,</p>')
     },
 
     select2_wrapper: function (tag, multi, fetch_fnc) {
         return {
             width: '100%',
-            placeholder: tag,
             allowClear: true,
-            formatNoMatches: false,
             multiple: multi,
             selection_data: false,
             fetch_rpc_fnc : fetch_fnc,
