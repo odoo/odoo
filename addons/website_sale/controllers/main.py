@@ -569,6 +569,8 @@ class website_sale(http.Controller):
 
         # vat validation
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            if data.get("country_id"):
+                data["vat"] = registry["res.partner"].fix_eu_vat_number(cr, uid, data.get("country_id"), data.get("vat"), context)
             if request.website.company_id.vat_check_vies:
                 # force full VIES online check
                 check_func = registry["res.partner"].vies_vat_check
