@@ -185,7 +185,7 @@ class AccountVoucher(models.Model):
                 'date_maturity': self.date_due
             }
         # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-        if self.pay_now == 'pay_now':
+        if self.pay_now == 'pay_now' and self.amount > 0:
             move_line['payment_id'] = self.env['account.payment'].create(
                 self.voucher_pay_now_payment_create()
             ).id
@@ -228,9 +228,10 @@ class AccountVoucher(models.Model):
 
     @api.multi
     def voucher_pay_now_payment_create(self):
+        payment_methods = self.journal_id.outbound_payment_method_ids
         return {
             'payment_type': 'outbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': payment_methods and payment_methods[0].id or False,
             'partner_type': 'supplier',
             'partner_id': self.partner_id.id,
             'amount': self.amount,
@@ -238,6 +239,9 @@ class AccountVoucher(models.Model):
             'payment_date': self.date,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
+            'communication': self.name,
+            'name': self.name,
+            'state': 'reconciled',
         }
 
     @api.multi
