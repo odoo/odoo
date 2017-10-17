@@ -4,6 +4,7 @@ odoo.define('web.WebClient', function (require) {
 var AbstractWebClient = require('web.AbstractWebClient');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
+var dialogs = require('web.view_dialogs');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
 var session = require('web.session');
@@ -59,7 +60,7 @@ return AbstractWebClient.extend({
     update_logo: function(reload) {
         var company = session.company_id;
         var img = session.url('/web/binary/company_logo' + '?db=' + session.db + (company ? '&company=' + company : ''));
-        this.$('.o_sub_menu_logo img').attr('src', '').attr('src', img + (reload ? "#" + Date.now() : ''));
+        this.$('.o_sub_menu_logo img').attr('src', '').attr('src', img + (reload ? "&_=" + Date.now() : ''));
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', session.is_superuser);
     },
     logo_edit: function(ev) {
@@ -76,21 +77,15 @@ return AbstractWebClient.extend({
                         params: { action_id: 'base.action_res_company_form' },
                     })
                     .done(function(result) {
-                        result.res_id = data[0].company_id[0];
-                        result.target = "new";
-                        result.views = [[false, 'form']];
-                        result.flags = {
-                            action_buttons: true,
-                            headless: true,
-                        };
-                        self.action_manager.do_action(result).then(function () {
-                            var form = self.action_manager.dialog_widget.views.form.controller;
-                            form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
-                            form.on('record_saved', self, function() {
-                                self.action_manager.dialog_stop();
-                                self.update_logo();
-                            });
-                        });
+                        new dialogs.FormViewDialog(self, {
+                            res_model: 'res.company',
+                            res_id: data[0].company_id[0],
+                            context: self.context,
+                            title: data[0].company_id[1],
+                            on_saved: function() {
+                                self.update_logo(true);
+                            }
+                        }).open();
                     });
             });
         return false;
