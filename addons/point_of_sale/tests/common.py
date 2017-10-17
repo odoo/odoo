@@ -48,17 +48,6 @@ class TestPointOfSaleCommon(common.TransactionCase):
             'price_include': 0
         })
 
-        # create a second VAT tax of 5% but this time for a child company, to
-        # ensure that only product taxes of the current session's company are considered
-        #(this tax should be ignore when computing order's taxes in following tests)
-        account_tax_05_incl_chicago = Tax.create({
-            'name': 'VAT 05 perc Excl (US)',
-            'amount_type': 'percent',
-            'amount': 5.0,
-            'price_include': 0,
-            'company_id': self.ref('stock.res_company_1')
-        })
-
         # I assign those 5 percent taxes on the PCSC349 product as a sale taxes
         self.product4.write(
-            {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
+            {'taxes_id': [(6, 0, [account_tax_05_incl.id, ])]})
