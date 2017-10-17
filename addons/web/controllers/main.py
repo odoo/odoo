@@ -518,7 +518,7 @@ class WebClient(http.Controller):
         momentjs_locale = ""
         for code in magic_file_finding:
             try:
-                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
+                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'rb') as f:
                     momentjs_locale = f.read()
                 # we found a locale matching so we can exit
                 break
