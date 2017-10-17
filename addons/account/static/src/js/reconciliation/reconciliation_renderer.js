@@ -392,6 +392,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         this.$('.match').css('max-height', !state.mv_lines.length && !state.filter.length ? '0px' : '');
 
         // balance
+        this.$('.popover').remove();
         this.$('table tfoot').html(qweb.render("reconciliation.line.balance", {'state': state}));
 
         // create form
