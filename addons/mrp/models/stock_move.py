@@ -138,6 +138,14 @@ class StockMove(models.Model):
         self.check_move_lots()
         return res
 
+    def _propagate_cancel(self):
+        self.ensure_one()
+        if not self.move_dest_id.raw_material_production_id:
+            super(StockMove, self)._propagate_cancel()
+        elif self.move_dest_id.state == 'waiting':
+            # If waiting, the chain will be broken and we are not sure if we can still wait for it (=> could take from stock instead)
+            self.move_dest_id.write({'state': 'confirmed'})
+
     @api.multi
     def action_cancel(self):
         if any(move.quantity_done for move in self):
@@ -372,6 +380,10 @@ class StockMove(models.Model):
         # delete the move with original product which is not relevant anymore
         self.sudo().unlink()
         return processed_moves
+
+    def _propagate_split(self, new_move, qty):
+        if not self.move_dest_id.raw_material_production_id:
+            super(StockMove, self)._propagate_split(new_move, qty)
 
     def _generate_move_phantom(self, bom_line, quantity):
         if bom_line.product_id.type in ['product', 'consu']:
