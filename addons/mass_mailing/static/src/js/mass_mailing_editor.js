@@ -402,4 +402,15 @@ odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
 if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
     $editable_area.empty();
 }
+// Adding compatibility for the outlook compliance of mailings.
+// Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
+options.registry.background.include({
+    start: function() {
+        this._super();
+        var $table_target = this.$target.find('table:first');
+        if ($table_target) {
+            this.$target = $table_target;
+        }
+    }
+});
 });
