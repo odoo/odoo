@@ -14,9 +14,8 @@ from odoo.exceptions import UserError
 class HrAttendance(models.Model):
     _inherit = "hr.attendance"
 
-    sheet_id_computed = fields.Many2one('hr_timesheet_sheet.sheet', string='Sheet', compute='_compute_sheet', index=True, ondelete='cascade',
-        search='_search_sheet')
-    sheet_id = fields.Many2one('hr_timesheet_sheet.sheet', compute='_compute_sheet', string='Sheet', store=True)
+    sheet_id_computed = fields.Many2one('hr_timesheet_sheet.sheet', string='Sheet', compute='_compute_sheet', search='_search_sheet')
+    sheet_id = fields.Many2one('hr_timesheet_sheet.sheet', compute='_compute_sheet', string='Sheet', store=True, index=True, ondelete='cascade')
 
     @api.depends('employee_id', 'check_in', 'check_out', 'sheet_id_computed.date_to', 'sheet_id_computed.date_from', 'sheet_id_computed.employee_id')
     def _compute_sheet(self):
