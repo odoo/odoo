@@ -334,12 +334,12 @@
                         <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Created by : </b><br/>
-                            <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
+                            <t t-raw="item.create_uid[1]"/>  <t t-esc="item.create_date_string" />
                         </t>
                         <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Modified by : </b><br/>
-                            <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
+                            <t t-raw="item.write_uid[1]"/>  <t t-esc="item.write_date_string"/>
                         </t>
                     </t>
                     <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
