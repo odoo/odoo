@@ -2028,6 +2028,15 @@ var FieldDomain = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * A domain field is always set since the false value is considered to be
+     * equal to "[]" (match all records).
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+    /**
      * @override isValid from AbstractField.isValid
      * Parsing the char value is not enough for this field. It is considered
      * valid if the internal domain selector was built correctly and that the
