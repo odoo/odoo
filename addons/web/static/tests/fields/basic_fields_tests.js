@@ -1957,7 +1957,7 @@ QUnit.module('basic_fields', {
 
     QUnit.test('datetime field with date/datetime widget (with day change)', function (assert) {
         assert.expect(2);
-        
+
         this.data.partner.records[0].p = [2];
         this.data.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
 
@@ -3786,7 +3786,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('domain field: handle false domain as []', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         this.data.partner.records[0].foo = false;
         this.data.partner.fields.bar.type = "char";
@@ -3812,10 +3812,12 @@ QUnit.module('basic_fields', {
                 return this._super.apply(this, arguments);
             },
             res_id: 1,
-            viewOptions: {
-                mode: 'edit',
-            },
         });
+
+        assert.strictEqual(form.$('.o_field_widget[name=foo]:not(.o_field_empty)').length, 1,
+            "there should be a domain field, not considered empty");
+
+        form.$buttons.find('.o_form_button_edit').click();
 
         var $warning = form.$('.o_field_widget[name=foo] .text-warning');
         assert.strictEqual($warning.length, 0, "should not display that the domain is invalid");
