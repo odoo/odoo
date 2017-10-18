@@ -1219,6 +1219,7 @@ class Response(werkzeug.wrappers.Response):
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
         self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
