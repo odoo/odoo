@@ -3,6 +3,7 @@ odoo.define('web.DebugManager', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var dialogs = require('web.view_dialogs');
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
@@ -770,7 +771,7 @@ var RequestDetails = Widget.extend({
     }
 });
 
-if (core.debug) {
+if (config.debug) {
     SystrayMenu.Items.push(DebugManager);
 
     WebClient.include({

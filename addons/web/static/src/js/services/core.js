@@ -3,6 +3,7 @@ odoo.define('web.core', function (require) {
 
 var Bus = require('web.Bus');
 var Class = require('web.Class');
+var config = require('web.config');
 var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
@@ -12,8 +13,6 @@ var translation = require('web.translation');
  *
  * @type Boolean
  */
-var debug = $.deparam($.param.querystring()).debug !== undefined;
-
 var bus = new Bus ();
 
 _.each('click,dblclick,keydown,keypress,keyup'.split(','), function(evtype) {
@@ -28,8 +27,7 @@ _.each('resize,scroll'.split(','), function(evtype) {
 });
 
 return {
-    debug: debug,
-    qweb: new QWeb(debug),
+    qweb: new QWeb(config.debug),
 
     // core classes and functions
     Class: Class,
