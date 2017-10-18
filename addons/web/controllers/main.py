@@ -498,6 +498,14 @@ class Home(http.Controller):
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
+    @http.route('/web/clean_assets', type='json', auth='user')
+    def clean_assets(self, **kwargs):
+        ensure_db()
+        if request.uid and request.uid == odoo.SUPERUSER_ID:
+            res = request.env['ir.attachment'].search([('res_model', '=', 'ir.ui.view'), ('name', 'ilike', 'asset')]).unlink()
+            return {'status': res}
+        else:
+            raise werkzeug.exceptions.BadRequest()
 
 
 class WebClient(http.Controller):
