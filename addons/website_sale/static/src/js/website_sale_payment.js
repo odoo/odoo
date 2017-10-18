@@ -8,7 +8,7 @@ $(document).ready(function () {
     if ($("#checkbox_cgv").length) {
       $("#checkbox_cgv").change(function() {
         $("div.oe_sale_acquirer_button").find('input, button').prop("disabled", !this.checked);
-      };
+      });
       $('#checkbox_cgv').trigger('change');
     }
 
