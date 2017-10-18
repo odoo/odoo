@@ -45,7 +45,7 @@ class PurchaseRequisition(models.Model):
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
-    name = fields.Char(string='Agreement Reference', required=True, copy=False, default= lambda self: self.env['ir.sequence'].next_by_code('purchase.order.requisition'))
+    name = fields.Char(string='Agreement Reference', required=True, copy=False, default='New', readonly=True)
     origin = fields.Char(string='Source Document')
     order_count = fields.Integer(compute='_compute_orders_number', string='Number of Orders')
     vendor_id = fields.Many2one('res.partner', string="Vendor")
@@ -67,6 +67,16 @@ class PurchaseRequisition(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
+
+    @api.model
+    def create(self, vals):
+        rec = super(PurchaseRequisition, self).create(vals)
+        if rec.name == 'New':
+            if rec.is_quantity_copy != 'none':
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
+            else:
+                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+        return rec
 
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
