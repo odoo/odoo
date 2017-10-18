@@ -148,7 +148,8 @@ class SaleOrder(models.Model):
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
-            if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
+            if self.env.user.has_group('sale.group_discount_per_so_line') and \
+                self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 order = self.sudo().browse(self.id)
                 product_context = dict(self.env.context)
                 product_context.setdefault('lang', order.partner_id.lang)
