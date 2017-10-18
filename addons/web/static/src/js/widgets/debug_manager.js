@@ -200,6 +200,29 @@ var DebugManager = Widget.extend({
     split_assets: function() {
         window.location = $.param.querystring(window.location.href, 'debug=assets');
     },
+    /**
+     * Delete assets bundles to force their regeneration
+     *
+     * @returns {void}
+     */
+    regenerateAssets: function () {
+        var self = this;
+        var domain = [
+            ['res_model', '=', 'ir.ui.view'],
+            ['name', 'like', 'assets_']
+        ];
+        this._rpc({
+            model: 'ir.attachment',
+            method: 'search',
+            args: [domain],
+        }).then(function (ids) {
+            self._rpc({
+                model: 'ir.attachment',
+                method: 'unlink',
+                args: [ids],
+            }).then(self.do_action('reload'));
+        });
+    }
 });
 
 /**
