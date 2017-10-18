@@ -93,10 +93,21 @@ class LandedCost(models.Model):
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 # Prorate the value at what's still in stock
                 cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
-                line.move_id.landed_cost_value += cost_to_add
-                line.move_id.remaining_value += cost_to_add
 
-                line._create_accounting_entries(move, line.move_id.product_qty - line.move_id.remaining_qty)
+                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
+                line.move_id.write({
+                    'landed_cost_value': new_landed_cost_value,
+                    'remaining_value': line.move_id.remaining_value + cost_to_add,
+                    'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
+                })
+                # `remaining_qty` is negative if the move is out and delivered proudcts that were not
+                # in stock.
+                qty_out = 0
+                if line.move_id._is_in():
+                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                elif line.move_id._is_out():
+                    qty_out = line.move_id.product_qty
+                line._create_accounting_entries(move, qty_out)
                 
             move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
