@@ -651,19 +651,36 @@ class AccountMoveLine(models.Model):
             '|', ('date_maturity', 'like', str),
             '&', ('name', '!=', '/'), ('name', 'ilike', str)
         ]
-        try:
-            amount = float(str)
-            amount_domain = [
-                '|', ('amount_residual', '=', amount),
-                '|', ('amount_residual_currency', '=', amount),
-                '|', ('amount_residual', '=', -amount),
-                '|', ('amount_residual_currency', '=', -amount),
-                '&', ('account_id.internal_type', '=', 'liquidity'),
-                '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
-            ]
-            str_domain = expression.OR([str_domain, amount_domain])
-        except:
-            pass
+        if str[0] in ['-', '+']:
+            try:
+                amounts_str = str.split('|')
+                for amount_str in amounts_str:
+                    amount = amount_str[0] == '-' and float(amount_str) or float(amount_str[1:])
+                    amount_domain = [
+                        '|', ('amount_residual', '=', amount),
+                        '|', ('amount_residual_currency', '=', amount),
+                        '|', (amount_str[0] == '-' and 'credit' or 'debit', '=', float(amount_str[1:])),
+                        ('amount_currency', '=', amount),
+                    ]
+                    str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
+        else:
+            try:
+                amount = float(str)
+                amount_domain = [
+                    '|', ('amount_residual', '=', amount),
+                    '|', ('amount_residual_currency', '=', amount),
+                    '|', ('amount_residual', '=', -amount),
+                    '|', ('amount_residual_currency', '=', -amount),
+                    '&', ('account_id.internal_type', '=', 'liquidity'),
+                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount),
+                        ('amount_currency', '=', amount),
+                        ('amount_currency', '=', -amount),
+                ]
+                str_domain = expression.OR([str_domain, amount_domain])
+            except:
+                pass
         return str_domain
 
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
