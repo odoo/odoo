@@ -20,6 +20,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         change_offset: '_onAction',
         change_partner: '_onAction',
         add_proposition: '_onAction',
+        search_balance_amount: '_onAction',
         remove_proposition: '_onAction',
         update_proposition: '_onAction',
         create_proposition: '_onAction',
