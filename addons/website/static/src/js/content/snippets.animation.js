@@ -8,6 +8,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var qweb = core.qweb;
@@ -862,6 +863,50 @@ registry.socialShare = Animation.extend({
 
         this._render();
         this._bindSocialEvent();
+    },
+});
+
+registry.facebookPage = Animation.extend({
+    selector: '.o_facebook_page',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+
+        var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
+        if (!params.href) {
+            return def;
+        }
+        params.width = utils.confine(this.$el.width(), 180, 500);
+
+        var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
+        this.$iframe = $('<iframe/>', {
+            src: src,
+            width: params.width,
+            height: params.height,
+            css: {
+                border: 'none',
+                overflow: 'hidden',
+            },
+            scrolling: 'no',
+            frameborder: '0',
+            allowTransparency: 'true',
+        });
+        this.$el.append(this.$iframe);
+
+        return def;
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$iframe) {
+            this.$iframe.remove();
+        }
     },
 });
 
