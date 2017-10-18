@@ -87,9 +87,8 @@ class MailController(http.Controller):
                 record_sudo.sudo(uid).check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
-
-        if record_action['type'] == 'ir.actions.act_url':
-            return werkzeug.utils.redirect(record_action['url'])
+            if record_action['type'] == 'ir.actions.act_url':
+                return werkzeug.utils.redirect(record_action['url'])
 
         url_params = {
             'view_type': record_action['view_type'],

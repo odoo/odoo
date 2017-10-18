@@ -968,7 +968,7 @@ class StockMove(models.Model):
         self._propagate_split(new_move, qty)
         # returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
         # thus the result of action_confirm should always be a list of 1 element length)
-        new_move.action_confirm()
+        new_move = new_move.action_confirm()
         # TDE FIXME: due to action confirm change
         return new_move.id
 
