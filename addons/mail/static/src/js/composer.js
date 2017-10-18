@@ -458,7 +458,12 @@ var BasicComposer = Widget.extend(chat_mixin, {
     preprocess_message: function () {
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
-        var value = _.escape(this.$input.val()).replace(/\n|\r/g, '<br/>');
+
+        //Removing unwanted extra spaces from message
+        var value = _.escape(this.$input.val()).trim();
+        value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
+        value = value.replace(/(\r|\n)/g, '<br/>');
+
         // prevent html space collapsing
         value = value.replace(/ /g, '&nbsp;').replace(/([^>])&nbsp;([^<])/g, '$1 $2');
         var commands = this.options.commands_enabled ? this.mention_manager.get_listener_selection('/') : [];
