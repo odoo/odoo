@@ -57,8 +57,10 @@ def jsonrpc(url, method='call', params=None):
                 e_class = InsufficientCreditError
             elif name == 'AccessError':
                 e_class = exceptions.AccessError
-            else:
+            elif name == 'UserError':
                 e_class = exceptions.UserError
+            else:
+                raise requests.exceptions.ConnectionError()
             e = e_class(message)
             e.data = response['error']['data']
             raise e
