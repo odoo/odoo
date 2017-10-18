@@ -317,6 +317,7 @@ class StockMove(models.Model):
         if moves_error:
             user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
             user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
+            user_warning += '\n\nProducts: %s' % ' ,'.join(moves_error.mapped('product_id'))
             raise UserError(user_warning)
 
     @api.model_cr
