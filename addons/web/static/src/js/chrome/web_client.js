@@ -2,7 +2,7 @@ odoo.define('web.WebClient', function (require) {
 "use strict";
 
 var AbstractWebClient = require('web.AbstractWebClient');
-var core = require('web.core');
+var config = require('web.config');
 var data_manager = require('web.data_manager');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
@@ -16,7 +16,7 @@ return AbstractWebClient.extend({
         'click .oe_logo img': function(ev) {
             ev.preventDefault();
             return this.clear_uncommitted_changes().then(function() {
-                framework.redirect("/web" + (core.debug ? "?debug" : ""));
+                framework.redirect("/web" + (config.debug ? "?debug" : ""));
             });
         },
     },
