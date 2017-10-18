@@ -1218,6 +1218,7 @@ class Response(werkzeug.wrappers.Response):
 
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
+        self.copy_template = template
         self.qcontext = qcontext or dict()
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
