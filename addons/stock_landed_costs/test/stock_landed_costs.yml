@@ -37,6 +37,7 @@
   Confirm and assign picking
 -
   !python {model: stock.picking, id: picking_landed_cost_1}: |
+    self.env.user.company_id.anglo_saxon_accounting = True
     self.action_confirm()
     self.action_assign()
     self.move_lines.quantity_done = 5
