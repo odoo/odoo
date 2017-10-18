@@ -819,7 +819,15 @@ class SaleOrderLine(models.Model):
             order.message_post(body=msg)
 
     @api.multi
+    def _check_product_change_obstacle(self):
+        return any(line.state in ['done', 'cancel'] or line.state == 'sale' and (line.qty_invoiced > 0 or line.qty_delivered > 0) for line in self)
+
+    @api.multi
     def write(self, values):
+        if 'product_id' in values:
+            if self._check_product_change_obstacle():
+                raise UserError(_('It is not allowed to change the product in the current state!'))
+
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
@@ -971,6 +979,8 @@ class SaleOrderLine(models.Model):
     def product_id_change(self):
         if not self.product_id:
             return {'domain': {'product_uom': []}}
+        if self._check_product_change_obstacle():
+            raise UserError(_('It is not allowed to change the product in the current state!'))
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}

@@ -109,7 +109,16 @@ class SaleOrderLine(models.Model):
         if lines:
             lines._action_launch_procurement_rule()
         return res
-    
+
+    @api.multi
+    def _check_product_change_obstacle(self):
+        obstacle = super(SaleOrderLine, self)._check_product_change_obstacle()
+        if not obstacle:
+            lines = self
+            if self.env.in_onchange:
+                lines = self._origin
+            obstacle = bool(lines.mapped('move_ids').filtered(lambda r: r.state not in ['cancel']))
+        return obstacle
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
