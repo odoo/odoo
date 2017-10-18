@@ -127,6 +127,14 @@ class SaleOrderLine(models.Model):
                     and all(move.state in ['done', 'cancel'] for move in line.move_ids):
                 line.invoice_status = 'invoiced'
 
+    @api.depends('move_ids')
+    def _compute_product_updatable(self):
+        for line in self:
+            if not line.move_ids:
+                super(SaleOrderLine, line)._compute_product_updatable()
+            else:
+                line.product_updatable = False
+
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
