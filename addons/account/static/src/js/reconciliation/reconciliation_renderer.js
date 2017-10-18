@@ -242,7 +242,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click .accounting_view caption .o_buttons button': '_onValidate',
         'click .accounting_view thead td': '_onTogglePanel',
-        'click .accounting_view tfoot td': '_onShowPanel',
+        'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
+        'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
         'input input.filter': '_onFilterChange',
         'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
         'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
@@ -394,6 +395,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         // balance
         this.$('.popover').remove();
         this.$('table tfoot').html(qweb.render("reconciliation.line.balance", {'state': state}));
+
+        // filter
+        if (_.str.strip(this.$('input.filter').val()) !== state.filter) {
+            this.$('input.filter').val(state.filter);
+        }
 
         // create form
         if (state.createForm) {
@@ -582,6 +588,12 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _onTogglePanel: function () {
         var mode = this.$el.data('mode') === 'inactive' ? 'match' : 'inactive';
         this.trigger_up('change_mode', {'data': mode});
+    },
+    /**
+     * @private
+     */
+    _onSearchBalanceAmount: function () {
+        this.trigger_up('search_balance_amount');
     },
     /**
      * @private
