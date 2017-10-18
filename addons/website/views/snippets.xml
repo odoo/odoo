@@ -283,6 +283,16 @@
     </div>
 </template>
 
+<template id="s_facebook_page" name="Facebook Page">
+    <div class="o_facebook_page">
+        <div class="o_facebook_alert alert alert-info">
+            <span class="o_add_facebook_page">
+                <i class="fa fa-plus-circle"/> Add Facebook Page
+            </span>
+        </div>
+    </div>
+</template>
+
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
@@ -728,6 +738,7 @@
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
+                    <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/blocks/facebook_page.png"/>
                 </div>
             </div>
         </div>
@@ -907,8 +918,8 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .s_panel, .oe_share, .o_image_floating"
-        data-drop-near="p, h1, h2, h3, blockquote, .well, .s_panel, .oe_share"
+        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .o_image_floating"
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share"
         data-drop-in=".content">
     </div>
 
@@ -959,6 +970,12 @@
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
         <li data-toggle-class="o_ul_folded"><a href="#">Folded list</a></li>
+    </div>
+
+    <div data-js="facebookPage" data-selector=".o_facebook_page">
+        <li data-fb-page-options="true" data-no-preview="true">
+            <a href="#"><i class="fa fa-facebook"/>Options</a>
+        </li>
     </div>
 
     <div data-js='collapse'
