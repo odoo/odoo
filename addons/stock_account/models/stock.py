@@ -49,6 +49,15 @@ class StockLocation(models.Model):
              "and into an internal location, instead of the generic Stock Output Account set on the product. "
              "This has no effect for internal locations.")
 
+    def _should_be_valued(self):
+        """ This method returns a boolean reflecting whether the products stored in `self` should
+        be considered when valuating the stock of a company.
+        """
+        self.ensure_one()
+        if self.usage == 'internal' or (self.usage == 'transit' and self.company_id):
+            return True
+        return False
+
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
@@ -175,7 +184,7 @@ class StockMove(models.Model):
 
         :return: True if the move is entering the company else False
         """
-        return not self.location_id.company_id and self.location_dest_id.company_id.id == self.company_id.id
+        return not self.location_id._should_be_valued() and self.location_dest_id._should_be_valued()
 
     def _is_out(self):
         """ Check if the move should be considered as leaving the company so that the cost method
@@ -183,7 +192,7 @@ class StockMove(models.Model):
 
         :return: True if the move is leaving the company else False
         """
-        return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
+        return self.location_id._should_be_valued() and not self.location_dest_id._should_be_valued()
 
     @api.model
     def _run_fifo(self, move, quantity=None):
@@ -519,12 +528,12 @@ class StockMove(models.Model):
 
         location_from = self.location_id
         location_to = self.location_dest_id
-        company_from = location_from.usage == 'internal' and location_from.company_id or False
-        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
+        company_from = location_from._should_be_valued() and location_from.company_id or False
+        company_to = location_to._should_be_valued() and location_to.company_id or False
 
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if company_to and (self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage == 'internal' or company_from != company_to):
+        if company_to and (self._is_in() or company_from != company_to):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_from and location_from.usage == 'customer':  # goods returned from customer
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
@@ -532,7 +541,7 @@ class StockMove(models.Model):
                 self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
 
         # Create Journal Entry for products leaving the company
-        if company_from and (self.location_id.usage == 'internal' and self.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
+        if company_from and (self._is_out() or company_from != company_to):
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if location_to and location_to.usage == 'supplier':  # goods returned to supplier
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
