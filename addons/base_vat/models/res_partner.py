@@ -18,6 +18,12 @@ from odoo import api, models, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
+_eu_country_vat = {
+    'GR': 'EL'
+}
+
+_eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
+
 _ref_vat = {
     'at': 'ATU12345675',
     'be': 'BE0477472701',
@@ -79,6 +85,7 @@ class ResPartner(models.Model):
                 # Foreign companies that trade with non-enterprises in the EU
                 # may have a VATIN starting with "EU" instead of a country code.
                 return True
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
 
@@ -95,6 +102,19 @@ class ResPartner(models.Model):
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we fall back to the simple check.
             return self.simple_vat_check(country_code, vat_number)
+
+    @api.model
+    def fix_eu_vat_number(self, country_id, vat):
+        europe = self.env.ref('base.europe')
+        country = self.env["res.country"].browse(country_id)
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+        if europe and country and country.id in europe.country_ids.ids:
+            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
+            country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if vat[:2] != country_code:
+                vat = country_code + vat
+        return vat
 
     @api.constrains("vat")
     def check_vat(self):
