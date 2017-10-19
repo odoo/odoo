@@ -21,11 +21,11 @@ class AccountAnalyticLine(models.Model):
             sheets = self.env['hr_timesheet_sheet.sheet'].search(
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
                  ('employee_id.user_id.id', '=', ts_line.user_id.id),
-                 ('state', 'in', ['draft', 'new'])])
+                 ('state', 'in', ['draft', 'new'])], limit=1)
             if sheets:
                 # [0] because only one sheet possible for an employee between 2 dates
-                ts_line.sheet_id_computed = sheets[0]
-                ts_line.sheet_id = sheets[0]
+                ts_line.sheet_id_computed = sheets
+                ts_line.sheet_id = sheets
 
     def _search_sheet(self, operator, value):
         assert operator == 'in'
