@@ -21,6 +21,7 @@ from odoo.exceptions import UserError
 import odoo.release
 import odoo.sql_db
 import odoo.tools
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -345,6 +346,9 @@ def list_dbs(force=False):
             else:
                 cr.execute("select datname from pg_database where not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
             res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
+            dbfilter = odoo.tools.config['dbfilter']
+            if '%d' not in dbfilter and '%h' not in dbfilter:
+                res = [i for i in res if re.match(dbfilter, i)]
         except Exception:
             res = []
     res.sort()
