@@ -1078,6 +1078,7 @@ actual arch.
             datetime=datetime,
             relativedelta=relativedelta,
             xmlid=self.key,
+            viewid=self.id,
         )
         return qcontext
 
