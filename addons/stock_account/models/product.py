@@ -92,7 +92,11 @@ class ProductProduct(models.Model):
         # TO REMOVE IN MASTER
         pass
     
+    # Este metodo ha sido agregado por TRESCLOUD
     def _get_adjustment_lines(self, debit_account_id, credit_account_id, diff, qty_available):
+        """
+        Modulo en forma de hook para herencia y añadidura de nuevos parametros
+        """
         return [(0, 0, {
                         'name': _('Standard Price changed'),
                         'account_id': debit_account_id,
@@ -138,6 +142,7 @@ class ProductProduct(models.Model):
                     move_vals = {
                         'journal_id': product_accounts[product.id]['stock_journal'].id,
                         'company_id': location.company_id.id,
+                        # El codigo esta arriba en forma de metodo _get_adjustment_lines.
                         'line_ids': product._get_adjustment_lines(debit_account_id, credit_account_id, diff, qty_available),
                     }
                     move = AccountMove.create(move_vals)
