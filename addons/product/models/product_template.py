@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
     def _get_default_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
 
-    name = fields.Char('Name', index=True, required=True, translate=True)
+    name = fields.Char('Name', index=True, required=True, translate=True, track_visibility='onchange')
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
         'Description', translate=True,
