@@ -352,7 +352,7 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
 var FieldDate = InputField.extend({
     className: "o_field_date",
     tagName: "span",
-    supportedFieldTypes: ['date'],
+    supportedFieldTypes: ['date', 'datetime'],
 
     /**
      * @override
@@ -411,12 +411,13 @@ var FieldDate = InputField.extend({
      * @override
      * @private
      * @param {Moment|false} value
+     * @returns {boolean}
      */
     _isSameValue: function (value) {
         if (value === false) {
             return this.value === false;
         }
-        return value.isSame(this.value);
+        return value.isSame(this.value, 'day');
     },
     /**
      * Instantiates a new DateWidget datepicker.
@@ -455,7 +456,16 @@ var FieldDateTime = FieldDate.extend({
         var value = this.datewidget.getValue();
         return value && value.add(-this.getSession().getTZOffset(value), 'minutes');
     },
-
+    /**
+     * @override
+     * @private
+     */
+    _isSameValue: function (value) {
+        if (value === false) {
+            return this.value === false;
+        }
+        return value.isSame(this.value);
+    },
     /**
      * Instantiates a new DateTimeWidget datepicker rather than DateWidget.
      *

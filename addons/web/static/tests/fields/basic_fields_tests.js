@@ -1823,6 +1823,39 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('do not trigger a field_changed for datetime field with date widget', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime" widget="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/08/2017',
+            'the date should be correct');
+
+        form.$('input[name="datetime"]').val('02/08/2017').trigger('input').trigger('change');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['read']); // should not have save as nothing changed
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', function (assert) {
