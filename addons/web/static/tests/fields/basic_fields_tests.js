@@ -1424,6 +1424,42 @@ QUnit.module('basic_fields', {
         }
     });
 
+    QUnit.module('FieldImage');
+
+    QUnit.test('image fields are correctly rendered', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].document = 'myimage';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" widget="image" options="{\'size\': [90, 90]}"/> ' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route) {
+                if (route === 'data:image/png;base64,myimage') {
+                    assert.ok(true, "should called the correct route");
+                    return $.when('wow');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.$('div[name="document"]').hasClass('o_field_image'),
+            "the widget should have the correct class");
+        assert.strictEqual(form.$('div[name="document"] > img').length, 1,
+            "the widget should contain an image");
+        assert.ok(form.$('div[name="document"] > img').hasClass('img-responsive'),
+            "the image should have the correct class");
+        assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
+            "the image should correctly set its attributes");
+        form.destroy();
+
+    });
+
     QUnit.module('JournalDashboardGraph');
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
