@@ -14,6 +14,14 @@ odoo.define('payment_stripe.stripe', function(require) {
         'RWF', 'KRW', 'VUV', 'VND', 'XOF'
     ];
 
+    if ($.blockUI) {
+        // our message needs to appear above the modal dialog
+        $.blockUI.defaults.baseZ = 2147483647; //same z-index as StripeCheckout
+        $.blockUI.defaults.css.border = '0';
+        $.blockUI.defaults.css["background-color"] = '';
+        $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
+    }
+
     var handler = StripeCheckout.configure({
         key: $("input[name='stripe_key']").val(),
         image: $("input[name='stripe_image']").val(),
@@ -27,6 +35,14 @@ odoo.define('payment_stripe.stripe', function(require) {
         },
         token: function(token, args) {
             handler.isTokenGenerate = true;
+            if ($.blockUI) {
+                var msg = _t("Just one more second, confirming your payment...");
+                $.blockUI({
+                    'message': '<h2 class="text-white"><img src="/web/static/src/img/spin.png" class="fa-pulse"/>' +
+                               '    <br />' + msg +
+                               '</h2>'
+                });
+            }
             ajax.jsonRpc("/payment/stripe/create_charge", 'call', {
                 tokenid: token.id,
                 email: token.email,
@@ -34,12 +50,17 @@ odoo.define('payment_stripe.stripe', function(require) {
                 acquirer_id: $("#acquirer_stripe").val(),
                 currency: $("input[name='currency']").val(),
                 invoice_num: $("input[name='invoice_num']").val(),
+                tx_ref: $("input[name='invoice_num']").val(),
                 return_url: $("input[name='return_url']").val()
+            }).always(function(){
+                if ($.blockUI) {
+                    $.unblockUI();
+                }
             }).done(function(data){
                 handler.isTokenGenerate = false;
                 window.location.href = data;
             }).fail(function(){
-                var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.message;
+                var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.arguments && arguments[1].data.arguments[0];
                 var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                 wizard.appendTo($('body')).modal({'keyboard': true});
             });
@@ -66,44 +87,45 @@ odoo.define('payment_stripe.stripe', function(require) {
         }
 
         e.preventDefault();
+
+        var currency = $("input[name='currency']").val();
+        var currency_id = $("input[name='currency_id']").val();
+        var amount = parseFloat($("input[name='amount']").val() || '0.0');
+
+
         if ($('.o_website_payment').length !== 0) {
-            var currency = $("input[name='currency']").val();
-            var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
-
-            ajax.jsonRpc('/website_payment/transaction', 'call', {
+            var create_tx = ajax.jsonRpc('/website_payment/transaction', 'call', {
                     reference: $("input[name='invoice_num']").val(),
-                    amount: amount,
-                    currency_id: currency,
+                    amount: amount, // exact amount, not stripe cents
+                    currency_id: currency_id,
                     acquirer_id: acquirer_id
-                })
-                handler.open({
-                    name: $("input[name='merchant']").val(),
-                    description: $("input[name='invoice_num']").val(),
-                    currency: currency,
-                    amount: amount,
-                });
-        } else {
-            var currency = $("input[name='currency']").val();
-            var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
-
-            ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
-                    so_id: so_id,
-                    so_token: so_token
-                }, {'async': false}).then(function (data) {
-                $form.html(data);
-                handler.open({
-                    name: $("input[name='merchant']").val(),
-                    description: $("input[name='invoice_num']").val(),
-                    currency: currency,
-                    amount: amount,
-                });
             });
         }
+        else if ($('.o_website_quote').length !== 0) {
+            var url = _.str.sprintf("/quote/%s/transaction/%s/%s", so_id, acquirer_id, so_token);
+            var create_tx = ajax.jsonRpc(url, 'call', {}).then(function (data) {
+                try { $form.html(data); } catch (e) {};
+            });
+        }
+        else {
+            var create_tx = ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
+                    so_id: so_id,
+                    so_token: so_token
+            }).then(function (data) {
+                try { $form.html(data); } catch (e) {};
+            });
+        }
+        create_tx.done(function () {
+            if (!_.contains(int_currencies, currency)) {
+                amount = amount*100;
+            }
+            handler.open({
+                name: $("input[name='merchant']").val(),
+                description: $("input[name='invoice_num']").val(),
+                email: $("input[name='email']").val(),
+                currency: currency,
+                amount: amount,
+            });
+        });
     });
 });
