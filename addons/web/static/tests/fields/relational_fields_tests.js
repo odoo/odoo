@@ -6633,6 +6633,42 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('default_get, onchange, onchange on m2m', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.int_field = function (obj) {
+            if (obj.int_field === 2) {
+                assert.deepEqual(obj.timmy, [
+                    [6, false, [12]],
+                    [1, 12, {display_name: 'gold'}]
+                ]);
+            }
+            obj.timmy = [
+                [5],
+                [1, 12, {display_name: 'gold'}]
+            ];
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="timmy">' +
+                            '<tree>' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {

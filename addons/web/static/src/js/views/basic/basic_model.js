@@ -2595,6 +2595,7 @@ var BasicModel = AbstractModel.extend({
                     _.each(relRecordUpdated, function (relRecord) {
                         var changes = self._generateChanges(relRecord, options);
                         if (!_.isEmpty(changes)) {
+                            delete changes.id;
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -2626,9 +2627,8 @@ var BasicModel = AbstractModel.extend({
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
                             changes = this._generateChanges(relRecord, options);
                             if ('id' in changes) {
-                                var id = changes.id;
                                 delete changes.id;
-                                commands[fieldName].push(x2ManyCommands.update(id, changes));
+                                commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
                             } else {
                                 commands[fieldName].push(x2ManyCommands.create(changes));
                             }
