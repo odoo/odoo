@@ -642,6 +642,21 @@
                     <filter string="Overdue Opportunities" name="overdue_opp"
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities with a deadline for which the next action date is before today"/>
+
+                    <filter string="To Close Today" name="close_today"
+                            domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="To Close This Week" name="close_this_week"
+                            domain="[
+                                '&amp;',
+                                ('date_deadline', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
+                                ('date_deadline', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
+                            ]"/>
+                    <filter string="To Close This Month" name="close_this_month"
+                            domain="[
+                                '&amp;',
+                                ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                ('date_deadline', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+                            ]"/>
                     <separator/>
                     <filter string="Lost" name="lost" domain="[('active', '=', False)]"/>
                     <filter string="Won" name="won"
