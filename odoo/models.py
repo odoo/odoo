@@ -10,7 +10,7 @@
      * Optimised processing by complex query (multiple actions at once)
      * Default field values
      * Permissions optimisation
-     * Persistant object: DB postgresql
+     * Persistent object: DB postgresql
      * Data conversion
      * Multi-level caching system
      * Two different inheritance mechanisms
