@@ -17,9 +17,9 @@ _logger = logging.getLogger(__name__)
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
 BANNED_DEVICES = set([
-	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
-	"1d6b:0002",	# Linux Foundation 2.0 root hub
-	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
+    "1d6b:0002",    # Linux Foundation 2.0 root hub
+    "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
 ])
 
 
@@ -106,7 +106,7 @@ class Proxy(http.Controller):
             device_name = device[device.find('ID')+2:]
             device_id   = device_name.split()[0]
             if not (device_id in BANNED_DEVICES):
-            	resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
 
         if count == 0:
