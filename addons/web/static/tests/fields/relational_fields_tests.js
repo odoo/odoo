@@ -2003,7 +2003,8 @@ QUnit.module('relational_fields', {
     QUnit.test('embedded one2many with handle widget', function (assert) {
         assert.expect(8);
 
-        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.records[0].turtles = [1, 2, 3];
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -2012,10 +2013,10 @@ QUnit.module('relational_fields', {
                     '<sheet>' +
                         '<notebook>' +
                             '<page string="P page">' +
-                                '<field name="p">' +
-                                    '<tree default_order="int_field">' +
-                                        '<field name="int_field" widget="handle"/>' +
-                                        '<field name="foo"/>' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
                                     '</tree>' +
                                 '</field>' +
                             '</page>' +
@@ -2026,14 +2027,14 @@ QUnit.module('relational_fields', {
         });
 
         testUtils.intercept(form, "field_changed", function (event) {
-            assert.step(event.data.changes.p.data.int_field.toString());
+            assert.step(event.data.changes.turtles.data.turtle_int.toString());
         }, true);
 
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should have the 3 rows in the correct order");
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "yopblipkawa",
             "should still have the 3 rows in the correct order");
 
         // Drag and drop the fourth line in second position
@@ -2046,12 +2047,65 @@ QUnit.module('relational_fields', {
         assert.verifySteps(["0", "1", "2"],
             "sequences values should be incremental starting from the previous minimum one");
 
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
             "should have the 3 rows in the new order");
 
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
             "should still have the 3 rows in the new order");
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange for embedded one2many with handle widget', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1, 2, 3];
+        var partnerOnchange = 0;
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                partnerOnchange++;
+            },
+        };
+        var turtleOnchange = 0;
+        this.data.turtle.onchanges = {
+            turtle_int: function (obj) {
+                turtleOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.strictEqual(turtleOnchange, 3, "should trigger one onchange per line updated");
+        assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
 
         form.destroy();
     });
