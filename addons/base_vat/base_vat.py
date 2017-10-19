@@ -14,9 +14,16 @@ except ImportError:
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
+from openerp import api
 from openerp.osv import osv
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
+
+_eu_country_vat = {
+    'GR': 'EL'
+}
+
+_eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
     'at': 'ATU12345675',
@@ -79,6 +86,7 @@ class res_partner(osv.osv):
                 # may have a VATIN starting with "EU" instead of a country code.
                 return True
             res_country = self.pool.get('res.country')
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
             return bool(res_country.search(cr, uid, [('code', '=ilike', country_code)], context=context))
         return check_func(vat_number)
 
@@ -94,6 +102,20 @@ class res_partner(osv.osv):
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we fall back to the simple check.
             return self.simple_vat_check(cr, uid, country_code, vat_number, context=context)
+
+    @api.model
+    def fix_eu_vat_number(self, country_id, vat):
+        in_europe = False
+        europe = self.env.ref('base.europe')
+        country = self.env["res.country"].browse(country_id)
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+        if europe and country and country.id in europe.country_ids.ids:
+            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
+            country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if vat[:2] != country_code:
+                vat = country_code + vat
+        return vat
 
     def check_vat(self, cr, uid, ids, context=None):
         user_company = self.pool.get('res.users').browse(cr, uid, uid).company_id
