@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Requests Links -->
-        <record id="req_link_sale_order" model="res.request.link">
-            <field name="name">Sales Order</field>
-            <field name="object">sale.order</field>
-        </record>
-
         <record model="crm.team" id="sales_team.team_sales_department">
             <field name="use_quotations" eval="True"/>
             <field name="use_invoices" eval="True"/>

@@ -7,17 +7,6 @@
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
         </record>
 
-        <!-- Requests Links -->
-        <record id="req_link_project" model="res.request.link">
-            <field name="name">Project</field>
-            <field name="object">project.project</field>
-        </record>
-
-        <record id="req_link_task" model="res.request.link">
-            <field name="name">Project task</field>
-            <field name="object">project.task</field>
-        </record>
-
         <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
         is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
         <record id="duplicate_field_xmlid" model="ir.model.data">

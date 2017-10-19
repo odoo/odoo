@@ -53,13 +53,6 @@
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
         </record>
-        <!--
-        Invoice requests (deprecated)
-        -->
-        <record id="req_link_invoice" model="res.request.link">
-            <field name="name">Invoice</field>
-            <field name="object">account.invoice</field>
-        </record>
 
         <!-- Account-related subtypes for messaging / Chatter -->
         <record id="mt_invoice_validated" model="mail.message.subtype">
