@@ -91,6 +91,27 @@ class ProductProduct(models.Model):
     def onchange_type_valuation(self):
         # TO REMOVE IN MASTER
         pass
+    
+    # Este metodo ha sido agregado por TRESCLOUD
+    def _get_adjustment_lines(self, debit_account_id, credit_account_id, diff, qty_available):
+        """
+        Modulo en forma de hook para herencia y añadidura de nuevos parametros
+        """
+        return [(0, 0, {
+                        'name': _('Standard Price changed'),
+                        'account_id': debit_account_id,
+                        'debit': abs(diff * qty_available),
+                        'credit': 0,
+                        'product_id': self.id,
+                        'product_uom_id': self.uom_po_id.id,
+                        }), (0, 0, {
+                            'name': _('Standard Price changed'),
+                            'account_id': credit_account_id,
+                            'debit': 0,
+                            'credit': abs(diff * qty_available),
+                            'product_id': self.id,
+                            'product_uom_id': self.uom_po_id.id,
+                        })]
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
@@ -121,17 +142,8 @@ class ProductProduct(models.Model):
                     move_vals = {
                         'journal_id': product_accounts[product.id]['stock_journal'].id,
                         'company_id': location.company_id.id,
-                        'line_ids': [(0, 0, {
-                            'name': _('Standard Price changed'),
-                            'account_id': debit_account_id,
-                            'debit': abs(diff * qty_available),
-                            'credit': 0,
-                        }), (0, 0, {
-                            'name': _('Standard Price changed'),
-                            'account_id': credit_account_id,
-                            'debit': 0,
-                            'credit': abs(diff * qty_available),
-                        })],
+                        # El codigo esta arriba en forma de metodo _get_adjustment_lines.
+                        'line_ids': product._get_adjustment_lines(debit_account_id, credit_account_id, diff, qty_available),
                     }
                     move = AccountMove.create(move_vals)
                     move.post()
