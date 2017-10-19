@@ -2643,3 +2643,4 @@ class TestStockValuation(TransactionCase):
         # the cost should now be 12,65
         # (9 * 10) + (15 * 10) / 19
         self.assertEqual(self.product1.standard_price, 12.63)
+
