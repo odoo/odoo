@@ -2001,7 +2001,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('embedded one2many with handle widget', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
 
@@ -2044,7 +2044,7 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
-        assert.verifySteps(["0", "1", "2"],
+        assert.verifySteps(["0", "1"],
             "sequences values should be incremental starting from the previous minimum one");
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
@@ -2104,14 +2104,109 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
-        assert.strictEqual(turtleOnchange, 3, "should trigger one onchange per line updated");
+        assert.strictEqual(turtleOnchange, 2, "should trigger one onchange per line updated");
         assert.strictEqual(partnerOnchange, 1, "should trigger only one onchange on the parent");
 
         form.destroy();
     });
 
+    QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
+        var done = assert.async();
+        assert.expect(20);
+
+
+        this.data.turtle.records[0].turtle_int = 6;
+        this.data.turtle.records.push({
+                id: 4,
+                turtle_int: 20,
+                turtle_foo: "a1",
+            }, {
+                id: 5,
+                turtle_int: 9,
+                turtle_foo: "a2",
+            }, {
+                id: 6,
+                turtle_int: 2,
+                turtle_foo: "a3",
+            }, {
+                id: 7,
+                turtle_int: 11,
+                turtle_foo: "a4",
+            });
+        this.data.partner.records[0].turtles = [1, 2, 3, 4, 5, 6, 7];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="turtles">' +
+                                    '<tree default_order="turtle_int">' +
+                                        '<field name="turtle_int" widget="handle"/>' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        testUtils.intercept(form, "field_changed", function (event) {
+            assert.step(form.model.get(event.data.changes.turtles.id).res_id);
+        }, true);
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var steps = [];
+        var positions = [
+            [6, 0, 'top', [3, 6, 1, 2, 5, 7, 4]], // move the last to the first line
+            [5, 1, 'top', [7, 6, 1, 2, 5]], // move the penultimate to the second line
+            [2, 5, 'center', [1, 2, 5, 6]], // move the third to the penultimate line
+        ];
+        function dragAndDrop() {
+            var pos = positions.shift();
+
+            testUtils.dragAndDrop(
+                form.$('.ui-sortable-handle').eq(pos[0]),
+                form.$('tbody tr').eq(pos[1]),
+                {position: pos[2]}
+            );
+
+            steps = steps.concat(pos[3]);
+            assert.verifySteps(steps,
+                "sequences values should be apply from the begin index to the drop index");
+
+            if (positions.length) {
+
+                setTimeout(dragAndDrop, 10);
+
+            } else {
+
+                assert.deepEqual(_.pluck(form.model.get(form.handle).data.turtles.data, 'data'), [
+                    {  id: 3,  turtle_foo: "kawa",  turtle_int: 2 },
+                    {  id: 7,  turtle_foo: "a4",  turtle_int: 3 },
+                    {  id: 1,  turtle_foo: "yop",  turtle_int: 4 },
+                    {  id: 2,  turtle_foo: "blip",  turtle_int: 5 },
+                    {  id: 5,  turtle_foo: "a2",  turtle_int: 6 },
+                    {  id: 6,  turtle_foo: "a3",  turtle_int: 7 },
+                    {  id: 4,  turtle_foo: "a1",  turtle_int: 8 }
+                ], "sequences must be apply correctly");
+
+                form.destroy();
+                done();
+            }
+        }
+
+        dragAndDrop();
+    });
+
     QUnit.test('embedded one2many (editable list) with handle widget', function (assert) {
-        assert.expect(9);
+        assert.expect(8);
 
         this.data.partner.records[0].p = [1, 2, 4];
         var form = createView({
@@ -2153,7 +2248,7 @@ QUnit.module('relational_fields', {
             {position: 'top'}
         );
 
-        assert.verifySteps(["0", "1", "2"],
+        assert.verifySteps(["0", "1"],
             "sequences values should be incremental starting from the previous minimum one");
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
