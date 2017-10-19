@@ -683,14 +683,14 @@ class Meeting(models.Model):
         date_deadline = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date).decode('utf-8')
-        time_str = date.strftime(format_time).decode('utf-8')
+        date_str = pycompat.to_text(date.strftime(format_date))
+        time_str = pycompat.to_text(date.strftime(format_time))
 
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            duration_time = duration.strftime(format_time).decode('utf-8')
+            duration_time = pycompat.to_text(duration.strftime(format_time))
             display_time = _(u"%s at (%s To %s) (%s)") % (
                 date_str,
                 time_str,
@@ -698,8 +698,8 @@ class Meeting(models.Model):
                 timezone,
             )
         else:
-            dd_date = date_deadline.strftime(format_date).decode('utf-8')
-            dd_time = date_deadline.strftime(format_time).decode('utf-8')
+            dd_date = pycompat.to_text(date_deadline.strftime(format_date))
+            dd_time = pycompat.to_text(date_deadline.strftime(format_time))
             display_time = _(u"%s at %s To\n %s at %s (%s)") % (
                 date_str,
                 time_str,
