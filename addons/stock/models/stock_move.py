@@ -517,7 +517,7 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         return [
-            'product_id', 'price_unit', 'product_packaging',
+            'product_id', 'price_unit', 'product_packaging', 'procure_method',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id'
         ]
 
@@ -525,8 +525,8 @@ class StockMove(models.Model):
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         return [
-            move.product_id.id, move.price_unit, move.product_packaging.id, move.product_uom.id,
-            move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
+            move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
+            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
         ]
 
     def _merge_moves(self):
