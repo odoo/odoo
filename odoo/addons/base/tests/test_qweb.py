@@ -10,7 +10,7 @@ from lxml import etree
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.ir.ir_qweb import QWebException
+from odoo.addons.base.models.qweb import QWebException
 from odoo.tools import misc, ustr
 
 

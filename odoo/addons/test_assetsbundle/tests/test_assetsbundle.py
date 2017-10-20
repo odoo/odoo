@@ -8,7 +8,7 @@ from os import utime
 import time
 
 from odoo import api
-from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.modules.module import get_resource_path
 from odoo.tests import HttpCase
 from odoo.tests.common import TransactionCase
