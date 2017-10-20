@@ -8,6 +8,7 @@ import werkzeug.urls
 import requests
 
 from odoo import api, fields, models, exceptions
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -95,7 +96,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
     except InsufficientCreditError as e:
         if credit_template:
             arguments = json.loads(e.args[0])
-            arguments['body'] = env['ir.qweb'].render(credit_template).decode("utf-8")
+            arguments['body'] = pycompat.to_text(env['ir.qweb'].render(credit_template))
             e.args = (json.dumps(arguments),)
         raise e
     try:
